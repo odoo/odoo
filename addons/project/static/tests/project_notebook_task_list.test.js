@@ -126,7 +126,7 @@ test("test Project Task Calendar Popover with task_stage_with_state_selection wi
     expect("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Hide closed tasks");
     expect("div[name='depend_on_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Hide closed tasks");
 
-    click("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button");
+    await click("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button");
     await animationFrame();
 
     expect("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Show closed tasks");
@@ -139,7 +139,7 @@ test("test Project Task Calendar Popover with task_stage_with_state_selection wi
         message: "The depend on tasks list should still display all blocking tasks, in this case 2"
     });
 
-    click("div[name='depend_on_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button");
+    await click("div[name='depend_on_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button");
     await animationFrame();
 
     expect("div[name='child_ids'] .o_field_x2many_list_row_add a.o_toggle_closed_task_button").toHaveText("Show closed tasks");

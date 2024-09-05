@@ -475,14 +475,14 @@ describe("useDebounced", () => {
         expect.verifySteps([]);
         expect("button.c").toHaveCount(1);
 
-        click(`button.c`);
+        await click(`button.c`);
         await advanceTime(900);
         expect.verifySteps([]);
 
         await advanceTime(200);
         expect.verifySteps(["debounced"]);
 
-        click(`button.c`);
+        await click(`button.c`);
         await advanceTime(900);
         expect.verifySteps([]);
 
@@ -505,14 +505,14 @@ describe("useDebounced", () => {
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
-        click(`button.c`);
+        await click(`button.c`);
         await advanceTime(900);
         expect.verifySteps([]);
 
         await advanceTime(200);
         expect.verifySteps(["debounced: hello"]);
 
-        click(`button.c`);
+        await click(`button.c`);
         await advanceTime(900);
         expect.verifySteps([]);
 
@@ -534,7 +534,7 @@ describe("useDebounced", () => {
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
-        click(`button.c`);
+        await click(`button.c`);
         await advanceTime(900);
         expect.verifySteps([]);
 
@@ -561,10 +561,10 @@ describe("useThrottleForAnimation", () => {
         expect(`button.c`).toHaveCount(1);
 
         // Without destroy
-        click(`button.c`);
+        await click(`button.c`);
         expect.verifySteps(["throttled"]);
 
-        click(`button.c`);
+        await click(`button.c`);
         expect.verifySteps([]);
 
         await animationFrame();
@@ -575,10 +575,11 @@ describe("useThrottleForAnimation", () => {
         expect.verifySteps([]);
 
         // With destroy
-        click(`button.c`);
+        await click(`button.c`);
         expect.verifySteps(["throttled"]);
 
-        click(`button.c`);
+        await click(`button.c`);
+        await Promise.resolve();
         expect.verifySteps([]);
 
         destroy(component);

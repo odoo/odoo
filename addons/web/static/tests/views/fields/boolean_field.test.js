@@ -39,38 +39,38 @@ test("boolean field in form view", async () => {
     expect(`.o_field_boolean input`).toBeChecked();
     expect(`.o_field_boolean input`).toBeEnabled();
 
-    uncheck(`.o_field_boolean input`);
+    await uncheck(`.o_field_boolean input`);
     await animationFrame();
     expect(`.o_field_boolean input`).not.toBeChecked();
 
     await clickSave();
     expect(`.o_field_boolean input`).not.toBeChecked();
 
-    check(`.o_field_boolean input`);
+    await check(`.o_field_boolean input`);
     await animationFrame();
     expect(`.o_field_boolean input`).toBeChecked();
 
-    uncheck(`.o_field_boolean input`);
+    await uncheck(`.o_field_boolean input`);
     await animationFrame();
     expect(`.o_field_boolean input`).not.toBeChecked();
 
-    click(`.o_form_view label:not(.form-check-label)`);
+    await click(`.o_form_view label:not(.form-check-label)`);
     await animationFrame();
     expect(`.o_field_boolean input`).toBeChecked();
 
-    click(`.o_form_view label:not(.form-check-label)`);
+    await click(`.o_form_view label:not(.form-check-label)`);
     await animationFrame();
     expect(`.o_field_boolean input`).not.toBeChecked();
 
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect(`.o_field_boolean input`).toBeChecked();
 
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect(`.o_field_boolean input`).not.toBeChecked();
 
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect(`.o_field_boolean input`).toBeChecked();
 
@@ -94,7 +94,7 @@ test("boolean field in editable list view", async () => {
     expect(`${cell} .o-checkbox input:only`).toBeChecked();
     expect(`${cell} .o-checkbox input:only`).not.toBeEnabled();
 
-    click(`${cell} .o-checkbox`);
+    await click(`${cell} .o-checkbox`);
     await animationFrame();
     expect(`tr.o_data_row:nth-child(1)`).toHaveClass("o_selected_row", {
         message: "the row is now selected, in edition",
@@ -102,16 +102,16 @@ test("boolean field in editable list view", async () => {
     expect(`${cell} .o-checkbox input:only`).not.toBeChecked();
     expect(`${cell} .o-checkbox input:only`).toBeEnabled();
 
-    click(`${cell} .o-checkbox`);
-    click(cell);
+    await click(`${cell} .o-checkbox`);
+    await click(cell);
     await animationFrame();
     expect(`${cell} .o-checkbox input:only`).toBeChecked();
     expect(`${cell} .o-checkbox input:only`).toBeEnabled();
 
-    click(`${cell} .o-checkbox`);
+    await click(`${cell} .o-checkbox`);
     await animationFrame();
 
-    click(`.o_list_button_save`);
+    await click(`.o_list_button_save`);
     await animationFrame();
     expect(`${cell} .o-checkbox input:only`).not.toBeChecked();
     expect(`${cell} .o-checkbox input:only`).not.toBeEnabled();
@@ -119,12 +119,12 @@ test("boolean field in editable list view", async () => {
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input:checked`).toHaveCount(3);
 
     // Fake-check the checkbox
-    click(cell);
+    await click(cell);
     await animationFrame();
-    click(`${cell} .o-checkbox`);
+    await click(`${cell} .o-checkbox`);
     await animationFrame();
 
-    click(`.o_list_button_save`);
+    await click(`.o_list_button_save`);
     await animationFrame();
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input`).toHaveCount(5);
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input:checked`).toHaveCount(3);
@@ -140,7 +140,7 @@ test("readonly boolean field", async () => {
     expect(`.o_field_boolean input`).toBeChecked();
     expect(`.o_field_boolean input`).not.toBeEnabled();
 
-    click(`.o_field_boolean .o-checkbox`);
+    await click(`.o_field_boolean .o-checkbox`);
     await animationFrame();
     expect(`.o_field_boolean input`).toBeChecked();
     expect(`.o_field_boolean input`).not.toBeEnabled();
@@ -159,7 +159,7 @@ test("onchange return value before toggle checkbox", async () => {
     });
     expect(`.o_field_boolean input`).toBeChecked();
 
-    click(`.o_field_boolean .o-checkbox`);
+    await click(`.o_field_boolean .o-checkbox`);
     await animationFrame();
     await animationFrame();
     expect(`.o_field_boolean input`).toBeChecked();

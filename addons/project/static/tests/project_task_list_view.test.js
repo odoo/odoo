@@ -35,11 +35,11 @@ test("project.task (list): cannot edit stage_id with different projects", async 
     });
 
     const [firstRow, secondRow] = queryAll(".o_data_row");
-    check(".o_list_record_selector input", { root: firstRow });
+    await check(".o_list_record_selector input", { root: firstRow });
     await animationFrame();
     expect(queryAll("[name=stage_id]")).not.toHaveClass("o_readonly_modifier");
 
-    check(".o_list_record_selector input", { root: secondRow });
+    await check(".o_list_record_selector input", { root: secondRow });
     await animationFrame();
     expect(queryOne("[name=stage_id]", { root: firstRow })).toHaveClass("o_readonly_modifier");
     expect(queryOne("[name=stage_id]", { root: secondRow })).toHaveClass("o_readonly_modifier");

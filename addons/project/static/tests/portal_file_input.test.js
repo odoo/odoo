@@ -40,7 +40,7 @@ test("check that uploading a file that is too heavy in portal sends a notificati
 
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
     await contains(".o_file_input input", { visible: false }).click();
-    setInputFiles([file]);
+    await setInputFiles([file]);
     await animationFrame();
     // Only the notification should be triggered and the file shouldn't be uploaded
     expect.verifySteps(["notification"]);

@@ -19,7 +19,7 @@ test("accordion can be rendered", async () => {
     expect(".o_accordion button.o_accordion_toggle").toHaveCount(1);
     expect(".o_accordion_values").toHaveCount(0);
 
-    click("button.o_accordion_toggle");
+    await click("button.o_accordion_toggle");
     await animationFrame();
     expect(".o_accordion_values").toHaveCount(1);
     expect(queryOne(".o_accordion_values").innerHTML).toBe(`<h5>In accordion</h5>`);
@@ -45,7 +45,7 @@ test("dropdown with accordion keyboard navigation", async () => {
     }
 
     await mountWithCleanup(Parent);
-    click(".o-dropdown.dropdown-toggle");
+    await click(".o-dropdown.dropdown-toggle");
     await animationFrame();
 
     expect(".dropdown-menu > .focus").toHaveCount(0);
@@ -76,7 +76,7 @@ test("dropdown with accordion keyboard navigation", async () => {
 
     for (let i = 0; i < scenarioSteps.length; i++) {
         const step = scenarioSteps[i];
-        press(step.key);
+        await press(step.key);
         await animationFrame();
         await runAllTimers();
         expect(`.dropdown-menu .focus:contains(${step.expected})`).toBeFocused();

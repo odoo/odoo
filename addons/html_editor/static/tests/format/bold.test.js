@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
@@ -185,52 +186,55 @@ test("should insert a span zws when toggling a formatting command twice", () => 
 // This test uses execCommand to reproduce as closely as possible the browser's
 // default behaviour when typing in a contenteditable=true zone.
 test("should type in bold", async () => {
-    function typeChar(editor, char) {
-        manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
-        manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+    async function typeChar(editor, char) {
+        await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: char });
+        await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
             inputType: "insertText",
             data: char,
         });
         // Simulate text insertion as done by the contenteditable.
         editor.document.execCommand("insertText", false, char);
         // Input event is dispatched and handlers are called synchronously.
-        manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: char });
+        await manuallyDispatchProgrammaticEvent(editor.editable, "keyup", { key: char });
     }
 
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+    /** @todo fix warnings */
+    patchWithCleanup(console, { warn: () => {} });
 
     // Toggle bold on.
     bold(editor);
     expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
 
     // Simulate text insertion as done by the contenteditable.
-    typeChar(editor, "x");
+    await typeChar(editor, "x");
     // Check that character was inserted inside the strong tag.
     expect(getContent(el)).toBe(`<p>ab${strong("x[]")}cd</p>`);
 
     // Keep typing.
-    typeChar(editor, "y");
+    await typeChar(editor, "y");
     expect(getContent(el)).toBe(`<p>ab${strong("xy[]")}cd</p>`);
 
     // Toggle bold off and type more.
     bold(editor);
     expect(getContent(el)).toBe(`<p>ab${strong("xy")}${span("[]\u200B", "first")}cd</p>`);
-    typeChar(editor, "z");
+    await typeChar(editor, "z");
     expect(getContent(el)).toBe(`<p>ab${strong("xy")}z[]cd</p>`);
 });
 
 test.tags("desktop")("create bold with shortcut + selected with arrow", async () => {
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
-    press(["control", "b"]);
+    await press(["control", "b"]);
     expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
 
-    simulateArrowKeyPress(editor, ["Shift", "ArrowRight"]);
+    await simulateArrowKeyPress(editor, ["Shift", "ArrowRight"]);
     await tick(); // await selectionchange
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(1);
     expect(getContent(el)).toBe(`<p>ab${strong("[\u200B", "first")}c]d</p>`);
 
-    simulateArrowKeyPress(editor, ["Shift", "ArrowLeft"]);
+    await simulateArrowKeyPress(editor, ["Shift", "ArrowLeft"]);
     await tick(); // await selectionchange
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(0);

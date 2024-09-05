@@ -1722,7 +1722,7 @@ describe("internal links", () => {
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();
         });
-        click("a");
+        await click("a");
         await tick();
         expect.verifySteps(["click"]);
         expect(router.current).toEqual({
@@ -1759,7 +1759,7 @@ describe("internal links", () => {
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();
         });
-        click("span");
+        await click("span");
         await tick();
         expect.verifySteps(["click"]);
         expect(router.current).toEqual({
@@ -1798,7 +1798,7 @@ describe("internal links", () => {
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();
         });
-        click("a");
+        await click("a");
         await tick();
         expect.verifySteps(["click"]);
         expect(router.current).toEqual({
@@ -1836,7 +1836,7 @@ describe("internal links", () => {
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();
         });
-        click("a");
+        await click("a");
         await tick();
         expect.verifySteps(["click"]);
         expect(router.current).toEqual({
@@ -1879,7 +1879,7 @@ describe("internal links", () => {
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();
         });
-        click("a");
+        await click("a");
         await tick();
         expect.verifySteps([
             "pushState: https://www.hoot.test/odoo/1/action-114/22#anchorId",
@@ -1921,7 +1921,7 @@ describe("internal links", () => {
             defaultPrevented = ev.defaultPrevented;
             ev.preventDefault();
         });
-        click("a");
+        await click("a");
         await tick();
         expect.verifySteps(["click"]);
         expect(router.current).toEqual({});

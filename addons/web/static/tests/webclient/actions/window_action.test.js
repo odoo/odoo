@@ -1004,7 +1004,7 @@ test("execute_action of type object raises error: re-enables buttons", async () 
     await contains(".o_form_button_save").click();
 
     // click on 'Execute action', to execute action 4 in a dialog
-    click('.o_form_view button[name="object"]');
+    await click('.o_form_view button[name="object"]');
     expect(".o_form_button_create").toHaveProperty("disabled", true);
     await animationFrame();
     expect(".o_form_button_create").not.toHaveProperty("disabled");
@@ -1027,7 +1027,7 @@ test("execute_action of type object raises error in modal: re-enables buttons", 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(5);
     expect(".modal .o_form_view").toHaveCount(1);
-    click('.modal footer button[name="object"]');
+    await click('.modal footer button[name="object"]');
     expect(".modal .o_form_view").toHaveCount(1);
     expect(".modal footer button").toHaveProperty("disabled", true);
     await animationFrame();

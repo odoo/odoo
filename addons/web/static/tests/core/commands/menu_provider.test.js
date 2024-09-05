@@ -54,7 +54,7 @@ test.tags("desktop")("displays only apps if the search value is '/'", async () =
     await mountWithCleanup(WebClient);
     expect(".o_menu_brand").toHaveCount(0);
 
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/", { confirm: false });
     await animationFrame();
@@ -69,7 +69,7 @@ test.tags("desktop")(
     async () => {
         await mountWithCleanup(WebClient);
 
-        press(["control", "k"]);
+        await press(["control", "k"]);
         await animationFrame();
         await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
         await animationFrame();
@@ -87,13 +87,13 @@ test.tags("desktop")("opens an app", async () => {
     await mountWithCleanup(WebClient);
     expect(".o_menu_brand").toHaveCount(0);
 
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/", { confirm: false });
     await animationFrame();
     expect(".o_command_palette").toHaveCount(1);
 
-    press("enter");
+    await press("enter");
     await animationFrame();
     // empty screen for now, wait for actual action to show up
     await animationFrame();
@@ -105,7 +105,7 @@ test.tags("desktop")("opens a menu items", async () => {
     await mountWithCleanup(WebClient);
     expect(".o_menu_brand").toHaveCount(0);
 
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
     await animationFrame();
@@ -135,7 +135,7 @@ test.tags("desktop")("open a menu item when a dialog is displayed", async () => 
     await animationFrame();
     expect(".modal .test").toHaveCount(1);
 
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     await contains(".o_command_palette_search input").edit("/sal", { confirm: false });
     await animationFrame();

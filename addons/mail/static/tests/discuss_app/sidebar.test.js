@@ -1242,7 +1242,7 @@ test("Group unread counter up to date after mention is marked as seen [REQUIRE F
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel .o-discuss-badge");
-    click(".o-mail-DiscussSidebarChannel");
+    await click(".o-mail-DiscussSidebarChannel");
     await contains(".o-discuss-badge", { count: 0 });
 });
 

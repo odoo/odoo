@@ -479,7 +479,7 @@ test("activity view: activity_ids condition in domain", async () => {
 
     await click(".o_pager_value");
     await contains(".o_pager_value:focus");
-    keyDown("Enter");
+    await keyDown("Enter");
 
     await assertSteps([
         // load view requests

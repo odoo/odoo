@@ -101,9 +101,9 @@ test("returned value is updated when input has changed", async () => {
 
     expect(".datetime_hook_input").toHaveValue("");
     expect(pickerProps.value).toBe(false);
-    click(".datetime_hook_input");
-    edit("06/06/2023");
-    click(document.body);
+    await click(".datetime_hook_input");
+    await edit("06/06/2023");
+    await click(document.body);
 
     expect(pickerProps.value.toSQL().split(" ")[0]).toBe("2023-06-06");
 });
@@ -129,16 +129,16 @@ test("value is not updated if it did not change", async () => {
     expect(".datetime_hook_input").toHaveValue("06/06/2023");
     expect(getShortDate(pickerProps.value)).toBe("2023-06-06");
 
-    click(".datetime_hook_input");
-    edit("06/06/2023");
-    click(document.body);
+    await click(".datetime_hook_input");
+    await edit("06/06/2023");
+    await click(document.body);
 
     expect(getShortDate(pickerProps.value)).toBe("2023-06-06");
     expect.verifySteps([]);
 
-    click(".datetime_hook_input");
-    edit("07/07/2023");
-    click(document.body);
+    await click(".datetime_hook_input");
+    await edit("07/07/2023");
+    await click(document.body);
 
     expect(getShortDate(pickerProps.value)).toBe("2023-07-07");
     expect.verifySteps(["2023-07-07"]);

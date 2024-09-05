@@ -537,7 +537,7 @@ describe("Text insertion", () => {
             contentBeforeEdit:
                 '<p>ab[]<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>cd</p>',
             stepFunction: async (editor) => {
-                insertText(editor, "s");
+                await insertText(editor, "s");
             },
             contentAfterEdit:
                 '<p>abs[]<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>cd</p>',
@@ -551,7 +551,7 @@ describe("Text insertion", () => {
             contentBeforeEdit:
                 '<p>ab<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]cd</p>',
             stepFunction: async (editor) => {
-                insertText(editor, "s");
+                await insertText(editor, "s");
             },
             contentAfterEdit:
                 '<p>ab<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>s[]cd</p>',
@@ -562,7 +562,7 @@ describe("Text insertion", () => {
         await testEditor({
             contentBefore: '<p>ab[<i class="fa fa-pastafarianism"></i>]cd</p>',
             stepFunction: async (editor) => {
-                insertText(editor, "s");
+                await insertText(editor, "s");
             },
             contentAfter: "<p>abs[]cd</p>",
         });

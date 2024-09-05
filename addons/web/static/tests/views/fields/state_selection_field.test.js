@@ -51,7 +51,7 @@ test("StateSelectionField in form view", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 
     // Click on the status button to make the dropdown appear
-    click(".o_field_widget.o_field_state_selection .o_status");
+    await click(".o_field_widget.o_field_state_selection .o_status");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
@@ -62,7 +62,7 @@ test("StateSelectionField in form view", async () => {
     });
 
     // Click on the first option, "Normal"
-    click(".o-dropdown--menu .dropdown-item");
+    await click(".o-dropdown--menu .dropdown-item");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should not be a dropdown anymore",
@@ -90,14 +90,14 @@ test("StateSelectionField in form view", async () => {
     });
 
     // Click on the status button to make the dropdown appear
-    click(".o_field_widget.o_field_state_selection .o_status");
+    await click(".o_field_widget.o_field_state_selection .o_status");
     await animationFrame();
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
         message: "there should be three options in the dropdown",
     });
 
     // Click on the last option, "Done"
-    click(".o-dropdown--menu .dropdown-item:last-child");
+    await click(".o-dropdown--menu .dropdown-item:last-child");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should not be a dropdown anymore",
@@ -110,7 +110,7 @@ test("StateSelectionField in form view", async () => {
     });
 
     // save
-    click(".o_form_button_save");
+    await click(".o_form_button_save");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should still not be a dropdown anymore",
@@ -133,7 +133,7 @@ test("StateSelectionField with readonly modifier", async () => {
 
     expect(".o_field_state_selection").toHaveClass("o_readonly_modifier");
     expect(".dropdown-menu").not.toBeVisible();
-    click(".o_field_state_selection span.o_status");
+    await click(".o_field_state_selection span.o_status");
     await animationFrame();
     expect(".dropdown-menu").not.toBeVisible();
 });
@@ -222,7 +222,7 @@ test("StateSelectionField in editable list view", async () => {
 
     // Click on the status button to make the dropdown appear
     let cell = queryFirst("tbody td.o_state_selection_cell");
-    click(".o_state_selection_cell .o_field_state_selection span.o_status");
+    await click(".o_state_selection_cell .o_field_state_selection span.o_status");
     await animationFrame();
     expect(cell.parentElement).not.toHaveClass("o_selected_row", {
         message: "should not be in edit mode since we clicked on the state selection widget",
@@ -233,7 +233,7 @@ test("StateSelectionField in editable list view", async () => {
     });
 
     // Click on the first option, "Normal"
-    click(".o-dropdown--menu .dropdown-item");
+    await click(".o-dropdown--menu .dropdown-item");
     await animationFrame();
     expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(5, {
         message: "should still have five status selection widgets",
@@ -249,7 +249,7 @@ test("StateSelectionField in editable list view", async () => {
 
     // switch to edit mode and check the result
     cell = queryFirst("tbody td.o_state_selection_cell");
-    click(cell);
+    await click(cell);
     await animationFrame();
     expect(cell.parentElement).toHaveClass("o_selected_row", {
         message: "should now be in edit mode",
@@ -266,7 +266,7 @@ test("StateSelectionField in editable list view", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 
     // Click on the status button to make the dropdown appear
-    click(".o_state_selection_cell .o_field_state_selection span.o_status");
+    await click(".o_state_selection_cell .o_field_state_selection span.o_status");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
@@ -275,7 +275,7 @@ test("StateSelectionField in editable list view", async () => {
 
     // Click on another row
     const lastCell = queryAll("tbody td.o_state_selection_cell")[4];
-    click(lastCell);
+    await click(lastCell);
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should not be a dropdown anymore",
@@ -289,7 +289,7 @@ test("StateSelectionField in editable list view", async () => {
     });
 
     // Click on the third status button to make the dropdown appear
-    click(".o_state_selection_cell .o_field_state_selection span.o_status:eq(2)");
+    await click(".o_state_selection_cell .o_field_state_selection span.o_status:eq(2)");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(1, "there should be a dropdown".msg);
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
@@ -297,7 +297,7 @@ test("StateSelectionField in editable list view", async () => {
     });
 
     // Click on the last option, "Done"
-    click(".o-dropdown--menu .dropdown-item:last-child");
+    await click(".o-dropdown--menu .dropdown-item:last-child");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should not be a dropdown anymore",
@@ -314,7 +314,7 @@ test("StateSelectionField in editable list view", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 
     // save
-    click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
     expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(5, {
         message: "should have five status selection widgets",
@@ -341,17 +341,17 @@ test('StateSelectionField edited by the smart actions "Set kanban state as <stat
     });
 
     expect(".o_status_red").toHaveCount(1);
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     expect(`.o_command:contains("Set kanban state as Normal\nALT + D")`).toHaveCount(1);
     const doneItem = `.o_command:contains("Set kanban state as Done\nALT + G")`;
     expect(doneItem).toHaveCount(1);
 
-    click(doneItem);
+    await click(doneItem);
     await animationFrame();
     expect(".o_status_green").toHaveCount(1);
 
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     expect(`.o_command:contains("Set kanban state as Normal\nALT + D")`).toHaveCount(1);
     expect(`.o_command:contains("Set kanban state as Blocked\nALT + F")`).toHaveCount(1);
@@ -384,7 +384,7 @@ test("StateSelectionField uses legend_* fields", async () => {
         resId: 1,
     });
 
-    click(".o_status");
+    await click(".o_status");
     await animationFrame();
     expect(queryAllTexts(".o-dropdown--menu .dropdown-item")).toEqual([
         "Custom normal",
@@ -392,9 +392,9 @@ test("StateSelectionField uses legend_* fields", async () => {
         "Custom done",
     ]);
 
-    click(".dropdown-item .o_status");
+    await click(".dropdown-item .o_status");
     await animationFrame();
-    click(".o_status");
+    await click(".o_status");
     await animationFrame();
     expect(queryAllTexts(".o-dropdown--menu .dropdown-item")).toEqual([
         "Custom normal",
@@ -421,9 +421,9 @@ test("works when required in a readonly view", async () => {
         `,
     });
     expect(".o_status_label").toHaveCount(0);
-    click(".o_field_state_selection button");
+    await click(".o_field_state_selection button");
     await animationFrame();
-    click(".dropdown-item:eq(2)");
+    await click(".dropdown-item:eq(2)");
     await animationFrame();
     expect.verifySteps(["web_save"]);
     expect(".o_field_state_selection span").toHaveClass("o_status_green");
@@ -446,9 +446,9 @@ test("StateSelectionField - auto save record when field toggled", async () => {
         resId: 1,
     });
 
-    click(".o_field_widget.o_field_state_selection .o_status");
+    await click(".o_field_widget.o_field_state_selection .o_status");
     await animationFrame();
-    click(".dropdown-menu .dropdown-item:last-child");
+    await click(".dropdown-menu .dropdown-item:last-child");
     await animationFrame();
     expect.verifySteps(["web_save"]);
 });
@@ -470,9 +470,9 @@ test("StateSelectionField -  prevent auto save with autosave option", async () =
         resId: 1,
     });
 
-    click(".o_field_widget.o_field_state_selection .o_status");
+    await click(".o_field_widget.o_field_state_selection .o_status");
     await animationFrame();
-    click(".dropdown-menu .dropdown-item:last-child");
+    await click(".dropdown-menu .dropdown-item:last-child");
     await animationFrame();
     expect.verifySteps([]);
 });
@@ -505,12 +505,12 @@ test("StateSelectionField - hotkey handling when there are more than 3 options a
         resId: 1,
     });
 
-    click(".o_field_widget.o_field_state_selection .o_status");
+    await click(".o_field_widget.o_field_state_selection .o_status");
     await animationFrame();
     expect(".dropdown-menu .dropdown-item").toHaveCount(5, {
         message: "Five choices are displayed",
     });
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
 
     expect(".o_command#o_command_2").toHaveText("Set kanban state as Done\nALT + G", {
@@ -520,7 +520,7 @@ test("StateSelectionField - hotkey handling when there are more than 3 options a
         message: "no hotkey is present, but the command exists",
     });
 
-    click(".o_command#o_command_2");
+    await click(".o_command#o_command_2");
     await animationFrame();
     expect(".o_field_state_selection .o_status").toHaveClass("o_status_green", {
         message: "green color and Done state have been set",

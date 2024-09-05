@@ -223,7 +223,7 @@ test("edit and save a html field", async () => {
     expect(`.o_form_button_save`).not.toBeVisible();
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "test");
+    await insertText(htmlEditor, "test");
     await animationFrame();
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(".o_form_button_save").toBeVisible();
@@ -249,12 +249,12 @@ test("edit a html field in new form view dialog and close the dialog with 'escap
 
     await contains("[name='txt'] .odoo-editor-editable").focus();
     setSelectionInHtmlField();
-    insertText(htmlEditor, "test");
+    await insertText(htmlEditor, "test");
     await animationFrame();
     expect(".odoo-editor-editable p").toHaveText("test");
     expect(".o_form_button_save").toBeVisible();
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(".modal").toHaveCount(0);
 });
@@ -373,7 +373,7 @@ test("edit html field and blur multiple time should apply 1 onchange", async () 
     });
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "Hello ");
+    await insertText(htmlEditor, "Hello ");
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hello first </p>");
 
     await contains("[name='name'] input").click();
@@ -409,14 +409,14 @@ test("edit an html field during an onchange", async () => {
     });
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "Hello ");
+    await insertText(htmlEditor, "Hello ");
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hello first </p>");
 
     await contains(".o_form_view").click();
     expect.verifySteps(["onchange: <p>Hello first</p>"]);
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "Yop ");
+    await insertText(htmlEditor, "Yop ");
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Yop Hello first </p>");
 
     def.resolve();
@@ -465,7 +465,7 @@ test("edit and switch page", async () => {
     expect(`.o_form_button_save`).not.toBeVisible();
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "test");
+    await insertText(htmlEditor, "test");
     await animationFrame();
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_save`).toBeVisible();
@@ -496,9 +496,9 @@ test("discard changes in html field in form", async () => {
     expect(`.o_form_button_save`).not.toBeVisible();
 
     // move the hoot focus in the editor
-    click(".odoo-editor-editable");
+    await click(".odoo-editor-editable");
     setSelectionInHtmlField();
-    insertText(htmlEditor, "test");
+    await insertText(htmlEditor, "test");
     await animationFrame();
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_cancel`).toBeVisible();
@@ -524,14 +524,14 @@ test("undo after discard html field changes in form", async () => {
     expect(`.o_form_button_save`).not.toBeVisible();
 
     // move the hoot focus in the editor
-    click(".odoo-editor-editable");
+    await click(".odoo-editor-editable");
     setSelectionInHtmlField();
-    insertText(htmlEditor, "test");
+    await insertText(htmlEditor, "test");
     await animationFrame();
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_cancel`).toBeVisible();
 
-    press(["ctrl", "z"]);
+    await press(["ctrl", "z"]);
     expect(".odoo-editor-editable p").toHaveText("tesfirst");
     expect(`.o_form_button_cancel`).toBeVisible();
 
@@ -540,7 +540,7 @@ test("undo after discard html field changes in form", async () => {
     expect(".odoo-editor-editable p").toHaveText("first");
     expect(`.o_form_button_cancel`).not.toBeVisible();
 
-    press(["ctrl", "z"]);
+    await press(["ctrl", "z"]);
     expect(".odoo-editor-editable p").toHaveText("first");
     expect(`.o_form_button_cancel`).not.toBeVisible();
 });
@@ -574,12 +574,12 @@ test("A new MediaDialog after switching record in a Form view should have the co
     expect(".odoo-editor-editable p:contains(second)").toHaveCount(1);
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/Image");
+    await insertText(htmlEditor, "/Image");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(1);
     expect(".active .o-we-command-name").toHaveText("Image");
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect.verifySteps(["partner : 2"]);
 });
@@ -619,7 +619,7 @@ test("Embed video by pasting video URL", async () => {
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Embed Youtube Video", "Paste as URL"]);
 
     // Press Enter to select first option in the powerbox ("Embed Youtube Video").
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(anchorNode.outerHTML).toBe("<p></p>");
     expect(
@@ -767,7 +767,7 @@ test("'Video' command is available by default", async () => {
             </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/video");
+    await insertText(htmlEditor, "/video");
     await waitFor(".o-we-powerbox");
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Video"]);
 });
@@ -783,7 +783,7 @@ test("'Video' command is not available when 'disableVideo' = true", async () => 
             </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/video");
+    await insertText(htmlEditor, "/video");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(0);
     expect(queryAllTexts(".o-we-command-name")).toEqual([]);
@@ -808,7 +808,7 @@ test("'Video' command is not available by default when sanitize_tags = true", as
             </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/video");
+    await insertText(htmlEditor, "/video");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(0);
     expect(queryAllTexts(".o-we-command-name")).toEqual([]);
@@ -833,7 +833,7 @@ test("'Video' command is not available by default when sanitize = true", async (
             </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/video");
+    await insertText(htmlEditor, "/video");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(0);
     expect(queryAllTexts(".o-we-command-name")).toEqual([]);
@@ -858,7 +858,7 @@ test("'Video' command is available when sanitize_tags = true and 'disableVideo' 
             </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/video");
+    await insertText(htmlEditor, "/video");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(1);
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Video"]);
@@ -875,11 +875,11 @@ test("MediaDialog contains 'Videos' tab by default in html field", async () => {
             </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/image");
+    await insertText(htmlEditor, "/image");
     await waitFor(".o-we-powerbox");
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Image"]);
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
         "Images",
@@ -901,11 +901,11 @@ test("MediaDialog don't contains 'Videos' tab in html field when 'disableVideo' 
     });
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/image");
+    await insertText(htmlEditor, "/image");
     await waitFor(".o-we-powerbox");
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Image"]);
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
         "Images",
@@ -925,7 +925,7 @@ test("'Image' command is available by default", async () => {
             </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/image");
+    await insertText(htmlEditor, "/image");
     await waitFor(".o-we-powerbox");
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Image"]);
 });
@@ -941,7 +941,7 @@ test("'Image' command is not available when 'disableImage' = true", async () => 
             </form>`,
     });
     setSelectionInHtmlField();
-    insertText(htmlEditor, "/image");
+    await insertText(htmlEditor, "/image");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(0);
     expect(queryAllTexts(".o-we-command-name")).toEqual([]);
@@ -1044,7 +1044,7 @@ test("edit and enable/disable codeview with editor toolbar", async () => {
     });
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "Hello ");
+    await insertText(htmlEditor, "Hello ");
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hello first </p>");
 
     // Switch to code view
@@ -1103,7 +1103,7 @@ test("edit and save a html field in collaborative should keep the same wysiwyg",
     });
 
     setSelectionInHtmlField();
-    insertText(htmlEditor, "Hello ");
+    await insertText(htmlEditor, "Hello ");
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hello first </p>");
     expect.verifySteps(["Setup Wysiwyg"]);
 
@@ -1545,10 +1545,10 @@ describe("direction config", () => {
         expect(".odoo-editor-editable").toHaveAttribute("dir", "ltr");
         const node = queryOne(".odoo-editor-editable p");
         setSelection({ anchorNode: node.firstChild, anchorOffset: 0 });
-        insertText(htmlEditor, "/Switchdirection");
+        await insertText(htmlEditor, "/Switchdirection");
         await animationFrame();
         expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
-        press("Enter");
+        await press("Enter");
         expect(".odoo-editor-editable p").toHaveAttribute("dir", "rtl");
     });
 
@@ -1570,10 +1570,10 @@ describe("direction config", () => {
         expect(".odoo-editor-editable").toHaveAttribute("dir", "rtl");
         const node = queryOne(".odoo-editor-editable p");
         setSelection({ anchorNode: node.firstChild, anchorOffset: 0 });
-        insertText(htmlEditor, "/Switchdirection");
+        await insertText(htmlEditor, "/Switchdirection");
         await animationFrame();
         expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
-        press("Enter");
+        await press("Enter");
         expect(".odoo-editor-editable p").toHaveAttribute("dir", "ltr");
     });
 });
@@ -1707,7 +1707,7 @@ describe("save image", () => {
         // Simulate an urgent save without any image in the content.
         sendBeaconDef = new Deferred();
         setSelectionInHtmlField(".test_target");
-        insertText(htmlEditor, "a");
+        await insertText(htmlEditor, "a");
         htmlEditor.dispatch("ADD_STEP");
         await formController.beforeUnload();
         await sendBeaconDef;

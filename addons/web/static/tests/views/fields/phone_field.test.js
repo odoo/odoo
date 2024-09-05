@@ -61,8 +61,8 @@ test("PhoneField in form view on normal screens (edit)", async () => {
     expect(".o_field_phone a").toHaveAttribute("href", "tel:yop");
 
     // change value in edit mode
-    click(`input[type="tel"]`);
-    edit("new");
+    await click(`input[type="tel"]`);
+    await edit("new");
     await animationFrame();
     // save
     await clickSave();
@@ -82,14 +82,15 @@ test("PhoneField in editable list view on normal screens", async () => {
 
     // Edit a line and check the result
     const cell = queryFirst("tbody td:not(.o_list_record_selector)");
-    click(cell);
+    await click(cell);
     await animationFrame();
     expect(cell.parentElement).toHaveClass("o_selected_row");
     expect(`tbody td:not(.o_list_record_selector) input`).toHaveValue("yop");
 
-    click(`tbody td:not(.o_list_record_selector) input`);
-    edit("new");
-    click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(`tbody td:not(.o_list_record_selector) input`);
+    await edit("new");
+    await animationFrame();
+    await click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
 
     expect(".o_selected_row").toHaveCount(0);
@@ -112,7 +113,7 @@ test("use TAB to navigate to a PhoneField", async () => {
             </form>`,
     });
 
-    pointerDown(".o_field_widget[name=name] input");
+    await pointerDown(".o_field_widget[name=name] input");
 
     expect(".o_field_widget[name=name] input").toBeFocused();
     expect(queryOne`[name="foo"] input:only`).toBe(getNextTabableElement());

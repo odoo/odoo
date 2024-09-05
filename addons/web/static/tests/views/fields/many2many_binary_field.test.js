@@ -107,7 +107,7 @@ test("widget many2many_binary", async () => {
     // Set and trigger the change of a file for the input
     const file = new File(["fake_file"], "fake_file.tiff", { type: "text/plain" });
     await contains(".o_file_input_trigger").click();
-    setInputFiles([file]);
+    await setInputFiles([file]);
     await animationFrame();
 
     expect(".o_attachment:nth-child(2) .caption a:eq(0)").toHaveText("fake_file.tiff", {
@@ -186,7 +186,7 @@ test("widget many2many_binary displays notification on error", async () => {
         new File(["bad_file"], "bad_file.txt", { type: "text/plain" }),
     ];
     await contains(".o_file_input_trigger").click();
-    setInputFiles(files);
+    await setInputFiles(files);
     await animationFrame();
 
     expect(".o_attachment:nth-child(2) .caption a:eq(0)").toHaveText("good_file.txt", {
