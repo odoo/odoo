@@ -26,6 +26,7 @@ class TestAnalyticAccount(AnalyticCommon):
                 'analytic_distribution': {cls.analytic_account_2.id: 100}
             },
         ])
+        cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company.id})
 
     def test_aggregates(self):
         # debit and credit are hidden by the group when account is installed
@@ -179,3 +180,20 @@ class TestAnalyticAccount(AnalyticCommon):
             with self.subTest(plan=plan.name, expected_count=expected_value):
                 with Form(plan) as plan_form:
                     self.assertEqual(plan_form.record.all_account_count, expected_value)
+
+    def test_analytic_account_branches(self):
+        """
+        Test that an analytic account defined in a parent company is accessible in its branches (children)
+        """
+        # timesheet adds a rule to forcer a project_id; account overrides it
+        timesheet_group = self.env.ref('hr_timesheet.group_hr_timesheet_user', raise_if_not_found=False)
+        if timesheet_group:
+            self.env.user.groups_id -= timesheet_group
+
+        self.analytic_account_1.company_id = self.company
+        self.env['account.analytic.line'].create({
+            'name': 'company specific account',
+            'account_id': self.analytic_account_1.id,
+            'amount': 100,
+            'company_id': self.company_b_branch.id,
+        })
