@@ -10,8 +10,6 @@ import {
     queryAllTexts,
     queryAllValues,
     queryFirst,
-    queryLast,
-    queryOne,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
@@ -40,11 +38,10 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-
+import { browser } from "@web/core/browser/browser";
 import { browser } from "@web/core/browser/browser";
 import { pick } from "@web/core/utils/objects";
 import { SearchBar } from "@web/search/search_bar/search_bar";
-
 class Partner extends models.Model {
     name = fields.Char();
     bar = fields.Many2one({ relation: "partner" });
@@ -1083,27 +1080,27 @@ test("search a property", async () => {
     keyDown("ArrowRight");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("Search Properties");
-    expect(queryAll(".fa-caret-down", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-down").toHaveCount(1);
     // move on the many2one property
     keyDown("ArrowRight");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
     // move on the many2many property
     keyDown("ArrowDown");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partners (Bar 1)");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
     // move on the many2one property again
     keyDown("ArrowUp");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
     // unfold the many2one
     keyDown("ArrowRight");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-down", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-down").toHaveCount(1);
     // select the first many2one
     keyDown("ArrowRight");
     await animationFrame();
@@ -1112,22 +1109,22 @@ test("search a property", async () => {
     keyDown("ArrowLeft");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-down", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-down").toHaveCount(1);
     // fold the parent
     keyDown("ArrowLeft");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
     // go up on the properties field
     keyDown("ArrowLeft");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("Search Properties");
-    expect(queryAll(".fa-caret-down", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-down").toHaveCount(1);
     // fold the properties field
     keyDown("ArrowLeft");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("Search Properties");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
 });
 
 test("search a property: definition record id in the context", async () => {
@@ -1777,14 +1774,10 @@ test("subitems have a load more item if there is more records available", async 
     await editSearch("Home");
     await contains(".o_expand").click();
     await expect(".o_searchview_autocomplete li.o_menu_item.o_indent").toHaveCount(8 + 1);
-    await expect(queryLast(".o_searchview_autocomplete li.o_menu_item.o_indent")).toHaveText(
-        "Load more"
-    );
-    await contains(queryLast(".o_searchview_autocomplete li.o_menu_item.o_indent")).click();
+    await expect(".o_searchview_autocomplete li.o_menu_item.o_indent:last").toHaveText("Load more");
+    await contains(".o_searchview_autocomplete li.o_menu_item.o_indent:last").click();
     await expect(".o_searchview_autocomplete li.o_menu_item.o_indent").toHaveCount(8 + 8 + 1);
-    await expect(queryLast(".o_searchview_autocomplete li.o_menu_item.o_indent")).toHaveText(
-        "Load more"
-    );
+    await expect(".o_searchview_autocomplete li.o_menu_item.o_indent:last").toHaveText("Load more");
 });
 
 test("subitems do not have a load more item if there is no more records available", async () => {

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { check, click, press, queryAll, queryOne, uncheck } from "@odoo/hoot-dom";
+import { check, click, press, uncheck } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -90,39 +90,38 @@ test("boolean field in editable list view", async () => {
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input:checked`).toHaveCount(4);
 
     // Edit a line
-    let cell = queryAll`tr.o_data_row td:not(.o_list_record_selector)`[0];
-    expect(queryOne(`.o-checkbox input`, { root: cell })).toBeChecked();
-    expect(queryOne(`.o-checkbox input`, { root: cell })).not.toBeEnabled();
+    const cell = `tr.o_data_row td:not(.o_list_record_selector):first`;
+    expect(`${cell} .o-checkbox input:only`).toBeChecked();
+    expect(`${cell} .o-checkbox input:only`).not.toBeEnabled();
 
-    click(`.o-checkbox`, { root: cell });
+    click(`${cell} .o-checkbox`);
     await animationFrame();
     expect(`tr.o_data_row:nth-child(1)`).toHaveClass("o_selected_row", {
         message: "the row is now selected, in edition",
     });
-    expect(queryOne(`.o-checkbox input`, { root: cell })).not.toBeChecked();
-    expect(queryOne(`.o-checkbox input`, { root: cell })).toBeEnabled();
+    expect(`${cell} .o-checkbox input:only`).not.toBeChecked();
+    expect(`${cell} .o-checkbox input:only`).toBeEnabled();
 
-    click(`.o-checkbox`, { root: cell });
+    click(`${cell} .o-checkbox`);
     click(cell);
     await animationFrame();
-    expect(queryOne(`.o-checkbox input`, { root: cell })).toBeChecked();
-    expect(queryOne(`.o-checkbox input`, { root: cell })).toBeEnabled();
+    expect(`${cell} .o-checkbox input:only`).toBeChecked();
+    expect(`${cell} .o-checkbox input:only`).toBeEnabled();
 
-    click(`.o-checkbox`, { root: cell });
+    click(`${cell} .o-checkbox`);
     await animationFrame();
 
     click(`.o_list_button_save`);
     await animationFrame();
-    cell = queryAll`tr.o_data_row td:not(.o_list_record_selector)`[0];
-    expect(queryOne(`.o-checkbox input`, { root: cell })).not.toBeChecked();
-    expect(queryOne(`.o-checkbox input`, { root: cell })).not.toBeEnabled();
+    expect(`${cell} .o-checkbox input:only`).not.toBeChecked();
+    expect(`${cell} .o-checkbox input:only`).not.toBeEnabled();
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input`).toHaveCount(5);
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input:checked`).toHaveCount(3);
 
     // Fake-check the checkbox
     click(cell);
     await animationFrame();
-    click(`.o-checkbox`, { root: cell });
+    click(`${cell} .o-checkbox`);
     await animationFrame();
 
     click(`.o_list_button_save`);

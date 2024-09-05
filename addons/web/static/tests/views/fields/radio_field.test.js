@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryFirst, queryLast } from "@odoo/hoot-dom";
+import { click, queryFirst, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -134,7 +134,7 @@ test("radio field on a selection in a new record", async () => {
     expect(".o_field_radio").toHaveText("Red\nBlack");
 
     // click on 2nd option
-    click(queryLast("input.o_radio_input"));
+    click("input.o_radio_input:eq(1)");
     await animationFrame();
 
     await clickSave();
@@ -195,17 +195,17 @@ test("radio field has o_horizontal or o_vertical class", async () => {
         message: "should have o_vertical class",
     });
 
-    const verticalRadio = queryFirst(".o_field_radio > div.o_vertical");
-    const elementT = queryFirst(".o_radio_item", { root: verticalRadio });
-    const elementB = queryLast(".o_radio_item", { root: verticalRadio });
-    expect(elementT.getBoundingClientRect().right).toBe(elementB.getBoundingClientRect().right);
+    const verticalRadio = ".o_field_radio > div.o_vertical:first";
+    const rectT = queryRect(`${verticalRadio} .o_radio_item:first`);
+    const rectB = queryRect(`${verticalRadio} .o_radio_item:last`);
+    expect(rectT.right).toBe(rectB.right);
     expect(".o_field_radio > div.o_horizontal").toHaveCount(1, {
         message: "should have o_horizontal class",
     });
-    const horizontalRadio = queryFirst(".o_field_radio > div.o_horizontal");
-    const elementL = queryFirst(".o_radio_item", { root: horizontalRadio });
-    const elementR = queryLast(".o_radio_item", { root: horizontalRadio });
-    expect(elementL.getBoundingClientRect().top).toBe(elementR.getBoundingClientRect().top);
+    const horizontalRadio = ".o_field_radio > div.o_horizontal:first";
+    const rectL = queryRect(`${horizontalRadio} .o_radio_item:first`);
+    const rectR = queryRect(`${horizontalRadio} .o_radio_item:last`);
+    expect(rectL.top).toBe(rectR.top);
 });
 
 test("radio field with numerical keys encoded as strings", async () => {
@@ -232,7 +232,7 @@ test("radio field with numerical keys encoded as strings", async () => {
     expect(".o_field_widget").toHaveText("Red\nBlack");
     expect(".o_radio_input:checked").toHaveCount(0, { message: "no value should be checked" });
 
-    click(queryLast("input.o_radio_input"));
+    click("input.o_radio_input:last");
     await animationFrame();
     await clickSave();
 

@@ -3,7 +3,7 @@
 import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoot_dom_utils";
 
 /**
- * @typedef {{
+ * @typedef {number | [number, number] | {
  *  w?: number;
  *  h?: number;
  *  width?: number;
@@ -11,7 +11,7 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  * }} Dimensions
  *
  * @typedef {{
- *  parent?: Node;
+ *  root?: Target;
  *  tabbable?: boolean;
  * }} FocusableOptions
  *
@@ -24,18 +24,20 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  * @typedef {{
  *  inline: boolean;
  *  level: number;
- *  value: {
- *      close?: string;
- *      open?: string;
- *      textContent?: string;
- *  };
+ *  value: MarkupLayerValue;
  * }} MarkupLayer
+ *
+ * @typedef {{
+ *  close?: string;
+ *  open?: string;
+ *  textContent?: string;
+ * }} MarkupLayerValue
  *
  * @typedef {(node: Node, selector: string) => Node[]} NodeGetter
  *
  * @typedef {string | string[] | number | boolean | File[]} NodeValue
  *
- * @typedef {{
+ * @typedef {number | [number, number] | {
  *  x?: number;
  *  y?: number;
  *  left?: number;
@@ -44,6 +46,8 @@ import { HootDomError, getTag, isFirefox, isIterable, parseRegExp } from "../hoo
  *  clientY?: number;
  *  pageX?: number;
  *  pageY?: number;
+ *  screenX?: number;
+ *  screenY?: number;
  * }} Position
  *
  * @typedef {(content: string) => (node: Node, index: number, nodes: Node[]) => boolean | Node} PseudoClassPredicateBuilder
@@ -255,13 +259,6 @@ const generateStringFromLayers = (layers, tabSize) => {
 };
 
 /**
- * @param {string} string
- */
-const getStringContent = (string) => {
-    return string.match(R_QUOTE_CONTENT)?.[2] || string;
-};
-
-/**
  * @param {Node} node
  * @returns {NodeValue}
  */
@@ -276,6 +273,11 @@ const getNodeContent = (node) => {
     }
     return getNodeText(node);
 };
+
+/**
+ * @param {string} string
+ */
+const getStringContent = (string) => string.match(R_QUOTE_CONTENT)?.[2] || string;
 
 /**
  * @param {string} [char]
@@ -525,6 +527,32 @@ const matchesQueryPart = (query, width, height) => {
     }
 
     return query.startsWith("not") ? !result : result;
+};
+
+/**
+ * @template T
+ * @param {T} value
+ * @param {(keyof T)[]} propsA
+ * @param {(keyof T)[]} propsB
+ * @returns {[number, number]}
+ */
+const parseNumberTuple = (value, propsA, propsB) => {
+    let result = [];
+    if (value && typeof value === "object") {
+        if (isIterable(value)) {
+            [result[0], result[1]] = [...value];
+        } else {
+            for (const prop of propsA) {
+                result[0] ??= value[prop];
+            }
+            for (const prop of propsB) {
+                result[1] ??= value[prop];
+            }
+        }
+    } else {
+        result = [value, value];
+    }
+    return result.map($parseFloat);
 };
 
 /**
@@ -799,7 +827,6 @@ export const FOCUSABLE_SELECTOR = [
     "input:enabled",
     "select:enabled",
     "textarea:enabled",
-    "[draggable]",
     "[tabindex]",
     "[contenteditable=true]",
 ].join(",");
@@ -1036,7 +1063,7 @@ export function getDocument(node) {
  *  getFocusableElements();
  */
 export function getFocusableElements(options) {
-    const parent = options?.parent || getDefaultRoot();
+    const parent = options?.root || getDefaultRoot();
     if (typeof parent.querySelectorAll !== "function") {
         return [];
     }
@@ -1057,22 +1084,6 @@ export function getFocusableElements(options) {
 }
 
 /**
- * @param {Dimensions} dimensions
- * @returns {number}
- */
-export function getHeight(dimensions) {
-    if (dimensions) {
-        for (const prop of ["h", "height"]) {
-            const value = $parseFloat(dimensions[prop]);
-            if (!$isNaN(value)) {
-                return value;
-            }
-        }
-    }
-    return NaN;
-}
-
-/**
  * Returns the next focusable element after the current active element if it is
  * contained in the given parent.
  *
@@ -1083,7 +1094,7 @@ export function getHeight(dimensions) {
  *  getPreviousFocusableElement();
  */
 export function getNextFocusableElement(options) {
-    const parent = options?.parent || getDefaultRoot();
+    const parent = options?.root || getDefaultRoot();
     const focusableEls = getFocusableElements(parent, options);
     const index = focusableEls.indexOf(getActiveElement(parent));
     return focusableEls[index + 1] || null;
@@ -1201,7 +1212,7 @@ export function getParentFrame(node) {
  *  getPreviousFocusableElement();
  */
 export function getPreviousFocusableElement(options) {
-    const parent = options?.parent || getDefaultRoot();
+    const parent = options?.root || getDefaultRoot();
     const focusableEls = getFocusableElements(parent, options);
     const index = focusableEls.indexOf(getActiveElement(parent));
     return index < 0 ? focusableEls.at(-1) : focusableEls[index - 1] || null;
@@ -1217,59 +1228,11 @@ export function getStyle(node) {
 }
 
 /**
- * @param {Dimensions} dimensions
- * @returns {number}
- */
-export function getWidth(dimensions) {
-    if (dimensions) {
-        for (const prop of ["w", "width"]) {
-            const value = $parseFloat(dimensions[prop]);
-            if (!$isNaN(value)) {
-                return value;
-            }
-        }
-    }
-    return NaN;
-}
-
-/**
  * @param {Node} [node]
  * @returns {Window}
  */
 export function getWindow(node) {
     return getDocument(node).defaultView;
-}
-
-/**
- * @param {Position} position
- * @returns {number}
- */
-export function getX(position) {
-    if (position) {
-        for (const prop of ["x", "left", "clientX", "pageX", "screenX"]) {
-            const value = $parseFloat(position[prop]);
-            if (!$isNaN(value)) {
-                return value;
-            }
-        }
-    }
-    return NaN;
-}
-
-/**
- * @param {Position} position
- * @returns {number}
- */
-export function getY(position) {
-    if (position) {
-        for (const prop of ["y", "top", "clientY", "pageY", "screenY"]) {
-            const value = $parseFloat(position[prop]);
-            if (!$isNaN(value)) {
-                return value;
-            }
-        }
-    }
-    return NaN;
 }
 
 /**
@@ -1372,7 +1335,7 @@ export function isEventTarget(target) {
  * @returns {boolean}
  */
 export function isFocusable(target, options) {
-    const nodes = queryAll(target, { root: options?.parent });
+    const nodes = queryAll(...arguments);
     return nodes.length && nodes.every((node) => isNodeFocusable(node, options));
 }
 
@@ -1549,7 +1512,7 @@ export function observe(target, callback) {
  * @returns {[number, number]}
  */
 export function parseDimensions(dimensions) {
-    return [getWidth(dimensions), getHeight(dimensions)];
+    return parseNumberTuple(dimensions, ["width", "w"], ["height", "h"]);
 }
 
 /**
@@ -1557,7 +1520,11 @@ export function parseDimensions(dimensions) {
  * @returns {[number, number]}
  */
 export function parsePosition(position) {
-    return [getX(position), getY(position)];
+    return parseNumberTuple(
+        position,
+        ["x", "left", "clientX", "pageX", "screenX"],
+        ["y", "top", "clientY", "pageY", "screenY"]
+    );
 }
 
 /**
@@ -1648,7 +1615,7 @@ export function queryAll(target, options) {
     let selector;
 
     if (typeof target === "string") {
-        nodes = filterUniqueNodes([root || getDefaultRoot()]);
+        nodes = root ? queryAll(root) : [getDefaultRoot()];
         selector = target.trim();
         // HTMLSelectElement is iterable ¯\_(ツ)_/¯
     } else if (isIterable(target) && !isNode(target)) {
@@ -1750,7 +1717,7 @@ export function queryAllProperties(target, property, options) {
  * @returns {DOMRect[]}
  */
 export function queryAllRects(target, options) {
-    return queryAll(target, options).map(getNodeRect);
+    return queryAll(...arguments).map(getNodeRect);
 }
 
 /**
@@ -1762,7 +1729,7 @@ export function queryAllRects(target, options) {
  * @returns {string[]}
  */
 export function queryAllTexts(target, options) {
-    return queryAll(target, options).map((node) => getNodeText(node, options));
+    return queryAll(...arguments).map((node) => getNodeText(node, options));
 }
 
 /**
@@ -1774,7 +1741,7 @@ export function queryAllTexts(target, options) {
  * @returns {NodeValue[]}
  */
 export function queryAllValues(target, options) {
-    return queryAll(target, options).map(getNodeValue);
+    return queryAll(...arguments).map(getNodeValue);
 }
 
 /**
@@ -1786,19 +1753,7 @@ export function queryAllValues(target, options) {
  * @returns {Element | null}
  */
 export function queryFirst(target, options) {
-    return queryAll(target, options)[0] || null;
-}
-
-/**
- * Performs a {@link queryAll} with the given arguments and returns the last result
- * or `null`.
- *
- * @param {Target} target
- * @param {QueryOptions} options
- * @returns {Element | null}
- */
-export function queryLast(target, options) {
-    return queryAll(target, options).at(-1) || null;
+    return queryAll(...arguments)[0] || null;
 }
 
 /**
@@ -1820,7 +1775,7 @@ export function queryOne(target, options) {
             `cannot call \`queryOne\` with 'exact'=${options.exact}: did you mean to use \`queryAll\`?`
         );
     }
-    return queryAll(target, { exact: 1, ...options })[0];
+    return queryAll(target, { ...options, exact: 1 })[0];
 }
 
 /**
@@ -1837,7 +1792,7 @@ export function queryOne(target, options) {
  * @returns {DOMRect}
  */
 export function queryRect(target, options) {
-    return getNodeRect(queryOne(target, options), options);
+    return getNodeRect(queryOne(...arguments), options);
 }
 
 /**
@@ -1849,7 +1804,7 @@ export function queryRect(target, options) {
  * @returns {string}
  */
 export function queryText(target, options) {
-    return getNodeText(queryOne(target, options), options);
+    return getNodeText(queryOne(...arguments), options);
 }
 
 /**
@@ -1861,7 +1816,7 @@ export function queryText(target, options) {
  * @returns {NodeValue}
  */
 export function queryValue(target, options) {
-    return getNodeValue(queryOne(target, options));
+    return getNodeValue(queryOne(...arguments));
 }
 
 /**
@@ -1913,7 +1868,7 @@ export function toSelector(node, options) {
  *  button.click();
  */
 export function waitFor(target, options) {
-    return waitUntil(() => queryFirst(target, options), {
+    return waitUntil(() => queryFirst(...arguments), {
         message: `Could not find elements matching "${target}" within %timeout% milliseconds`,
         ...options,
     });
@@ -1934,7 +1889,7 @@ export function waitForNone(target, options) {
     let count = 0;
     return waitUntil(
         () => {
-            count = queryAll(target, options).length;
+            count = queryAll(...arguments).length;
             return !count;
         },
         {

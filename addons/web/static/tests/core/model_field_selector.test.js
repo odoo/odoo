@@ -1,5 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { queryAllTexts, queryLast } from "@odoo/hoot-dom";
+import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
@@ -122,7 +122,7 @@ test("creating a field chain from scratch", async () => {
     expect(queryAllTexts(".o_model_field_selector_popover_item_name").at(-1)).toBe("Product Name", {
         message: "the name of the last suggestion should be 'Product Name'",
     });
-    await contains(queryLast(".o_model_field_selector_popover_item_name")).click();
+    await contains(".o_model_field_selector_popover_item_name:last").click();
     expect(".o_model_field_selector_popover").toHaveCount(0);
     expect(getValueFromDOM()).toBe("Product -> Product Name");
     expect.verifySteps(["update: product_id.name"]);
@@ -141,7 +141,7 @@ test("creating a field chain from scratch", async () => {
     await contains(
         ".o_model_field_selector_popover .o_model_field_selector_popover_relation_icon"
     ).click();
-    await contains(queryLast(".o_model_field_selector_popover_item_name")).click();
+    await contains(".o_model_field_selector_popover_item_name:last").click();
     expect(".o_model_field_selector_popover").toHaveCount(0);
     expect(getValueFromDOM()).toBe("Product -> Product Name");
     expect.verifySteps(["update: product_id.name"]);
@@ -424,7 +424,7 @@ test("cannot follow relations", async () => {
         "Product",
     ]);
     expect(".o_model_field_selector_popover_relation_icon").toHaveCount(0);
-    await contains(queryLast(".o_model_field_selector_popover_item_name")).click();
+    await contains(".o_model_field_selector_popover_item_name:last").click();
     expect(".o_popover").toHaveCount(0);
     expect(getModelFieldSelectorValues()).toEqual(["Product"]);
 });
