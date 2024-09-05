@@ -1,7 +1,8 @@
 import { useHover } from "@mail/utils/common/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component, onMounted, onPatched, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -13,12 +14,19 @@ export class MessageReactionList extends Component {
 
     setup() {
         super.setup();
+        this.loadEmoji = loadEmoji;
         this.store = useState(useService("mail.store"));
         this.ui = useService("ui");
         this.hover = useHover(["reactionButton", "reactionList*"], {
             onHover: () => (this.preview.isOpen = true),
             onAway: () => (this.preview.isOpen = false),
         });
+        this.state = useState({ emojiLoaded: Boolean(loader.loaded) });
+        if (!loader.loaded) {
+            loader.onEmojiLoaded(() => (this.state.emojiLoaded = true));
+        }
+        onMounted(() => void this.state.emojiLoaded);
+        onPatched(() => void this.state.emojiLoaded);
         this.preview = useDropdownState();
     }
 
@@ -28,18 +36,22 @@ export class MessageReactionList extends Component {
         const personNames = reaction.personas
             .map(({ name, displayName }) => name || displayName)
             .slice(0, 3);
+        const shortcode = loader.loaded?.emojiValueToShortcode?.[emoji] ?? "?";
         switch (count) {
             case 1:
-                return _t("%(emoji)s reacted by %(person)s", { emoji, person: personNames[0] });
+                return _t("%(emoji)s reacted by %(person)s", {
+                    emoji: shortcode,
+                    person: personNames[0],
+                });
             case 2:
                 return _t("%(emoji)s reacted by %(person1)s and %(person2)s", {
-                    emoji,
+                    emoji: shortcode,
                     person1: personNames[0],
                     person2: personNames[1],
                 });
             case 3:
                 return _t("%(emoji)s reacted by %(person1)s, %(person2)s, and %(person3)s", {
-                    emoji,
+                    emoji: shortcode,
                     person1: personNames[0],
                     person2: personNames[1],
                     person3: personNames[2],
@@ -48,7 +60,7 @@ export class MessageReactionList extends Component {
                 return _t(
                     "%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and 1 other",
                     {
-                        emoji,
+                        emoji: shortcode,
                         person1: personNames[0],
                         person2: personNames[1],
                         person3: personNames[2],
@@ -59,7 +71,7 @@ export class MessageReactionList extends Component {
                     "%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and %(count)s others",
                     {
                         count: count - 3,
-                        emoji,
+                        emoji: shortcode,
                         person1: personNames[0],
                         person2: personNames[1],
                         person3: personNames[2],
