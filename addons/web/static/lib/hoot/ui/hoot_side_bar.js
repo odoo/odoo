@@ -134,7 +134,7 @@ export class HootSideBar extends Component {
             t-on-click="onClick"
         >
             <form class="flex p-2 items-center gap-1">
-                <div class="hoot-search-bar border rounded bg-base">
+                <div class="hoot-search-bar border rounded bg-base w-full">
                     <input
                         class="w-full rounded px-2 py-1 outline-none"
                         type="search"
