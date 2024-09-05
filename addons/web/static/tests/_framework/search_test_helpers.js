@@ -133,10 +133,8 @@ export async function toggleMenuItem(label) {
  * @param {string} optionLabel
  */
 export async function toggleMenuItemOption(itemLabel, optionLabel) {
-    const { parentElement } = queryOne`.o_menu_item:contains(/^${itemLabel}$/)`;
-    const target = queryOne(`.o_item_option:contains(/^${optionLabel}$/)`, {
-        root: parentElement,
-    });
+    const { parentElement: root } = queryOne`.o_menu_item:contains(/^${itemLabel}$/)`;
+    const target = queryOne(`.o_item_option:contains(/^${optionLabel}$/)`, { root });
     if (target.classList.contains("dropdown-toggle")) {
         await contains(target).hover();
     } else {
@@ -156,10 +154,10 @@ export function isItemSelected(label) {
  * @param {string} optionLabel
  */
 export function isOptionSelected(itemLabel, optionLabel) {
-    const { parentElement } = queryOne`.o_menu_item:contains(/^${itemLabel}$/)`;
-    return queryOne(`.o_item_option:contains(/^${optionLabel}$/)`, {
-        root: parentElement,
-    }).classList.contains("selected");
+    const { parentElement: root } = queryOne`.o_menu_item:contains(/^${itemLabel}$/)`;
+    return queryOne(`.o_item_option:contains(/^${optionLabel}$/)`, { root }).classList.contains(
+        "selected"
+    );
 }
 
 export function getMenuItemTexts() {

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryOne, scroll } from "@odoo/hoot-dom";
+import { queryOne, scroll } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { getPickerCell, zoomOut } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -283,10 +283,9 @@ test.tags("desktop")("multi edition of date field in list view: clear date in in
             </tree>`,
     });
 
-    const rows = queryAll(".o_data_row");
-    await contains(".o_list_record_selector input", { root: rows[0] }).click();
-    await contains(".o_list_record_selector input", { root: rows[1] }).click();
-    await contains(".o_data_cell", { root: rows[0] }).click();
+    await contains(".o_data_row:eq(0) .o_list_record_selector input").click();
+    await contains(".o_data_row:eq(1) .o_list_record_selector input").click();
+    await contains(".o_data_row:eq(0) .o_data_cell").click();
 
     expect(".o_field_date input").toHaveCount(1);
     await fieldInput("date").clear();
