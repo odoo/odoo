@@ -161,6 +161,13 @@
                 border-radius: $btn-border-radius;
                 border: $border-width solid $border-color;
                 background-color: $carousel-dark-indicator-active-bg;
+                filter: $carousel-dark-control-icon-filter;
+            }
+
+            .carousel-dark {
+                .carousel-control-prev-icon, .carousel-control-next-icon {
+                    filter: none;
+                }
             }
         }
 
