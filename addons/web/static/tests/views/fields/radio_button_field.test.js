@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryLast } from "@odoo/hoot-dom";
+import { click, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { clickSave, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
@@ -28,7 +28,7 @@ test("radio button field on a selection in a new record", async () => {
     expect(queryAllTexts("label")).toEqual(["Red", "Black"]);
 
     // click on 2nd option
-    click(queryLast("input.btn-check"));
+    click("input.btn-check:eq(1)");
     await animationFrame();
 
     await clickSave();

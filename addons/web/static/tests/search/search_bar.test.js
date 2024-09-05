@@ -10,7 +10,6 @@ import {
     queryAllTexts,
     queryAllValues,
     queryFirst,
-    queryOne,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
@@ -1081,27 +1080,27 @@ test("search a property", async () => {
     keyDown("ArrowRight");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("Search Properties");
-    expect(queryAll(".fa-caret-down", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-down").toHaveCount(1);
     // move on the many2one property
     keyDown("ArrowRight");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
     // move on the many2many property
     keyDown("ArrowDown");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partners (Bar 1)");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
     // move on the many2one property again
     keyDown("ArrowUp");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
     // unfold the many2one
     keyDown("ArrowRight");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-down", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-down").toHaveCount(1);
     // select the first many2one
     keyDown("ArrowRight");
     await animationFrame();
@@ -1110,22 +1109,22 @@ test("search a property", async () => {
     keyDown("ArrowLeft");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-down", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-down").toHaveCount(1);
     // fold the parent
     keyDown("ArrowLeft");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("My Partner (Bar 1)");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
     // go up on the properties field
     keyDown("ArrowLeft");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("Search Properties");
-    expect(queryAll(".fa-caret-down", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-down").toHaveCount(1);
     // fold the properties field
     keyDown("ArrowLeft");
     await animationFrame();
     expect(`.o_menu_item.focus`).toHaveText("Search Properties");
-    expect(queryAll(".fa-caret-right", { root: queryOne`.o_menu_item.focus` })).toHaveCount(1);
+    expect(".o_menu_item.focus:only .fa-caret-right").toHaveCount(1);
 });
 
 test("search a property: definition record id in the context", async () => {
