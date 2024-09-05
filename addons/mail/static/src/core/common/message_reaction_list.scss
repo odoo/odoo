@@ -1,5 +1,7 @@
-.o-mail-MessageReaction:not(.o-selfReacted) {
-    &:hover {
+.o-mail-MessageReaction {
+    line-height: 1.25;
+    
+    &:not(.o-selfReacted):hover {
         --border-color: #{$primary};
     }
 }

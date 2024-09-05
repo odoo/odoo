@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="mail.MessageReactions">
-    <div class="o-mail-MessageReactions position-relative d-flex flex-wrap"
+    <div class="o-mail-MessageReactions position-relative d-flex flex-wrap mt-n1"
         t-att-class="{
             'flex-row-reverse me-3': env.inChatWindow and env.alignedRight,
             'ms-3': !(env.inChatWindow and env.alignedRight) and (props.message.is_discussion),
             'o-emojiPickerOpen': emojiPicker.isOpen,
-        }"
-        t-attf-class="{{ props.message.is_discussion ? 'mt-n1' : 'mt-1' }}">
+        }">
         <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
             <MessageReactionList message="this.props.message" openReactionMenu="this.props.openReactionMenu" reaction="reaction"/>
         </t>
