@@ -932,3 +932,75 @@ class TestProcurement(TestMrpCommon):
         ]
         self.assertRecordValues(mo.move_raw_ids, expected_vals)
         self.assertRecordValues(mo.picking_ids.move_ids, expected_vals)
+
+    def test_consecutive_pickings(self):
+        """ Test that when we generate several procurements for a product in a raw
+            we do not create demand for the same quantities several times """
+
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+
+        # Create a product with manufacture route
+        product_1 = self.env['product.product'].create({
+            'name': 'AAA',
+            'route_ids': [(6, 0, [route_manufacture.id])],
+        })
+
+        component_1 = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'consu',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_1.id, 'product_qty': 1}),
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'OP1', 'workcenter_id': self.workcenter_2.id})
+            ],
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product_1.id,
+            'product_min_qty': 0.0,
+            'product_max_qty': 0.0,
+            'route_id': route_manufacture.id,
+        })
+
+        # Create 3 pickings and confirm them one by one
+        bob = self.env['res.partner'].create({
+            'name': 'Bob',
+        })
+
+        def delta_hours(td):
+            return td.days * 24 + td.seconds // 3600
+
+        mo = False
+        for i in range(1, 4):
+            picking = self.env['stock.picking'].create({
+                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'partner_id': bob.id,
+                'picking_type_id': self.env.ref('stock.picking_type_out').id,
+                'move_ids': [(0, 0, {
+                    'state': 'draft',
+                    'location_id': self.env.ref('stock.stock_location_stock').id,
+                    'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                    'name': 'picking move',
+                    'product_id': product_1.id,
+                    'product_uom_qty': 15,
+                    'product_uom': self.uom_unit.id,
+                })],
+            })
+            picking.action_confirm()
+            if not mo:
+                mo = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
+            self.assertEqual(delta_hours(mo.date_finished - mo.date_start), i * 15)
+
+        # Check the generated MO
+        self.assertEqual(mo.product_qty, 45)
