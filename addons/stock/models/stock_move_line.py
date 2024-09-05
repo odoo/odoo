@@ -774,12 +774,11 @@ class StockMoveLine(models.Model):
                 break
 
         move_line_to_unlink = self.env['stock.move.line'].browse(to_unlink_candidate_ids)
-        if self.env['ir.config_parameter'].sudo().get_param('stock.break_mto'):
-            for m in (move_line_to_unlink.move_id | move_to_reassign):
-                m.write({
-                    'procure_method': 'make_to_stock',
-                    'move_orig_ids': [Command.clear()]
-                })
+        for m in (move_line_to_unlink.move_id | move_to_reassign):
+            m.write({
+                'procure_method': 'make_to_stock',
+                'move_orig_ids': [Command.clear()]
+            })
         move_line_to_unlink.unlink()
         move_to_reassign._action_assign()
 
