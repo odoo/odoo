@@ -35109,6 +35109,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.selectedFigureId = null;
                     break;
             }
+        }
+        finalize() {
             /** Any change to the selection has to be  reflected in the selection processor. */
             this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
         }
@@ -37108,7 +37110,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         handle(cmd) {
             var _a;
-            this.cleanViewports();
             switch (cmd.type) {
                 case "START":
                     this.selection.observe(this, {
@@ -37152,6 +37153,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if ("content" in cmd || "format" in cmd || ((_a = cmd.style) === null || _a === void 0 ? void 0 : _a.fontSize) !== undefined) {
                         this.sheetsWithDirtyViewports.add(cmd.sheetId);
                     }
+                    break;
+                case "DELETE_SHEET":
+                    this.cleanViewports();
                     break;
                 case "ACTIVATE_SHEET":
                     this.setViewports();
@@ -37469,6 +37473,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         resetSheetViews() {
+            this.cleanViewports();
             for (let sheetId of Object.keys(this.viewports)) {
                 const position = this.getters.getSheetPosition(sheetId);
                 this.resetViewports(sheetId);
@@ -41854,30 +41859,27 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         const isExported = tokens
             .filter((tk) => tk.type === "FUNCTION")
             .every((tk) => functions[tk.value.toUpperCase()].isExported);
+        const type = getCellType(cell.value);
         if (isExported) {
-            let cycle = escapeXml ``;
             const XlsxFormula = adaptFormulaToExcel(formula);
-            // hack for cycles : if we don't set a value (be it 0 or #VALUE!), it will appear as invisible on excel,
-            // Making it very hard for the client to find where the recursion is.
-            if (cell.value === CellErrorType.CircularDependency) {
-                attrs.push(["t", "str"]);
-                cycle = escapeXml /*xml*/ `<v>${cell.value}</v>`;
-            }
-            node = escapeXml /*xml*/ `<f> ${XlsxFormula} </f> ${cycle}`;
+            node = escapeXml /*xml*/ `
+      <f>
+        ${XlsxFormula}
+      </f>
+      ${escapeXml /*xml*/ `<v>${cell.value}</v>`}
+    `;
+            attrs.push(["t", type]);
             return { attrs, node };
         }
         else {
-            // Shouldn't we always output the value then ?
-            const value = cell.value;
             // If the cell contains a non-exported formula and that is evaluates to
             // nothing* ,we don't export it.
             // * non-falsy value are relevant and so are 0 and FALSE, which only leaves
             // the empty string.
-            if (value === "")
+            if (cell.value === "")
                 return undefined;
-            const type = getCellType(value);
             attrs.push(["t", type]);
-            node = escapeXml /*xml*/ `<v>${value}</v>`;
+            node = escapeXml /*xml*/ `<v>${cell.value}</v>`;
             return { attrs, node };
         }
     }
@@ -43440,9 +43442,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.51';
-    __info__.date = '2024-08-19T08:14:53.311Z';
-    __info__.hash = '2b60022';
+    __info__.version = '16.0.52';
+    __info__.date = '2024-09-05T12:00:03.412Z';
+    __info__.hash = '2d666d7';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
