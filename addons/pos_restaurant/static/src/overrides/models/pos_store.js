@@ -22,7 +22,6 @@ patch(PosStore.prototype, {
      * @override
      */
     async setup() {
-        this.orderToTransferUuid = null; // table transfer feature
         this.isEditMode = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
@@ -282,7 +281,6 @@ patch(PosStore.prototype, {
             const orders = this.getTableOrders(table.id);
             if (orders.length > 0) {
                 this.set_order(orders[0]);
-                this.orderToTransferUuid = null;
                 const props = {};
                 if (orders[0].get_screen_data().name === "PaymentScreen") {
                     props.orderUuid = orders[0].uuid;
@@ -321,11 +319,15 @@ patch(PosStore.prototype, {
     tableHasOrders(table) {
         return Boolean(table.getOrder());
     },
-    async transferOrder(destinationTable) {
-        const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
+    getTableFromElement(el) {
+        return this.models["restaurant.table"].get(
+            [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
+        );
+    },
+    async transferOrder(orderUuid, destinationTable) {
+        const order = this.models["pos.order"].getBy("uuid", orderUuid);
         const originalTable = order.table_id;
         this.loadingOrderState = false;
-        this.orderToTransferUuid = null;
         this.alert.dismiss();
         if (destinationTable.id === originalTable?.id) {
             this.set_order(order);
