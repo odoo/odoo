@@ -86,7 +86,7 @@
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
                 <input type="hidden" name="url_param" t-att-value="request.params.get('url_param')"/>
-                <div class="col-3">
+                <div class="col-12 col-sm-3">
                     <div class="card o_card_people">
                         <div class="card-body">
                             <img class="o_wforum_avatar_img w-100 mb-3" t-att-src="website.image_url(user, 'avatar_128')"/>
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-9 mb-3">
+                <div class="col-12 col-sm-9 mb-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
