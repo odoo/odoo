@@ -1,6 +1,7 @@
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
 import { registry } from "@web/core/registry";
 
@@ -8,7 +9,8 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.addOrderline("Desk Organizer", "2"),
 
@@ -129,7 +131,8 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
@@ -146,7 +149,8 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.selectedOrderlineHas("Test Product A", "1.00", "40.00"),
@@ -170,7 +174,8 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product A"),
             ProductScreen.clickDisplayedProduct("Test Product C"),
             PosLoyalty.orderTotalIs("130.00"),
@@ -185,7 +190,8 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.selectedOrderlineHas("Product A", "1.00", "15.00"),
@@ -201,7 +207,8 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),

@@ -28,11 +28,11 @@
                 <button class="button btn btn-lg btn-primary"
                     t-on-click="confirm"
                     t-att-disabled="!env.utils.isValidFloat(state.openingCash)">
-                    Open session
+                    Open Register
                 </button>
                 <button class="backend-button button btn btn-lg btn-secondary"
-                    t-on-click="() => this.pos.closePos()">
-                    Backend
+                    t-on-click="() => this.pos.showLoginScreen()">
+                    Discard
                 </button>
             </t>
         </Dialog>

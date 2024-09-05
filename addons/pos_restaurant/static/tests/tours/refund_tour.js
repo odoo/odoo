@@ -6,6 +6,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_scre
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import { registry } from "@web/core/registry";
 
@@ -13,7 +14,8 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             // Create first order and pay it
             FloorScreen.clickTable("2"),

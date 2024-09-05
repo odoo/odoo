@@ -10,7 +10,8 @@ registry.category("web_tour.tours").add("ChromeTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             Chrome.clickMenuButton(),
             Chrome.clickMenuDropdownOption("Cash In/Out"),
             Dialog.confirm(),
@@ -112,7 +113,8 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),

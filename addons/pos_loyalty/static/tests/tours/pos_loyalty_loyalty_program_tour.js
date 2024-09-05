@@ -1,5 +1,6 @@
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
@@ -10,7 +11,8 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             // Order1: Generates 2 points.
             ProductScreen.addOrderline("Whiteboard Pen", "2"),
@@ -71,6 +73,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             // - He has enough points to purchase a free product but since there is still
             //   no product in the order, reward button should not yet be highlighted.
             // - Furthermore, clicking the reward product should not add it as reward product.
+            Chrome.startPoS(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Test Partner"),
             // No item in the order, so reward button is off.
@@ -134,9 +137,9 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
 
 registry.category("web_tour.tours").add("PosLoyaltyChangeRewardQty", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
+            Chrome.startPoS(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Test Partner DDD"),
             ProductScreen.addOrderline("Desk Organizer", "1"),
@@ -153,7 +156,8 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             // Generates 10.2 points and use points to get the reward product with zero sale price
             ProductScreen.addOrderline("Desk Organizer", "2"),
@@ -175,7 +179,8 @@ registry.category("web_tour.tours").add("PosLoyaltyPromotion", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
             ProductScreen.addOrderline("Test Product 1", "1.00", "100"),
@@ -187,7 +192,8 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Test Partner"),
@@ -204,10 +210,10 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
 
 registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
     test: true,
-    url: "/pos/web",
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 1"),
             combo.select("Combo Product 4"),

@@ -3,6 +3,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 import { registry } from "@web/core/registry";
 
@@ -45,6 +46,8 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentFailure", {
     test: true,
     steps: () =>
         [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             addProductandPay(),
             Dialog.is({ title: "Failure to generate Payment QR Code" }),
             Dialog.confirm(),
@@ -55,6 +58,8 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
     test: true,
     steps: () =>
         [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             addProductandPay(),
             isQRDisplayedinDialog(),
             Dialog.cancel(),
@@ -78,6 +83,8 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentSwiss", {
     test: true,
     steps: () =>
         [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Hand Bag", "10"),
             ProductScreen.selectedOrderlineHas("Hand Bag", "10.0"),
             ProductScreen.clickPartnerButton(),

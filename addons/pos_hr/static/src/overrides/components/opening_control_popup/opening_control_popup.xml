@@ -2,15 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_hr.OpeningControlPopup" t-inherit="point_of_sale.OpeningControlPopup" t-inherit-mode="extension">
         <xpath expr="//button[hasclass('backend-button')]" position="attributes">
-            <attribute name="t-if">
-                !pos.config.module_pos_hr or pos.employeeIsAdmin
-            </attribute>
-        </xpath>
-        <xpath expr="//button[hasclass('backend-button')]" position="after">
-            <button class="backend-button button btn btn-lg btn-secondary"
-                t-on-click="() => this.pos.showLoginScreen()">
-                Lock
-            </button>
+            <attribute name="t-if">!this.pos.config.module_pos_hr</attribute>
         </xpath>
     </t>
 </templates>

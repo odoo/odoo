@@ -24,7 +24,7 @@ export function loginScreenIsShown() {
     return [
         {
             content: "login screen is shown",
-            trigger: ".login-overlay .screen-login .login-body",
+            trigger: ".login-overlay .screen-login",
         },
     ];
 }

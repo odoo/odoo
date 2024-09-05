@@ -14,7 +14,8 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.clickNewTicket(),
             ProductScreen.addOrderline("Desk Pad", "1", "3"),
@@ -170,7 +171,8 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product Test"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickFiscalPosition("No Tax"),
@@ -194,7 +196,8 @@ registry.category("web_tour.tours").add("LotRefundTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductScreen.enterLotNumber("123456789"),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
@@ -218,7 +221,8 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Sugar"),
             ProductScreen.clickNumpad("0", "."),
             ProductScreen.selectedOrderlineHas("Sugar", "0.00", "0.00"),

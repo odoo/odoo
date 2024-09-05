@@ -16,6 +16,7 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         [
             // Go by default to home category
 
+            Chrome.startPoS(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0", "5.28"),
@@ -130,7 +131,8 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickFiscalPosition("No Tax"),
@@ -147,7 +149,8 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product 1"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickFiscalPosition("Incl. to Incl."),
@@ -167,6 +170,7 @@ registry.category("web_tour.tours").add("FiscalPositionExcl", {
     test: true,
     steps: () =>
         [
+            Chrome.startPoS(),
             ProductScreen.clickDisplayedProduct("Test Product 2"),
             ProductScreen.totalAmountIs("120.00"),
             ProductScreen.clickFiscalPosition("Excl. to Excl."),
@@ -184,8 +188,9 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
     test: true,
     steps: () =>
         [
+            Chrome.startPoS(),
             ProductScreen.enterOpeningAmount("0"),
-            Dialog.confirm("Open session"),
+            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Organizer", "10"), //5.1 per item
             ProductScreen.totalAmountIs("51.00"),
             ProductScreen.clickPayButton(),
@@ -197,7 +202,7 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
             ProductScreen.cashDifferenceIs("-1.00"),
             Dialog.confirm("Close Register"),
             Dialog.confirm("Proceed Anyway", ".btn-primary"),
-            Dialog.confirm("Backend", ".btn-secondary"),
+            Chrome.clickBtn("Backend"),
             ProductScreen.lastClosingCashIs("50.00"),
         ].flat(),
 });
@@ -206,7 +211,8 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Test Product", true, "1.0", "100.0"),
             ProductScreen.totalAmountIs("110.0"),
@@ -218,7 +224,8 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.scan_barcode("0100100"),
             ProductScreen.selectedOrderlineHas("Test Product 1", "1.0", "80.0"),
@@ -239,7 +246,8 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Product A"),
             ProductConfiguratorPopup.isOptionShown("Value 1"),
@@ -254,7 +262,8 @@ registry.category("web_tour.tours").add("TranslateProductNameTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Ouvrir la session"),
+            Chrome.startPoS(),
+            Dialog.confirm(),
             ProductScreen.clickDisplayedProduct("Testez le produit"),
             Chrome.endTour(),
         ].flat(),
@@ -264,7 +273,8 @@ registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.clickNumpad("5"),
             ProductScreen.selectedOrderlineHas("Test Product", "5,00", "7.267,65"),
@@ -276,7 +286,8 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             // Check that the product form is shown.
             Chrome.clickMenuButton(),
@@ -300,7 +311,8 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
             PartnerList.checkContactValues(
                 "John Doe",

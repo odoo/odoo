@@ -11,7 +11,8 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             // New Ticket button should not be in the ticket screen if no table is selected.
             Chrome.clickMenuOption("Orders"),
             TicketScreen.noNewTicketButton(),

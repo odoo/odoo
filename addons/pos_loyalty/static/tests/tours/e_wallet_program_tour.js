@@ -2,6 +2,7 @@ import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util"
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
 import { registry } from "@web/core/registry";
 
@@ -9,7 +10,8 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             // Topup 50$ for partner_aaa
             ProductScreen.clickDisplayedProduct("Top-up eWallet"),
@@ -34,6 +36,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
     test: true,
     steps: () =>
         [
+            Chrome.startPoS(),
             ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
             PosLoyalty.eWalletButtonState({ highlighted: false }),
             ProductScreen.clickPartnerButton(),
@@ -99,7 +102,8 @@ registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
@@ -114,7 +118,8 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
             PosLoyalty.eWalletButtonState({ highlighted: false }),

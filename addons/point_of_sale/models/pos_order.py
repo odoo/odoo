@@ -53,6 +53,7 @@ class PosOrder(models.Model):
         ], limit=1)
         if rescue_session:
             _logger.warning('reusing recovery session %s for saving order %s', rescue_session.name, order['name'])
+            rescue_session.write({'state': 'opened'})
             return rescue_session
 
         _logger.warning('attempting to create recovery session for saving order %s', order['name'])

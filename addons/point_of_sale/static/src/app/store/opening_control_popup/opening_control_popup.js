@@ -33,11 +33,13 @@ export class OpeningControlPopup extends Component {
     }
     confirm() {
         this.pos.session.state = "opened";
-        this.pos.data.call("pos.session", "set_opening_control", [
-            this.pos.session.id,
-            parseFloat(this.state.openingCash),
-            this.state.notes,
-        ]);
+        this.pos.data.call(
+            "pos.session",
+            "set_opening_control",
+            [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
+            {},
+            true
+        );
         this.props.close();
     }
     async openDetailsPopup() {

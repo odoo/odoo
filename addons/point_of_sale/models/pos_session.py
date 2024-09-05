@@ -186,8 +186,8 @@ class PosSession(models.Model):
 
     def delete_opening_control_session(self):
         self.ensure_one()
-        if self.state != 'opening_control':
-            raise UserError(_("You can only cancel a session that is in opening control state."))
+        if self.state != 'opening_control' or len(self.order_ids) > 0:
+            raise UserError(_("You can only cancel a session that is in opening control state and has no orders."))
         self.sudo().unlink()
         return {
             'status': 'success',

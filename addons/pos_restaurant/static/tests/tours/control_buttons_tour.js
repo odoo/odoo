@@ -21,7 +21,8 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
     steps: () =>
         [
             // Test TransferOrderButton
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
             activeTableIs("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
