@@ -12,6 +12,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
+import { getService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -43,13 +44,18 @@ test("bus subscription is refreshed when channel is joined", async () => {
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
     await start();
-    await assertSteps(["subscribe - []"]);
+    const imStatusChannels = [];
+    for (const { type, id } of getService("mail.store").imStatusTrackedPersonas) {
+        const model = type === "partner" ? "res.partner" : "mail.guest";
+        imStatusChannels.unshift(`"odoo-presence-${model}_${id}"`);
+    }
+    await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
     await openDiscuss();
     await assertSteps([]);
     await click(".o-mail-DiscussSidebar i[title='Add or join a channel']");
     await insertText(".o-discuss-ChannelSelector input", "new channel");
     await click(".o-discuss-ChannelSelector-suggestion");
-    await assertSteps(["subscribe - []"]);
+    await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
 });
 
 test("bus subscription is refreshed when channel is left", async () => {
@@ -67,9 +73,14 @@ test("bus subscription is refreshed when channel is left", async () => {
         `${later.year}-${later.month}-${later.day} ${later.hour}:${later.minute}:${later.second}`
     );
     await start();
-    await assertSteps(["subscribe - []"]);
+    const imStatusChannels = [];
+    for (const { type, id } of getService("mail.store").imStatusTrackedPersonas) {
+        const model = type === "partner" ? "res.partner" : "mail.guest";
+        imStatusChannels.unshift(`"odoo-presence-${model}_${id}"`);
+    }
+    await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
     await openDiscuss();
     await assertSteps([]);
     await click("[title='Leave this channel']");
-    await assertSteps(["subscribe - []"]);
+    await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
 });

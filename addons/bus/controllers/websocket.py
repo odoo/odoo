@@ -3,7 +3,6 @@
 import json
 
 from odoo.http import Controller, request, route, SessionExpiredException
-from odoo.addons.base.models.assetsbundle import AssetsBundle
 from ..models.bus import channel_with_db
 from ..websocket import WebsocketConnectionHandler
 
@@ -31,22 +30,17 @@ class WebsocketController(Controller):
 
     @route('/websocket/peek_notifications', type='json', auth='public', cors='*')
     def peek_notifications(self, channels, last, is_first_poll=False):
-        if not all(isinstance(c, str) for c in channels):
-            raise ValueError("bus.Bus only string channels are allowed.")
         if is_first_poll:
             # Used to detect when the current session is expired.
             request.session['is_websocket_session'] = True
         elif 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
-        channels = list(set(
-            channel_with_db(request.db, c)
-            for c in request.env['ir.websocket']._build_bus_channel_list(channels)
-        ))
-        last_known_notification_id = request.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
-        if last > last_known_notification_id:
-            last = 0
-        notifications = request.env['bus.bus']._poll(channels, last)
-        return {'channels': channels, 'notifications': notifications}
+        subscribe_data = request.env["ir.websocket"]._prepare_subscribe_data(channels, last)
+        if bus_target := request.env["ir.websocket"]._get_missed_presences_bus_target():
+            subscribe_data["missed_presences"]._send_presence(bus_target=bus_target)
+        channels_with_db = [channel_with_db(request.db, c) for c in subscribe_data["channels"]]
+        notifications = request.env["bus.bus"]._poll(channels_with_db, subscribe_data["last"])
+        return {"channels": channels_with_db, "notifications": notifications}
 
     @route('/websocket/update_bus_presence', type='json', auth='public', cors='*')
     def update_bus_presence(self, inactivity_period, im_status_ids_by_model):

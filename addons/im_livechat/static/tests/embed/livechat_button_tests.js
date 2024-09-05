@@ -1,6 +1,7 @@
 const test = QUnit.test; // QUnit.test()
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
@@ -35,6 +36,7 @@ test("open/close persisted channel", async () => {
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "How can I help?");
     await triggerHotkey("Enter");
+    await waitUntilSubscribe();
     await assertSteps(["persisted"]);
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await click("[title='Close Chat Window']");
