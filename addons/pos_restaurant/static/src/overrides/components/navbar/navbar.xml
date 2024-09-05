@@ -18,12 +18,12 @@
             <div t-if="pos.config.module_pos_restaurant" class="d-flex flex-shrink-0 gap-1 position-relative">
                <div class="navbar-menu d-flex d-lg-grid gap-1">
                     <t t-set="screen" t-value="pos.mainScreen.component.name" />
-                    <button class="back-button btn btn-lg lh-lg" t-att-class="{'btn-primary': screen === 'FloorScreen' and !pos.orderToTransferUuid}" t-on-click="() => this.onClickPlanButton()">
+                    <button class="back-button btn btn-lg lh-lg" t-att-class="{'btn-primary': screen === 'FloorScreen'}" t-on-click="() => this.onClickPlanButton()">
                         <span t-if="!ui.isSmall">Plan</span>
                         <img t-else="" src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" alt="Floor Plan"/>
                     </button>
-                    <button class="table-free-order-label btn btn-lg lh-lg" t-att-class="{'btn-primary': !['ActionScreen', 'FloorScreen'].includes(screen) or pos.orderToTransferUuid}" t-on-click="() => this.onClickTableTab()">
-                        <span t-if="getOrderToDisplay()" t-esc="getOrderToDisplay().getName().slice(0, 7)"/>
+                    <button class="table-free-order-label btn btn-lg lh-lg" t-att-class="{'btn-primary': !['ActionScreen', 'FloorScreen'].includes(screen)}" t-on-click="() => this.onClickTableTab()">
+                        <span t-if="pos.get_order()" t-esc="pos.get_order().getName().slice(0, 7)"/>
                         <span t-elif="!ui.isSmall">Table</span>
                         <img t-else="" src="/pos_restaurant/static/img/table.svg" class="navbar-icon" alt="Table Selector"/>
                     </button>

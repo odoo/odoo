@@ -46,9 +46,25 @@ patch(ControlButtons.prototype, {
         });
     },
     clickTransferOrder() {
-        this.pos.orderToTransferUuid = this.pos.get_order().uuid;
+        this.dialog.closeAll();
+        this.pos.isOrderTransferMode = true;
+        const orderUuid = this.pos.get_order().uuid;
         this.pos.get_order().setBooked(true);
         this.pos.showScreen("FloorScreen");
+        document.addEventListener(
+            "click",
+            async (ev) => {
+                this.pos.isOrderTransferMode = false;
+                const tableElement = ev.target.closest(".table");
+                if (!tableElement) {
+                    return;
+                }
+                const table = this.pos.getTableFromElement(tableElement);
+                await this.pos.transferOrder(orderUuid, table);
+                this.pos.setTableFromUi(table);
+            },
+            { once: true }
+        );
     },
     clickTakeAway() {
         const isTakeAway = !this.currentOrder.takeaway;
