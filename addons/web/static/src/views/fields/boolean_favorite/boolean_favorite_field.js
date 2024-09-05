@@ -21,6 +21,7 @@ export class BooleanFavoriteField extends Component {
     async update() {
         const changes = { [this.props.name]: !this.props.record.data[this.props.name] };
         await this.props.record.update(changes, { save: this.props.autosave });
+        await this.props.record.update(changes, { save: false });
     }
 }
 
