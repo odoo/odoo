@@ -1,9 +1,10 @@
 {
-    'name': 'AshStockMove',
+
+    'name': 'AshStockMoveExt',
     'version': '1.0',
-    'depends': ['sale', 'base',],
+    'depends': ['base', 'stock'],
     'data': [
-        'views/views.xml',
+        'views.xml',
     ],
     'installable': True,
     'auto_install': False,
