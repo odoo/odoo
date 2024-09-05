@@ -352,6 +352,7 @@ class TestMrpOrder(TestMrpCommon):
         production_form.product_uom_id = self.product_6.uom_id
         production = production_form.save()
         self.assertEqual(production.workorder_ids.duration_expected, 90)
+        self.assertEqual([production.date_finished], production.move_finished_ids.mapped('date'))
         mo_form = Form(production)
         mo_form.product_qty = 3
         production = mo_form.save()

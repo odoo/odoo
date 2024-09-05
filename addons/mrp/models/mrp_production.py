@@ -942,6 +942,12 @@ class MrpProduction(models.Model):
                 and vals.get('date_finished')
                 and rec.move_finished_ids[0].date != vals['date_finished']):
                 rec.move_finished_ids.write({'date': vals['date_finished']})
+            elif (rec.move_finished_ids
+                  and rec.date_finished
+                  and rec.move_finished_ids[0].date != rec.date_finished
+                  and not vals.get('date_finished')):
+                # if no value is specified, do take the workorder duration (etc) into account
+                rec.move_finished_ids.write({'date': rec.date_finished})
         return res
 
     def unlink(self):
