@@ -20,6 +20,10 @@ fi
 mkdir -p /var/run/odoo
 chown odoo:odoo /var/run/odoo
 
-/home/pi/odoo/addons/iot_box_image/configuration/wireless_ap.sh &
+# For compatibility between new IoT Box images and old Odoo code on it (it will not start Odoo on boot without this)
+start_wifi=/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh
+if [ -f $start_wifi ]; then
+  $start_wifi &
+fi
 
 exit 0
