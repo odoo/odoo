@@ -5,6 +5,7 @@ from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_is_zero
 from odoo.osv.expression import AND
 from dateutil.relativedelta import relativedelta
+from datetime import datetime, time
 
 
 class StockWarehouseOrderpoint(models.Model):
@@ -104,6 +105,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
         bom_manufacture = self.env['mrp.bom'].concat(*bom_manufacture.values())
+        # add quantities coming from draft MOs
         productions_group = self.env['mrp.production']._read_group(
             [
                 ('bom_id', 'in', bom_manufacture.ids),
@@ -116,6 +118,21 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint, uom, product_qty_sum in productions_group:
             res[orderpoint.id] += uom._compute_quantity(
                 product_qty_sum, orderpoint.product_uom, round=False)
+
+        # add quantities coming from confirmed MO to be started but not finished
+        # by the end of the stock forecast
+        in_progress_productions = self.env['mrp.production'].search([
+            ('bom_id', 'in', bom_manufacture.ids),
+            ('state', '=', 'confirmed'),
+            ('orderpoint_id', 'in', orderpoints_without_kit.ids),
+            ('id', 'not in', self.env.context.get('ignore_mo_ids', [])),
+        ])
+        for prod in in_progress_productions:
+            date_start, date_finished, orderpoint = prod.date_start, prod.date_finished, prod.orderpoint_id
+            lead_days_date = datetime.combine(orderpoint.lead_days_date, time.max)
+            if date_start <= lead_days_date < date_finished:
+                res[orderpoint.id] += prod.product_uom_id._compute_quantity(
+                        prod.product_qty, orderpoint.product_uom, round=False)
         return res
 
     def _get_qty_multiple_to_order(self):
