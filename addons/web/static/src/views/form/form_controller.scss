@@ -245,7 +245,6 @@
             --formView-sheetBg-padding-x: #{map-get($spacers, 3)};
         }
 
-        padding-top: map-get($spacers, 2);
         padding-left: var(--formView-sheetBg-padding-x);
         padding-right: var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x));
         width: 100%;
@@ -308,6 +307,17 @@
 
     // Statusbar
     .o_form_statusbar {
+        position: relative;
+        z-index: 0;
+
+        @include media-breakpoint-up(md) {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: $body-bg;
+            box-shadow: 0 0.3rem 0.25rem -0.25rem rgba(0, 0, 0, 0.075);
+        }
+
         > .o_statusbar_status {
             display: flex;
             align-items: center;
@@ -333,6 +343,12 @@
                     width: 100%;
                 }
             }
+        }
+    }
+
+    @include media-breakpoint-up(md) {
+        .o_list_renderer .o_list_table thead {
+            z-index: 0;
         }
     }
 
