@@ -91,6 +91,8 @@ const {
     clearTimeout,
     document,
     DOMParser,
+    innerWidth,
+    innerHeight,
     Map,
     Math: { floor: $floor },
     MutationObserver,
@@ -871,8 +873,8 @@ const NEXT_SIBLINGS = (node, selector) => {
 /** @type {Map<HTMLElement, { callbacks: Set<MutationCallback>, observer: MutationObserver }>} */
 const observers = new Map();
 const currentDimensions = {
-    width: null,
-    height: null,
+    width: innerWidth,
+    height: innerHeight,
 };
 let getDefaultRoot = () => document;
 
@@ -978,8 +980,8 @@ const rCustomPseudoClass = compilePseudoClassRegex();
 
 export function cleanupDOM() {
     // Dimensions
-    currentDimensions.width = null;
-    currentDimensions.height = null;
+    currentDimensions.width = innerWidth;
+    currentDimensions.height = innerHeight;
 
     // Observers
     const remainingObservers = observers.size;
