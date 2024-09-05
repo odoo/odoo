@@ -97,15 +97,15 @@ class WebClient(http.Controller):
     def version_info(self):
         return odoo.service.common.exp_version()
 
-    @http.route('/web/tests/next', type='http', auth='user', readonly=True)
+    @http.route('/web/tests', type='http', auth='user', readonly=True)
     def unit_tests_suite(self, mod=None, **kwargs):
         return request.render('web.unit_tests_suite')
 
-    @http.route('/web/tests', type='http', auth='user', readonly=True)
+    @http.route('/web/tests/legacy', type='http', auth='user', readonly=True)
     def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
 
-    @http.route('/web/tests/mobile', type='http', auth="none")
+    @http.route('/web/tests/legacy/mobile', type='http', auth="none")
     def test_mobile_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_mobile_suite')
 

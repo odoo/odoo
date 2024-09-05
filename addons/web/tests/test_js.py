@@ -36,7 +36,7 @@ class WebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_unit_desktop(self):
         # Unit tests suite (desktop)
-        self.browser_js('/web/tests/next?headless&loglevel=2&preset=desktop&timeout=15000', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js('/web/tests?headless&loglevel=2&preset=desktop&timeout=15000', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
 
     @odoo.tests.no_retry
     def test_hoot(self):
@@ -46,7 +46,7 @@ class WebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_qunit_desktop(self):
         # ! DEPRECATED
-        self.browser_js('/web/tests?mod=web', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)
+        self.browser_js('/web/tests/legacy?mod=web', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)
 
     def test_check_suite(self):
         self._check_forbidden_statements('web.assets_unit_tests')
@@ -100,8 +100,8 @@ class MobileWebSuite(odoo.tests.HttpCase):
     @odoo.tests.no_retry
     def test_unit_mobile(self):
         # Unit tests suite (mobile)
-        self.browser_js('/web/tests/next?headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
+        self.browser_js('/web/tests?headless&loglevel=2&preset=mobile&tag=-headless&timeout=15000', "", "", login='admin', timeout=1800, success_signal="[HOOT] test suite succeeded", error_checker=unit_test_error_checker)
 
     def test_qunit_mobile(self):
         # ! DEPRECATED
-        self.browser_js('/web/tests/mobile?mod=web', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)
+        self.browser_js('/web/tests/legacy/mobile?mod=web', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)

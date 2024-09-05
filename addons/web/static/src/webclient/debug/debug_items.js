@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 function runHootItem() {
-    const href = "/web/tests/next?debug=assets";
+    const href = "/web/tests?debug=assets";
     return {
         type: "item",
         description: _t("Run unit tests"),
@@ -15,7 +15,7 @@ function runHootItem() {
 }
 
 function runJSTestsItem() {
-    const href = "/web/tests?debug=assets";
+    const href = "/web/tests/legacy?debug=assets";
     return {
         type: "item",
         description: _t("Run QUnit tests (legacy)"),
@@ -26,7 +26,7 @@ function runJSTestsItem() {
 }
 
 function runJSTestsMobileItem() {
-    const href = "/web/tests/mobile?debug=assets";
+    const href = "/web/tests/legacy/mobile?debug=assets";
     return {
         type: "item",
         description: _t("Run QUnit mobile tests (legacy)"),
