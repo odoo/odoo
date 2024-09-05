@@ -752,6 +752,48 @@ describe("post process external steps", () => {
         });
     });
 });
+describe("serialize/unserialize", () => {
+    test("Should add a new node that contain an existing node", async () => {
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: "<p>x</p>",
+        });
+        applyConcurrentActions(peerInfos, {
+            c1: (editor) => {
+                const divA = editor.document.createElement("div");
+                divA.textContent = "a";
+                editor.editable.append(divA);
+                const p = editor.editable.querySelector("p");
+                divA.append(p);
+                editor.dispatch("ADD_STEP");
+            },
+        });
+        mergePeersSteps(peerInfos);
+        validateSameHistory(peerInfos);
+        validateContent(peerInfos, "<div>a<p>x</p></div>");
+    });
+    test("Should add a new node that contain another node created in the same mutation stack", async () => {
+        const peerInfos = await setupMultiEditor({
+            peerIds: ["c1", "c2"],
+            contentBefore: "<p>x</p>",
+        });
+        applyConcurrentActions(peerInfos, {
+            c1: (editor) => {
+                const divA = editor.document.createElement("div");
+                divA.textContent = "a";
+                editor.editable.append(divA);
+                const divB = editor.document.createElement("div");
+                divB.textContent = "b";
+                editor.editable.append(divB);
+                divB.append(divA);
+                editor.dispatch("ADD_STEP");
+            },
+        });
+        mergePeersSteps(peerInfos);
+        validateSameHistory(peerInfos);
+        validateContent(peerInfos, "<p>x</p><div>b<div>a</div></div>");
+    });
+});
 
 describe("Collaboration with embedded components", () => {
     test("should send an empty embedded element", async () => {
