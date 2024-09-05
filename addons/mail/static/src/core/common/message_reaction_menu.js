@@ -1,9 +1,10 @@
-import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
 import {
     Component,
-    onWillStart,
+    onMounted,
+    onPatched,
     useEffect,
     useExternalListener,
     useRef,
@@ -24,6 +25,7 @@ export class MessageReactionMenu extends Component {
         this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
         this.state = useState({
+            emojiLoaded: Boolean(loader.loaded),
             reaction: this.props.initialReaction
                 ? this.props.initialReaction
                 : this.props.message.reactions[0],
@@ -43,10 +45,16 @@ export class MessageReactionMenu extends Component {
             },
             () => [this.props.message.reactions.length]
         );
-        onWillStart(async () => {
-            const { emojis } = await loadEmoji();
-            this.emojis = emojis;
+        onMounted(async () => {
+            if (!loader.loaded) {
+                loadEmoji();
+            }
         });
+        if (!loader.loaded) {
+            loader.onEmojiLoaded(() => (this.state.emojiLoaded = true));
+        }
+        onMounted(() => void this.state.emojiLoaded);
+        onPatched(() => void this.state.emojiLoaded);
     }
 
     onKeydown(ev) {
@@ -63,6 +71,6 @@ export class MessageReactionMenu extends Component {
     }
 
     getEmojiShortcode(reaction) {
-        return this.emojis.find((emoji) => emoji.codepoints === reaction.content).shortcodes[0];
+        return loader.loaded?.emojiValueToShortcode?.[reaction.content] ?? "?";
     }
 }
