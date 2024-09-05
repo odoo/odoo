@@ -5,7 +5,6 @@ import {
     queryAll,
     queryAllTexts,
     queryFirst,
-    queryLast,
     queryOne,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
@@ -7634,7 +7633,7 @@ test("editing tabbed one2many (editable=bottom)", async () => {
     });
     await contains(".o_field_x2many_list_row_add a").click();
     expect("tr.o_data_row").toHaveCount(41);
-    expect(queryLast("tr.o_data_row")).toHaveClass("o_selected_row");
+    expect("tr.o_data_row:last").toHaveClass("o_selected_row");
 
     await contains('.o_data_row [name="turtle_foo"] input').edit("rainbow dash", {
         confirm: false,

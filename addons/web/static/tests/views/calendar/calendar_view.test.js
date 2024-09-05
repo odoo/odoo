@@ -5,7 +5,7 @@ import {
     queryAllRects,
     queryAllTexts,
     queryFirst,
-    queryLast,
+    queryOne,
     queryRect,
 } from "@odoo/hoot-dom";
 import { Deferred, advanceTime, animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
@@ -3025,7 +3025,7 @@ test(`Monday week start year mode`, async () => {
     expect(queryFirst(`.fc-daygrid-day-top`, { root: weekRow })).toHaveText("9", {
         message: "The first day of the week should be Monday the 9th",
     });
-    expect(queryLast(`.fc-daygrid-day-top`, { root: weekRow })).toHaveText("15", {
+    expect(queryOne(`.fc-daygrid-day-top:last`, { root: weekRow })).toHaveText("15", {
         message: "The last day of the week should be Sunday the 15th",
     });
     expect(queryFirst(`.fc-daygrid-week-number`, { root: weekRow })).toHaveText("37");
@@ -3061,7 +3061,7 @@ test(`Sunday week start year mode`, async () => {
     expect(queryFirst(`.fc-daygrid-day-top`, { root: weekRow })).toHaveText("15", {
         message: "The first day of the week should be Sunday the 15th",
     });
-    expect(queryLast(`.fc-daygrid-day-top`, { root: weekRow })).toHaveText("21", {
+    expect(queryOne(`.fc-daygrid-day-top:last`, { root: weekRow })).toHaveText("21", {
         message: "The last day of the week should be Saturday the 21st",
     });
     expect(queryFirst(`.fc-daygrid-week-number`, { root: weekRow })).toHaveText("38");
@@ -3976,12 +3976,12 @@ test(`scroll to current hour when clicking on today`, async () => {
         arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week"/>`,
     });
     // Default scroll time should be 6am no matter the current hour
-    expect(queryLast(".fc-scroller").scrollTop).toBeWithin(210, 230);
+    expect(queryOne(".fc-scroller:last").scrollTop).toBeWithin(210, 230);
     await contains(".o_calendar_button_today").click();
-    expect(queryLast(".fc-scroller").scrollTop).toBe(0);
+    expect(queryOne(".fc-scroller:last").scrollTop).toBe(0);
     mockDate("2016-12-12T20:00:00", 1);
     await contains(".o_calendar_button_today").click();
-    expect(queryLast(".fc-scroller").scrollTop).toBeWithin(360, 380);
+    expect(queryOne(".fc-scroller:last").scrollTop).toBeWithin(360, 380);
 });
 
 test("save selected date during view switching", async () => {
