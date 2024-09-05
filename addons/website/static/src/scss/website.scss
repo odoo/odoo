@@ -1004,6 +1004,13 @@ table.table_desc tr td {
             border: $border-width solid $border-color;
             background-size: 50%;
             background-color: $carousel-dark-indicator-active-bg;
+            filter: $carousel-dark-control-icon-filter;
+        }
+
+        &.carousel-dark {
+            .carousel-control-prev-icon, .carousel-control-next-icon {
+                filter: none;
+            }
         }
     }
 
