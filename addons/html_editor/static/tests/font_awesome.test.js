@@ -515,6 +515,19 @@ describe("FontAwesome insertion", () => {
             contentAfter: '<p>abs<i class="fa fa-star"></i>[]cd</p>',
         });
     });
+
+    test("should insert fontAwesome consecutively", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                editor.dispatch("INSERT_FONT_AWESOME", { faClass: "fa fa-star" });
+                editor.dispatch("INSERT_FONT_AWESOME", { faClass: "fa fa-glass" });
+            },
+            contentAfterEdit:
+                '<p><i class="fa fa-star" contenteditable="false">\u200b</i><i class="fa fa-glass" contenteditable="false">\u200b</i>[]</p>',
+            contentAfter: '<p><i class="fa fa-star"></i><i class="fa fa-glass"></i>[]</p>',
+        });
+    });
 });
 
 describe("Text insertion", () => {

@@ -1,5 +1,6 @@
 import {
     getDeepestPosition,
+    isEmptyBlock,
     isVisible,
     isVisibleTextNode,
     nextLeaf,
@@ -7,6 +8,9 @@ import {
 } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { insertTestHtml } from "../_helpers/editor";
+
+const base64Img =
+    "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
 describe("previousLeaf", () => {
     test("should find the previous leaf of a deeply nested node", () => {
@@ -357,5 +361,59 @@ describe("getDeepestPosition", () => {
         const zwnbsp = editable.firstChild;
         const [node, offset] = getDeepestPosition(editable, 0);
         expect([node, offset]).toEqual([zwnbsp, 0]);
+    });
+});
+
+describe("isEmptyBlock", () => {
+    test("should identify empty p element", () => {
+        const [p] = insertTestHtml("<p></p>");
+        const result = isEmptyBlock(p);
+        expect(result).toBe(true);
+    });
+
+    test("should identify p with single br tag as empty and multiple br tag as non-empty", () => {
+        const [p1, p2] = insertTestHtml("<p><br></p><p><br><br></p>");
+        const result1 = isEmptyBlock(p1);
+        const result2 = isEmptyBlock(p2);
+        expect(result1).toBe(true);
+        expect(result2).toBe(false);
+    });
+
+    test("should identify p element with text content as non-empty", () => {
+        const [p] = insertTestHtml("<p>abc</p>");
+        const result1 = isEmptyBlock(p);
+        const result2 = isEmptyBlock(p.firstChild);
+        expect(result1).toBe(false);
+        expect(result2).toBe(false);
+    });
+
+    test("should identify a empty span with display block", () => {
+        const [span] = insertTestHtml('<span style="display: block;"><br></span>');
+        const result = isEmptyBlock(span);
+        expect(result).toBe(true);
+    });
+
+    test("should identify span with icon classes as non-empty", () => {
+        const [span] = insertTestHtml('<span class="fa fa-trash-o"></span>');
+        const result = isEmptyBlock(span);
+        expect(result).toBe(false);
+    });
+
+    test("should identify img element as non-empty", () => {
+        const [img] = insertTestHtml(`<img src="${base64Img}" alt="image">`);
+        const result = isEmptyBlock(img);
+        expect(result).toBe(false);
+    });
+
+    test("should identify empty a tag as non-empty", () => {
+        const [a] = insertTestHtml("<a></a>");
+        const result = isEmptyBlock(a);
+        expect(result).toBe(false);
+    });
+
+    test("should identify a tag with text as non-empty", () => {
+        const [a] = insertTestHtml('<a href="#">Link text</a>');
+        const result = isEmptyBlock(a);
+        expect(result).toBe(false);
     });
 });
