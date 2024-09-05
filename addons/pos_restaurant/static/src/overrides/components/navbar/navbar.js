@@ -22,15 +22,9 @@ patch(Navbar.prototype, {
         }
         return super.orderCount;
     },
-    getTable() {
-        return this.pos.orderToTransferUuid
-            ? this.pos.models["pos.order"].find((o) => o.uuid == this.pos.orderToTransferUuid)
-                  ?.table_id
-            : this.pos.selectedTable;
-    },
     showTabs() {
         if (this.pos.config.module_pos_restaurant) {
-            return !(this.pos.selectedTable || this.pos.orderToTransferUuid);
+            return !this.pos.selectedTable;
         } else {
             return super.showTabs();
         }
@@ -49,9 +43,6 @@ patch(Navbar.prototype, {
         this.pos.showScreen("ProductScreen");
     },
     async onClickTableTab() {
-        if (this.pos.orderToTransferUuid) {
-            return this.pos.setTableFromUi(this.getTable());
-        }
         await this.pos.syncAllOrders();
         this.dialog.add(TableSelector, {
             title: _t("Table Selector"),
@@ -86,15 +77,7 @@ patch(Navbar.prototype, {
             },
         });
     },
-    getOrderToDisplay() {
-        const currentOrder = this.pos.get_order();
-        const orderToTransfer = this.pos.models["pos.order"].find((order) => {
-            return order.uuid === this.pos.orderToTransferUuid;
-        });
-        return currentOrder || orderToTransfer;
-    },
     onClickPlanButton() {
-        this.pos.orderToTransferUuid = null;
         this.pos.showScreen("FloorScreen", { floor: this.floor });
     },
 });

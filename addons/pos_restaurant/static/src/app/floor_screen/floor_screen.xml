@@ -105,7 +105,7 @@
                                 <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
                                 <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>
                                 <div
-                                    t-on-click.stop="(ev) => this.onClickTable(table, ev)"
+                                    t-on-click="(ev) => this.onClickTable(table, ev)"
                                     class="table o_draggable d-flex flex-column align-items-center justify-content-between cursor-pointer"
                                     t-att-class="{
                                         'position-relative m-0': isKanban,
