@@ -909,9 +909,11 @@ class AccountMove(models.Model):
     @api.depends('bank_partner_id')
     def _compute_partner_bank_id(self):
         for move in self:
+            # This will get the bank account from the partner in an order with the trusted first
             bank_ids = move.bank_partner_id.bank_ids.filtered(
-                lambda bank: not bank.company_id or bank.company_id == move.company_id)
-            move.partner_bank_id = bank_ids[0] if bank_ids else False
+                lambda bank: not bank.company_id or bank.company_id == move.company_id
+            ).sorted(lambda bank: not bank.allow_out_payment)
+            move.partner_bank_id = bank_ids[:1]
 
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):
