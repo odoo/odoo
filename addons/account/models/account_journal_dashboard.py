@@ -87,22 +87,37 @@ class account_journal(models.Model):
         act_type_name = self.env['mail.activity.type']._field_to_sql('act_type', 'name')
         sql_query = SQL(
             """
-            SELECT activity.id,
-                   activity.res_id,
-                   activity.res_model,
-                   activity.summary,
-                   CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
-                   %(act_type_name)s as act_type_name,
-                   act_type.category as activity_category,
-                   activity.date_deadline,
-                   move.date,
-                   move.ref,
-                   move.journal_id
-              FROM account_move move
-              JOIN mail_activity activity ON activity.res_id = move.id AND activity.res_model = 'account.move'
-         LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
-             WHERE move.journal_id = ANY(%(ids)s)
-               AND move.company_id = ANY(%(company_ids)s)
+         SELECT activity.id,
+                activity.res_id,
+                activity.res_model,
+                activity.summary,
+      CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
+                %(act_type_name)s as act_type_name,
+                act_type.category as activity_category,
+                activity.date_deadline,
+                move.journal_id
+           FROM account_move move
+           JOIN mail_activity activity ON activity.res_id = move.id AND activity.res_model = 'account.move'
+      LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
+          WHERE move.journal_id = ANY(%(ids)s)
+            AND move.company_id = ANY(%(company_ids)s)
+
+      UNION ALL
+
+         SELECT activity.id,
+                activity.res_id,
+                activity.res_model,
+                activity.summary,
+      CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
+                %(act_type_name)s as act_type_name,
+                act_type.category as activity_category,
+                activity.date_deadline,
+                journal.id as journal_id
+           FROM account_journal journal
+           JOIN mail_activity activity ON activity.res_id = journal.id AND activity.res_model = 'account.journal'
+      LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
+          WHERE journal.id = ANY(%(ids)s)
+            AND journal.company_id = ANY(%(company_ids)s)
             """,
             today=today,
             act_type_name=act_type_name,
