@@ -40,7 +40,6 @@ export {
     queryAllValues,
     queryAttribute,
     queryFirst,
-    queryLast,
     queryOne,
     queryRect,
     queryText,
