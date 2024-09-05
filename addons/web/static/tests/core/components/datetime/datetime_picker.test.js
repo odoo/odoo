@@ -444,7 +444,7 @@ test("twelve-hour clock with non-null focus date index", async () => {
         },
     });
 
-    select("7", { target: ".o_time_picker_select:eq(0)" });
+    await select("7", { target: ".o_time_picker_select:eq(0)" });
     expect.verifySteps(["2023-04-20T08:43:00,2023-04-23T07:16:00"]);
 });
 
@@ -993,8 +993,8 @@ test("no value, select time", async () => {
         },
     });
 
-    select("18", { target: ".o_time_picker_select:eq(0)" });
-    select("5", { target: ".o_time_picker_select:eq(1)" });
+    await select("18", { target: ".o_time_picker_select:eq(0)" });
+    await select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
 
     expect.verifySteps(["2023-04-25T18:00:00", "2023-04-25T18:05:00"]);
@@ -1008,11 +1008,11 @@ test("minDate with time: selecting out-of-range and in-range times", async () =>
         },
     });
 
-    select("15", { target: ".o_time_picker_select:eq(0)" });
+    await select("15", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps(["2023-04-25T16:00:00"]);
 });
@@ -1025,11 +1025,11 @@ test("maxDate with time: selecting out-of-range and in-range times", async () =>
         },
     });
 
-    select("17", { target: ".o_time_picker_select:eq(0)" });
+    await select("17", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps(["2023-04-25T16:00:00"]);
 });
@@ -1043,12 +1043,12 @@ test("max and min date with time: selecting out-of-range and in-range times", as
         },
     });
 
-    select("15", { target: ".o_time_picker_select:eq(0)" });
-    select("17", { target: ".o_time_picker_select:eq(0)" });
+    await select("15", { target: ".o_time_picker_select:eq(0)" });
+    await select("17", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps(["2023-04-25T16:00:00"]);
 });
@@ -1062,12 +1062,12 @@ test("max and min date with time: selecting invalid minutes and making it valid 
         },
     });
 
-    select("13", { target: ".o_time_picker_select:eq(0)" });
-    select("30", { target: ".o_time_picker_select:eq(1)" });
+    await select("13", { target: ".o_time_picker_select:eq(0)" });
+    await select("30", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps(["2023-04-25T16:30:00"]);
 });
@@ -1081,8 +1081,8 @@ test("max and min date with time: valid time on invalid day becomes valid when s
         },
     });
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
-    select("30", { target: ".o_time_picker_select:eq(1)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("30", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
     expect.verifySteps([]);
 
@@ -1163,8 +1163,8 @@ test("single value, select time", async () => {
         },
     });
 
-    select("18", { target: ".o_time_picker_select:eq(0)" });
-    select("5", { target: ".o_time_picker_select:eq(1)" });
+    await select("18", { target: ".o_time_picker_select:eq(0)" });
+    await select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
     expect.verifySteps(["2023-04-30T18:43:00", "2023-04-30T18:05:00"]);
 });
@@ -1182,9 +1182,9 @@ test("single value, select time in twelve-hour clock format", async () => {
         },
     });
 
-    select("7", { target: ".o_time_picker_select:eq(0)" });
-    select("5", { target: ".o_time_picker_select:eq(1)" });
-    select("PM", { target: ".o_time_picker_select:eq(2)" });
+    await select("7", { target: ".o_time_picker_select:eq(0)" });
+    await select("5", { target: ".o_time_picker_select:eq(1)" });
+    await select("PM", { target: ".o_time_picker_select:eq(2)" });
     await animationFrame();
     expect.verifySteps(["2023-04-30T07:43:00", "2023-04-30T07:05:00", "2023-04-30T19:05:00"]);
 });
@@ -1219,8 +1219,8 @@ test("range value, select time for first value", async () => {
         },
     });
 
-    select("18", { target: ".o_time_picker_select:eq(0)" });
-    select("5", { target: ".o_time_picker_select:eq(1)" });
+    await select("18", { target: ".o_time_picker_select:eq(0)" });
+    await select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
     expect.verifySteps([
         "2023-04-20T18:43:00,2023-04-23T17:16:00",
@@ -1259,8 +1259,8 @@ test("range value, select time for second value", async () => {
         },
     });
 
-    select("18", { target: ".o_time_picker_select:eq(2)" });
-    select("5", { target: ".o_time_picker_select:eq(3)" });
+    await select("18", { target: ".o_time_picker_select:eq(2)" });
+    await select("5", { target: ".o_time_picker_select:eq(3)" });
     await animationFrame();
     expect.verifySteps([
         "2023-04-20T08:43:00,2023-04-23T18:16:00",

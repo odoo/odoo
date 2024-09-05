@@ -45,7 +45,7 @@ test("html field with required attribute", async () => {
     });
 
     expect(".o_field_html textarea").toHaveCount(1, { message: "should have a text area" });
-    click(".o_field_html textarea");
+    await click(".o_field_html textarea");
     edit("");
     await animationFrame();
     expect(".o_field_html textarea").toHaveValue("");
@@ -66,7 +66,7 @@ test("html fields are correctly rendered (edit)", async () => {
 
     expect(".o_field_html textarea").toHaveCount(1, { message: "should have a text area" });
     expect(".o_field_html textarea").toHaveValue(RED_TEXT);
-    click(".o_field_html textarea");
+    await click(".o_field_html textarea");
     edit(GREEN_TEXT);
     await animationFrame();
     expect(".o_field_html textarea").toHaveValue(GREEN_TEXT);
@@ -225,22 +225,23 @@ test("field html translatable", async () => {
     expect(enField1).toHaveValue("first paragraph", {
         message: "first part of english translation should be filled",
     });
-    click(enField1);
-    edit("first paragraph modified");
+    await click(enField1);
+    await edit("first paragraph modified");
 
     const frField1 = translations[2];
     expect(frField1).toHaveValue("", {
         message: "first part of french translation should not be filled",
     });
-    click(frField1);
-    edit("premier paragraphe modifié");
-    const frField2 = translations[3];
+    await click(frField1);
+    await edit("premier paragraphe modifié");
 
+    const frField2 = translations[3];
     expect(frField2).toHaveValue("deuxième paragraphe", {
         message: "second part of french translation should be filled",
     });
-    click(frField2);
-    edit("deuxième paragraphe modifié");
+
+    await click(frField2);
+    await edit("deuxième paragraphe modifié");
 
     click(".modal button.btn-primary"); // save
     await animationFrame();
@@ -258,16 +259,17 @@ test("html fields: spellcheck is disabled on blur", async () => {
     expect(textarea).toHaveProperty("spellcheck", true, {
         message: "by default, spellcheck is enabled",
     });
-    click(textarea);
+    await click(textarea);
 
-    edit("nev walue");
+    await edit("nev walue");
     pointerDown(document.body);
     await animationFrame();
     expect(textarea).toHaveProperty("spellcheck", false, {
         message: "spellcheck is disabled once the field has lost its focus",
     });
 
-    pointerDown(textarea);
+    await pointerDown(textarea);
+
     expect(textarea).toHaveProperty("spellcheck", true, {
         message: "spellcheck is re-enabled once the field is focused",
     });
@@ -292,8 +294,8 @@ test("Setting an html field to empty string is saved as a false value", async ()
         resId: 1,
     });
 
-    click(".o_field_widget[name=txt] textarea");
-    edit("");
+    await click(".o_field_widget[name=txt] textarea");
+    await edit("");
     await clickSave();
 });
 
@@ -323,7 +325,7 @@ test("html field: correct value is used to evaluate the modifiers", async () => 
     });
     expect("[name='txt'] textarea").toHaveCount(1);
 
-    click("[name='foo'] input");
+    await click("[name='foo'] input");
     edit("a", { confirm: "enter" });
     await animationFrame();
     expect("[name='txt'] textarea").toHaveCount(1);

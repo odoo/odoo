@@ -528,7 +528,9 @@ export function compileStepManual(stepIndex, step, options) {
                         let altAnchorEl = hoot.queryAll(subAction.altAnchor).at(0);
                         if (altAnchorEl && canContinue(altAnchorEl, step)) {
                             altAnchorEl = getAnchorEl(altAnchorEl, subAction.event);
-                            consumeEvents.push(...getConsumeEventType(altAnchorEl, subAction.event));
+                            consumeEvents.push(
+                                ...getConsumeEventType(altAnchorEl, subAction.event)
+                            );
                         }
                     }
 
@@ -603,7 +605,7 @@ export function compileStepAuto(stepIndex, step, options) {
     return [
         {
             action: () => {
-                setupEventActions(document.createElement("div"));
+                setupEventActions(document.body);
                 step.state = step.state || {};
                 if (step.break && debugMode !== false) {
                     // eslint-disable-next-line no-debugger

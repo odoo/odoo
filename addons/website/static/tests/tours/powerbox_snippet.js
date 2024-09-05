@@ -22,7 +22,7 @@ wTourUtils.registerWebsitePreviewTour("website_powerbox_snippet",{
     content: "Show the powerbox",
     trigger: ":iframe .s_text_block p:last-child",
     async run(actions) {
-        actions.editor(`/`);
+        await actions.editor(`/`);
         const wrapwrap = this.anchor.closest("#wrapwrap");
         wrapwrap.dispatchEvent(
             new InputEvent("input", {

@@ -35,8 +35,8 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
         const token = await rpc('/totphook', {
             secret
         });
-        helpers.edit(token, 'input[name="code"]');
-        helpers.click("button.btn-primary:contains(Activate)");
+        await helpers.edit(token, 'input[name="code"]');
+        await helpers.click("button.btn-primary:contains(Activate)");
     }
 }, {
     content: "Check that the button has changed",
@@ -71,10 +71,10 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
     trigger: 'input[name=totp_token]',
     run: async function (helpers) {
         const token = await rpc('/totphook');
-        helpers.edit(token);
+        await helpers.edit(token);
         // FIXME: is there a way to put the button as its own step trigger without
         //        the tour straight blowing through and not waiting for this?
-        helpers.click('button:contains("Log in")');
+        await helpers.click('button:contains("Log in")');
     }
 }, {
     content: "check we're logged in",

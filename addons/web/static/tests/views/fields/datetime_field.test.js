@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryFirst, select } from "@odoo/hoot-dom";
+import { click, edit, queryAll, select } from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -172,7 +172,7 @@ test("DatetimeField with datetime formatted without second", async () => {
         message: "the datetime should be correctly displayed",
     });
 
-    click(".o_form_button_cancel");
+    await click(".o_form_button_cancel");
     expect(".modal").toHaveCount(0, { message: "there should not be a Warning dialog" });
 });
 
@@ -187,13 +187,12 @@ test("DatetimeField in editable list view", async () => {
     });
 
     const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
-    expect(queryFirst("tr.o_data_row td:not(.o_list_record_selector)")).toHaveText(
-        expectedDateString,
-        { message: "the datetime should be correctly displayed" }
-    );
+    expect("tr.o_data_row td:not(.o_list_record_selector):first").toHaveText(expectedDateString, {
+        message: "the datetime should be correctly displayed",
+    });
 
     // switch to edit mode
-    click(queryFirst(".o_data_row .o_data_cell"));
+    click(".o_data_row .o_data_cell");
     await animationFrame();
     expect(".o_field_datetime input").toHaveCount(1, {
         message: "the view should have a date input for editable mode",
@@ -235,18 +234,16 @@ test("DatetimeField in editable list view", async () => {
 
     const newExpectedDateString = "04/22/2018 08:25:00";
 
-    expect(queryFirst(".o_field_datetime input")).toHaveValue(newExpectedDateString, {
+    expect(".o_field_datetime input:first").toHaveValue(newExpectedDateString, {
         message: "the date should be correct in edit mode",
     });
     // save
 
     click(".o_list_button_save");
     await animationFrame();
-    expect(queryFirst("tr.o_data_row td:not(.o_list_record_selector)")).toHaveText(
+    expect("tr.o_data_row td:not(.o_list_record_selector):first").toHaveText(
         newExpectedDateString,
-        {
-            message: "the selected datetime should be displayed after saving",
-        }
+        { message: "the selected datetime should be displayed after saving" }
     );
 });
 test.tags("desktop")(
@@ -260,32 +257,28 @@ test.tags("desktop")(
             arch: '<tree multi_edit="1"><field name="datetime"/></tree>',
         });
 
-        const rows = queryAll(".o_data_row");
         // select two records and edit them
-        click(queryFirst(".o_list_record_selector input", { root: rows[0] }));
+        await click(".o_data_row:eq(0) .o_list_record_selector input");
         await animationFrame();
-        click(queryFirst(".o_list_record_selector input", { root: rows[1] }));
+        await click(".o_data_row:eq(1) .o_list_record_selector input");
         await animationFrame();
 
-        click(queryFirst(".o_data_cell", { root: rows[0] }));
+        await click(".o_data_row:eq(0) .o_data_cell");
         await animationFrame();
 
         expect(".o_field_datetime input").toHaveCount(1);
 
-        click(".o_field_datetime input");
-        edit("10/02/2019 09:00:00", { confirm: "Enter" });
+        await click(".o_field_datetime input");
+        await edit("10/02/2019 09:00:00", { confirm: "Enter" });
         await animationFrame();
+
         expect(".modal").toHaveCount(1);
 
-        click(".modal .modal-footer .btn-primary");
+        await click(".modal .modal-footer .btn-primary");
         await animationFrame();
 
-        expect(queryFirst(".o_data_row:first-child .o_data_cell")).toHaveText(
-            "10/02/2019 09:00:00"
-        );
-        expect(queryFirst(".o_data_row:nth-child(2) .o_data_cell")).toHaveText(
-            "10/02/2019 09:00:00"
-        );
+        expect(".o_data_row:first-child .o_data_cell:first").toHaveText("10/02/2019 09:00:00");
+        expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("10/02/2019 09:00:00");
     }
 );
 
@@ -301,28 +294,28 @@ test.tags("desktop")(
             arch: '<tree multi_edit="1"><field name="datetime"/></tree>',
         });
 
-        const rows = queryAll(".o_data_row");
-
         // select two records and edit them
-        click(queryFirst(".o_list_record_selector input", { root: rows[0] }));
+        await click(".o_data_row:eq(0) .o_list_record_selector input");
         await animationFrame();
-        click(queryFirst(".o_list_record_selector input", { root: rows[1] }));
+        await click(".o_data_row:eq(1) .o_list_record_selector input");
         await animationFrame();
-        click(queryFirst(".o_data_cell", { root: rows[0] }));
+        await click(".o_data_row:eq(0) .o_data_cell");
         await animationFrame();
 
         expect(".o_field_datetime input").toHaveCount(1);
-        click(".o_field_datetime input");
+
+        await click(".o_field_datetime input");
         await animationFrame();
-        edit("", { confirm: "Enter" });
+        await edit("", { confirm: "Enter" });
         await animationFrame();
 
         expect(".modal").toHaveCount(1);
 
-        click(".modal .modal-footer .btn-primary");
+        await click(".modal .modal-footer .btn-primary");
         await animationFrame();
-        expect(queryFirst(".o_data_row:first-child .o_data_cell")).toHaveText("");
-        expect(queryFirst(".o_data_row:nth-child(2) .o_data_cell")).toHaveText("");
+
+        expect(".o_data_row:first-child .o_data_cell:first").toHaveText("");
+        expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("");
     }
 );
 
@@ -341,23 +334,23 @@ test("DatetimeField remove value", async () => {
         arch: /* xml */ '<form><field name="datetime"/></form>',
     });
 
-    expect(queryFirst(".o_field_datetime input")).toHaveValue("02/08/2017 12:00:00", {
+    expect(".o_field_datetime input:first").toHaveValue("02/08/2017 12:00:00", {
         message: "the date should be correct in edit mode",
     });
 
-    click(".o_field_datetime input");
+    await click(".o_field_datetime input");
     edit("");
     await animationFrame();
     click(document.body);
     await animationFrame();
 
-    expect(queryFirst(".o_field_datetime input")).toHaveValue("", {
+    expect(".o_field_datetime input:first").toHaveValue("", {
         message: "should have an empty input",
     });
 
     // save
     await clickSave();
-    expect(queryFirst(".o_field_datetime")).toHaveText("", {
+    expect(".o_field_datetime:first").toHaveText("", {
         message: "the selected date should be displayed after saving",
     });
 });
@@ -415,19 +408,16 @@ test("DatetimeField with date/datetime widget (without day change) does not care
     });
 
     const expectedDateString = "02/08/2017 06:00:00"; // with timezone
-    expect(queryFirst(".o_field_widget[name='p'] .o_data_cell")).toHaveText(expectedDateString, {
+    expect(".o_field_widget[name='p'] .o_data_cell:first").toHaveText(expectedDateString, {
         message: "the datetime (datetime widget) should be correctly displayed in tree view",
     });
 
     // switch to form view
     click(".o_field_widget[name='p'] .o_data_cell");
     await animationFrame();
-    expect(queryFirst(".modal .o_field_date[name='datetime'] input")).toHaveValue(
-        "02/08/2017 06:00:00",
-        {
-            message: "the datetime (date widget) should be correctly displayed in form view",
-        }
-    );
+    expect(".modal .o_field_date[name='datetime'] input:first").toHaveValue("02/08/2017 06:00:00", {
+        message: "the datetime (date widget) should be correctly displayed in form view",
+    });
 });
 
 test("datetime field: hit enter should update value", async () => {
@@ -445,21 +435,21 @@ test("datetime field: hit enter should update value", async () => {
     });
 
     // Enter a beginning of date and press enter to validate
-    click(queryFirst(".o_field_datetime input"));
-    edit("01/08/22 14:30:40", { confirm: "Enter" });
+    await click(".o_field_datetime input");
+    await edit("01/08/22 14:30:40", { confirm: "Enter" });
 
     const datetimeValue = `01/08/2022 14:30:40`;
 
-    expect(queryFirst(".o_field_datetime input")).toHaveValue(datetimeValue);
+    expect(".o_field_datetime input:first").toHaveValue(datetimeValue);
 
     // Click outside the field to check that the field is not changed
-    click(document.body);
-    expect(queryFirst(".o_field_datetime input")).toHaveValue(datetimeValue);
+    await click(document.body);
+    expect(".o_field_datetime input:first").toHaveValue(datetimeValue);
 
     // Save and check that it's still ok
     await clickSave();
 
-    expect(queryFirst(".o_field_datetime input")).toHaveValue(datetimeValue);
+    expect(".o_field_datetime input:first").toHaveValue(datetimeValue);
 });
 
 test("DateTimeField with label opens datepicker on click", async () => {
@@ -474,7 +464,7 @@ test("DateTimeField with label opens datepicker on click", async () => {
                 </form>`,
     });
 
-    click(queryFirst("label.o_form_label"));
+    click("label.o_form_label");
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1, { message: "datepicker should be opened" });
 });
@@ -489,13 +479,13 @@ test("datetime field: use picker with arabic numbering system", async () => {
         arch: /* xml */ `<form string="Partners"><field name="datetime" /></form>`,
     });
 
-    expect(queryFirst("[name=datetime] input")).toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٠٠:٠٠");
+    expect("[name=datetime] input:first").toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٠٠:٠٠");
 
-    click(queryFirst("[name=datetime] input"));
+    click("[name=datetime] input");
     await animationFrame();
     select(45, { target: getTimePickers()[0][1] });
     await animationFrame();
-    expect(queryFirst("[name=datetime] input")).toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٤٥:٠٠");
+    expect("[name=datetime] input:first").toHaveValue("٠٢/٠٨/٢٠١٧ ١١:٤٥:٠٠");
 });
 
 test("list datetime with date widget test", async () => {
@@ -505,8 +495,8 @@ test("list datetime with date widget test", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */
-            `<tree editable="bottom">
+        /* xml */
+        arch: `<tree editable="bottom">
                 <field name="datetime" widget="datetime" options="{'show_time': false}"/>
                 <field name="datetime" widget="datetime" />
             </tree>`,
@@ -522,7 +512,7 @@ test("list datetime with date widget test", async () => {
     });
     click(dates[0]);
     await animationFrame();
-    expect(queryFirst(".o_field_datetime input").value).toBe("02/08/2017 12:00:00", {
+    expect(".o_field_datetime input:first").toHaveValue("02/08/2017 12:00:00", {
         message: "for datetime field both date and time should be visible with datetime widget",
     });
 });

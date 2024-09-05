@@ -46,7 +46,7 @@ describe("DateTimeInput (date)", () => {
 
         expect(".o_datetime_input").toHaveValue("09/01/1997");
 
-        click(".o_datetime_input");
+        await click(".o_datetime_input");
         await animationFrame();
 
         assertDateTimePicker({
@@ -183,12 +183,12 @@ describe("DateTimeInput (date)", () => {
         await contains(".o_datetime_input").click();
         edit("08/02/1997");
         await animationFrame();
-        click(document.body);
+        await click(document.body);
         await animationFrame();
 
         expect.verifySteps(["datetime-changed"]);
 
-        click(".o_datetime_input");
+        await click(".o_datetime_input");
         await animationFrame();
 
         expect(getPickerCell("8").at(0)).toHaveClass("o_selected");
@@ -276,8 +276,10 @@ describe("DateTimeInput (datetime)", () => {
 
         // Select 15:45
         const [hourSelect, minuteSelect] = queryAll(".o_time_picker_select");
-        select("15", { target: hourSelect });
-        select("45", { target: minuteSelect });
+        await select("15", { target: hourSelect });
+        await animationFrame();
+        await select("45", { target: minuteSelect });
+        await animationFrame();
 
         expect(".o_datetime_input").toHaveValue("08/02/1997 15:45:01");
         expect.verifySteps(["1997-02-08 12:30:01", "1997-02-08 15:30:01", "1997-02-08 15:45:01"]);
@@ -305,8 +307,10 @@ describe("DateTimeInput (datetime)", () => {
 
         // Select 15:45
         const [hourSelect, minuteSelect] = queryAll(".o_time_picker_select");
-        select("15", { target: hourSelect });
-        select("45", { target: minuteSelect });
+        await select("15", { target: hourSelect });
+        await animationFrame();
+        await select("45", { target: minuteSelect });
+        await animationFrame();
 
         expect(".o_datetime_input").toHaveValue("01 sept., 1997 15:45:01");
         expect.verifySteps(["1997-09-01 12:30:01", "1997-09-01 15:30:01", "1997-09-01 15:45:01"]);
@@ -334,9 +338,9 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
 
         const [, minuteSelect] = queryAll(".o_time_picker_select");
-        select("15", { target: minuteSelect });
+        await select("15", { target: minuteSelect });
 
-        click(document.body);
+        await click(document.body);
         await animationFrame();
 
         expect.verifySteps(["1997-01-09 08:15:01"]);
@@ -363,7 +367,7 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
         edit("08/02/1997 15:45:05");
         await animationFrame();
-        click(document.body);
+        await click(document.body);
         await animationFrame();
 
         expect.verifySteps(["datetime-changed"]);
@@ -425,7 +429,7 @@ describe("DateTimeInput (datetime)", () => {
         expect(".o_datetime_input").toHaveValue("01 apr., 1997");
         expect.verifySteps(["datetime-changed"]);
 
-        click(".o_apply");
+        await click(".o_apply");
         await animationFrame();
         expect.verifySteps(["datetime-changed"]);
     });
@@ -469,7 +473,7 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
         edit("08/02/1997 15:45:05");
         await animationFrame();
-        click(document.body);
+        await click(document.body);
         await animationFrame();
 
         expect.verifySteps(["datetime-changed"]);
@@ -532,7 +536,7 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
         edit("٠٤ يونيو, ٢٠٢٣ ١١:٣٣:٠٠");
         await animationFrame();
-        click(document.body);
+        await click(document.body);
         await animationFrame();
 
         expect(".o_datetime_input").toHaveValue("٠٤ يونيو, ٢٠٢٣ ١١:٣٣:٠٠");
@@ -540,7 +544,7 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
         edit("15 07, 2020 12:30:43");
         await animationFrame();
-        click(document.body);
+        await click(document.body);
         await animationFrame();
 
         expect(".o_datetime_input").toHaveValue("١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣");

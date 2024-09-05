@@ -188,15 +188,15 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Double click on link",
         trigger: ':iframe footer a[href="/"]',
-        run: function (actions) {
+        async run(actions) {
             // Create range to simulate real double click, see pull request
             const range = document.createRange();
             range.selectNodeContents(this.anchor);
             const sel = window.getSelection();
             sel.removeAllRanges();
             sel.addRange(range);
-            actions.click();
-            actions.dblclick();
+            await actions.click();
+            await actions.dblclick();
         },
     },
     {

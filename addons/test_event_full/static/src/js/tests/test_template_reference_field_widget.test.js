@@ -1,7 +1,7 @@
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, select } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class EventMail extends models.Model {
@@ -79,16 +79,16 @@ test("Reference field displays right icons", async () => {
 
     // select a sms.template instead of mail.template
 
-    click(".o_field_cell:eq(0)");
+    await click(".o_field_cell:eq(0)");
     await animationFrame();
-    click(".o_field_cell:eq(0) select.o_input");
-    select("sms.template");
+    await click(".o_field_cell:eq(0) select.o_input");
+    await select("sms.template");
     await animationFrame();
-    click(".o_field_cell:eq(0) .o_field_many2one_selection input");
+    await click(".o_field_cell:eq(0) .o_field_many2one_selection input");
     await animationFrame();
-    click(".o_field_cell:eq(0) .o-autocomplete--dropdown-item");
+    await click(".o_field_cell:eq(0) .o-autocomplete--dropdown-item");
     // click out
-    click(".o_list_renderer");
+    await click(".o_list_renderer");
     await animationFrame();
 
     expect(".o_field_cell:eq(0) .fa-mobile").toHaveCount(1);
@@ -96,15 +96,15 @@ test("Reference field displays right icons", async () => {
 
     // select a some other model to check it has no icon
 
-    click(".o_field_cell:eq(0)");
+    await click(".o_field_cell:eq(0)");
     await animationFrame();
-    click(".o_field_cell:eq(0) select.o_input");
-    select("some.template");
+    await click(".o_field_cell:eq(0) select.o_input");
+    await select("some.template");
     await animationFrame();
-    click(".o_field_cell:eq(0) .o_field_many2one_selection input");
+    await click(".o_field_cell:eq(0) .o_field_many2one_selection input");
     await animationFrame();
-    click(".o_field_cell:eq(0) .o-autocomplete--dropdown-item");
-    click(".o_list_renderer");
+    await click(".o_field_cell:eq(0) .o-autocomplete--dropdown-item");
+    await click(".o_list_renderer");
     await animationFrame();
 
     expect(".o_field_cell:eq(0) .fa-mobile").toHaveCount(0);
@@ -112,11 +112,11 @@ test("Reference field displays right icons", async () => {
 
     // select no record for the model
 
-    click(".o_field_cell:eq(1)");
+    await click(".o_field_cell:eq(1)");
     await animationFrame();
-    click(".o_field_cell:eq(1) select.o_input");
-    select("mail.template");
-    click(".o_list_renderer");
+    await click(".o_field_cell:eq(1) select.o_input");
+    await select("mail.template");
+    await click(".o_list_renderer");
     await animationFrame();
 
     expect(".o_field_cell:eq(1) .fa-mobile").toHaveCount(0);

@@ -109,7 +109,7 @@ describe.tags("desktop")("DebugMenu", () => {
         expect(queryAllTexts(items)).toEqual(["Item 2", "Item 1", "Item 3"]);
 
         for (const item of items) {
-            click(item);
+            await click(item);
         }
 
         expect.verifySteps(["callback item_2", "callback item_1", "callback item_3"]);
@@ -218,7 +218,7 @@ describe.tags("desktop")("DebugMenu", () => {
         const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
         expect(items.map((el) => el.textContent)).toEqual(["Item 1", "Item 2"]);
         for (const item of items) {
-            click(item);
+            await click(item);
         }
         expect.verifySteps(["callback item_1", "callback item_2"]);
     });

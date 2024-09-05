@@ -42,9 +42,11 @@ const SELECTORS = {
 /**
  * @param {string} value
  */
-function editExpression(value) {
-    click(SELECTORS.complexConditionInput);
+async function editExpression(value) {
+    await click(SELECTORS.complexConditionInput);
+
     edit(value);
+    await animationFrame();
 }
 
 /**
@@ -143,7 +145,7 @@ test("edit a complex condition in dev mode", async () => {
         { value: "all", level: 0 },
         { value: "expr", level: 1 },
     ]);
-    editExpression("uid");
+    await editExpression("uid");
     expect(getTreeEditorContent()).toEqual([
         { value: "all", level: 0 },
         { value: "uid", level: 1 },

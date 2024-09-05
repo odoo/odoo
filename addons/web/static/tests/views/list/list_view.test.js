@@ -2,6 +2,7 @@ import { Component, markup, onRendered, onWillStart, useRef, xml } from "@odoo/o
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import {
     clear,
+    click,
     edit,
     hover,
     keyDown,
@@ -20,6 +21,7 @@ import {
 } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 import {
+    clickModalButton,
     clickSave,
     contains,
     defineActions,
@@ -244,8 +246,8 @@ test(`select record range with shift+space`, async () => {
     });
 
     // Go to the first checkbox and check it
-    press("ArrowDown");
-    press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeFocused();
 
@@ -253,14 +255,14 @@ test(`select record range with shift+space`, async () => {
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeChecked();
 
     // Go to the fourth checkbox and shift+space
-    press("ArrowDown");
-    press("ArrowDown");
-    press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(3) .o_list_record_selector input`).toBeFocused();
     expect(`.o_data_row:eq(3) .o_list_record_selector input`).not.toBeChecked();
 
-    press(["shift", "space"]);
+    await press(["shift", "space"]);
     await animationFrame();
     // focus is on the input and not in the td cell
     expect(`.o_data_row:eq(3) .o_list_record_selector input`).toBeFocused();
@@ -280,8 +282,8 @@ test(`expand range of checkbox with shift+arrow`, async () => {
     });
 
     // Go to the first checkbox and check it
-    press("ArrowDown");
-    press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeFocused();
 
@@ -289,10 +291,10 @@ test(`expand range of checkbox with shift+arrow`, async () => {
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeChecked();
 
     // expand the checkbox with arrowdown
-    press(["shift", "ArrowDown"]);
-    press(["shift", "ArrowDown"]);
-    press(["shift", "ArrowDown"]);
-    press(["shift", "ArrowUp"]);
+    await press(["shift", "ArrowDown"]);
+    await press(["shift", "ArrowDown"]);
+    await press(["shift", "ArrowDown"]);
+    await press(["shift", "ArrowUp"]);
     await animationFrame();
     expect(`.o_data_row:eq(2) .o_list_record_selector input`).toBeFocused();
     expect(`.o_data_row:eq(2) .o_list_record_selector input`).toBeChecked();
@@ -314,27 +316,27 @@ test(`multiple interactions to change the range of checked boxes`, async () => {
         arch: `<tree><field name="foo"/><field name="int_field"/></tree>`,
     });
 
-    press("down");
+    await press("down");
     await animationFrame();
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).not.toBeFocused();
 
-    keyDown("shift");
-    press("down");
+    await keyDown("shift");
+    await press("down");
     await animationFrame();
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeFocused();
 
-    press("down");
-    press("down");
-    press("down");
-    press("up");
-    keyUp("shift");
-    press("down");
-    press("down");
-    press(["shift", "down"]);
+    await press("down");
+    await press("down");
+    await press("down");
+    await press("up");
+    await keyUp("shift");
+    await press("down");
+    await press("down");
+    await press(["shift", "down"]);
     await animationFrame();
 
     await contains(`.o_data_row:eq(7) .o_list_record_selector .o-checkbox`).click();
-    press(["shift", "down"]);
+    await press(["shift", "down"]);
     await animationFrame();
 
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeChecked();
@@ -402,7 +404,7 @@ test(`basic list view and command palette`, async () => {
         arch: `<tree><field name="foo"/></tree>`,
     });
 
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     expect(queryAllTexts(`.o_command_hotkey`)).toEqual([
         "New\nALT + C",
@@ -1446,7 +1448,7 @@ test(`editable list datepicker destroy widget (edition)`, async () => {
     await contains(`.o_field_date input`).click();
     expect(`.o_datetime_picker`).toHaveCount(1);
 
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(4);
@@ -1466,7 +1468,7 @@ test(`editable list datepicker destroy widget (new line)`, async () => {
     await contains(`.o_field_date input`).click();
     expect(`.o_datetime_picker`).toHaveCount(1, { message: "datepicker should be opened" });
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(0, { message: "the row is no longer in edition" });
     expect(`.o_data_row`).toHaveCount(4, { message: "There should still be 4 rows" });
@@ -1842,15 +1844,21 @@ test(`grouped list with (disabled) pager inside group`, async () => {
     expect(".o_group_header").toHaveCount(2);
 
     await contains(".o_group_header:first").click();
+
     expect(".o_data_row").toHaveCount(2);
     expect(".o_group_header .o_pager").toHaveCount(1);
 
     def = new Deferred();
-    await contains(".o_group_header .o_pager_next").click();
+
+    await click(".o_group_header .o_pager_next:enabled");
+    await animationFrame();
+
     expect(".o_group_header .o_pager_next").toHaveAttribute("disabled");
 
-    await contains(".o_group_header .o_pager_next").click();
-    await contains(".o_group_header .o_pager_next").click();
+    await click(".o_group_header .o_pager_next");
+    await click(".o_group_header .o_pager_next");
+    await animationFrame();
+
     expect(".o_data_row").toHaveCount(2);
 });
 
@@ -5330,14 +5338,14 @@ test(`Navigate between the list and kanban view using the command palette`, asyn
     expect(`.o_switch_view`).toHaveCount(2);
     expect(`.o_list_view`).toHaveCount(1);
 
-    press("control+k");
+    await press("control+k");
     await animationFrame();
     expect(`.o_command_category .o_command:contains(Show Kanban view)`).toHaveCount(1);
 
     await contains(`.o_command:contains(Show Kanban view)`).click();
     expect(`.o_kanban_view`).toHaveCount(1);
 
-    press("control+k");
+    await press("control+k");
     await animationFrame();
     expect(`.o_command_category .o_command:contains(Show List view)`).toHaveCount(1);
 
@@ -5685,7 +5693,7 @@ test(`display a tooltip on a field`, async () => {
         `,
     });
 
-    hover(`th[data-name="foo"] div`);
+    await hover(`th[data-name="foo"] div`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--technical`).toHaveCount(0);
     expect(`.o-tooltip`).toHaveCount(1);
@@ -5695,7 +5703,7 @@ test(`display a tooltip on a field`, async () => {
 
     // it is necessary to rerender the list so tooltips can be properly created
     await validateSearch(); // reload view
-    hover(`th[data-name="bar"] div`);
+    await hover(`th[data-name="bar"] div`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--technical`).toHaveCount(1);
     expect(`.o-tooltip--technical > li[data-item="widget"]`).toHaveCount(1);
@@ -5714,7 +5722,7 @@ test("field (with help) tooltip in non debug mode", async function () {
         resModel: "foo",
         arch: `<tree><field name="foo"/></tree>`,
     });
-    hover(`th[data-name="foo"] div`);
+    await hover(`th[data-name="foo"] div`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveCount(1);
     expect(`.o-tooltip`).toHaveText("Foo\nThis is a foo field");
@@ -6089,20 +6097,20 @@ test(`empty list with sample data: keyboard navigation`, async () => {
     // From search bar
     expect(`.o_searchview_input`).toBeFocused();
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(`.o_searchview_input`).toBeFocused();
 
     // From 'Create' button
-    pointerDown(".o_list_button_add");
+    await pointerDown(".o_list_button_add");
     await animationFrame();
     expect(`.o_list_button_add`).toBeFocused();
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(`.o_list_button_add`).toBeFocused();
 
-    press("tab");
+    await press("tab");
     await animationFrame();
     expect(`.o-tooltip--string`).toHaveCount(0);
 });
@@ -7444,13 +7452,13 @@ test(`pressing enter on last line of editable list view`, async () => {
     expect(`.o_selected_row [name=foo] input`).toBeFocused();
 
     // press enter in input
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`tr.o_data_row:eq(3)`).toHaveClass("o_selected_row");
     expect(`.o_selected_row [name=foo] input`).toBeFocused();
 
     // press enter on last row
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`tr.o_data_row`).toHaveCount(5);
     expect(`tr.o_data_row:eq(4)`).toHaveClass("o_selected_row");
@@ -7471,7 +7479,7 @@ test(`pressing tab on last cell of editable list view`, async () => {
     //it will not create a new line unless a modification is made
     await contains(`[name=foo] input`).edit("blip-changed", { confirm: "tab" });
     expect(`[name=int_field] input`).toBeFocused();
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`tr.o_data_row:eq(4)`).toHaveClass("o_selected_row", {
         message: "5th row should be selected",
@@ -7517,7 +7525,7 @@ test(`navigation with tab and read completes after default_get`, async () => {
     // we trigger a tab to move to the second cell in the current row. this
     // operation requires that this.currentRow is properly set in the
     // list editable renderer.
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`tr.o_data_row:eq(4)`).toHaveClass("o_selected_row", {
         message: "5th row should be selected",
@@ -7872,13 +7880,13 @@ test(`pressing TAB in editable list with several fields`, async () => {
     expect(`.o_data_row:eq(0) .o_data_cell:eq(0) input`).toBeFocused();
 
     // Press 'Tab' -> should go to next cell (still in first row)
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(0) .o_data_cell:eq(1) input`).toBeFocused();
 
     // Press 'Tab' -> should go to next line (first cell)
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) .o_data_cell:eq(0) input`).toBeFocused();
@@ -7899,12 +7907,12 @@ test(`pressing SHIFT-TAB in editable list with several fields`, async () => {
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) .o_data_cell:eq(0) input`).toBeFocused();
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(0) .o_data_cell:eq(1) input`).toBeFocused();
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(0) .o_data_cell:eq(0) input`).toBeFocused();
@@ -7933,14 +7941,14 @@ test(`navigation with tab and readonly field (no modification)`, async () => {
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Pressing Tab should skip the readonly field and directly go to the next row.
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // We do it again.
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
@@ -7976,7 +7984,7 @@ test(`navigation with tab and readonly field (with modification)`, async () => {
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // Press tab again.
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
@@ -8007,7 +8015,7 @@ test(`navigation with tab on a list with create="0"`, async () => {
     });
 
     // Press 'Tab' -> should go back to first line as the create action isn't available
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row", {
         message: "first row should be in edition",
@@ -8044,7 +8052,7 @@ test(`navigation with tab on a one2many list with create="0"`, async () => {
     expect(`.o_selected_row [name=name] input`).toBeFocused();
 
     // Press 'Tab' -> should go to next line
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_field_widget[name=o2m] .o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_selected_row`).toHaveCount(1);
@@ -8052,7 +8060,7 @@ test(`navigation with tab on a one2many list with create="0"`, async () => {
 
     // Pressing 'Tab' -> should use default behavior and thus get out of
     // the one to many and go to the next field of the form
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_field_widget[name=int_field] input`).toBeFocused();
 });
@@ -8078,7 +8086,7 @@ test(`edition, then navigation with tab (with a readonly field)`, async () => {
     // click on first dataRow and press TAB
     await contains(`.o_data_row .o_data_cell`).click();
     await contains(`.o_selected_row [name='foo'] input`).edit("new value");
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`tbody tr:eq(0) td:contains(new value)`).toHaveCount(1, {
         message: "should have the new value visible in dom",
@@ -8153,7 +8161,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field`, async () => {
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=qux] input`).toBeFocused();
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
@@ -8175,7 +8183,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field in first column`
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row [name=qux] input`).toBeFocused();
@@ -8197,7 +8205,7 @@ test(`pressing SHIFT-TAB in editable list with a readonly field in last column`,
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=int_field] input`).toBeFocused();
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row [name=foo] input`).toBeFocused();
@@ -8219,7 +8227,7 @@ test(`skip invisible fields when navigating list view with TAB`, async () => {
     await contains(`.o_data_row:eq(0) .o_field_cell[name=foo]`).click();
     expect(`.o_data_row:eq(0) .o_field_cell[name=foo] input`).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) .o_field_cell[name=int_field] input`).toBeFocused();
 });
@@ -8239,7 +8247,7 @@ test(`skip buttons when navigating list view with TAB (end)`, async () => {
     await contains(`.o_data_row:eq(2) [name=foo]`).click();
     expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(3) [name=foo] input`).toBeFocused();
 });
@@ -8261,7 +8269,7 @@ test(`skip buttons when navigating list view with TAB (middle)`, async () => {
     await contains(`.o_data_row:eq(2) [name=foo]`).click();
     expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(2) [name=int_field] input`).toBeFocused();
 });
@@ -8275,7 +8283,7 @@ test(`navigation: not moving down with keydown`, async () => {
     await contains(`.o_field_cell[name=foo]`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 });
@@ -8299,13 +8307,13 @@ test(`navigation: moving right with keydown from text field does not move the fo
     expect(textarea.selectionStart).toBe(0);
     expect(textarea.selectionEnd).toBe(3);
 
-    press("arrowright");
+    await press("arrowright");
     await animationFrame();
     expect(`.o_field_widget[name=foo] textarea`).toBeFocused();
     expect(textarea.selectionStart).toBe(3);
     expect(textarea.selectionEnd).toBe(3);
 
-    press("arrowright");
+    await press("arrowright");
     await animationFrame();
     expect(`.o_field_widget[name=foo] textarea`).toBeFocused();
     expect(textarea.selectionStart).toBe(3);
@@ -8423,7 +8431,7 @@ test(`pressing ESC discard the current line changes`, async () => {
     await contains(`.o_list_button_add`).click();
     expect(`tr.o_data_row`).toHaveCount(5, { message: "should currently adding a 5th data row" });
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(`tr.o_data_row`).toHaveCount(4, { message: "should have only 4 data row after escape" });
     expect(`tr.o_data_row.o_selected_row`).toHaveCount(0, {
@@ -8441,7 +8449,7 @@ test(`pressing ESC discard the current line changes (with required)`, async () =
     await contains(`.o_list_button_add`).click();
     expect(`tr.o_data_row`).toHaveCount(5, { message: "should currently adding a 5th data row" });
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(`tr.o_data_row`).toHaveCount(4, { message: "should have only 4 data row after escape" });
     expect(`tr.o_data_row.o_selected_row`).toHaveCount(0, {
@@ -9288,7 +9296,7 @@ test(`editable list view: non dirty record with required fields`, async () => {
     expect(`.o_selected_row`).toHaveCount(1);
 
     // do not change anything and press Enter key should not allow to discard record
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
 
@@ -9662,13 +9670,13 @@ test(`editable list view: clicking on "Discard changes" in multi edition`, async
     });
 
     // select two records
-    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).check();
+    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).check();
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
-    await contains(`.o_data_row [name=foo] input`).edit("oof", { confirm: false });
+    await contains(`.o_data_row [name=foo] input`).edit("oof", { confirm: "blur" });
 
-    contains(`.o_list_button_discard`).click();
-    await animationFrame();
+    await clickModalButton({ text: "Cancel" });
+
     expect(`.modal`).toHaveCount(0, { message: "should not open modal" });
     expect(`.o_data_row:eq(0) .o_data_cell:eq(0)`).toHaveText("yop");
 });
@@ -9756,8 +9764,8 @@ test(`editable list view: mousedown on "Discard", mouseup somewhere else (no mul
     await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_data_row [name=foo] input`).edit("oof", { confirm: false });
-    pointerDown(`.o_list_button_discard`);
-    pointerUp(".o_control_panel");
+    await pointerDown(`.o_list_button_discard`);
+    await pointerUp(".o_control_panel");
     await animationFrame();
     expect(`.modal`).toHaveCount(0, { message: "should not open modal" });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["oof", "blip", "gnap", "blip"]);
@@ -9801,7 +9809,7 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
     await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("oof2", { confirm: false });
 
     // mousedown on Discard (simulate a mousemove) and mouseup somewhere else
-    pointerDown(".o_list_button_discard");
+    await pointerDown(".o_list_button_discard");
     await animationFrame();
     expect(`.o_dialog`).toHaveCount(0, { message: "should not display an invalid field dialog" });
 
@@ -9812,7 +9820,7 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
         capture: true,
         once: true,
     });
-    pointerUp(".o_control_panel");
+    await pointerUp(".o_control_panel");
     await animationFrame();
     expect(`.o_dialog`).toHaveCount(1, { message: "should display an invalid field dialog" });
 
@@ -9832,9 +9840,9 @@ test(`editable list view (multi edition): mousedown on 'Discard', but mouseup so
     await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
     await contains(`.o_data_row:eq(0) .o_data_cell`).click();
     await contains(`.o_data_row [name=foo] input`).fill("oof", { confirm: false });
-    pointerDown(".o_list_button_discard");
+    await pointerDown(".o_list_button_discard");
     await animationFrame();
-    pointerUp(".o_control_panel");
+    await pointerUp(".o_control_panel");
     await animationFrame();
     expect(`.modal-header`).toHaveText("Confirmation", {
         message: "Modal should ask to save changes",
@@ -10013,76 +10021,76 @@ test(`editable readonly list view: navigation`, async () => {
     expect(`.o_searchview_input`).toBeFocused();
 
     // ArrowDown two times must get to the checkbox selector of first data row
-    press("ArrowDown");
-    press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(0) .o_list_record_selector input`).toBeFocused();
 
     // select the second record
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(1) .o_list_record_selector input`).toBeFocused();
     expect(`.o_data_row:eq(1) .o_list_record_selector input`).not.toBeChecked();
 
-    press("space");
+    await press("space");
     await animationFrame();
     expect(`.o_data_row:eq(1) .o_list_record_selector input`).toBeFocused();
     expect(`.o_data_row:eq(1) .o_list_record_selector input`).toBeChecked();
 
     // select the fourth record
-    press("ArrowDown");
-    press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(3) .o_list_record_selector input`).toBeFocused();
     expect(`.o_data_row:eq(3) .o_list_record_selector input`).not.toBeChecked();
 
-    press("space");
+    await press("space");
     await animationFrame();
     expect(`.o_data_row:eq(3) .o_list_record_selector input`).toBeFocused();
     expect(`.o_data_row:eq(3) .o_list_record_selector input`).toBeChecked();
 
     // toggle a row mode
-    press("ArrowUp");
-    press("ArrowUp");
-    press("ArrowRight");
+    await press("ArrowUp");
+    await press("ArrowUp");
+    await press("ArrowRight");
     await animationFrame();
     expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // Keyboard navigation only interracts with selected elements
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(3)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(3) [name=foo] input`).toBeFocused();
 
-    press("Tab"); // go to 4th row int_field
-    press("Tab"); // go to 2nd row foo field
+    await press("Tab"); // go to 4th row int_field
+    await press("Tab"); // go to 2nd row foo field
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
-    press("Tab"); // go to 2nd row int_field
-    press("Tab"); // go to 4th row foo field
+    await press("Tab"); // go to 2nd row int_field
+    await press("Tab"); // go to 4th row foo field
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(3)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(3) [name=foo] input`).toBeFocused();
 
-    press("Shift+Tab"); // go to 2nd row int_field
+    await press("Shift+Tab"); // go to 2nd row int_field
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=int_field] input`).toBeFocused();
 
-    press("Shift+Tab"); // go to 2nd row foo field
-    press("Shift+Tab"); // go to 4th row int_field field
+    await press("Shift+Tab"); // go to 2nd row foo field
+    await press("Shift+Tab"); // go to 4th row int_field field
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(3)`).toHaveClass("o_selected_row");
@@ -10148,19 +10156,19 @@ test(`editable readonly list view: navigation in grouped list`, async () => {
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Keyboard navigation only interracts with selected elements
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
@@ -11378,7 +11386,7 @@ test(`pressing ESC in editable grouped list should discard the current line chan
     expect(`.o_data_cell [name=foo] input`).toBeFocused();
 
     // discard by pressing ESC
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(`.modal`).toHaveCount(0);
     expect(`tbody tr td:contains(yop)`).toHaveCount(1);
@@ -11405,22 +11413,22 @@ test(`pressing TAB in editable="bottom" grouped list`, async () => {
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
     // Press 'Tab' -> should go to first line of second group
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
     // Press 'Tab' -> should go to next line (still in second group)
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
     // Press 'Tab' -> should go to next line (still in second group)
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(3)`).toHaveClass("o_selected_row");
 
     // Press 'Tab' -> should go back to first line of first group
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 });
@@ -11447,15 +11455,15 @@ test(`pressing TAB in editable="top" grouped list`, async () => {
     await contains(`.o_data_cell`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(3)`).toHaveClass("o_selected_row");
 });
@@ -11479,22 +11487,22 @@ test(`pressing TAB in editable grouped list with create=0`, async () => {
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
     // Press 'Tab' -> should go to the second group
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
     // Press 'Tab' -> should go to next line (still in second group)
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
     // Press 'Tab' -> should go to next line (still in second group)
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(3)`).toHaveClass("o_selected_row");
 
     // Press 'Tab' -> should go back to first line of first group
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 });
@@ -11522,7 +11530,7 @@ test(`pressing SHIFT-TAB in editable="bottom" grouped list`, async () => {
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1)`).not.toHaveClass("o_selected_row");
@@ -11531,7 +11539,7 @@ test(`pressing SHIFT-TAB in editable="bottom" grouped list`, async () => {
     await contains(`.o_data_row:eq(2) .o_data_cell`).click();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 });
@@ -11559,7 +11567,7 @@ test(`pressing SHIFT-TAB in editable="top" grouped list`, async () => {
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1)`).not.toHaveClass("o_selected_row");
@@ -11568,7 +11576,7 @@ test(`pressing SHIFT-TAB in editable="top" grouped list`, async () => {
     await contains(`.o_data_row:eq(2) .o_data_cell`).click();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 });
@@ -11596,7 +11604,7 @@ test(`pressing SHIFT-TAB in editable grouped list with create="0"`, async () => 
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1)`).not.toHaveClass("o_selected_row");
@@ -11605,7 +11613,7 @@ test(`pressing SHIFT-TAB in editable grouped list with create="0"`, async () => 
     await contains(`.o_data_row:eq(2) .o_data_cell`).click();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
-    press("shift+Tab");
+    await press("shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 });
@@ -11631,23 +11639,23 @@ test.todo(`editing then pressing TAB in editable grouped list`, async () => {
     await contains(`.o_data_row:eq(0) .o_data_cell`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
-    edit("new value", { confirm: false });
-    press("tab");
+    await edit("new value", { confirm: false });
+    await press("tab");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
     // fill foo field for the new record and press 'tab' -> should create another record
     // FIXME: input field hook calls update, but in a mutex -> .dirty is not set when we call applyCellKeydownEditModeGroup
-    edit("new record", { confirm: false });
-    press("tab");
+    await edit("new record", { confirm: false });
+    await press("tab");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
     // leave this new row empty and press tab -> should discard the new record and move to the
     // next group
-    press("tab");
+    await press("tab");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
@@ -11715,13 +11723,13 @@ test(`pressing ENTER in editable="bottom" grouped list view`, async () => {
     expect(`tr.o_data_row:eq(2)`).toHaveClass("o_selected_row");
 
     // press enter in input should move to next record
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`tr.o_data_row:eq(3)`).toHaveClass("o_selected_row");
     expect(`tr.o_data_row:eq(2)`).not.toHaveClass("o_selected_row");
 
     // press enter on last row should create a new record
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`tr.o_data_row`).toHaveCount(5);
     expect(`tr.o_data_row:eq(4)`).toHaveClass("o_selected_row");
@@ -11755,11 +11763,11 @@ test(`pressing ENTER in editable="top" grouped list view`, async () => {
     await contains(`.o_data_row .o_data_cell`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
     expect.verifySteps([
@@ -11806,28 +11814,28 @@ test(`pressing ENTER in editable grouped list view with create=0`, async () => {
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Press enter in input should move to next record, even if record is in another group
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // Press enter in input should move to next record
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(2) [name=foo] input`).toBeFocused();
 
     // Once again
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(3)`).toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(3) [name=foo] input`).toBeFocused();
 
     // Once again on the last data row should cycle to the first data row
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(1);
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
@@ -11846,68 +11854,68 @@ test(`cell-level keyboard navigation in non-editable list`, async () => {
     });
     expect(`.o_searchview_input`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`thead .o_list_record_selector input`).toBeFocused();
 
-    press("ArrowUp");
+    await press("ArrowUp");
     await animationFrame();
     expect(`.o_searchview_input`).toBeFocused();
 
-    press("ArrowDown");
-    press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`tbody tr:eq(0) .o_list_record_selector input`).toBeFocused();
 
-    press("ArrowRight");
+    await press("ArrowRight");
     await animationFrame();
     expect(`tbody tr:eq(0) .o_field_cell[name=foo]`).toBeFocused();
     expect(`tbody tr:eq(0) .o_field_cell[name=foo]`).toHaveText("yop");
 
-    press("ArrowRight");
+    await press("ArrowRight");
     await animationFrame();
     expect(`tbody tr:eq(0) .o_field_cell[name=foo]`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`tbody tr:eq(1) .o_field_cell[name=foo]`).toBeFocused();
     expect(`tbody tr:eq(1) .o_field_cell[name=foo]`).toHaveText("blip");
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`tbody tr:eq(2) .o_field_cell[name=foo]`).toBeFocused();
     expect(`tbody tr:eq(2) .o_field_cell[name=foo]`).toHaveText("gnap");
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`tbody tr:eq(3) .o_field_cell[name=foo]`).toBeFocused();
     expect(`tbody tr:eq(3) .o_field_cell[name=foo]`).toHaveText("blip");
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`tbody tr:eq(3) .o_field_cell[name=foo]`).toBeFocused();
     expect(`tbody tr:eq(3) .o_field_cell[name=foo]`).toHaveText("blip");
 
-    press("ArrowRight");
+    await press("ArrowRight");
     await animationFrame();
     expect(`tbody tr:eq(3) .o_field_cell[name=foo]`).toBeFocused();
     expect(`tbody tr:eq(3) .o_field_cell[name=foo]`).toHaveText("blip");
 
-    press("ArrowLeft");
+    await press("ArrowLeft");
     await animationFrame();
     expect(`tbody tr:eq(3) .o_list_record_selector input`).toBeFocused();
 
-    press("ArrowLeft");
+    await press("ArrowLeft");
     await animationFrame();
     expect(`tbody tr:eq(3) .o_list_record_selector input`).toBeFocused();
 
-    press("ArrowUp");
-    press("ArrowRight");
+    await press("ArrowUp");
+    await press("ArrowRight");
     await animationFrame();
     expect(`tbody tr:eq(2) .o_field_cell[name=foo]`).toBeFocused();
     expect(`tbody tr:eq(2) .o_field_cell[name=foo]`).toHaveText("gnap");
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect.verifySteps(["resId: 3"]);
 });
@@ -11928,24 +11936,24 @@ test(`keyboard navigation from last cell in editable list`, async () => {
     expect(`.o_data_row:eq(-1) [name=int_field] input`).toBeFocused();
 
     // Tab should focus the first field of first row
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of last row
-    press("Shift+Tab");
+    await press("Shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(-1) [name=int_field] input`).toBeFocused();
     // Enter should add a new row at the bottom
     expect(`.o_data_row`).toHaveCount(4);
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(-1) [name=foo] input`).toBeFocused();
 
     // Enter should discard the edited row as it is pristine + get to first row
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
@@ -11955,7 +11963,7 @@ test(`keyboard navigation from last cell in editable list`, async () => {
     expect(`.o_data_row:eq(-1) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row at the bottom
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
 
@@ -11965,7 +11973,7 @@ test(`keyboard navigation from last cell in editable list`, async () => {
     expect(`.o_data_row:eq(-1) [name=foo] input`).toBeFocused();
 
     // Escape should discard the added row as it is pristine + view should go into readonly mode
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_selected_row`).toHaveCount(0);
@@ -11996,23 +12004,23 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     expect(`.o_data_row:eq(3) [name=int_field] input`).toBeFocused();
 
     // Tab should focus the first field of first data row
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of last row
-    press("Shift+Tab");
+    await press("Shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(3) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row at the bottom
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(4) [name=foo] input`).toBeFocused();
 
     // Enter should discard the edited row as it is pristine + get to first row
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
@@ -12022,7 +12030,7 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     expect(`.o_data_row:eq(3) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row at the bottom
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(4) [name=foo] input`).toBeFocused();
@@ -12033,7 +12041,7 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     expect(`.o_data_row:eq(5) [name=foo] input`).toBeFocused();
 
     // Escape should discard the added row as it is pristine + view should go into readonly mode
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_selected_row`).toHaveCount(0);
@@ -12044,25 +12052,25 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Enter should add a new row in the first group
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
     expect(`.o_group_header:eq(0)`).toHaveText("No (2)\n -4");
 
     // Enter should discard the edited row as it is pristine + get to next data row
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_group_header:eq(0)`).toHaveText("No (1)\n -4");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of first row
-    press("Shift+Tab");
+    await press("Shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row in the first group
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
     expect(`.o_group_header:eq(0)`).toHaveText("No (2)\n -4");
@@ -12099,23 +12107,23 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     expect(`.o_data_row:eq(3) [name=int_field] input`).toBeFocused();
 
     // Tab should focus the first field of first data row
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of last row
-    press("Shift+Tab");
+    await press("Shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(3) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row at the bottom
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(4) [name=foo] input`).toBeFocused();
 
     // Enter should discard the edited row as it is pristine + get to first row
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
@@ -12125,7 +12133,7 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     expect(`.o_data_row:eq(3) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row at the bottom
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_data_row:eq(4) [name=foo] input`).toBeFocused();
@@ -12136,7 +12144,7 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     expect(`.o_data_row:eq(5) [name=foo] input`).toBeFocused();
 
     // Escape should discard the added row as it is pristine + view should go into readonly mode
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_selected_row`).toHaveCount(0);
@@ -12147,25 +12155,25 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
     // Enter should add a new row in the first group
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
     expect(`.o_group_header:eq(0)`).toHaveText("No (2)\n -4");
 
     // Enter should discard the edited row as it is pristine + get to next data row
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_group_header:eq(0)`).toHaveText("No (1)\n -4");
     expect(`.o_data_row:eq(1) [name=foo] input`).toBeFocused();
 
     // Shift+Tab should focus back the last field of first row
-    press("Shift+Tab");
+    await press("Shift+Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=int_field] input`).toBeFocused();
 
     // Enter should add a new row in the first group
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(6);
     expect(`.o_group_header:eq(0)`).toHaveText("No (2)\n -4");
@@ -12196,16 +12204,16 @@ test(`keyboard navigation with date range`, async () => {
     await contains(`.o_data_row:eq(0) [name=foo]`).click();
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     const [startDateInput, endDateInput] = queryAll(`.o_data_row:eq(0) [name=date] input`);
     expect(startDateInput).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(endDateInput).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=int_field] input`).toBeFocused();
 });
@@ -12225,11 +12233,11 @@ test(`keyboard navigation with Many2One field`, async () => {
     await contains(`.o_data_row:eq(0) [name=foo]`).click();
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=m2o] input`).toBeFocused();
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=int_field] input`).toBeFocused();
 });
@@ -12354,79 +12362,79 @@ test.todo(`cell-level keyboard navigation in editable grouped list`, async () =>
     expect(`.o_data_row:eq(1)`).toHaveClass("o_selected_row");
 
     await contains(`.o_data_row:eq(1) [name=foo] input`).click();
-    edit("blipbloup", { confirm: false });
-    press("escape");
+    await edit("blipbloup", { confirm: false });
+    await press("escape");
     await animationFrame();
     expect(`.modal`).toHaveCount(0);
     expect(`.o_data_row:eq(1)`).not.toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
     expect(`.o_data_row:eq(1) [name=foo]`).toHaveText("blip");
 
-    press("ArrowLeft");
+    await press("ArrowLeft");
     await animationFrame();
     expect(`.o_data_row:eq(1) input[type=checkbox]`).toBeFocused();
 
-    press("ArrowUp");
-    press("ArrowRight");
+    await press("ArrowUp");
+    await press("ArrowRight");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=foo]`).toBeFocused();
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 
-    edit("Zipadeedoodah", { confirm: "enter" });
+    await edit("Zipadeedoodah", { confirm: "enter" });
     await animationFrame();
     expect(`.o_data_row:eq(0)`).not.toHaveClass("o_selected_row");
     expect(`.o_data_row:eq(0) [name=foo]`).toHaveText("Zipadeedoodah");
     expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
     expect(`.o_data_row:eq(1) [name=foo]`).toHaveText("blip");
 
-    press("ArrowUp");
-    press("ArrowRight");
+    await press("ArrowUp");
+    await press("ArrowRight");
     await animationFrame();
     expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
     expect(`.o_data_row:eq(1) [name=foo]`).toHaveText("blip");
 
-    press("ArrowDown");
-    press("ArrowLeft");
+    await press("ArrowDown");
+    await press("ArrowLeft");
     await animationFrame();
     expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
     expect(`.o_data_row:eq(1) [name=foo]`).toHaveText("blip");
 
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(`.o_data_row:eq(1) td[name=foo]`).toBeFocused();
 
-    press("ArrowDown");
-    press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_group_field_row_add a`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_group_name:eq(1)`).toBeFocused();
     expect(`.o_data_row`).toHaveCount(3);
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_group_name:eq(1)`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(3) [name=foo]`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_group_field_row_add:eq(1) a`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_group_field_row_add:eq(1) a`).toBeFocused();
 
     // default Enter on a A tag
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     await contains(`.o_group_field_row_add a:eq(1)`).click();
     expect(`.o_data_row:eq(4) [name=foo] input`).toBeFocused();
@@ -12436,78 +12444,78 @@ test.todo(`cell-level keyboard navigation in editable grouped list`, async () =>
     });
     expect(`.o_data_row`).toHaveCount(6);
 
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(`.o_group_field_row_add:eq(1) a`).toBeFocused();
 
     // come back to the top
     for (let i = 0; i < 9; i++) {
-        press("ArrowUp");
+        await press("ArrowUp");
     }
     await animationFrame();
     expect(`thead th:eq(1)`).toBeFocused();
 
-    press("ArrowLeft");
+    await press("ArrowLeft");
     await animationFrame();
     expect(`thead th.o_list_record_selector input`).toBeFocused();
 
-    press("ArrowDown");
-    press("ArrowDown");
-    press("ArrowRight");
+    await press("ArrowDown");
+    await press("ArrowDown");
+    await press("ArrowRight");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=foo] input`).toBeFocused();
 
-    press("ArrowUp");
+    await press("ArrowUp");
     await animationFrame();
     expect(`.o_group_header:eq(0) .o_group_name`).toBeFocused();
     expect(`.o_data_row`).toHaveCount(5);
 
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_group_header:eq(0) .o_group_name`).toBeFocused();
 
-    press("ArrowRight");
+    await press("ArrowRight");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_group_header:eq(0) .o_group_name`).toBeFocused();
 
-    press("ArrowRight");
+    await press("ArrowRight");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(5);
     expect(`.o_group_header:eq(0) .o_group_name`).toBeFocused();
 
-    press("ArrowLeft");
+    await press("ArrowLeft");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_group_header:eq(0) .o_group_name`).toBeFocused();
 
-    press("ArrowLeft");
+    await press("ArrowLeft");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_group_header:eq(0) .o_group_name`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_group_header:eq(1) .o_group_name`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=foo]`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_group_field_row_add a`).toBeFocused();
 
-    press("ArrowUp");
+    await press("ArrowUp");
     await animationFrame();
     expect(`.o_data_row:eq(1) [name=foo]`).toBeFocused();
 
-    press("ArrowUp");
+    await press("ArrowUp");
     await animationFrame();
     expect(`.o_data_row:eq(0) [name=foo]`).toBeFocused();
 });
@@ -12540,50 +12548,50 @@ test(`execute group header button with keyboard navigation`, async () => {
     queryFirst(`.o_list_button_add`).focus();
     expect(`.o_list_button_add`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`thead th.o_list_record_selector input`).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`.o_group_header:nth-child(1) .o_group_name`).toBeFocused();
 
     // unfold first group
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(3);
     expect(`.o_group_header:nth-child(1) .o_group_name`).toBeFocused();
 
     // move to first record of opened group
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(`tbody .o_data_row:eq(0) td[name=foo]`).toBeFocused();
 
     // move back to the group header
-    press("ArrowUp");
+    await press("ArrowUp");
     await animationFrame();
     expect(`.o_group_header:nth-child(1) .o_group_name`).toBeFocused();
 
     // fold the group
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(0);
     expect(`.o_group_header:nth-child(1) .o_group_name`).toBeFocused();
 
     // unfold the group
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(3);
     expect(`.o_group_header:nth-child(1) .o_group_name`).toBeFocused();
 
     // tab to the group header button
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(`.o_group_header .o_group_buttons button:eq(0)`).toBeFocused();
 
     // click on the button by pressing enter
     expect.verifySteps([]);
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(3);
     expect.verifySteps(["some_method"]);
@@ -12662,7 +12670,7 @@ test(`add and discard a line through keyboard navigation without crashing`, asyn
 
     queryFirst(`.o_group_field_row_add a`).focus();
     expect(`.o_group_field_row_add a`).toBeFocused();
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(`.o_data_row`).toHaveCount(4);
 
@@ -13284,7 +13292,7 @@ test(`quickcreate in a many2one in a list`, async () => {
     await contains(`.o_data_row .o_data_cell`).click();
     await contains(`.o_data_row .o_data_cell input`).edit("aaa", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
     await animationFrame();
     expect(`.o_data_cell:eq(0)`).toHaveText("aaa");
 });
@@ -13636,7 +13644,7 @@ test(`Auto save: save on closing tab/browser`, async () => {
     await contains(`.o_data_cell`).click();
     await contains(`.o_data_cell [name=foo] input`).edit("test");
 
-    const [event] = unload();
+    const [event] = await unload();
     await animationFrame();
     expect(event.defaultPrevented).toBe(false);
     expect.verifySteps(["save"]);
@@ -13674,7 +13682,7 @@ test(`Auto save: save on closing tab/browser (invalid field)`, async () => {
     await contains(`.o_data_cell`).click();
     await contains(`.o_data_cell [name=foo] input`).edit("");
 
-    const [event] = unload();
+    const [event] = await unload();
     await animationFrame();
     // should not save because of invalid field
     expect.verifySteps([]);
@@ -13991,7 +13999,7 @@ test(`editable list header click should unselect record`, async () => {
 
     await contains(`.o_data_cell input`).edit("someInput", { confirm: false });
     await contains(`thead th:eq(1)`).click();
-    press("down");
+    await press("down");
     await animationFrame();
     expect(`.o_selected_row`).toHaveCount(0);
 });
@@ -15683,11 +15691,11 @@ test(`search nested many2one field with early option selection`, async () => {
     });
     await contains(`.o_field_x2many_list_row_add a`).click();
 
-    edit("alu", { confirm: false });
+    await edit("alu", { confirm: false });
     await runAllTimers();
 
-    edit("alue", { confirm: false });
-    press("enter");
+    await edit("alue", { confirm: false });
+    await press("enter");
     await runAllTimers();
 
     deferred.resolve();

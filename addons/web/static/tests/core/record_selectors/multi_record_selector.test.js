@@ -180,7 +180,7 @@ test("Can focus tags with arrow right and left", async () => {
         resIds: [1, 2],
     });
     // Click twice because to get the focus and make disappear the autocomplete popover
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     click(".o_multi_record_selector input");
     await animationFrame();
     press("arrowleft");
@@ -209,7 +209,7 @@ test("Delete the focused element", async () => {
         resIds: [1, 2],
     });
     // Click twice because to get the focus and make disappear the autocomplete popover
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     click(".o_multi_record_selector input");
     await animationFrame();
 

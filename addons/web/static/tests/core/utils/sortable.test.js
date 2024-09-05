@@ -226,7 +226,7 @@ test.skip("Sorting in groups with distinct per-axis scrolling", async () => {
     const scrollParentX = queryFirst(".root");
     const scrollParentY = queryFirst(".scroll_parent_y");
     const cancelDrag = async ({ cancel }) => {
-        cancel();
+        await cancel();
         await animationFrame();
         scrollParentY.scrollTop = 0;
         scrollParentX.scrollLeft = 0;
@@ -244,8 +244,8 @@ test.skip("Sorting in groups with distinct per-axis scrolling", async () => {
     expect(scrollParentX).toHaveProperty("scrollLeft", 16, {
         message: "Negative horizontal scrolling: scrollLeft",
     });
-    let dragHelpers = drag(".item12");
-    dragHelpers.moveTo(".item11", { position: "left", relative: true });
+    let dragHelpers = await drag(".item12");
+    await dragHelpers.moveTo(".item11", { position: "left", relative: true });
     await processAdvanceFrame();
     expect(scrollParentY).toHaveProperty("scrollTop", 50, {
         message: "Negative horizontal scrolling left - scrollTop",
@@ -264,8 +264,8 @@ test.skip("Sorting in groups with distinct per-axis scrolling", async () => {
     expect(scrollParentX).toHaveProperty("scrollLeft", 0, {
         message: "Positive horizontal scrolling - scrollLeft",
     });
-    dragHelpers = drag(".item11");
-    dragHelpers.moveTo(".item12", { position: "right", relative: true });
+    dragHelpers = await drag(".item11");
+    await dragHelpers.moveTo(".item12", { position: "right", relative: true });
     await processAdvanceFrame();
     expect(scrollParentY).toHaveProperty("scrollTop", 50, {
         message: "Positive horizontal scrolling right - scrollTop",
@@ -284,8 +284,8 @@ test.skip("Sorting in groups with distinct per-axis scrolling", async () => {
     expect(scrollParentX).toHaveProperty("scrollLeft", 0, {
         message: "Negative vertical scrolling - scrollLeft",
     });
-    dragHelpers = drag(".item11");
-    dragHelpers.moveTo(".item11", { position: "top", relative: true });
+    dragHelpers = await drag(".item11");
+    await dragHelpers.moveTo(".item11", { position: "top", relative: true });
     await processAdvanceFrame();
     expect(scrollParentY).toHaveProperty("scrollTop", 84, {
         message: "Negative vertical scrolling top - scrollTop",
@@ -304,8 +304,8 @@ test.skip("Sorting in groups with distinct per-axis scrolling", async () => {
     expect(scrollParentX).toHaveProperty("scrollLeft", 0, {
         message: "Positive vertical scrolling - scrollLeft",
     });
-    dragHelpers = drag(".item21");
-    dragHelpers.moveTo(".item21", { position: "bottom", relative: true });
+    dragHelpers = await drag(".item21");
+    await dragHelpers.moveTo(".item21", { position: "bottom", relative: true });
     await processAdvanceFrame();
     expect(scrollParentY).toHaveProperty("scrollTop", 16, {
         message: "Positive vertical scrolling bottom - scrollTop",
