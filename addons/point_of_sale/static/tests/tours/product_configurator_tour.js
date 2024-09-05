@@ -8,7 +8,8 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),

@@ -11,6 +11,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
     test: true,
     steps: () =>
         [
+            Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
             SelectionPopup.has("Pos Employee1"),
@@ -24,7 +25,6 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Dialog.confirm(),
             // after trying to close the number popup, the error popup should be shown
             // successfully confirming the dialog would imply that the error popup is actually shown
-            Dialog.confirm(),
             PosHr.clickLoginButton(),
             SelectionPopup.has("Pos Employee1", { run: "click" }),
 
@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             NumberPopup.enterValue("80"),
             NumberPopup.isShown("••••"),
             Dialog.confirm(),
-            Dialog.confirm("Open session"),
+            Dialog.confirm("Open Register"),
             ProductScreen.isShown(),
             PosHr.cashierNameIs("Pos Employee1"),
             PosHr.clickCashierName(),
@@ -57,6 +57,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
 
             // order for employee 1
             PosHr.clickLockButton(),
+            Chrome.clickBtn("Unlock Register"),
             PosHr.login("Pos Employee1", "2580"),
             TicketScreen.clickNewTicket(),
             ProductScreen.addOrderline("Desk Pad", "1"),
@@ -89,13 +90,14 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
     test: true,
     steps: () =>
         [
+            Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
             SelectionPopup.has("Pos Employee1"),
             SelectionPopup.has("Pos Employee2"),
             SelectionPopup.has("Mitchell Admin"),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
-            Dialog.confirm("Open session"),
+            Dialog.confirm("Open Register"),
             PosHr.cashierNameIs("Mitchell Admin"),
             PosHr.refreshPage(),
             ProductScreen.isShown(),

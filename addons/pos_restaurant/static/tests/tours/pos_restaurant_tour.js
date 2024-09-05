@@ -57,7 +57,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             // Create a floating order. The idea is to have one of the draft orders be a floating order during the tour.
 
@@ -194,6 +195,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
     steps: () =>
         [
             // There is one draft synced order from the previous tour
+            Chrome.startPoS(),
             FloorScreen.clickTable("5"),
             ProductScreen.totalAmountIs("4.40"),
 
@@ -233,7 +235,8 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1.0"),
             ProductScreen.clickOrderButton(),
@@ -251,7 +254,8 @@ registry.category("web_tour.tours").add("BillScreenTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickControlButton("Bill"),
@@ -269,7 +273,8 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2.0"),
@@ -288,7 +293,8 @@ registry.category("web_tour.tours").add("CategLabelCheck", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Test Multi Category Product"),
             ProductScreen.OrderButtonNotContain("Drinks"),

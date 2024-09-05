@@ -46,3 +46,19 @@ export function clickPlanButton() {
         run: "click",
     };
 }
+export function startPoS() {
+    return [
+        {
+            content: "Start PoS",
+            trigger: ".screen-login .btn.open-register-btn",
+            run: "click",
+        },
+    ];
+}
+export function clickBtn(name) {
+    return {
+        content: `Click on ${name}`,
+        trigger: `body button:contains(${name})`,
+        run: "click",
+    };
+}

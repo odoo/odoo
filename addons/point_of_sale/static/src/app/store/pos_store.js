@@ -138,7 +138,48 @@ export class PosStore extends Reactive {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
-        this.showScreen("ProductScreen");
+    }
+
+    get firstScreen() {
+        if (odoo.from_backend) {
+            // Remove from_backend params in the URL but keep the rest
+            const url = new URL(window.location.href);
+            url.searchParams.delete("from_backend");
+            window.history.replaceState({}, "", url);
+
+            if (!this.config.module_pos_hr) {
+                this.set_cashier(this.user);
+            }
+        }
+
+        return !this.cashier ? "LoginScreen" : "ProductScreen";
+    }
+
+    showLoginScreen() {
+        this.reset_cashier();
+        this.showScreen("LoginScreen");
+        this.dialog.closeAll();
+    }
+
+    reset_cashier() {
+        this.cashier = false;
+        sessionStorage.removeItem("connected_cashier");
+    }
+
+    checkPreviousLoggedCashier() {
+        const saved_cashier_id = Number(sessionStorage.getItem("connected_cashier"));
+        if (saved_cashier_id) {
+            this.set_cashier(this.models["res.users"].get(saved_cashier_id));
+        }
+    }
+
+    set_cashier(user) {
+        if (!user) {
+            return;
+        }
+
+        this.cashier = user;
+        sessionStorage.setItem("connected_cashier", user.id);
     }
 
     useProxy() {
@@ -171,6 +212,9 @@ export class PosStore extends Reactive {
         this.currency = this.data.models["res.currency"].getFirst();
         this.pickingType = this.data.models["stock.picking.type"].getFirst();
         this.models = this.data.models;
+
+        // Check cashier
+        this.checkPreviousLoggedCashier();
 
         // Add Payment Interface to Payment Method
         for (const pm of this.models["pos.payment.method"].getAll()) {
@@ -436,6 +480,7 @@ export class PosStore extends Reactive {
         }
 
         this.markReady();
+        this.showScreen(this.firstScreen);
     }
 
     get productListViewMode() {
@@ -1456,6 +1501,7 @@ export class PosStore extends Reactive {
         });
     }
     async closePos() {
+        sessionStorage.removeItem("connected_cashier");
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this) {

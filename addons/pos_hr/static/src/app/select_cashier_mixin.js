@@ -6,15 +6,13 @@ import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup"
 import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
 import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { makeAwaitable, ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 
-export function useCashierSelector(
-    { onCashierChanged, exclusive } = { onCashierChanged: () => {}, exclusive: false }
-) {
+export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, exclusive: false }) {
     const pos = usePos();
     const dialog = useService("dialog");
+    const notification = useService("notification");
     useBarcodeReader(
         {
             async cashier(code) {
@@ -26,10 +24,7 @@ export function useCashierSelector(
                     employee !== pos.get_cashier() &&
                     (!employee._pin || (await checkPin(employee)))
                 ) {
-                    pos.set_cashier(employee);
-                    if (onCashierChanged) {
-                        onCashierChanged();
-                    }
+                    onScan && onScan(employee);
                 }
                 return employee;
             },
@@ -53,9 +48,9 @@ export function useCashierSelector(
             }
         }
         if (!inputPin || employee._pin !== Sha1.hash(inputPin)) {
-            dialog.add(AlertDialog, {
-                title: _t("Incorrect Password"),
-                body: _t("Please try again."),
+            notification.add(_t("PIN not found"), {
+                type: "warning",
+                title: _t(`Wrong PIN`),
             });
             return false;
         }
@@ -65,12 +60,17 @@ export function useCashierSelector(
     /**
      * Select a cashier, the returning value will either be an object or nothing (undefined)
      */
-    return async function selectCashier(pin = false) {
+    return async function selectCashier(pin = false, login = false, list = false) {
+        let employee = false;
         if (!pos.config.module_pos_hr) {
             return;
         }
         const employeesList = pos.models["hr.employee"]
-            .filter((employee) => employee.id !== pos.get_cashier().id)
+            .filter(
+                (employee) =>
+                    employee.id !== pos.get_cashier()?.id &&
+                    (!pin || Sha1.hash(pin) === employee._pin)
+            )
             .map((employee) => {
                 return {
                     id: employee.id,
@@ -79,24 +79,55 @@ export function useCashierSelector(
                     isSelected: false,
                 };
             });
-        if (!employeesList.length) {
-            const confirmed = await ask(this.dialog, {
+        if (!employeesList.length && !pin) {
+            await ask(this.dialog, {
                 title: _t("No Cashiers"),
-                body: _t("There are no employees to select as cashier. Please create one."),
+                body: _t("There is no cashier available."),
             });
-            if (confirmed) {
-                this.pos.redirectToBackend();
+            return;
+        } else if (pin && !employeesList.length) {
+            notification.add(_t("PIN not found"), {
+                type: "warning",
+                title: _t(`Wrong PIN`),
+            });
+            return;
+        }
+
+        if (employeesList.length > 1 || list) {
+            employee = await makeAwaitable(dialog, SelectionPopup, {
+                title: _t("Change Cashier"),
+                list: employeesList,
+            });
+        } else if (employeesList.length === 1) {
+            employee = employeesList[0].item;
+        }
+
+        if (!pin && employee && employee._pin) {
+            const result = await checkPin(employee);
+
+            if (!result) {
+                return false;
             }
-            return;
         }
-        const employee = await makeAwaitable(dialog, SelectionPopup, {
-            title: _t("Change Cashier"),
-            list: employeesList,
-        });
-        if (!employee || (employee._pin && !(await checkPin(employee, pin)))) {
-            return;
+
+        if (login && employee) {
+            pos.hasLoggedIn = true;
+            pos.set_cashier(employee);
         }
-        pos.set_cashier(employee);
-        onCashierChanged?.();
+
+        const currentScreen = pos.mainScreen.component.name;
+        if (currentScreen === "LoginScreen" && login && employee) {
+            const isRestaurant = pos.config.module_pos_restaurant;
+            const selectedScreen =
+                pos.previousScreen && pos.previousScreen !== "LoginScreen"
+                    ? pos.previousScreen
+                    : isRestaurant
+                    ? "FloorScreen"
+                    : "ProductScreen";
+
+            pos.showScreen(selectedScreen);
+        }
+
+        return employee;
     };
 }

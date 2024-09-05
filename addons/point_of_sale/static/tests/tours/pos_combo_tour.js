@@ -5,13 +5,15 @@ import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),
@@ -76,7 +78,8 @@ registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Combo"),
             ProductScreen.selectedOrderlineHas("Desk Combo"),
             ProductScreen.clickOrderline("Desk Organizer"),
@@ -94,7 +97,8 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 2"),

@@ -2,6 +2,7 @@ import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util"
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
@@ -10,7 +11,8 @@ registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
     steps: () =>
         [
             // One card for gift_card_1.
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             SelectionPopup.has("gift_card_1"),
             SelectionPopup.has("gift_card_2"),

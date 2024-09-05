@@ -5,22 +5,17 @@ patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
         if (this.config.module_pos_hr) {
+            this.login = Boolean(odoo.from_backend) && !this.config.module_pos_hr;
             if (!this.hasLoggedIn) {
                 this.showScreen("LoginScreen");
             }
         }
     },
-    showLoginScreen() {
-        this.reset_cashier();
-        this.showScreen("LoginScreen");
-        this.dialog.closeAll();
-    },
     get employeeIsAdmin() {
         const cashier = this.get_cashier();
         return cashier._role === "manager" || cashier.user_id?.id === this.user.id;
     },
-    async processServerData() {
-        await super.processServerData(...arguments);
+    checkPreviousLoggedCashier() {
         if (this.config.module_pos_hr) {
             const saved_cashier_id = Number(sessionStorage.getItem("connected_cashier"));
             if (saved_cashier_id) {
@@ -28,6 +23,8 @@ patch(PosStore.prototype, {
             } else {
                 this.reset_cashier();
             }
+        } else {
+            super.checkPreviousLoggedCashier(...arguments);
         }
     },
     async actionAfterIdle() {
@@ -51,21 +48,19 @@ patch(PosStore.prototype, {
 
         return order;
     },
-    reset_cashier() {
-        this.cashier = false;
-        sessionStorage.removeItem("connected_cashier");
-    },
     set_cashier(employee) {
-        this.cashier = employee;
-        sessionStorage.setItem("connected_cashier", employee.id);
-        const o = this.get_order();
-        if (o && !o.get_orderlines().length) {
-            // Order without lines can be considered to be un-owned by any employee.
-            // We set the cashier on that order to the currently set employee.
-            o.update({ employee_id: employee });
-        }
-        if (!this.cashierHasPriceControlRights() && this.numpadMode === "price") {
-            this.numpadMode = "quantity";
+        super.set_cashier(employee);
+
+        if (this.config.module_pos_hr) {
+            const o = this.get_order();
+            if (o && !o.get_orderlines().length) {
+                // Order without lines can be considered to be un-owned by any employee.
+                // We set the cashier on that order to the currently set employee.
+                o.update({ employee_id: employee });
+            }
+            if (!this.cashierHasPriceControlRights() && this.numpadMode === "price") {
+                this.numpadMode = "quantity";
+            }
         }
     },
     addLineToCurrentOrder(vals, opt = {}, configure = true) {

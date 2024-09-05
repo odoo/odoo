@@ -605,7 +605,7 @@ class PosConfig(models.Model):
         if not self.current_session_id:
             self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
         path = '/pos/web' if self._force_http() else '/pos/ui'
-        pos_url = path + '?config_id=%d' % self.id
+        pos_url = path + '?config_id=%d&from_backend=True' % self.id
         debug = request and request.session.debug
         if debug:
             pos_url += '&debug=%s' % debug

@@ -6,7 +6,8 @@ registry.category("web_tour.tours").add("chrome_without_cash_move_permission", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             Chrome.clickMenuButton(),
             Chrome.isCashMoveButtonHidden(),
         ].flat(),
