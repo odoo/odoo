@@ -5374,10 +5374,14 @@ var BasicModel = AbstractModel.extend({
                 var orderData1 = data1[order.name];
                 var orderData2 = data2[order.name];
 
+                var type = list.fields[order.name].type;
                 // If the field is a relation, sort on the display_name of those records
-                if (list.fields[order.name].type === 'many2one') {
+                if (type === 'many2one') {
                     orderData1 = orderData1 ? self.localData[orderData1].data.display_name : "";
                     orderData2 = orderData2 ? self.localData[orderData2].data.display_name : "";
+                } else if (type === 'char' || type === 'text') {
+                    orderData1 = orderData1 || "";
+                    orderData2 = orderData2 || "";
                 }
                 if (orderData1 < orderData2) {
                     return order.asc ? -1 : 1;
