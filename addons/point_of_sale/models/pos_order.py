@@ -931,6 +931,7 @@ class PosOrder(models.Model):
         :Returns: list -- list of db-ids for the created and updated orders.
         """
         order_ids = []
+        session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
             existing_draft_order = self.env["pos.order"].search(
                 ['&', ('id', '=', order.get('id', False)), ('state', '=', 'draft')], limit=1) if isinstance(order.get('id'), int) else False
@@ -952,8 +953,11 @@ class PosOrder(models.Model):
         for order in pos_order_ids:
             order._ensure_access_token()
 
+        # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
+        is_rescue_session = any(order.get('session_id') not in session_ids for order in orders)
         return {
             'pos.order': pos_order_ids.read(pos_order_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.session': pos_order_ids.session_id._load_pos_data({})['data'] if config_id and is_rescue_session else [],
             'pos.payment': pos_order_ids.payment_ids.read(pos_order_ids.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.order.line': pos_order_ids.lines.read(pos_order_ids.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],

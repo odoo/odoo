@@ -149,11 +149,14 @@ export class PosStore extends Reactive {
         return await this.afterProcessServerData();
     }
 
+    get session() {
+        return this.data.models["pos.session"].getFirst();
+    }
+
     async processServerData() {
         // These fields should be unique for the pos_config
         // and should not change during the session, so we can
         // safely take the first element.this.models
-        this.session = this.data.models["pos.session"].getFirst();
         this.config = this.data.models["pos.config"].getFirst();
         this.company = this.data.models["res.company"].getFirst();
         this.user = this.data.models["res.users"].getFirst();
@@ -1012,6 +1015,14 @@ export class PosStore extends Reactive {
 
             this.models.loadData(modelToAdd);
             this.postSyncAllOrders(newData["pos.order"]);
+
+            if (modelToAdd["pos.session"].length > 0) {
+                // Replace the original session by the rescue one. And the rescue one will have
+                // a higher id than the original one since it's the last one created.
+                const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
+                session.delete();
+            }
+
             return newData["pos.order"];
         } catch (error) {
             if (options.throw) {
