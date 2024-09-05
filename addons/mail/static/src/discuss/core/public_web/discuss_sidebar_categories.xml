@@ -31,7 +31,7 @@
     <t t-name="mail.DiscussSidebarCategories.category">
         <DiscussSidebarCategory category="category"/>
         <t t-if="category.open">
-            <DiscussSidebarChannel t-foreach="filteredThreads(category)" t-as="thread" t-key="thread.localId" thread="thread"/>
+            <DiscussSidebarChannel t-foreach="filteredThreads(category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
         </t>
         <DiscussSidebarChannel t-elif="store.discuss.thread?.in(category.threads)" thread="store.discuss.thread"/>
     </t>
@@ -105,7 +105,7 @@
     <t t-name="mail.DiscussSidebarChannel.main">
         <div class="o-mail-DiscussSidebarChannel o-mail-DiscussSidebar-item d-flex rounded-2 align-items-center cursor-pointer mb-0 position-relative"
              t-att-class="attClass"
-             t-on-click="(ev) => this.openThread(ev)"
+             t-on-click="(ev) => this.openThread(ev, thread)"
              t-ref="root"
         >
             <button class="o-mail-DiscussSidebarChannel-itemMain btn border-0 rounded-start-2 text-reset d-flex align-items-center px-0 py-2" t-att-class="{ 'overflow-hidden': !store.discuss.isSidebarCompact }" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName">
@@ -131,6 +131,16 @@
             <span t-if="thread.selfMember?.message_unread_counter > 0 and !thread.mute_until_dt and thread.importantCounter === 0" class="o-mail-DiscussSidebarChannel-unreadIndicator position-absolute" name="unread-indicator" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }" title="Thread has unread messages"><i class="fa fa-circle smaller"/></span>
             <span t-if="thread.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge fw-bold {{thread.mute_until_dt ? 'o-muted' : ''}}" t-att-class="{ 'ms-1 me-2': !store.discuss.isSidebarCompact, 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact }" t-esc="thread.importantCounter"/>
         </div>
+        <t t-set="subChannels" t-value="env.filteredThreads?.(thread.sub_channel_ids) ?? []"/>
+        <ul t-if="subChannels.length > 0 and !store.discuss.isSidebarCompact" class="list-unstyled w-100 position-relative mb-0">
+            <li class="d-flex w-100 align-items-baseline pb-0" t-foreach="subChannels" t-as="sub" t-key="sub.localId">
+                <svg class="text-500 position-absolute me-1" style="left: 36px;" xmlns="http://www.w3.org/2000/svg" width="12" height="18" viewBox="0 0 12 18">
+                    <line x1="0" y1="6" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>
+                    <line x1="0" y1="100%" x2="100%" y2="100%" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                <button t-att-class="{'o-active': sub.eq(this.store.discuss.thread), 'fw-bold': sub.selfMember?.message_unread_counter > 0}" class="o-mail-DiscussSidebar-item btn btn-secondary fw-normal ms-5 me-2 p-0 ps-2  border-0 rounded-0 text-start text-truncate text-muted bg-inherit flex-grow-1" t-esc="sub.name" t-on-click="(ev) => this.openThread(ev, sub)"/>
+            </li>
+        </ul>
     </t>
 
     <t t-name="mail.DiscussSidebarChannel.commands">

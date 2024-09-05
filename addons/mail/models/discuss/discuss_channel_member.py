@@ -4,6 +4,8 @@ import logging
 import requests
 import uuid
 from markupsafe import Markup
+from collections import defaultdict
+from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
@@ -172,6 +174,11 @@ class ChannelMember(models.Model):
         # help the ORM to detect changes
         res.partner_id.invalidate_recordset(["channel_ids"])
         res.guest_id.invalidate_recordset(["channel_ids"])
+        # Always link members to owner channels as well. Member list should be
+        # kept in sync.
+        for member in res:
+            if owner := member.channel_id.owner_id:
+                owner.add_members(partner_ids=member.partner_id.ids, guest_ids=member.guest_id.ids)
         return res
 
     def write(self, vals):
@@ -181,9 +188,33 @@ class ChannelMember(models.Model):
                     raise AccessError(_('You can not write on %(field_name)s.', field_name=field_name))
         return super().write(vals)
 
+    @api.autovacuum
+    def _gc_unpin_outdated_sub_channels(self):
+        unpin_limit_dt = fields.Datetime.now() - timedelta(days=2)
+        members = self.env["discuss.channel.member"].search(
+            [
+                ("channel_id.owner_id", "!=", False),
+                ("last_interest_dt", "<", unpin_limit_dt),
+            ]
+        )
+        members.unpin_dt = fields.Datetime.now()
+        for member in members:
+            member._bus_send("discuss.channel/unpin", [{"id": member.channel_id.id}])
+
     def unlink(self):
         # sudo: discuss.channel.rtc.session - cascade unlink of sessions for self member
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
+        sub_member_domain = expression.AND([
+            [("channel_id", "in", self.channel_id.sub_channel_ids.ids)],
+            expression.OR(
+                [
+                    [("partner_id", "in", self.partner_id.ids)],
+                    [("guest_id", "in", self.guest_id.ids)],
+                ]
+            ),
+        ])
+        for member in self.search(sub_member_domain):
+            member.channel_id._action_unfollow(partner=member.partner_id, guest=member.guest_id)
         return super().unlink()
 
     def _bus_channel(self):

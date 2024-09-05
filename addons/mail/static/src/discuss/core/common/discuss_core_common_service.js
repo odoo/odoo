@@ -30,13 +30,14 @@ export class DiscussCoreCommon {
         this.busService.subscribe("discuss.channel/leave", (payload) => {
             const { Thread } = this.store.insert(payload);
             const [thread] = Thread;
-            if (thread.displayName) {
+            if (thread.displayName && !thread.owner_id) {
                 // Ignore if thread displayName (which might depend on knowledge of members for
                 // groups) is not known in the current tab.
                 this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
                     type: "info",
                 });
             }
+            thread.sub_channel_ids.forEach((t) => (t.isLocallyPinned = false));
         });
         this.busService.subscribe("discuss.channel/delete", (payload, metadata) => {
             const thread = this.store.Thread.insert({
@@ -66,13 +67,15 @@ export class DiscussCoreCommon {
             message.thread.transientMessages.push(message);
         });
         this.busService.subscribe("discuss.channel/unpin", (payload) => {
-            const thread = this.store.Thread.get({ model: "discuss.channel", id: payload.id });
-            if (thread) {
-                thread.is_pinned = false;
-                this.notificationService.add(
-                    _t("You unpinned your conversation with %s", thread.displayName),
-                    { type: "info" }
-                );
+            for (const { id } of payload) {
+                const thread = this.store.Thread.get({ id, model: "discuss.channel" });
+                if (thread) {
+                    thread.is_pinned = false;
+                    this.notificationService.add(
+                        _t("You unpinned your conversation with %s", thread.displayName),
+                        { type: "info" }
+                    );
+                }
             }
         });
         this.busService.subscribe("discuss.channel.member/fetched", (payload) => {

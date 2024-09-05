@@ -558,4 +558,19 @@ export class Thread extends Component {
             this.messageHighlight.scrollTo(el).then(() => (this.scrollingToHighlight = false));
         }
     }
+
+    get orderedMessages() {
+        const { order, thread } = this.props;
+        const { initial_message_id, nonEmptyMessages } = thread;
+        const orderedMessages =
+            order === "asc" ? [...nonEmptyMessages] : [...nonEmptyMessages].reverse();
+        if (initial_message_id && !initial_message_id.isEmpty) {
+            if (order === "asc") {
+                orderedMessages.unshift(initial_message_id);
+            } else {
+                orderedMessages.push(initial_message_id);
+            }
+        }
+        return orderedMessages;
+    }
 }

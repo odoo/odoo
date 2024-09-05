@@ -372,6 +372,10 @@ export class Thread extends Record {
         return this.model === "discuss.channel";
     }
 
+    get hasSubThreadFeature() {
+        return this.channel_type === "channel" && !this.owner_id;
+    }
+
     get isChatChannel() {
         return ["chat", "group"].includes(this.channel_type);
     }

@@ -141,3 +141,27 @@ class ChannelController(http.Controller):
         if not member:
             raise NotFound()
         return member._channel_fold(state, state_count)
+
+    @http.route("/mail/channel/sub_channel/fetch", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
+    def discuss_channel_sub_channel_fetch(self, owner_id, search_term=None, before=None, limit=30):
+        channel = request.env["discuss.channel"].search([("id", "=", owner_id)])
+        if not channel._find_or_create_member_for_self():
+            raise NotFound()
+        domain = [("owner_id", "=", channel.id)]
+        if before:
+            domain.append(("id", "<", before))
+        if search_term:
+            domain.append(("name", "ilike", search_term))
+        sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
+        store = Store(sub_channels)
+        store.add(sub_channels._get_last_messages())
+        return store.get_result()
+
+    @http.route("/mail/channel/sub_channel/join", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
+    def discuss_channel_sub_channel_join(self, sub_channel_id):
+        if sub_channel := request.env["discuss.channel"].browse(sub_channel_id).exists():
+            sub_channel._find_or_create_member_for_self()
+            return Store(sub_channel).get_result()
+        raise NotFound()

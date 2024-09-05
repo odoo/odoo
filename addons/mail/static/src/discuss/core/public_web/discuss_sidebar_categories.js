@@ -5,7 +5,7 @@ import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sideb
 import { cleanTerm } from "@mail/utils/common/format";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, useSubEnv } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -113,9 +113,9 @@ export class DiscussSidebarChannel extends Component {
     }
 
     /** @param {MouseEvent} ev */
-    openThread(ev) {
+    openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");
-        this.thread.setAsDiscussThread();
+        thread.setAsDiscussThread();
     }
 }
 
@@ -203,16 +203,18 @@ export class DiscussSidebarCategories extends Component {
             },
         });
         this.quickSearchFloating = useDropdownState();
+        useSubEnv({
+            filteredThreads: (threads) => this.filteredThreads(threads),
+        });
     }
 
-    filteredThreads(category) {
-        return category.threads.filter((thread) => {
-            return (
-                (thread.displayToSelf || thread.isLocallyPinned) &&
+    filteredThreads(threads) {
+        return threads.filter(
+            (thread) =>
+                thread.displayInSidebar &&
                 (!this.state.quickSearchVal ||
                     cleanTerm(thread.displayName).includes(cleanTerm(this.state.quickSearchVal)))
-            );
-        });
+        );
     }
 
     get hasQuickSearch() {

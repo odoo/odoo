@@ -677,6 +677,7 @@ patch(MockServer.prototype, {
      * @param {boolean} [pinned=false]
      */
     async _mockDiscussChannelChannelPin(ids, pinned = false) {
+        // TODO tsm: adapt this method, should handle batch now.
         const [channel] = this.getRecords("discuss.channel", [["id", "in", ids]]);
         const memberOfCurrentUser = this._mockDiscussChannelMember__getAsSudoFromContext(
             channel.id
@@ -687,9 +688,11 @@ patch(MockServer.prototype, {
             });
         }
         if (!pinned) {
-            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.channel/unpin", {
-                id: channel.id,
-            });
+            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.channel/unpin", [
+                {
+                    id: channel.id,
+                },
+            ]);
         } else {
             const store = {};
             Object.assign(store, {

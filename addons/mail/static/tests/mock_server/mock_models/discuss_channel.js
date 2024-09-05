@@ -441,6 +441,7 @@ export class DiscussChannel extends models.ServerModel {
      * @param {boolean} [pinned=false]
      */
     channel_pin(ids, pinned) {
+        // TODO tsm: adapt this method, should handle batch now.
         const kwargs = getKwArgs(arguments, "ids", "pinned");
         ids = kwargs.ids;
         delete kwargs.ids;
@@ -464,9 +465,11 @@ export class DiscussChannel extends models.ServerModel {
         }
         const [partner] = ResPartner.read(this.env.user.partner_id);
         if (!pinned) {
-            BusBus._sendone(partner, "discuss.channel/unpin", {
-                id: channel.id,
-            });
+            BusBus._sendone(partner, "discuss.channel/unpin", [
+                {
+                    id: channel.id,
+                },
+            ]);
         } else {
             BusBus._sendone(
                 partner,

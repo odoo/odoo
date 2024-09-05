@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SubChannelList">
+        <ActionPanel title.translate="Threads" resizable="false">
+            <t t-set-slot="header">
+                <div class="input-group my-2">
+                    <div class="form-control d-flex align-items-center py-1" role="search" aria-autocomplete="list">
+                        <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
+                            <input t-ref="search" t-model="state.searchTerm" type="text" class="o_searchview_input flex-grow-1 w-auto border-0" t-on-keydown="onKeydownSearch" placeholder="Search by name"/>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-primary" aria-label="Search button" t-on-click="search">
+                        <i t-if="!state.loading" class="o_searchview_icon oi oi-search" role="img" aria-label="Search Sub Channels" title="Search Sub Channels"/>
+                        <i t-else="" class="fa fa-spin fa-spinner" aria-label="Search in progress" title="Search in progress"/>
+                    </button>
+                </div>
+            </t>
+            <div class="o-mail-SubChannelList o-discuss-has-size-constraints mw-100">
+                <div t-if="state.subChannels.length === 0" class="flex-grow-1 pb-2 d-flex flex-column justify-content-center align-items-center">
+                    <p class="my-1 text-center fst-italic text-500">This channel does not have any thread yet.</p>
+                    <button class="btn btn-primary" t-on-click="onClickCreate">Create Thread</button>
+                </div>
+                <div>
+                    <t t-foreach="state.subChannels" t-as="thread" t-key="thread.localId">
+                        <t t-set="message" t-value="thread.newestPersistentNotEmptyOfAllMessage"/>
+                        <NotificationItem body="message?.inlineBody" displayName="thread.displayName" datetime="message?.datetime" iconSrc="thread.avatarUrl" muted="1" onClick="() => this.onClickSubThread(thread)"/>
+                    </t>
+                    <span t-ref="load-more"/>
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

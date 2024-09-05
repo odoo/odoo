@@ -61,6 +61,7 @@ patch(Message.prototype, {
             }
         }
     },
+
     openRecord() {
         this.message.thread.open();
     },

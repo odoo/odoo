@@ -21,4 +21,18 @@ patch(Thread.prototype, {
             }
         }
     },
+    /**
+     * @param {import("models").Message} initialMessage
+     */
+    async createSubChannel(initialMessage) {
+        const data = await this.store.env.services.orm.call(
+            "discuss.channel",
+            "create_sub_channel",
+            [[this.id]],
+            {
+                initial_message_id: initialMessage?.id,
+            }
+        );
+        this.store.insert(data);
+    },
 });

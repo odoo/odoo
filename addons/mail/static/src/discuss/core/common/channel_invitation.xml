@@ -3,7 +3,7 @@
 
     <t t-name="discuss.ChannelInvitation">
         <ActionPanel title.translate="Invite people" resizable="false">
-            <div t-att-class="{ 'o-discuss-ChannelInvitation-has-size-constraints': props.hasSizeConstraints }">
+            <div t-att-class="{ 'o-discuss-has-size-constraints': props.hasSizeConstraints }">
                 <t t-if="store.self.type === 'partner'">
                     <input class="o-discuss-ChannelInvitation-search border form-control" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
                     <div class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto">

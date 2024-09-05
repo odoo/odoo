@@ -346,7 +346,7 @@ test("sidebar: unpin chat from bus", async () => {
     // Simulate receiving a unpin chat notification
     // (e.g. from user interaction from another device or browser tab)
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    pyEnv["bus.bus"]._sendone(partner, "discuss.channel/unpin", { id: channelId });
+    pyEnv["bus.bus"]._sendone(partner, "discuss.channel/unpin", [{ id: channelId }]);
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
     await contains(".o-mail-Discuss-threadName", { count: 0, value: "Demo" });
 });

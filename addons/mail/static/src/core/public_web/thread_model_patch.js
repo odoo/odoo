@@ -17,7 +17,7 @@ patch(Thread.prototype, {
         if (["group", "chat"].includes(this.channel_type)) {
             return this.store.discuss.chats;
         }
-        if (this.channel_type === "channel") {
+        if (this.channel_type === "channel" && !this.owner_id) {
             return this.store.discuss.channels;
         }
     },

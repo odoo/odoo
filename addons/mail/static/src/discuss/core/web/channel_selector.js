@@ -72,6 +72,7 @@ export class ChannelSelector extends Component {
         if (cleanedTerm) {
             if (this.props.category.id === "channels") {
                 const domain = [
+                    ["owner_id", "=", false],
                     ["channel_type", "=", "channel"],
                     ["name", "ilike", cleanedTerm],
                 ];

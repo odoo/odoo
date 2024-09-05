@@ -12,6 +12,7 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const threadPatch = {
     setup() {
         super.setup();
+        this.initial_message_id = Record.one("Message");
         this.fetchChannelMutex = new Mutex();
         this.fetchChannelInfoDeferred = undefined;
         this.fetchChannelInfoState = "not_fetched";
@@ -82,6 +83,9 @@ const threadPatch = {
         } finally {
             this.isLoadingAttachments = false;
         }
+    },
+    get isEmpty() {
+        return !this.initial_message_id && super.isEmpty;
     },
     /** @param {string} body */
     async post(body) {

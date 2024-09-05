@@ -225,6 +225,7 @@ export class SuggestionService {
     searchChannelSuggestions(cleanedSearchTerm, sort) {
         const suggestionList = Object.values(this.store.Thread.records).filter(
             (thread) =>
+                !thread.owner_id &&
                 thread.channel_type === "channel" &&
                 thread.displayName &&
                 cleanTerm(thread.displayName).includes(cleanedSearchTerm)

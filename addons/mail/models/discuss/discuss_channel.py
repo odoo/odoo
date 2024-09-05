@@ -59,6 +59,9 @@ class Channel(models.Model):
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
         search='_search_channel_partner_ids')
     channel_member_ids = fields.One2many('discuss.channel.member', 'channel_id', string='Members')
+    owner_id = fields.Many2one("discuss.channel", help="Parent channel", ondelete="cascade")
+    sub_channel_ids = fields.One2many("discuss.channel", "owner_id", string="Sub Threads")
+    initial_message_id = fields.Many2one("mail.message", help="The message the channel was created from.")
     pinned_message_ids = fields.One2many('mail.message', 'res_id', domain=[('model', '=', 'discuss.channel'), ('pinned_at', '!=', False)], string='Pinned Messages')
     sfu_channel_uuid = fields.Char(groups="base.group_system")
     sfu_server_url = fields.Char(groups="base.group_system")
@@ -99,6 +102,19 @@ class Channel(models.Model):
         failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.group_public_id or channel.group_ids))
         if failing_channels:
             raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
+
+    @api.constrains("sub_channel_ids")
+    def _constraint_sub_channel_ids(self):
+        # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
+        if failing_channels := self.sudo().filtered(
+            lambda channel: channel.owner_id and channel.sub_channel_ids
+        ):
+            raise ValidationError(
+                _(
+                    "Channels %(channels)s cannot have sub-threads as they are sub-threads themselves.",
+                    channels=", ".join([ch.name for ch in failing_channels]),
+                )
+            )
 
     # COMPUTE / INVERSE
 
@@ -287,6 +303,8 @@ class Channel(models.Model):
                 channel._bus_send_store(channel, diff)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
+        if "group_public_id" in vals:
+            self.sub_channel_ids.group_public_id = vals["group_public_id"]
         return result
 
     def init(self):
@@ -323,30 +341,38 @@ class Channel(models.Model):
     def action_unfollow(self):
         self._action_unfollow(self.env.user.partner_id)
 
-    def _action_unfollow(self, partner):
+    def _action_unfollow(self, partner=None, guest=None):
+        self.ensure_one()
         self.message_unsubscribe(partner.ids)
-        custom_store = Store(self, {"is_pinned": False, "isLocallyPinned": False})
         member = self.env["discuss.channel.member"].search(
-            [("channel_id", "=", self.id), ("partner_id", "=", partner.id)]
+            [
+                ("channel_id", "=", self.id),
+                ("partner_id", "=", partner.id) if partner else ("guest_id", "=", guest.id),
+            ]
         )
+        custom_store = Store(self, {"is_pinned": False, "isLocallyPinned": False})
         if not member:
-            partner._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+            target = partner or guest
+            target._bus_send_store(custom_store, notification_type="discuss.channel/leave")
             return
-        member.unlink()
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _("left the channel")
-        # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
-        self.sudo().message_post(
-            body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
-        )
+        if not member.channel_id.owner_id:
+            notification = Markup('<div class="o_mail_notification">%s</div>') % _(
+                "left the channel"
+            )
+            # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
+            member.channel_id.sudo().message_post(
+                body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
+            )
         # send custom store after message_post to avoid is_pinned reset to True
-        partner._bus_send_store(custom_store, notification_type="discuss.channel/leave")
-        self._bus_send_store(
+        member._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+        member.channel_id._bus_send_store(
             self,
             {
                 "channelMembers": Store.many(member, "DELETE", only_id=True),
                 "memberCount": self.member_count,
             },
         )
+        member.unlink()
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """
@@ -693,6 +719,23 @@ class Channel(models.Model):
     #   - when a message is posted on a channel (to the channel, using _notify() method)
     # ------------------------------------------------------------
 
+    @api.autovacuum
+    def _gc_empty_sub_channels(self):
+        self.env.cr.execute(
+            """
+            SELECT id
+              FROM discuss_channel C
+             WHERE NOT EXISTS (
+                SELECT *
+                  FROM mail_message M
+                 WHERE M.res_id = C.id AND m.model = 'discuss.channel'
+            )
+               AND create_date < %s
+        """,
+            (fields.Datetime.now() - timedelta(days=1),),
+        )
+        self.browse([id for (id,) in self.env.cr.fetchall()]).unlink()
+
     def set_message_pin(self, message_id, pinned):
         """ (Un)pin a message on the channel and send a notification to the
         members.
@@ -739,10 +782,12 @@ class Channel(models.Model):
         if member:
             return member
         if not self.env.user._is_public():
-            return self.add_members(partner_ids=self.env.user.partner_id.ids)
+            return self.add_members(
+                partner_ids=self.env.user.partner_id.ids, post_joined_message=not self.owner_id
+            )
         guest = self.env["mail.guest"]._get_guest_from_context()
         if guest:
-            return self.add_members(guest_ids=guest.ids)
+            return self.add_members(guest_ids=guest.ids, post_joined_message=not self.owner_id)
         return self.env["discuss.channel.member"]
 
     def _find_or_create_persona_for_channel(self, guest_name, timezone, country_code, post_joined_message=True):
@@ -852,6 +897,8 @@ class Channel(models.Model):
             info = channel._channel_basic_info()
             info["is_editable"] = channel.is_editable
             info["fetchChannelInfoState"] = "fetched"
+            info["owner_id"] = Store.one(channel.owner_id)
+            info["initial_message_id"] = Store.one(channel.initial_message_id)
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
@@ -964,7 +1011,7 @@ class Channel(models.Model):
         if member:
             member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
         if not pinned:
-            self.env.user._bus_send("discuss.channel/unpin", {"id": self.id})
+            self.env.user._bus_send("discuss.channel/unpin", [{"id": self.id}])
         else:
             self.env.user._bus_send_store(self)
 
@@ -1053,7 +1100,6 @@ class Channel(models.Model):
         return new_channel
 
     @api.model
-    @api.returns('self', lambda channels: Store(channels).get_result())
     def create_group(self, partners_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 
@@ -1073,6 +1119,43 @@ class Channel(models.Model):
         channel._broadcast(channel.channel_member_ids.partner_id.ids)
         return channel
 
+    def create_sub_channel(self, initial_message_id=None):
+        message = self.env["mail.message"]
+        if initial_message_id:
+            message = self.env["mail.message"].search([("id", "=", initial_message_id)])
+        sub_channel = self.create(
+            {
+                "channel_member_ids": [Command.create({"partner_id": self.env.user.partner_id.id})],
+                "channel_type": "channel",
+                "group_public_id": self.group_public_id.id,
+                "initial_message_id": message.id,
+                "name": message.body.striptags()[:30] if message else _("New Thread"),
+                "owner_id": self.id,
+            }
+        )
+        store = Store(sub_channel)
+        store.add("DiscussApp", {"thread": Store.one(sub_channel, only_id=True)})
+        self.env.user.partner_id._bus_send("mail.record/insert",store.get_result())
+        notification = (
+            Markup('<div class="o_mail_notification">%s</div>')
+            % _(
+                "%(user)s started a thread: %(goto)s%(thread_name)s%(end)s.%(goto_all)sSee all threads%(end)s."
+            )
+        ) % {
+            "user": self.env.user.display_name,
+            "goto": Markup(
+                "<a href='#' class='o_channel_redirect' data-oe-id='%s' data-oe-model='discuss.channel'>"
+            )
+            % sub_channel.id,
+            "goto_all": Markup("<a href='#' data-oe-type='sub-threads-menu'>"),
+            "thread_name": sub_channel.name,
+            "end": Markup("</a>"),
+        }
+        self.message_post(
+            body=notification, message_type="notification", subtype_xmlid="mail.mt_comment"
+        )
+        return store.get_result()
+
     @api.readonly
     @api.model
     def get_mention_suggestions(self, search, limit=8):
@@ -1080,6 +1163,7 @@ class Channel(models.Model):
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
         domain = expression.AND([
+                        [('owner_id', "=", False)],
                         [('name', 'ilike', search)],
                         [('channel_type', '=', 'channel')],
                         [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
