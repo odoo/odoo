@@ -123,7 +123,8 @@ class ResDeviceLog(models.Model):
                     AND log1.platform = log2.platform
                     AND log1.browser = log2.browser
                     AND log1.ip_address = log2.ip_address
-                    AND log1.last_activity < log2.last_activity
+                    AND log1.last_activity <= log2.last_activity
+                    AND log1.id != log2.id
             )
         """)
         _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
