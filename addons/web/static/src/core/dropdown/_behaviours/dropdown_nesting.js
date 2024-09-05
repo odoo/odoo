@@ -18,7 +18,9 @@ class DropdownNestingState {
 
     set isOpen(value) {
         this._isOpen = value;
-        BUS.trigger("state-changed", this);
+        if (this._isOpen) {
+            BUS.trigger("dropdown-opened", this);
+        }
     }
 
     get isOpen() {
@@ -90,7 +92,7 @@ export function useDropdownNesting(state) {
     );
 
     useChildSubEnv({ [DROPDOWN_NESTING]: current });
-    useBus(BUS, "state-changed", ({ detail: other }) => current.handleChange(other));
+    useBus(BUS, "dropdown-opened", ({ detail: other }) => current.handleChange(other));
 
     effect(
         (state) => {
