@@ -170,6 +170,7 @@ class AccountMove(models.Model):
         string='Journal',
         compute='_compute_journal_id', inverse='_inverse_journal_id', store=True, readonly=False, precompute=True,
         required=True,
+        change_default=True,
         check_company=True,
         domain="[('id', 'in', suitable_journal_ids)]",
     )
