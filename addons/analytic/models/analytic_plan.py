@@ -284,6 +284,8 @@ class AccountAnalyticPlan(models.Model):
 class AccountAnalyticApplicability(models.Model):
     _name = 'account.analytic.applicability'
     _description = "Analytic Plan's Applicabilities"
+    _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     analytic_plan_id = fields.Many2one('account.analytic.plan')
     business_domain = fields.Selection(
