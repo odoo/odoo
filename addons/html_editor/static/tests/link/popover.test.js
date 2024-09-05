@@ -30,7 +30,7 @@ describe("should open a popover", () => {
         expect(".o-we-linkpopover").toHaveCount(1);
         // selection outside a link
         setContent(el, "<p>this []is a <a>link</a></p>");
-        await waitUntil(() => !document.querySelector(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
         expect(".o-we-linkpopover").toHaveCount(0);
     });
     test("link popover should have input field for href when the link doesn't have href", async () => {
@@ -120,7 +120,7 @@ describe("popover should edit,copy,remove the link", () => {
         const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
         await waitFor(".o-we-linkpopover");
         click(".o_we_remove_link");
-        await waitUntil(() => !document.querySelector(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
         expect(getContent(el)).toBe("<p>this is a li[]nk</p>");
     });
     test("after edit the label, the text of the link should be updated", async () => {
@@ -703,7 +703,7 @@ describe("link preview", () => {
             focusNode: pNode,
             focusOffset: 1,
         });
-        await waitUntil(() => !document.querySelector(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
 
         const linkNode = queryOne("a");
         setSelection({
@@ -744,7 +744,7 @@ describe("link preview", () => {
             focusNode: pNode,
             focusOffset: 1,
         });
-        await waitUntil(() => !document.querySelector(".o-we-linkpopover"));
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
 
         const linkNode = queryOne("a");
         setSelection({
@@ -755,5 +755,42 @@ describe("link preview", () => {
         });
         await waitFor(".o-we-linkpopover");
         expect.verifySteps([]);
+    });
+});
+
+describe("link in templates", () => {
+    test("Should not remove a link with t-attf-href", async () => {
+        const { el } = await setupEditor('<p>test<a t-attf-href="/test/1">li[]nk</a></p>');
+
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover").toHaveCount(1);
+        const pNode = queryOne("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 0,
+            focusNode: pNode,
+            focusOffset: 0,
+        });
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>[]test<a t-attf-href="/test/1">link</a></p>'
+        );
+    });
+    test("Should not remove a link with t-att-href", async () => {
+        const { el } = await setupEditor('<p>test<a t-att-href="/test/1">li[]nk</a></p>');
+
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover").toHaveCount(1);
+        const pNode = queryOne("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 0,
+            focusNode: pNode,
+            focusOffset: 0,
+        });
+        await waitUntil(() => !queryFirst(".o-we-linkpopover"));
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>[]test<a t-att-href="/test/1">link</a></p>'
+        );
     });
 });
