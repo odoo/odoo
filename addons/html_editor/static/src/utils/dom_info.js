@@ -515,7 +515,7 @@ export function isEmptyBlock(blockEl) {
             return false;
         }
     }
-    return true;
+    return isBlock(blockEl);
 }
 /**
  * Checks whether or not the given block element has something to make it have
