@@ -1066,3 +1066,24 @@ test("update the selected input date after removing the existing date", async ()
 
     expect("input[data-field=date]").toHaveValue("02/12/2017");
 });
+
+test("daterange field in kanban with show_time option", async () => {
+    mockTimeZone(+2);
+    Partner._records[0].datetime_end = "2017-03-13 00:00:00";
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-card">
+                        <field name="datetime" widget="daterange" options="{'show_time': false, 'end_date_field': 'datetime_end'}"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_field_daterange span")).toEqual(["02/08/2017", "03/13/2017"]);
+});

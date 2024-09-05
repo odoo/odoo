@@ -547,6 +547,26 @@ test("edit a datetime field in form view with show_seconds option", async () => 
     });
 });
 
+test("datetime field (with widget) in kanban with show_time option", async () => {
+    mockTimeZone(+2);
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-card">
+                        <field name="datetime" widget="datetime" options="{'show_time': false}"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        resId: 1,
+    });
+
+    expect(".o_kanban_record:first").toHaveText("02/08/2017");
+});
+
 test("datetime field in list with show_time option", async () => {
     mockTimeZone(+2);
     onRpc("has_group", () => true);

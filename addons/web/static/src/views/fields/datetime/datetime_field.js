@@ -1,18 +1,12 @@
 import { Component, onWillRender, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
-import {
-    areDatesEqual,
-    deserializeDate,
-    deserializeDateTime,
-    formatDate,
-    formatDateTime,
-    today,
-} from "@web/core/l10n/dates";
+import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
+import { formatDate, formatDateTime } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
 /**
