@@ -107,10 +107,21 @@ export class ClipboardPlugin extends Plugin {
         ev.preventDefault();
         const selection = this.shared.getEditableSelection();
 
-        let clonedContents = selection.cloneContents();
+        const clonedContents = selection.cloneContents();
         if (!clonedContents.hasChildNodes()) {
             return;
         }
+        const { odooHtml, odooText } = this.createClipboardData(selection, clonedContents);
+        ev.clipboardData.setData("text/plain", odooText);
+        ev.clipboardData.setData("text/html", odooHtml);
+        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", odooHtml);
+    }
+
+    /**
+     * @param {EditorSelection} clonedContents
+     * @param {DocumentFragment} selection
+     */
+    createClipboardData(selection, clonedContents) {
         // Repair the copied range.
         if (clonedContents.firstChild.nodeName === "LI") {
             const list = selection.commonAncestorContainer.cloneNode();
@@ -191,9 +202,7 @@ export class ClipboardPlugin extends Plugin {
         dataHtmlElement.append(clonedContents);
         const odooHtml = dataHtmlElement.innerHTML;
         const odooText = selection.textContent();
-        ev.clipboardData.setData("text/plain", odooText);
-        ev.clipboardData.setData("text/html", odooHtml);
-        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", odooHtml);
+        return { odooHtml, odooText };
     }
 
     /**
@@ -542,6 +551,14 @@ export class ClipboardPlugin extends Plugin {
      * @param {DragEvent} ev
      */
     onDragStart(ev) {
+        const selection = this.shared.getEditableSelection();
+        const clonedContents = selection.cloneContents();
+        if (!clonedContents.hasChildNodes()) {
+            return;
+        }
+        const { odooHtml, odooText } = this.createClipboardData(selection, clonedContents);
+        ev.dataTransfer.setData("text/plain", odooText);
+        ev.dataTransfer.setData("text/html", odooHtml);
         if (ev.target.nodeName === "IMG") {
             this.dragImage = ev.target instanceof HTMLElement && ev.target;
             ev.dataTransfer.setData(
