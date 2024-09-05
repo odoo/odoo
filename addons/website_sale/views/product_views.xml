@@ -171,7 +171,17 @@
             </group>
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group colspan="2" name="product_template_images" string="eCommerce Media" invisible="not sale_ok">
-                    <field colspan="2" name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add Media" nolabel="1" widget="x2_many_media_viewer"/>
+                    <field
+                        colspan="2"
+                        name="product_template_image_ids"
+                        class="o_website_sale_image_list"
+                        context="{'default_name': name}"
+                        mode="kanban"
+                        add-label="Add Media"
+                        nolabel="1"
+                        widget="x2_many_media_viewer"
+                        options="{'convert_to_webp': True}"
+                    />
                 </group>
             </xpath>
             <xpath expr="//page[@name='sales']//group[@name='description']" position="after">
@@ -228,7 +238,7 @@
             </group>
             <group name="packaging" position="after">
                 <group colspan="2" name="product_variant_images" string="Extra Variant Media">
-                    <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add Media" nolabel="1" widget="x2_many_media_viewer"/>
+                    <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add Media" nolabel="1" widget="x2_many_media_viewer" options="{'convert_to_webp': True}"/>
                 </group>
             </group>
         </field>

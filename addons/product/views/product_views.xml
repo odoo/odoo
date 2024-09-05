@@ -55,7 +55,12 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="id" invisible="True"/>
-                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <field
+                        name="image_1920"
+                        widget="image"
+                        class="oe_avatar"
+                        options="{'convert_to_webp': True, 'preview_image': 'image_128'}"
+                    />
                     <div class="oe_title">
                         <label for="name" string="Product"/>
                         <h1>
@@ -324,7 +329,7 @@
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="company_id" invisible="1"/>
-                        <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
@@ -518,7 +523,7 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'preview_image': 'image_128'}"/>
+                        <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
                         <group name="name">
                                 <field name="company_id" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
