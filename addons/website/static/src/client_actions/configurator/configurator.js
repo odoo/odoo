@@ -24,14 +24,14 @@ import {
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
-const ROUTES = {
+export const ROUTES = {
     descriptionScreen: 2,
     paletteSelectionScreen: 3,
     featuresSelectionScreen: 4,
     themeSelectionScreen: 5,
 };
 
-const WEBSITE_TYPES = {
+export const WEBSITE_TYPES = {
     1: {id: 1, label: _t("a business website"), name: 'business'},
     2: {id: 2, label: _t("an online store"), name: 'online_store'},
     3: {id: 3, label: _t("a blog"), name: 'blog'},
@@ -39,7 +39,7 @@ const WEBSITE_TYPES = {
     5: {id: 5, label: _t("an elearning platform"), name: 'elearning'},
 };
 
-const WEBSITE_PURPOSES = {
+export const WEBSITE_PURPOSES = {
     1: {id: 1, label: _t("get leads"), name: 'get_leads'},
     2: {id: 2, label: _t("develop the brand"), name: 'develop_brand'},
     3: {id: 3, label: _t("sell more"), name: 'sell_more'},
@@ -47,7 +47,7 @@ const WEBSITE_PURPOSES = {
     5: {id: 5, label: _t("schedule appointments"), name: 'schedule_appointments'},
 };
 
-const PALETTE_NAMES = [
+export const PALETTE_NAMES = [
     'default-1',
     'default-2',
     'default-3',
@@ -80,20 +80,20 @@ const PALETTE_NAMES = [
 
 // Attributes for which background color should be retrieved
 // from CSS and added in each palette.
-const CUSTOM_BG_COLOR_ATTRS = ['menu', 'footer'];
+export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
 //------------------------------------------------------------------------------
 // Components
 //------------------------------------------------------------------------------
 
-class SkipButton extends Component {
+export class SkipButton extends Component {
     static template = "website.Configurator.SkipButton";
     static props = {
         skip: Function,
     };
 }
 
-class WelcomeScreen extends Component {
+export class WelcomeScreen extends Component {
     static template = "website.Configurator.WelcomeScreen";
     static components = { SkipButton };
     static props = {
@@ -109,7 +109,7 @@ class WelcomeScreen extends Component {
     }
 }
 
-class IndustrySelectionAutoComplete extends AutoComplete {
+export class IndustrySelectionAutoComplete extends AutoComplete {
     static timeout = 400;
 
     get dropdownOptions() {
@@ -124,7 +124,7 @@ class IndustrySelectionAutoComplete extends AutoComplete {
     }
 }
 
-class DescriptionScreen extends Component {
+export class DescriptionScreen extends Component {
     static template = 'website.Configurator.DescriptionScreen';
     static components = { SkipButton, AutoComplete: IndustrySelectionAutoComplete };
     static props = {
@@ -233,7 +233,7 @@ class DescriptionScreen extends Component {
     }
 }
 
-class PaletteSelectionScreen extends Component {
+export class PaletteSelectionScreen extends Component {
     static components = {SkipButton};
     static template = 'website.Configurator.PaletteSelectionScreen';
     static props = {
@@ -335,7 +335,7 @@ class PaletteSelectionScreen extends Component {
     }
 }
 
-class ApplyConfiguratorScreen extends Component {
+export class ApplyConfiguratorScreen extends Component {
     static template = "";
     static props = ["*"];
     setup() {
@@ -442,7 +442,7 @@ export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
     }
 }
 
-class ThemeSelectionScreen extends ApplyConfiguratorScreen {
+export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     static template = "website.Configurator.ThemeSelectionScreen";
     setup() {
         super.setup();
@@ -489,7 +489,7 @@ class ThemeSelectionScreen extends ApplyConfiguratorScreen {
 // Store
 //------------------------------------------------------------------------------
 
-class Store {
+export class Store {
     async start(getInitialState) {
         Object.assign(this, await getInitialState());
     }
