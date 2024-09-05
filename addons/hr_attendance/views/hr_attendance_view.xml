@@ -217,7 +217,9 @@
                 <separator/>
                 <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
                 <filter string="Errors" name="errors"
-                        domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"                />
+                        domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Automatically Checked-Out" name="auto_check"
+                        domain="[('out_mode', '=', 'auto_check_out')]"/>
                 <separator/>
                 <filter string="Check In" name="check_in_filter" date="check_in"/>
                 <filter string="Last 7 days" name="last_week" domain="[(
@@ -319,10 +321,10 @@
         <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <list string="Employee attendances" editable="bottom" create="0">
+            <list string="Employee attendances" create="0">
                 <header>
-                    <button class="btn-primary" string="Approve Extra Hours" name="action_approve_overtime" type="object"/>
-                    <button class="btn-primary" string="Refuse Extra Hours" name="action_refuse_overtime" type="object"/>
+                    <button class="btn-secondary" string="Approve" name="action_approve_overtime" type="object"/>
+                    <button class="btn-secondary" string="Refuse" name="action_refuse_overtime" type="object"/>
                 </header>
                 <field name="employee_id" widget="many2one_avatar_user" readonly="1"/>
                 <field name="check_in" readonly="1"/>
