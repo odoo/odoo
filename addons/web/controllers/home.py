@@ -46,17 +46,11 @@ class Home(http.Controller):
         return False
 
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
-    @http.route(['/web', '/odoo', '/odoo/<path:subpath>', '/scoped_app/<path:subpath>'], type='http', auth="none", readonly=_web_client_readonly)
+    @http.route(['/web', '/odoo', '/odoo/<path:subpath>', '/scoped_app/<path:subpath>'], type='http', auth="user", readonly=_web_client_readonly)
     def web_client(self, s_action=None, **kw):
 
         # Ensure we have both a database and a user
         ensure_db()
-        if not request.session.uid:
-            return request.redirect_query('/web/login', query={'redirect': request.httprequest.full_path}, code=303)
-        if kw.get('redirect'):
-            return request.redirect(kw.get('redirect'), 303)
-        if not security.check_session(request.session, request.env, request):
-            raise http.SessionExpiredException("Session expired")
         if not is_user_internal(request.session.uid):
             return request.redirect('/web/login_successful', 303)
 

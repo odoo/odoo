@@ -2392,10 +2392,8 @@ class Application:
                 # Logs the error here so the traceback starts with ``__call__``.
                 if hasattr(exc, 'loglevel'):
                     _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
-                elif isinstance(exc, HTTPException):
+                elif isinstance(exc, (HTTPException, SessionExpiredException)):
                     pass
-                elif isinstance(exc, SessionExpiredException):
-                    _logger.info(exc)
                 elif isinstance(exc, (UserError, AccessError)):
                     _logger.warning(exc)
                 else:
