@@ -166,6 +166,10 @@ find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
     done
 done
 
+# copy the odoo.conf file to the overwrite directory
+mv -v "${MOUNT_POINT}/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "${MOUNT_POINT}/home/pi/"
+chown pi:pi "${MOUNT_POINT}/home/pi/odoo.conf"
+
 # cleanup
 umount -fv "${MOUNT_POINT}"/boot/
 umount -lv "${MOUNT_POINT}"/
