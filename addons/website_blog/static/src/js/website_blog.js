@@ -47,7 +47,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         // Use setTimeout() to calculate the 'offset()'' only after that size classes
         // have been applyed and that $el has been resized.
         setTimeout(() => {
-            this._forumScrollAction(ev.currentTarget, 300, function () {
+            this._forumScrollAction(ev.currentTarget, function () {
                 window.location.href = nexInfo.url;
             });
         });
@@ -61,7 +61,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         ev.stopImmediatePropagation();
         const currentTargetEl = document.querySelector(ev.currentTarget.hash);
 
-        this._forumScrollAction(currentTargetEl, 500, function () {
+        this._forumScrollAction(currentTargetEl, function () {
             window.location.hash = 'blog_content';
         });
     },
@@ -95,7 +95,6 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     /**
      * @private
      * @param {HTMLElement} el - the element we are scrolling to
-     * @param {Integer} duration - scroll animation duration
      * @param {Function} callback - to be executed after the scroll is performed
      */
     _forumScrollAction: function (el, callback) {
