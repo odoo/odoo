@@ -25,6 +25,7 @@ export class TourHelpers {
     check(selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "check");
+        this._ensureElementIsInModal(element, "check");
         hoot.check(element);
     }
 
@@ -45,6 +46,7 @@ export class TourHelpers {
     clear(selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "clear");
+        this._ensureElementIsInModal(element, "clear");
         hoot.click(element);
         hoot.clear();
     }
@@ -61,6 +63,7 @@ export class TourHelpers {
     click(selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "click");
+        this._ensureElementIsInModal(element, "click");
         hoot.click(element);
     }
 
@@ -76,6 +79,7 @@ export class TourHelpers {
     dblclick(selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "dblclick");
+        this._ensureElementIsInModal(element, "dblclick");
         hoot.dblclick(element);
     }
 
@@ -135,6 +139,7 @@ export class TourHelpers {
      */
     edit(text, selector) {
         const element = this._get_action_element(selector);
+        this._ensureElementIsInModal(element, "edit");
         hoot.click(element);
         hoot.edit(text);
     }
@@ -146,6 +151,7 @@ export class TourHelpers {
      */
     editor(text, selector) {
         const element = this._get_action_element(selector);
+        this._ensureElementIsInModal(element, "editor");
         const InEditor = !!element.closest(".odoo-editor-editable");
         if (!InEditor) {
             throw new Error("run 'editor' always on an element in an editor");
@@ -172,6 +178,7 @@ export class TourHelpers {
      */
     fill(value, selector) {
         const element = this._get_action_element(selector);
+        this._ensureElementIsInModal(element, "fill");
         hoot.click(element);
         hoot.fill(value);
     }
@@ -184,6 +191,7 @@ export class TourHelpers {
      */
     hover(selector) {
         const element = this._get_action_element(selector);
+        this._ensureElementIsInModal(element, "hover");
         hoot.hover(element);
     }
 
@@ -195,6 +203,7 @@ export class TourHelpers {
     range(value, selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "range");
+        this._ensureElementIsInModal(element, "range");
         hoot.click(element);
         hoot.setInputRange(element, value);
     }
@@ -224,6 +233,7 @@ export class TourHelpers {
     select(value, selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "select");
+        this._ensureElementIsInModal(element, "select");
         hoot.click(element);
         hoot.select(value, { target: element });
     }
@@ -239,6 +249,7 @@ export class TourHelpers {
     selectByIndex(index, selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "selectByIndex");
+        this._ensureElementIsInModal(element, "selectByIndex");
         hoot.click(element);
         const value = hoot.queryValue(`option:eq(${index})`, { root: element });
         if (value) {
@@ -258,6 +269,7 @@ export class TourHelpers {
     selectByLabel(contains, selector) {
         const element = this._get_action_element(selector);
         this._ensureEnabled(element, "selectByLabel");
+        this._ensureElementIsInModal(element, "selectByLabel");
         hoot.click(element);
         const values = hoot.queryAllValues(`option:contains(${contains})`, { root: element });
         hoot.select(values, { target: element });
@@ -309,14 +321,29 @@ export class TourHelpers {
     }
 
     /**
-     * Return true when element is not disabled
+     * Throw an error when element is disabled
      * @param {Node} element
      */
-    _ensureEnabled(element, action = "do action") {
+    _ensureEnabled(element, action = "an action") {
         if (element.disabled) {
             throw new Error(
-                `Element can't be disabled when you want to ${action} on it.
-Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`
+                `TourHelpers: Element can't be disabled when you want to run **${action}** on it.
+TIP: You can use the pseudo selector **:enabled** to your selector to wait for the element is enabled.`
+            );
+        }
+    }
+
+    /**
+     * Throw an error when element is below a modal or not in backdrop
+     * @param {Node} element
+     */
+    _ensureElementIsInModal(element, action = "an action") {
+        const root = hoot.queryFirst(".modal:not(.o_inactive_modal)");
+        if (root && !root.contains(element)) {
+            throw new Error(
+                `TourHelpers: It is forbidden to run **${action}** on an element that is not in the active modal.
+TIP: When a modal is closed in a tour, create a step that ensure it is really closed, e.g. { trigger: "body:not(:has(.modal:contains(my title)))" }.
+TIP: To only check if an element is in DOM without doing an action on it, create a step without run key.`
             );
         }
     }

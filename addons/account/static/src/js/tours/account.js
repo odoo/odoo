@@ -64,7 +64,12 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: ".modal-content button.btn-primary",
         content: markup(_t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu.")),
         run: "click",
-    }, 
+    },
+    {
+        isActive: ["auto"],
+        content: "Wait for the modal is closed before continuing the tour",
+        trigger: "body:not(:has(.modal:contains(create partner)))",
+    },
     {
         isActive: ["auto"],
         trigger: "[name=move_type] [raw-value=out_invoice]",
@@ -115,13 +120,13 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
-        trigger: "div.modal-dialog",
-    },
-    {
-        trigger: ".modal button[name=document_layout_save]",
+        trigger: ".modal button[name=document_layout_save]:contains(continue)",
         content: _t("Configure document layout."),
         run: "click",
+    },
+    {
+        isActive: ["auto"],
+        trigger: "body:not(:has(.modal:contains(configure your document layout)))",
     },
     {
         trigger: "div[name=account_missing_email] a",
@@ -158,6 +163,10 @@ registry.category("web_tour.tours").add('account_tour', {
         content: _t("Let's send the invoice."),
         tooltipPosition: "top",
         run: "click",
+    },
+    {
+        isActive: ["auto"],
+        trigger: "body:not(:has(.modal:contains(print & send)))",
     },
     {
         isActive: ["auto"],
