@@ -198,7 +198,7 @@ class AccountMoveSend(models.TransientModel):
 
         # Read pdf content.
         pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
-        reader_buffer = io.BytesIO(pdf_values['raw'])
+        reader_buffer = pdf_values['raw']['stream']
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
         # Post-process.
