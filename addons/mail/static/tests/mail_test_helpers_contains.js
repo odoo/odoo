@@ -285,39 +285,6 @@ export async function editInput(el, selector, value) {
 }
 
 /**
- * Create a file object, which can be used for drag-and-drop.
- *
- * @param {Object} data
- * @param {string} data.name
- * @param {string} data.content
- * @param {string} data.contentType
- * @returns {Promise<Object>} resolved with file created
- */
-export function createFile(data) {
-    // Note: this is only supported by Chrome, and does not work in Incognito mode
-    return new Promise(function (resolve, reject) {
-        const requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-        if (!requestFileSystem) {
-            throw new Error("FileSystem API is not supported");
-        }
-        requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fileSystem) {
-            fileSystem.root.getFile(data.name, { create: true }, function (fileEntry) {
-                fileEntry.createWriter(function (fileWriter) {
-                    fileWriter.onwriteend = function (e) {
-                        fileSystem.root.getFile(data.name, {}, function (fileEntry) {
-                            fileEntry.file(function (file) {
-                                resolve(file);
-                            });
-                        });
-                    };
-                    fileWriter.write(new Blob([data.content], { type: data.contentType }));
-                });
-            });
-        });
-    });
-}
-
-/**
  * Create a fake object 'dataTransfer', linked to some files,
  * which is passed to drag and drop events.
  *

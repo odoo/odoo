@@ -3,7 +3,6 @@ import {
     assertSteps,
     click,
     contains,
-    createFile,
     defineMailModels,
     focus,
     hover,
@@ -710,6 +709,16 @@ test("chat window should remain folded when new message is received", async () =
 test("chat window: composer state conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
+    const textFile1 = new File(
+        ["hello, world"],
+        "text state conversation on toggle home menu.txt",
+        { type: "text/plain" }
+    );
+    const textFile2 = new File(
+        ["hello, xdu is da best man"],
+        "text2 state conversation on toggle home menu.txt",
+        { type: "text/plain" }
+    );
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
@@ -719,18 +728,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
         count: 0,
     });
     // Set attachments of the composer
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-        await createFile({
-            name: "text state conservation on toggle home menu.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-        await createFile({
-            name: "text2 state conservation on toggle home menu.txt",
-            content: "hello, xdu is da best man",
-            contentType: "text/plain",
-        }),
-    ]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [textFile1, textFile2]);
     await contains(".o-mail-AttachmentCard .fa-check", { count: 2 });
     await openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });

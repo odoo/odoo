@@ -2,7 +2,6 @@ import {
     SIZES,
     click,
     contains,
-    createFile,
     defineMailModels,
     dragenterFiles,
     dropFiles,
@@ -562,36 +561,22 @@ test("Select composer suggestion via Enter does not send the message", async () 
 test("composer: drop attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    const text2 = new File(["hello, worlduh"], "text2.txt", { type: "text/plain" });
+    const text3 = new File(["hello, world"], "text3.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-Dropzone", { count: 0 });
     await contains(".o-mail-AttachmentCard", { count: 0 });
-    const files = [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text.txt",
-        }),
-        await createFile({
-            content: "hello, worlduh",
-            contentType: "text/plain",
-            name: "text2.txt",
-        }),
-    ];
+    const files = [text, text2];
     await dragenterFiles(".o-mail-Composer-input", files);
     await contains(".o-mail-Dropzone");
     await contains(".o-mail-AttachmentCard", { count: 0 });
     await dropFiles(".o-mail-Dropzone", files);
     await contains(".o-mail-Dropzone", { count: 0 });
     await contains(".o-mail-AttachmentCard", { count: 2 });
-    const extraFiles = [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text3.txt",
-        }),
-    ];
+    const extraFiles = [text3];
     await dragenterFiles(".o-mail-Composer-input", extraFiles);
     await dropFiles(".o-mail-Dropzone", extraFiles);
     await contains(".o-mail-AttachmentCard", { count: 3 });
@@ -600,15 +585,10 @@ test("composer: drop attachments", async () => {
 test("composer: add an attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text.txt",
-        }),
-    ]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -617,6 +597,7 @@ test("composer: add an attachment", async () => {
 test("composer: add an attachment in reply to message in history", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         model: "discuss.channel",
@@ -631,13 +612,7 @@ test("composer: add an attachment in reply to message in history", async () => {
     await start();
     await openDiscuss("mail.box_history");
     await click("[title='Reply']");
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text.txt",
-        }),
-    ]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -647,16 +622,11 @@ test("composer: send button is disabled if attachment upload is not finished", a
     const pyEnv = await startServer();
     const attachmentUploadedDef = new Deferred();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     onRpcBefore("/mail/attachment/upload", async () => await attachmentUploadedDef);
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text.txt",
-        }),
-    ]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard.o-isUploading");
     await contains(".o-mail-Composer-send:disabled");
     // simulates attachment finishes uploading
@@ -669,15 +639,10 @@ test("composer: send button is disabled if attachment upload is not finished", a
 test("remove an attachment from composer does not need any confirmation", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text.txt",
-        }),
-    ]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
@@ -688,18 +653,12 @@ test("remove an attachment from composer does not need any confirmation", async 
 test("composer: paste attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await start();
     await openDiscuss(channelId);
-    const files = [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text.txt",
-        }),
-    ];
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard", { count: 0 });
-    await pasteFiles(".o-mail-Composer-input", files);
+    await pasteFiles(".o-mail-Composer-input", [text]);
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
 });
 
@@ -724,16 +683,11 @@ test("Replying on a channel should focus composer initially [REQUIRE FOCUS]", as
 test("remove an uploading attachment", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
     onRpc("/mail/attachment/upload", () => new Deferred()); // simulates uploading indefinitely
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-        await createFile({
-            content: "hello, world",
-            contentType: "text/plain",
-            name: "text.txt",
-        }),
-    ]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
     await contains(".o-mail-AttachmentCard.o-isUploading");
     await click(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 0 });
@@ -784,21 +738,12 @@ test("Show 'No recipient found.' with 0 followers.", async () => {
 test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const text1 = new File(["hello, world"], "text1.txt", { type: "text/plain" });
+    const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
     onRpc("/mail/attachment/upload", () => new Deferred());
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-        await createFile({
-            name: "text1.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-        await createFile({
-            name: "text2.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-    ]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text1, text2]);
     await contains(".o-mail-AttachmentCard", { text: "text1.txt" });
     await contains(".o-mail-AttachmentCard", { text: "text2.txt" });
     await contains(".o-mail-AttachmentCard-aside div[title='Uploading']", { count: 2 });
@@ -812,21 +757,12 @@ test("[technical] does not crash when an attachment is removed before its upload
     // Promise to block attachment uploading
     const uploadDef = new Deferred();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const text1 = new File(["hello, world"], "text1.txt", { type: "text/plain" });
+    const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
     onRpcBefore("/mail/attachment/upload", async () => await uploadDef);
     await start();
     await openDiscuss(channelId);
-    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
-        await createFile({
-            name: "text1.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-        await createFile({
-            name: "text2.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-    ]);
+    await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text1, text2]);
     await contains(".o-mail-AttachmentCard.o-isUploading", { text: "text1.txt" });
     await click(".o-mail-AttachmentCard-unlink", {
         parent: [".o-mail-AttachmentCard.o-isUploading", { text: "text2.txt" }],

@@ -10,7 +10,6 @@ import {
     assertSteps,
     click,
     contains,
-    createFile,
     inputFiles,
     insertText,
     onRpcBefore,
@@ -61,11 +60,7 @@ test("internal users can upload file to temporary thread", async () => {
     await start({ authenticateAs: partnerUser });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
-    const file = await createFile({
-        content: "hello, world",
-        contentType: "text/plain",
-        name: "text.txt",
-    });
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await contains(".o-mail-Composer");
     await contains("button[title='Attach files']");
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [file]);

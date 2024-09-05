@@ -9,7 +9,7 @@ import {
     startServer,
     step,
 } from "@mail/../tests/mail_test_helpers";
-import { createFile, inputFiles } from "@web/../tests/utils";
+import { inputFiles } from "@web/../tests/utils";
 import { defineMrpModels } from "@mrp/../tests/mrp_test_helpers";
 import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
@@ -51,6 +51,9 @@ test("mrp: upload multiple files", async () => {
         mimetype: "image/png",
         name: "test.png",
     });
+    const text1 = new File(["hello, world"], "text1.txt", { type: "text/plain" });
+    const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
+    const text3 = new File(["hello, world"], "text3.txt", { type: "text/plain" });
     pyEnv["product.document"].create([
         { name: "test1", ir_attachment_id: irAttachment, mimetype: "image/png" },
         { name: "test2" },
@@ -62,26 +65,9 @@ test("mrp: upload multiple files", async () => {
     await openView({ res_model: "product.document", views: [[false, "kanban"]] });
 
     getService("file_upload").bus.addEventListener("FILE_UPLOAD_ADDED", () => step("xhrSend"));
-    await inputFiles(".o_control_panel_main_buttons .o_input_file", [
-        await createFile({
-            name: "text1.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-    ]);
+    await inputFiles(".o_control_panel_main_buttons .o_input_file", [text1]);
     assertSteps(["xhrSend"]);
-    await inputFiles(".o_control_panel_main_buttons .o_input_file", [
-        await createFile({
-            name: "text2.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-        await createFile({
-            name: "text3.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-    ]);
+    await inputFiles(".o_control_panel_main_buttons .o_input_file", [text2, text3]);
     assertSteps(["xhrSend"]);
 });
 
@@ -132,6 +118,7 @@ test("mrp: upload progress bars", async () => {
         mimetype: "image/png",
         name: "test.png",
     });
+    const text1 = new File(["hello, world"], "text1.txt", { type: "text/plain" });
     pyEnv["product.document"].create([
         { name: "test1", ir_attachment_id: irAttachment, mimetype: "image/png" },
         { name: "test2" },
@@ -151,13 +138,7 @@ test("mrp: upload progress bars", async () => {
         },
     });
 
-    await inputFiles(".o_control_panel_main_buttons .o_input_file", [
-        await createFile({
-            name: "text1.txt",
-            content: "hello, world",
-            contentType: "text/plain",
-        }),
-    ]);
+    await inputFiles(".o_control_panel_main_buttons .o_input_file", [text1]);
 
     const progressEvent = new Event("progress", { bubbles: true });
     progressEvent.loaded = 250000000;
