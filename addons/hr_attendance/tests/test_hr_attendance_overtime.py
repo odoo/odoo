@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime
+from freezegun import freeze_time
 
 from odoo.tests import new_test_user
 from odoo.tests.common import tagged, TransactionCase
@@ -366,3 +367,103 @@ class TestHrAttendanceOvertime(TransactionCase):
         overtime_record = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
                                                               ('date', '=', datetime(2024, 5, 28))])
         self.assertAlmostEqual(overtime_record.duration, 5)
+
+    @freeze_time("2024-02-1 23:00:00")
+    def test_auto_check_out(self):
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1
+        })
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 2, 1, 8, 0),
+            'check_out': datetime(2024, 2, 1, 13, 0)
+        })
+
+        attendance_utc_pending = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 2, 1, 14, 0)
+        })
+
+        attendance_utc_done = self.env['hr.attendance'].create({
+            'employee_id': self.other_employee.id,
+            'check_in': datetime(2024, 2, 1, 8, 0),
+            'check_out': datetime(2024, 2, 1, 17, 0)
+        })
+
+        attendance_jpn_pending = self.env['hr.attendance'].create({
+            'employee_id': self.jpn_employee.id,
+            'check_in': datetime(2024, 2, 1, 12, 0)
+        })
+
+        self.assertEqual(attendance_utc_pending.check_out, False)
+        self.assertEqual(attendance_utc_done.check_out, datetime(2024, 2, 1, 17, 0))
+        self.assertEqual(attendance_jpn_pending.check_out, False)
+
+        self.env['hr.attendance']._cron_auto_check_out()
+
+        self.assertEqual(attendance_utc_pending.check_out, datetime(2024, 2, 1, 19, 0))
+        self.assertEqual(attendance_utc_done.check_out, datetime(2024, 2, 1, 17, 0))
+        self.assertEqual(attendance_jpn_pending.check_out, datetime(2024, 2, 1, 21, 0))
+
+    @freeze_time("2024-02-1 14:00:00")
+    def test_absence_management(self):
+        self.company.write({
+            'absence_management': True,
+        })
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 1, 31, 8, 0),
+            'check_out': datetime(2024, 1, 31, 17, 0)
+        })
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 2, 1, 8, 0),
+            'check_out': datetime(2024, 2, 1, 17, 0)
+        })
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.other_employee.id,
+            'check_in': datetime(2024, 2, 1, 8, 0),
+            'check_out': datetime(2024, 2, 1, 17, 0)
+        })
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.jpn_employee.id,
+            'check_in': datetime(2024, 2, 1, 1, 0),
+            'check_out': datetime(2024, 2, 1, 10, 0)
+
+        })
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.honolulu_employee.id,
+            'check_in': datetime(2024, 2, 1, 17, 0),
+            'check_out': datetime(2024, 2, 2, 2, 0)
+        })
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.europe_employee.id,
+            'check_in': datetime(2024, 2, 1, 8, 0),
+            'check_out': datetime(2024, 2, 1, 17, 0)
+        })
+
+        self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
+        self.assertAlmostEqual(self.other_employee.total_overtime, 0, 2)
+        self.assertAlmostEqual(self.jpn_employee.total_overtime, 0, 2)
+        self.assertAlmostEqual(self.honolulu_employee.total_overtime, 0, 2)
+        self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)
+
+        self.env['hr.attendance']._cron_absence_detection()
+
+        # Check that absences were correctly attributed
+        self.assertAlmostEqual(self.other_employee.total_overtime, -8, 2)
+        self.assertAlmostEqual(self.jpn_employee.total_overtime, -8, 2)
+        self.assertAlmostEqual(self.honolulu_employee.total_overtime, -8, 2)
+
+        # Employee Checked in yesterday, no absence found
+        self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
+
+        # Other company with setting disabled
+        self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)
