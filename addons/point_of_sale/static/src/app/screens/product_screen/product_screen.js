@@ -328,14 +328,24 @@ export class ProductScreen extends Component {
         const exactMatches = products.filter((product) => product.exactMatch(searchWord));
 
         if (exactMatches.length > 0 && searchWord.length > 2) {
-            return exactMatches;
+            return this.addMainProductsToDisplay(exactMatches);
         }
 
         const fuzzyMatches = fuzzyLookup(unaccent(searchWord, false), products, (product) =>
             unaccent(product.searchString, false)
         );
 
-        return Array.from(new Set([...exactMatches, ...fuzzyMatches]));
+        return this.addMainProductsToDisplay([...exactMatches, ...fuzzyMatches]);
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProducts = new Set(products);
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                uniqueProducts.add(this.pos.mainProductVariant[product.id]);
+            }
+        }
+        return Array.from(uniqueProducts);
     }
 
     getProductsByCategory(category) {
