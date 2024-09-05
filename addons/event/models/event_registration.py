@@ -76,6 +76,10 @@ class EventRegistration(models.Model):
     registration_answer_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Answers')
     registration_answer_choice_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Selection Answers',
         domain=[('question_type', '=', 'simple_choice')])
+    # scheduled mails
+    mail_registration_ids = fields.One2many(
+        'event.mail.registration', 'registration_id',
+        string="Scheduler Emails", readonly=True)
     # properties
     registration_properties = fields.Properties(
         'Properties', definition='event_id.registration_properties_definition', copy=True)

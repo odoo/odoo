@@ -193,15 +193,23 @@ class EventMailScheduler(models.Model):
 
         # fillup on subscription lines (generate more than to render creating
         # mail.registration is less costly than rendering emails)
+        # note: original 2many domain was
+        #   ("id", "not in", self.env["event.registration"]._search([
+        #       ("mail_registration_ids.scheduler_id", "in", self.ids),
+        #   ]))
+        # but it gives less optimized sql
         new_attendee_domain = [
             ('event_id', '=', self.event_id.id),
             ("state", "not in", ("cancel", "draft")),
-            ("id", "not in", self.mail_registration_ids.registration_id.ids),
+            ("mail_registration_ids", "not in", self.env["event.mail.registration"]._search(
+                [('scheduler_id', 'in', self.ids)]
+            )),
         ]
         if context_registrations:
             new_attendee_domain += [
                 ('id', 'in', context_registrations),
             ]
+        self.env["event.mail.registration"].flush_model(["registration_id", "scheduler_id"])
         new_attendees = self.env["event.registration"].search(new_attendee_domain, limit=cron_limit * 2, order="id ASC")
         new_attendee_mails = self._create_missing_mail_registrations(new_attendees)
 
