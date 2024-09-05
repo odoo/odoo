@@ -29,7 +29,7 @@
                                 <field name="manager_id" widget="many2one_avatar_employee"/>
                                 <field name="parent_id"/>
                                 <field name="child_ids" invisible="1"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 <field name="color" widget="color_picker" string="Color"/>
                             </group>
                             <div invisible="not id or id and not child_ids and not parent_id">

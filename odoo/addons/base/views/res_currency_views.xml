@@ -166,7 +166,7 @@
                                 <field name="rate_ids" widget="one2many">
                                     <list string="Rates"  editable="top" limit="25">
                                         <field name="name"/>
-                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                                         <field name="company_rate" digits="[12,12]"/>
                                         <field name="inverse_company_rate" digits="[12,12]"/>
                                         <field name="rate" digits="[12,12]" optional="hide"/>
