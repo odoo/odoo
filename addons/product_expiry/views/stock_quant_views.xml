@@ -51,6 +51,19 @@
                 <separator/>
                 <filter string="Expiration Alerts" name="expiration_alerts"
                     domain="[('lot_id.alert_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="To Remove" name="to_remove"
+                    domain="[('lot_id.expiration_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_quant_tree_simple" model="ir.ui.view">
+        <field name="name">stock.quant.tree.simple.inherit.expiry_date</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_simple"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_id']" position="after">
+                <field name="expiration_date" string="Expiry Date" groups="stock.group_production_lot"/>
             </xpath>
         </field>
     </record>
