@@ -223,7 +223,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
                     event_name: jsonResponse.event_name,
                     contact: jsonResponse.contact,
                 });
-                formEl.insertAfter(boothRegistrationCompleteFormEl);
+                formEl.insertAdjacentElement("afterend", boothRegistrationCompleteFormEl);
                 formEl.remove();
             } else if (jsonResponse.redirect) {
                 redirect(jsonResponse.redirect);
