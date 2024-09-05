@@ -53,7 +53,7 @@ odoo_dev() {
 }
 " >> /home/pi/.bashrc
 echo "
-show_odoo_aliases() {
+odoo_help() {
   echo 'Welcome to Odoo IoTBox tools'
   echo 'odoo                Starts/Restarts Odoo server manually (not through odoo.service)'
   echo 'odoo_logs           Displays Odoo server logs in real time'
@@ -67,7 +67,32 @@ show_odoo_aliases() {
   echo 'odoo_restart        Restarts Odoo service'
   echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
 }
-alias odoo_help='show_odoo_aliases'
+
+odoo_dev() {
+  if [ -z \"\$1\" ]; then
+    odoo_help
+    return
+  fi
+  write_mode
+  pwd=\$(pwd)
+  cd /home/pi/odoo
+  git remote add dev https://github.com/odoo-dev/odoo.git
+  git fetch dev \$1 --depth=1 --prune
+  git reset --hard dev/\$1
+  cd \$pwd
+}
+
+pip() {
+  if [[ -z \"\$1\" || -z \"\$2\" ]]; then
+    odoo_help
+    return 1
+  fi
+  additional_arg=\"\"
+  if [ \"\$1\" == \"install\" ]; then
+    additional_arg=\"--user\"
+  fi
+  pip3 \"\$1\" \"\$2\" --break-system-package \"\$additional_arg\"
+}
 " | tee -a ~/.bashrc /home/pi/.bashrc
 
 source ~/.bashrc
