@@ -2688,7 +2688,7 @@
             <t t-else="">Categories:</t>
         </button>
         <t t-foreach="categories" t-as="category">
-            <button class="btn btn-link btn-sm p-0" t-out="category.name"
+            <button class="btn btn-link btn-sm p-0 text-wrap" t-out="category.name"
                 t-attf-onclick="location.href='/shop/category/#{slug(category)}';return false;"/>
         </t>
     </template>
