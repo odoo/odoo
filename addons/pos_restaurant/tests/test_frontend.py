@@ -8,7 +8,7 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontend(TestPointOfSaleHttpCommon):
+class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -209,6 +209,9 @@ class TestFrontend(TestPointOfSaleHttpCommon):
 
         pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
         cls.pos_config.write({'pricelist_id': pricelist.id})
+
+
+class TestFrontend(TestFrontendCommon):
 
     def test_01_pos_restaurant(self):
         self.pos_user.write({
