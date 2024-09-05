@@ -212,7 +212,7 @@
                 <h5 >You have a pending post</h5>
                 <span>Please wait for a moderator to validate your previous post to be allowed to reply to questions.</span>
             </div>
-            <div t-attf-class="alert alert-danger #{'d-none ' if question.state != 'flagged' else ''}text-center" >
+            <div t-attf-class="alert alert-danger o_wforum_flag_alert #{'d-none ' if question.state != 'flagged' else ''}text-center" >
                 <h5>This question has been flagged</h5>
                 <span t-if="question.can_moderate">As a moderator, you can either validate or reject this answer.</span>
                 <t t-call="website_forum.link_button">
