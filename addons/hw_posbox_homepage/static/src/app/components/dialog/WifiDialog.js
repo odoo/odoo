@@ -1,8 +1,8 @@
 /* global owl */
 
 import useStore from "../../hooks/useStore.js";
-import { BootstrapDialog } from "./BootstrapDialog.js";
-import { LoadingFullScreen } from "../LoadingFullScreen.js";
+import {BootstrapDialog} from "./BootstrapDialog.js";
+import {LoadingFullScreen} from "../LoadingFullScreen.js";
 
 const { Component, xml, useState } = owl;
 
@@ -17,11 +17,11 @@ export class WifiDialog extends Component {
             loading: false,
             waitRestart: false,
             availableWifi: [],
+            currentWifi: '',
         });
         this.form = useState({
             essid: "",
             password: "",
-            persistent: false,
         });
     }
 
@@ -30,16 +30,14 @@ export class WifiDialog extends Component {
         this.state.scanning = true;
         this.form.essid = "";
         this.form.password = "";
-        this.form.persistent = false;
     }
 
     async getWifiNetworks() {
         try {
-            const data = await this.store.rpc({
+            this.state.availableWifi = await this.store.rpc({
                 url: "/hw_posbox_homepage/wifi",
             });
 
-            this.state.availableWifi = data;
             this.state.scanning = false;
         } catch {
             console.warn("Error while fetching data");
@@ -51,26 +49,29 @@ export class WifiDialog extends Component {
             return;
         }
 
+        this.state.waitRestart = true;
         const data = await this.store.rpc({
             url: "/hw_posbox_homepage/update_wifi",
             method: "POST",
             params: this.form,
         });
 
-        if (data.status === "success") {
-            this.state.waitRestart = true;
+        if (data.status !== "success") {
+            this.state.waitRestart = false;
         }
     }
 
     async clearConfiguration() {
         try {
+            this.state.waitRestart = true;
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/wifi_clear",
             });
 
-            if (data.status === "success") {
-                this.state.waitRestart = true;
+            if (data.status !== "success") {
+                this.state.waitRestart = false;
             }
+            this.state.currentWifi = '';
         } catch {
             console.warn("Error while clearing configuration");
         }
@@ -96,38 +97,27 @@ export class WifiDialog extends Component {
                 </div>
 
                 <div class="alert alert-warning fs-6" role="alert">
-                    Here you can configure how the iotbox should connect to wireless networks.
-                    Currently only Open and WPA networks are supported. When enabling the persistent checkbox,
-                    the chosen network will be saved and the iotbox will attempt to connect to it every time it boots.
+                    Here, you can configure how the IoT Box should connect to wireless networks.
+                    Currently, only Open and WPA networks are supported.
                 </div>
                 <div class="mt-3">
                     <div class="mb-3">
-                        <label for="wifi-ssid">WIFI SSID</label>
                         <select name="essid" class="form-control" id="wifi-ssid" t-model="this.form.essid">
-                            <option>Choose...</option>
+                            <option>Select Network...</option>
                             <option t-foreach="this.state.availableWifi.filter((wifi) => wifi)" t-as="wifi" t-key="wifi" t-att-value="wifi">
-                                <t t-esc="wifi" />
+                                <t t-esc="wifi"/>
                             </option>
                         </select>
-                        <small t-if="!this.form.essid" class="text-danger">Please select a network</small>
+                        <small t-if="this.form.essid == 'Select Network...'" class="text-danger">Please select a network</small>
                     </div>
 
                     <div class="mb-3">
-                        <label for="wifi-ssid">WIFI Password</label>
-                        <input name="password" type="password" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" />
-                        <small t-if="!this.form.password" class="text-danger">Please enter a password</small>
-                    </div>
-
-                    <div class="form-check">
-                        <input name="persistent" class="form-check-input" type="checkbox" value="" id="persistent" t-model="this.form.persistent" />
-                        <label class="form-check-label" for="persistent">
-                            Persistent
-                        </label>
+                        <input name="password" type="password" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" placeholder="Wi-Fi password"/>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">
-                        <button type="submit" class="btn btn-danger btn-sm" t-on-click="clearConfiguration">Clear</button>
-                        <button type="submit" class="btn btn-warning btn-sm" t-on-click="connectToWifi">Connect</button>
+                        <button type="submit" class="btn btn-danger btn-sm" t-on-click="clearConfiguration">Disconnect From Current</button>
+                        <button type="submit" class="btn btn-primary btn-sm" t-on-click="connectToWifi">Connect</button>
                     </div>
                 </div>
             </t>

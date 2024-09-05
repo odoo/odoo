@@ -11,7 +11,7 @@ import sys
 
 from pathlib import Path
 from odoo import http, tools
-from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.web.controllers.home import Home
 from odoo.addons.hw_drivers.connection_manager import connection_manager
@@ -107,7 +107,8 @@ class IotBoxOwlHomePage(Home):
 
     @http.route('/hw_posbox_homepage/wifi_clear', auth='none', type='http', cors='*')
     def clear_wifi_configuration(self):
-        helpers.unlink_file('wifi_network.txt')
+        helpers.update_conf({'wifi_ssid': '', 'wifi_password': ''})
+        wifi.disconnect(forget_network=True)
         return json.dumps({
             'status': 'success',
             'message': 'Successfully disconnected from wifi',
@@ -132,17 +133,17 @@ class IotBoxOwlHomePage(Home):
     @http.route('/hw_posbox_homepage/data', auth="none", type="http", cors='*')
     def get_homepage_data(self):
         if platform.system() == 'Linux':
-            ssid = helpers.get_ssid()
+            ssid = wifi.get_current() or wifi.get_access_point_ssid()
             wired = helpers.read_file_first_line('/sys/class/net/eth0/operstate')
         else:
             wired = 'up'
         if wired == 'up':
             network = 'Ethernet'
         elif ssid:
-            if helpers.access_point():
+            if wifi.is_access_point():
                 network = 'Wifi access point'
             else:
-                network = 'Wifi : ' + ssid
+                network = 'Wifi: ' + ssid
         else:
             network = 'Not Connected'
 
@@ -178,7 +179,7 @@ class IotBoxOwlHomePage(Home):
 
     @http.route('/hw_posbox_homepage/wifi', auth="none", type="http", cors='*')
     def get_available_wifi(self):
-        return json.dumps(helpers.get_wifi_essid())
+        return json.dumps(wifi.get_available_ssids())
 
     @http.route('/hw_posbox_homepage/generate_password', auth="none", type="http", cors='*')
     def generate_password(self):
@@ -277,10 +278,9 @@ class IotBoxOwlHomePage(Home):
         }
 
     @http.route('/hw_posbox_homepage/update_wifi', auth="none", type="json", methods=['POST'], cors='*')
-    def update_wifi(self, essid, password, persistent=False):
-        persistent = "1" if persistent else ""
-        subprocess.check_call([file_path(
-            'point_of_sale/tools/posbox/configuration/connect_to_wifi.sh'), essid, password, persistent])
+    def update_wifi(self, essid, password):
+        if wifi.connect(essid, password):
+            helpers.update_conf({'wifi_ssid': essid, 'wifi_password': password})
         server = helpers.get_odoo_server_url()
 
         res_payload = {
