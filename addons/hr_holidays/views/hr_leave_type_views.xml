@@ -70,7 +70,7 @@
                                     invisible="leave_validation_type in ['no_validation', 'manager'] and (requires_allocation == 'no' or allocation_validation_type not in ['hr', 'both'])"/>
                         </group>
                         <group>
-                            <field name="company_id" groups="base.group_multi_company" readonly="is_used"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="is_used" placeholder="Visible to all"/>
                             <field name="country_id" groups="base.group_multi_company" readonly="company_id or is_used"/>
                         </group>
                     </group>
@@ -93,7 +93,6 @@
                                 <label for="show_on_dashboard"/>
                                 <field name="support_document" nolabel="1"/>
                                 <label for="support_document" string="Allow To Attach Supporting Document"/>
-
                         </group>
                         <group>
                             <group name="negative_cap" id="negative_cap"
