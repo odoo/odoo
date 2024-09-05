@@ -11,11 +11,11 @@ import { animationFrame } from "@odoo/hoot-mock";
 
 test("add 3 star elements", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
-    insertText(editor, "/3star");
+    await insertText(editor, "/3star");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(1);
 
-    press("Enter");
+    await press("Enter");
     expect(getContent(el)).toBe(
         `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
@@ -23,11 +23,11 @@ test("add 3 star elements", async () => {
 
 test("add 5 star elements", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
-    insertText(editor, "/5star");
+    await insertText(editor, "/5star");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(1);
 
-    press("Enter");
+    await press("Enter");
     expect(getContent(el)).toBe(
         `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
@@ -38,19 +38,19 @@ test("select star rating", async () => {
         `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
 
-    click("i.fa-star-o:first");
+    await click("i.fa-star-o:first");
     await animationFrame();
     expect(getContent(el)).toBe(
         `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
 
-    click("i.fa-star-o:last");
+    await click("i.fa-star-o:last");
     await animationFrame();
     expect(getContent(el)).toBe(
         `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star" contenteditable="false">\u200B</i><i class="o_stars fa fa-star" contenteditable="false">\u200B</i><i class="o_stars fa fa-star" contenteditable="false">\u200B</i></span>\u200B[]</p>`
     );
 
-    click("i.fa-star:last");
+    await click("i.fa-star:last");
     await animationFrame();
     expect(getContent(el)).toBe(
         `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i><i class="o_stars fa fa-star-o" contenteditable="false">\u200B</i></span>\u200B[]</p>`

@@ -1865,14 +1865,14 @@ test("scroll position is kept when switching between controllers", async () => {
     expect(queryFirst(`.o_search_panel`).scrollTop).toBe(0);
 
     // simulate a scroll in the search panel and switch into list
-    scroll(`.o_search_panel`, { y: 100 });
+    await scroll(`.o_search_panel`, { y: 100 });
     await animationFrame();
     await getService("action").switchView("list");
     expect(`.o_list_view .o_content`).toHaveCount(1);
     expect(queryFirst(`.o_search_panel`).scrollTop).toBe(100);
 
     // simulate another scroll and switch back to kanban
-    scroll(`.o_search_panel`, { y: 25 });
+    await scroll(`.o_search_panel`, { y: 25 });
     await getService("action").switchView("kanban");
     expect(`.o_kanban_view .o_content`).toHaveCount(1);
     expect(queryFirst(`.o_search_panel`).scrollTop).toBe(25);
@@ -2960,8 +2960,8 @@ test("search panel should be resizable", async () => {
     const resizeHandle = queryFirst(".o_search_panel_resize");
     const originalWidth = searchPanel.offsetWidth;
 
-    const { drop } = drag(resizeHandle);
-    drop(resizeHandle, { position: { x: 500 } });
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 500 } });
     expect(searchPanel.offsetWidth).toBeGreaterThan(originalWidth);
 });
 
@@ -2973,8 +2973,9 @@ test("search panel width is kept when switching between controllers", async () =
     const resizeHandle = queryFirst(".o_search_panel_resize");
     const originalWidth = searchPanel.offsetWidth;
 
-    const { drop } = drag(resizeHandle);
-    drop(resizeHandle, { position: { x: 500 } });
+    const { drop } = await drag(resizeHandle);
+    await drop(resizeHandle, { position: { x: 500 } });
+
     const newWidth = searchPanel.offsetWidth;
     expect(newWidth).toBeGreaterThan(originalWidth);
     await getService("action").switchView("list");

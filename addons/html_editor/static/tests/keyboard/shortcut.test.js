@@ -22,9 +22,9 @@ test("shortcut plugin allow registering shortcuts", async () => {
     });
 
     expect(count).toBe(0);
-    press("a");
+    await press("a");
     expect(count).toBe(1);
-    press("b");
+    await press("b");
     expect(count).toBe(1);
 });
 
@@ -47,8 +47,8 @@ test.tags("iframe")("shortcut plugin allow registering shortcuts in iframe", asy
     });
 
     expect(count).toBe(0);
-    press("a");
+    await press("a");
     expect(count).toBe(1);
-    press("b");
+    await press("b");
     expect(count).toBe(1);
 });

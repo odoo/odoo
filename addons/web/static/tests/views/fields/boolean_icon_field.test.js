@@ -28,7 +28,7 @@ test("BooleanIcon field in form view", async () => {
     expect("[name='bar'] button").toHaveClass("btn-primary fa-recycle");
     expect("[name='foo'] button").toHaveClass("btn-outline-secondary fa-trash");
 
-    click("[name='bar'] button");
+    await click("[name='bar'] button");
     await animationFrame();
     expect("[name='bar'] button").toHaveClass("btn-outline-secondary fa-recycle");
 });

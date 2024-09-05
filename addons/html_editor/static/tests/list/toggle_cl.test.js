@@ -55,7 +55,7 @@ describe("Range collapsed", () => {
                 `<ul class="o_checklist"><li><h1 placeholder="Heading 1" class="o-we-hint">[]</h1></li></ul>`
             );
 
-            insertText(editor, "a");
+            await insertText(editor, "a");
             editor.dispatch("NORMALIZE", { node: el });
             expect(getContent(el)).toBe(`<ul class="o_checklist"><li><h1>a[]</h1></li></ul>`);
         });

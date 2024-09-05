@@ -99,14 +99,14 @@ test("Do not fetch if search more specific and fetch had no result", async () =>
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
-    insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 3 }); // Mitchell Admin, Hermit, Public user
     await contains(".o-mail-Composer-suggestion", { text: "Mitchell Admin" });
     await assertSteps(["get_mention_suggestions"]);
-    insertText(".o-mail-Composer-input", "x");
+    await insertText(".o-mail-Composer-input", "x");
     await contains(".o-mail-Composer-suggestion", { count: 0 });
     await assertSteps(["get_mention_suggestions"]);
-    insertText(".o-mail-Composer-input", "x");
+    await insertText(".o-mail-Composer-input", "x");
     await assertSteps([]);
 });
 
@@ -210,9 +210,9 @@ test("Channel suggestions do not crash after rpc returns", async () => {
     await start();
     await openDiscuss(channelId);
     pyEnv["discuss.channel"].create({ name: "foo" });
-    insertText(".o-mail-Composer-input", "#");
+    await insertText(".o-mail-Composer-input", "#");
     await tick();
-    insertText(".o-mail-Composer-input", "f");
+    await insertText(".o-mail-Composer-input", "f");
     await deferred;
     await assertSteps(["get_mention_suggestions"]);
 });

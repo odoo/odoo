@@ -108,10 +108,10 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
         const token = await rpc('/totphook', {
             secret: secret.textContent
         });
-        helpers.edit(token, '[name=code] input');
+        await helpers.edit(token, '[name=code] input');
         document.querySelector("body").classList.add("got-token");
     }
-}, 
+},
 {
     trigger: ".modal button.btn-primary:contains(Activate)",
     run: "click",
@@ -136,7 +136,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
-    trigger: 'input#login, a:contains(Sign in)', 
+    trigger: 'input#login, a:contains(Sign in)',
     run: "click",
 }, {
     content: "input login",
@@ -161,7 +161,7 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
         const token = await rpc('/totphook');
         helpers.edit(token);
     }
-}, 
+},
 {
     trigger: `button:contains("Log in")`,
     run: "click",
@@ -350,7 +350,7 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     content: "Confirm",
     trigger: ".modal button:contains(Confirm Password)",
     run: "click",
-}, 
+},
 {
     content: "Wait the modal is closed",
     trigger: "body:not(:has(.modal))",

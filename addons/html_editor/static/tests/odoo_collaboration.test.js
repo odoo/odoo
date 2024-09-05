@@ -303,8 +303,8 @@ async function createPeers(peerIds) {
     return pool;
 }
 
-function insertEditorText(editor, text) {
-    insertText(editor, text);
+async function insertEditorText(editor, text) {
+    await insertText(editor, text);
     editor.dispatch("ADD_STEP");
 }
 
@@ -328,7 +328,7 @@ describe("Focus", () => {
         await peers.p1.focus();
         await peers.p2.focus();
 
-        insertEditorText(peers.p1.editor, "b");
+        await insertEditorText(peers.p1.editor, "b");
 
         expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
             message: "p1 should have the document changed",
@@ -349,7 +349,7 @@ describe("Focus", () => {
 
         await peers.p1.openDataChannel(peers.p2);
 
-        insertEditorText(peers.p1.editor, "b");
+        await insertEditorText(peers.p1.editor, "b");
         await animationFrame();
 
         expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
@@ -369,7 +369,7 @@ describe("Focus", () => {
         await peers.p1.focus();
         await peers.p2.focus();
 
-        insertEditorText(peers.p1.editor, "b");
+        await insertEditorText(peers.p1.editor, "b");
 
         await peers.p1.openDataChannel(peers.p2);
 
@@ -394,7 +394,7 @@ describe("Stale detection & recovery", () => {
             await peers.p2.focus();
             await peers.p1.openDataChannel(peers.p2);
 
-            insertEditorText(peers.p1.editor, "b");
+            await insertEditorText(peers.p1.editor, "b");
 
             await peers.p1.writeToServer();
 
@@ -431,7 +431,7 @@ describe("Stale detection & recovery", () => {
                 message: "p3 should have the same document as p1",
             });
 
-            insertEditorText(peers.p1.editor, "c");
+            await insertEditorText(peers.p1.editor, "c");
 
             expect(peers.p1.getValue()).toBe(`<p>abc[]</p>`, {
                 message: "p1 should have the same document as p3",
@@ -486,7 +486,7 @@ describe("Stale detection & recovery", () => {
 
                 peers.p3.setOffline();
 
-                insertEditorText(peers.p1.editor, "b");
+                await insertEditorText(peers.p1.editor, "b");
 
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
                     message: "p1 should have the same document as p2",
@@ -564,7 +564,7 @@ describe("Stale detection & recovery", () => {
                     "onRecoveryPeerTimeout",
                 ]);
 
-                insertEditorText(peers.p1.editor, "b");
+                await insertEditorText(peers.p1.editor, "b");
 
                 await peers.p1.writeToServer();
 
@@ -662,7 +662,7 @@ describe("Stale detection & recovery", () => {
                     "onRecoveryPeerTimeout",
                 ]);
 
-                insertEditorText(peers.p1.editor, "b");
+                await insertEditorText(peers.p1.editor, "b");
                 await peers.p1.writeToServer();
                 peers.p1.setOffline();
 
@@ -764,7 +764,7 @@ describe("Stale detection & recovery", () => {
                     "resetFromPeer",
                 ]);
 
-                insertEditorText(peers.p1.editor, "b");
+                await insertEditorText(peers.p1.editor, "b");
                 await peers.p1.writeToServer();
 
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
@@ -847,7 +847,7 @@ describe("Stale detection & recovery", () => {
                     "resetFromPeer",
                 ]);
 
-                insertEditorText(peers.p1.editor, "b");
+                await insertEditorText(peers.p1.editor, "b");
                 await peers.p1.writeToServer();
 
                 expect(peers.p1.getValue()).toBe(`<p>ab[]</p>`, {
@@ -921,7 +921,7 @@ describe("Stale detection & recovery", () => {
                     "resetFromPeer",
                 ]);
 
-                insertEditorText(peers.p1.editor, "b");
+                await insertEditorText(peers.p1.editor, "b");
                 await peers.p1.writeToServer();
                 peers.p1.setOffline();
 
@@ -995,7 +995,7 @@ describe("Disconnect & reconnect", () => {
         await peers.p2.focus();
         await peers.p1.openDataChannel(peers.p2);
 
-        insertEditorText(peers.p1.editor, "b");
+        await insertEditorText(peers.p1.editor, "b");
 
         peers.p1.setOffline();
 
@@ -1016,12 +1016,12 @@ describe("Disconnect & reconnect", () => {
         };
 
         setSelection(peers.p1);
-        insertEditorText(peers.p1.editor, "c");
+        await insertEditorText(peers.p1.editor, "c");
 
         addP(peers.p1, "d");
 
         setSelection(peers.p2);
-        insertEditorText(peers.p2.editor, "e");
+        await insertEditorText(peers.p2.editor, "e");
         addP(peers.p2, "f");
 
         peers.p1.setOnline();
@@ -1068,7 +1068,7 @@ describe("Snapshot", () => {
         const peers = pool.peers;
         const editor = peers.p1.editor;
         await peers.p1.focus();
-        insertEditorText(peers.p1.editor, "b");
+        await insertEditorText(peers.p1.editor, "b");
         editor.destroy();
         await advanceTime(2 * HISTORY_SNAPSHOT_INTERVAL);
         expect(peers.p1.plugins.collaboration._snapshotInterval).toBe(false);
@@ -1083,7 +1083,7 @@ describe("Snapshot", () => {
 
         await peers.p1.openDataChannel(peers.p2);
 
-        insertEditorText(peers.p1.editor, "b");
+        await insertEditorText(peers.p1.editor, "b");
         await animationFrame();
 
         await advanceTime(HISTORY_SNAPSHOT_INTERVAL);
@@ -1111,7 +1111,7 @@ describe("History steps Ids", () => {
         const peers = pool.peers;
 
         await peers.p1.focus();
-        insertEditorText(peers.p1.editor, "b");
+        await insertEditorText(peers.p1.editor, "b");
         await peers.p1.writeToServer();
 
         expect(peers.p2.plugins.collaboration_odoo.isDocumentStale).toBe(true, {

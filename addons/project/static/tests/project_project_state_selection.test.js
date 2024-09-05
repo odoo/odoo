@@ -40,6 +40,6 @@ test("project.project (kanban): check that ProjectStateSelectionField does not p
             </kanban>
         `,
     });
-    click("div[name='last_update_status'] button.dropdown-toggle");
+    await click("div[name='last_update_status'] button.dropdown-toggle");
     expect(".dropdown-menu .dropdown-item:contains('Set Status')").toHaveCount(0);
 });

@@ -108,7 +108,7 @@ test("can be toggled", async () => {
 
     await mountWithCleanup(Parent);
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect.verifySteps(["beforeOpen"]);
     expect(DROPDOWN_MENU).toHaveCount(0);
@@ -120,7 +120,7 @@ test("can be toggled", async () => {
     expect(DROPDOWN_MENU).toHaveAttribute("role", "menu");
     expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-expanded", "true");
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
     expect(DROPDOWN_TOGGLE).toHaveAttribute("aria-expanded", "false");
@@ -142,11 +142,11 @@ test("initial open state can be true", async () => {
 test("close on outside click", async () => {
     await mountWithCleanup(SimpleDropdown);
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    click("div.outside");
+    await click("div.outside");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
@@ -154,11 +154,11 @@ test("close on outside click", async () => {
 test("close on item selection", async () => {
     await mountWithCleanup(SimpleDropdown);
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    click(DROPDOWN_ITEM);
+    await click(DROPDOWN_ITEM);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
@@ -190,14 +190,14 @@ test.tags("desktop")("hold position on hover", async () => {
     }
 
     await mountWithCleanup(Parent);
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     const menuBox1 = queryOne(DROPDOWN_MENU).getBoundingClientRect();
 
     // Pointer enter the dropdown menu
-    hover(DROPDOWN_MENU);
+    await hover(DROPDOWN_MENU);
 
     // Add a filler to the parent
     expect(".filler").toHaveCount(0);
@@ -209,7 +209,8 @@ test.tags("desktop")("hold position on hover", async () => {
     expect(menuBox2.top - menuBox1.top).toBe(0);
 
     // Pointer leave the dropdown menu
-    leave(DROPDOWN_MENU);
+    await leave();
+
     const menuBox3 = queryOne(DROPDOWN_MENU).getBoundingClientRect();
     expect(menuBox3.top - menuBox1.top).toBe(100);
 });
@@ -227,21 +228,21 @@ test("unlock position after close", async () => {
         static props = [];
     }
     await mountWithCleanup(Parent);
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
     const menuBox1 = queryOne(DROPDOWN_MENU).getBoundingClientRect();
 
     // Pointer enter the dropdown menu to lock the menu
-    hover(DROPDOWN_MENU);
+    await hover(DROPDOWN_MENU);
 
     // close the menu
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // and reopen it
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
     const menuBox2 = queryOne(DROPDOWN_MENU).getBoundingClientRect();
@@ -272,7 +273,7 @@ test.tags("desktop")("dropdowns keynav", async () => {
     await mountWithCleanup(Parent);
     expect(DROPDOWN_MENU).toHaveCount(0);
 
-    press("alt+m");
+    await press("alt+m");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
@@ -298,7 +299,7 @@ test.tags("desktop")("dropdowns keynav", async () => {
 
     for (let i = 0; i < scenarioSteps.length; i++) {
         const step = scenarioSteps[i];
-        press(step.hotkey);
+        await press(step.hotkey);
         await animationFrame();
 
         expect(".dropdown-menu > .focus").toHaveClass(step.expected, {
@@ -308,27 +309,27 @@ test.tags("desktop")("dropdowns keynav", async () => {
     }
 
     // Select last one activated in previous scenario (item1)
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Reopen dropdown
-    press("alt+m");
+    await press("alt+m");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Select second item through data-hotkey attribute
-    press("alt+2");
+    await press("alt+2");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Reopen dropdown
-    press("alt+m");
+    await press("alt+m");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Close dropdown with keynav
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
@@ -390,15 +391,15 @@ test.tags("desktop")("refocus toggler on close with keynav", async () => {
     await mountWithCleanup(SimpleDropdown);
     expect(DROPDOWN_TOGGLE).not.toBeFocused();
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_TOGGLE).toBeFocused();
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await animationFrame();
     expect(".dropdown-item:first-child").toBeFocused();
 
-    press("Escape");
+    await press("Escape");
     await animationFrame();
     expect(DROPDOWN_TOGGLE).toBeFocused();
 });
@@ -418,7 +419,7 @@ test.tags("desktop")("navigationProps changes navigation behaviour", async () =>
     }
 
     await mountWithCleanup(Parent);
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
 
     // Toggler is focused, no focus in dropdown
@@ -426,13 +427,16 @@ test.tags("desktop")("navigationProps changes navigation behaviour", async () =>
     expect(".o-dropdown-item:nth-child(1)").not.toHaveClass("focus");
 
     // After arrow down, toggler is still focused, virtual focus in dropdown
-    press("arrowdown");
+    await press("arrowdown");
+
     expect(DROPDOWN_TOGGLE).toBeFocused();
     expect(".o-dropdown-item:nth-child(1)").toHaveClass("focus");
 
     expect.verifySteps([]);
+
     // Arrow up is overridden, nothing should change
-    press("arrowup");
+    await press("arrowup");
+
     expect(DROPDOWN_TOGGLE).toBeFocused();
     expect(".o-dropdown-item:nth-child(1)").toHaveClass("focus");
     expect.verifySteps(["arrowup"]);
@@ -474,7 +478,7 @@ test("'o-dropdown-caret' class adds a caret", async () => {
     // Check that the "::after" pseudo-element is NOT empty, there is a caret
     expect(getContent(".first")).not.toBe("none");
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     // Check that the "::after" pseudo-element is NOT empty, there is a caret
     expect(getContent(".second")).not.toBe("none");
@@ -483,7 +487,7 @@ test("'o-dropdown-caret' class adds a caret", async () => {
 });
 
 test("direction class set to default when closed", async () => {
-    resize({ height: 600 });
+    await resize({ height: 600 });
 
     class Parent extends Component {
         static components = { Dropdown, DropdownItem };
@@ -505,13 +509,13 @@ test("direction class set to default when closed", async () => {
     expect(DROPDOWN_TOGGLE).toHaveClass("dropdown");
 
     // open
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_TOGGLE).toHaveClass("show");
     expect(DROPDOWN_TOGGLE).toHaveClass("dropup");
 
     // close
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_TOGGLE).not.toHaveClass("show");
     expect(DROPDOWN_TOGGLE).toHaveClass("dropdown");
@@ -534,7 +538,7 @@ test.tags("desktop")("tooltip on toggler", async () => {
     await mountWithCleanup(Parent);
     expect(DROPDOWN_TOGGLE).toHaveAttribute("data-tooltip", "My tooltip");
 
-    hover(DROPDOWN_TOGGLE);
+    await hover(DROPDOWN_TOGGLE);
     await runAllTimers();
     expect(".o-tooltip").toHaveText("My tooltip");
 });
@@ -555,21 +559,21 @@ test("date picker inside does not close when a click occurs in date picker", asy
 
     await mountWithCleanup(Parent);
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(1);
     expect(".o_datetime_picker").toHaveCount(0);
     expect(".o_datetime_input").toHaveValue("");
 
-    click(".o_datetime_input");
+    await click(".o_datetime_input");
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(1);
     expect(".o_datetime_picker").toHaveCount(1);
     expect(".o_datetime_input").toHaveValue("");
 
-    click(getPickerCell("15")); // select some day
+    await click(getPickerCell("15")); // select some day
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(1);
@@ -595,7 +599,7 @@ test("onOpened callback props called after the menu has been mounted", async () 
     }
     await mountWithCleanup(Parent);
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
 
     expect.verifySteps(["beforeOpened"]);
@@ -647,13 +651,13 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
         }
     }
     await mountWithCleanup(Parent);
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
 
     expect(DROPDOWN_ITEM).toHaveAttribute("aria-checked", "false");
     expect(DROPDOWN_ITEM).not.toHaveClass(["selected", "focus"]);
 
-    click(DROPDOWN_ITEM);
+    await click(DROPDOWN_ITEM);
     await animationFrame();
     expect(DROPDOWN_ITEM).toHaveAttribute("aria-checked", "true");
     expect(DROPDOWN_ITEM).toHaveClass(["selected", "focus"]);
@@ -702,27 +706,27 @@ test("don't close dropdown outside the active element", async () => {
 
     await mountWithCleanup(Parent, { env });
 
-    click("button.parent-toggle");
+    await click("button.parent-toggle");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
-    click("button.parent-item");
+    await click("button.parent-item");
     await animationFrame();
     expect(".modal-dialog").toHaveCount(1);
 
-    click(".modal-dialog button.dialog-toggle");
+    await click(".modal-dialog button.dialog-toggle");
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(2);
-    click(".outside-dialog");
+    await click(".outside-dialog");
     await animationFrame();
     expect(".modal-dialog").toHaveCount(1);
     expect(DROPDOWN_MENU).toHaveCount(1);
 
-    click(".modal-dialog .btn-primary");
+    await click(".modal-dialog .btn-primary");
     await animationFrame();
     expect(".modal-dialog").toHaveCount(0);
     expect(DROPDOWN_MENU).toHaveCount(1);
-    click(".outside-parent");
+    await click(".outside-parent");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
@@ -752,19 +756,19 @@ test("t-if t-else as toggler", async () => {
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Open
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Close
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Change button then open
     state.foo = "boo";
     await animationFrame();
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 });
@@ -809,24 +813,24 @@ test("Dropdown in dialog in dropdown, first dropdown should stay open when click
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Open dialog
-    click(".root-dropdown");
+    await click(".root-dropdown");
     await animationFrame();
-    click(".root-button");
+    await click(".root-button");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Open dropdown in dialog => both dropdown should be open
-    click(".dialog-dropdown");
+    await click(".dialog-dropdown");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
 
     // Click inside dropdown inside dialog => both dropdown should not close
-    click(".dialog-button");
+    await click(".dialog-button");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
 
     // Click outside dropdown inside dialog => only first dropdown should be open
-    click(".inside-dialog");
+    await click(".inside-dialog");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 });
@@ -834,13 +838,13 @@ test("Dropdown in dialog in dropdown, first dropdown should stay open when click
 test("multi-level dropdown: can be rendered and toggled", async () => {
     await mountWithCleanup(MultiLevelDropdown);
 
-    click(".dropdown-a");
+    await click(".dropdown-a");
     await animationFrame();
 
-    click(".dropdown-b");
+    await click(".dropdown-b");
     await animationFrame();
 
-    click(".dropdown-c");
+    await click(".dropdown-c");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(3);
 });
@@ -869,15 +873,15 @@ test("multi-level dropdown: initial open state can be true", async () => {
 test("multi-level dropdown: close on outside click", async () => {
     await mountWithCleanup(MultiLevelDropdown);
 
-    click(".dropdown-a");
+    await click(".dropdown-a");
     await animationFrame();
-    click(".dropdown-b");
+    await click(".dropdown-b");
     await animationFrame();
-    click(".dropdown-c");
+    await click(".dropdown-c");
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(3);
-    click("div.outside");
+    await click("div.outside");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
@@ -885,15 +889,15 @@ test("multi-level dropdown: close on outside click", async () => {
 test("multi-level dropdown: close on item selection", async () => {
     await mountWithCleanup(MultiLevelDropdown);
 
-    click(".dropdown-a");
+    await click(".dropdown-a");
     await animationFrame();
-    click(".dropdown-b");
+    await click(".dropdown-b");
     await animationFrame();
 
     expect(DROPDOWN_MENU).toHaveCount(2);
     expect(DROPDOWN_ITEM).toHaveCount(2);
 
-    click(".o-dropdown-item.item-b");
+    await click(".o-dropdown-item.item-b");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
@@ -923,38 +927,38 @@ test("multi-level dropdown: parent closing modes on item selection", async () =>
     await mountWithCleanup(Parent);
 
     // Open the 2-level dropdowns
-    click(".dropdown-a");
+    await click(".dropdown-a");
     await animationFrame();
-    click(".dropdown-b");
+    await click(".dropdown-b");
     await animationFrame();
 
     // Select item (closingMode=none)
-    click(".item1");
+    await click(".item1");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
 
     // Select item (closingMode=closest)
-    click(".item2");
+    await click(".item2");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
 
     // Reopen second level dropdown
-    click(".dropdown-b");
+    await click(".dropdown-b");
     await animationFrame();
 
     // Select item (closingMode=all)
-    click(".item3");
+    await click(".item3");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 
     // Reopen the 2-level dropdowns
-    click(".dropdown-a");
+    await click(".dropdown-a");
     await animationFrame();
-    click(".dropdown-b");
+    await click(".dropdown-b");
     await animationFrame();
 
     // Select item (default should be closingMode=all)
-    click(".item4");
+    await click(".item4");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
@@ -1160,7 +1164,7 @@ test.tags("desktop")("multi-level dropdown: keynav", async () => {
     ];
 
     for (const [stepIndex, step] of scenarioSteps.entries()) {
-        press(step.hotkey);
+        await press(step.hotkey);
         await animationFrame();
 
         if (step.highlighted !== undefined) {
@@ -1236,7 +1240,7 @@ test.tags("desktop")("multi-level dropdown: keynav when rtl direction", async ()
     ];
 
     for (const [stepIndex, step] of scenarioSteps.entries()) {
-        press(step.hotkey);
+        await press(step.hotkey);
         await animationFrame();
         if (step.highlighted !== undefined) {
             const activeElements = queryAll(".focus");
@@ -1304,12 +1308,12 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     expect.verifySteps([]);
 
     // Open the menu
-    click(".one");
+    await click(".one");
     await animationFrame();
     expect.verifySteps(["submenu mounted"]);
 
     // Open the submenu
-    click(".two");
+    await click(".two");
     await animationFrame();
     // Change submenu content
     parentState.foo = true;
@@ -1350,19 +1354,19 @@ test.tags("desktop")(
         });
 
         // Open main dropdown
-        click(".main");
+        await click(".main");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(1, {
             message: "1st menu is opened",
         });
 
         // Mouse enter sub dropdown
-        hover(".sub");
+        await hover(".sub");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(2);
 
         // Mouse enter the adjacent dropdown item
-        hover(".item");
+        await hover(".item");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(1, {
             message: "only 1st menu is opened",
@@ -1436,46 +1440,46 @@ test.tags("desktop")("multi-level dropdown: unsubscribe all keynav when root clo
     expect(registeredHotkeys.size).toBe(0);
 
     // Open dropdowns one by one
-    click(".first");
+    await click(".first");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(1);
     checkKeys(registeredHotkeys);
 
-    hover(".second");
+    await hover(".second");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
     checkKeys(registeredHotkeys);
 
-    hover(".third");
+    await hover(".third");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(3);
     checkKeys(registeredHotkeys);
 
     // Close third
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(2);
     checkKeys(removedHotkeys);
 
     // Reset hover
-    hover(getFixture());
+    await hover(getFixture());
 
     // Reopen second
-    hover(".third");
+    await hover(".third");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(3);
     checkKeys(registeredHotkeys);
 
     // Close third, second and first
-    press("escape");
+    await press("escape");
     await animationFrame();
     checkKeys(removedHotkeys);
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     checkKeys(removedHotkeys);
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveCount(0);
     checkKeys(removedHotkeys);

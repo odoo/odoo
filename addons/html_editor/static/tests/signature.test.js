@@ -20,20 +20,20 @@ defineModels([ResUsers]);
 
 test("apply 'Signature' command", async () => {
     const { el, editor } = await setupEditor("<p>ab[]cd</p>");
-    insertText(editor, "/signature");
+    await insertText(editor, "/signature");
     await animationFrame();
     expect(".active .o-we-command-name").toHaveText("Signature");
 
-    press("enter");
+    await press("enter");
     await tick();
     expect(getContent(el)).toBe("<p>ab</p><h1>Hello[]</h1><p>cd</p>");
 });
 
 test("undo a 'Signature' command", async () => {
     const { el, editor } = await setupEditor("<p>ab[]cd</p>");
-    insertText(editor, "test");
-    insertText(editor, "/signature");
-    press("enter");
+    await insertText(editor, "test");
+    await insertText(editor, "/signature");
+    await press("enter");
     await tick();
     expect(getContent(el)).toBe("<p>abtest</p><h1>Hello[]</h1><p>cd</p>");
 

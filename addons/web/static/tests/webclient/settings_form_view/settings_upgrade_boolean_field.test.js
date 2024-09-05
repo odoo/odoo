@@ -27,7 +27,7 @@ test("widget upgrade_boolean in a form view - dialog", async () => {
         resModel: "res.config.settings",
     });
 
-    click(".o-checkbox .form-check-input");
+    await click(".o-checkbox .form-check-input");
     await animationFrame();
     expect(".o_dialog .modal").toHaveCount(1, {
         message: "the 'Upgrade to Enterprise' dialog should be opened",
@@ -72,7 +72,7 @@ test("widget upgrade_boolean in a form view - dialog (enterprise version)", asyn
         resModel: "res.config.settings",
     });
 
-    click(".o-checkbox .form-check-input");
+    await click(".o-checkbox .form-check-input");
     await animationFrame();
 
     expect(".o_dialog .modal").toHaveCount(0, {

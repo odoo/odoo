@@ -4,6 +4,7 @@
  * @typedef {import("./mock/network").ServerWebSocket} ServerWebSocket
  */
 
+export { animationFrame } from "@odoo/hoot-dom";
 export { makeSeededRandom } from "./mock/math";
 export { mockPermission, mockSendBeacon, mockUserAgent, mockVibrate } from "./mock/navigator";
 export { mockFetch, mockLocation, mockWebSocket, mockWorker } from "./mock/network";
@@ -12,7 +13,6 @@ export {
     Deferred,
     advanceFrame,
     advanceTime,
-    animationFrame,
     cancelAllTimers,
     delay,
     freezeTime,

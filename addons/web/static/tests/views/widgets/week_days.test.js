@@ -66,25 +66,25 @@ test("simple week recurrence widget", async () => {
         message: "all inputs should be enabled in edit mode",
     });
 
-    click("td:nth-child(7) input");
+    await click("td:nth-child(7) input");
     expect("td:nth-child(7) input").toBeChecked({
         message: "sunday checkbox should be checked",
     });
 
     await clickSave();
 
-    click("td:nth-child(1) input");
+    await click("td:nth-child(1) input");
     expect("td:nth-child(1) input").toBeChecked({
         message: "monday checkbox should be checked",
     });
 
-    click("td:nth-child(2) input");
+    await click("td:nth-child(2) input");
     expect("td:nth-child(2) input").toBeChecked({
         message: "tuesday checkbox should be checked",
     });
 
     // uncheck Sunday checkbox and check write call
-    click("td:nth-child(7) input");
+    await click("td:nth-child(7) input");
     expect("td:nth-child(7) input").not.toBeChecked({
         message: "sunday checkbox should be unchecked",
     });

@@ -13,7 +13,7 @@ test("should do nothing if do not click on the checkbox", async () => {
         stepFunction: async (editor) => {
             const li = editor.editable.querySelector("li");
             const liRect = li.getBoundingClientRect();
-            click(li, { position: { clientX: liRect.left + 10, clientY: liRect.top + 10 } });
+            await click(li, { position: { clientX: liRect.left + 10, clientY: liRect.top + 10 } });
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -30,7 +30,7 @@ test("should check a simple item", async () => {
             </ul>`),
         stepFunction: async (editor) => {
             const li = editor.editable.querySelector("li");
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -47,7 +47,7 @@ test("should uncheck a simple item", async () => {
             </ul>`),
         stepFunction: async (editor) => {
             const li = editor.editable.querySelector("li");
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
                 <ul class="o_checklist">
@@ -64,7 +64,7 @@ test("should check an empty item", async () => {
                 </ul>`),
         stepFunction: async (editor) => {
             const li = editor.editable.querySelector("li");
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -81,7 +81,7 @@ test("should uncheck an empty item", async () => {
             </ul>`),
         stepFunction: async (editor) => {
             const li = editor.editable.querySelector("li");
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -107,7 +107,7 @@ test("should check a nested item and the previous checklist item used as title",
                 '.o_checklist > li:not([class^="oe-nested"])'
             );
             const li = lis[2];
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -139,7 +139,7 @@ test("should uncheck a nested item and the previous checklist item used as title
                 '.o_checklist > li:not([class^="oe-nested"])'
             );
             const li = lis[2];
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -176,7 +176,7 @@ test("should check a nested item and the wrapper wrapper title", async () => {
                 '.o_checklist > li:not([class^="oe-nested"])'
             );
             const li = lis[3];
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -218,7 +218,7 @@ test("should uncheck a nested item and the wrapper wrapper title", async () => {
                 '.o_checklist > li:not([class^="oe-nested"])'
             );
             const li = lis[3];
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -268,7 +268,7 @@ test("should check all nested checklist item", async () => {
                 '.o_checklist > li:not([class^="oe-nested"])'
             );
             const li = lis[0];
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -321,7 +321,7 @@ test("should uncheck all nested checklist item", async () => {
                 '.o_checklist > li:not([class^="oe-nested"])'
             );
             const li = lis[0];
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -366,7 +366,7 @@ test("should check all nested checklist item and update wrapper title", async ()
                 '.o_checklist > li:not([class^="oe-nested"])'
             );
             const li = lis[1];
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">
@@ -408,7 +408,7 @@ test("should uncheck all nested checklist items and update wrapper title", async
                 '.o_checklist > li:not([class^="oe-nested"])'
             );
             const li = lis[1];
-            clickCheckbox(li);
+            await clickCheckbox(li);
         },
         contentAfter: unformat(`
             <ul class="o_checklist">

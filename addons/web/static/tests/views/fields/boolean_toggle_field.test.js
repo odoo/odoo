@@ -22,7 +22,7 @@ test("use BooleanToggleField in form view", async () => {
     expect(`.o_boolean_toggle input`).toBeEnabled();
     expect(`.o_boolean_toggle input`).not.toBeChecked();
 
-    check(`.o_field_widget[name='bar'] input`);
+    await check(`.o_field_widget[name='bar'] input`);
     await animationFrame();
     expect(`.o_boolean_toggle input`).toBeEnabled();
     expect(`.o_boolean_toggle input`).toBeChecked();
@@ -55,7 +55,7 @@ test("BooleanToggleField is disabled if readonly in editable list", async () => 
     expect(`.o_boolean_toggle input`).not.toBeEnabled();
     expect(`.o_boolean_toggle input`).not.toBeChecked();
 
-    click(`.o_boolean_toggle`);
+    await click(`.o_boolean_toggle`);
     await animationFrame();
     expect(`.o_boolean_toggle input`).not.toBeEnabled();
     expect(`.o_boolean_toggle input`).not.toBeChecked();
@@ -69,7 +69,7 @@ test("BooleanToggleField - auto save record when field toggled", async () => {
         type: "form",
         arch: `<form><field name="bar" widget="boolean_toggle"/></form>`,
     });
-    click(`.o_field_widget[name='bar'] input`);
+    await click(`.o_field_widget[name='bar'] input`);
     await animationFrame();
     expect.verifySteps(["web_save"]);
 });
@@ -82,7 +82,7 @@ test("BooleanToggleField - autosave option set to false", async () => {
         type: "form",
         arch: `<form><field name="bar" widget="boolean_toggle" options="{'autosave': false}"/></form>`,
     });
-    click(`.o_field_widget[name='bar'] input`);
+    await click(`.o_field_widget[name='bar'] input`);
     await animationFrame();
     expect.verifySteps([]);
 });

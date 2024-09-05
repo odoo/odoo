@@ -29,11 +29,11 @@ test("can color cells", async () => {
 
     await waitFor(".o-we-toolbar");
     expect(".o_font_color_selector").toHaveCount(0);
-    click(".o-select-color-background");
+    await click(".o-select-color-background");
     await animationFrame();
     expect(".o_font_color_selector").toHaveCount(1);
 
-    click(".o_color_button[data-color='#6BADDE']");
+    await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
     expect(".o_font_color_selector").toHaveCount(0); // selector closed

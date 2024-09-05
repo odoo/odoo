@@ -77,10 +77,10 @@ test("Can be updated from autocomplete", async () => {
 
     expect(".o_record_selector input").toHaveValue("Alice");
     expect(".o-autocomplete--dropdown-menu").toHaveCount(0);
-    click(".o_record_selector input");
+    await click(".o_record_selector input");
     await animationFrame();
     expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
-    click("li.o-autocomplete--dropdown-item:eq(1)");
+    await click("li.o-autocomplete--dropdown-item:eq(1)");
     await animationFrame();
     expect(".o_record_selector input").toHaveValue("Bob");
 });
@@ -116,7 +116,7 @@ test("Can give domain and context props for the name search", async () => {
 
     expect(".o_record_selector input").toHaveValue("Alice");
     expect.verifySteps([]);
-    click(".o_record_selector input");
+    await click(".o_record_selector input");
     await animationFrame();
     expect.verifySteps(["name_search"]);
 });

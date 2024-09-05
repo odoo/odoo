@@ -139,7 +139,7 @@ test("rendering of tracked field of type boolean: from true to false", async () 
     await start();
     registerArchs(archs);
     await openFormView("mail.test.track.all", mailTestTrackAllId1);
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking", { text: "YesNo(Boolean)" });
 });
@@ -150,7 +150,7 @@ test("rendering of tracked field of type boolean: from false to true", async () 
     await start();
     registerArchs(archs);
     await openFormView("mail.test.track.all", mailTestTrackAllId1);
-    click(".o_field_boolean input");
+    await click(".o_field_boolean input");
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking", { text: "NoYes(Boolean)" });
 });

@@ -105,8 +105,8 @@ test("media dialog: upload", async function () {
 
     // Open media dialog
     await animationFrame();
-    insertText(htmlEditor, "/image");
-    press("Enter");
+    await insertText(htmlEditor, "/image");
+    await press("Enter");
     await animationFrame();
 
     // upload test
@@ -152,19 +152,19 @@ test("mention a partner", async () => {
 
     const anchorNode = queryOne(`[name='body'] .odoo-editor-editable p`);
     setSelection({ anchorNode, anchorOffset: 0 });
-    insertText(htmlEditor, "@");
+    await insertText(htmlEditor, "@");
     await animationFrame();
     expect(".overlay .search input[placeholder='Search for a user...']").toBeFocused();
     expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
 
-    press("a");
+    await press("a");
     await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item");
     expect(queryAllTexts(".overlay .o-mail-NavigableList .o-mail-NavigableList-item")).toEqual([
         "Mitchell Admin",
     ]);
     expect.verifySteps(["get_mention_suggestions: a"]);
 
-    press("enter");
+    await press("enter");
     expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
     <p>
         <a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">
@@ -187,12 +187,12 @@ test("mention a channel", async () => {
     });
     const anchorNode = queryOne(`[name='body'] .odoo-editor-editable p`);
     setSelection({ anchorNode, anchorOffset: 0 });
-    insertText(htmlEditor, "#");
+    await insertText(htmlEditor, "#");
     await animationFrame();
     expect(".overlay .search input[placeholder='Search for a channel...']").toBeFocused();
     expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
 
-    press("a");
+    await press("a");
     await animationFrame();
     expect.verifySteps(["get_mention_suggestions: a"]);
 });

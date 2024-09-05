@@ -103,7 +103,7 @@ test("ImageUrlField in subviews are loaded correctly", async () => {
     });
 
     // Actual flow: click on an element of the m2m to get its form view
-    click(".o_kanban_record:not(.o_kanban_ghost)");
+    await click(".o_kanban_record:not(.o_kanban_ghost)");
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "The modal should have opened" });
     expect(`img[data-src="${EN_FLAG_URL}"]`).toHaveCount(1, {
@@ -160,7 +160,7 @@ test("image url fields in kanban don't stop opening record", async () => {
         `,
     });
 
-    click(".o_kanban_record");
+    await click(".o_kanban_record");
     await animationFrame();
     expect.verifySteps(["open record"]);
 });
@@ -209,8 +209,8 @@ test("onchange update image fields", async () => {
         message: "the image should have the correct src",
     });
 
-    click(`[name="name"] input`);
-    edit("test", { confirm: "enter" });
+    await click(`[name="name"] input`);
+    await edit("test", { confirm: "enter" });
     await runAllTimers();
     await animationFrame();
     expect(`div[name="foo"] > img`).toHaveAttribute("data-src", srcTest, {

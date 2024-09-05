@@ -59,12 +59,12 @@ test("hotkeys work on dialogs", async () => {
     expect("header .modal-title").toHaveText("Wow(l) Effect");
     expect("footer button").toHaveText("Ok");
     // Same effect as clicking on the x button
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect.verifySteps(["dismiss", "close"]);
     // Same effect as clicking on the Ok button
-    keyDown("control+enter");
-    keyUp("ctrl+enter");
+    await keyDown("control+enter");
+    await keyUp("ctrl+enter");
     expect.verifySteps(["close"]);
 });
 
@@ -414,7 +414,7 @@ test.tags("desktop")("dialog's position is reset on resize", async () => {
         top: `${modalRect.x + 50}px`,
     });
 
-    resize();
+    await resize();
     await animationFrame();
     expect(".modal-content").toHaveStyle({
         left: "0px",

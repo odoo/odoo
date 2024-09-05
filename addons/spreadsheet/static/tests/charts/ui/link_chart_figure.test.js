@@ -31,7 +31,7 @@ async function showChartMenu(fixture) {
 async function clickChartExternalLink(fixture) {
     await showChartMenu(fixture);
     const chartMenuItem = fixture.querySelector(".o-figure-menu-item.o-chart-external-link");
-    click(chartMenuItem);
+    await click(chartMenuItem);
     await animationFrame();
 }
 
@@ -218,14 +218,14 @@ test("Click on chart in dashboard mode redirect to the odoo menu", async functio
     expect(chartMenu.id).toBe(2, { message: "Odoo menu is linked to chart" });
     await animationFrame();
 
-    click(fixture.querySelector(".o-chart-container"));
+    await click(fixture.querySelector(".o-chart-container"));
     await animationFrame();
     // Clicking on a chart while not dashboard mode do nothing
     expect.verifySteps([]);
 
     model.updateMode("dashboard");
     await animationFrame();
-    click(fixture.querySelector(".o-chart-container"));
+    await click(fixture.querySelector(".o-chart-container"));
     await animationFrame();
     // Clicking on a chart while on dashboard mode redirect to the odoo menu
     expect.verifySteps([doActionStep]);

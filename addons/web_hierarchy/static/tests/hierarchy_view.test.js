@@ -1077,7 +1077,7 @@ test("drag node to scroll", async () => {
     ]);
     await animationFrame();
     const content = queryOne(".o_content");
-    scroll(content, { top: 0 });
+    await scroll(content, { top: 0 });
 
     // Limit the height and enable scrolling
     content.setAttribute("style", "min-height:600px;max-height:600px;overflow-y:auto;");
@@ -1108,7 +1108,7 @@ test("drag node to scroll", async () => {
     expect(content.scrollTop).toBe(0);
 
     // cancel drag: press "Escape"
-    press("Escape");
+    await press("Escape");
     await animationFrame();
 
     expect(".o_hierarchy_node_container.o_hierarchy_dragged").toHaveCount(0);

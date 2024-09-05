@@ -356,7 +356,7 @@ test("don't show dialog for errors in third-party scripts", async () => {
 
     // Error events from errors in third-party scripts have no colno, no lineno and no filename
     // because of CORS.
-    manuallyDispatchProgrammaticEvent(window, "error", { error });
+    await manuallyDispatchProgrammaticEvent(window, "error", { error });
     await animationFrame();
     expect.verifyErrors(["Script error."]);
 });
@@ -378,7 +378,7 @@ test("show dialog for errors in third-party scripts in debug mode", async () => 
 
     // Error events from errors in third-party scripts have no colno, no lineno and no filename
     // because of CORS.
-    manuallyDispatchProgrammaticEvent(window, "error", { error });
+    await manuallyDispatchProgrammaticEvent(window, "error", { error });
     await animationFrame();
     expect.verifyErrors(["Script error."]);
     expect.verifySteps(["Dialog: Third-Party Script Error"]);

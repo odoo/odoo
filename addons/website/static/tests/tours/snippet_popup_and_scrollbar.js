@@ -126,7 +126,7 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         content: "Remove the s_popup snippet",
         trigger: ".o_we_customize_panel we-customizeblock-options:contains('Popup') we-button.oe_snippet_remove:first",
         async run(helpers) {
-            helpers.click();
+            await helpers.click();
             // TODO: remove the below setTimeout. Without it, goBackToBlocks() not works.
             await new Promise((r) => setTimeout(r, 1000));
         }

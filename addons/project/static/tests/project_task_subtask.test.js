@@ -140,7 +140,7 @@ test("project.task (kanban): check subtask list", async () => {
         message: "If the drawdown button is not clicked, the subtasks list should be hidden",
     });
 
-    click(".subtask_list_button");
+    await click(".subtask_list_button");
     await animationFrame();
     expect(".subtask_list").toHaveCount(1, {
         message:
@@ -162,7 +162,7 @@ test("project.task (kanban): check subtask list", async () => {
             "Each of the list's rows should display the subtask's name, thus we are looking for 3 in total",
     });
 
-    click(".subtask_list_button");
+    await click(".subtask_list_button");
     await animationFrame();
     expect(".subtask_list").toHaveCount(0, {
         message:
@@ -184,7 +184,7 @@ test("project.task (kanban): check closed subtask count update", async () => {
     checkSteps = true;
 
     expect(queryOne(".subtask_list_button").parentNode).toHaveText("1/4");
-    click(".subtask_list_button");
+    await click(".subtask_list_button");
     await animationFrame();
     const inProgressStatesSelector = `
         .subtask_list
@@ -195,9 +195,9 @@ test("project.task (kanban): check closed subtask count update", async () => {
         message: "The state of the subtask should be in progress",
     });
 
-    click(inProgressStatesSelector);
+    await click(inProgressStatesSelector);
     await animationFrame();
-    click(".project_task_state_selection_menu .fa-check-circle");
+    await click(".project_task_state_selection_menu .fa-check-circle");
     await animationFrame();
     expect(inProgressStatesSelector).toHaveCount(0, {
         message: "The state of the subtask should no longer be in progress",
@@ -236,12 +236,12 @@ test("project.task (kanban): check subtask creation", async () => {
     checkSteps = true;
 
     expect(queryOne(".subtask_list_button").parentNode).toHaveText("1/4");
-    click(".subtask_list_button");
+    await click(".subtask_list_button");
     await animationFrame();
-    click(".subtask_create");
+    await click(".subtask_create");
     await animationFrame();
-    click(".subtask_create_input input");
-    edit("New Subtask", { confirm: "enter" });
+    await click(".subtask_create_input input");
+    await edit("New Subtask", { confirm: "enter" });
     await animationFrame();
     expect(".subtask_list_row").toHaveCount(4, {
         message:
@@ -261,15 +261,15 @@ test("project.task (form): check that the subtask of another project can be adde
         type: "form",
     });
 
-    click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add a");
     await animationFrame();
-    click(".o_field_project input");
+    await click(".o_field_project input");
     await animationFrame();
-    click(".o_field_project li");
+    await click(".o_field_project li");
     await animationFrame();
-    click(".o_field_project input");
-    edit("aaa");
-    click(".o_form_button_save");
+    await click(".o_field_project input");
+    await edit("aaa");
+    await click(".o_form_button_save");
     await animationFrame();
     expect(".o_field_project").toHaveText("Project 1");
 });
@@ -280,7 +280,7 @@ test("project.task (form): check focus on new subtask's name", async () => {
         type: "form",
     });
 
-    click(".o_field_x2many_list_row_add a");
+    await click(".o_field_x2many_list_row_add a");
     await animationFrame();
     expect(".o_field_char input").toBeFocused({
         message: "Upon clicking on 'Add a line', the new subtask's name should be focused.",

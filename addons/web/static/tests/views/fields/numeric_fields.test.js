@@ -70,47 +70,47 @@ test("Numeric fields: fields with keydown on numpad decimal key", async () => {
 
     // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
     // Numpad "comma" is specific to some countries (Brazil...)
-    click(".o_field_float_factor input");
-    keyDown("ArrowRight", { code: "ArrowRight" });
-    keyDown(".", { code: "NumpadDecimal" });
-    keyDown(",", { code: "NumpadDecimal" });
+    await click(".o_field_float_factor input");
+    await keyDown("ArrowRight", { code: "ArrowRight" });
+    await keyDown(".", { code: "NumpadDecimal" });
+    await keyDown(",", { code: "NumpadDecimal" });
     await animationFrame();
     expect(".o_field_float_factor input").toHaveValue("5🇧🇪00🇧🇪🇧🇪");
 
-    click(".o_field_float input");
-    keyDown("ArrowRight", { code: "ArrowRight" });
-    keyDown(".", { code: "NumpadDecimal" });
-    keyDown(",", { code: "NumpadDecimal" });
+    await click(".o_field_float input");
+    await keyDown("ArrowRight", { code: "ArrowRight" });
+    await keyDown(".", { code: "NumpadDecimal" });
+    await keyDown(",", { code: "NumpadDecimal" });
     await animationFrame();
     expect(".o_field_float input").toHaveValue("0🇧🇪4🇧🇪🇧🇪");
 
-    click(".o_field_integer input");
-    keyDown("ArrowRight", { code: "ArrowRight" });
-    keyDown(".", { code: "NumpadDecimal" });
-    keyDown(",", { code: "NumpadDecimal" });
+    await click(".o_field_integer input");
+    await keyDown("ArrowRight", { code: "ArrowRight" });
+    await keyDown(".", { code: "NumpadDecimal" });
+    await keyDown(",", { code: "NumpadDecimal" });
     await animationFrame();
     expect(".o_field_integer input").toHaveValue("10🇧🇪🇧🇪");
 
-    click(".o_field_monetary input");
-    keyDown("ArrowRight", { code: "ArrowRight" });
-    keyDown(".", { code: "NumpadDecimal" });
-    keyDown(",", { code: "NumpadDecimal" });
+    await click(".o_field_monetary input");
+    await keyDown("ArrowRight", { code: "ArrowRight" });
+    await keyDown(".", { code: "NumpadDecimal" });
+    await keyDown(",", { code: "NumpadDecimal" });
     await animationFrame();
     expect(".o_field_monetary input").toHaveValue("9🇧🇪99🇧🇪🇧🇪");
 
-    click(".o_field_percentage input");
-    keyDown("ArrowRight", { code: "ArrowRight" });
-    keyDown(".", { code: "NumpadDecimal" });
-    keyDown(",", { code: "NumpadDecimal" });
+    await click(".o_field_percentage input");
+    await keyDown("ArrowRight", { code: "ArrowRight" });
+    await keyDown(".", { code: "NumpadDecimal" });
+    await keyDown(",", { code: "NumpadDecimal" });
     await animationFrame();
     expect(".o_field_percentage input").toHaveValue("99🇧🇪🇧🇪");
 
-    click(".o_field_progressbar input");
+    await click(".o_field_progressbar input");
     await animationFrame();
 
-    keyDown("ArrowRight", { code: "ArrowRight" });
-    keyDown(".", { code: "NumpadDecimal" });
-    keyDown(",", { code: "NumpadDecimal" });
+    await keyDown("ArrowRight", { code: "ArrowRight" });
+    await keyDown(".", { code: "NumpadDecimal" });
+    await keyDown(",", { code: "NumpadDecimal" });
     await animationFrame();
     expect(".o_field_progressbar input").toHaveValue("0🇧🇪44🇧🇪🇧🇪");
 });
@@ -153,17 +153,17 @@ test("Numeric fields: NumpadDecimal key is different from the decimalPoint", asy
     async function testInputElementOnNumpadDecimal(params) {
         const { el, selectionRange, expectedValue, msg } = params;
 
-        pointerDown(el);
+        await pointerDown(el);
         await animationFrame();
         el.setSelectionRange(...selectionRange);
-        const [event] = keyDown(".", { code: "NumpadDecimal" });
+        const [event] = await keyDown(".", { code: "NumpadDecimal" });
         if (event.defaultPrevented) {
             expect.step("preventDefault");
         }
         await animationFrame();
 
         // dispatch an extra keydown event and expect that it's not default prevented
-        const [extraEvent] = keyDown("1", { code: "Digit1" });
+        const [extraEvent] = await keyDown("1", { code: "Digit1" });
         if (extraEvent.defaultPrevented) {
             throw new Error("should not be default prevented");
         }
@@ -228,16 +228,16 @@ test("useNumpadDecimal should synchronize handlers on input elements", async () 
      */
     async function testInputElements(inputEls) {
         for (const inputEl of inputEls) {
-            pointerDown(inputEl);
+            await pointerDown(inputEl);
             await animationFrame();
-            const [event] = keyDown(".", { code: "NumpadDecimal" });
+            const [event] = await keyDown(".", { code: "NumpadDecimal" });
             if (event.defaultPrevented) {
                 expect.step("preventDefault");
             }
             await animationFrame();
 
             // dispatch an extra keydown event and expect that it's not default prevented
-            const [extraEvent] = keyDown("1", { code: "Digit1" });
+            const [extraEvent] = await keyDown("1", { code: "Digit1" });
             if (extraEvent.defaultPrevented) {
                 throw new Error("should not be default prevented");
             }
@@ -285,7 +285,7 @@ test("select all content on focus", async () => {
     });
 
     const input = queryFirst(".o_field_widget[name='monetary'] input");
-    pointerDown(input);
+    await pointerDown(input);
     await animationFrame();
     expect(input.selectionStart).toBe(0);
     expect(input.selectionEnd).toBe(4);

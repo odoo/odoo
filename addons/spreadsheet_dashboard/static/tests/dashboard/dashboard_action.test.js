@@ -1,5 +1,5 @@
 import { describe, expect, getFixture, onError as onErrorHoot, test } from "@odoo/hoot";
-import { click, press } from "@odoo/hoot-dom";
+import { click, pointerDown, press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getBasicData } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
@@ -7,7 +7,7 @@ import {
     defineSpreadsheetDashboardModels,
     getDashboardServerData,
 } from "@spreadsheet_dashboard/../tests/helpers/data";
-import { contains, getMockEnv, patchWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, getMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -232,8 +232,8 @@ test("Can delete record tag in the filter by hitting Backspace", async function 
     const autoCompleteInput = filter.querySelector(".o-autocomplete--input.o_input");
     expect(filter.querySelectorAll(".o_tag").length).toBe(1);
 
-    autoCompleteInput.focus();
-    press("Backspace");
+    await pointerDown(autoCompleteInput);
+    await press("Backspace");
     await animationFrame();
     expect(filter.querySelectorAll(".o_tag").length).toBe(0);
 });
@@ -354,7 +354,7 @@ test("Clicking 'Edit' icon navigates to dashboard edit view", async function () 
             expect(action.tag).toBe("action_edit_dashboard");
         },
     });
-    click(".o_edit_dashboard");
+    await click(".o_edit_dashboard");
     await animationFrame();
     expect.verifySteps(["action_edit_dashboard", "doAction"]);
 });

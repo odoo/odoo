@@ -42,7 +42,7 @@ test("Without dismiss callback: pressing escape to close the dialog", async () =
         },
     });
     expect.verifySteps([]);
-    press("escape");
+    await press("escape");
     await tick();
     expect.verifySteps(["Cancel action", "Close action"]);
 });
@@ -68,7 +68,7 @@ test("With dismiss callback: pressing escape to close the dialog", async () => {
             },
         },
     });
-    press("escape");
+    await press("escape");
     await tick();
     expect.verifySteps(["Dismiss action", "Close action"]);
 });
@@ -234,7 +234,7 @@ test("can't cancel (with escape) after confirm", async () => {
     });
     await contains(".modal-footer .btn-primary").click();
     expect.verifySteps(["Confirm action"]);
-    press("escape");
+    await press("escape");
     await tick();
     expect.verifySteps([]);
     def.resolve();

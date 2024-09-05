@@ -125,7 +125,7 @@ test("save actions to dashboard", async () => {
     await selectGroup("foo");
 
     // add this action to dashboard
-    hover(".o_add_to_board button.dropdown-toggle");
+    await hover(".o_add_to_board button.dropdown-toggle");
     await animationFrame();
     await contains(queryOne("input", { root: getAddToDashboardMenu() })).edit("a name", {
         confirm: false,
@@ -179,7 +179,7 @@ test("save two searches to dashboard", async () => {
     await toggleMenuItem("Filter on a");
 
     // Add it to dashboard
-    hover(".o_add_to_board button.dropdown-toggle");
+    await hover(".o_add_to_board button.dropdown-toggle");
     await animationFrame();
     await contains(queryOne("button", { root: getAddToDashboardMenu() })).click();
 
@@ -191,7 +191,7 @@ test("save two searches to dashboard", async () => {
     await toggleMenuItem("Filter on b");
 
     // Add it to dashboard
-    hover(".o_add_to_board button.dropdown-toggle");
+    await hover(".o_add_to_board button.dropdown-toggle");
     await animationFrame();
     await contains(queryOne("button", { root: getAddToDashboardMenu() })).click();
 });
@@ -237,7 +237,7 @@ test("save an action domain to dashboard", async () => {
     await toggleMenuItem("Filter");
 
     // Add it to dashboard
-    hover(".o_add_to_board button.dropdown-toggle");
+    await hover(".o_add_to_board button.dropdown-toggle");
     await animationFrame();
     // add
     await contains(queryOne("button", { root: getAddToDashboardMenu() })).click();
@@ -323,7 +323,7 @@ test("correctly save the time ranges of a reporting view in comparison mode", as
 
     // add the view to the dashboard
 
-    hover(".o_add_to_board button.dropdown-toggle");
+    await hover(".o_add_to_board button.dropdown-toggle");
     await animationFrame();
     await contains(queryOne("input", { root: getAddToDashboardMenu() })).edit("Pipeline", {
         confirm: false,
@@ -354,12 +354,12 @@ test("Add a view to dashboard (keynav)", async () => {
     });
 
     await toggleSearchBarMenu();
-    hover(".o_add_to_board button.dropdown-toggle");
+    await hover(".o_add_to_board button.dropdown-toggle");
     await animationFrame();
     await contains(queryOne("input", { root: getAddToDashboardMenu() })).edit("Pipeline", {
         confirm: false,
     });
-    press("Enter");
+    await press("Enter");
 
     expect.verifySteps(["add to board"]);
 });
@@ -395,7 +395,7 @@ test("Add a view with dynamic domain", async () => {
     });
 
     await toggleSearchBarMenu();
-    hover(".o_add_to_board button.dropdown-toggle");
+    await hover(".o_add_to_board button.dropdown-toggle");
     await animationFrame();
     await contains(queryOne("input", { root: getAddToDashboardMenu() })).edit("Pipeline");
 });
@@ -458,7 +458,7 @@ test("Add a view to dashboard doesn't save default filters", async () => {
 
     // Add to dashboard
     await toggleSearchBarMenu();
-    hover(".o_add_to_board button.dropdown-toggle");
+    await hover(".o_add_to_board button.dropdown-toggle");
     await animationFrame();
     await contains(queryOne("input", { root: getAddToDashboardMenu() })).edit("Pipeline");
 });

@@ -635,7 +635,7 @@ test("can click on action-bound links -- 1", async () => {
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect("a").toHaveCount(1);
-    click("a");
+    await click("a");
     await animationFrame();
     expect.verifySteps(["root called"]);
 });
@@ -661,7 +661,7 @@ test("can click on action-bound links -- 2", async () => {
     `;
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect("a").toHaveCount(1);
-    click("a");
+    await click("a");
     await animationFrame();
 });
 
@@ -694,7 +694,7 @@ test("can click on action-bound links -- 3", async () => {
     `;
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect("a").toHaveCount(1);
-    click("a");
+    await click("a");
     await animationFrame();
 });
 

@@ -100,7 +100,7 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
         range(12, (i) => pad2(i * 5))
     );
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("2023");
@@ -118,7 +118,7 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
     ]);
     expect(".o_date_item_cell.o_today").toHaveText("Apr");
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("2019 - 2030");
@@ -135,7 +135,7 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
     ]);
     expect(".o_date_item_cell.o_today").toHaveText("2023");
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("1990 - 2100");
@@ -153,11 +153,11 @@ test("minDate: correct days/month/year/decades are disabled", async () => {
     ]);
     expect(".o_date_item_cell.o_today").toHaveText("2020");
 
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
 
     assertDateTimePicker({
@@ -211,7 +211,7 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
         range(12, (i) => pad2(i * 5))
     );
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("2023");
@@ -233,7 +233,7 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
     ]);
     expect(".o_date_item_cell.o_today").toHaveText("Apr");
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("2019 - 2030");
@@ -255,7 +255,7 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
     ]);
     expect(".o_date_item_cell.o_today").toHaveText("2023");
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("1990 - 2100");
@@ -277,11 +277,11 @@ test("maxDate: correct days/month/year/decades are disabled", async () => {
     ]);
     expect(".o_date_item_cell.o_today").toHaveText("2020");
 
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
 
     assertDateTimePicker({
@@ -336,7 +336,7 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
         range(12, (i) => pad2(i * 5))
     );
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("2023");
@@ -356,7 +356,7 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
     expect(queryAllTexts(".o_date_item_cell:not([disabled])")).toEqual(["Apr"]);
     expect(".o_date_item_cell.o_today").toHaveText("Apr");
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("2019 - 2030");
@@ -376,7 +376,7 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
     expect(queryAllTexts(".o_date_item_cell:not([disabled])")).toEqual(["2023"]);
     expect(".o_date_item_cell.o_today").toHaveText("2023");
 
-    click(".o_zoom_out");
+    await click(".o_zoom_out");
     await animationFrame();
 
     expect(".o_datetime_picker_header").toHaveText("1990 - 2100");
@@ -396,11 +396,11 @@ test("min+max date: correct days/month/year/decades are disabled", async () => {
     expect(queryAllTexts(".o_date_item_cell:not([disabled])")).toEqual(["2020"]);
     expect(".o_date_item_cell.o_today").toHaveText("2020");
 
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
-    click(".o_today");
+    await click(".o_today");
     await animationFrame();
 
     assertDateTimePicker({
@@ -444,7 +444,7 @@ test("twelve-hour clock with non-null focus date index", async () => {
         },
     });
 
-    select("7", { target: ".o_time_picker_select:eq(0)" });
+    await select("7", { target: ".o_time_picker_select:eq(0)" });
     expect.verifySteps(["2023-04-20T08:43:00,2023-04-23T07:16:00"]);
 });
 
@@ -564,7 +564,7 @@ test("next month and previous month", async () => {
         ],
     });
 
-    click(".o_previous");
+    await click(".o_previous");
     await animationFrame();
 
     assertDateTimePicker({
@@ -585,7 +585,7 @@ test("next month and previous month", async () => {
         ],
     });
 
-    click(".o_next");
+    await click(".o_next");
     await animationFrame();
 
     assertDateTimePicker({
@@ -606,7 +606,7 @@ test("next month and previous month", async () => {
         ],
     });
 
-    click(".o_next");
+    await click(".o_next");
     await animationFrame();
 
     assertDateTimePicker({
@@ -782,7 +782,7 @@ test.tags("desktop")("range value", async () => {
 });
 
 test("range value on small device", async () => {
-    resize({ width: 300 });
+    await resize({ width: 300 });
 
     await mountWithCleanup(DateTimePicker, {
         props: {
@@ -870,7 +870,7 @@ test.tags("desktop")("range value, previous month", async () => {
         ],
     });
 
-    click(".o_previous");
+    await click(".o_previous");
     await animationFrame();
 
     assertDateTimePicker({
@@ -965,7 +965,7 @@ test("rounding=0 enables seconds picker", async () => {
 test("no value, select date without handler", async () => {
     await mountWithCleanup(DateTimePicker);
 
-    click(getPickerCell("12"));
+    await click(getPickerCell("12"));
     await animationFrame();
 
     expect.verifySteps([]); // This test just asserts that nothing happens
@@ -978,9 +978,9 @@ test("no value, select date", async () => {
         },
     });
 
-    click(getPickerCell("5").at(0));
+    await click(getPickerCell("5").at(0));
     await animationFrame();
-    click(getPickerCell("12"));
+    await click(getPickerCell("12"));
     await animationFrame();
 
     expect.verifySteps(["2023-04-05T13:00:00", "2023-04-12T13:00:00"]);
@@ -993,8 +993,8 @@ test("no value, select time", async () => {
         },
     });
 
-    select("18", { target: ".o_time_picker_select:eq(0)" });
-    select("5", { target: ".o_time_picker_select:eq(1)" });
+    await select("18", { target: ".o_time_picker_select:eq(0)" });
+    await select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
 
     expect.verifySteps(["2023-04-25T18:00:00", "2023-04-25T18:05:00"]);
@@ -1008,11 +1008,11 @@ test("minDate with time: selecting out-of-range and in-range times", async () =>
         },
     });
 
-    select("15", { target: ".o_time_picker_select:eq(0)" });
+    await select("15", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps(["2023-04-25T16:00:00"]);
 });
@@ -1025,11 +1025,11 @@ test("maxDate with time: selecting out-of-range and in-range times", async () =>
         },
     });
 
-    select("17", { target: ".o_time_picker_select:eq(0)" });
+    await select("17", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps(["2023-04-25T16:00:00"]);
 });
@@ -1043,12 +1043,12 @@ test("max and min date with time: selecting out-of-range and in-range times", as
         },
     });
 
-    select("15", { target: ".o_time_picker_select:eq(0)" });
-    select("17", { target: ".o_time_picker_select:eq(0)" });
+    await select("15", { target: ".o_time_picker_select:eq(0)" });
+    await select("17", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps(["2023-04-25T16:00:00"]);
 });
@@ -1062,12 +1062,12 @@ test("max and min date with time: selecting invalid minutes and making it valid 
         },
     });
 
-    select("13", { target: ".o_time_picker_select:eq(0)" });
-    select("30", { target: ".o_time_picker_select:eq(1)" });
+    await select("13", { target: ".o_time_picker_select:eq(0)" });
+    await select("30", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
     await animationFrame();
     expect.verifySteps(["2023-04-25T16:30:00"]);
 });
@@ -1081,12 +1081,12 @@ test("max and min date with time: valid time on invalid day becomes valid when s
         },
     });
 
-    select("16", { target: ".o_time_picker_select:eq(0)" });
-    select("30", { target: ".o_time_picker_select:eq(1)" });
+    await select("16", { target: ".o_time_picker_select:eq(0)" });
+    await select("30", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
     expect.verifySteps([]);
 
-    click(getPickerCell("24"));
+    await click(getPickerCell("24"));
     await animationFrame();
     expect.verifySteps(["2023-04-24T16:30:00"]);
 });
@@ -1150,7 +1150,7 @@ test("single value, select date", async () => {
         },
     });
 
-    click(getPickerCell("5").at(0));
+    await click(getPickerCell("5").at(0));
     await animationFrame();
     expect.verifySteps(["2023-04-05T08:43:00"]);
 });
@@ -1163,8 +1163,8 @@ test("single value, select time", async () => {
         },
     });
 
-    select("18", { target: ".o_time_picker_select:eq(0)" });
-    select("5", { target: ".o_time_picker_select:eq(1)" });
+    await select("18", { target: ".o_time_picker_select:eq(0)" });
+    await select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
     expect.verifySteps(["2023-04-30T18:43:00", "2023-04-30T18:05:00"]);
 });
@@ -1182,9 +1182,9 @@ test("single value, select time in twelve-hour clock format", async () => {
         },
     });
 
-    select("7", { target: ".o_time_picker_select:eq(0)" });
-    select("5", { target: ".o_time_picker_select:eq(1)" });
-    select("PM", { target: ".o_time_picker_select:eq(2)" });
+    await select("7", { target: ".o_time_picker_select:eq(0)" });
+    await select("5", { target: ".o_time_picker_select:eq(1)" });
+    await select("PM", { target: ".o_time_picker_select:eq(2)" });
     await animationFrame();
     expect.verifySteps(["2023-04-30T07:43:00", "2023-04-30T07:05:00", "2023-04-30T19:05:00"]);
 });
@@ -1202,7 +1202,7 @@ test("range value, select date for first value", async () => {
         },
     });
 
-    click(getPickerCell("5").at(0));
+    await click(getPickerCell("5").at(0));
     await animationFrame();
     expect.verifySteps(["2023-04-05T08:43:00,2023-04-23T17:16:00"]);
 });
@@ -1219,8 +1219,8 @@ test("range value, select time for first value", async () => {
         },
     });
 
-    select("18", { target: ".o_time_picker_select:eq(0)" });
-    select("5", { target: ".o_time_picker_select:eq(1)" });
+    await select("18", { target: ".o_time_picker_select:eq(0)" });
+    await select("5", { target: ".o_time_picker_select:eq(1)" });
     await animationFrame();
     expect.verifySteps([
         "2023-04-20T18:43:00,2023-04-23T17:16:00",
@@ -1241,7 +1241,7 @@ test.tags("desktop")("range value, select date for second value", async () => {
         },
     });
 
-    click(getPickerCell("21").at(0));
+    await click(getPickerCell("21").at(0));
     await animationFrame();
     expect.verifySteps(["2023-04-20T08:43:00,2023-04-21T17:16:00"]);
 });
@@ -1259,8 +1259,8 @@ test("range value, select time for second value", async () => {
         },
     });
 
-    select("18", { target: ".o_time_picker_select:eq(2)" });
-    select("5", { target: ".o_time_picker_select:eq(3)" });
+    await select("18", { target: ".o_time_picker_select:eq(2)" });
+    await select("5", { target: ".o_time_picker_select:eq(3)" });
     await animationFrame();
     expect.verifySteps([
         "2023-04-20T08:43:00,2023-04-23T18:16:00",
@@ -1281,7 +1281,7 @@ test.tags("desktop")("range value, select date for second value before first val
         },
     });
 
-    click(getPickerCell("19").at(0));
+    await click(getPickerCell("19").at(0));
     await animationFrame();
     expect.verifySteps(["2023-04-19T08:43:00,2023-04-23T17:16:00"]);
 });
@@ -1299,7 +1299,7 @@ test("range value, select date for first value after second value", async () => 
         },
     });
 
-    click(getPickerCell("27").at(1));
+    await click(getPickerCell("27").at(1));
     await animationFrame();
     expect.verifySteps(["2023-04-20T08:43:00,2023-04-27T17:16:00"]);
 });

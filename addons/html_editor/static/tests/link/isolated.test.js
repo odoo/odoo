@@ -51,9 +51,9 @@ test("should keep isolated link after a delete and typing", async () => {
         contentBefore: '<p>a<a href="#/">b[]</a>c</p>',
         stepFunction: async (editor) => {
             deleteBackward(editor);
-            insertText(editor, "a");
-            insertText(editor, "b");
-            insertText(editor, "c");
+            await insertText(editor, "a");
+            await insertText(editor, "b");
+            await insertText(editor, "c");
         },
         contentAfter: '<p>a<a href="#/">abc[]</a>c</p>',
     });
@@ -199,7 +199,7 @@ test("should remove zwnbsp from middle of the link", async () => {
         stepFunction: async (editor) => {
             // Cursor before the FEFF text node
             setSelection({ anchorNode: editor.editable.querySelector("a"), anchorOffset: 0 });
-            insertText(editor, "more ");
+            await insertText(editor, "more ");
         },
         contentAfterEdit:
             '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffmore []content\ufeff</a>\ufeff</p>',
@@ -217,7 +217,7 @@ test("should remove zwnbsp from middle of the link (2)", async () => {
                 anchorNode: editor.editable.querySelector("a").firstChild,
                 anchorOffset: 0,
             });
-            insertText(editor, "more ");
+            await insertText(editor, "more ");
         },
         contentAfterEdit:
             '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffmore []content\ufeff</a>\ufeff</p>',

@@ -80,7 +80,7 @@ test("reply: discard on pressing escape [REQUIRE FOCUS]", async () => {
     triggerHotkey("Escape");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     await contains(".o-mail-Composer");
-    click(".o-mail-Composer-input").catch(() => {});
+    await click(".o-mail-Composer-input").catch(() => {});
     triggerHotkey("Escape");
     await contains(".o-mail-Composer", { count: 0 });
 });

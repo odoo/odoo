@@ -26,7 +26,7 @@ test("is notified when content is changed", async () => {
         config: { onChange: () => n++ },
     });
     expect(n).toBe(0);
-    insertText(editor, "a");
+    await insertText(editor, "a");
 
     expect(editor.getContent()).toBe(`<p>helloa world</p>`);
     expect(n).toBe(1);

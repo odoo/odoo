@@ -194,11 +194,11 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "Select the h4 of first menu link of the first column",
         trigger: ':iframe .s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4',
-        run(actions) {
+        async run(actions) {
             // Clicking on the h4 element first time leads to the selection of
             // the entire a.nav-link, due to presence of `o_default_snippet_text` class
             // hence, specify the selection on the h4 element
-            actions.click();
+            await actions.click();
             const iframeDocument = document.querySelector('.o_iframe').contentDocument;
             const range = iframeDocument.createRange();
             range.selectNodeContents(this.anchor);

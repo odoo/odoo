@@ -145,51 +145,58 @@
   </t>
 
   <t t-name="web.NavBar.SectionsMenu">
-    <div t-if="!env.isSmall" class="o_menu_sections d-flex flex-grow-1 flex-shrink-1 w-0" t-ref="appSubMenus" role="menu">
-      <DropdownGroup>
-        <t t-foreach="sections" t-as="section" t-key="section.id">
-          <t
-            t-set="sectionsVisibleCount"
-            t-value="(sections.length - currentAppSectionsExtra.length)"
-          />
+    <div class="o_menu_sections d-flex flex-grow-1 flex-shrink-1 w-0" t-ref="appSubMenus" role="menu">
+        <t t-if="!env.isSmall">
+            <DropdownGroup>
+                <t t-foreach="sections" t-as="section" t-key="section.id">
+                    <t
+                        t-set="sectionsVisibleCount"
+                        t-value="(sections.length - currentAppSectionsExtra.length)"
+                    />
 
-          <t t-if="section_index lt Math.min(10, sectionsVisibleCount)">
-            <t t-set="hotkey" t-value="((section_index + 1) % 10).toString()" />
-          </t>
-          <t t-else="">
-            <t t-set="hotkey" t-value="undefined" />
-          </t>
+                    <t t-if="section_index lt Math.min(10, sectionsVisibleCount)">
+                        <t t-set="hotkey" t-value="((section_index + 1) % 10).toString()" />
+                    </t>
+                    <t t-else="">
+                        <t t-set="hotkey" t-value="undefined" />
+                    </t>
 
-          <t t-if="!section.childrenTree.length">
-            <DropdownItem
-              class="'o_nav_entry'"
-              onSelected="() => this.onNavBarDropdownItemSelection(section)"
-              t-esc="section.name"
-              attrs="{ href: getMenuItemHref(section), 'data-hotkey': hotkey, 'data-menu-xmlid': section.xmlid, 'data-section': section.id  }"
-            />
-          </t>
-          <t t-else="">
-            <Dropdown>
-              <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid">
-                <span t-esc="section.name" t-att-data-section="section.id" />
-              </button>
-              <t t-set-slot="content">
-                <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
-                  <t t-set="items" t-value="section.childrenTree" />
-                  <t t-set="decalage" t-value="20" />
+                    <t t-if="!section.childrenTree.length">
+                        <DropdownItem
+                            class="'o_nav_entry'"
+                            onSelected="() => this.onNavBarDropdownItemSelection(section)"
+                            t-esc="section.name"
+                            attrs="{
+                                href: getMenuItemHref(section),
+                                'data-hotkey': hotkey,
+                                'data-menu-xmlid': section.xmlid,
+                                'data-section': section.id,
+                            }"
+                        />
+                    </t>
+                    <t t-else="">
+                        <Dropdown>
+                            <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid">
+                                <span t-esc="section.name" t-att-data-section="section.id" />
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+                                <t t-set="items" t-value="section.childrenTree" />
+                                <t t-set="decalage" t-value="20" />
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </t>
                 </t>
-              </t>
-            </Dropdown>
-          </t>
-        </t>
 
-        <t t-if="currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown">
-          <t t-set="sections" t-value="currentAppSectionsExtra" />
-          <t t-if="sectionsVisibleCount lt 10">
-            <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()" />
-          </t>
+                <t t-if="currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown">
+                    <t t-set="sections" t-value="currentAppSectionsExtra" />
+                    <t t-if="sectionsVisibleCount lt 10">
+                        <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()" />
+                    </t>
+                </t>
+            </DropdownGroup>
         </t>
-      </DropdownGroup>
     </div>
   </t>
 

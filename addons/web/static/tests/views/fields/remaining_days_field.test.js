@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
@@ -95,37 +95,33 @@ test.tags("desktop")("RemainingDaysField on a date field in multi edit list view
         arch: /* xml */ `<list multi_edit="1"><field name="date" widget="remaining_days" /></list>`,
     });
 
-    const cells = queryAll(".o_data_cell");
-    const rows = queryAll(".o_data_row");
-
-    expect(cells[0]).toHaveText("Today");
-    expect(cells[1]).toHaveText("Tomorrow");
+    expect(queryAllTexts(".o_data_cell").slice(0, 2)).toEqual(["Today", "Tomorrow"]);
 
     // select two records and edit them
-    click(queryFirst(".o_list_record_selector input", { root: rows[0] }));
+    await click(".o_data_row:eq(0) .o_list_record_selector input:first");
     await animationFrame();
-    click(queryFirst(".o_list_record_selector input", { root: rows[1] }));
+    await click(".o_data_row:eq(1) .o_list_record_selector input:first");
     await animationFrame();
 
-    click(queryFirst(".o_data_cell", { root: rows[0] }));
+    await click(".o_data_row:eq(0) .o_data_cell:first");
     await animationFrame();
 
     expect(".o_field_remaining_days input").toHaveCount(1);
 
-    click(".o_field_remaining_days input");
-    edit("10/10/2017", { confirm: "enter" });
+    await click(".o_field_remaining_days input");
+    await edit("10/10/2017", { confirm: "enter" });
     await animationFrame();
     expect(".modal").toHaveCount(1);
     expect(".modal .o_field_widget").toHaveText("In 2 days", {
         message: "should have 'In 2 days' value to change",
     });
-    click(".modal .modal-footer .btn-primary");
+    await click(".modal .modal-footer .btn-primary");
     await animationFrame();
 
-    expect(queryFirst(".o_data_cell", { root: rows[0] })).toHaveText("In 2 days", {
+    expect(".o_data_row:eq(0) .o_data_cell:first").toHaveText("In 2 days", {
         message: "should have 'In 2 days' as date field value",
     });
-    expect(queryFirst(".o_data_cell", { root: rows[1] })).toHaveText("In 2 days", {
+    expect(".o_data_row:eq(1) .o_data_cell:first").toHaveText("In 2 days", {
         message: "should have 'In 2 days' as date field value",
     });
 });
@@ -153,18 +149,18 @@ test.tags("desktop")(
         expect(cells[1]).toHaveText("Tomorrow");
 
         // select two records and edit them
-        click(queryFirst(".o_list_record_selector input", { root: rows[0] }));
+        await click(".o_list_record_selector input", { root: rows[0] });
         await animationFrame();
-        click(queryFirst(".o_list_record_selector input", { root: rows[1] }));
+        await click(".o_list_record_selector input", { root: rows[1] });
         await animationFrame();
 
-        click(queryFirst(".o_data_cell", { root: rows[0] }));
+        await click(".o_data_cell", { root: rows[0] });
         await animationFrame();
 
         expect(".o_field_remaining_days input").toHaveCount(1);
 
-        click(".o_field_remaining_days input");
-        edit("blabla", { confirm: "enter" });
+        await click(".o_field_remaining_days input");
+        await edit("blabla", { confirm: "enter" });
         await animationFrame();
         expect(".modal").toHaveCount(0);
         expect(cells[0]).toHaveText("Today");
@@ -190,13 +186,13 @@ test("RemainingDaysField on a date field in form view", async () => {
     expect(".o_form_editable").toHaveCount(1);
     expect("div.o_field_widget[name='date'] input").toHaveCount(1);
 
-    click(".o_field_remaining_days input");
+    await click(".o_field_remaining_days input");
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1, { message: "datepicker should be opened" });
 
-    click(getPickerCell("9").at(0));
+    await click(getPickerCell("9").at(0));
     await animationFrame();
-    click(".o_form_button_save");
+    await click(".o_form_button_save");
     await animationFrame();
     expect(".o_field_widget input").toHaveValue("10/09/2017");
 });
@@ -212,7 +208,7 @@ test("RemainingDaysField on a date field on a new record in form", async () => {
     });
 
     expect(".o_form_editable .o_field_widget[name='date'] input").toHaveCount(1);
-    click(".o_field_widget[name='date'] input");
+    await click(".o_field_widget[name='date'] input");
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1);
 });
@@ -255,13 +251,13 @@ test("RemainingDaysField on a datetime field in form view", async () => {
     expect(".o_field_widget input").toHaveValue("10/08/2017 11:00:00");
     expect("div.o_field_widget[name='datetime'] input").toHaveCount(1);
 
-    click(".o_field_widget input");
+    await click(".o_field_widget input");
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1, { message: "datepicker should be opened" });
 
-    click(getPickerCell("9").at(0));
+    await click(getPickerCell("9").at(0));
     await animationFrame();
-    click(".o_form_button_save");
+    await click(".o_form_button_save");
     await animationFrame();
     expect(".o_field_widget input").toHaveValue("10/09/2017 11:00:00");
 });
@@ -296,7 +292,7 @@ test("RemainingDaysField on a datetime field in list view in UTC", async () => {
         "",
     ]);
 
-    expect(queryFirst(".o_data_cell .o_field_widget div")).toHaveAttribute("title", "10/08/2017");
+    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute("title", "10/08/2017");
 
     const cells = queryAll(".o_data_cell div div");
     expect(cells[0]).toHaveClass(["fw-bold", "text-warning"]);
@@ -332,7 +328,7 @@ test("RemainingDaysField on a datetime field in list view in UTC+6", async () =>
         "Yesterday",
         "In 2 days",
     ]);
-    expect(queryFirst(".o_data_cell .o_field_widget div")).toHaveAttribute("title", "10/09/2017");
+    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute("title", "10/09/2017");
 });
 
 test("RemainingDaysField on a date field in list view in UTC-6", async () => {
@@ -358,7 +354,7 @@ test("RemainingDaysField on a date field in list view in UTC-6", async () => {
         "In 2 days",
         "3 days ago",
     ]);
-    expect(queryFirst(".o_data_cell .o_field_widget div")).toHaveAttribute("title", "10/08/2017");
+    expect(".o_data_cell .o_field_widget div:first").toHaveAttribute("title", "10/08/2017");
 });
 
 test("RemainingDaysField on a datetime field in list view in UTC-8", async () => {

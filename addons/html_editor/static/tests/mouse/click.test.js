@@ -12,7 +12,7 @@ import { getContent, setSelection } from "../_helpers/selection";
  * @param {boolean} [before=false] whether to place the cursor after the node
  */
 async function simulateMouseClick(node, before = false) {
-    pointerDown(node);
+    await pointerDown(node);
     const pos = before ? leftPos(node) : rightPos(node);
     setSelection({
         anchorNode: pos[0],
@@ -21,7 +21,7 @@ async function simulateMouseClick(node, before = false) {
         focusOffset: pos[1],
     });
     await tick();
-    pointerUp(node);
+    await pointerUp(node);
 }
 
 test("should insert a paragraph at end of editable and place cursor in it (hr)", async () => {

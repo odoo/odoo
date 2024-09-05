@@ -779,8 +779,8 @@ registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
     {
         content: "Select the form by clicking on an input field",
         trigger: ':iframe section.s_website_form input',
-        run: function (actions) {
-            actions.click();
+        async run(actions) {
+            await actions.click();
 
             // The next steps will be about removing non essential required
             // fields. For the robustness of the test, check that amount
@@ -820,7 +820,7 @@ registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
         content: "Choose first checkbox as condition item",
         trigger: 'we-button[data-set-visibility-dependency="Checkbox 1"]',
         async run(helpers) {
-            helpers.click();
+            await helpers.click();
             // TODO:to be removed
             await new Promise((r) => setTimeout(r, 300));
         }
@@ -835,7 +835,7 @@ registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
         content: "Choose 'not equal to' comparator",
         trigger: 'we-button[data-select-data-attribute="!selected"]',
         async run(helpers) {
-            helpers.click();
+            await helpers.click();
             // TODO: to be removed
             await new Promise((r) => setTimeout(r, 300));
         }

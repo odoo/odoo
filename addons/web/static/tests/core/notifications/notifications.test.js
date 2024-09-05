@@ -105,7 +105,7 @@ test("can display a notification with a button", async () => {
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
     expect(".o_notification_buttons").toHaveText("I'm a button");
-    click(".o_notification .btn-primary");
+    await click(".o_notification .btn-primary");
     await animationFrame();
     expect.verifySteps(["Button clicked"]);
     expect(".o_notification").toHaveCount(1);
@@ -125,7 +125,7 @@ test("can display a notification with a callback when closed", async () => {
     });
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
-    click(".o_notification .o_notification_close");
+    await click(".o_notification .o_notification_close");
     await animationFrame();
     expect.verifySteps(["Notification closed"]);
     expect(".o_notification").toHaveCount(0);
@@ -181,7 +181,7 @@ test("can close sticky notification", async () => {
     expect(".o_notification").toHaveCount(1);
 
     // close by clicking on the close icon
-    click(".o_notification .o_notification_close");
+    await click(".o_notification .o_notification_close");
     await animationFrame();
     expect(".o_notification").toHaveCount(0);
 });
@@ -242,11 +242,11 @@ test.tags("desktop")("can refresh the duration of a non-sticky notification", as
     expect(".o_notification").toHaveCount(2);
 
     await advanceTime(3000);
-    hover(".o_notification:first-child");
+    await hover(".o_notification:first-child");
     await advanceTime(5000);
     // Both notifications should be visible as long as mouse is over one of them
     expect(".o_notification").toHaveCount(2);
-    leave();
+    await leave();
     await advanceTime(3000);
     // Both notifications should be refreshed in duration (4000 ms)
     expect(".o_notification").toHaveCount(2);

@@ -190,7 +190,7 @@ test("clickable statusbar widget on many2one field", async () => {
         ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current)"
     ).toHaveCount(2);
 
-    click(
+    await click(
         ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current):eq(1)"
     );
     await animationFrame();
@@ -266,7 +266,7 @@ test("statusbar with required modifier", async () => {
         `,
     });
 
-    click(".o_form_button_save");
+    await click(".o_form_button_save");
     await animationFrame();
 
     expect(".o_form_editable").toHaveCount(1, { message: "view should still be in edit" });
@@ -333,7 +333,7 @@ test("clickable statusbar should change m2o fetching domain in edit mode", async
     });
 
     expect(".o_statusbar_status button:not(.dropdown-toggle)").toHaveCount(3);
-    click(".o_statusbar_status button:not(.dropdown-toggle):eq(-1)");
+    await click(".o_statusbar_status button:not(.dropdown-toggle):eq(-1)");
     await animationFrame();
     expect(".o_statusbar_status button:not(.dropdown-toggle)").toHaveCount(2);
 });
@@ -355,11 +355,14 @@ test("statusbar fold_field option and statusbar_visible attribute", async () => 
         `,
     });
 
-    click(".o_statusbar_status .dropdown-toggle:not(.d-none)");
+    await click(".o_statusbar_status .dropdown-toggle:not(.d-none)");
     await animationFrame();
 
-    expect(".dropdown-menu .dropdown-item.disabled").toHaveCount(1);
-    expect(".o_statusbar_status:eq(-1) button:disabled").toHaveCount(4);
+    expect(".o_statusbar_status:first button:visible").toHaveCount(3);
+    expect(".o_statusbar_status:last button:visible").toHaveCount(1);
+    expect(".o_statusbar_status button").not.toBeEnabled({
+        message: "no status bar buttons should be enabled",
+    });
 });
 
 test("statusbar: choose an item from the folded menu", async () => {
@@ -386,9 +389,9 @@ test("statusbar: choose an item from the folded menu", async () => {
         message: "button has the correct text",
     });
 
-    click(".o_statusbar_status .dropdown-toggle:not(.d-none)");
+    await click(".o_statusbar_status .dropdown-toggle:not(.d-none)");
     await animationFrame();
-    click(".o-dropdown--menu .dropdown-item");
+    await click(".o-dropdown--menu .dropdown-item");
     await animationFrame();
 
     expect("[aria-label='Current state']").toHaveText("second record", {
@@ -423,13 +426,13 @@ test("statusbar with dynamic domain", async () => {
 
     expect(".o_statusbar_status button:disabled").toHaveCount(6);
     expect(rpcCount).toBe(1, { message: "should have done 1 search_read rpc" });
-    click(".o_field_widget[name='qux'] input");
-    edit(9.5, { confirm: "enter" });
+    await click(".o_field_widget[name='qux'] input");
+    await edit(9.5, { confirm: "enter" });
     await runAllTimers();
     await animationFrame();
     expect(".o_statusbar_status button:disabled").toHaveCount(5);
     expect(rpcCount).toBe(2, { message: "should have done 1 more search_read rpc" });
-    edit("hey", { confirm: "enter" });
+    await edit("hey", { confirm: "enter" });
     await animationFrame();
     expect(rpcCount).toBe(2, { message: "should not have done 1 more search_read rpc" });
 });
@@ -450,12 +453,12 @@ test(`statusbar edited by the smart action "Move to stage..."`, async () => {
 
     expect(".o_field_widget").toHaveCount(1);
 
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
-    click(`.o_command:contains("Move to Trululu")`);
+    await click(`.o_command:contains("Move to Trululu")`);
     await animationFrame();
     expect(queryAllTexts(".o_command")).toEqual(["first record", "second record", "aaa"]);
-    click("#o_command_2");
+    await click("#o_command_2");
     await animationFrame();
 });
 
@@ -474,7 +477,7 @@ test("smart actions are unavailable if readonly", async () => {
     });
 
     expect(".o_field_widget").toHaveCount(1);
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     const moveStages = queryAllTexts(".o_command");
     expect(moveStages).not.toInclude("Move to Trululu\nALT + SHIFT + X");
@@ -496,11 +499,11 @@ test("hotkeys are unavailable if readonly", async () => {
     });
 
     expect(".o_field_widget").toHaveCount(1);
-    press(["alt", "shift", "x"]); // Move to stage...
+    await press(["alt", "shift", "x"]); // Move to stage...
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "command palette should not open" });
 
-    press(["alt", "x"]); // Move to next
+    await press(["alt", "x"]); // Move to next
     await animationFrame();
     expect(".modal").toHaveCount(0, { message: "command palette should not open" });
 });
@@ -520,7 +523,7 @@ test("auto save record when field toggled", async () => {
         `,
     });
 
-    click(
+    await click(
         ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current):eq(-1)"
     );
     await animationFrame();
@@ -557,13 +560,13 @@ test("For the same record, a single rpc is done to recover the specialData", asy
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
 
-    click(".o_data_row .o_data_cell");
+    await click(".o_data_row .o_data_cell");
     await animationFrame();
     expect.verifySteps(["search_read"]);
 
-    click(".o_back_button");
+    await click(".o_back_button");
     await animationFrame();
-    click(".o_data_row .o_data_cell");
+    await click(".o_data_row .o_data_cell");
     await animationFrame();
     expect.verifySteps([]);
 });
@@ -599,14 +602,14 @@ test("open form with statusbar, leave and come back to another one with other do
     await getService("action").doAction(1);
 
     // open first record
-    click(".o_data_row .o_data_cell");
+    await click(".o_data_row .o_data_cell");
     await animationFrame();
     expect.verifySteps(["search_read"]);
 
     // go back and open second record
-    click(".o_back_button");
+    await click(".o_back_button");
     await animationFrame();
-    click(".o_data_row:eq(1) .o_data_cell");
+    await click(".o_data_row:eq(1) .o_data_cell");
     await animationFrame();
     expect.verifySteps(["search_read"]);
 });
@@ -696,9 +699,9 @@ test("last status bar button have a border radius (no arrow shape) on the right 
             </form>
         `,
     });
-    click(".o_statusbar_status .dropdown-toggle:not(.d-none)");
+    await click(".o_statusbar_status .dropdown-toggle:not(.d-none)");
     await animationFrame();
-    click(
+    await click(
         queryFirst(".dropdown-item", {
             root: getDropdownMenu(".o_statusbar_status .dropdown-toggle:not(.d-none)"),
         })
@@ -760,9 +763,9 @@ test.tags("desktop")("correctly load statusbar when dynamic domain changes", asy
     });
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 1"]);
     expect.verifySteps(['["|",["id","=",1],["project_ids","in",1]]']);
-    click(`[name="project_id"] .dropdown input`);
+    await click(`[name="project_id"] .dropdown input`);
     await animationFrame();
-    click(`[name="project_id"] .dropdown .dropdown-menu .ui-menu-item:contains("Project 2")`);
+    await click(`[name="project_id"] .dropdown .dropdown-menu .ui-menu-item:contains("Project 2")`);
     await animationFrame();
 
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 2"]);

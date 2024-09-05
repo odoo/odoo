@@ -85,7 +85,7 @@ test("relational filter with domain", async function () {
         domainOfAllowedValues: [["display_name", "=", "Bob"]],
     });
     await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     await animationFrame();
     expect.verifySteps(["name_search"]);
 });
@@ -110,7 +110,7 @@ test("relational filter with a contextual domain", async function () {
         domainOfAllowedValues: '[["user_ids", "in", [uid]]]',
     });
     await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     await animationFrame();
     expect.verifySteps(["name_search"]);
 });

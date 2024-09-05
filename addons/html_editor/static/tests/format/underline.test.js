@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { em, s, span, u } from "../_helpers/tags";
@@ -156,12 +157,15 @@ describe("with strikeThrough", () => {
         await testEditor({
             contentBefore: `<p>ab<u><s>cd[]ef</s></u></p>`,
             stepFunction: async (editor) => {
+                /** @todo fix warnings */
+                patchWithCleanup(console, { warn: () => {} });
+
                 underline(editor);
-                insertText(editor, "A");
+                await insertText(editor, "A");
                 underline(editor);
-                insertText(editor, "B");
+                await insertText(editor, "B");
                 underline(editor);
-                insertText(editor, "C");
+                await insertText(editor, "C");
             },
             contentAfterEdit: `<p>ab<u><s>cd</s></u><s>A<u>B</u>C[]</s><u><s>ef</s></u></p>`,
         });
@@ -271,12 +275,15 @@ describe("with italic", () => {
         await testEditor({
             contentBefore: `<p>ab${u(em(`cd[]ef`))}</p>`,
             stepFunction: async (editor) => {
+                /** @todo fix warnings */
+                patchWithCleanup(console, { warn: () => {} });
+
                 underline(editor);
-                insertText(editor, "A");
+                await insertText(editor, "A");
                 underline(editor);
-                insertText(editor, "B");
+                await insertText(editor, "B");
                 underline(editor);
-                insertText(editor, "C");
+                await insertText(editor, "C");
             },
             contentAfter: `<p>ab${u(em(`cd`))}${em(`A${u(`B`)}C[]`)}${u(em(`ef`))}</p>`,
         });

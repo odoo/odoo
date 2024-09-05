@@ -40,7 +40,7 @@ test("ErrorDialog with traceback", async () => {
         "Something went wrong... If you really are stuck, share the report with your friendly support service"
     );
     expect("div.o_error_detail").toHaveCount(0);
-    click("main button");
+    await click("main button");
     await animationFrame();
     expect(queryAllTexts("main .clearfix p")).toEqual([
         "Odoo Error",
@@ -72,7 +72,7 @@ test("Client ErrorDialog with traceback", async () => {
         "Something went wrong... If you really are stuck, share the report with your friendly support service"
     );
     expect("div.o_error_detail").toHaveCount(0);
-    click("main button");
+    await click("main button");
     await animationFrame();
     expect(queryAllTexts("main .clearfix p")).toEqual([
         "Odoo Client Error",
@@ -107,9 +107,9 @@ test("button clipboard copy error traceback", async () => {
             close() {},
         },
     });
-    click("main button");
+    await click("main button");
     await animationFrame();
-    click(".fa-clone");
+    await click(".fa-clone");
     await tick();
 });
 
@@ -132,9 +132,9 @@ test("Display a tooltip on clicking copy button", async () => {
             close() {},
         },
     });
-    click("main button");
+    await click("main button");
     await animationFrame();
-    click(".fa-clone");
+    await click(".fa-clone");
 });
 
 test("WarningDialog", async () => {
@@ -184,11 +184,11 @@ test("RedirectWarningDialog", async () => {
     expect("main").toHaveText("Some strange unreadable message");
     expect(queryAllTexts("footer button")).toEqual(["Buy book on cryptography", "Close"]);
 
-    click("footer button:nth-child(1)"); // click on "Buy book on cryptography"
+    await click("footer button:nth-child(1)"); // click on "Buy book on cryptography"
     await animationFrame();
     expect.verifySteps(["buy_action_id", "dialog-closed"]);
 
-    click("footer button:nth-child(2)"); // click on "Cancel"
+    await click("footer button:nth-child(2)"); // click on "Cancel"
     await animationFrame();
     expect.verifySteps(["dialog-closed"]);
 });
@@ -221,7 +221,7 @@ test("SessionExpiredDialog", async () => {
         "Your Odoo session expired. The current page is about to be refreshed."
     );
     expect(".o_dialog footer button").toHaveText("Close");
-    click(".o_dialog footer button");
+    await click(".o_dialog footer button");
     await animationFrame();
     expect.verifySteps(["location reload"]);
 });

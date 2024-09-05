@@ -34,8 +34,8 @@ describe("insert tabulation", () => {
         await testTabulation({
             contentBefore: `<p>a[]b</p>`,
             stepFunction: async (editor) => {
-                keydownTab(editor);
-                keydownTab(editor);
+                await keydownTab(editor);
+                await keydownTab(editor);
             },
             contentAfterEdit: `<p>a${oeTab(expectedTabWidth, false)}${oeTab(
                 TAB_WIDTH,
@@ -50,9 +50,9 @@ describe("insert tabulation", () => {
         await testTabulation({
             contentBefore: `<p>a[]b</p>`,
             stepFunction: async (editor) => {
-                keydownTab(editor);
-                insertText(editor, "a");
-                keydownTab(editor);
+                await keydownTab(editor);
+                await insertText(editor, "a");
+                await keydownTab(editor);
             },
             contentAfterEdit: `<p>a${oeTab(expectedTabWidth, false)}a${oeTab(
                 expectedTabWidth,
@@ -513,8 +513,8 @@ describe("remove tabulation with shift+tab", () => {
         await testEditor({
             contentBefore: `<p>${oeTab()}${oeTab()}a[]b</p>`,
             stepFunction: async (editor) => {
-                keydownShiftTab(editor);
-                keydownShiftTab(editor);
+                await keydownShiftTab(editor);
+                await keydownShiftTab(editor);
             },
             contentAfter: `<p>a[]b</p>`,
         });
@@ -719,7 +719,7 @@ describe("update tab width", () => {
         await testEditor({
             contentBefore: `<p><span>a[]</span>${oeTab(tabAfterA)}</p>`,
             stepFunction: async (editor) => {
-                insertText(editor, "a");
+                await insertText(editor, "a");
             },
             contentAfter: `<p><span>aa[]</span>${oeTab(tabAfterAA)}</p>`,
         });

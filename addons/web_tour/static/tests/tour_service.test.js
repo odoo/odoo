@@ -525,11 +525,11 @@ test("pointer is added on top of overlay's stack", async () => {
     await advanceTime(100);
     expect(".o-overlay-item:eq(1) .o_tour_pointer").toHaveCount(1);
 
-    click(".modal .a");
+    await click(".modal .a");
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(1);
 
-    click(".btn-primary");
+    await click(".btn-primary");
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
 });
@@ -599,14 +599,14 @@ test("hovering to the anchor element should show the content and not when conten
     await animationFrame();
     expect(".o_tour_pointer_content.invisible").toHaveCount(1);
 
-    click("button.inc");
+    await click("button.inc");
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(1);
     await contains("button.inc").hover();
     await animationFrame();
     expect(".o_tour_pointer_content.invisible").toHaveCount(1);
 
-    click("button.inc");
+    await click("button.inc");
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
 });
@@ -648,7 +648,7 @@ test("should show only 1 pointer at a time", async () => {
     expect(".o_tour_pointer").toHaveCount(1);
     await contains(".interval input").edit(5);
     expect(".o_tour_pointer").toHaveCount(1);
-    click("button.inc");
+    await click("button.inc");
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
 });
@@ -831,7 +831,7 @@ test("scroller pointer to reach next step", async () => {
     expect(pointer).toHaveCount(1);
     expect(pointer.textContent).toBe("Click to increment");
 
-    click("button.inc");
+    await click("button.inc");
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
 });

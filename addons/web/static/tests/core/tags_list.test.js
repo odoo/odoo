@@ -40,10 +40,10 @@ test("Can be rendered with different tags", async () => {
     await mountWithCleanup(Parent);
     expect(".o_tag").toHaveCount(3);
 
-    click(".o_tag:nth-of-type(2) .o_delete");
+    await click(".o_tag:nth-of-type(2) .o_delete");
     expect.verifySteps(["tag2 delete button has been clicked"]);
 
-    click(".o_tag:nth-of-type(3)");
+    await click(".o_tag:nth-of-type(3)");
     expect.verifySteps(["tag3 has been clicked"]);
 });
 

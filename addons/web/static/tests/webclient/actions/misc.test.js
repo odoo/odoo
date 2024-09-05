@@ -465,7 +465,7 @@ test.tags("desktop")("stores and restores scroll position (in kanban)", async ()
     await getService("action").doAction(3);
     expect(".o_content").toHaveProperty("scrollTop", 0);
     // simulate a scroll
-    scroll(".o_content", { top: 100 });
+    await scroll(".o_content", { top: 100 });
     // execute a second action (in which we don't scroll)
     await getService("action").doAction(4);
     expect(".o_content").toHaveProperty("scrollTop", 0);

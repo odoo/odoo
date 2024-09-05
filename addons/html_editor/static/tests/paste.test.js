@@ -2299,7 +2299,7 @@ describe("link", () => {
             expect(".o-we-powerbox").toHaveCount(1);
             expect(getContent(el)).toBe(`<p>xy${imgUrl}[]z</p>`);
 
-            press("Enter");
+            await press("Enter");
             expect(getContent(el)).toBe(`<p>xy<img src="${imgUrl}">[]z</p>`);
         });
 
@@ -2312,8 +2312,8 @@ describe("link", () => {
             expect(".o-we-powerbox").toHaveCount(1);
             expect(getContent(el)).toBe(`<p>xy${imgUrl}[]z</p>`);
 
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
 
             await animationFrame();
             expect(cleanLinkArtifacts(getContent(el))).toBe(
@@ -2592,7 +2592,7 @@ describe("link", () => {
             expect(getContent(el)).toBe(
                 `<p>abhttps://download.odoocdn.com/icons/website/static/description/icon.png[]cd</p>`
             );
-            press("Enter");
+            await press("Enter");
             expect(getContent(el)).toBe(`<p>ab<img src="${imgUrl}">[]cd</p>`);
         });
 
@@ -2606,8 +2606,8 @@ describe("link", () => {
             expect(getContent(el)).toBe(
                 `<p>abhttps://download.odoocdn.com/icons/website/static/description/icon.png[]cd</p>`
             );
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>ab<a href="${imgUrl}">${imgUrl}</a>[]cd</p>`
             );
@@ -2636,7 +2636,7 @@ describe("images", () => {
             pasteText(editor, imgUrl);
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
-            press("Enter");
+            await press("Enter");
             expect(getContent(el)).toBe(`<p>ab<img src="${imgUrl}">[]cd</p>`);
         });
 
@@ -2645,7 +2645,7 @@ describe("images", () => {
             pasteText(editor, imgUrl);
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
-            press("Enter");
+            await press("Enter");
             expect(getContent(el)).toBe(
                 `<p>a<span class="a">b<img src="${imgUrl}">[]c</span>d</p>`
             );
@@ -2671,8 +2671,8 @@ describe("images", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p><a href="${imgUrl}">${imgUrl}</a>[]</p>`
             );
@@ -2687,8 +2687,8 @@ describe("images", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>*should not disappear*<a href="${imgUrl}">${imgUrl}</a>[]</p>`
             );
@@ -2702,7 +2702,7 @@ describe("images", () => {
             pasteText(editor, imgUrl);
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
-            press("Enter");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(`<p>ab<img src="${imgUrl}">[]cd</p>`);
         });
 
@@ -2714,7 +2714,7 @@ describe("images", () => {
             pasteText(editor, imgUrl);
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
-            press("Enter");
+            await press("Enter");
             expect(getContent(el)).toBe(
                 `<p>a<span class="a">b<img src="${imgUrl}">[]c</span>d</p>`
             );
@@ -2740,8 +2740,8 @@ describe("images", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>ab<a href="${imgUrl}">${imgUrl}</a>[]cd</p>`
             );
@@ -2766,8 +2766,8 @@ describe("images", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>ab<a href="${imgUrl}">${imgUrl}</a>[]cd</p>`
             );
@@ -2779,7 +2779,7 @@ describe("images", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick first command (Embed image)
-            press("Enter");
+            await press("Enter");
             // Undo
             undo(editor);
             expect(getContent(el)).toBe("<p>[abc]</p>");
@@ -2792,8 +2792,8 @@ describe("images", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             // Undo
             undo(editor);
             expect(getContent(el)).toBe("<p>[abc]</p>");
@@ -2816,7 +2816,7 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Force powerbox validation on the default first choice
-            press("Enter");
+            await press("Enter");
             // Wait for the getYoutubeVideoElement promise to resolve.
             await tick();
             expect(getContent(el)).toBe(
@@ -2830,7 +2830,7 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Force powerbox validation on the default first choice
-            press("Enter");
+            await press("Enter");
             // Wait for the getYoutubeVideoElement promise to resolve.
             await tick();
             expect(getContent(el)).toBe(
@@ -2860,8 +2860,8 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(`<p><a href="${url}">${url}</a>[]</p>`);
         });
 
@@ -2874,8 +2874,8 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>*should not disappear*<a href="${url}">${url}</a>[]</p>`
             );
@@ -2896,7 +2896,7 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Force powerbox validation on the default first choice
-            press("Enter");
+            await press("Enter");
             // Wait for the getYoutubeVideoElement promise to resolve.
             await tick();
             expect(getContent(el)).toBe(
@@ -2912,7 +2912,7 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Force powerbox validation on the default first choice
-            press("Enter");
+            await press("Enter");
             // Wait for the getYoutubeVideoElement promise to resolve.
             await tick();
             expect(getContent(el)).toBe(
@@ -2941,8 +2941,8 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>ab<a href="${videoUrl}">${videoUrl}</a>[]cd</p>`
             );
@@ -2968,8 +2968,8 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
                 `<p>ab<a href="${videoUrl}">${videoUrl}</a>[]cd</p>`
             );
@@ -2981,7 +2981,7 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Force powerbox validation on the default first choice
-            press("Enter");
+            await press("Enter");
             // Undo
             undo(editor);
             expect(getContent(el)).toBe("<p>[abc]</p>");
@@ -2993,8 +2993,8 @@ describe("youtube video", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(1);
             // Pick the second command (Paste as URL)
-            press("ArrowDown");
-            press("Enter");
+            await press("ArrowDown");
+            await press("Enter");
             // Undo
             undo(editor);
             expect(getContent(el)).toBe("<p>[abc]</p>");
@@ -3532,7 +3532,7 @@ describe("onDrop", () => {
 
         const dropData = new DataTransfer();
         dropData.setData("text/html", "b");
-        dispatch(pElement, "drop", { dataTransfer: dropData });
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
         await tick();
 
         expect(getContent(el)).toBe("<p>abcb[]d</p>");
@@ -3549,7 +3549,7 @@ describe("onDrop", () => {
         const dropData = new DataTransfer();
         dropData.setData("text/html", "x");
 
-        dispatch(pElement, "drop", { dataTransfer: dropData });
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
         await tick();
 
         expect(getContent(el)).toBe(`<p data-oe-model="foo" data-oe-type="text">a[b]cd</p>`);
@@ -3569,7 +3569,7 @@ describe("onDrop", () => {
         const dropData = new DataTransfer();
         const f = new File([blob], "image.png", { type: blob.type });
         dropData.items.add(f);
-        dispatch(pElement, "drop", { dataTransfer: dropData });
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
         await waitFor("img");
         expect(getContent(el)).toBe(
             `<p>abc<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]d</p>`
@@ -3591,7 +3591,7 @@ describe("onDrop", () => {
         });
 
         const dragdata = new DataTransfer();
-        dispatch(imgElement, "dragstart", { dataTransfer: dragdata });
+        await dispatch(imgElement, "dragstart", { dataTransfer: dragdata });
         await animationFrame();
         const imageHTML = dragdata.getData("application/vnd.odoo.odoo-editor-node");
         expect(imageHTML).toBe(
@@ -3605,7 +3605,7 @@ describe("onDrop", () => {
         );
         // Simulate the application/vnd.odoo.odoo-editor-node data that the browser would do.
         dropData.setData("application/vnd.odoo.odoo-editor-node", imageHTML);
-        dispatch(pElement, "drop", { dataTransfer: dropData });
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
         await animationFrame();
 
         expect(getContent(el)).toBe(

@@ -49,7 +49,7 @@ test("Check is_favorite field is still editable even if the record/view is in re
 
     expect("div[name=is_favorite] .o_favorite").toHaveCount(1);
     expect.verifySteps([]);
-    click("div[name=is_favorite] .o_favorite");
+    await click("div[name=is_favorite] .o_favorite");
     await animationFrame();
     expect.verifySteps(["web_save"]);
 });
@@ -71,7 +71,7 @@ test("Check is_favorite field is readonly if the field is readonly", async () =>
 
     expect("div[name=is_favorite] .o_favorite").toHaveCount(1);
     expect.verifySteps([]);
-    click("div[name=is_favorite] .o_favorite");
+    await click("div[name=is_favorite] .o_favorite");
     await animationFrame();
     expect.verifySteps([]);
 });

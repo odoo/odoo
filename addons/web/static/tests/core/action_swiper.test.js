@@ -376,7 +376,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
     await dragHelper.drop();
     // The scrollable element is set at its left limit
     scrollable.scrollLeft = 0;
-    hover(largeText, {
+    await hover(largeText, {
         position: {
             clientX: scrollable.clientLeft,
             clientY: clientYMiddleScrollBar,
@@ -422,7 +422,7 @@ test("swiping when the swiper contains scrollable areas", async () => {
 
     // The scrollable element is set at its right limit
     scrollable.scrollLeft = scrollable.scrollWidth - scrollable.getBoundingClientRect().right;
-    hover(largeText, {
+    await hover(largeText, {
         position: {
             clientX: scrollable.clientWidth,
             clientY: clientYMiddleScrollBar,
@@ -524,7 +524,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
 
     // The scrollable element is set at its left limit
     scrollable.scrollLeft = 0;
-    hover(largeText, {
+    await hover(largeText, {
         position: {
             clientX: scrollable.clientLeft,
             clientY: scrollableMiddleClientY,
@@ -551,7 +551,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
     // In rtl languages, actions are permuted
     expect.verifySteps(["onLeftSwipe"]);
     // LEFT => RIGHT trigger
-    hover(largeText, {
+    await hover(largeText, {
         position: {
             clientX: scrollable.clientWidth,
             clientY: scrollableMiddleClientY,
@@ -576,7 +576,7 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
     await dragHelper.drop();
     // The scrollable element is set at its right limit
     scrollable.scrollLeft = scrollable.scrollWidth - scrollable.getBoundingClientRect().right;
-    hover(largeText, {
+    await hover(largeText, {
         position: {
             clientX: scrollable.clientWidth,
             clientY: scrollableMiddleClientY,

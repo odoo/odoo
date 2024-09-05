@@ -16,14 +16,14 @@ describe("qweb picker", () => {
         expect(getContent(el)).toBe(
             `<div><t t-if="test" data-oe-t-inline="true" data-oe-t-group="0" data-oe-t-selectable="true" data-oe-t-group-active="true">yes</t><t t-else="" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">no</t></div>`
         );
-        click(queryOne(`[data-oe-t-group-active="true"]`));
+        await click(queryOne(`[data-oe-t-group-active="true"]`));
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(queryAllTexts(".o-we-qweb-picker option")).toEqual(["if: test", "else"]);
         expect(".o-we-qweb-picker select option:selected").toHaveText("if: test");
 
-        click(".o-we-qweb-picker select");
-        select("0,1"); // t-else
+        await click(".o-we-qweb-picker select");
+        await select("0,1"); // t-else
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select option:selected").toHaveText("else");
@@ -54,14 +54,14 @@ describe("qweb picker", () => {
         expect(getContent(el)).toBe(
             `<div><t t-if="test" data-oe-t-inline="true" data-oe-t-group="0" data-oe-t-selectable="true" data-oe-t-group-active="true">yes</t><t t-else="" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">no</t></div>`
         );
-        click(queryOne(`[data-oe-t-group-active="true"]`));
+        await click(queryOne(`[data-oe-t-group-active="true"]`));
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(queryAllTexts(".o-we-qweb-picker option")).toEqual(["if: test", "else"]);
         expect(".o-we-qweb-picker select option:selected").toHaveText("if: test");
 
-        click(".o-we-qweb-picker select");
-        select("0,0"); // t-if
+        await click(".o-we-qweb-picker select");
+        await select("0,0"); // t-if
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select option:selected").toHaveText("if: test");
@@ -78,7 +78,7 @@ describe("qweb picker", () => {
         expect(getContent(el)).toBe(
             `<div><t t-if="test" data-oe-t-inline="true" data-oe-t-group="0" data-oe-t-selectable="true" data-oe-t-group-active="true">if</t><t t-elif="test2" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">elif</t><t t-elif="test3" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">elif 3</t><t t-else="" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">else</t></div>`
         );
-        click(queryOne(`[data-oe-t-group-active="true"]`));
+        await click(queryOne(`[data-oe-t-group-active="true"]`));
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(queryAllTexts(".o-we-qweb-picker option")).toEqual([
@@ -89,8 +89,8 @@ describe("qweb picker", () => {
         ]);
         expect(".o-we-qweb-picker select option:selected").toHaveText("if: test");
 
-        click(".o-we-qweb-picker select");
-        select("0,1"); // t-elif test2
+        await click(".o-we-qweb-picker select");
+        await select("0,1"); // t-elif test2
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select option:selected").toHaveText("elif: test2");
@@ -98,8 +98,8 @@ describe("qweb picker", () => {
             `<div><t t-if="test" data-oe-t-inline="true" data-oe-t-group="0" data-oe-t-selectable="true">if</t><t t-elif="test2" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0" data-oe-t-group-active="true">elif</t><t t-elif="test3" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">elif 3</t><t t-else="" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">else</t></div>`
         );
 
-        click(".o-we-qweb-picker select");
-        select("0,2"); // t-elif test2
+        await click(".o-we-qweb-picker select");
+        await select("0,2"); // t-elif test2
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select option:selected").toHaveText("elif: test3");
@@ -107,8 +107,8 @@ describe("qweb picker", () => {
             `<div><t t-if="test" data-oe-t-inline="true" data-oe-t-group="0" data-oe-t-selectable="true">if</t><t t-elif="test2" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">elif</t><t t-elif="test3" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0" data-oe-t-group-active="true">elif 3</t><t t-else="" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">else</t></div>`
         );
 
-        click(".o-we-qweb-picker select");
-        select("0,3"); // t-else
+        await click(".o-we-qweb-picker select");
+        await select("0,3"); // t-else
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select option:selected").toHaveText("else");
@@ -127,14 +127,14 @@ describe("qweb picker", () => {
         );
         expect('[data-oe-t-group-active="true"]').toHaveCount(2);
 
-        click(queryOne(`[data-oe-t-group="1"][data-oe-t-group-active="true"]`));
+        await click(queryOne(`[data-oe-t-group="1"][data-oe-t-group-active="true"]`));
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(queryAllTexts(".o-we-qweb-picker option")).toEqual(["if: test2", "else"]);
         expect(".o-we-qweb-picker select option:selected").toHaveText("if: test2");
 
-        click(".o-we-qweb-picker select");
-        select("0,1"); // t-else
+        await click(".o-we-qweb-picker select");
+        await select("0,1"); // t-else
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select option:selected").toHaveText("else");
@@ -152,12 +152,12 @@ describe("qweb picker", () => {
         );
 
         // Open picker
-        click(queryOne(`[data-oe-t-group-active="true"]`));
+        await click(queryOne(`[data-oe-t-group-active="true"]`));
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
 
         // Click outside to close the picker
-        click(el.querySelector("div"));
+        await click(el.querySelector("div"));
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(0);
     });
@@ -174,7 +174,7 @@ describe("qweb picker", () => {
         );
 
         // Open picker on sub condition
-        click(queryAll(`[data-oe-t-group-active="true"]`)[1]);
+        await click(queryAll(`[data-oe-t-group-active="true"]`)[1]);
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select").toHaveCount(2);
@@ -190,8 +190,8 @@ describe("qweb picker", () => {
         expect(".o-we-qweb-picker select:last option:selected").toHaveText("if: sub-test");
 
         // Select t-else on sub condition
-        click(".o-we-qweb-picker select:last");
-        select("1,1"); // sub t-else
+        await click(".o-we-qweb-picker select:last");
+        await select("1,1"); // sub t-else
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select").toHaveCount(2);
@@ -207,8 +207,8 @@ describe("qweb picker", () => {
         expect(".o-we-qweb-picker select:last option:selected").toHaveText("else");
 
         // Select t-else on main condition
-        click(".o-we-qweb-picker select:first");
-        select("0,1"); // t-else
+        await click(".o-we-qweb-picker select:first");
+        await select("0,1"); // t-else
         await animationFrame();
         expect(".o-we-qweb-picker").toHaveCount(1);
         expect(".o-we-qweb-picker select").toHaveCount(1);

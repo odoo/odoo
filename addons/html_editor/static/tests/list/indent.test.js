@@ -285,7 +285,7 @@ describe("Regular list", () => {
                     <p>def</p>`),
             stepFunction: async (editor) => {
                 splitBlock(editor);
-                keydownTab(editor);
+                await keydownTab(editor);
             },
             contentAfter: unformat(`
                     <ul>
@@ -606,7 +606,7 @@ describe("with selection collapsed", () => {
                             </tbody>
                         </table>
                     `),
-            stepFunction: async (editor) => keydownTab(editor),
+            stepFunction: async (editor) => await keydownTab(editor),
             contentAfter: unformat(`
                         <table>
                             <tbody>
@@ -656,7 +656,7 @@ describe("with selection collapsed", () => {
                             </tbody>
                         </table>
                     `),
-            stepFunction: async (editor) => keydownTab(editor),
+            stepFunction: async (editor) => await keydownTab(editor),
             contentAfter: unformat(`
                         <table>
                             <tbody>
@@ -749,7 +749,7 @@ describe("with selection", () => {
                     </li>
                 </ul>
             `),
-            stepFunction: async (editor) => keydownTab(editor),
+            stepFunction: async (editor) => await keydownTab(editor),
             contentAfter: unformat(`
                 <ul>
                     <li class="oe-nested">
@@ -771,7 +771,7 @@ describe("with selection", () => {
                     [<li><h1>abc</h1></li>]
                 </ul>
             `),
-            stepFunction: async (editor) => keydownTab(editor),
+            stepFunction: async (editor) => await keydownTab(editor),
             contentAfter: unformat(`
                 <ul>
                     <li class="oe-nested">
@@ -793,7 +793,7 @@ describe("with selection", () => {
                     <li>c]</li>
                 </ul>
             `),
-            stepFunction: async (editor) => keydownTab(editor),
+            stepFunction: async (editor) => await keydownTab(editor),
             contentAfter: unformat(`
                 <ul>
                     <li class="oe-nested">
@@ -1237,7 +1237,7 @@ describe("with selection", () => {
                             </tbody>
                         </table>
                     `),
-            stepFunction: async (editor) => keydownTab(editor),
+            stepFunction: async (editor) => await keydownTab(editor),
             contentAfter: unformat(`
                         <table>
                             <tbody>
@@ -1275,10 +1275,11 @@ describe("Mixed: list + paragraph", () => {
             <p>def]</p>`);
         const { el, editor } = await setupEditor(contentBefore);
 
-        keydownTab(editor);
+        await keydownTab(editor);
 
         /* eslint-disable */
-        const expectedContent = unformat(`
+        const expectedContent =
+            unformat(`
             <ul>
                 <li class="oe-nested">
                     <ul>

@@ -106,8 +106,8 @@ test(`click on remove button`, async () => {
             },
         },
     });
-    click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(1) .o_remove`);
-    click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(2) .o_remove`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(1) .o_remove`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(2) .o_remove`);
     expect.verifySteps(["partner_ids 1", "partner_ids 2"]);
 });
 
@@ -120,11 +120,11 @@ test(`click on filter`, async () => {
             },
         },
     });
-    click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(0) input`);
-    click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(1) input`);
-    click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(2) input`);
-    click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(3) input`);
-    click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(3) input`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(0) input`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(1) input`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(2) input`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(3) input`);
+    await click(`.o_calendar_filter:eq(0) .o_calendar_filter_item:eq(3) input`);
     expect.verifySteps([
         "partner_ids 3 false",
         "partner_ids 4 false",

@@ -306,8 +306,9 @@ test("Render with initial empty value: date field", async () => {
     expect(".o_field_daterange input:eq(0)").toHaveValue("08/14/2014");
 
     // Add an end date
-    await contains(".o_add_date", { visible: false }).click();
-    expect(queryValue(".o_field_daterange input:eq(0)")).toBe(
+    await animationFrame();
+    await contains(".o_add_date:enabled", { visible: false }).click();
+    expect(".o_field_daterange input:eq(0)").toHaveValue(
         queryValue(".o_field_daterange input:eq(1)")
     );
 });
@@ -339,7 +340,7 @@ test("Render with initial empty value: datetime field", async () => {
     expect(".o_add_date").toHaveText("Add end date");
 
     // Add an end date
-    await contains(".o_add_date").click();
+    await contains(".o_add_date:enabled").click();
 
     expect(queryAllValues(".o_field_daterange input")).toEqual([
         "08/14/2014 12:00:00",
@@ -370,7 +371,7 @@ test("Render with initial empty value and optional start date", async () => {
     expect(".o_add_date").toHaveText("Add start date");
 
     // Add an end date
-    await contains(".o_add_date").click();
+    await contains(".o_add_date:enabled").click();
 
     expect(queryAllValues(".o_field_daterange input")).toEqual([
         "08/14/2014 12:00:00",
@@ -402,7 +403,7 @@ test("initial empty date with optional start date", async () => {
     expect(".o_add_date").toHaveText("Add end date");
 
     // Add an end date
-    await contains(".o_add_date").click();
+    await contains(".o_add_date:enabled").click();
 
     expect(".o_datetime_picker").toHaveCount(1);
     expect(queryAllValues(".o_field_daterange input")).toEqual([
@@ -435,7 +436,7 @@ test("initial empty date with optional end date", async () => {
     expect(".o_add_date").toHaveText("Add start date");
 
     // Add a start date
-    await contains(".o_add_date").click();
+    await contains(".o_add_date:enabled").click();
 
     expect(queryAllValues(".o_field_daterange input")).toEqual([
         "03/12/2017 23:00:00",
@@ -571,7 +572,7 @@ test("related end date, both start date and end date empty", async () => {
     expect(".o_field_daterange input:eq(0)").toHaveAttribute("data-field", "datetime");
     expect(".o_field_daterange input:eq(0)").toHaveValue("06/06/2023 12:00:00");
     expect(".o_add_date").toHaveText("Add end date");
-    await contains(".o_add_date").click();
+    await contains(".o_add_date:enabled").click();
     expect(".o_field_daterange input").toHaveCount(2);
     expect(".o_field_daterange input:eq(0)").toHaveAttribute("data-field", "datetime");
     expect(".o_field_daterange input:eq(0)").toHaveValue("06/06/2023 12:00:00");
@@ -854,7 +855,7 @@ test("list daterange with empty start date and end date", async () => {
 });
 
 test("list daterange: column widths", async () => {
-    resize({ width: 800 });
+    await resize({ width: 800 });
 
     Partner._fields.char_field = fields.Char();
     Partner._fields.date_end = fields.Date();
@@ -878,7 +879,7 @@ test("list daterange: column widths", async () => {
 });
 
 test("list daterange: column widths (no record)", async () => {
-    resize({ width: 800 });
+    await resize({ width: 800 });
 
     Partner._fields.char_field = fields.Char();
     Partner._fields.date_end = fields.Date();
@@ -1028,7 +1029,7 @@ test.tags("desktop")("date values are selected eagerly and do not flicker", asyn
 
     await contains(".o_field_datetime input").click();
     await contains(getPickerCell("19")).click();
-    await contains(".o_add_date").click();
+    await contains(".o_add_date:enabled").click();
     await contains(".btn:contains(Apply)").click();
 
     expect(queryAllValues(".o_field_datetime input")).toEqual([

@@ -41,7 +41,7 @@ test("rendering a rainbowman destroy after animation", async () => {
     expect(".o_reward_rainbow").toHaveCount(1);
     expect(".o_reward_msg_content").toHaveInnerHTML("<div>Congrats!</div>");
 
-    manuallyDispatchProgrammaticEvent(queryOne(".o_reward"), "animationend", {
+    await manuallyDispatchProgrammaticEvent(queryOne(".o_reward"), "animationend", {
         animationName: "reward-fading-reverse",
     });
     await animationFrame();
@@ -55,7 +55,7 @@ test("rendering a rainbowman destroy on click", async () => {
     expect(".o_reward").toHaveCount(1);
     expect(".o_reward_rainbow").toHaveCount(1);
 
-    click(".o_reward");
+    await click(".o_reward");
     await animationFrame();
     expect(".o_reward").toHaveCount(0);
 });

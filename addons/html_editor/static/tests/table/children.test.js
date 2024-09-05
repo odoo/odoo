@@ -474,7 +474,7 @@ describe("tab", () => {
             </tbody></table>`);
         const { el, editor } = await setupEditor(contentBefore);
 
-        press("Tab");
+        await press("Tab");
 
         const expectedContent = unformat(`
             <table><tbody>

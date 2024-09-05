@@ -1,12 +1,7 @@
-import { Component, xml } from "@odoo/owl";
-import { user } from "@web/core/user";
-import { Record } from "@web/model/record";
-import { Field } from "@web/views/fields/field";
-
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { hover, press, queryAll, queryAllTexts, queryOne, scroll } from "@odoo/hoot-dom";
+import { click, press, queryAll, queryAllTexts, queryOne, scroll } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
-
+import { Component, xml } from "@odoo/owl";
 import {
     clickFieldDropdown,
     clickFieldDropdownItem,
@@ -31,6 +26,10 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
+
+import { user } from "@web/core/user";
+import { Record } from "@web/model/record";
+import { Field } from "@web/views/fields/field";
 import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
@@ -236,7 +235,8 @@ test("many2ones in form views", async () => {
                 </sheet>
             </form>`,
     });
-    await contains(".o_external_button", { visible: false }).click();
+
+    await contains(".o_external_button:enabled", { visible: false }).click();
     expect(".o_dialog:not(.o_inactive_modal) .modal-title").toHaveText("Open: custom label");
 
     // TODO: test that we can edit the record in the dialog, and that
@@ -743,9 +743,9 @@ test("edit many2one before onchange is finished should not reset the value", asy
             obj.user_id = 19;
         },
     };
-    onRpc("onchange", async () => {
+    onRpc("onchange", () => {
         expect.step("onchange");
-        await def;
+        return def;
     });
 
     const def = new Deferred();
@@ -1057,7 +1057,7 @@ test("many2one in edit mode", async () => {
     });
     await contains(".modal .o_searchview_input").edit("P", { confirm: false });
     await runAllTimers();
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(".modal tbody tr").toHaveCount(10);
     // choose a record
@@ -1338,7 +1338,7 @@ test("many2one field and list navigation", async () => {
     await contains(".o_data_cell input").clear();
 
     // press keydown, to select first choice
-    press("arrowdown");
+    await press("arrowdown");
 
     // we now check that the dropdown is open (and that the focus did not go
     // to the next line)
@@ -2453,7 +2453,7 @@ test("quick create on a many2one", async () => {
 
     await contains(".o_field_many2one input").edit("new partner", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
 });
 
 test("failing quick create on a many2one because ValidationError", async () => {
@@ -2569,7 +2569,7 @@ test("slow create on a many2one", async () => {
     });
     await contains(".o_field_many2one input").edit("new product", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
     await animationFrame();
 
     expect(".modal").toHaveCount(1);
@@ -2581,7 +2581,7 @@ test("slow create on a many2one", async () => {
     // cancel the many2one creation with Close button
     await contains(".o_field_many2one input").edit("new product", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
     await animationFrame();
 
     expect(".modal").toHaveCount(1);
@@ -2596,7 +2596,7 @@ test("slow create on a many2one", async () => {
 
     await contains(".o_field_many2one input").edit("new product", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
     await animationFrame();
     expect(".modal").toHaveCount(1);
 
@@ -2606,7 +2606,7 @@ test("slow create on a many2one", async () => {
     // confirm the many2one creation
     await contains(".o_field_many2one input").edit("new product", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
     await animationFrame();
 
     expect(".modal .o_form_view").toHaveCount(1);
@@ -2623,7 +2623,7 @@ test("select a many2one value by pressing tab", async () => {
 
     await contains(".o_field_many2one input").edit("xph", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
     await animationFrame();
 
     expect(".modal").toHaveCount(0);
@@ -2645,7 +2645,7 @@ test("no_create option on a many2one", async () => {
 
     await contains(".o_field_many2one input").edit("new partner", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
 
     expect(".modal").toHaveCount(0);
     expect(".o_field_many2one input").toHaveValue("");
@@ -2665,7 +2665,7 @@ test("no_create option on a many2one when can_create is absent", async () => {
     });
     await contains(".o_field_many2one input").edit("new partner", { confirm: false });
     await runAllTimers();
-    press("tab");
+    await press("tab");
 
     expect(".modal").toHaveCount(0);
     expect(".o_field_many2one input").toHaveValue("");
@@ -2865,14 +2865,14 @@ test("pressing enter in a m2o in an editable list", async () => {
     expect("[name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(1);
 
     // we now trigger ENTER to select first choice
-    press("Enter");
+    await press("Enter");
     await animationFrame();
 
     expect("[name=product_id] input").toBeFocused();
     expect("[name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(0);
 
     // we now trigger again ENTER to make sure we can move to next line
-    press("Enter");
+    await press("Enter");
     await animationFrame();
 
     expect("tr.o_data_row:nth-child(1) [name=product_id] input").toHaveCount(0);
@@ -2886,7 +2886,7 @@ test("pressing enter in a m2o in an editable list", async () => {
         "tr.o_data_row:nth-child(2) [name=product_id] .o-autocomplete--dropdown-menu"
     ).toHaveCount(1);
 
-    press("Tab");
+    await press("Tab");
     await animationFrame();
 
     expect("tr.o_data_row:nth-child(2) [name=product_id] input").toHaveCount(0);
@@ -2916,7 +2916,7 @@ test("pressing ENTER on a 'no_quick_create' many2one should open a M2ODialog", a
         confirm: false,
     });
     await runAllTimers();
-    press("Enter");
+    await press("Enter");
     await animationFrame();
     expect(".modal").toHaveCount(1);
     // Check that discarding clears $input
@@ -2931,9 +2931,7 @@ test("select a value by pressing TAB on a many2one with onchange", async () => {
 
     const def = new Deferred();
 
-    onRpc("onchange", async () => {
-        await def;
-    });
+    onRpc("onchange", () => def);
 
     await mountView({
         type: "form",
@@ -2946,19 +2944,17 @@ test("select a value by pressing TAB on a many2one with onchange", async () => {
             </form>`,
     });
 
-    await contains(".o_field_many2one input").edit("first", { confirm: false });
-    await runAllTimers();
-    press("tab");
+    await contains(".o_field_many2one input").edit("first", { confirm: "tab" });
 
     // simulate a focusout (e.g. because the user clicks outside)
     // before the onchange returns
-    hover(".o_field_char");
+    await click(".o_field_char");
 
     expect(".modal").toHaveCount(0);
 
     // unlock the onchange
     def.resolve();
-    await animationFrame();
+    await runAllTimers();
 
     expect(".o_field_many2one input").toHaveValue("first record");
     expect(".modal").toHaveCount(0);
@@ -2977,26 +2973,27 @@ test("leaving a many2one by pressing tab", async () => {
 
     await contains(".o_field_many2one input").click();
     await runAllTimers();
-    press("tab");
+    await press("tab");
     await animationFrame();
+
     expect(".o_field_many2one input").toHaveValue("");
 
     // open autocomplete dropdown and manually select item by UP/DOWN key and press TAB
     await contains(".o_field_many2one input").click();
     await runAllTimers();
-    press("arrowdown");
-    press("tab");
+    await press("arrowdown");
+    await press("tab");
     await animationFrame();
+
     expect(".o_field_many2one input").toHaveValue("second record");
 
     // clear many2one and then open autocomplete, write something and press TAB
     await contains(".o_field_many2one input").edit("", { confirm: false });
     await runAllTimers();
     await contains(".o_field_many2one input").click();
-    await contains(".o_field_many2one input").edit("se", { confirm: false });
+    await contains(".o_field_many2one input").edit("se", { confirm: "tab" });
     await runAllTimers();
-    press("tab");
-    await animationFrame();
+
     expect(".o_field_many2one input").toHaveValue("second record");
 });
 
@@ -3018,8 +3015,8 @@ test("leaving an empty many2one by pressing tab (after backspace or delete)", as
     // simulate backspace to remove values and press TAB
     await contains(".o_field_many2one input").edit("", { confirm: false });
     await runAllTimers();
-    press("backspace");
-    press("tab");
+    await press("backspace");
+    await press("tab");
     await animationFrame();
     expect(".o_field_many2one input").toHaveValue("");
 
@@ -3030,8 +3027,8 @@ test("leaving an empty many2one by pressing tab (after backspace or delete)", as
     // simulate delete to remove values and press TAB
     await contains(".o_field_many2one input").edit("", { confirm: false });
     await runAllTimers();
-    press("delete");
-    press("tab");
+    await press("delete");
+    await press("tab");
     // TODO: fix owl
     await animationFrame();
     expect(".o_field_many2one input").toHaveValue("");
@@ -3046,9 +3043,7 @@ test("many2one in editable list + onchange, with enter", async () => {
 
     const def = new Deferred();
 
-    onRpc("onchange", async () => {
-        await def;
-    });
+    onRpc("onchange", () => def);
     onRpc(({ method }) => {
         expect.step(method);
     });
@@ -3066,10 +3061,10 @@ test("many2one in editable list + onchange, with enter", async () => {
     await contains("td.o_data_cell").click();
     await contains("td.o_data_cell input").edit("a", { confirm: false });
     await runAllTimers();
-    press("enter");
+    await press("enter");
     def.resolve();
     await animationFrame();
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect(".modal").toHaveCount(0);
     expect.verifySteps([
@@ -3092,9 +3087,7 @@ test("many2one in editable list + onchange, with enter, part 2", async () => {
     };
 
     const def = new Deferred();
-    onRpc("onchange", async () => {
-        await def;
-    });
+    onRpc("onchange", () => def);
     onRpc(({ method }) => {
         expect.step(method);
     });
@@ -3112,8 +3105,8 @@ test("many2one in editable list + onchange, with enter, part 2", async () => {
     await contains("td.o_data_cell").click();
     await contains("td.o_data_cell input").edit("a", { confirm: false });
     await runAllTimers();
-    press("enter");
-    press("enter");
+    await press("enter");
+    await press("enter");
     def.resolve();
     await animationFrame();
     expect(".modal").toHaveCount(0);
@@ -3476,12 +3469,15 @@ test("many2one dropdown disappears on scroll", async () => {
 
     const dropdown = queryOne(".o_field_many2one .dropdown-menu");
     dropdown.style = "max-height: 40px;";
-    scroll(dropdown, { top: 50 });
-    expect(dropdown.scrollTop).toBe(50);
+
+    await scroll(dropdown, { top: 50 });
+
+    expect(dropdown).toHaveProperty("scrollTop", 50);
     expect(".o_field_many2one .dropdown-menu").toHaveCount(1);
 
-    scroll(queryOne(".o_content"), { top: 50 });
+    await scroll(".o_content", { top: 50 });
     await animationFrame();
+
     expect(".o_field_many2one .dropdown-menu").toHaveCount(0);
 });
 
