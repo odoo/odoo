@@ -2,11 +2,10 @@ import { expect, test } from "@odoo/hoot";
 import {
     pointerDown,
     pointerUp,
+    queryAllAttributes,
     queryAllTexts,
     queryFirst,
-    queryLast,
     queryOne,
-    queryAllAttributes,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
@@ -80,7 +79,7 @@ test("select option", async () => {
     expect.verifySteps(["World"]);
 
     await contains(".o-autocomplete input").click();
-    await contains(queryLast(".o-autocomplete--dropdown-item")).click();
+    await contains(".o-autocomplete--dropdown-item:last").click();
     expect(".o-autocomplete input").toHaveValue("Hello");
     expect.verifySteps(["Hello"]);
 });
@@ -124,7 +123,7 @@ test("autocomplete with resetOnSelect='true'", async () => {
 
     await contains(".o-autocomplete input").edit("Blip", { confirm: false });
     await runAllTimers();
-    await contains(queryLast(".o-autocomplete--dropdown-item")).click();
+    await contains(".o-autocomplete--dropdown-item:last").click();
     expect(".test_value").toHaveText("Hello");
     expect(".o-autocomplete input").toHaveValue("");
     expect.verifySteps(["Hello"]);
@@ -594,7 +593,7 @@ test("correct sequence of blur, focus and select", async () => {
     await contains(".o-autocomplete input").edit("h", { confirm: false });
     await runAllTimers();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
-    await contains(queryLast(".o-autocomplete--dropdown-item")).click();
+    await contains(".o-autocomplete--dropdown-item:last").click();
     expect.verifySteps(["change", "select Hello"]);
     expect(".o-autocomplete input").toBeFocused();
 
@@ -638,8 +637,8 @@ test("autocomplete always closes on click away", async () => {
     expect(".o-autocomplete input").toHaveCount(1);
     await contains(".o-autocomplete input").click();
     expect(".o-autocomplete--dropdown-item").toHaveCount(2);
-    pointerDown(queryLast(".o-autocomplete--dropdown-item"));
-    pointerUp(document.body);
+    await pointerDown(".o-autocomplete--dropdown-item:last");
+    await pointerUp(document.body);
     expect(".o-autocomplete--dropdown-item").toHaveCount(2);
     await contains(document.body).click();
     expect(".o-autocomplete--dropdown-item").toHaveCount(0);

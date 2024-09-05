@@ -517,6 +517,15 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             });
         });
 
+        test("root element in template litteral", async () => {
+            await mountOnFixture(FULL_HTML_TEMPLATE);
+
+            const root = queryOne`form`;
+
+            expect(queryOne`h5:first`).toHaveText(/^List header$/);
+            expect(queryOne`${root} h5`).toHaveText(/^Form title$/);
+        });
+
         test("advanced use cases", async () => {
             await mountOnFixture(FULL_HTML_TEMPLATE);
 
