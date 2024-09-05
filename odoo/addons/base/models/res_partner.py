@@ -231,6 +231,7 @@ class Partner(models.Model):
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    vat_child = fields.Char(string="Branch VAT", compute='_compute_vat_child', inverse='_inverse_vat_child')
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     same_company_registry_partner_id = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
     company_registry = fields.Char(string="Company ID", compute='_compute_company_registry', store=True, readonly=False,
@@ -388,6 +389,24 @@ class Partner(models.Model):
             super_partner.partner_share = False
         for partner in self - super_partner:
             partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
+
+    @api.depends('vat', 'is_company')
+    def _compute_vat_child(self):
+        for partner in self:
+            partner.vat_child = ""
+            if partner.is_company:
+                partner.vat_child = partner.vat
+
+    def _inverse_vat_child(self):
+        """ If a partner is specified for a """
+        for partner in self:
+            if partner.vat_child:
+                partner.is_company = True
+                partner.vat = partner.vat_child
+            else:
+                partner.is_company = False
+                if partner.parent_id:
+                    partner.vat = partner.parent_id.vat
 
     @api.depends('vat', 'company_id', 'company_registry')
     def _compute_same_vat_partner_id(self):
