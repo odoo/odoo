@@ -10,7 +10,7 @@ from odoo import api, fields, models, _
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
 from odoo.osv import expression
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools import escape_psql
 from odoo.tools.json import scriptsafe as json_safe
 
@@ -183,6 +183,12 @@ class WebsitePublishedMixin(models.AbstractModel):
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
     is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
+    publish_on = fields.Datetime(
+        "Auto publish on",
+        copy=False,
+        help="This page will automatically go live on the specified date.",
+    )
+    published_date = fields.Datetime("Published date", copy=False)
     can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
@@ -191,13 +197,168 @@ class WebsitePublishedMixin(models.AbstractModel):
         for record in self:
             record.website_url = '#'
 
+    @api.constrains("is_published")
+    def _check_is_published(self):
+        for record in self:
+            if record.is_published and not record.published_date:
+                # Check if something must be done just after publishing.
+                self._check_for_action_post_publish()
+                # If the record is being published and does not have a
+                # published_date set, set the published_date to the current date
+                # and time.
+                record.published_date = fields.datetime.now()
+                # Additionally, set the publish_on field to False
+                # This likely means that the record should be published
+                # immediately.
+                record.publish_on = False
+
     def _default_is_published(self):
         return False
+
+    def action_unschedule(self):
+        for page in self:
+            page.publish_on = False
+
+    def _models_generator(self):
+        """
+        This method generates a sequence of models that contain the field
+        'publish_on'. Thus all the models that inherit WebsitePublishedMixin.
+
+        :return: A generator yielding models containing the 'publish_on' field.
+        :rtype: generator of odoo.models.Model
+        """
+        # Retrieve the models containing the field 'publish_on' and filter
+        # transient models and related fields.
+        models = [
+            self.env[m]
+            for m in self.env["ir.model.fields"]
+            .sudo()
+            .search(
+                [
+                    ("name", "=", "publish_on"),
+                    ("model_id.transient", "=", False),
+                    ("related", "=", False),
+                ]
+            )
+            .mapped("model")
+            if (
+                m in self.env
+                and {"id", "is_published"} <= set(self.env[m]._fields)
+            )
+        ]
+        yield from models
+
+    def _cron_publish_scheduled_pages(self):
+        """
+        Method triggered by a cron job to publish records at a scheduled time.
+
+        This method iterates through each model containing the 'publish_on'
+        field. It searches for records scheduled to be published before the
+        current datetime. If such records are found, it updates their
+        'is_published' field to True and clears the 'publish_on' field.
+
+        :return: None
+        :rtype: None
+        """
+        # Iterate through each model containing the 'publish_on' field.
+        for model in self._models_generator():
+            pages = model.search(
+                [
+                    ("publish_on", "!=", False),
+                    ("publish_on", "<", fields.datetime.now()),
+                ]
+            )
+            # Update 'is_published' field to True for retrieved records.
+            if pages:
+                pages.write({"is_published": True, "publish_on": False})
+
+    def _manage_next_scheduled_action(self):
+        """
+        Manages the next scheduled action for publishing records with a
+        'publish_on' field.
+
+        This method retrieves the scheduled action for publishing scheduled
+        pages. It checks if the scheduled action exists and raises a UserError
+        if it is not found. It then finds the next scheduled trigger datetime
+        and the earliest scheduled page to trigger. If no scheduled page is
+        found, it returns False. If a scheduled page is found and it is either
+        the first one or its publish_on time is earlier than the next scheduled
+        trigger datetime, it creates a new trigger for the earliest scheduled
+        page.
+
+        :return: True if the next scheduled action is managed successfully,
+                 False if there is no more scheduled action to manage.
+        :rtype: bool
+        """
+        # Retrieve the scheduled action for publishing scheduled pages.
+        scheduled_action_cron = self.env.ref(
+            "website.ir_cron_publish_scheduled_pages", raise_if_not_found=False
+        )
+
+        # Check if the scheduled action exists
+        if not scheduled_action_cron:
+            # Raise a user error if the scheduled action is not found.
+            raise UserError(
+                _(
+                    'The scheduled action "Website Publish Mixin: Publish scheduled website page" '
+                    "has been deleted. Please contact your administrator to have the action restored "
+                    'or to reinstall the website module.'
+                )
+            )
+
+        next_trigger = self.env["ir.cron.trigger"].sudo().search(
+            [("cron_id", "=", scheduled_action_cron.id),
+             ("call_at", ">=", fields.datetime.now())],
+            order="call_at asc",
+            limit=1
+        )
+        next_trigger_datetime = False
+        if len(next_trigger):
+            next_trigger_datetime = next_trigger.call_at
+
+        # Find the earliest scheduled page to trigger.
+        earliest_scheduled_pages = []
+        for model in self._models_generator():
+            # Retrieve records where 'publish_on' is in the past and 'scheduled'
+            # is True.
+            scheduled_records = model.sudo().search(
+                [("publish_on", "!=", False)], order="publish_on asc", limit=1
+            )
+            if scheduled_records:
+                earliest_scheduled_pages.append(scheduled_records.publish_on)
+
+        # Return False if no scheduled page is found.
+        if not earliest_scheduled_pages:
+            return False
+
+        # Arrange the retrieved dates in ascending order.
+        earliest_scheduled_pages.sort()
+
+        # We create the trigger if it doesn't exist or if the date is before the
+        # new scheduled page
+        if (not next_trigger_datetime
+            or (earliest_scheduled_pages[0] < next_trigger_datetime)):
+            # Delete any existing triggers associated with the scheduled action.
+            # To prevent concurrent queries on the database, we only unlink
+            # the cron triggers where call_at is in the future. Other triggers
+            # are managed automatically by the ir.cron model.
+            self.env["ir.cron.trigger"].sudo().search(
+                [
+                    ("cron_id", "=", scheduled_action_cron.id),
+                    ("call_at", ">=", fields.datetime.now()),
+                ]
+            ).unlink()
+
+            # Trigger the scheduled action with the publish time of the earliest
+            # scheduled page.
+            scheduled_action_cron._trigger(earliest_scheduled_pages[0])
+
+        return True
 
     def website_publish_button(self):
         self.ensure_one()
         value = not self.website_published
-        self.write({'website_published': value})
+        self.write({'website_published': value, 'publish_on': False})
         return value
 
     def open_website_url(self):
@@ -205,20 +366,50 @@ class WebsitePublishedMixin(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        records = super(WebsitePublishedMixin, self).create(vals_list)
-        if any(record.is_published and not record.can_publish for record in records):
-            raise AccessError(self._get_can_publish_error_message())
+        records = super().create(vals_list)
+
+        for record in records:
+            # Check if any record is attempting to be published without permission
+            if record.is_published and not record.can_publish:
+                raise AccessError(self._get_can_publish_error_message())
+            # Unpublish record if it's not active
+            if "active" in record._fields and not record.active and record.is_published:
+                record.is_published = False
 
         return records
 
     def write(self, values):
-        if 'is_published' in values and any(not record.can_publish for record in self):
+        # Check if any record is attempting to be published without permission
+        if "is_published" in values and any(not record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
 
-        return super(WebsitePublishedMixin, self).write(values)
+        # Unpublish and unschedule record if it's not active
+        if "active" in values and not values["active"]:
+            values["is_published"] = False
+            values["publish_on"] = False
+
+        if values.get("is_published") and values.get("publish_on"):
+            values["publish_on"] = False
+
+        if "publish_on" in values:
+            res = super().write(values)
+            self._manage_next_scheduled_action()
+            return res
+
+        return super().write(values)
 
     def create_and_get_website_url(self, **kwargs):
         return self.create(kwargs).website_url
+
+    def _check_for_action_post_publish(self):
+        """
+        Placeholder method to be overridden to perform additional checks or
+        actions after a record is published.
+
+        :return: None
+        :rtype: None
+        """
+        pass
 
     def _compute_can_publish(self):
         """ This method can be overridden if you need more complex rights management than just 'website_restricted_editor'
@@ -271,7 +462,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
         is_published = [('is_published', '=', value)]
         if current_website_id:
             on_current_website = self.env['website'].website_domain(current_website_id)
-            return (['!'] if value is False else []) + expression.AND([is_published, on_current_website])
+            return expression.AND([is_published, on_current_website])
         else:  # should be in the backend, return things that are published anywhere
             return is_published
 

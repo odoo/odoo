@@ -74,7 +74,7 @@
                                     <span class="o_stat_text">Embed Views</span>
                                 </div>
                             </button>
-                            <field name="is_published" widget="website_redirect_button"
+                            <field name="website_published" widget="website_redirect_button"
                                    invisible="is_category or not channel_id"/>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -127,7 +127,14 @@
                                             <span> hours</span>
                                         </div>
                                         <field name="slide_resource_downloadable" invisible="slide_category != 'document' or source_type != 'local_file'"/>
-                                        <field name="date_published" string="Published Date" invisible="not date_published" groups="base.group_no_one"/>
+                                        <field name="published_date" string="Published Date" invisible="not published_date" groups="base.group_no_one"/>
+                                        <field name="publish_on" invisible="1"/>
+                                        <field string="Published" name="website_published" widget="boolean_toggle" readonly="publish_on"></field>
+                                        <label invisible="website_published" for="publish_on" string="Auto publish on"/>
+                                        <div invisible="website_published" class="o_row">
+                                            <field name="publish_on" widget="datetime" options="{'min_date': datetime.datetime.now().to_utc().strftime('%Y-%m-%d %H:%M:%S')}"/>
+                                            <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
+                                        </div>
                                         <field name="is_preview"/>
                                         <field name="public_views"/>
                                         <field name="total_views"/>
@@ -211,6 +218,16 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                                <div class="ribbon ribbon-top-right"
+                                     invisible="not website_published or not active">
+                                    <field name="website_published" invisible="1"/>
+                                    <span class="text-bg-success">Published</span>
+                                </div>
+                                <div class="ribbon ribbon-top-right"
+                                     invisible="not publish_on">
+                                    <field name="publish_on" invisible="1"/>
+                                    <span class="text-bg-warning">Scheduled</span>
+                                </div>
                                 <t t-set="placeholder" t-value="'/website_slides/static/src/img/channel-training-default.jpg'"/>
                                 <t t-if="record.image_128.raw_value" t-set="image" t-value="kanban_image('slide.slide', 'image_128', record.id.raw_value, placeholder)"/>
                                 <t t-else="" t-set="image" t-value="'/website_slides/static/src/img/channel-training-default.jpg'"/>
@@ -279,8 +296,9 @@
                     <field name="channel_id" readonly="1"/>
                     <field name="category_id" readonly="1" optional="hide"/>
                     <field name="user_id" widget="many2one_avatar_user"/>
-                    <field name="is_published"/>
-                    <field name="date_published" readonly="1"/>
+                    <field name="publish_on" column_invisible="1"/>
+                    <field name="website_published" invisible="publish_on and website_published" string="Published"/>
+                    <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
                     <field name="completion_time" sum="Total" readonly="1" widget="float_time"/>
                 </tree>
             </field>
@@ -296,7 +314,7 @@
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="channel_id"/>
                     <field name="category_id" optional="hide"/>
-                    <field name="date_published"/>
+                    <field name="published_date"/>
                     <field name="total_views" string="# Views" sum="Total Views"/>
                     <field name="questions_count" string="# Questions" sum="Total Questions"/>
                     <field name="completion_time" sum="Total Duration" widget="float_time"/>

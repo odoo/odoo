@@ -8,4 +8,20 @@
         <field name="interval_number">1</field>
         <field name="interval_type">weeks</field>
     </record>
+    <!--
+        We employ a static cron mechanism, deliberately set with
+        extended intervals, to manage scheduled tasks using the ir.cron.trigger
+        feature linked to corresponding ir.cron entries. These tasks primarily
+        entail the publication of scheduled content such as website pages, blog
+        posts, and product updates. By leveraging this setup, we ensure the
+        timely and efficient dissemination of information while optimizing
+        resource allocation.
+    -->
+    <record id="ir_cron_publish_scheduled_pages" model="ir.cron">
+        <field name="name">Website Publish Mixin: Publish scheduled page</field>
+        <field name="interval_number">9999</field>
+        <field name="interval_type">months</field>
+        <field name="model_id" ref="model_website_controller_page"/>
+        <field name="code">model._cron_publish_scheduled_pages()</field>
+    </record>
 </odoo>

@@ -49,7 +49,7 @@ class Job(models.Model):
             <span class="text-muted small">Days to get an Offer</span>
             <h6>4 Days after Interview</h6>
         """)
-    published_date = fields.Date(compute='_compute_published_date', store=True)
+    published_date = fields.Datetime(compute='_compute_published_date', store=True)
     full_url = fields.Char('job URL', compute='_compute_full_url')
 
     @api.depends('website_url')
@@ -60,7 +60,7 @@ class Job(models.Model):
     @api.depends('website_published')
     def _compute_published_date(self):
         for job in self:
-            job.published_date = job.website_published and fields.Date.today()
+            job.published_date = job.website_published and fields.datetime.now()
 
     @api.onchange('website_published')
     def _onchange_website_published(self):

@@ -1,26 +1,23 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/network/rpc";
 import { CheckBox } from '@web/core/checkbox/checkbox';
 import { useService, useBus } from '@web/core/utils/hooks';
-import { Component, xml, useState } from "@odoo/owl";
+import { RelativePublishTime } from "./relative_publish_time";
+import { Component, useState } from "@odoo/owl";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";
 import { checkAndNotifySEO } from "@website/js/utils";
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
 class PublishSystray extends Component {
-    static template = xml`
-        <div t-on-click="publishContent" class="o_menu_systray_item o_website_publish_container d-flex ms-auto" t-att-data-processing="state.processing and 1">
-            <a href="#" class="d-flex align-items-center mx-1 px-2 px-md-0" data-hotkey="p">
-                <span class="o_nav_entry d-none d-md-block mx-0 pe-1" t-esc="this.label"/>
-                <CheckBox value="state.published" className="'form-switch d-flex justify-content-center m-0 pe-none'"/>
-            </a>
-        </div>`;
+    static template = "website.WebsitePublishSystray";
     static components = {
         CheckBox,
+        RelativePublishTime,
     };
     static props = {};
 
@@ -29,13 +26,53 @@ class PublishSystray extends Component {
         this.orm = useService('orm');
         this.dialogService = useService("dialog");
         this.notificationService = useService("notification");
-
+        this.actionService = useService('action');
+        this.websiteCustomMenus = useService('website_custom_menus');
         this.state = useState({
-            published: this.website.currentWebsite.metadata.isPublished,
+            published: false,
+            scheduled: false,
+            publishOn: false,
+            formattedPublishAt: false,
             processing: false,
         });
+        this._updateState();
+        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', this._updateState);
+    }
 
-        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', () => this.state.published = this.website.currentWebsite.metadata.isPublished);
+    _updateState() {
+        this.state.published = this.website.currentWebsite.metadata.isPublished;
+        this.state.scheduled = this.website.currentWebsite.metadata.publishOn ? true : false;
+        this.state.publishOn = this.website.currentWebsite.metadata.publishOn
+            ? deserializeDateTime(
+                this.website.currentWebsite.metadata.publishOn
+            )
+            : false;
+        this.state.formattedPublishAt = this.state.publishOn ? this.state.publishOn.toLocaleString(luxon.DateTime.DATETIME_MED) : false;
+    }
+
+    triggerPublish() {
+        this.state.published = true;
+        this.state.scheduled = false;
+        this.state.publishOn = false;
+        this.state.formattedPublishAt = false;
+    }
+
+    editInBackend() {
+        const { metadata: { mainObject } } = this.website.currentWebsite;
+        if (mainObject.model === "website.page") {
+            this.websiteCustomMenus.open({
+                xmlid: "website.menu_page_properties"
+            });
+        }
+        else {
+            this.actionService.doAction({
+                res_model: mainObject.model,
+                res_id: mainObject.id,
+                views: [[false, "form"]],
+                type: "ir.actions.act_window",
+                view_mode: "form",
+            });
+        }
     }
 
     get label() {
@@ -69,6 +106,11 @@ class PublishSystray extends Component {
                         notification: this.notificationService,
                         dialog: this.dialogService,
                     });
+                }
+                if (this.state.published) {
+                    // Set the scheduled state to false if the page is published
+                    this.state.scheduled = false;
+                    this.state.publishOn = false;
                 }
                 this.state.processing = false;
                 return published;

@@ -16,6 +16,7 @@ from werkzeug import urls
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import html2plaintext, sql
 
 _logger = logging.getLogger(__name__)
@@ -104,7 +105,7 @@ class Slide(models.Model):
         'sequence': 'sequence asc, id asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
-        'latest': 'date_published desc',
+        'latest': 'published_date desc',
     }
     _order = 'sequence asc, is_category asc, id asc'
     _partner_unfollow_enabled = True
@@ -211,7 +212,6 @@ class Slide(models.Model):
     vimeo_id = fields.Char('Video Vimeo ID', compute='_compute_vimeo_id')
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
-    date_published = fields.Datetime('Publish Date', readonly=True, tracking=False, copy=False)
     likes = fields.Integer('Likes', compute='_compute_like_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_like_info', store=True, compute_sudo=False)
     embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
@@ -237,11 +237,39 @@ class Slide(models.Model):
     nbr_quiz = fields.Integer("Number of Quizs", compute="_compute_slides_statistics", store=True)
     total_slides = fields.Integer(compute='_compute_slides_statistics', store=True)
     is_published = fields.Boolean(tracking=1)
-    website_published = fields.Boolean(tracking=False)
+    website_published = fields.Boolean(tracking=False, compute='_compute_website_published', inverse='_inverse_website_published', related=None, search='_search_website_published')
 
     _sql_constraints = [
         ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a url or HTML content. Not both.")
     ]
+
+    @api.depends('is_published')
+    def _compute_website_published(self):
+        for record in self:
+            if record.channel_id.website_published and record.is_published:
+                record.website_published = True
+            else:
+                record.website_published = False
+
+    def _inverse_website_published(self):
+        for record in self:
+            record.is_published = record.website_published and record.channel_id.website_published
+
+    def _search_website_published(self, operator, value):
+        if not isinstance(value, bool) or operator not in ('=', '!='):
+            _logger.warning('unsupported search on website_published: %s, %s', operator, value)
+            return [()]
+
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            value = not value
+
+        current_website_id = self._context.get('website_id')
+        is_published = [('is_published', '=', value)]
+        if current_website_id:
+            on_current_website = self.env['website'].website_domain(current_website_id)
+            return expression.AND([is_published, on_current_website])
+        else:  # should be in the backend, return things that are published anywhere
+            return is_published
 
     @api.depends('slide_category', 'source_type', 'image_binary_content')
     def _compute_image_1920(self):
@@ -251,10 +279,10 @@ class Slide(models.Model):
             elif not slide.image_1920:
                 slide.image_1920 = False
 
-    @api.depends('date_published', 'is_published')
+    @api.depends('published_date', 'is_published')
     def _compute_is_new_slide(self):
         for slide in self:
-            slide.is_new_slide = slide.date_published > fields.Datetime.now() - relativedelta(days=7) if slide.is_published else False
+            slide.is_new_slide = slide.published_date > fields.Datetime.now() - relativedelta(days=7) if slide.is_published else False
 
     def _get_placeholder_filename(self, field):
         return self.channel_id._get_placeholder_filename(field)
@@ -626,13 +654,11 @@ class Slide(models.Model):
             # Do not publish slide if user has not publisher rights
             if vals['channel_id'] not in can_publish_channel_ids:
                 # 'website_published' is handled by mixin
-                vals['date_published'] = False
+                vals['published_date'] = False
 
             if vals.get('is_category'):
                 vals['is_preview'] = True
                 vals['is_published'] = True
-            if vals.get('is_published') and not vals.get('date_published'):
-                vals['date_published'] = datetime.datetime.now()
 
         slides = super().create(vals_list)
 
@@ -651,7 +677,6 @@ class Slide(models.Model):
                 slide._on_change_document_binary_content()
 
             if slide.is_published and not slide.is_category:
-                slide._post_publication()
                 slide.channel_id.channel_partner_ids._recompute_completion()
         return slides
 
@@ -670,9 +695,6 @@ class Slide(models.Model):
                 values = {'html_content': False, **values}
 
         res = super(Slide, self).write(values)
-        if values.get('is_published'):
-            self.date_published = datetime.datetime.now()
-            self._post_publication()
 
         # avoid fetching external metadata when installing the module (i.e. for demo data)
         # we also support a context key if you don't want to fetch the metadata when modifying a slide
@@ -786,8 +808,13 @@ class Slide(models.Model):
 
         return embed_entry
 
-    def _post_publication(self):
-        for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
+    def _check_for_action_post_publish(self):
+        """ Override
+        Send a notification only if the new material has never been published.
+        If the published_date is already set, the notification has already
+        been sent.
+        """
+        for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id and not slide.published_date):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context(base_url=slide.get_base_url())._render_field('body_html', slide.ids)[slide.id]
             subject = publish_template._render_field('subject', slide.ids)[slide.id]

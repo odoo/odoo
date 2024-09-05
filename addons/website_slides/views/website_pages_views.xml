@@ -19,7 +19,6 @@
         </field>
         <xpath expr="//tree">
             <field name="is_seo_optimized"/>
-            <field name="is_published"/>
 
             <field name="website_id" position="move"/>
         </xpath>
@@ -50,7 +49,8 @@
         <xpath expr="//div[hasclass('o_kanban_card_content')]" position="after">
             <div class="border-top mt-2 pt-2">
                 <field name="is_published" widget="boolean_toggle"/>
-                <t t-if="record.is_published.raw_value">Published</t>
+                <t t-if="record.publish_on.raw_value">Scheduled</t>
+                <t t-elif="record.is_published.raw_value">Published</t>
                 <t t-else="">Not Published</t>
             </div>
         </xpath>

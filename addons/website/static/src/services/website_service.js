@@ -121,7 +121,19 @@ export const websiteService = {
                 if (!isWebsitePage) {
                     currentMetadata = {};
                 } else {
-                    const { mainObject, seoObject, isPublished, canOptimizeSeo, canPublish, editableInBackend, translatable, viewXmlid, defaultLangName, langName } = dataset;
+                    const {
+                        mainObject,
+                        seoObject,
+                        isPublished,
+                        publishOn,
+                        canOptimizeSeo,
+                        canPublish,
+                        editableInBackend,
+                        translatable,
+                        viewXmlid,
+                        defaultLangName,
+                        langName,
+                    } = dataset;
                     // We ignore multiple menus with the same `content_menu_id`
                     // in the DOM, since it's possible to have different
                     // templates for the same content menu (E.g. used for a
@@ -141,6 +153,7 @@ export const websiteService = {
                         mainObject: unslugHtmlDataObject(mainObject),
                         seoObject: unslugHtmlDataObject(seoObject),
                         isPublished: isPublished === 'True',
+                        publishOn: publishOn || false,
                         canOptimizeSeo: canOptimizeSeo === 'True',
                         canPublish: canPublish === 'True',
                         editableInBackend: editableInBackend === 'True',

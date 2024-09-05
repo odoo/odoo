@@ -23,7 +23,6 @@ class Page(models.Model):
     url = fields.Char('Page URL', required=True)
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
     website_indexed = fields.Boolean('Is Indexed', default=True)
-    date_publish = fields.Datetime('Publishing Date')
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     # This is needed to be able to control if page is a menu in page properties.
     # TODO this should be reviewed entirely so that we use a transient model.
@@ -60,9 +59,7 @@ class Page(models.Model):
 
     def _compute_visible(self):
         for page in self:
-            page.is_visible = page.website_published and (
-                not page.date_publish or page.date_publish < fields.Datetime.now()
-            )
+            page.is_visible = page.website_published
 
     @api.depends('menu_ids')
     def _compute_website_menu(self):

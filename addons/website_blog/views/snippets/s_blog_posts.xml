@@ -63,7 +63,7 @@
             <h4 class="mb0">
                 <a t-att-href="data['call_to_action_url']" t-field="record.name"/>
             </h4>
-            <h5 class="mt0 mb4" t-field="record.post_date" t-options='{"format": "dd/MM"}'/>
+            <h5 class="mt0 mb4" t-field="record.published_date" t-options='{"format": "dd/MM"}'/>
         </figcaption>
         <a t-att-href="data['call_to_action_url']">
             <t t-call="website.record_cover">
@@ -93,7 +93,7 @@
                 <a t-att-href="data['call_to_action_url']"><h4 class="mb-0" t-field="record.name"/></a>
             </div>
             <div class="card-footer d-flex justify-content-between">
-                <span class="text-muted mb-0" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
+                <span class="text-muted mb-0" t-field="record.published_date" t-options='{"format": "MMM d, yyyy"}' />
                 <span class="text-muted mb-0">In <a class="fw-bold" t-field="record.blog_id.name" t-att-href="'/blog/%s' % record.blog_id.id" />
                     <a t-if="is_sample" class="fw-bold" href="#">Sample</a>
                 </span>

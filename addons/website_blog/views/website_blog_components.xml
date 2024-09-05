@@ -121,6 +121,12 @@
                 t-att="[('selected' if (not date_begin) else 'unselected' ) , 'true' ]">
                 -- All dates
         </option>
+        <option t-att-value="blog_url(state='unpublished')" groups="website.group_website_designer">
+            -- Unpublished
+        </option>
+        <option t-att-value="blog_url(state='scheduled')" groups="website.group_website_designer">
+            -- Scheduled
+        </option>
 
         <optgroup t-foreach="nav_list" t-as="year" t-attf-label="#{year}">
             <option t-foreach="nav_list[year]" t-as="months"
@@ -144,7 +150,10 @@
         <div t-att-class="not hide_date and 'small fw-bold'" style="line-height:1">
             <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
             <span t-else="" t-esc="blog_post.author_name"/>
-            <small t-if="not hide_date" t-field="blog_post.post_date" t-options="{'format': 'long', 'date_only': 'true'}"/>
+            <t t-if="not hide_date">
+                <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'format': 'long', 'date_only': 'true'}"/>
+                <small t-else="" t-field="blog_post.publish_on" t-options="{'format': 'long', 'date_only': 'true'}"/>
+            </t>
         </div>
     </div>
 </template>
