@@ -282,13 +282,16 @@ class AccountMove(models.Model):
         tax_amls = self.line_ids.filtered(lambda x: x.display_type == 'tax')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
         self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id, tax_lines=tax_lines)
+        taxes = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy()
+        is_oss = any(tax._l10n_es_get_regime_code() == '17' for tax in taxes)
 
         return {
             **self._l10n_es_tbai_get_credit_note_values(),
             'origin': self.invoice_origin,
-            'taxes': self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy(),
+            'taxes': taxes,
             'rate':  abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
             'base_lines': base_lines,
+            'nosujeto_causa': 'IE' if is_oss else 'RL',
             **({'post_doc': self.l10n_es_tbai_post_document_id} if cancel else {}),
         }
 
