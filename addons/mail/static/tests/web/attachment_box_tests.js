@@ -5,7 +5,7 @@ import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
-import { click, contains, scroll } from "@web/../tests/utils";
+import { click, contains, createFile, inputFiles, scroll } from "@web/../tests/utils";
 
 QUnit.module("attachment box");
 
@@ -245,3 +245,56 @@ QUnit.test("attachment box auto-closed on switch to record wih no attachments", 
     await click(".o_pager_next");
     await contains(".o-mail-AttachmentBox", { count: 0 });
 });
+
+QUnit.test(
+    "open attachment box should remain open after adding a new attachment",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const recordId = pyEnv["mail.test.simple.main.attachment"].create({});
+        const attachmentId = pyEnv["ir.attachment"].create({
+            mimetype: "image/jpeg",
+            res_id: recordId,
+            res_model: "mail.test.simple.main.attachment",
+        });
+        pyEnv["mail.message"].create({
+            attachment_ids: [attachmentId],
+            model: "mail.test.simple.main.attachment",
+            res_id: recordId,
+        });
+        const views = {
+            "mail.test.simple.main.attachment,false,form": `
+            <form string="Test document">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <div class="oe_chatter">
+                    <field name="message_ids"  options="{'post_refresh': 'always'}"/>
+                </div>
+            </form>`,
+        };
+        patchUiSize({ size: SIZES.XXL });
+        const { openFormView } = await start({
+            async mockRPC(route, args) {
+                if (String(route).includes("/mail/thread/data")) {
+                    await new Promise((resolve) => setTimeout(resolve, 1)); // need extra time for useEffect hook
+                }
+            },
+            serverData: { views },
+        });
+        await openFormView("mail.test.simple.main.attachment", recordId);
+        await contains(".o-mail-Attachment-imgContainer > img");
+        await contains(".o_form_sheet_bg > .o-mail-Form-chatter");
+        await contains(".o-mail-Form-chatter:not(.o-aside)");
+        await contains(".o_form_sheet_bg + .o_attachment_preview");
+        await click("button", { text: "Send message" });
+        await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
+            await createFile({ name: "invoice.pdf", contentType: "application/pdf" }),
+        ]);
+        await click(".o-mail-Chatter-attachFiles");
+        await contains(".o-mail-AttachmentBox");
+        await click(".o-mail-Composer-send:enabled");
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        await contains(".o-mail-AttachmentBox");
+    }
+);
