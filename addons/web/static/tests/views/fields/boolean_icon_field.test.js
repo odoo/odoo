@@ -1,6 +1,5 @@
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
 import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -28,7 +27,6 @@ test("BooleanIcon field in form view", async () => {
     expect("[name='bar'] button").toHaveClass("btn-primary fa-recycle");
     expect("[name='foo'] button").toHaveClass("btn-outline-secondary fa-trash");
 
-    click("[name='bar'] button");
-    await animationFrame();
+    await click("[name='bar'] button");
     expect("[name='bar'] button").toHaveClass("btn-outline-secondary fa-recycle");
 });

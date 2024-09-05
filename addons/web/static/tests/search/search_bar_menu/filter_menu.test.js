@@ -881,7 +881,7 @@ test("group by properties", async () => {
     expect(searchBar.env.searchModel.groupBy).toEqual([]);
     expect(getFacetTexts()).toEqual([]);
 
-    await contains(queryAll`.o_accordion_values .o_accordion_values .dropdown-item`[1]).click();
+    await contains(`.o_accordion_values .o_accordion_values .dropdown-item:eq(1)`).click();
     await animationFrame();
     expect(searchBar.env.searchModel.groupBy).toEqual(["properties.my_datetime:quarter"]);
     expect(getFacetTexts()).toEqual(["My Datetime: Quarter"]);

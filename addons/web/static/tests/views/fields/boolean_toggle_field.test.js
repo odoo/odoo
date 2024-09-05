@@ -1,6 +1,5 @@
 import { expect, test } from "@odoo/hoot";
 import { check, click } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
 import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
@@ -22,8 +21,7 @@ test("use BooleanToggleField in form view", async () => {
     expect(`.o_boolean_toggle input`).toBeEnabled();
     expect(`.o_boolean_toggle input`).not.toBeChecked();
 
-    check(`.o_field_widget[name='bar'] input`);
-    await animationFrame();
+    await check(`.o_field_widget[name='bar'] input`);
     expect(`.o_boolean_toggle input`).toBeEnabled();
     expect(`.o_boolean_toggle input`).toBeChecked();
 });
@@ -55,8 +53,7 @@ test("BooleanToggleField is disabled if readonly in editable list", async () => 
     expect(`.o_boolean_toggle input`).not.toBeEnabled();
     expect(`.o_boolean_toggle input`).not.toBeChecked();
 
-    click(`.o_boolean_toggle`);
-    await animationFrame();
+    await click(`.o_boolean_toggle`);
     expect(`.o_boolean_toggle input`).not.toBeEnabled();
     expect(`.o_boolean_toggle input`).not.toBeChecked();
 });
@@ -69,8 +66,7 @@ test("BooleanToggleField - auto save record when field toggled", async () => {
         type: "form",
         arch: `<form><field name="bar" widget="boolean_toggle"/></form>`,
     });
-    click(`.o_field_widget[name='bar'] input`);
-    await animationFrame();
+    await click(`.o_field_widget[name='bar'] input`);
     expect.verifySteps(["web_save"]);
 });
 
@@ -82,7 +78,6 @@ test("BooleanToggleField - autosave option set to false", async () => {
         type: "form",
         arch: `<form><field name="bar" widget="boolean_toggle" options="{'autosave': false}"/></form>`,
     });
-    click(`.o_field_widget[name='bar'] input`);
-    await animationFrame();
+    await click(`.o_field_widget[name='bar'] input`);
     expect.verifySteps([]);
 });

@@ -203,8 +203,7 @@ test.tags("desktop")("with dynamic placeholder", async () => {
             </form>`,
     });
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(0);
-    press(["alt", "#"]);
-    await animationFrame();
+    await press(["alt", "#"]);
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(1);
 });
 
@@ -231,8 +230,7 @@ test.tags("mobile")("with dynamic placeholder in mobile", async () => {
     });
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(0);
     await fieldTextArea("description").focus();
-    press(["alt", "#"]);
-    await animationFrame();
+    await press(["alt", "#"]);
     expect(".o_popover .o_model_field_selector_popover").toHaveCount(1);
 });
 
@@ -248,12 +246,12 @@ test("text field without line breaks", async () => {
     expect(".o_field_text textarea").toHaveCount(1);
     expect(".o_field_text textarea").toHaveValue("Description as text");
     await contains(".o_field_text textarea").click();
-    press("Enter");
+    await press("Enter");
     expect(".o_field_text textarea").toHaveValue("Description as text");
 
     await contains(".o_field_text textarea").clear({ confirm: false });
     navigator.clipboard.writeText("text\nwith\nline\nbreaks\n"); // copy
-    press(["ctrl", "v"]); // paste
+    await press(["ctrl", "v"]); // paste
     expect(".o_field_text textarea").toHaveValue("text with line breaks ", {
         message: "no line break should appear",
     });

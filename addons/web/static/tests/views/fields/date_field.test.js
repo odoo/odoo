@@ -125,10 +125,8 @@ test("date field in form view (with positive time zone offset)", async () => {
     expect(".o_date_item_cell.o_selected").toHaveCount(1);
 
     // select 22 Feb 2017
-    zoomOut();
-    await animationFrame();
-    zoomOut();
-    await animationFrame();
+    await zoomOut();
+    await zoomOut();
     await contains(getPickerCell("2017")).click();
     await contains(getPickerCell("Feb")).click();
     await contains(getPickerCell("22")).click();
@@ -198,10 +196,8 @@ test("date field with warn_future option ", async () => {
     });
 
     await contains(".o_field_date input").click();
-    zoomOut();
-    await animationFrame();
-    zoomOut();
-    await animationFrame();
+    await zoomOut();
+    await zoomOut();
     await contains(getPickerCell("2020")).click();
     await contains(getPickerCell("Dec")).click();
     await contains(getPickerCell("22")).click();
@@ -253,10 +249,8 @@ test.tags("desktop")("date field in editable list view", async () => {
     // open datepicker and select another value
     await contains(".o_field_date input").click();
     expect(".o_datetime_picker").toHaveCount(1);
-    zoomOut();
-    await animationFrame();
-    zoomOut();
-    await animationFrame();
+    await zoomOut();
+    await zoomOut();
     await contains(getPickerCell("2017")).click();
     await contains(getPickerCell("Feb")).click();
     await contains(getPickerCell("22")).click();

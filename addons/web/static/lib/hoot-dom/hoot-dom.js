@@ -49,6 +49,7 @@ export {
     waitUntil,
 } from "./helpers/dom";
 export {
+    animationFrame,
     check,
     clear,
     click,

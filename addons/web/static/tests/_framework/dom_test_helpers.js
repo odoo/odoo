@@ -20,7 +20,6 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { getTag } from "@web/core/utils/xml";
 
 /**
  * @typedef {import("@odoo/hoot-dom").DragHelpers} DragHelpers
@@ -38,12 +37,6 @@ import { getTag } from "@web/core/utils/xml";
  *  metaKey?: boolean;
  *  shiftKey?: boolean;
  * }} KeyModifierOptions
- *
- * @typedef {{
- *  cancel: () => Promise<void>;
- *  drop: () => Promise<AsyncDragHelpers>;
- *  moveTo: (...args: Parameters<DragHelpers["moveTo"]>) => Promise<void>;
- * }} AsyncDragHelpers
  */
 
 /**
@@ -59,11 +52,6 @@ import { getTag } from "@web/core/utils/xml";
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-/**
- * @param {Node} node
- */
-const getConfirmAction = (node) => (getTag(node, true) === "input" ? "enter" : "blur");
 
 /**
  * These params are used to move the pointer from an arbitrary distance in the
@@ -88,14 +76,10 @@ const DRAG_TOLERANCE_PARAMS = {
  * @param {QueryOptions} [options]
  */
 export function contains(target, options) {
-    if (target?.raw) {
-        return contains(String.raw(...arguments));
-    }
-
     const focusCurrent = async () => {
         const node = await nodePromise;
-        if (node !== getActiveElement()) {
-            pointerDown(node);
+        if (node !== getActiveElement(node)) {
+            await pointerDown(node);
         }
         return node;
     };
@@ -105,156 +89,103 @@ export function contains(target, options) {
         /**
          * @param {PointerOptions} [options]
          */
-        check: async (options) => {
-            check(await nodePromise, options);
-            await animationFrame();
-        },
+        check: (options) => check(nodePromise, options),
         /**
          * @param {FillOptions} [options]
          */
         clear: async (options) => {
-            const node = await focusCurrent();
-            clear({ confirm: getConfirmAction(node), ...options });
-            await animationFrame();
+            await focusCurrent();
+            await clear({ confirm: "auto", ...options });
         },
         /**
          * @param {PointerOptions & KeyModifierOptions} [options]
          */
         click: async (options) => {
-            const actions = [() => click(node, options)];
+            const actions = [() => click(nodePromise, { ...options, delay: 0 })];
             if (options?.altKey) {
                 actions.unshift(() => keyDown("Alt"));
-                actions.push(() => keyUp("Alt"));
+                actions.push(() => keyUp("Alt", { delay: 0 }));
             }
             if (options?.ctrlKey) {
                 actions.unshift(() => keyDown("Control"));
-                actions.push(() => keyUp("Control"));
+                actions.push(() => keyUp("Control", { delay: 0 }));
             }
             if (options?.metaKey) {
                 actions.unshift(() => keyDown("Meta"));
-                actions.push(() => keyUp("Meta"));
+                actions.push(() => keyUp("Meta", { delay: 0 }));
             }
             if (options?.shiftKey) {
                 actions.unshift(() => keyDown("Shift"));
-                actions.push(() => keyUp("Shift"));
+                actions.push(() => keyUp("Shift", { delay: 0 }));
             }
 
-            const node = await nodePromise;
             for (const action of actions) {
-                action();
+                await action();
             }
             await animationFrame();
         },
         /**
          * @param {PointerOptions} [options]
-         * @returns {Promise<AsyncDragHelpers>}
+         * @returns {Promise<DragHelpers>}
          */
         drag: async (options) => {
-            /** @type {AsyncDragHelpers["cancel"]} */
-            const asyncCancel = async () => {
-                cancel();
-                await advanceFrame();
-            };
-
-            /** @type {AsyncDragHelpers["drop"]} */
-            const asyncDrop = async () => {
-                drop();
-                await advanceFrame();
-            };
-
-            /** @type {AsyncDragHelpers["moveTo"]} */
-            const asyncMoveTo = async (to, options) => {
-                moveTo(to, options);
-                await advanceFrame();
-            };
-
-            const node = await nodePromise;
-            const { cancel, drop, moveTo } = drag(node, options);
-            await advanceTime(500); // Go past the touch delay
-
-            hover(node, DRAG_TOLERANCE_PARAMS);
-            await advanceFrame();
-
-            return {
-                cancel: asyncCancel,
-                drop: asyncDrop,
-                moveTo: asyncMoveTo,
-            };
+            const { moveTo } = await drag(nodePromise, { delay: advanceFrame, ...options });
+            await advanceTime(500); // Wait past the mobile long touch delay
+            return moveTo(nodePromise, DRAG_TOLERANCE_PARAMS);
         },
         /**
          * @param {Target} target
-         * @param {PointerOptions} [options]
+         * @param {PointerOptions} [dropOptions]
+         * @param {PointerOptions} [dragOptions]
          */
-        dragAndDrop: async (target, options) => {
-            const [from, to] = await Promise.all([nodePromise, waitFor(target)]);
-            const { drop, moveTo } = drag(from);
-            await advanceTime(500); // Go past the touch delay
-
-            hover(from, DRAG_TOLERANCE_PARAMS);
-            await advanceFrame();
-
-            moveTo(to, options);
-            await advanceFrame();
-
-            drop();
-            await advanceFrame();
+        dragAndDrop: async (target, dropOptions, dragOptions) => {
+            const to = await waitFor(target);
+            const { drop, moveTo } = await drag(nodePromise, {
+                delay: advanceFrame,
+                ...dragOptions,
+            });
+            await advanceTime(500); // Wait past the mobile long touch delay
+            await moveTo(nodePromise, DRAG_TOLERANCE_PARAMS);
+            await drop(to, dropOptions);
         },
         /**
          * @param {InputValue} value
          * @param {FillOptions} [options]
          */
         edit: async (value, options) => {
-            const node = await focusCurrent();
-            edit(value, { confirm: getConfirmAction(node), ...options });
-            await animationFrame();
+            await focusCurrent();
+            await edit(value, { confirm: "auto", ...options });
         },
         /**
          * @param {InputValue} value
          * @param {FillOptions} [options]
          */
         fill: async (value, options) => {
-            const node = await focusCurrent();
-            fill(value, { confirm: getConfirmAction(node), ...options });
-            await animationFrame();
-        },
-        focus: async () => {
             await focusCurrent();
-            await animationFrame();
+            await fill(value, { confirm: "auto", ...options });
         },
-        hover: async () => {
-            hover(await nodePromise);
-            await animationFrame();
-        },
+        focus: focusCurrent,
+        hover: () => hover(nodePromise),
         /**
          * @param {KeyStrokes} keyStrokes
          * @param {KeyboardEventInit} [options]
          */
         press: async (keyStrokes, options) => {
             await focusCurrent();
-            press(keyStrokes, options);
-            await animationFrame();
+            await press(keyStrokes, options);
         },
         /**
          * @param {Position} position
          */
-        scroll: async (position) => {
-            scroll(await nodePromise, position);
-            await animationFrame();
-        },
+        scroll: (position) => scroll(nodePromise, position),
         /**
          * @param {InputValue} value
          */
-        select: async (value) => {
-            select(value, { target: await nodePromise });
-            await animationFrame();
-        },
+        select: (value) => select(value, { target: nodePromise }),
         /**
          * @param {PointerOptions} [options]
          */
-        uncheck: async (options) => {
-            uncheck(await nodePromise, options);
-            await animationFrame();
-        },
+        uncheck: (options) => uncheck(nodePromise, options),
     };
 }
 
@@ -277,7 +208,7 @@ export async function editAce(value) {
     // mobile. To support both environments, a single "mouedown" event is triggered
     // in this specific case. This should not be reproduced and is only accepted
     // because the tested behaviour comes from a lib on which we have no control.
-    manuallyDispatchProgrammaticEvent(queryOne(".ace_editor .ace_content"), "mousedown");
+    await manuallyDispatchProgrammaticEvent(queryOne(".ace_editor .ace_content"), "mousedown");
 
     await contains(".ace_editor textarea", { displayed: true, visible: false }).edit(value, {
         instantly: true,

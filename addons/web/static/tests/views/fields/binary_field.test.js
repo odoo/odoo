@@ -160,8 +160,7 @@ test("BinaryField is correctly rendered", async () => {
     await deferred;
     expect.verifySteps(["/web/content"]);
 
-    click(`.o_field_binary .o_clear_file_button`);
-    await animationFrame();
+    await click(`.o_field_binary .o_clear_file_button`);
     expect(`.o_field_binary input`).not.toBeVisible({ message: "the input should be hidden" });
     expect(`.o_field_binary .o_select_file_button`).toHaveCount(1, {
         message: "there should be a button to upload the file",
@@ -195,10 +194,9 @@ test("BinaryField is correctly rendered (isDirty)", async () => {
     });
 
     // Simulate a file upload
-    click(`.o_select_file_button`);
-    await animationFrame();
+    await click(`.o_select_file_button`);
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
-    setInputFiles([file]);
+    await setInputFiles([file]);
     await waitFor(`.o_form_button_save:visible`);
     expect(`.o_field_widget[name="document"] .fa-download`).toHaveCount(0, {
         message:
@@ -258,17 +256,15 @@ test("input value is empty when clearing after uploading", async () => {
         `,
     });
 
-    click(`.o_select_file_button`);
-    await animationFrame();
+    await click(`.o_select_file_button`);
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
-    setInputFiles([file]);
+    await setInputFiles([file]);
     await waitFor(`.o_form_button_save:visible`);
     expect(`.o_field_binary input[type=text]`).toHaveAttribute("readonly");
     expect(`.o_field_binary input[type=text]`).toHaveValue("fake_file.txt");
     expect(`.o_field_char input[type=text]`).toHaveValue("fake_file.txt");
 
-    click(`.o_clear_file_button`);
-    await animationFrame();
+    await click(`.o_clear_file_button`);
     expect(`.o_field_binary .o_input_file`).toHaveValue("");
     expect(`.o_field_char input`).toHaveValue("");
 });
@@ -309,10 +305,8 @@ test.tags("desktop")("readonly in create mode does not download", async () => {
         `,
     });
 
-    click(`.o_field_many2one[name='product_id'] input`);
-    await animationFrame();
-    click(`.o_field_many2one[name='product_id'] .dropdown-item`);
-    await animationFrame();
+    await click(`.o_field_many2one[name='product_id'] input`);
+    await click(`.o_field_many2one[name='product_id'] .dropdown-item`);
     expect(`.o_field_widget[name="document"] a`).toHaveCount(0, {
         message: "The link to download the binary should not be present",
     });
@@ -421,10 +415,9 @@ test("isUploading state should be set to false after upload", async () => {
         arch: `<form><field name="document"/></form>`,
     });
 
-    click(`.o_select_file_button`);
-    await animationFrame();
+    await click(`.o_select_file_button`);
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
-    setInputFiles([file]);
+    await setInputFiles([file]);
     await waitFor(`.o_form_button_save:visible`);
     await animationFrame();
     expect.verifyErrors([/RPC_ERROR/]);

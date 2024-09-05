@@ -631,8 +631,7 @@ test("can click on action-bound links -- 1", async () => {
     });
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect("a").toHaveCount(1);
-    click("a");
-    await animationFrame();
+    await click("a");
     expect.verifySteps(["root called"]);
 });
 
@@ -657,8 +656,7 @@ test("can click on action-bound links -- 2", async () => {
     `;
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect("a").toHaveCount(1);
-    click("a");
-    await animationFrame();
+    await click("a");
 });
 
 test("can click on action-bound links -- 3", async () => {
@@ -690,8 +688,7 @@ test("can click on action-bound links -- 3", async () => {
     `;
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
     expect("a").toHaveCount(1);
-    click("a");
-    await animationFrame();
+    await click("a");
 });
 
 test("renders banner_route", async () => {
@@ -784,8 +781,7 @@ test("banner can re-render with new HTML", async () => {
     expect.verifySteps(["/mybody/isacage"]);
     expect(".banner1").toHaveCount(1);
     expect(".banner2").toHaveCount(0);
-    click("a");
-    await animationFrame();
+    await click("a");
     expect.verifySteps(["/mybody/isacage"]);
     expect(".banner1").toHaveCount(0);
     expect(".banner2").toHaveCount(1);
@@ -854,9 +850,8 @@ test("click on action-bound links in banner (concurrency)", async () => {
         tag: "gout",
     }));
     await mountWithCleanup(View, { props: { resModel: "animal", type: "toy", viewId: 1 } });
-    click("a[data-method='setTheControl']");
-    await animationFrame();
-    click("a[data-method='heartOfTheSun']");
+    await click("a[data-method='setTheControl']");
+    await click("a[data-method='heartOfTheSun']");
     prom.resolve();
     await animationFrame();
 });
@@ -909,15 +904,12 @@ test("real life banner", async () => {
     expect.verifySteps(["/mybody/isacage"]);
     expect(".modal").not.toBeVisible();
     expect(".o_onboarding_container").toHaveClass("o-vertical-slide");
-    click("#closeOnboarding");
-    await animationFrame();
+    await click("#closeOnboarding");
     expect(".modal").toBeVisible();
-    click(queryOne(".modal a[type='action']"));
-    await animationFrame();
+    await click(queryOne(".modal a[type='action']"));
     expect.verifySteps(["/web/dataset/call_kw/mah.model/mah_method"]);
 
-    runAllTimers();
-    await animationFrame();
+    await runAllTimers();
     expect(".o_onboarding_container").toHaveCount(0);
 });
 

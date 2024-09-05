@@ -78,9 +78,8 @@ test("attach document widget calls action with attachment ids", async () => {
 
     await contains("[name='display_name'] input").edit("yop");
     await animationFrame();
-    click(".o_attach_document");
-    await animationFrame();
-    manuallyDispatchProgrammaticEvent(fileInput, "change");
+    await click(".o_attach_document");
+    await manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();
     expect.verifySteps(["web_save", "post", "my_action", "web_read"]);
 });
@@ -134,9 +133,8 @@ test("attach document widget calls action with attachment ids on a new record", 
     });
     expect.verifySteps(["get_views", "onchange"]);
     await contains("[name='display_name'] input").edit("yop");
-    click(".o_attach_document");
-    await animationFrame();
-    manuallyDispatchProgrammaticEvent(fileInput, "change");
+    await click(".o_attach_document");
+    await manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();
     expect.verifySteps(["web_save", "post", "my_action", "web_read"]);
 });

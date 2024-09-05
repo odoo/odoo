@@ -1,13 +1,12 @@
-import { browser } from "@web/core/browser/browser";
-import { describe, test, expect } from "@odoo/hoot";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { describe, expect, test } from "@odoo/hoot";
+import { click, queryAllTexts } from "@odoo/hoot-dom";
 import {
+    makeDialogMockEnv,
+    mockService,
     mountWithCleanup,
     patchWithCleanup,
-    mockService,
-    makeDialogMockEnv,
 } from "@web/../tests/web_test_helpers";
-import { click, queryAllTexts } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
 import {
     ClientErrorDialog,
     Error504Dialog,
@@ -41,8 +40,7 @@ test("ErrorDialog with traceback", async () => {
         "Please use the copy button to report the error to your support service.",
     ]);
     expect("div.o_error_detail").toHaveCount(0);
-    click("main button");
-    await animationFrame();
+    await click("main button");
     expect("main .clearfix p").toHaveText("Something bad happened");
     expect("main .clearfix code").toHaveText("ERROR_NAME");
     expect("div.o_error_detail").toHaveCount(1);
@@ -70,8 +68,7 @@ test("Client ErrorDialog with traceback", async () => {
         "Please use the copy button to report the error to your support service.",
     ]);
     expect("div.o_error_detail").toHaveCount(0);
-    click("main button");
-    await animationFrame();
+    await click("main button");
     expect("main .clearfix p").toHaveText("Something bad happened");
     expect("main .clearfix code").toHaveText("ERROR_NAME");
     expect("div.o_error_detail").toHaveCount(1);
@@ -99,8 +96,7 @@ test("button clipboard copy error traceback", async () => {
             close() {},
         },
     });
-    click(".fa-clipboard");
-    await tick();
+    await click(".fa-clipboard");
 });
 
 test("WarningDialog", async () => {
@@ -150,12 +146,10 @@ test("RedirectWarningDialog", async () => {
     expect("main").toHaveText("Some strange unreadable message");
     expect(queryAllTexts("footer button")).toEqual(["Buy book on cryptography", "Close"]);
 
-    click("footer button:nth-child(1)"); // click on "Buy book on cryptography"
-    await animationFrame();
+    await click("footer button:nth-child(1)"); // click on "Buy book on cryptography"
     expect.verifySteps(["buy_action_id", "dialog-closed"]);
 
-    click("footer button:nth-child(2)"); // click on "Cancel"
-    await animationFrame();
+    await click("footer button:nth-child(2)"); // click on "Cancel"
     expect.verifySteps(["dialog-closed"]);
 });
 
@@ -187,7 +181,6 @@ test("SessionExpiredDialog", async () => {
         "Your Odoo session expired. The current page is about to be refreshed."
     );
     expect(".o_dialog footer button").toHaveText("Close");
-    click(".o_dialog footer button");
-    await animationFrame();
+    await click(".o_dialog footer button");
     expect.verifySteps(["location reload"]);
 });

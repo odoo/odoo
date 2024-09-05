@@ -1,6 +1,6 @@
 import { beforeEach, expect, mountOnFixture, test } from "@odoo/hoot";
 import { resize, scroll } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { runAllTimers } from "@odoo/hoot-mock";
 import { Component, useRef, xml } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { localization } from "@web/core/l10n/localization";
@@ -107,7 +107,7 @@ beforeEach(() => {
     // In this test suite, we trick the hook by setting the window size to the size
     // of the scrollable, so that it is a measurable size and this suite can run
     // in a window of any size.
-    resize({ height: CONTAINER_HEIGHT, width: CONTAINER_WIDTH });
+    return resize({ height: CONTAINER_HEIGHT, width: CONTAINER_WIDTH });
 });
 
 test("basic usage", async () => {
@@ -116,14 +116,12 @@ test("basic usage", async () => {
     expect(comp.virtualGrid.columnsIndexes).toEqual([0, 19]);
 
     // scroll to the middle
-    scroll(".scrollable", { top: MAX_SCROLL_TOP / 2, left: MAX_SCROLL_LEFT / 2 });
-    await animationFrame();
+    await scroll(".scrollable", { top: MAX_SCROLL_TOP / 2, left: MAX_SCROLL_LEFT / 2 });
     expect(comp.virtualGrid.rowsIndexes).toEqual([92, 107]);
     expect(comp.virtualGrid.columnsIndexes).toEqual([85, 114]);
 
-    // // scroll to bottom right
-    scroll(".scrollable", { top: MAX_SCROLL_TOP, left: MAX_SCROLL_LEFT });
-    await animationFrame();
+    // scroll to bottom right
+    await scroll(".scrollable", { top: MAX_SCROLL_TOP, left: MAX_SCROLL_LEFT });
     expect(comp.virtualGrid.rowsIndexes).toEqual([190, 199]);
     expect(comp.virtualGrid.columnsIndexes).toEqual([180, 199]);
 });
@@ -134,13 +132,13 @@ test("updates on resize", async () => {
     expect(comp.virtualGrid.columnsIndexes).toEqual([0, 19]);
 
     // resize the window
-    resize({ height: CONTAINER_HEIGHT / 2, width: CONTAINER_WIDTH / 2 });
+    await resize({ height: CONTAINER_HEIGHT / 2, width: CONTAINER_WIDTH / 2 });
     await runAllTimers();
     expect(comp.virtualGrid.rowsIndexes).toEqual([0, 4]);
     expect(comp.virtualGrid.columnsIndexes).toEqual([0, 9]);
 
     // resize the window
-    resize({ height: CONTAINER_HEIGHT * 2, width: CONTAINER_WIDTH * 2 });
+    await resize({ height: CONTAINER_HEIGHT * 2, width: CONTAINER_WIDTH * 2 });
     await runAllTimers();
     expect(comp.virtualGrid.rowsIndexes).toEqual([0, 19]);
     expect(comp.virtualGrid.columnsIndexes).toEqual([0, 39]);
@@ -254,34 +252,31 @@ test("onChange", async () => {
     expect.verifySteps([]);
 
     // onChange is called on scroll
-    scroll(".scrollable", { top: MAX_SCROLL_TOP / 2, left: MAX_SCROLL_LEFT / 2 });
-    await animationFrame();
+    await scroll(".scrollable", { top: MAX_SCROLL_TOP / 2, left: MAX_SCROLL_LEFT / 2 });
     expect.verifySteps([{ columnsIndexes: [85, 114], rowsIndexes: [92, 107] }]);
     // but it is not if the scroll is too small
-    scroll(".scrollable", {
+    await scroll(".scrollable", {
         top: MAX_SCROLL_TOP / 2 + Number.EPSILON,
         left: MAX_SCROLL_LEFT / 2 + Number.EPSILON,
     });
-    await animationFrame();
     expect.verifySteps([]);
     // it can also receive the changed indexes of a single direction
-    scroll(".scrollable", { top: MAX_SCROLL_TOP });
-    await animationFrame();
+    await scroll(".scrollable", { top: MAX_SCROLL_TOP });
     expect.verifySteps([{ rowsIndexes: [190, 199] }]);
 
     // onChange is called on resize
-    resize({ height: CONTAINER_HEIGHT / 2, width: CONTAINER_WIDTH / 2 });
+    await resize({ height: CONTAINER_HEIGHT / 2, width: CONTAINER_WIDTH / 2 });
     await runAllTimers();
     expect.verifySteps([{ columnsIndexes: [90, 104], rowsIndexes: [192, 199] }]);
     // but it is not if the resize is too small
-    resize({
+    await resize({
         height: CONTAINER_HEIGHT / 2 + Number.EPSILON,
         width: CONTAINER_WIDTH / 2 + Number.EPSILON,
     });
     await runAllTimers();
     expect.verifySteps([]);
     // it can also receive the changed indexes of a single direction
-    resize({ width: CONTAINER_WIDTH * 2 });
+    await resize({ width: CONTAINER_WIDTH * 2 });
     await runAllTimers();
     expect.verifySteps([{ columnsIndexes: [75, 134] }]);
 
@@ -295,8 +290,7 @@ test("onChange", async () => {
 
 test("when scrolling to the bottom right then updating to smaller rows and columns", async () => {
     const comp = await mountOnFixture(getTestComponent());
-    scroll(".scrollable", { top: MAX_SCROLL_TOP, left: MAX_SCROLL_LEFT });
-    await animationFrame();
+    await scroll(".scrollable", { top: MAX_SCROLL_TOP, left: MAX_SCROLL_LEFT });
     expect(comp.virtualGrid.rowsIndexes).toEqual([190, 199]);
     expect(comp.virtualGrid.columnsIndexes).toEqual([180, 199]);
 
@@ -315,12 +309,10 @@ test("horizontal scroll in RTL", async () => {
     expect(comp.virtualGrid.columnsIndexes).toEqual([0, 19]);
 
     // scroll to the middle
-    scroll(".scrollable", { left: -MAX_SCROLL_LEFT / 2 });
-    await animationFrame();
+    await scroll(".scrollable", { left: -MAX_SCROLL_LEFT / 2 });
     expect(comp.virtualGrid.columnsIndexes).toEqual([85, 114]);
 
     // scroll to left
-    scroll(".scrollable", { left: -MAX_SCROLL_LEFT });
-    await animationFrame();
+    await scroll(".scrollable", { left: -MAX_SCROLL_LEFT });
     expect(comp.virtualGrid.columnsIndexes).toEqual([180, 199]);
 });

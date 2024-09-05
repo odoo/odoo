@@ -148,7 +148,7 @@ describe(parseUrl(import.meta.url), () => {
             <input type="text" value="abc" />
         `);
 
-        check("input[type=checkbox]");
+        await check("input[type=checkbox]");
 
         const [customExpect, hooks] = makeExpect({ headless: true });
 

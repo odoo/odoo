@@ -1,3 +1,5 @@
+import { expect, test } from "@odoo/hoot";
+import { click, edit, pointerDown, queryFirst, queryOne } from "@odoo/hoot-dom";
 import {
     clickSave,
     defineModels,
@@ -6,10 +8,7 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { click, edit, pointerDown, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { getNextTabableElement } from "@web/core/utils/ui";
-import { animationFrame } from "@odoo/hoot-mock";
 
 class Partner extends models.Model {
     foo = fields.Char({ default: "My little Foo Value", trim: true });
@@ -61,9 +60,8 @@ test("PhoneField in form view on normal screens (edit)", async () => {
     expect(".o_field_phone a").toHaveAttribute("href", "tel:yop");
 
     // change value in edit mode
-    click(`input[type="tel"]`);
-    edit("new");
-    await animationFrame();
+    await click(`input[type="tel"]`);
+    await edit("new");
     // save
     await clickSave();
     expect(`input[type="tel"]`).toHaveValue("new");
@@ -82,15 +80,13 @@ test("PhoneField in editable list view on normal screens", async () => {
 
     // Edit a line and check the result
     const cell = queryFirst("tbody td:not(.o_list_record_selector)");
-    click(cell);
-    await animationFrame();
+    await click(cell);
     expect(cell.parentElement).toHaveClass("o_selected_row");
     expect(`tbody td:not(.o_list_record_selector) input`).toHaveValue("yop");
 
-    click(`tbody td:not(.o_list_record_selector) input`);
-    edit("new");
-    click(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save");
-    await animationFrame();
+    await click(`tbody td:not(.o_list_record_selector) input`);
+    await edit("new");
+    await click(".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save");
 
     expect(".o_selected_row").toHaveCount(0);
     expect("tbody td:not(.o_list_record_selector) a:first").toHaveText("new");
@@ -112,7 +108,7 @@ test("use TAB to navigate to a PhoneField", async () => {
             </form>`,
     });
 
-    pointerDown(".o_field_widget[name=name] input");
+    await pointerDown(".o_field_widget[name=name] input");
 
     expect(".o_field_widget[name=name] input").toBeFocused();
     expect(queryOne`[name="foo"] input:only`).toBe(getNextTabableElement());

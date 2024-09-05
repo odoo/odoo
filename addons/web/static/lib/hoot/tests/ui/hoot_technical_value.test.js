@@ -56,15 +56,13 @@ describe(parseUrl(import.meta.url), () => {
         await updateValue([1, 2, "3"]);
         expect(".hoot-technical").toHaveText(`Array(3)`);
 
-        click(".hoot-object");
-        await animationFrame();
+        await click(".hoot-object");
         expect(".hoot-technical").toHaveText(`Array(3)[\n1\n,\n2\n,\n"3"\n,\n]`);
 
         await updateValue({ a: true });
         expect(".hoot-technical").toHaveText(`Object(1)`);
 
-        click(".hoot-object");
-        await animationFrame();
+        await click(".hoot-object");
         expect(".hoot-technical").toHaveText(`Object(1){\na\n:\ntrue\n,\n}`);
 
         await updateValue({
@@ -75,14 +73,12 @@ describe(parseUrl(import.meta.url), () => {
         });
         expect(".hoot-technical").toHaveText(`Object(2)`);
 
-        click(".hoot-object:first");
-        await animationFrame();
+        await click(".hoot-object:first");
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1)\n}`
         );
 
-        click(".hoot-object:last");
-        await animationFrame();
+        await click(".hoot-object:last");
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1){\nkey\n:\n"oui"\n,\n}\n}`
         );

@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { animationFrame } from "@odoo/hoot-dom";
 import { isNil } from "../hoot_utils";
 
 /**
@@ -199,17 +200,6 @@ export async function advanceTime(ms) {
     await animationFrame();
 
     return ms;
-}
-
-/**
- * Returns a promise resolved after the next animation frame, typically allowing
- * Owl components to render.
- *
- * @returns {Promise<void>}
- */
-export async function animationFrame() {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    await delay();
 }
 
 /**

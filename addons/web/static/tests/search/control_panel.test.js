@@ -54,7 +54,7 @@ test.tags`desktop`("breadcrumbs", async () => {
     expect(breadcrumbItems[1]).toHaveClass("active");
 
     getService("action").restore = (jsId) => expect.step(jsId);
-    click(breadcrumbItems[0]);
+    await click(breadcrumbItems[0]);
     expect.verifySteps(["controller_7"]);
 });
 
@@ -81,7 +81,7 @@ test("view switcher", async () => {
     expect(queryAll(`.oi-view-kanban`, { root: views[1] })).toHaveCount(1);
 
     getService("action").switchView = (viewType) => expect.step(viewType);
-    click(views[1]);
+    await click(views[1]);
     expect.verifySteps(["kanban"]);
 });
 
@@ -115,11 +115,9 @@ test("view switcher hotkey cycles through views", async () => {
     });
     expect(`.o_list_view`).toHaveCount(1);
 
-    press(["alt", "shift", "v"]);
-    await animationFrame();
+    await press(["alt", "shift", "v"]);
     expect(`.o_kanban_view`).toHaveCount(1);
 
-    press(["alt", "shift", "v"]);
-    await animationFrame();
+    await press(["alt", "shift", "v"]);
     expect(`.o_list_view`).toHaveCount(1);
 });

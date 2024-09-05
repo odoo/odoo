@@ -35,10 +35,10 @@ const SELECTORS = {
     debugArea: ".o_expression_editor_debug_container textarea",
 };
 
-function editExpression(value, index = 0) {
+async function editExpression(value, index = 0) {
     const input = get(SELECTORS.complexConditionInput, index);
-    click(input);
-    edit(value);
+    await click(input);
+    await edit(value);
 }
 
 async function selectConnector(value, index = 0) {
@@ -136,7 +136,7 @@ test("edit a complex condition in dev mode", async () => {
         { value: "all", level: 0 },
         { value: "expr", level: 1 },
     ]);
-    editExpression("uid");
+    await editExpression("uid");
     expect(getTreeEditorContent()).toEqual([
         { value: "all", level: 0 },
         { value: "uid", level: 1 },

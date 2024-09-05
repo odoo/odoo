@@ -1,6 +1,5 @@
 import { describe, destroy, expect, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, useState, xml } from "@odoo/owl";
 import {
     contains,
@@ -62,8 +61,7 @@ test("hotkeys work on dialogs", async () => {
     expect("header .modal-title").toHaveText("Wow(l) Effect");
     expect("footer button").toHaveText("Ok");
     // Same effect as clicking on the x button
-    press("escape");
-    await animationFrame();
+    await press("escape");
     expect.verifySteps(["dismiss", "close"]);
     // Same effect as clicking on the Ok button
     keyDown("control+enter");
@@ -384,8 +382,7 @@ test("dialog's position is reset on resize", async () => {
         top: `${modalRect.x + 50}px`,
     });
 
-    resize();
-    await animationFrame();
+    await resize();
     expect(".modal-content").toHaveStyle({
         left: "0px",
         top: "0px",
