@@ -12,8 +12,16 @@ import { SwitchCompanyItem } from "@web/webclient/switch_company_menu/switch_com
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
+<<<<<<< saas-17.4
 class CompanySelector {
     constructor(companyService, dropdownState) {
+||||||| 96b3ffc2394be46a4f7a44b7a618a7ee8f2c594f
+class CompanySelector {
+    constructor(companyService, toggleDelay) {
+=======
+export class CompanySelector {
+    constructor(companyService, toggleDelay) {
+>>>>>>> 2a75589499eeac0f64e323ec4a497c984f85d087
         this.companyService = companyService;
         this.dropdownState = dropdownState;
         this.selectedCompaniesIds = companyService.activeCompanyIds.slice();
@@ -139,11 +147,30 @@ export class SwitchCompanyMenu extends Component {
     static template = "web.SwitchCompanyMenu";
     static components = { Dropdown, DropdownItem, DropdownGroup, SwitchCompanyItem };
     static props = {};
+<<<<<<< saas-17.4
+||||||| 96b3ffc2394be46a4f7a44b7a618a7ee8f2c594f
+    static toggleDelay = 1000;
+=======
+    static toggleDelay = 1000;
+    static CompanySelector = CompanySelector;
+>>>>>>> 2a75589499eeac0f64e323ec4a497c984f85d087
 
     setup() {
         this.dropdown = useDropdownState();
         this.companyService = useService("company");
+<<<<<<< saas-17.4
         this.companySelector = useState(new CompanySelector(this.companyService, this.dropdown));
+||||||| 96b3ffc2394be46a4f7a44b7a618a7ee8f2c594f
+
+        this.companySelector = useState(
+            new CompanySelector(this.companyService, this.constructor.toggleDelay)
+        );
+=======
+
+        this.companySelector = useState(
+            new this.constructor.CompanySelector(this.companyService, this.constructor.toggleDelay)
+        );
+>>>>>>> 2a75589499eeac0f64e323ec4a497c984f85d087
         useChildSubEnv({ companySelector: this.companySelector });
 
         this.searchInputRef = useRef("inputRef");
