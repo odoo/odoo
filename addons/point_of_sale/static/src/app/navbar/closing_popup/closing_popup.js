@@ -12,6 +12,7 @@ import { Input } from "@point_of_sale/app/generic_components/inputs/input/input"
 import { useAsyncLockedMethod } from "@point_of_sale/app/utils/hooks";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { deduceUrl } from "@point_of_sale/utils";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 export class ClosePosPopup extends Component {
     static components = { SaleDetailsButton, Input, Dialog };
@@ -145,6 +146,7 @@ export class ClosePosPopup extends Component {
         return true;
     }
     async closeSession() {
+        sessionStorage.removeItem("connected_cashier");
         if (this.pos.config.customer_display_type === "proxy") {
             const proxyIP = this.pos.getDisplayDeviceIP();
             fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
@@ -208,23 +210,41 @@ export class ClosePosPopup extends Component {
             location.reload();
         } catch (error) {
             if (error instanceof ConnectionLostError) {
-                // Cannot redirect to backend when offline, let error handlers show the offline popup
-                // FIXME POSREF: doing this means closing again when online will redo the beginning of the method
-                // although it's impossible to close again because this.closeSessionClicked isn't reset to false
-                // The application state is corrupted.
                 throw error;
             } else {
-                // FIXME POSREF: why are we catching errors here but not anywhere else in this method?
-                this.dialog.add(AlertDialog, {
-                    title: _t("Closing session error"),
-                    body: _t(
-                        "An error has occurred when trying to close the session.\n" +
-                            "You will be redirected to the back-end to manually close the session."
-                    ),
-                });
-                this.pos.redirectToBackend();
+                await this.handleClosingControlError();
             }
         }
+    }
+    async handleClosingControlError() {
+        this.dialog.add(AlertDialog, {
+            title: _t("Closing session error"),
+            body: _t(
+                "An error has occurred when trying to close the session.\n" +
+                    "You will be redirected to the back-end to manually close the session."
+            ),
+            onClose: () => {
+                this.dialog.add(
+                    FormViewDialog,
+                    {
+                        resModel: "pos.session",
+                        resId: this.pos.session.id,
+                    },
+                    {
+                        onClose: async () => {
+                            const session = await this.pos.data.read("pos.session", [
+                                this.pos.session.id,
+                            ]);
+                            if (session[0] && session[0].state === "closed") {
+                                location.reload();
+                            } else {
+                                this.pos.redirectToBackend();
+                            }
+                        },
+                    }
+                );
+            },
+        });
     }
     async handleClosingError(response) {
         this.dialog.add(ConfirmationDialog, {
@@ -248,7 +268,7 @@ export class ClosePosPopup extends Component {
         });
 
         if (response.redirect) {
-            this.pos.redirectToBackend();
+            window.location.reload();
         }
     }
     getMovesTotalAmount() {

@@ -16,7 +16,8 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
@@ -58,7 +59,8 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "1", "2.0"),
             ProductScreen.addOrderline("Minute Maid", "1", "2.0"),
@@ -91,7 +93,8 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Water", "2", "2", "4.00"),
             ProductScreen.clickControlButton("Split"),
@@ -128,7 +131,8 @@ registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
             ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 3"),

@@ -4,14 +4,16 @@ import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Pricelist from "@point_of_sale/../tests/tours/utils/pricelist_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 registry.category("web_tour.tours").add("pos_pricelist", {
     test: true,
     steps: () =>
         [
+            Chrome.startPoS(),
             Pricelist.setUp(),
             Pricelist.waitForUnitTest(),
-            Dialog.confirm("Open session"),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickPriceList("Fixed", true, "Public Pricelist"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Deco Addict"),

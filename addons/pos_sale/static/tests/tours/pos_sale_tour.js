@@ -13,7 +13,8 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Pizza Chicken", 9),
             ProductScreen.clickNumpad("Qty", "2"), // Change the quantity of the product to 2
@@ -30,7 +31,8 @@ registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             // The second item in the list is the first sale.order.
             PosSale.settleNthOrder(2),
             ProductScreen.selectedOrderlineHas("product1", 1),
@@ -49,7 +51,8 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.clickOrderline("Product A", "1"),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
@@ -67,7 +70,8 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.downPaymentFirstOrder("+10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
@@ -95,7 +99,8 @@ registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.totalAmountIs(40),
             ProductScreen.clickPayButton(),
@@ -109,7 +114,8 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", "1.00"),
             ProductScreen.clickPayButton(),
@@ -123,7 +129,8 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.totalAmountIs(32.2), // 3.5 * 8 * 1.15
             ProductScreen.selectedOrderlineHas("Product A", "0.50"),
@@ -135,7 +142,8 @@ registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             Order.hasLine({
                 customerNote: "Customer note 2--Customer note 3",
@@ -155,7 +163,8 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             Order.hasLine({}),
             ProductScreen.clickPayButton(),
@@ -169,7 +178,8 @@ registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -183,7 +193,8 @@ registry.category("web_tour.tours").add("PosSettleDraftOrder", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Test service product", "1.00", "50.00"),
         ].flat(),
@@ -193,7 +204,8 @@ registry.category("web_tour.tours").add("PosSettleCustomPrice", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
             ProductScreen.clickPartnerButton(),
@@ -206,7 +218,8 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.selectedOrderlineHas("Down Payment (POS)"),
             ProductScreen.totalAmountIs(980.0),
@@ -217,7 +230,8 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.downPaymentFirstOrder("+20"),
             Order.hasLine({
                 productName: "Down Payment",
@@ -246,7 +260,8 @@ registry.category("web_tour.tours").add("PoSApplyDownpayment", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.downPaymentFirstOrder("+10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -258,7 +273,8 @@ registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
     test: true,
     steps: () =>
         [
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),

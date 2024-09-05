@@ -17,7 +17,8 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
         [
             // Create order that is synced when draft.
             // order 1
-            Dialog.confirm("Open session"),
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
             ProductScreen.addOrderline("Minute Maid", "1", "2"),
             ProductScreen.totalAmountIs("2.0"),

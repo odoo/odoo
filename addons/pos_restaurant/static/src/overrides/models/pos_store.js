@@ -25,15 +25,15 @@ patch(PosStore.prototype, {
         this.isEditMode = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
-        this.floorPlanStyle =
-            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
-        if (this.config.module_pos_restaurant) {
-            this.setActivityListeners();
-            this.showScreen("FloorScreen", { floor: this.selectedTable?.floor || null });
-            this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
-            // Sync the number of orders on each table with other PoS
-            this.bus.subscribe("SYNC_ORDERS", this.ws_syncTableCount.bind(this));
+    },
+    get firstScreen() {
+        const screen = super.firstScreen;
+
+        if (!this.config.module_pos_restaurant) {
+            return screen;
         }
+
+        return screen === "LoginScreen" ? "LoginScreen" : "FloorScreen";
     },
     async onDeleteOrder(order) {
         if (
@@ -160,6 +160,14 @@ patch(PosStore.prototype, {
     },
     //@override
     async afterProcessServerData() {
+        this.floorPlanStyle =
+            localStorage.getItem("floorPlanStyle") || (this.ui.isSmall ? "kanban" : "default");
+        if (this.config.module_pos_restaurant) {
+            this.setActivityListeners();
+            this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
+            this.bus.subscribe("SYNC_ORDERS", this.ws_syncTableCount.bind(this));
+        }
+
         const res = await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_restaurant) {
             this.selectedTable = null;

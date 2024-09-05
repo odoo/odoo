@@ -4,12 +4,14 @@ import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/o
 import { inLeftSide, waitForLoading } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_change", {
     test: true,
     steps: () =>
         [
             waitForLoading(),
+            Chrome.startPoS(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),
             ProductScreen.clickPayButton(),
@@ -32,6 +34,7 @@ registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quanti
     steps: () =>
         [
             waitForLoading(),
+            Chrome.startPoS(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
             inLeftSide(Numpad.click(".")),
             ProductScreen.selectedOrderlineHas("Desk Organizer", "0.0", "0.0"),
@@ -50,6 +53,7 @@ registry.category("web_tour.tours").add("pos_basic_order_03_tax_position", {
     steps: () =>
         [
             waitForLoading(),
+            Chrome.startPoS(),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1.0"),
             inLeftSide(...Order.hasTotal("5.28")),
             ProductScreen.clickFiscalPosition("FP-POS-2M", true),

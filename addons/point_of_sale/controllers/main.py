@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 class PosController(PortalAccount):
 
     @http.route(['/pos/web', '/pos/ui'], type='http', auth='user')
-    def pos_web(self, config_id=False, **k):
+    def pos_web(self, config_id=False, from_backend=False, **k):
         """Open a pos session for the given config.
 
         The right pos session will be selected to open, if non is open yet a new session will be created.
@@ -29,6 +29,7 @@ class PosController(PortalAccount):
         :returns: object -- The rendered pos session.
         """
         is_internal_user = request.env.user._is_internal()
+        pos_config = False
         if not is_internal_user:
             return request.not_found()
         domain = [
@@ -36,7 +37,7 @@ class PosController(PortalAccount):
                 ('user_id', '=', request.session.uid),
                 ('rescue', '=', False)
                 ]
-        if config_id:
+        if config_id and request.env['pos.config'].sudo().browse(int(config_id)).exists():
             domain = AND([domain,[('config_id', '=', int(config_id))]])
             pos_config = request.env['pos.config'].sudo().browse(int(config_id))
         pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
@@ -52,7 +53,7 @@ class PosController(PortalAccount):
             ]
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
-        if not config_id or not pos_config.active or pos_config.has_active_session and not pos_session:
+        if not pos_config or not pos_config.active or pos_config.has_active_session and not pos_session:
             return request.redirect('/odoo/action-point_of_sale.action_client_pos_menu')
 
         if not pos_config.has_active_session:
@@ -67,6 +68,7 @@ class PosController(PortalAccount):
         session_info['nomenclature_id'] = pos_session.company_id.nomenclature_id.id
         session_info['fallback_nomenclature_id'] = pos_session._get_pos_fallback_nomenclature_id()
         context = {
+            'from_backend': 1 if from_backend else 0,
             'session_info': session_info,
             'login_number': pos_session.login(),
             'pos_session_id': pos_session.id,
