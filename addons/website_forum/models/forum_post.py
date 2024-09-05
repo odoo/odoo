@@ -527,7 +527,7 @@ class Post(models.Model):
         })
         return True
 
-    def _validate(self):
+    def validate(self):
         for post in self:
             if not post.can_moderate:
                 raise AccessError(_('%d karma required to validate a post.', post.forum_id.karma_moderate))
