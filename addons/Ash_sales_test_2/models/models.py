@@ -14,14 +14,6 @@ class SaleOrder(models.Model):
         ('released', 'Released'),
         ('unreleased', 'Unreleased')
     ], string="Is Released", default='unpicked')
-
-    customer_name = fields.Char(string="Name", required=True)
-    customer_address = fields.Char(string="Address", required=True)
-    customer_suburb = fields.Char(string="Suburb", required=True)
-    customer_state = fields.Char(string="State", required=True)
-    customer_postcode = fields.Char(string="Postcode", required=True)
-    customer_email = fields.Char(string="Email Address")
-    customer_phone = fields.Char(string="Phone Number")
     
     # New fields
     consignment_number = fields.Char(string="Consignment Number")
@@ -94,7 +86,6 @@ class SaleOrder(models.Model):
                         'products': products_data,
                     }
                     # Send data to external API
-                    #release_url = "http://127.0.0.1:5000/api/orders"
                     release_url = "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
 
                     headers = {

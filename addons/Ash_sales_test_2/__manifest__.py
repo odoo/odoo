@@ -3,7 +3,7 @@
     'version': '1.0',
     'depends': ['sale', 'base',],
     'data': [
-        'views/views.xml',
+        'views/views2.xml',
     ],
     'installable': True,
     'auto_install': False,
