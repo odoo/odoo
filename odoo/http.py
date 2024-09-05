@@ -1102,6 +1102,16 @@ class Session(collections.abc.MutableMapping):
         """
             :return: dict if a device log has to be inserted, ``None`` otherwise
         """
+        if self._trace_disable:
+            # To avoid generating useless logs, e.g. for automated technical sessions,
+            # a session can be flagged with `_trace_disable`. This should never be done
+            # without a proper assessment of the consequences for auditability.
+            # Non-admin users have no direct or indirect way to set this flag, so it can't
+            # be abused by unprivileged users. Such sessions will of course still be
+            # subject to all other auditing mechanisms (server logs, web proxy logs,
+            # metadata tracking on modified records, etc.)
+            return
+
         user_agent = request.httprequest.user_agent
         platform = user_agent.platform
         browser = user_agent.browser
