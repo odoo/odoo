@@ -23,7 +23,7 @@ class UoMCategory(models.Model):
             self.uom_ids[0].uom_type = 'reference'
             self.uom_ids[0].factor = 1
         else:
-            reference_count = sum(uom.uom_type == 'reference' for uom in self.uom_ids)
+            reference_count = sum(uom.uom_type == 'reference' for uom in self.uom_ids or self._origin.uom_ids)
             if reference_count == 0 and self._origin.id:
                 raise UserError(_('UoM category %s must have at least one reference unit of measure.', self.name))
             if self.reference_uom_id:
