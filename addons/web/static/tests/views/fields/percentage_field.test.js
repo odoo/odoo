@@ -38,8 +38,8 @@ test("PercentageField in form view", async () => {
         message: "The input should be followed by a span containing the percentage symbol.",
     });
 
-    click("[name='float_field'] input");
-    edit("24");
+    await click("[name='float_field'] input");
+    await edit("24");
     expect("[name='float_field'] input").toHaveValue("24");
 
     await clickSave();
@@ -54,8 +54,8 @@ test("percentage field with placeholder", async () => {
         arch: /* xml */ `<form><field name="float_field" widget="percentage" placeholder="Placeholder"/></form>`,
     });
 
-    click(".o_field_widget[name='float_field'] input");
-    clear();
+    await click(".o_field_widget[name='float_field'] input");
+    await clear();
 
     expect(".o_field_widget[name='float_field'] input").toHaveProperty(
         "placeholder",
@@ -74,8 +74,8 @@ test("PercentageField in form view without rounding error", async () => {
         arch: /* xml */ `<form><field name="float_field" widget="percentage"/></form>`,
     });
 
-    click("[name='float_field'] input");
-    edit("28");
+    await click("[name='float_field'] input");
+    await edit("28");
 
     expect("[name='float_field'] input").toHaveValue("28");
 });
