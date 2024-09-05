@@ -7,7 +7,7 @@
                     <t t-if="line.isSelected()">
                         <div t-attf-class="paymentline selected d-flex align-items-center {{ this.ui.isSmall ? 'bg-100' : 'bg-200'}} border rounded-3"
                             t-att-class="selectedLineClass(line)">
-                            <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 py-lg-4 text-truncate cursor-pointer" t-on-click="() => this.selectLine(line)">
+                            <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
                                  <span class="payment-name"><t t-esc="line.payment_method_id.name"/></span>
                                  <div class="payment-amount px-3">
                                     <t t-esc="env.utils.formatCurrency(line.get_amount())" />
@@ -19,6 +19,9 @@
                                     aria-label="Delete" title="Delete">
                                     <i class="oi oi-close text-danger" />
                                 </button>
+                            </t>
+                            <t t-else="">
+                                <div class="mx-2 px-4"/>
                             </t>
                         </div>
                         <t t-if="line and line.payment_status">
@@ -96,7 +99,7 @@
                     <t t-else="">
                         <div class="paymentline d-flex align-items-center bg-view border rounded-3"
                             t-att-class="unselectedLineClass(line)">
-                             <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 py-lg-4 text-truncate cursor-pointer" t-on-click="() => this.selectLine(line)">
+                             <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
                                  <t t-esc="line.payment_method_id.name" />
                                  <div class="payment-amount px-3">
                                     <t t-esc="env.utils.formatCurrency(line.get_amount())" />
@@ -108,6 +111,9 @@
                                     aria-label="Delete" title="Delete">
                                     <i class="oi oi-close text-danger" />
                                 </div>
+                            </t>
+                            <t t-else="">
+                                <div class="mx-2 px-4"/>
                             </t>
                         </div>
                     </t>
