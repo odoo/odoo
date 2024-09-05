@@ -203,6 +203,7 @@ export class Many2XAutocomplete extends Component {
         autocomplete_container: { type: Function, optional: true },
         dropdown: { type: Boolean, optional: true },
         autofocus: { type: Boolean, optional: true },
+        getOptionClassnames: { type: Function, optional: true },
     };
     static defaultProps = {
         searchLimit: 7,
@@ -213,6 +214,7 @@ export class Many2XAutocomplete extends Component {
         quickCreate: null,
         context: {},
         dropdown: true,
+        getOptionClassnames: () => "",
     };
     setup() {
         this.orm = useService("orm");
@@ -322,6 +324,7 @@ export class Many2XAutocomplete extends Component {
             value: result[0],
             label: result[1] ? result[1].split("\n")[0] : _t("Unnamed"),
             displayName: result[1],
+            classList: this.props.getOptionClassnames({ id: result[0], display_name: result[1] }),
         };
     }
     async loadOptionsSource(request) {

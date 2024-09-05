@@ -169,7 +169,7 @@ export class Many2ManyTagsField extends Component {
             resId: record.resId,
             context: this.props.context,
             title: _t("Edit: %s", record.data.display_name),
-        })
+        });
     }
 
     get tags() {
@@ -198,6 +198,12 @@ export class Many2ManyTagsField extends Component {
         return Domain.and([
             getFieldDomain(this.props.record, this.props.name, this.props.domain),
         ]).toList(this.props.context);
+    }
+
+    getOptionClassnames(record) {
+        const records = this.props.record.data[this.props.name].records;
+        const isSelected = records.some((r) => r.resId === record.id);
+        return isSelected ? "dropdown-item-selected" : "";
     }
 }
 
@@ -264,7 +270,7 @@ export const many2ManyTagsField = {
         const noCreate = Boolean(options.no_create);
         const canCreate = noCreate ? false : hasCreatePermission;
         const hasEditPermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
-        const canEditTags = Boolean(options.edit_tags) ? hasEditPermission : false;
+        const canEditTags = options.edit_tags ? hasEditPermission : false;
         const noQuickCreate = Boolean(options.no_quick_create);
         const noCreateEdit = Boolean(options.no_create_edit);
         return {
