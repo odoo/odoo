@@ -1,4 +1,4 @@
-import { waitNotifications } from "@bus/../tests/bus_test_helpers";
+import { waitForChannels, waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
     click,
     contains,
@@ -71,6 +71,7 @@ test("unknown channel can be displayed and interacted with", async () => {
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await openDiscuss(channelId);
+    await waitForChannels([`discuss.channel_${channelId}`]);
     await contains(
         ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel.o-active",
         { text: "Not So Secret" }

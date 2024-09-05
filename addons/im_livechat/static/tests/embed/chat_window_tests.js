@@ -8,6 +8,7 @@ import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/tes
 import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 import { createFile, inputFiles } from "@web/../tests/legacy/utils";
+import { waitUntilSubscribe } from "@bus/../tests/legacy/helpers/websocket_event_deferred";
 
 QUnit.module("chat window");
 
@@ -29,6 +30,7 @@ test("do not save fold state of temporary live chats", async () => {
     await assertSteps([]);
     await insertText(".o-mail-Composer-input", "Hello");
     await triggerHotkey("Enter");
+    await waitUntilSubscribe();
     await contains(".o-mail-Message", { text: "Hello" });
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Message", { text: "Hello", count: 0 });
