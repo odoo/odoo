@@ -8,4 +8,5 @@ addModelNamesToFetch([
     "mail.test.multi.company",
     "mail.test.multi.company.read",
     "mail.test.properties",
+    "mail.test.simple.main.attachment",
 ]);
