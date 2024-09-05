@@ -225,8 +225,7 @@ export class FloorScreen extends Component {
                 }
                 const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
                 if (oToTrans) {
-                    this.pos.orderToTransferUuid = oToTrans.uuid;
-                    this.pos.transferOrder(this.state.potentialLink.parent);
+                    this.pos.transferOrder(oToTrans.uuid, this.state.potentialLink.parent);
                 }
                 this.pos.data.write("restaurant.table", [table.id], {
                     parent_id: this.state.potentialLink.parent.id,
@@ -261,9 +260,7 @@ export class FloorScreen extends Component {
         );
     }
     getPosTable(el) {
-        return this.pos.models["restaurant.table"].get(
-            [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
-        );
+        return this.pos.getTableFromElement(el);
     }
     useResizeHook() {
         let startX, startY;
@@ -377,7 +374,10 @@ export class FloorScreen extends Component {
             ? -12 + Math.min(table.width / 2, table.height / 2) * 0.2929
             : -12;
     }
-    onClickFloorMap() {
+    onClickFloorMap(ev) {
+        if (ev.target.closest(".table")) {
+            return;
+        }
         for (const tableId of this.state.selectedTableIds) {
             const table = this.pos.models["restaurant.table"].get(tableId);
             this.pos.data.write("restaurant.table", [tableId], {
@@ -609,11 +609,7 @@ export class FloorScreen extends Component {
             this.onClickTable(table.parent_id, ev);
             return;
         }
-        const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
-        if (oToTrans) {
-            await this.pos.transferOrder(table);
-            this.pos.showScreen("ProductScreen");
-        } else {
+        if (!this.pos.isOrderTransferMode) {
             await this.pos.setTableFromUi(table);
         }
     }
