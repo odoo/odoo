@@ -2464,7 +2464,15 @@ export class Wysiwyg extends Component {
                 fontawesome: 'fa-pencil-square-o',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: async () => {
+<<<<<<< saas-17.2
                     const [currentUser] = await this.orm.read(
+||||||| 822b3dd2f0956e8f5e5eb9c41c924df1dfbf9c3c
+                    const uid = Array.isArray(session.user_id) ? session.user_id[0] : session.user_id;
+                    const [user] = await this.orm.read(
+=======
+                    const uid = (Array.isArray(session.user_id) ? session.user_id[0] : session.user_id)  | session.uid;
+                    const [user] = await this.orm.read(
+>>>>>>> 71971807d481360e16cba7ed16b5338a3305e2f8
                         'res.users',
                         [this.user.userId],
                         ['signature'],
