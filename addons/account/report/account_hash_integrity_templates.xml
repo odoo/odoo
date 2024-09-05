@@ -25,9 +25,9 @@
                                     <table class="table table-borderless" id="hash_config_table">
                                         <thead style="display: table-row-group">
                                             <tr>
-                                                <th style="width: 30%" scope="col">Journal</th>
+                                                <th style="width: 30%" scope="col">Journal (Sequence Prefix)</th>
                                                 <th class="text-center text-nowrap" style="width: 20%" scope="col">Inalterability check</th>
-                                                <th style="width: 50%" scope="col">Coverage</th>
+                                                <th style="width: 50%" scope="col">Check</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -55,27 +55,27 @@
                                 <div class="row">
                                     <div class="col-12" id="hash_data_consistency_table">
                                         <table class="table table-borderless">
-                                            <thead style="display: table-row-group">
+                                            <thead style="display: table-row-group; border-bottom: 1px solid black;">
                                                 <tr>
-                                                    <th class="text-center" style="width: 20%" scope="col">Journal</th>
-                                                    <th class="text-center" style="width: 20%" scope="col">First Hash</th>
-                                                    <th class="text-center" style="width: 20%" scope="col">First Entry</th>
-                                                    <th class="text-center" style="width: 20%" scope="col">Last Hash</th>
-                                                    <th class="text-center" style="width: 20%" scope="col">Last Entry</th>
+                                                    <th class="text-start fw-bold" style="width: 20%" scope="col">Journal</th>
+                                                    <th class="text-start fw-bold" style="width: 20%" scope="col">First Hash</th>
+                                                    <th class="text-start fw-bold" style="width: 20%" scope="col">First Entry</th>
+                                                    <th class="text-start fw-bold" style="width: 20%" scope="col">Last Hash</th>
+                                                    <th class="text-start fw-bold" style="width: 20%" scope="col">Last Entry</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <t t-foreach="data['results']" t-as="result">
                                                     <t t-if="result['status'] == 'verified'">
-                                                        <tr>
-                                                            <td><span t-out="result['journal_name']"/></td>
-                                                            <td><span t-out="result['first_hash']"/></td>
-                                                            <td>
+                                                        <tr style="border-bottom: 1px solid lightgrey;">
+                                                            <td class="align-top"><span t-out="result['journal_name']"/></td>
+                                                            <td class="align-top text-break"><span t-out="result['first_hash']"/></td>
+                                                            <td class="align-top">
                                                                 <span t-out="result['first_move_name']"/> <br/>
                                                                 <span t-out="result['first_move_date']"/>
                                                             </td>
-                                                            <td><span t-out="result['last_hash']"/></td>
-                                                            <td>
+                                                            <td class="align-top text-break"><span t-out="result['last_hash']"/></td>
+                                                            <td class="align-top">
                                                                 <span t-out="result['last_move_name']"/> <br/>
                                                                 <span t-out="result['last_move_date']"/>
                                                             </td>
