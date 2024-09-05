@@ -351,7 +351,8 @@ export class Powerbox {
                     this._context.filteredCommands = this._context.commands.filter(command => {
                         const commandText = (command.category + ' ' + command.name);
                         const commandDescription = command.description.replace(/\s/g, '');
-                        return commandText.match(fuzzyRegex) || commandDescription.match(exactRegex);
+                        return commandText.match(fuzzyRegex) || commandDescription.match(exactRegex)
+                         || command.keywords?.some(keyword => exactRegex.test(keyword));
                     });
                 } else {
                     this._context.filteredCommands = this._context.commands;
