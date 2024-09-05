@@ -897,7 +897,7 @@ describe("In-editor manipulations", () => {
             }
         );
         const historyPlugin = plugins.get("history");
-        const node = historyPlugin.unserializeNode(historyPlugin.serializeNode(el));
+        const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node, { sortAttrs: true })).toBe(
             `<div><p>a</p></div><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div>`
         );
@@ -918,7 +918,7 @@ describe("In-editor manipulations", () => {
             { config: getConfig([]) }
         );
         const historyPlugin = plugins.get("history");
-        const node = historyPlugin.unserializeNode(historyPlugin.serializeNode(el));
+        const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node)).toBe(`<div data-embedded="unknown"><p>UNKNOWN</p></div>`);
     });
 });
@@ -1082,7 +1082,7 @@ describe("editable descendants", () => {
             }
         );
         const historyPlugin = plugins.get("history");
-        const node = historyPlugin.unserializeNode(historyPlugin.serializeNode(el));
+        const node = historyPlugin._unserializeNode(historyPlugin.serializeNode(el))[0];
         expect(getContent(node, { sortAttrs: true })).toBe(
             unformat(`
                 <div contenteditable="false" data-embedded="wrapper" data-oe-protected="true">

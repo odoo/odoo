@@ -1010,7 +1010,7 @@ export class HistoryPlugin extends Plugin {
      * @returns { Node }
      */
     unserializeNode(node) {
-        let [unserializedNode, nodeMap] = this._unserializeNode(node);
+        let [unserializedNode, nodeMap] = this._unserializeNode(node, this.idToNodeMap);
         const fakeNode = this.document.createElement("fake-el");
         fakeNode.appendChild(unserializedNode);
         this.shared.sanitize(fakeNode, { IN_PLACE: true });
@@ -1022,8 +1022,10 @@ export class HistoryPlugin extends Plugin {
             // lead to security issues.
             for (const node of [unserializedNode, ...descendants(unserializedNode)]) {
                 const id = nodeMap.get(node);
-                this.nodeToIdMap.set(node, id);
-                this.idToNodeMap.set(id, node);
+                if (id) {
+                    this.nodeToIdMap.set(node, id);
+                    this.idToNodeMap.set(id, node);
+                }
             }
             this.setNodeId(unserializedNode);
             return unserializedNode;
@@ -1080,17 +1082,21 @@ export class HistoryPlugin extends Plugin {
      * @param { Map<Node, number> } _map
      * @returns { Node, Map<Node, number> }
      */
-    _unserializeNode(serializedNode, _map = new Map()) {
+    _unserializeNode(serializedNode, idToNodeMap = new Map(), _map = new Map()) {
         let node = undefined;
         if (serializedNode.nodeType === Node.TEXT_NODE) {
             node = this.document.createTextNode(serializedNode.textValue);
         } else if (serializedNode.nodeType === Node.ELEMENT_NODE) {
+            node = idToNodeMap.get(serializedNode.nodeId);
+            if (node) {
+                return [node, _map];
+            }
             node = this.document.createElement(serializedNode.tagName);
             for (const key in serializedNode.attributes) {
                 node.setAttribute(key, serializedNode.attributes[key]);
             }
             serializedNode.children.forEach((child) =>
-                node.append(this._unserializeNode(child, _map)[0])
+                node.append(this._unserializeNode(child, idToNodeMap, _map)[0])
             );
         } else {
             console.warn("unknown node type");
