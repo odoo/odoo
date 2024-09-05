@@ -59,9 +59,18 @@ export class CollaborationSelectionPlugin extends Plugin {
             anchorOffset = 0;
             focusOffset = 0;
         }
-
-        [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
-        [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
+        if (anchorNode.isConnected && focusNode.isConnected) {
+            [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
+            [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
+        } else {
+            // todo: We should not be able to get here, this fixes multiples
+            // issues where we temporarily try to draw a an impossible
+            // selection. We should investigate the root cause of this issue.
+            anchorNode = this.editable.children[0];
+            focusNode = this.editable.children[0];
+            anchorOffset = 0;
+            focusOffset = 0;
+        }
 
         const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
         const range = new Range();
