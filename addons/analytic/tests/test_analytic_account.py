@@ -26,6 +26,7 @@ class TestAnalyticAccount(AnalyticCommon):
                 'analytic_distribution': {cls.analytic_account_2.id: 100}
             },
         ])
+        cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company.id})
 
     def test_aggregates(self):
         # debit and credit are hidden by the group when account is installed
@@ -202,7 +203,7 @@ class TestAnalyticAccount(AnalyticCommon):
         if timesheet_user and not account_user:
             self.skipTest("`hr_timesheet` overrides analytic rights. Without `account` the test would crash")
 
-        self.analytic_account_1.company_id = self.company_data
+        self.analytic_account_1.company_id = self.company
         self.env['account.analytic.line'].create({
             'name': 'company specific account',
             'account_id': self.analytic_account_1.id,
