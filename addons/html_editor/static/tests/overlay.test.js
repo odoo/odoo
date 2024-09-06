@@ -155,3 +155,56 @@ test.tags("desktop")("Table menu should close on scroll", async () => {
     expect(".o-dropdown--menu").not.toBeVisible();
 });
 
+test("Toolbar should keep stable while extending down the selection", async () => {
+    const top = (el) => el.getBoundingClientRect().top;
+    const left = (el) => el.getBoundingClientRect().left;
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "test",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    const editable = queryOne(".odoo-editor-editable");
+
+    // Select inner content of a paragraph in the middle of the text
+    const fifthParagraph = editable.children[5];
+    const textNode = fifthParagraph.firstChild;
+    setSelection({
+        anchorNode: textNode,
+        anchorOffset: 0,
+        focusNode: textNode,
+        focusOffset: textNode.length,
+    });
+    const toolbar = await waitFor(".o-we-toolbar");
+    const referenceTop = top(toolbar);
+    const referenceLeft = left(toolbar);
+
+    const extendSelection = (focusNode, focusOffset) => {
+        setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode, focusOffset });
+    };
+
+    // Extend the selection to the beginning of the following paragraph. This
+    // simulates the selection obtained by moving the mouse while mousedown.
+    const sixthParagraph = fifthParagraph.nextElementSibling;
+    extendSelection(sixthParagraph, 0);
+    await animationFrame();
+
+    // Toolbar should not move
+    expect(top(toolbar)).toBe(referenceTop);
+    expect(left(toolbar)).toBe(referenceLeft);
+
+    // Extend selection to end of paragraph
+    const textNodeSixthParagraph = sixthParagraph.firstChild;
+    extendSelection(textNodeSixthParagraph, textNodeSixthParagraph.length);
+    await animationFrame();
+
+    // Toolbar should not move
+    expect(top(toolbar)).toBe(referenceTop);
+    expect(left(toolbar)).toBe(referenceLeft);
+});
