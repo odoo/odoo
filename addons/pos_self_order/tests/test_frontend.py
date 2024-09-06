@@ -14,6 +14,12 @@ class TestFrontendMobile(SelfOrderCommonTest):
     def test_order_fiscal_position(self):
         """ Orders made in take away should have the alternative fiscal position. """
 
+        product = self.env["product.product"].create(
+            {
+                "name": "Test Product",
+                "lst_price": 30,
+            }
+        )
         tax30 = self.env['account.tax'].create({
             'name': '30%',
             'amount': 30,
@@ -59,7 +65,19 @@ class TestFrontendMobile(SelfOrderCommonTest):
                         "amount_tax": 0,
                         "amount_paid": 0,
                         "amount_return": 0,
-                        "lines": [],
+                        "lines": [
+                            (
+                                0,
+                                0,
+                                {
+                                    "product_id": product.id,
+                                    "qty": 1,
+                                    "price_unit": 30,
+                                    "price_subtotal": 30,
+                                    "price_subtotal_incl": 34.5,
+                                },
+                            ),
+                        ],
                         "tracking_number": None,
                         "takeaway": True,
                     },

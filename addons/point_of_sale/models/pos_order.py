@@ -1043,7 +1043,7 @@ class PosOrder(models.Model):
 
             if existing_draft_order:
                 order_ids.append(self._process_order(order, existing_draft_order))
-            else:
+            elif order.get('lines') or order.get('payment_ids'):
                 existing_orders = self.env['pos.order'].search([('pos_reference', '=', order.get('name', False))])
                 if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):
                     order_ids.append(self._process_order(order, False))
