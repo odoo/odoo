@@ -53,13 +53,8 @@ const pwaService = {
         });
 
         function _getInstallationState(scope = state.startUrl) {
-            let value;
-            try {
-                value = JSON.parse(browser.localStorage.getItem("pwa.installationState"))[scope];
-            } catch {
-                value = "";
-            }
-            return value;
+            const installationState = browser.localStorage.getItem("pwa.installationState");
+            return installationState ? JSON.parse(installationState)[scope] : "";
         }
 
         function _setInstallationState(value) {
