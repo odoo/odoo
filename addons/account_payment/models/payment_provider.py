@@ -48,6 +48,9 @@ class Paymentprovider(models.Model):
             pay_method_line.name = self.name
         elif allow_create:
             default_payment_method_id = self._get_default_payment_method_id(self.code)
+            if not default_payment_method_id:
+                return
+
             create_values = {
                 'name': self.name,
                 'payment_method_id': default_payment_method_id,
@@ -95,7 +98,7 @@ class Paymentprovider(models.Model):
         provider_payment_method = self._get_provider_payment_method(code)
         if provider_payment_method:
             return provider_payment_method.id
-        return self.env.ref('account.account_payment_method_manual_in').id
+        return None
 
     @api.model
     def _get_provider_payment_method(self, code):
