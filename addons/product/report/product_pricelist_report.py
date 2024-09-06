@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
@@ -18,7 +17,6 @@ class ProductPricelistReport(models.AbstractModel):
 
     def _get_report_data(self, data, report_type='html'):
         quantities = data.get('quantities', [1])
-
         data_pricelist_id = data.get('pricelist_id')
         pricelist_id = data_pricelist_id and int(data_pricelist_id)
         pricelist = self.env['product.pricelist'].browse(pricelist_id).exists()
@@ -30,7 +28,7 @@ class ProductPricelistReport(models.AbstractModel):
         is_product_tmpl = active_model == 'product.template'
         ProductClass = self.env[active_model]
 
-        products = ProductClass.browse(active_ids) if active_ids else ProductClass.search([('sale_ok', '=', True)])
+        products = ProductClass.browse(active_ids) if active_ids else []
         products_data = [
             self._get_product_data(is_product_tmpl, product, pricelist, quantities)
             for product in products

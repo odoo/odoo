@@ -51,6 +51,9 @@
         <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
             <form string="Products Price List">
+                <header>
+                    <button name="action_open_pricelist_report" type="object" string="Print"/>
+                </header>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
