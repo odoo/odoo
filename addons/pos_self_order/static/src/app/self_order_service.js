@@ -76,7 +76,7 @@ export class SelfOrder extends Reactive {
 
         this.onNotified = getOnNotified(this.bus, this.access_token);
         this.onNotified("PRODUCT_CHANGED", (payload) => {
-            this.models.replaceDataByKey("uuid", payload);
+            this.models.loadData(payload);
         });
         if (this.config.self_ordering_mode === "kiosk") {
             this.onNotified("STATUS", ({ status }) => {
@@ -91,7 +91,7 @@ export class SelfOrder extends Reactive {
             });
             this.onNotified("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
-                    this.models.replaceDataByKey("uuid", data);
+                    this.models.loadData(data);
                     const order = this.models["pos.order"].find(
                         (o) => o.access_token === data["pos.order"][0].access_token
                     );
@@ -628,7 +628,7 @@ export class SelfOrder extends Reactive {
                     table_identifier: this.currentOrder?.table_id?.identifier || false,
                 }
             );
-            this.models.replaceDataByKey("uuid", data);
+            this.models.loadData(data);
             for (const order of data["pos.order"]) {
                 this.subscribeToOrderChannel(order);
             }

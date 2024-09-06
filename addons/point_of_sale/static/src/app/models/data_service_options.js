@@ -44,7 +44,8 @@ export class DataServiceOptions {
     }
 
     get databaseIndex() {
-        return {
+        const databaseTable = this.databaseTable;
+        const indexes = {
             "pos.order": ["uuid"],
             "pos.order.line": ["uuid"],
             "product.product": ["barcode", "pos_categ_ids", "write_date"],
@@ -54,6 +55,16 @@ export class DataServiceOptions {
             "calendar.event": ["appointment_resource_ids"],
             "res.partner": ["barcode"],
         };
+
+        for (const model in databaseTable) {
+            if (!indexes[model]) {
+                indexes[model] = [databaseTable[model].key];
+            } else if (!indexes[model].includes(databaseTable[model].key)) {
+                indexes[model].push(databaseTable[model].key);
+            }
+        }
+
+        return indexes;
     }
 
     get autoLoadedOrmMethods() {

@@ -34,6 +34,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     const changes = {};
     let changesCount = 0;
     let changeAbsCount = 0;
+    let skipCount = 0;
 
     // Compares the orderlines of the order with the last ones sent.
     // When one of them has changed, we add the change.
@@ -69,6 +70,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     orderline.setHasChange(true);
                 }
             } else {
+                if (quantityDiff) {
+                    skipCount += quantityDiff;
+                }
+
                 orderline.setHasChange(false);
             }
         } else {
@@ -97,6 +102,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     }
 
     return {
+        nbrOfSkipped: skipCount,
         nbrOfChanges: changeAbsCount,
         orderlines: changes,
         count: changesCount,

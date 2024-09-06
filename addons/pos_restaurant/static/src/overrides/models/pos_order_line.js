@@ -21,6 +21,7 @@ patch(PosOrderline.prototype, {
     },
     toggleSkipChange() {
         if (this.uiState.hasChange || this.skip_change) {
+            this.setDirty();
             this.skip_change = !this.skip_change;
         }
     },

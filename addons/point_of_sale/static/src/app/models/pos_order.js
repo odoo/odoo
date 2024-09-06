@@ -24,6 +24,10 @@ export class PosOrder extends Base {
     setup(vals) {
         super.setup(vals);
 
+        if (!this.session_id && !this.finalized) {
+            this.update({ session_id: this.session.id });
+        }
+
         // Data present in python model
         this.date_order = vals.date_order || getUTCString(luxon.DateTime.now());
         this.to_invoice = vals.to_invoice || false;
@@ -530,7 +534,7 @@ export class PosOrder extends Base {
             this.select_paymentline(undefined);
         }
 
-        line.delete();
+        line.delete({ backend: true });
     }
 
     clean_empty_paymentlines() {

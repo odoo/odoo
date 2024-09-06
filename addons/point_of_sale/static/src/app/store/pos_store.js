@@ -984,6 +984,7 @@ export class PosStore extends Reactive {
     getSyncAllOrdersContext(orders, options = {}) {
         return {
             config_id: this.config.id,
+            login_number: this.session.login_number,
         };
     }
 
@@ -1019,24 +1020,10 @@ export class PosStore extends Reactive {
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });
+            const missingRecords = await this.data.missingRecursive(data);
+            const newData = this.models.loadData(missingRecords);
 
-            const modelToAdd = {};
-            const newData = {};
-            for (const [model, records] of Object.entries(data)) {
-                const modelKey = this.data.opts.databaseTable[model]?.key;
-
-                if (!modelKey) {
-                    modelToAdd[model] = records;
-                    continue;
-                }
-
-                Object.assign(
-                    newData,
-                    this.models.replaceDataByKey(modelKey, { [model]: records })
-                );
-            }
-
-            for (const order of [...orders, ...newData["pos.order"]]) {
+            for (const order of [...orders, ...data["pos.order"]]) {
                 if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
                     this.addPendingOrder([order.id]);
                 } else {
@@ -1054,10 +1041,9 @@ export class PosStore extends Reactive {
                 }
             }
 
-            this.models.loadData(modelToAdd);
             this.postSyncAllOrders(newData["pos.order"]);
 
-            if (modelToAdd["pos.session"].length > 0) {
+            if (data["pos.session"].length > 0) {
                 // Replace the original session by the rescue one. And the rescue one will have
                 // a higher id than the original one since it's the last one created.
                 const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
