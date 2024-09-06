@@ -311,7 +311,7 @@
     <!-- /shop product listing -->
     <template id="products" name="Products">
         <t t-call="website.layout">
-            <t t-set="additional_title">Shop</t>
+            <t t-set="additional_title" t-value="category.name"/>
             <t t-set="grid_block_name">Grid</t>
             <t t-set="product_block_name">Product</t>
 
@@ -373,6 +373,25 @@
                             <t t-call="website_sale.products_breadcrumb">
                                 <t t-set="_classes" t-valuef="d-none d-lg-flex w-100 p-0 small"/>
                             </t>
+
+                            <h1 t-if="category">
+                                <t t-esc="category.name"/>
+                            </h1>
+
+                            <t t-if="category">
+                                <t t-set='editor_msg'>
+                                    Drag building blocks here to customize the header for
+                                    "<t t-esc='category.name'/>" category.
+                                </t>
+                                <div class="mb16"
+                                    id="category_header"
+                                    t-att-data-editor-message="editor_msg"
+                                    t-field="category.website_description"/>
+                            </t>
+
+                            <t t-if="opt_wsale_categories_top"
+                               t-call="website_sale.filmstrip_categories"/>
+
                             <div class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between gap-3 mb-3">
                                 <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
                                     <t t-set="search" t-value="original_search or search"/>
@@ -410,16 +429,9 @@
                                 </button>
                             </div>
 
-                            <t t-if="opt_wsale_categories_top" t-call="website_sale.filmstrip_categories"/>
-
                             <div t-if="original_search and products" class="alert alert-warning mt8">
                                 No results found for '<span t-esc="original_search"/>'. Showing results for '<span t-esc="search"/>'.
                             </div>
-
-                            <t t-if="category">
-                                <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
-                                <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
-                            </t>
 
                             <div t-if="products" class="o_wsale_products_grid_table_wrapper pt-3 pt-lg-0">
                                 <t t-set="grid_md_allow_custom_cols" t-value="hasLeftColumn"/>
@@ -483,6 +495,18 @@
                             <div class="products_pager d-flex justify-content-center pt-5 pb-3">
                                 <t t-call="website.pager"/>
                             </div>
+                            <t t-if="category">
+                                <t t-set='footer_editor_message'>
+                                    Drag building blocks here to customize the footer for
+                                    "<t t-esc='category.name'/>" category.
+                                </t>
+                                <div
+                                    class="mb16"
+                                    id="category_footer"
+                                    t-att-data-editor-message="footer_editor_message"
+                                    t-field="category.website_footer"
+                                />
+                            </t>
                         </div>
                     </div>
 
