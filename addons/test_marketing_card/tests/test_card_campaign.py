@@ -45,7 +45,8 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
             self.assertMailMailWRecord(
                 record,
                 record.partner_id,
-                "outgoing",
+                "sent",
+                author=self.env.user.partner_id,
                 content=f"""<div><p>Here\'s your link</p></div>\n<a class="o_no_link_popover" href="{preview_url}">Your Card</a>"""
             )
 
