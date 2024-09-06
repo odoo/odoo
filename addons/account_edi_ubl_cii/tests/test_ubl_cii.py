@@ -215,3 +215,28 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         # The partner should be retrieved based on the peppol fields
         imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
         self.assertEqual(imported_invoice.partner_id, partner)
+
+    def test_import_partner_postal_address(self):
+        " Test importing postal address when creating new partner from UBL xml."
+        file_path = "bis3_bill_example.xml"
+        file_path = f"{self.test_module}/tests/test_files/{file_path}"
+        with file_open(file_path, 'rb') as file:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+
+        partner_vals = {
+            'name': "ALD Automotive LU",
+            'email': "adl@test.com",
+            'vat': "LU12977109",
+        }
+        # assert there is no matching partner
+        partner_match = self.env['res.partner']._retrieve_partner(**partner_vals)
+        self.assertFalse(partner_match)
+
+        bill = self.import_attachment(xml_attachment)
+
+        self.assertRecordValues(bill.partner_id, [partner_vals])
+        self.assertEqual(bill.partner_id.contact_address_complete, "270 rte d'Arlon, 8010 Strassen, Luxembourg")
