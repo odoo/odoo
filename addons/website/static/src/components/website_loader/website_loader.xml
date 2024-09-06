@@ -3,6 +3,12 @@
 <t t-name="website.website_loader">
     <div t-if="state.isVisible" class="o_website_loader_container position-fixed fixed-top fixed-left
         h-100 w-100 d-flex flex-column align-items-center fw-bold text-center">
+        <a t-if="state.showCloseButton"
+           href="#" class="btn" style="position: absolute; right: 0; top: 0; margin: 15px;"
+           t-on-click="close">
+            <span class="fa fa-close fa-2x"/>
+        </a>
+
         <div t-if="state.showWaitingMessages" t-out="currentWaitingMessage.title"/>
         <div t-elif="state.title" t-out="state.title"/>
         <div t-elif="state.showTips">Building your website...</div>
@@ -10,7 +16,10 @@
             class="o_website_loader_tip w-25"/>
         <div class="o_website_loader"/>
         <p class="o_website_loader_tip w-25">
-            <t t-if="state.showTips">
+            <t t-if="state.bottomMessageTemplate !== undefined">
+                <t t-if="state.bottomMessageTemplate" t-call="{{state.bottomMessageTemplate}}"/>
+            </t>
+            <t t-elif="state.showTips">
                 TIP: Once loaded, follow the
                 <span class="o_tour_pointer o_bottom position-absolute ms-2">
                     <span class="o_tour_pointer_tip position-absolute"></span>
@@ -18,7 +27,7 @@
                 <br/>pointer to build the perfect page in 7 steps.
             </t>
         </p>
-        <div class="o_website_loader_progress progress rounded-pill mt-3">
+        <div t-if="state.showLoader" class="o_website_loader_progress progress rounded-pill mt-3">
             <div role="progressbar"
                  aria-label="Installing your features"
                  class="progress-bar bg-success progress-bar-striped progress-bar-animated rounded-pill"
