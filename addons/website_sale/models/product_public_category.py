@@ -55,6 +55,13 @@ class ProductPublicCategory(models.Model):
         translate=html_translate,
     )
 
+    website_footer = fields.Html(
+        string="Category Footer",
+        sanitize_attributes=False,
+        sanitize_form=False,
+        translate=html_translate,
+    )
+
     #=== COMPUTE METHODS ===#
 
     def _compute_parents_and_self(self):
