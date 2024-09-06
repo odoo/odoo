@@ -31,7 +31,8 @@ class ResPartner(models.Model):
 
     @api.depends('l10n_in_pan')
     def _compute_display_pan_warning(self):
-        self.display_pan_warning = self.vat and self.l10n_in_pan and self.l10n_in_pan != self.vat[2:12]
+        for partner in self:
+            partner.display_pan_warning = partner.vat and partner.l10n_in_pan and partner.l10n_in_pan != partner.vat[2:12]
 
     @api.onchange('company_type')
     def onchange_company_type(self):
