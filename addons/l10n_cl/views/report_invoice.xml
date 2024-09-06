@@ -86,7 +86,7 @@
                 <br/>
 
                 <strong>Customer:</strong>
-                <span t-field="o.partner_id.name"/>
+                <span t-out="o.partner_id.commercial_partner_id.name or o.partner_id.name"/>
                 <br/>
 
                 <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id">
