@@ -99,14 +99,6 @@ class DiscussChannel(models.Model):
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()
 
-    def _execute_command_help_message_extra(self):
-        msg = super()._execute_command_help_message_extra()
-        if self.channel_type == 'livechat':
-            return msg + html_escape(
-                _("%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned response in your message.")
-            ) % {"bold_start": Markup("<b>"), "bold_end": Markup("</b>"), "new_line": Markup("<br>")}
-        return msg
-
     def execute_command_history(self, **kwargs):
         self.env['bus.bus']._sendone(self, 'im_livechat.history_command', {'id': self.id})
 
