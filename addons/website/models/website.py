@@ -881,6 +881,9 @@ class Website(models.Model):
             fallback_create_missing_industry_image('s_cta_box_default_image', 'library_image_02')
             fallback_create_missing_industry_image('s_image_punchy_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_image_frame_default_image', 's_carousel_default_image_2')
+            fallback_create_missing_industry_image('s_carousel_intro_default_image_1', 's_cover_default_image')
+            fallback_create_missing_industry_image('s_carousel_intro_default_image_2', 's_image_text_default_image')
+            fallback_create_missing_industry_image('s_carousel_intro_default_image_3', 's_text_image_default_image')
 
             fallback_create_missing_industry_image('s_framed_intro_default_image', 's_cover_default_image')
             fallback_create_missing_industry_image('s_wavy_grid_default_image_1', 's_cover_default_image')

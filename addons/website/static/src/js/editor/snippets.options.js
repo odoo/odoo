@@ -2214,8 +2214,9 @@ options.registry.CarouselItem = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addSlideItem(previewMode, widgetValue, params) {
+        const optionName = this.$carousel[0].classList.contains("s_carousel_intro") ? "CarouselIntro" : "Carousel";
         this.trigger_up('option_update', {
-            optionName: 'Carousel',
+            optionName: optionName,
             name: 'add_slide',
         });
     },
@@ -4308,7 +4309,8 @@ options.registry.GalleryElement = options.Class.extend({
      * @see this.selectClass for parameters
      */
     position(previewMode, widgetValue, params) {
-        const optionName = this.$target[0].classList.contains("carousel-item") ? "Carousel"
+        const carouselOptionName = this.$target[0].parentNode.parentNode.classList.contains("s_carousel_intro") ? "CarouselIntro" : "Carousel";
+        const optionName = this.$target[0].classList.contains("carousel-item") ? carouselOptionName
             : "GalleryImageList";
         const itemEl = this.$target[0];
         this.trigger_up("option_update", {
