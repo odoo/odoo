@@ -449,27 +449,6 @@ class Website(models.Model):
 
     def _prepare_sale_order_values(self, partner_sudo):
         self.ensure_one()
-        addr = partner_sudo.address_get(['delivery', 'invoice'])
-        if not request.website.is_public_user():
-            last_sale_order = self.env['sale.order'].sudo().search(
-                [('partner_id', '=', partner_sudo.id), ('website_id', '=', self.id)],
-                limit=1,
-                order='date_order desc, id desc',
-            )
-            if last_sale_order:
-                partner_shipping = last_sale_order.partner_shipping_id
-                if (
-                    partner_shipping.active
-                    and partner_shipping.commercial_partner_id == partner_sudo
-                ):
-                    addr['delivery'] = partner_shipping.id
-                partner_invoice = last_sale_order.partner_invoice_id
-                if (
-                    partner_invoice.active
-                    and partner_invoice.commercial_partner_id == partner_sudo
-                ):
-                    addr['invoice'] = partner_invoice.id
-
         affiliate_id = request.session.get('affiliate_id')
         salesperson_user_sudo = self.env['res.users'].sudo().browse(affiliate_id).exists()
         if not salesperson_user_sudo:
@@ -477,14 +456,9 @@ class Website(models.Model):
 
         return {
             'company_id': self.company_id.id,
-
             'fiscal_position_id': self.fiscal_position_id.id,
             'partner_id': partner_sudo.id,
-            'partner_invoice_id': addr['invoice'],
-            'partner_shipping_id': addr['delivery'],
-
             'pricelist_id': self.pricelist_id.id,
-
             'team_id': self.salesteam_id.id,
             'user_id': salesperson_user_sudo.id,
             'website_id': self.id,
