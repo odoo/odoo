@@ -72,6 +72,17 @@ class ImageData(models.Model):
             'original_src', 'mimetype', 'mimetype_before_format_conversion', 'filter_options',
         ]
 
+    def _get_image_data_res_info(self, res_model, res_id, res_field):
+        """ Gets the res info needed to search for the correct image data.
+            Returns:
+                dict: A dictionary of res info.
+        """
+        return {
+            'res_model': res_model,
+            'res_id': res_id,
+            'res_field': res_field,
+        }
+
     def _get_removable_option_names(self):
         """ Gets the list of the names of the image options that can be removed
         from the image. This is needed as they have to be removed each time the
@@ -91,7 +102,24 @@ class ImageData(models.Model):
             'hover_effect_color', 'hover_effect_stroke_width', 'hover_effect_intensity',
         ]
 
-    def _update_image_data(self, vals):
+    def _search_and_get_image_data(self, res_model='', res_id=None, res_field=''):
+        """ Searches for the correct image data linked to res_model, res_id and
+        res_field and returns the data related to the image.
+
+            Returns:
+                dict: A dictionary of the data related to the image.
+        """
+        image_data_res_info = self._get_image_data_res_info(res_model, res_id, res_field)
+        image_data_record = self.search([
+            ('res_model', '=', image_data_res_info['res_model']),
+            ('res_id', '=', image_data_res_info['res_id']),
+            ('res_field', '=', image_data_res_info['res_field']),
+        ], limit=1)
+        if not image_data_record:
+            return {}
+        return image_data_record._get_image_data()
+
+    def _search_and_update_image_data(self, res_model, res_id, res_field, vals):
         """ Updates the data related to the image.
 
         Args:
@@ -100,8 +128,30 @@ class ImageData(models.Model):
         Returns:
             bool: result of the write operation.
         """
+        image_data_res_info = self._update_image_data_res_info(res_model, res_id, res_field)
+        image_data_res_model, image_data_res_id, image_data_res_field = image_data_res_info['res_model'], image_data_res_info['res_id'], image_data_res_info['res_field']
+        image_data_record = self.search([
+            ('res_model', '=', image_data_res_model),
+            ('res_id', '=', image_data_res_id),
+            ('res_field', '=', image_data_res_field),
+        ], limit=1) or self.create({
+            'res_model': image_data_res_model,
+            'res_id': image_data_res_id,
+            'res_field': image_data_res_field,
+        })
         for option_to_remove in self._get_removable_option_names():
             # Remove some options before updating the record as they could have
             # been removed during the edition.
-            self[option_to_remove] = ''
-        return self.write(vals)
+            image_data_record[option_to_remove] = ''
+        return image_data_record.write(vals)
+
+    def _update_image_data_res_info(self, res_model, res_id, res_field):
+        """ Gets the res info needed to update the correct image data.
+            Returns:
+                dict: A dictionary of res info.
+        """
+        return {
+            'res_model': res_model,
+            'res_id': res_id,
+            'res_field': res_field,
+        }

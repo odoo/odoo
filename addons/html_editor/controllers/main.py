@@ -358,13 +358,9 @@ class HTML_Editor(http.Controller):
             # image_data_res_id could be a string (e.g. xmlid). In this case, do
             # not search for an image.data record as the image has never been
             # modified.
-            image_data = request.env['html_editor.image.data'].search([
-                ('res_model', '=', image_data_res_info['image_data_res_model']),
-                ('res_id', '=', image_data_res_id),
-                ('res_field', '=', image_data_res_info['image_data_res_field']),
-            ], limit=1)
-            if image_data:
-                return image_data._get_image_data()
+            image_data = request.env['html_editor.image.data']._search_and_get_image_data(image_data_res_info['image_data_res_model'], image_data_res_info['image_data_res_id'], image_data_res_info['image_data_res_field'])
+            if len(image_data):
+                return image_data
         # If no image data is linked to the image, it means that it has never
         # been modified. Search for the original attachment.
         original_attachment = None
@@ -555,16 +551,7 @@ class HTML_Editor(http.Controller):
         image_data_res_model = image_data_res_info['image_data_res_model']
         image_data_res_field = image_data_res_info['image_data_res_field']
         image_data_res_id = image_data_res_info['image_data_res_id']
-        image_data = request.env['html_editor.image.data'].search([
-            ('res_model', '=', image_data_res_model),
-            ('res_id', '=', image_data_res_id),
-            ('res_field', '=', image_data_res_field),
-        ], limit=1) or request.env['html_editor.image.data'].create({
-            'res_model': image_data_res_model,
-            'res_id': image_data_res_id,
-            'res_field': image_data_res_field,
-        })
-        image_data._update_image_data(saved_image_data)
+        request.env['html_editor.image.data']._search_and_update_image_data(image_data_res_model, image_data_res_id, image_data_res_field, saved_image_data)
 
         if attachment.public:
             return attachment.image_src
