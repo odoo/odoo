@@ -33,11 +33,13 @@ export class CashOpeningPopup extends Component {
     }
     confirm() {
         this.pos.session.state = "opened";
-        this.pos.data.call("pos.session", "set_cashbox_pos", [
-            this.pos.session.id,
-            parseFloat(this.state.openingCash),
-            this.state.notes,
-        ]);
+        this.pos.data.call(
+            "pos.session",
+            "set_cashbox_pos",
+            [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
+            {},
+            true
+        );
         this.props.close();
     }
     async openDetailsPopup() {
