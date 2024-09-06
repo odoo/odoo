@@ -72,7 +72,12 @@ class HrAttendance(models.Model):
                                            ('auto_check_out', 'Automatic Check-Out')],
                                 readonly=True,
                                 default='manual')
-    auto_checked_out = fields.Boolean(tracking=True)
+    expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
+
+    @api.depends("worked_hours", "overtime_hours")
+    def _compute_expected_hours(self):
+        for attendance in self:
+            attendance.expected_hours = attendance.worked_hours - attendance.overtime_hours
 
     def _compute_color(self):
         for attendance in self:
