@@ -413,6 +413,7 @@
             <field eval="593" name="phone_code" />
             <field name="vat_label">RUC</field>
             <field name='zip_required'>0</field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s\n%(country_name)s'" />
         </record>
         <record id="ee" model="res.country">
             <field name="name">Estonia</field>
