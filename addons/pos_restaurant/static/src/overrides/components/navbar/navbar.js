@@ -181,6 +181,7 @@ patch(Navbar.prototype, {
         }
         this.pos.selectedTable = null;
         this.pos.searchProductWord = "";
+        await this.pos.syncAllOrders();
         if (table) {
             await this.pos.setTableFromUi(table);
         } else {
