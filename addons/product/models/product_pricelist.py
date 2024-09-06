@@ -371,3 +371,11 @@ class Pricelist(models.Model):
                 pricelists='\n'.join(linked_items.base_pricelist_id.mapped('display_name')),
                 other_pricelists='\n'.join(linked_items.pricelist_id.mapped('display_name')),
             ))
+
+    def action_open_pricelist_report(self):
+        self.ensure_one()
+        return {
+            'name': _("Pricelist Report Preview"),
+            'type': 'ir.actions.client',
+            'tag': 'generate_pricelist_report',
+        }

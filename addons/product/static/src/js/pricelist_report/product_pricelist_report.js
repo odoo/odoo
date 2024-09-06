@@ -1,12 +1,14 @@
 /** @odoo-module **/
 
-import { _t } from "@web/core/l10n/translation";
 import { Component, markup, onRendered, onWillStart, useState } from "@odoo/owl";
-import { Layout } from "@web/search/layout";
+import { _t } from "@web/core/l10n/translation";
+import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
-
+import { Layout } from "@web/search/layout";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 function sendCustomNotification(type, message) {
     return {
@@ -20,22 +22,23 @@ function sendCustomNotification(type, message) {
 }
 
 export class ProductPricelistReport extends Component {
-    static props = {
-        action: { type: Object },
-        "*": true,
-    };
+    static props = { ...standardActionServiceProps };
     static components = { Layout };
     static template = "product.ProductPricelistReport";
 
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
+        this.dialog = useService("dialog");
 
         this.MAX_QTY = 5;
         const pastState = this.props.state || {};
 
-        this.activeIds = this.props.action.context.active_ids;
-        this.activeModel = this.props.action.context.active_model;
+        const active_model = pastState.activeModel || this.props.action.context.active_model;
+        this.noProducts = active_model === 'product.pricelist';
+        this.activeIds = this.noProducts ? [] : pastState.activeIds || this.props.action.context.active_ids;
+        this.activeModel = this.noProducts ? 'product.template' : active_model;
+        this.defaultPricelistId = this.noProducts ? this.props.action.context.active_id : false;
 
         this.state = useState({
             displayPricelistTitle: pastState.displayPricelistTitle || false,
@@ -46,9 +49,15 @@ export class ProductPricelistReport extends Component {
         });
 
         onWillStart(async () => {
-            this.state.pricelists = await this.getPricelists()
-            this.state.selectedPricelist = pastState.selectedPricelist || this.pricelists[0];
-
+            this.state.pricelists = await this.getPricelists();
+            if (this.defaultPricelistId) {
+                this.state.selectedPricelist = this.pricelists.find(p => p.id === this.defaultPricelistId) || this.pricelists[0];
+            } else {
+                this.state.selectedPricelist = pastState.selectedPricelist || this.pricelists[0];
+            }
+            if(this.noProducts){
+                await this.onClickAddProducts();
+            }
             this.renderHtml();
         });
 
@@ -57,7 +66,7 @@ export class ProductPricelistReport extends Component {
         });
 
         /*
-        When following the link of a product and coming back we need to keep the 
+        When following the link of a product and coming back we need to keep the
         precedent state:
             - if the pricelist was being showed
             - wich pricelist is selected at the moment
@@ -69,7 +78,9 @@ export class ProductPricelistReport extends Component {
                     displayPricelistTitle: this.displayPricelistTitle,
                     quantities: this.quantities,
                     selectedPricelist: this.selectedPricelist,
-              };
+                    activeModel: this.activeModel,
+                    activeIds: this.activeIds,
+                };
             },
         });
     }
@@ -117,6 +128,11 @@ export class ProductPricelistReport extends Component {
     }
 
     async renderHtml() {
+        if (this.noProducts) {
+            // do not make an rpc to get empty report data
+            this.state.html = "";
+            return
+        }
         let html = await this.orm.call(
             "report.product.report_pricelist", "get_html", [], {data: this.reportParams}
         );
@@ -158,9 +174,11 @@ export class ProductPricelistReport extends Component {
     onClickLink(ev) {
         ev.preventDefault();
 
-        let classes = ev.target.getAttribute("class", "");
-        let resModel = ev.target.getAttribute("data-model", "");
-        let resId = ev.target.getAttribute("data-res-id", "");
+        const parent = ev.target.parentElement;
+
+        let classes = parent.getAttribute("class", "");
+        let resModel = parent.getAttribute("data-model", "");
+        let resId = parent.getAttribute("data-res-id", "");
 
         if (classes && classes.includes("o_action") && resModel && resId) {
             this.action.doAction({
@@ -173,13 +191,65 @@ export class ProductPricelistReport extends Component {
         }
     }
 
-    onClickPrint() {
+    async onClickPrint() {
+        if (this.noProducts) {
+            this.action.doAction(
+                sendCustomNotification("warning", _t("Please select some products first."))
+            );
+            return;
+        }
+        const selectedFormat = document.getElementById('formats').value;
+        if (selectedFormat === 'pdf') {
+            this.export_pdf();
+        } else {
+            await this.export_pricelist_csv_xlsx(selectedFormat);
+        }
+    }
+
+    export_pdf() {
         this.action.doAction({
             type: 'ir.actions.report',
             report_type: 'qweb-pdf',
             report_name: 'product.report_pricelist',
             report_file: 'product.report_pricelist',
             data: this.reportParams,
+        });
+    }
+
+    async export_pricelist_csv_xlsx(format) {
+        try {
+            await download({
+                url: `/product/export/pricelist/`,
+                data: {
+                    report_data: JSON.stringify(this.reportParams),
+                    export_format: format,
+                }
+            });
+        } catch (error) {
+            console.error(`Error exporting ${format.toUpperCase()} file:`, error);
+            await this.action.doAction(
+                sendCustomNotification(
+                    "danger",
+                    _t("Error exporting file. Please try again.")
+                )
+            );
+        }
+    }
+
+    async onClickAddProducts() {
+        this.dialog.add(SelectCreateDialog, {
+            resModel: this.activeModel || 'product.template',
+            title: _t("Add Products to pricelist report"),
+            noCreate: true,
+            onSelected: async (resIds) => {
+                resIds.forEach((id) => {
+                    if (!this.activeIds.includes(id)) {
+                        this.activeIds.push(id);
+                    }
+                });
+                this.noProducts = false;
+                await this.renderHtml();
+            },
         });
     }
 
@@ -197,7 +267,7 @@ export class ProductPricelistReport extends Component {
     }
 
     onSelectPricelist(ev) {
-        this.state.selectedPricelist = this.pricelists.filter(pricelist => 
+        this.state.selectedPricelist = this.pricelists.filter(pricelist =>
             pricelist.id === parseInt(ev.target.value)
         )[0];
 

@@ -75,12 +75,11 @@ QUnit.module('Product Pricelist Report', {
             tag: 'generate_pricelist_report',
             type: 'ir.actions.client',
             context: {
-                'default_pricelist': 1,
                 'active_ids': [42],
-                'active_model': 'product.product'
+                'active_model': 'product.product',
             }
         });
-        const selectElement = findElement(target, 'select');
+        const selectElement = findElement(target, 'select#pricelists');
         const badgesElement = findElement(target, '.o_badges_list');
         const inputElement = findElement(target, '.add-quantity-input');
         const addQtyButton = findElement(target, '.o_add_qty');
