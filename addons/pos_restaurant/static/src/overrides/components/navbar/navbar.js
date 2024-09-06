@@ -52,6 +52,7 @@ patch(Navbar.prototype, {
         if (this.pos.orderToTransferUuid) {
             return this.pos.setTableFromUi(this.getTable());
         }
+        await this.pos.syncAllOrders();
         this.dialog.add(TableSelector, {
             title: _t("Table Selector"),
             placeholder: _t("Enter a table number"),
