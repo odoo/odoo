@@ -531,15 +531,20 @@ class ProductTemplate(models.Model):
                 precision_rounding=currency.rounding,
             ),
 
-            'base_unit_name': product_or_template.base_unit_name,
-            'base_unit_price': product_or_template._get_base_unit_price(combination_info['price']),
-
             # additional info to simplify overrides
             'currency': currency,  # displayed currency
             'date': date,
             'product_taxes': product_taxes,  # taxes before fpos mapping
             'taxes': taxes,  # taxes after fpos mapping
         })
+
+        if self.env.user.has_group('website_sale.group_show_uom_price'):
+            combination_info.update({
+                'base_unit_name': product_or_template.base_unit_name,
+                'base_unit_price': product_or_template._get_base_unit_price(
+                    combination_info['price']
+                ),
+            })
 
         return combination_info
 
