@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click, press, waitFor } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { getContent } from "./_helpers/selection";
@@ -23,6 +23,7 @@ test("Can replace an image", async () => {
     await setupEditor(`<p> <img class="img-fluid" src="/web/static/img/logo.png"> </p>`, { env });
     expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
     click("img");
+    await tick(); // selectionchange
     await waitFor(".o-we-toolbar");
     expect("button[name='replace_image']").toHaveCount(1);
     click("button[name='replace_image']");
