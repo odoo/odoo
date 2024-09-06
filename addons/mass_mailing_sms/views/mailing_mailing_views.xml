@@ -103,11 +103,8 @@
                 <attribute name="invisible">mailing_type != 'mail' or state in ('draft', 'test')</attribute>
             </xpath>
             <!-- Form -->
-            <xpath expr="//label[@for='subject']" position="attributes">
+            <xpath expr="//field[@name='subject']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
-            </xpath>
-            <xpath expr="//label[@for='subject']" position="after">
-                <label for="sms_subject" invisible="mailing_type != 'sms'"/>
             </xpath>
             <xpath expr="//field[@name='subject']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>
@@ -138,7 +135,8 @@
                     <field name="body_plaintext" widget="sms_widget"
                         readonly="state in ('sending', 'done')"
                         required="mailing_type == 'sms'"
-                        options="{'dynamic_placeholder': true}" enable_emojis="true"/>
+                        options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
+                        enable_emojis="true"/>
                 </page>
             </xpath>
             <xpath expr="//page[@name='settings']/group/group[@name='email_content']" position="after">

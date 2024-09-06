@@ -77,48 +77,192 @@ class TestMailTemplate(MailCommon):
         self.assertFalse(self.user_employee.has_group('mail.group_mail_template_editor'))
         self.assertFalse(self.user_employee.has_group('base.group_sanitize_override'))
 
+        model = self.env['ir.model']._get_id('res.partner')
+        record = self.user_employee.partner_id
+
         # Group System can create / write / unlink mail template
-        mail_template = self.env['mail.template'].with_user(self.user_admin).create({'name': 'Test template'})
+        mail_template = self.env['mail.template'].with_user(self.user_admin).create({
+            'name': 'Test template',
+            'model_id': model,
+        })
         self.assertEqual(mail_template.name, 'Test template')
 
         mail_template.with_user(self.user_admin).name = 'New name'
         self.assertEqual(mail_template.name, 'New name')
 
         # Standard employee can create and edit non-dynamic templates
-        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p>foo</p>'})
-
+        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p>foo</p>', 'model_id': model})
         employee_template.with_user(self.user_employee).body_html = '<p>bar</p>'
 
-        employee_template = self.env['mail.template'].with_user(self.user_employee).create({'email_to': 'foo@bar.com'})
+        employee_template = self.env['mail.template'].with_user(self.user_employee).create({
+            'email_to': 'foo@bar.com',
+            'model_id': model,
+        })
+        employee_template = employee_template.with_user(self.user_employee)
 
-        employee_template.with_user(self.user_employee).email_to = 'bar@foo.com'
+        employee_template.email_to = 'bar@foo.com'
 
-        # Standard employee cannot create and edit templates with dynamic qweb
+        # Standard employee cannot create and edit templates with forbidden expression
         with self.assertRaises(AccessError):
-            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '<p t-esc="\'foo\'"></p>'})
+            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '''<p t-out="'foo'"></p>''', 'model_id': model})
+
+        # If no model is specify, he can not write allowed expression
+        with self.assertRaises(AccessError):
+            self.env['mail.template'].with_user(self.user_employee).create({'body_html': '''<p t-out="object.name"></p>'''})
 
         # Standard employee cannot edit templates from another user, non-dynamic and dynamic
         with self.assertRaises(AccessError):
             mail_template.with_user(self.user_employee).body_html = '<p>foo</p>'
         with self.assertRaises(AccessError):
-            mail_template.with_user(self.user_employee).body_html = '<p t-esc="\'foo\'"></p>'
+            mail_template.with_user(self.user_employee).body_html = '''<p t-out="'foo'"></p>'''
 
         # Standard employee can edit his own templates if not dynamic
-        employee_template.with_user(self.user_employee).body_html = '<p>foo</p>'
+        employee_template.body_html = '<p>foo</p>'
 
         # Standard employee cannot create and edit templates with dynamic inline fields
         with self.assertRaises(AccessError):
-            self.env['mail.template'].with_user(self.user_employee).create({'email_to': '{{ object.partner_id.email }}'})
+            self.env['mail.template'].with_user(self.user_employee).create({'email_to': '{{ object.partner_id.email }}', 'model_id': model})
 
         # Standard employee cannot edit his own templates if dynamic
         with self.assertRaises(AccessError):
-            employee_template.with_user(self.user_employee).body_html = '<p t-esc="\'foo\'"></p>'
+            employee_template.body_html = '''<p t-out="'foo'"></p>'''
 
-        with self.assertRaises(AccessError):
-            employee_template.with_user(self.user_employee).email_to = '{{ object.partner_id.email }}'
+        forbidden_expressions = (
+            'object.partner_id.email',
+            'object.password',
+            "object.name or (1+1)",
+            'password',
+            'object.name or object.name',
+            '[a for a in (1,)]',
+            "object.name or f''",
+            "object.name or ''.format",
+            "object.name or f'{1+1}'",
+            "object.name or len('')",
+            "'abcd' or object.name",
+            "object.name and ''",
+        )
+        for expression in forbidden_expressions:
+            with self.assertRaises(AccessError):
+                employee_template.email_to = '{{ %s }}' % expression
+
+            with self.assertRaises(AccessError):
+                employee_template.email_to = '{{ %s ||| Bob}}' % expression
+
+            with self.assertRaises(AccessError):
+                employee_template.body_html = '<p t-out="%s"></p>' % expression
+
+            with self.assertRaises(AccessError):
+                employee_template.body_html = '<p t-esc="%s"></p>' % expression
+
+            # try to cheat with the context
+            with self.assertRaises(AccessError):
+                employee_template.with_context(raise_on_forbidden_code=False).email_to = '{{ %s }}' % expression
+            with self.assertRaises(AccessError):
+                employee_template.with_context(raise_on_forbidden_code=False).body_html = '<p t-esc="%s"></p>' % expression
+
+            # check that an admin can use the expression
+            mail_template.with_user(self.user_admin).email_to = '{{ %s }}' % expression
+            mail_template.with_user(self.user_admin).email_to = '{{ %s ||| Bob }}' % expression
+            mail_template.with_user(self.user_admin).body_html = '<p t-out="%s">Default</p>' % expression
+            mail_template.with_user(self.user_admin).body_html = '<p t-esc="%s">Default</p>' % expression
+
+        # hide qweb code in t-inner-content
+        code = '''<t t-inner-content="<p t-out='1+11'>Test</p>"></t>'''
+        body = self.env['mail.render.mixin']._render_template_qweb(code, 'res.partner', record.ids)[record.id]
+        self.assertNotIn('12', body)
+        code = '''<t t-inner-content="&lt;p t-out='1+11'&gt;Test&lt;/p&gt;"></t>'''
+        body = self.env['mail.render.mixin']._render_template_qweb(code, 'res.partner', record.ids)[record.id]
+        self.assertNotIn('12', body)
+
+        forbidden_qweb_expressions = (
+            '<p t-out="partner_id.name"></p>',
+            '<p t-esc="partner_id.name"></p>',
+            '<p t-debug=""></p>',
+            '<p t-set="x" t-value="object.name"></p>',
+            '<p t-set="x" t-value="object.name"></p>',
+            '<p t-groups="base.group_system"></p>',
+            '<p t-call="template"></p>',
+            '<p t-cache="object.name"></p>',
+            '<t t-set="namn" t-value="Hello {{world}} !"/>',
+            '<t t-att-test="object.name"/>',
+            '<p t-att-title="object.name"></p>',
+            # allowed expression with other attribute
+            '<p t-out="object.name" title="Test"></p>',
+            # allowed expression with child
+            '<p t-out="object.name"><img/></p>',
+            '<p t-out="object.password"></p>',
+        )
+        for expression in forbidden_qweb_expressions:
+            with self.assertRaises(AccessError):
+                employee_template.body_html = expression
+            self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_qweb(expression, 'res.partner'))
+
+        # allowed expressions
+        allowed_qweb_expressions = (
+            '<p t-out="object.name"></p>',
+            '<p t-out="object.name"></p><img/>',
+            '<p t-out="object.name"></p><img title="Test"/>',
+            '<p t-out="object.name">Default</p>',
+            '<p t-out="object.partner_id.name">Default</p>',
+
+        )
+        o_qweb_render = self.env['ir.qweb']._render
+        for expression in allowed_qweb_expressions:
+            template = self.env['mail.template'].with_user(self.user_employee).create({
+                'body_html': expression,
+                'model_id': model,
+            })
+            self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_qweb(expression, 'res.partner'))
+
+            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+                rendered = template._render_field('body_html', record.ids)[record.id]
+                self.assertNotIn('t-out', rendered)
+                self.assertFalse(qweb_render.called)
+                self.assertFalse(unsafe_eval.called)
+
+        # double check that we can detect the qweb rendering
+        mail_template.body_html = '<t t-out="1+1"/>'
+        with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+            patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+            rendered = mail_template._render_field('body_html', record.ids)[record.id]
+            self.assertNotIn('t-out', rendered)
+            self.assertTrue(qweb_render.called)
+            self.assertTrue(unsafe_eval.called)
+
+        employee_template.email_to = 'Test {{ object.name }}'
+        with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+            employee_template._render_field('email_to', record.ids)
+            self.assertFalse(unsafe_eval.called)
+
+        # double check that we can detect the eval call
+        mail_template.email_to = 'Test {{ 1+1 }}'
+        with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+            mail_template._render_field('email_to', record.ids)
+            self.assertTrue(unsafe_eval.called)
+
+        # malformed HTML (html_normalize should prevent the regex rendering on the malformed HTML)
+        templates = (
+            ('''<p ou="<p t-out="object.name">"</p>''', '<p ou="&lt;p t-out=" object.name>"</p>'),
+            ('''<p title="'<p t-out='object.name'/>">''', '''<p title="'&lt;p t-out='object.name'/&gt;"></p>'''),
+        )
+        o_render = self.env['mail.render.mixin']._render_template_qweb_regex
+        for template, excepted in templates:
+            mail_template.body_html = template
+            with patch('odoo.addons.mail.models.mail_render_mixin.MailRenderMixin._render_template_qweb_regex', side_effect=o_render) as render:
+                rendered = mail_template._render_field('body_html', record.ids)[record.id]
+                self.assertEqual(rendered, excepted)
+                self.assertTrue(render.called)
+
+        record.name = '<b> test </b>'
+        mail_template.body_html = '<t t-out="object.name"/>'
+        with patch('odoo.addons.mail.models.mail_render_mixin.MailRenderMixin._render_template_qweb_regex', side_effect=o_render) as render:
+            rendered = mail_template._render_field('body_html', record.ids)[record.id]
+            self.assertEqual(rendered, "&lt;b&gt; test &lt;/b&gt;")
+            self.assertTrue(render.called)
 
     def test_mail_template_acl_translation(self):
-        ''' Test that a user that doenn't have the group_mail_template_editor cannot create / edit
+        ''' Test that a user that doesn't have the group_mail_template_editor cannot create / edit
         translation with dynamic code if he cannot write dynamic code on the related record itself.
         '''
 

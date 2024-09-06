@@ -45,7 +45,9 @@
                     </group>
                     <field name="can_edit_body" invisible="1"/>
                     <div invisible="composition_mode == 'mass_mail'">
-                        <field name="body" widget="html_composer_message" class="oe-bordered-editor" placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"/>
+                        <field name="body" widget="html_composer_message" class="oe-bordered-editor"
+                            placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"
+                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'render_model'}"/>
                         <group>
                             <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1"/>
                         </group>
@@ -57,7 +59,9 @@
                     <notebook invisible="composition_mode != 'mass_mail'">
                         <page string="Content" name="page_content">
                             <div>
-                                <field name="body" widget="html_composer_message" class="oe-bordered-editor" placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"/>
+                                <field name="body" widget="html_composer_message" class="oe-bordered-editor"
+                                    placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"
+                                    options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'render_model'}"/>
                                 <group>
                                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1"/>
                                 </group>
@@ -101,7 +105,10 @@
             <field name="arch" type="xml">
                 <form string="Templates">
                     <group>
-                        <field name="subject" placeholder="e.g. &quot;Welcome to MyCompany&quot; or &quot;Nice to meet you, {{ object.name }}&quot;"/>
+                        <field name="subject"
+                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'model'}"
+                            placeholder="e.g. &quot;Welcome to MyCompany&quot; or &quot;Nice to meet you, {{ object.name }}&quot;"/>
+                        <field name="model" invisible="1"/>
                     </group>
                     <footer>
                         <button name="create_mail_template" type="object" class="btn btn-primary" string="Save"/>

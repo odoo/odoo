@@ -191,7 +191,7 @@ export class HtmlField extends Component {
                         category: _t('Marketing Tools'),
                         name: _t('Dynamic Placeholder'),
                         priority: 10,
-                        description: _t('Insert personalized content'),
+                        description: _t('Insert a field'),
                         fontawesome: 'fa-magic',
                         callback: () => {
                             this.wysiwygRangePosition = getRangePosition(document.createElement('x'), this.wysiwyg.options.document || document);
@@ -348,9 +348,9 @@ export class HtmlField extends Component {
             // before inserting the <t> element.
             this.wysiwyg.focus();
             let dynamicPlaceholder = "object." + chain;
-            dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''` : '';
             const t = document.createElement('T');
             t.setAttribute('t-out', dynamicPlaceholder);
+            t.innerText = defaultValue;
             this.wysiwyg.odooEditor.execCommand('insert', t);
             // Ensure the dynamic placeholder <t> element is sanitized.
             this.wysiwyg.odooEditor.sanitize(t);
