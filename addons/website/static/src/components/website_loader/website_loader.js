@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { rpc } from "@web/core/network/rpc";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { EventBus, Component, markup, useEffect, useState } from "@odoo/owl";
@@ -13,6 +13,8 @@ export class WebsiteLoader extends Component {
     static template = "website.website_loader";
 
     setup() {
+        this.website = useService("website");
+
         const initialState = {
             isVisible: false,
             title: '',
@@ -20,6 +22,9 @@ export class WebsiteLoader extends Component {
             selectedFeatures: [],
             showWaitingMessages: false,
             progressPercentage: 0,
+            bottomMessageTemplate: undefined,
+            showLoader: true,
+            showCloseButton: false,
         };
         const defaultMessage = {
             title: _t("Building your website."),
@@ -101,10 +106,17 @@ export class WebsiteLoader extends Component {
         useBus(this.props.bus, "SHOW-WEBSITE-LOADER", (ev) => {
             const props = ev.detail;
             this.state.isVisible = true;
-            this.state.title = props && props.title;
-            this.state.showTips = props && props.showTips;
-            this.state.selectedFeatures = props && props.selectedFeatures;
-            this.state.showWaitingMessages = props && props.showWaitingMessages;
+            for (const prop of [
+                "title",
+                "showTips",
+                "selectedFeatures",
+                "showWaitingMessages",
+                "bottomMessageTemplate",
+                "showCloseButton",
+            ]) {
+                this.state[prop] = props && props[prop];
+            }
+            this.state.showLoader = props && props.showLoader !== false;
         });
         useBus(this.props.bus, "HIDE-WEBSITE-LOADER", () => {
             for (const key of Object.keys(initialState)) {
@@ -262,4 +274,11 @@ export class WebsiteLoader extends Component {
             return ev.returnValue;
         }
     };
+
+    /**
+     * Hide the loader.
+     */
+    close() {
+        this.website.hideLoader();
+    }
 }
