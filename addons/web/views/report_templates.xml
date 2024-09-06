@@ -62,12 +62,30 @@
                         z-index: -2;
                     }
 
+                    .loading-spinner {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        border-top: 8px solid #e3e3e3;
+                        border-radius: 50%;
+                        width: 60px;
+                        height: 60px;
+                        animation: spin 1s linear infinite;
+                    }
+
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
                 </style>
             </head>
             <body class="o_body_html container-fluid" style="overflow:hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
-                <div id="wrapwrap" class="d-flex flex-column h-100">
+                <!-- display a spinner instead of the iframe content until the stylesheet is loaded -->
+                <div id="wrapwrap" class="d-block d-flex flex-column h-100" style="display:none;">
                     <t t-out="0"/>
                 </div>
+                <div class="loading-spinner d-none"/>
             </body>
         </html>
     </template>

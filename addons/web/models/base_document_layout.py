@@ -120,14 +120,6 @@ class BaseDocumentLayout(models.TransientModel):
     @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer', 'layout_background', 'layout_background_image', 'company_details')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
-
-        # This condition below makes sure that preview is computed only if the document layout is still under creation.
-        # If the document layout is finished (i.e., edit wizard is closed), the preview should not be recomputed.
-        # This solves the issue of the preview glitching at the wizard closing.
-        if self.env['base.document.layout'].browse(self.id):
-            self.preview = False
-            return
-
         styles = self._get_asset_style()
 
         for wizard in self:
