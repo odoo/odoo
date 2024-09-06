@@ -222,27 +222,27 @@ class ResPartner(models.Model):
         # OVERRIDE account
         check_result = None
 
-        # First check with country code as prefix of the TIN
-        vat_country_code, vat_number_split = self._split_vat(vat_number)
-
-        if vat_country_code == 'eu' and default_country not in self.env.ref('base.europe').country_ids:
+        if len(vat_number) > 2 and vat_number[:2].lower() == 'eu' and default_country not in self.env.ref('base.europe').country_ids:
             # Foreign companies that trade with non-enterprises in the EU
             # may have a VATIN starting with "EU" instead of a country code.
             return True
 
-        vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())], limit=1)
-        if not vat_has_legit_country_code:
-            vat_has_legit_country_code = vat_country_code.lower() in _region_specific_vat_codes
-        if vat_has_legit_country_code:
-            check_result = self.simple_vat_check(vat_country_code, vat_number_split)
-            if check_result:
-                return vat_country_code
+        country_code_to_check = default_country and default_country.code.lower()
+        vat_number_split = vat_number
+        if default_country and default_country in self.env.ref('base.europe').country_ids | self.env.ref('base.jp'):
+            # First check with country code as prefix of the TIN
+            vat_country_code, vat_number_split = self._split_vat(vat_number)
+            vat_has_legit_country_code = self.env['res.country'].search([('code', '=', vat_country_code.upper())],
+                                                                        limit=1)
+            if not vat_has_legit_country_code:
+                vat_has_legit_country_code = vat_country_code.lower() in _region_specific_vat_codes
+            if vat_has_legit_country_code:
+                country_code_to_check = vat_country_code
 
-        # If it fails, check with default_country (if it exists)
-        if default_country:
-            check_result = self.simple_vat_check(default_country.code.lower(), vat_number)
+        if country_code_to_check:
+            check_result = self.simple_vat_check(country_code_to_check, vat_number_split)
             if check_result:
-                return default_country.code.lower()
+                return country_code_to_check
 
         # We allow any number if it doesn't start with a country code and the partner has no country.
         # This is necessary to support an ORM limitation: setting vat and country_id together on a company
@@ -264,6 +264,7 @@ class ResPartner(models.Model):
 
         expected_format = _ref_vat.get(country_code, "'CC##' (CC=Country Code, ##=VAT Number)")
 
+        print(country_code)
         # Catch use case where the record label is about the public user (name: False)
         if 'False' not in record_label:
             return '\n' + _(
@@ -710,17 +711,23 @@ class ResPartner(models.Model):
         return stdnum_vat_format('SM' + vat)[2:]
 
     def _fix_vat_number(self, vat, country_id):
-        code = self.env['res.country'].browse(country_id).code if country_id else False
-        vat_country, vat_number = self._split_vat(vat)
-        if code and code.lower() != vat_country:
+        if not country_id or not vat:
             return vat
-        stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module(vat_country, 'vat'), 'compact', None)
-        #If any localization module need to define vat fix method for it's country then we give first priority to it.
-        format_func_name = 'format_vat_' + vat_country
+        country = self.env['res.country'].browse(country_id)
+        vat_country = False
+        if country in self.env.ref('base.europe').country_ids:
+            vat_country, vat_number = self._split_vat(vat)
+            if not vat_country.isalpha():
+                vat_country = False
+        to_check_country = vat_country or country.code.lower()
+        print(to_check_country)
+        stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module(to_check_country, 'vat'), 'compact', None)
+        # If any localization module needs to define vat fix method for its country then we give first priority to it.
+        format_func_name = 'format_vat_' + to_check_country
         format_func = getattr(self, format_func_name, None) or stdnum_vat_fix_func
         if format_func:
-            vat_number = format_func(vat_number)
-        return vat_country.upper() + vat_number
+            vat = format_func(vat)
+        return vat_country.upper() + vat if vat_country else vat
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -734,9 +741,15 @@ class ResPartner(models.Model):
         return res
 
     def write(self, values):
-        if values.get('vat') and len(self.mapped('country_id')) == 1:
-            country_id = values.get('country_id', self.country_id.id)
-            values['vat'] = self._fix_vat_number(values['vat'], country_id)
+        print(self.ids, values)
+        if self and (values.get('vat') or values.get('country_id')):
+            only_vat_problem = values.get('vat') and not values.get('country_id') and len(self.mapped('country_id')) > 1
+            only_country_problem = values.get('country_id') and not values.get('vat') and len(self.mapped('vat')) > 1
+            if not (only_vat_problem or only_country_problem):
+                country_id = values.get('country_id', self[0].country_id.id)
+                vat = values.get('vat', self[0].vat)
+                values['vat'] = self._fix_vat_number(vat, country_id)
+
         res = super().write(values)
         if self.env.context.get('import_file'):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
