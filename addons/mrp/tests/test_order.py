@@ -4063,6 +4063,7 @@ class TestMrpOrder(TestMrpCommon):
         Checks that the expected durations of workorders are updated depending on the produced quantity.
         """
         bom = self.bom_2
+        bom.type = 'normal'
         bom.operation_ids.time_mode = 'manual'
         bom.operation_ids.time_cycle_manual = 60.0
         product = bom.product_id

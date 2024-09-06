@@ -442,6 +442,14 @@ class BaseAutomation(models.Model):
         self._update_registry()
         return res
 
+    def copy(self, default=None):
+        """Copy the actions of the automation while
+        copying the automation itself."""
+        actions = self.action_server_ids.copy_multi()
+        record_copy = super().copy(default)
+        record_copy.action_server_ids = actions
+        return record_copy
+
     def action_rotate_webhook_uuid(self):
         for automation in self:
             automation.webhook_uuid = str(uuid4())
