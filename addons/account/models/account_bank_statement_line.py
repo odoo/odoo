@@ -176,6 +176,9 @@ class AccountBankStatementLine(models.Model):
         # the user can split on that lines, but their balance should be the same as previous posted line
         # we do the same for the canceled lines, in order to keep using them as anchor points
 
+        for record in self:
+            record.running_balance = 0
+
         self.statement_id.flush_model(['balance_start', 'first_line_index'])
         self.flush_model(['internal_index', 'date', 'journal_id', 'statement_id', 'amount', 'state'])
         record_by_id = {x.id: x for x in self}
