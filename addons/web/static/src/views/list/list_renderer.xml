@@ -40,7 +40,13 @@
                                           t-on-pointerdown.stop.prevent="this.columnWidths.onStartResize"/>
                                 </t>
                             </th>
-                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}"/>
+                            <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}">
+                                <t t-if="column.type === 'widget' and column.label != ''">
+                                    <div t-att-class="{'d-flex': true}">
+                                        <span class="d-block min-w-0 text-truncate flex-grow-1" t-esc="column.label"/>
+                                    </div>
+                                </t>
+                            </th>
                         </t>
                         <th t-if="hasOpenFormViewColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view w-print-0 p-print-0"/>
                         <th t-if="hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0">
