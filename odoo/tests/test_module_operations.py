@@ -23,7 +23,7 @@ BLACKLIST = {
 IGNORE = ('hw_', 'theme_', 'l10n_', 'test_')
 
 INSTALL_BLACKLIST = {
-    'payment_alipay', 'payment_ogone', 'payment_payulatam', 'payment_payumoney',
+    'payment_alipay', 'payment_payulatam', 'payment_payumoney',
 }  # deprecated modules (cannot be installed manually through button_install anymore)
 
 
