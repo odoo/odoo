@@ -209,7 +209,7 @@
                                                 <strong>Price:</strong>
                                                 <span t-out="combination_info['price']"
                                                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                                                <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])"
+                                                <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
                                                      t-attf-class="text-danger mr8"
                                                      style="white-space: nowrap;"
                                                      t-esc="combination_info['compare_list_price']"
@@ -300,7 +300,7 @@
                     <div t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else ''}}">
                         <span t-out="combination_info['price']"
                               t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                        <del t-if="combination_info['compare_list_price'] and (combination_info['compare_list_price'] &gt; combination_info['price'])"
+                        <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
                              t-attf-class="text-muted me-1 h6 mb-0 small"
                              style="white-space: nowrap;"
                              t-esc="combination_info['compare_list_price']"

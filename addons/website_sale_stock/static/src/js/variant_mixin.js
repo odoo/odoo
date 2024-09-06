@@ -25,18 +25,12 @@ import { markup } from "@odoo/owl";
  * @param {Array} combination
  */
 VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
-    let product_id = 0;
-    // needed for list view of variants
-    if ($parent.find('input.product_id:checked').length) {
-        product_id = $parent.find('input.product_id:checked').val();
-    } else {
-        product_id = $parent.find('.product_id').val();
+    if (!combination.is_storable) {
+        return
     }
-    const isMainProduct = combination.product_id &&
-        $parent.is('.js_main_product') &&
-        combination.product_id === parseInt(product_id);
 
-    if (!this.isWebsite || !isMainProduct) {
+    if (!$parent.is('.js_main_product') || !combination.product_id) {
+        // if we're not on product page or the product is dynamic
         return;
     }
 
@@ -46,7 +40,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     ctaWrapper.classList.replace('d-none', 'd-flex');
     ctaWrapper.classList.remove('out_of_stock');
 
-    if (combination.is_storable && !combination.allow_out_of_stock_order) {
+    if (!combination.allow_out_of_stock_order) {
         combination.free_qty -= parseInt(combination.cart_qty);
         $addQtyInput.data('max', combination.free_qty || 1);
         if (combination.free_qty < 0) {

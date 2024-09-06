@@ -25,28 +25,33 @@ class ProductTemplate(models.Model):
     def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
         res = super()._get_additionnal_combination_info(product_or_template, quantity, date, website)
 
-        product_or_template = product_or_template.sudo()
+        if not self.env.context.get('website_sale_stock_get_quantity'):
+            return res
+
+        if not product_or_template.is_storable:
+            return res
+
         res.update({
-            'product_type': product_or_template.type,
+            'is_storable': True,
             'allow_out_of_stock_order': product_or_template.allow_out_of_stock_order,
             'available_threshold': product_or_template.available_threshold,
         })
         if product_or_template.is_product_variant:
-            product = product_or_template
-            free_qty = website._get_product_available_qty(product)
+            product_sudo = product_or_template.sudo()
+            free_qty = website._get_product_available_qty(product_sudo)
             has_stock_notification = (
-                product._has_stock_notification(self.env.user.partner_id)
-                or request and product.id in request.session.get(
+                product_sudo._has_stock_notification(self.env.user.partner_id)
+                or request and product_sudo.id in request.session.get(
                     'product_with_stock_notification_enabled', set())
             )
             stock_notification_email = request and request.session.get('stock_notification_email', '')
             res.update({
                 'free_qty': free_qty,
-                'cart_qty': product._get_cart_qty(website),
-                'uom_name': product.uom_id.name,
-                'uom_rounding': product.uom_id.rounding,
-                'show_availability': product_or_template.show_availability,
-                'out_of_stock_message': product_or_template.out_of_stock_message,
+                'cart_qty': product_sudo._get_cart_qty(website),
+                'uom_name': product_sudo.uom_id.name,
+                'uom_rounding': product_sudo.uom_id.rounding,
+                'show_availability': product_sudo.show_availability,
+                'out_of_stock_message': product_sudo.out_of_stock_message,
                 'has_stock_notification': has_stock_notification,
                 'stock_notification_email': stock_notification_email,
             })
