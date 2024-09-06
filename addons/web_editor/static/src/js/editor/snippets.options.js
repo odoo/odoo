@@ -5927,10 +5927,8 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
             const hidden = elTop < 0 || bottomHidden;
             if (hidden) {
                 scrollTo(this.$target[0], {
-                    extraOffset: 50,
-                    forcedOffset: bottomHidden ? heightDiff - 50 : undefined,
-                    easing: 'linear',
-                    duration: 500,
+                    offset: 50,
+                    behavior: "smooth",
                 });
             }
         }
