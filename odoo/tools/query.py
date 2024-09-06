@@ -159,7 +159,14 @@ class Query:
         if not self._joins:
             return tables
         items = [tables]
+        # TODO: Quite crappy, but it works :/
+        left_join_encounter = False
+
         for alias, (kind, table, condition) in self._joins.items():
+            if kind.code == 'LEFT JOIN':
+                left_join_encounter = True
+            if kind.code == 'JOIN' and left_join_encounter:
+                kind = SQL('LEFT JOIN')
             items.append(_sql_from_join(kind, alias, table, condition))
         return SQL(" ").join(items)
 
