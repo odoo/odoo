@@ -483,7 +483,7 @@ var VariantMixin = {
      */
     _onChangeCombination: function (ev, $parent, combination) {
         const $pricePerUom = $parent.find(".o_base_unit_price:first .oe_currency_value");
-        if ($pricePerUom) {
+        if ($pricePerUom.length) {
             if (combination.is_combination_possible !== false && combination.base_unit_price != 0) {
                 $pricePerUom.parents(".o_base_unit_price_wrapper").removeClass("d-none");
                 $pricePerUom.text(this._priceToStr(combination.base_unit_price));
