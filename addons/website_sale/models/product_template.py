@@ -422,7 +422,6 @@ class ProductTemplate(models.Model):
             'product_id': product.id,
             'product_template_id': self.id,
             'display_name': display_name,
-            'display_image': bool(product_or_template.image_128),
             'is_combination_possible': self._is_combination_possible(combination=combination, parent_combination=parent_combination),
             'parent_exclusions': self._get_parent_attribute_exclusions(parent_combination=parent_combination),
 

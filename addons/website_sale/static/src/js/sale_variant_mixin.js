@@ -548,19 +548,12 @@ var VariantMixin = {
             $compare_price.removeClass("d-none");
         }
 
-        var rootComponentSelectors = [
-            'tr.js_product',
-            '.oe_website_sale',
-        ];
-
-        // update images only when changing product
+        // update images & tags only when changing product
         // or when either ids are 'false', meaning dynamic products.
         // Dynamic products don't have images BUT they may have invalid
         // combinations that need to disable the image.
-        if (!combination.product_id ||
-            !this.last_product_id ||
-            combination.product_id !== this.last_product_id) {
-            this.last_product_id = combination.product_id;
+        if (!combination.no_product_change) {
+            const rootComponentSelectors = ['tr.js_product', '.oe_website_sale'];
             self._updateProductImage(
                 $parent.closest(rootComponentSelectors.join(', ')),
                 combination.display_image,
@@ -569,6 +562,10 @@ var VariantMixin = {
                 combination.carousel,
                 isCombinationPossible
             );
+            $parent
+                .find('.o_product_tags')
+                .first()
+                .html(combination.product_tags);
         }
 
         $parent
@@ -576,11 +573,6 @@ var VariantMixin = {
             .first()
             .val(combination.product_id || 0)
             .trigger('change');
-
-        $parent
-            .find('.o_product_tags')
-            .first()
-            .html(combination.product_tags);
 
         this.handleCustomValues($(ev.target));
     },
