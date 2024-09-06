@@ -936,7 +936,9 @@
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
                         <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
-                            <t t-set="base_url" t-value="product.get_base_url()"/>
+                            <t t-set="base_url" t-value="website.get_base_url()"/>
+                            <!-- TODO: remove next line in master. Stable fix not to break custos. -->
+                            <t t-if="False" t-set="base_url" t-value="product.get_base_url()"/>
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
                             <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
