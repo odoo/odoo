@@ -343,3 +343,26 @@ class TestDevice(TestHttpBase):
         # This means that the device logic will not create a session file
         # (because we are not passing in the `_update_device` logic).
         self.assertFalse(session._trace)
+
+    def test_unique_id_shared_between_logs(self):
+        """
+            The goal is to check that we can still access information
+            on a device even if the log used for the device is different
+            (changes over time).
+        """
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw',
+            headers={'User-Agent': USER_AGENT_linux_chrome}, ip='191.0.1.41')
+        initial_device, initial_log = self.get_devices_logs(self.user_admin)
+
+        self.hit('2024-01-01 09:00:00', '/test_http/greeting-user-rw',
+            headers={'User-Agent': USER_AGENT_linux_chrome}, ip='191.0.1.41')
+
+        self.env['res.device.log']._gc_device_log()
+
+        # Check than we can access device information even if the logs have changed
+        initial_device.session_identifier
+        second_device, second_log = self.get_devices_logs(self.user_admin)
+
+        self.assertNotEqual(initial_log.id, second_log.id)
+        self.assertEqual(initial_device.id, second_device.id)

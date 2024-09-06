@@ -153,7 +153,30 @@ class ResDevice(models.Model):
 
     @api.model
     def _select(self):
-        return "SELECT DISTINCT ON (D.user_id, D.session_identifier, D.platform, D.browser) D.*"
+        return """
+            SELECT DISTINCT ON (D.user_id, D.session_identifier, D.platform, D.browser)
+            abs(hashtext(
+                D.session_identifier || '_' ||
+                COALESCE(D.platform, 'unknown') || '_' ||
+                COALESCE(D.browser, 'unknown')
+            )) AS id,
+            D.session_identifier AS session_identifier,
+            D.platform AS platform,
+            D.browser AS browser,
+            D.ip_address AS ip_address,
+            D.country AS country,
+            D.city AS city,
+            D.device_type AS device_type,
+            D.user_id AS user_id,
+            D.first_activity AS first_activity,
+            D.last_activity AS last_activity,
+            D.revoked AS revoked,
+
+            D.create_date AS create_date,
+            D.create_uid AS create_uid,
+            D.write_date AS write_date,
+            D.write_uid AS write_uid
+        """
 
     @api.model
     def _from(self):
