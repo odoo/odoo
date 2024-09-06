@@ -37,6 +37,21 @@ echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n
 echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
 echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
 echo  "alias odoo_restart='sudo systemctl restart odoo'" >> /home/pi/.bashrc
+echo  "
+odoo_dev() {
+  if [ -z \"\$1\" ]; then
+    odoo_help
+    return
+  fi
+  write_mode
+  pwd=\$(pwd)
+  cd /home/pi/odoo
+  git remote add dev https://github.com/odoo-dev/odoo.git
+  git fetch dev \$1 --depth=1 --prune
+  git reset --hard dev/\$1
+  cd \$pwd
+}
+" >> /home/pi/.bashrc
 echo "
 show_odoo_aliases() {
   echo 'Welcome to Odoo IoTBox tools'
@@ -50,6 +65,7 @@ show_odoo_aliases() {
   echo 'odoo_start          Starts Odoo service'
   echo 'odoo_stop           Stops Odoo service'
   echo 'odoo_restart        Restarts Odoo service'
+  echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
 }
 alias odoo_help='show_odoo_aliases'
 " | tee -a ~/.bashrc /home/pi/.bashrc
@@ -147,6 +163,7 @@ PIP_TO_INSTALL="
     gatt \
     polib \
     pycups \
+    pyotp==2.9.0 \
     pyusb \
     v4l2 \
     pysmb==1.2.9.1 \
