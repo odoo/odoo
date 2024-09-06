@@ -6,10 +6,11 @@ import uuid
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
+from odoo.addons.rtc.tools import sfu
+from odoo.addons.web.tools import jwt
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from ...tools import jwt, discuss
 
 _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3
@@ -323,7 +324,7 @@ class ChannelMember(models.Model):
             return
         elif self.channel_id.sfu_channel_uuid and self.channel_id.sfu_server_url:
             return
-        sfu_server_url = discuss.get_sfu_url(self.env)
+        sfu_server_url = sfu.get_sfu_url(self.env)
         if not sfu_server_url:
             return
         sfu_local_key = self.env["ir.config_parameter"].sudo().get_param("mail.sfu_local_key")
@@ -332,7 +333,7 @@ class ChannelMember(models.Model):
             self.env["ir.config_parameter"].sudo().set_param("mail.sfu_local_key", sfu_local_key)
         json_web_token = jwt.sign(
             {"iss": f"{self.get_base_url()}:channel:{self.channel_id.id}", "key": sfu_local_key},
-            key=discuss.get_sfu_key(self.env),
+            key=sfu.get_sfu_key(self.env),
             ttl=30,
             algorithm=jwt.Algorithm.HS256,
         )

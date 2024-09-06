@@ -15,7 +15,7 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from urllib.parse import urlsplit
 
-from . import jwt
+from odoo.addons.web.tools import jwt
 
 MAX_PAYLOAD_SIZE = 4096
 

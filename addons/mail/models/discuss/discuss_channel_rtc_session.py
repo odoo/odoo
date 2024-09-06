@@ -7,7 +7,8 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
-from odoo.addons.mail.tools import discuss, jwt
+from odoo.addons.web.tools import jwt
+from odoo.addons.rtc.tools import sfu
 from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
@@ -102,7 +103,7 @@ class MailRtcSession(models.Model):
             url = rtc_session.channel_id.sfu_server_url
             if sfu_channel_uuid and url:
                 session_ids_by_channel_by_url[url][sfu_channel_uuid].append(rtc_session.id)
-        key = discuss.get_sfu_key(self.env)
+        key = sfu.get_sfu_key(self.env)
         if key:
             with requests.Session() as requests_session:
                 for url, session_ids_by_channel in session_ids_by_channel_by_url.items():
