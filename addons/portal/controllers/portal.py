@@ -216,7 +216,7 @@ class CustomerPortal(Controller):
         states = request.env['res.country.state'].sudo().search([])
 
         values.update({
-            'partner': partner,
+            'partner_sudo': partner,
             'countries': countries,
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),

@@ -220,7 +220,7 @@ class PosController(PortalAccount):
                 form_values['partner_address'] = partner._display_address()
 
         return request.render("point_of_sale.ticket_validation_screen", {
-            'partner': partner,
+            'partner_sudo': partner,
             'address_url': f'/my/account?redirect=/pos/ticket/validate?access_token={access_token}',
             'user_is_connected': user_is_connected,
             'format_amount': format_amount,
