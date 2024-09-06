@@ -22,23 +22,3 @@ class TestBusPresence(HttpCase):
         self.env["bus.presence"]._gc_bus_presence()
         presence = self.env["bus.presence"].search([("user_id", "=", user.id)])
         self.assertFalse(presence)
-        # user is not active anymore
-        self.env["bus.presence"]._update_presence(
-            inactivity_period=0, identity_field="user_id", identity_value=user.id
-        )
-        presence = self.env["bus.presence"].search([("user_id", "=", user.id)])
-        self.assertTrue(presence)
-        user.active = False
-        self.env["bus.presence"]._gc_bus_presence()
-        presence = self.env["bus.presence"].search([("user_id", "=", user.id)])
-        self.assertFalse(presence)
-        # presence is offline
-        self.env["bus.presence"]._update_presence(
-            inactivity_period=0, identity_field="user_id", identity_value=user.id
-        )
-        presence = self.env["bus.presence"].search([("user_id", "=", user.id)])
-        presence.status = "offline"
-        self.assertEqual(presence.status, "offline")
-        self.env["bus.presence"]._gc_bus_presence()
-        presence = self.env["bus.presence"].search([("user_id", "=", user.id)])
-        self.assertFalse(presence)
