@@ -41,6 +41,9 @@ class TestMailRenderCommon(common.MailCommon):
             <h1>This is a test</h1>
             """,
             """<b>Test</b>{{ '' if True else '<b>Code not executed</b>' }}""",
+            """<b>Test</b> {{ '' ||| Bob }}""",
+            """<b>Test</b> {{ '' ||| Bob }} |||""",
+            """<b>Test</b> {{ '' ||| Bob }} ||| }}""",
         ]
         cls.base_inline_template_bits_fr = [
             '<p>Bonjour</p>',
@@ -89,7 +92,15 @@ class TestMailRenderCommon(common.MailCommon):
             '<p>Hello %s</p>' % cls.render_object.name,
             """<p>
     <span>English Speaker</span>
-</p>"""
+</p>""",
+            """
+            <p>26</p>
+            <h1>This is a test</h1>
+            """,
+            """<b>Test</b>""",
+            """<b>Test</b> Bob """,
+            """<b>Test</b> Bob  |||""",
+            """<b>Test</b> Bob  ||| }}"""
         ]
         cls.base_rendered_fr = [
             '<p>Bonjour</p>',
@@ -179,7 +190,7 @@ class TestMailRender(TestMailRenderCommon):
         preview = 'foo{{"false" if 1 > 2 else "true"}}bar'
         result = self.env['mail.render.mixin']._prepend_preview(Markup(body), preview)
         self.assertEqual(result, '''<div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
-                    foo<t t-out="&#34;false&#34; if 1 &gt; 2 else &#34;true&#34;"/>bar
+                    foo<t t-out="&#34;false&#34; if 1 &gt; 2 else &#34;true&#34;"></t>bar
                 </div>body''')
 
     @users('employee')
@@ -399,6 +410,102 @@ class TestMailRender(TestMailRenderCommon):
             self.assertEqual(rendered, expected)
 
 
+@tagged('mail_render', 'regex_render')
+class TestRegexRendering(common.MailCommon):
+
+    def test_qweb_regex_rendering(self):
+        record = self.env['res.partner'].create({'name': 'Alice'})
+
+        def render(template):
+            return self.env['mail.render.mixin']._render_template_qweb(template, 'res.partner', record.ids)[record.id]
+
+        static_templates = (
+            ('''<h1> Title </h1>''', '<h1> Title </h1>'),
+            ('''<p t-out="object.name"/>''', '<p>Alice</p>'),
+            ('''<p t-out="object.name"></p>''', '<p>Alice</p>'),
+            ('''<P   t-out="object.name" ></p >''', '<p>Alice</p>'),
+            ('''<t t-out="object.name"/>''', 'Alice'),
+            ('''<T t-out="object.name"/>''', 'Alice'),
+            ('''<div><T t-out="object.name"/></div>''', '<div>Alice</div>'),
+            ('''<h1 t-out="object.name"/>''', '<h1>Alice</h1>'),
+            ('''<p t-out='object.name'/>''', '<p>Alice</p>'),
+            ('''<p t-out="object.contact_name"/>''', '<p></p>'),
+            ('''<p t-out="object.name">Default</p>''', '<p>Alice</p>'),
+            ('''<p t-out='object.name'>Default</p>''', '<p>Alice</p>'),
+            ('''<p t-out="object.contact_name">Default</p>''', '<p>Default</p>'),
+            ('''<p t-out="object.name"/><p t-out="object.name">Default</p>''', '<p>Alice</p><p>Alice</p>'),
+            ('''<p t-out="object.name"/><p t-out="object.contact_name">Default</p>''', '<p>Alice</p><p>Default</p>'),
+            ('''<p
+                    t-out="object.name"
+                    />''', '<p>Alice</p>'),
+            ('''<p
+                    t-out="object.contact_name"
+                    >
+                    Default
+                    </p>''', '<p>Default</p>'),
+            ('''<div><p t-out="object.name"/></div>''', '<div><p>Alice</p></div>'),
+            ('''<div/aa t-out="object.name"></div/aa>''', '<div>Alice</div>'),
+            ('''<div/aa='x' t-out="object.name"></div/aa='x'>''', '<div>Alice</div>'),
+            ('''<55 t-out="object.name"></55>''', '&lt;55 t-out="object.name"&gt;55&gt;'),
+        )
+        o_qweb_render = self.env['ir.qweb']._render
+        for template, expected in static_templates:
+            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+                self.assertEqual(render(template), expected)
+                self.assertFalse(qweb_render.called)
+                self.assertFalse(unsafe_eval.called)
+
+        # double check that we are able to catch the eval
+        non_static_templates = (
+            ('''<p t-out=""/>''', '<p>()</p>'),
+            ('''<p t-out="1+1"/>''', '<p>2</p>'),
+            ('''<p t-out="env.context.get('test')"/>''', ''),
+            ('''<p t-out="object.name" title="Test"/>''', '<p title="Test">Alice</p>'),
+            ('''<p title="Test" t-out="object.name"/>''', '<p title="Test">Alice</p>'),
+            ('''<p t-out="object.name"><img/></p>''', '<p>Alice</p>'),
+            ('''<p t-out="object.parent_id.name"><img/></p>''', '<p><img/></p>'),
+            ('''<p t-out="'<h1>test</h1>'"/>''', '<p>&lt;h1&gt;test&lt;/h1&gt;</p>'),
+        )
+        for template, expected in non_static_templates:
+            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+                rendered = render(template)
+                self.assertTrue(isinstance(rendered, Markup))
+                self.assertEqual(rendered, expected)
+                self.assertTrue(qweb_render.called)
+                self.assertTrue(unsafe_eval.called)
+
+    def test_inline_regex_rendering(self):
+        record = self.env['res.partner'].create({'name': 'Alice'})
+
+        def render(template):
+            return self.env['mail.render.mixin']._render_template_inline_template(template, 'res.partner', record.ids)[record.id]
+
+        static_templates = (
+            ('''{{object.name}}''', 'Alice'),
+            ('''{{object.contact_name}}''', ''),
+            ('''{{object.name ||| Default}}''', 'Alice'),
+            ('''{{object.contact_name ||| Default}}''', 'Default'),
+        )
+        for template, expected in static_templates:
+            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+                self.assertEqual(render(template), expected)
+                self.assertFalse(unsafe_eval.called)
+                self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template, 'res.partner'))
+
+        non_static_templates = (
+            ('''{{''}}''', ''),
+            ('''{{1+1}}''', '2'),
+            ('''{{object.env.context.get('test')}}''', ''),
+        )
+        for template, expected in non_static_templates:
+            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+                self.assertEqual(render(template), expected)
+                self.assertTrue(unsafe_eval.called)
+                self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template, 'res.partner'))
+
+
 @tagged('mail_render')
 class TestMailRenderSecurity(TestMailRenderCommon):
     """ Test security of rendering, based on qweb finding + restricted rendering
@@ -524,8 +631,8 @@ class TestMailRenderSecurity(TestMailRenderCommon):
     def test_security_qweb_template_restricted(self):
         """Test if we correctly detect condition block (which might contains code)."""
         res_ids = self.env['res.partner'].search([], limit=1).ids
-        with self.assertRaises(AccessError, msg='Simple user should not be able to render qweb code'):
-            self.env['mail.render.mixin']._render_template_qweb(self.base_qweb_bits[1], 'res.partner', res_ids)
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render complex qweb code'):
+            self.env['mail.render.mixin']._render_template_qweb(self.base_qweb_bits[2], 'res.partner', res_ids)
 
     @users('user_rendering_restricted')
     def test_security_qweb_template_restricted_cached(self):
@@ -533,13 +640,15 @@ class TestMailRenderSecurity(TestMailRenderCommon):
         res_ids = self.env['res.partner'].search([], limit=1).ids
 
         # Render with the admin first to fill the cache
-        self.env['mail.render.mixin'].with_user(self.user_admin)._render_template_qweb(
-            self.base_qweb_bits[1], 'res.partner', res_ids)
+        result = self.env['mail.render.mixin'].with_user(self.user_admin)._render_template_qweb(
+            self.base_qweb_bits[2], 'res.partner', res_ids)
+
+        self.assertEqual(result[res_ids[0]], "<p>\n    <span>English Speaker</span>\n</p>")
 
         # Check that it raise even when rendered previously by an admin
-        with self.assertRaises(AccessError, msg='Simple user should not be able to render qweb code'):
+        with self.assertRaises(AccessError, msg='Simple user should not be able to render complex qweb code'):
             self.env['mail.render.mixin']._render_template_qweb(
-                self.base_qweb_bits[1], 'res.partner', res_ids)
+                self.base_qweb_bits[2], 'res.partner', res_ids)
 
     @users('employee')
     def test_security_qweb_template_unrestricted(self):

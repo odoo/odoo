@@ -26,10 +26,10 @@ export function useDynamicPlaceholder(elementRef) {
         let rangeIndex = parseInt(element.getAttribute("data-oe-dynamic-placeholder-range-index"));
         // When the user cancel/close the popover, the path is empty.
         if (path) {
-            let dynamicPlaceholder = "{{object." + path;
-            dynamicPlaceholder +=
-                defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''}}` : "}}";
-
+            defaultValue = defaultValue.replace("|||", "");
+            const dynamicPlaceholder = ` {{object.${path}${
+                defaultValue?.length ? ` ||| ${defaultValue}` : ""
+            }}}`;
             const baseValue = element.value;
             const splitedValue = [baseValue.slice(0, rangeIndex), baseValue.slice(rangeIndex)];
             const newValue =

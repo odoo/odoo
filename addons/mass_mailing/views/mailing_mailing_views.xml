@@ -72,7 +72,16 @@
                         <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
                         <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
                         <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" class="oe_highlight" string="Retry" data-hotkey="y"/>
-
+                        <button type="object"
+                            name="action_set_favorite"
+                            class="btn-secondary"
+                            invisible="favorite"
+                            string="Add to Templates"/>
+                        <button type="object"
+                            name="action_remove_favorite"
+                            class="btn-secondary"
+                            invisible="not favorite"
+                            string="Remove from Templates"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_queue,sending,done"/>
                     </header>
                     <div class="alert alert-info" role="alert"
@@ -207,24 +216,10 @@
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}"
                                 invisible="1"
                                 readonly="state != 'draft'" force_save="1"/>
-                            <label for="subject">Subject</label>
-                            <div class="o_mass_mailing_subject d-flex flex-row align-items-baseline">
-                                <field class="text-break" name="subject" string="Subject"
-                                    options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
-                                    readonly="state in ('sending', 'done')"
-                                    widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
-                                <field name="favorite" invisible="1"/>
-                                <button type="object" name="action_set_favorite"
-                                    class="o_mass_mailing_favorite p-0"
-                                    icon="fa-star-o"
-                                    invisible="favorite"
-                                    title="Add to Templates"/>
-                                <button type="object" name="action_remove_favorite"
-                                    class="o_mass_mailing_favorite p-0"
-                                    icon="fa-star"
-                                    invisible="not favorite"
-                                    title="Remove from Templates"/>
-                            </div>
+                            <field class="text-break" name="subject"
+                                options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
+                                readonly="state in ('sending', 'done')"
+                                widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
                             <label for="mailing_model_id" string="Recipients"/>
                             <div name="mailing_model_id_container">
                                 <div class="row">

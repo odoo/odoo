@@ -2,9 +2,6 @@
 
 <templates xml:space="preserve">
     <t t-name="sms.SmsWidget" t-inherit="mail.EmojisTextField" t-inherit-mode="primary">
-        <xpath expr="//textarea[1]" position="attributes">
-            <attribute name="t-on-blur">onBlur</attribute>
-        </xpath>
         <xpath expr="/*[last()]/*[last()]" position="after">
             <div class="o_sms_container">
                 <span class="text-muted o_sms_count">

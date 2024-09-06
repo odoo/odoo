@@ -117,6 +117,19 @@ class BaseModel(models.AbstractModel):
             return primary_email
         return None
 
+    @api.model
+    def mail_allowed_qweb_expressions(self):
+        # QWeb expressions allowed if we are not template editor
+        return (
+            "object.name",
+            "object.contact_name",
+            "object.partner_id",
+            "object.partner_id.name",
+            "object.user_id",
+            "object.user_id.name",
+            "object.user_id.signature",
+        )
+
     # ------------------------------------------------------------
     # GENERIC MAIL FEATURES
     # ------------------------------------------------------------

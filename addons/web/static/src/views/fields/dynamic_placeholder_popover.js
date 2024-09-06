@@ -1,6 +1,12 @@
-import { useAutofocus } from "@web/core/utils/hooks";
+import { memoize } from "@web/core/utils/functions";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
-import { Component, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
+import { user } from "@web/core/user";
+
+const allowedQwebExpressions = memoize(async (model, orm) => {
+    return await orm.call(model, "mail_allowed_qweb_expressions");
+});
 
 export class DynamicPlaceholderPopover extends Component {
     static template = "web.DynamicPlaceholderPopover";
@@ -16,9 +22,22 @@ export class DynamicPlaceholderPopover extends Component {
             isPathSelected: false,
             defaultValue: "",
         });
+        this.orm = useService("orm");
+
+        onWillStart(async () => {
+            [this.isTemplateEditor, this.allowedQwebExpressions] = await Promise.all([
+                user.hasGroup("mail.group_mail_template_editor"),
+                // (only the first element is the cache key)
+                allowedQwebExpressions(this.props.resModel, this.orm),
+            ]);
+        });
     }
 
-    filter(fieldDef) {
+    filter(fieldDef, path) {
+        const fullPath = `object${path ? `.${path}` : ""}.${fieldDef.name}`;
+        if (!this.isTemplateEditor && !this.allowedQwebExpressions.includes(fullPath)) {
+            return false;
+        }
         return !["one2many", "boolean", "many2many"].includes(fieldDef.type) && fieldDef.searchable;
     }
     closeFieldSelector() {
@@ -28,8 +47,9 @@ export class DynamicPlaceholderPopover extends Component {
         }
         this.props.close();
     }
-    setPath(path) {
+    setPath(path, fieldInfo) {
         this.state.path = path;
+        this.state.fieldName = fieldInfo?.string;
     }
     setDefaultValue(value) {
         this.state.defaultValue = value;
@@ -37,6 +57,12 @@ export class DynamicPlaceholderPopover extends Component {
     validate() {
         this.props.close();
         this.props.validate(this.state.path, this.state.defaultValue);
+    }
+
+    onBack() {
+        this.state.defaultValue = "";
+        this.state.isPathSelected = false;
+        this.state.path = "";
     }
 
     // @TODO should rework this to use hotkeys
