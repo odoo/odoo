@@ -251,7 +251,16 @@ class AccountEdiXmlCII(models.AbstractModel):
             'name': self._find_value(f".//ram:{role}/ram:Name", tree),
             'phone': self._find_value(f".//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber", tree),
             'email': self._find_value(f".//ram:{role}//ram:URIID[@schemeID='SMTP']", tree),
+            'postal_address': self._get_postal_address(tree, role),
+        }
+
+    def _get_postal_address(self, tree, role):
+        return {
             'country_code': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:CountryID', tree),
+            'street': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:LineOne', tree),
+            'additional_street': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:LineTwo', tree),
+            'city': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:CityName', tree),
+            'zip': self._find_value(f'.//ram:{role}/ram:PostalTradeAddress//ram:PostcodeCode', tree),
         }
 
     def _import_fill_invoice(self, invoice, tree, qty_factor):

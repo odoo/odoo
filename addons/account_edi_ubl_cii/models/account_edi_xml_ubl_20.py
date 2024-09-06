@@ -628,7 +628,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'email': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:ElectronicMail', tree),
             'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree) or
                     self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree),
+            'postal_address': self._get_postal_address(tree, role),
+        }
+
+    def _get_postal_address(self, tree, role):
+        return {
             'country_code': self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
+            'street': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:StreetName', tree),
+            'additional_street': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName', tree),
+            'city': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:CityName', tree),
+            'zip': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:PostalZone', tree),
+            'state_code': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:CountrySubentityCode', tree),
         }
 
     def _import_fill_invoice(self, invoice, tree, qty_factor):
