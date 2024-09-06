@@ -105,7 +105,7 @@ export function odooAccountItem(env) {
 }
 
 function installPWAItem(env) {
-    let description = _t("Install app");
+    let description = _t("Install App");
     let callback = () => env.services.pwa.show();
     let show = () => env.services.pwa.isAvailable;
     const currentApp = env.services.menu.getCurrentApp();
