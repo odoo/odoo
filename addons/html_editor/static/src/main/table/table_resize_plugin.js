@@ -5,9 +5,11 @@ import {
     getAdjacentPreviousSiblings,
 } from "@html_editor/utils/dom_traversal";
 import { getColumnIndex } from "@html_editor/utils/table";
+import { BORDER_SENSITIVITY } from "@html_editor/main/table/table_plugin";
 
 export class TableResizePlugin extends Plugin {
     static name = "table_resize";
+    static dependencies = ["table"];
 
     setup() {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);
@@ -26,15 +28,14 @@ export class TableResizePlugin extends Plugin {
     isHoveringTdBorder(ev) {
         const target = /** @type {HTMLElement} */ (ev.target);
         if (ev.target && target.nodeName === "TD" && target.isContentEditable) {
-            const SENSITIVITY = 5;
             const targetRect = target.getBoundingClientRect();
-            if (ev.clientX <= targetRect.x + SENSITIVITY) {
+            if (ev.clientX <= targetRect.x + BORDER_SENSITIVITY) {
                 return "left";
-            } else if (ev.clientY <= targetRect.y + SENSITIVITY) {
+            } else if (ev.clientY <= targetRect.y + BORDER_SENSITIVITY) {
                 return "top";
-            } else if (ev.clientX >= targetRect.x + target.clientWidth - SENSITIVITY) {
+            } else if (ev.clientX >= targetRect.x + target.clientWidth - BORDER_SENSITIVITY) {
                 return "right";
-            } else if (ev.clientY >= targetRect.y + target.clientHeight - SENSITIVITY) {
+            } else if (ev.clientY >= targetRect.y + target.clientHeight - BORDER_SENSITIVITY) {
                 return "bottom";
             }
         }
