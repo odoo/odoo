@@ -170,6 +170,7 @@ export class AddPageTemplatePreview extends Component {
                     transform: scale(101%);
                 }
                 section[data-snippet="s_carousel"],
+                section[data-snippet="s_carousel_intro"],
                 section[data-snippet="s_quotes_carousel"] {
                     height: ${carouselHeight} !important;
                 }
