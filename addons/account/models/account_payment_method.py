@@ -21,14 +21,16 @@ class AccountPaymentMethod(models.Model):
     def create(self, vals_list):
         payment_methods = super().create(vals_list)
         methods_info = self._get_payment_method_information()
+        return self._auto_link_payment_methods(payment_methods, methods_info)
+
+    def _auto_link_payment_methods(self, payment_methods, methods_info):
+        # This method was extracted from create so it can be overriden in the upgrade script.
+        # In said script we can then allow for a custom behavior for the payment.method.line on the journals.
         for method in payment_methods:
             information = methods_info.get(method.code, {})
-
             if information.get('mode') == 'multi':
                 method_domain = method._get_payment_method_domain(method.code)
-
                 journals = self.env['account.journal'].search(method_domain)
-
                 self.env['account.payment.method.line'].create([{
                     'name': method.name,
                     'payment_method_id': method.id,

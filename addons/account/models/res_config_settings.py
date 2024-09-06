@@ -112,7 +112,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_batch_payment = fields.Boolean(string='Use batch payments',
         help='This allows you grouping payments into a single batch and eases the reconciliation process.\n'
              '-This installs the account_batch_payment module.')
-    module_account_sepa = fields.Boolean(string='SEPA Credit Transfer (SCT)')
+    module_account_iso20022 = fields.Boolean(string='SEPA Credit Transfer / ISO20022')
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format")
