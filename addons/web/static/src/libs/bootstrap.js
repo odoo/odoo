@@ -58,7 +58,7 @@ const bootstrapShowFunction = Tooltip.prototype.show;
 Tooltip.prototype.show = function () {
     // Overwrite bootstrap tooltip method to prevent showing 2 tooltip at the
     // same time
-    $(".tooltip").remove();
+    document.querySelectorAll(".tooltip").forEach((el) => el.remove());
     const errorsToIgnore = ["Please use show on visible elements"];
     try {
         return bootstrapShowFunction.call(this);
