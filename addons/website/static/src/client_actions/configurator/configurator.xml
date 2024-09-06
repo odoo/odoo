@@ -239,11 +239,11 @@
 
 <t t-name="website.Configurator.Configurator">
     <div class="o_configurator_container">
-        <DescriptionScreen t-if="state.currentStep === 2" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
-        <PaletteSelectionScreen t-elif="state.currentStep === 3" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
-        <FeaturesSelectionScreen t-elif="state.currentStep === 4" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator" clearStorage.bind="clearStorage"/>
-        <ThemeSelectionScreen t-elif="state.currentStep === 5" navigate="(screen) => this.navigate(screen)" clearStorage.bind="clearStorage"/>
-        <WelcomeScreen t-else="" navigate="(screen) => this.navigate(screen)" skip.bind="skipConfigurator"/>
+        <DescriptionScreen t-if="state.currentStep === 2" navigate.bind="navigate" skip.bind="skipConfigurator"/>
+        <PaletteSelectionScreen t-elif="state.currentStep === 3" navigate.bind="navigate" skip.bind="skipConfigurator"/>
+        <FeaturesSelectionScreen t-elif="state.currentStep === 4" navigate.bind="navigate" skip.bind="skipConfigurator" clearStorage.bind="clearStorage"/>
+        <ThemeSelectionScreen t-elif="state.currentStep === 5" navigate.bind="navigate" clearStorage.bind="clearStorage"/>
+        <WelcomeScreen t-else="" navigate.bind="navigate" skip.bind="skipConfigurator"/>
     </div>
 </t>
 

@@ -685,9 +685,13 @@ export class Configurator extends Component {
         history.pushState({ skipRouteChange: true, configuratorStep: this.state.currentStep }, '', this.pathname);
     }
 
-    navigate(step) {
+    navigate(step, reload = false) {
         this.state.currentStep = step;
-        this.updateBrowserUrl();
+        if (reload) {
+            redirect(this.pathname);
+        } else {
+            this.updateBrowserUrl();
+        }
     }
 
     clearStorage() {
