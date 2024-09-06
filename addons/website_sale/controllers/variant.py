@@ -9,8 +9,7 @@ class WebsiteSaleVariantController(Controller):
 
     @route('/website_sale/get_combination_info', type='json', auth='public', methods=['POST'], website=True)
     def get_combination_info_website(
-        self, product_template_id, product_id, combination, add_qty, parent_combination=None,
-        **kwargs
+        self, product_template_id, product_id, combination, add_qty, **kwargs
     ):
         product_template_id = product_template_id and int(product_template_id)
         product_id = product_id and int(product_id)
@@ -21,7 +20,6 @@ class WebsiteSaleVariantController(Controller):
             combination=request.env['product.template.attribute.value'].browse(combination),
             product_id=product_id,
             add_qty=add_qty and float(add_qty) or 1.0,
-            parent_combination=request.env['product.template.attribute.value'].browse(parent_combination),
         )
 
         # Pop data only computed to ease server-side computations.

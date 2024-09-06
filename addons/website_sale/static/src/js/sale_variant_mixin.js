@@ -65,7 +65,6 @@ var VariantMixin = {
             'product_id': this._getProductId($parent),
             'combination': combination,
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
-            'parent_combination': [],
             'context': this.context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
@@ -73,7 +72,7 @@ var VariantMixin = {
                 return;
             }
             this._onChangeCombination(ev, $parent, combinationData);
-            this._checkExclusions($parent, combination, combinationData.parent_exclusions);
+            this._checkExclusions($parent, combination);
         });
     },
 
@@ -320,18 +319,13 @@ var VariantMixin = {
      * @private
      * @param {$.Element} $parent the parent container to apply exclusions
      * @param {Array} combination the selected combination of product attribute values
-     * @param {Array} parentExclusions the exclusions induced by the variant selection of the parent product
-     * For example chair cannot have steel legs if the parent Desk doesn't have steel legs
      */
-    _checkExclusions: function ($parent, combination, parentExclusions) {
+    _checkExclusions: function ($parent, combination) {
         var self = this;
         var combinationData = $parent
             .find('ul[data-attribute_exclusions]')
             .data('attribute_exclusions');
 
-        if (parentExclusions && combinationData.parent_exclusions) {
-            combinationData.parent_exclusions = parentExclusions;
-        }
         $parent
             .find('option, input, label, .o_variant_pills')
             .removeClass('css_not_available')
@@ -404,24 +398,6 @@ var VariantMixin = {
                 }
             });
         }
-
-        // parent exclusions (tell which attributes are excluded from parent)
-        for (const [excluded_by, exclusions] of Object.entries(
-            combinationData.parent_exclusions || {}
-        )) {
-            // check that the selected combination is in the parent exclusions
-            exclusions.forEach((ptav) => {
-                // disable the excluded input (even when not already selected)
-                // to give a visual feedback before click
-                self._disableInput(
-                    $parent,
-                    ptav,
-                    excluded_by,
-                    combinationData.mapped_attribute_names,
-                    combinationData.parent_product_name
-                );
-            });
-        }
     },
     /**
      * Extracted to a method to be extendable by other modules
@@ -482,9 +458,10 @@ var VariantMixin = {
      * @param {Array} combination
      */
     _onChangeCombination: function (ev, $parent, combination) {
+        const isCombinationPossible = !!combination.is_combination_possible;
         const $pricePerUom = $parent.find(".o_base_unit_price:first .oe_currency_value");
         if ($pricePerUom.length) {
-            if (combination.is_combination_possible !== false && combination.base_unit_price != 0) {
+            if (isCombinationPossible && combination.base_unit_price != 0) {
                 $pricePerUom.parents(".o_base_unit_price_wrapper").removeClass("d-none");
                 $pricePerUom.text(this._priceToStr(combination.base_unit_price));
                 $parent.find(".oe_custom_base_unit:first").text(combination.base_unit_name);
@@ -512,29 +489,25 @@ var VariantMixin = {
             quantity.removeClass('d-inline-flex').addClass('d-none');
             addToCart.removeClass('d-inline-flex').addClass('d-none');
             contactUsButton.removeClass('d-none').addClass('d-flex');
-            product_unavailable.removeClass('d-none').addClass('d-flex')
+            product_unavailable.removeClass('d-none').addClass('d-flex');
         } else {
             productPrice.removeClass('d-none').addClass('d-inline-block');
             quantity.removeClass('d-none').addClass('d-inline-flex');
             addToCart.removeClass('d-none').addClass('d-inline-flex');
             contactUsButton.removeClass('d-flex').addClass('d-none');
-            product_unavailable.removeClass('d-flex').addClass('d-none')
+            product_unavailable.removeClass('d-flex').addClass('d-none');
         }
 
-        var self = this;
-        var $price = $parent.find(".oe_price:first .oe_currency_value");
-        var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
-        var $compare_price = $parent.find(".oe_compare_list_price")
+        const self = this;
+        const $price = $parent.find(".oe_price:first .oe_currency_value");
+        const $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
+        const $compare_price = $parent.find(".oe_compare_list_price")
         $price.text(self._priceToStr(combination.price));
         $default_price.text(self._priceToStr(combination.list_price));
 
-        var isCombinationPossible = true;
-        if (typeof combination.is_combination_possible !== "undefined") {
-            isCombinationPossible = combination.is_combination_possible;
-        }
         this._toggleDisable($parent, isCombinationPossible);
 
-        if (combination.has_discounted_price && !combination.compare_list_price) {
+        if (combination.has_discounted_price) {
             $default_price
                 .closest('.oe_website_sale')
                 .addClass("discount");
