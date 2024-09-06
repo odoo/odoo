@@ -41,6 +41,7 @@ have real delivered quantities in sales orders.
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
+            # TODO-shsa: didnt saw any usage of this file, remove it ?
             'sale_timesheet/static/src/scss/sale_timesheet_portal.scss',
         ],
         'web.assets_backend': [

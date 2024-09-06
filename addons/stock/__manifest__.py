@@ -109,6 +109,8 @@
             'stock/static/src/stock_forecasted/forecasted_graph.*',
         ],
         'web.assets_frontend': [
+            # all the classes mentioned are either never used or used in the backend or xml templates
+            # i see no point to include them in the frontend assets or may be not?
             'stock/static/src/scss/stock_traceability_report.scss',
         ],
         'web.assets_tests': [
