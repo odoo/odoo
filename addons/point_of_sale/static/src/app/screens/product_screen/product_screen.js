@@ -205,12 +205,11 @@ export class ProductScreen extends Component {
             return;
         }
 
-        const configure =
-            product.isConfigurable() &&
-            product.attribute_line_ids.length > 0 &&
-            !product.attribute_line_ids.every((l) => l.attribute_id.create_variant === "always");
-
-        await this.pos.addLineToCurrentOrder({ product_id: product }, { code }, configure);
+        await this.pos.addLineToCurrentOrder(
+            { product_id: product },
+            { code },
+            product.needToConfigure()
+        );
         this.numberBuffer.reset();
     }
     async _getPartnerByBarcode(code) {

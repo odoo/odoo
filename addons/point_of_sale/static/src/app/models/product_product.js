@@ -40,6 +40,14 @@ export class ProductProduct extends Base {
         return this.attribute_line_ids.map((a) => a.product_template_value_ids).flat().length > 1;
     }
 
+    needToConfigure() {
+        return (
+            this.isConfigurable() &&
+            this.attribute_line_ids.length > 0 &&
+            !this.attribute_line_ids.every((l) => l.attribute_id.create_variant === "always")
+        );
+    }
+
     isCombo() {
         return this.combo_ids.length;
     }
