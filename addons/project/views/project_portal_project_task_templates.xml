@@ -80,7 +80,7 @@
                                 <td>
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
                                     <div t-if="assignees" class="flex-nowrap ps-3">
-                                        <img class="rounded o_portal_contact_img me-2" t-attf-src="#{image_data_uri(assignees[:1].avatar_128)}" alt="User" style="width: 20px; height: 20px;"/>
+                                        <img class="o_avatar o_portal_contact_img rounded" t-attf-src="#{image_data_uri(assignees[:1].avatar_128)}" alt="User"/>
                                         <span t-att-title="'\n'.join(assignees.mapped('name'))">
                                             <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-light"> +<span t-out="len(assignees) - 1"/></span>
                                         </span>
