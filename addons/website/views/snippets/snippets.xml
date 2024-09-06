@@ -54,6 +54,9 @@
                 <t t-snippet="website.s_carousel" string="Carousel" group="intro">
                     <keywords>gallery, carousel</keywords>
                 </t>
+                <t t-snippet="website.s_carousel_intro" string="Carousel Intro" group="intro">
+                    <keywords>gallery, carousel, slider, slideshow, picture, photo, image-slider, rotating, swipe, transition, media-carousel, movement</keywords>
+                </t>
                 <t t-snippet="website.s_adventure" string="Adventure" group="intro">
                     <keywords>journey, exploration, travel, outdoor, excitement, quest, start, onboarding, discovery, thrill</keywords>
                 </t>
@@ -436,6 +439,43 @@
     </xpath>
 </template>
 
+<template id="snippet_options_carousel">
+    <div data-js="Carousel"
+         data-selector="section"
+         data-exclude=".s_carousel_intro_wrapper"
+         data-target="> .carousel">
+        <we-row string="Slide">
+            <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
+        </we-row>
+        <we-select string="Style">
+            <we-button data-select-class="">Classic</we-button>
+            <we-button data-select-class="s_carousel_controllers_indicators_outside">Indicators outside</we-button>
+        </we-select>
+        <we-checkbox string="Invert colors" class="o_we_sublevel_1" data-select-class="carousel-dark"/>
+        <we-select string="Arrows" class="o_we_sublevel_1">
+            <we-button data-select-class="s_carousel_default">Default</we-button>
+            <we-button data-select-class="s_carousel_boxed">Boxed</we-button>
+            <we-button data-select-class="s_carousel_rounded">Rounded</we-button>
+            <we-button data-select-class="s_carousel_arrows_hidden">Hidden</we-button>
+        </we-select>
+        <we-select string="Indicators" data-apply-to=".carousel-indicators" class="o_we_sublevel_1">
+            <we-button data-select-class="">Bars</we-button>
+            <we-button data-select-class="s_carousel_indicators_dots">Dots</we-button>
+            <we-button data-select-class="s_carousel_indicators_numbers">Numbers</we-button>
+            <we-button data-select-class="s_carousel_indicators_hidden">Hidden</we-button>
+        </we-select>
+        <we-select string="Transition">
+            <we-button data-select-class="slide">Slide</we-button>
+            <we-button data-select-class="carousel-fade slide">Fade</we-button>
+            <we-divider/>
+            <we-button data-select-class="">None</we-button>
+        </we-select>
+        <we-input string="Speed"
+                  data-select-data-attribute="0s" data-attribute-name="bsInterval"
+                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
+    </div>
+</template>
+
 <template id="snippet_options_border_line_widgets">
     <we-row t-att-string="label">
         <we-input data-name="border_width_opt"
@@ -682,42 +722,11 @@
         <t t-set="with_gradients" t-value="True"/>
         <t t-set="with_color_combinations" t-value="True"/>
     </t>
-    <div data-js="Carousel"
-         data-selector="section"
-         data-target="> .carousel">
-        <we-row string="Slide">
-            <we-button data-add-slide="true" data-no-preview="true" class="o_we_bg_brand_primary">Add Slide</we-button>
-        </we-row>
-        <we-select string="Style">
-            <we-button data-select-class="">Classic</we-button>
-            <we-button data-select-class="s_carousel_controllers_indicators_outside">Indicators outside</we-button>
-        </we-select>
-        <we-checkbox string="Invert colors" class="o_we_sublevel_1" data-select-class="carousel-dark"/>
-        <we-select string="Arrows" class="o_we_sublevel_1">
-            <we-button data-select-class="s_carousel_default">Default</we-button>
-            <we-button data-select-class="s_carousel_boxed">Boxed</we-button>
-            <we-button data-select-class="s_carousel_rounded">Rounded</we-button>
-            <we-button data-select-class="s_carousel_arrows_hidden">Hidden</we-button>
-        </we-select>
-        <we-select string="Indicators" data-apply-to=".carousel-indicators" class="o_we_sublevel_1">
-            <we-button data-select-class="">Bars</we-button>
-            <we-button data-select-class="s_carousel_indicators_dots">Dots</we-button>
-            <we-button data-select-class="s_carousel_indicators_numbers">Numbers</we-button>
-            <we-button data-select-class="s_carousel_indicators_hidden">Hidden</we-button>
-        </we-select>
-        <we-select string="Transition">
-            <we-button data-select-class="slide">Slide</we-button>
-            <we-button data-select-class="carousel-fade slide">Fade</we-button>
-            <we-divider/>
-            <we-button data-select-class="">None</we-button>
-        </we-select>
-        <we-input string="Speed"
-                  data-select-data-attribute="0s" data-attribute-name="bsInterval"
-                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
-    </div>
+
+    <t t-call="website.snippet_options_carousel"/>
 
     <div data-js="CarouselItem"
-         data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
+         data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item">
         <we-button class="fa fa-fw fa-angle-left" data-switch-to-slide="left" data-no-preview="true" title="Move Backward"/>
         <we-button class="fa fa-fw fa-angle-right me-2" data-switch-to-slide="right" data-no-preview="true" title="Move Forward"/>
         <we-button class="fa fa-fw fa-plus o_we_bg_success" data-add-slide-item="true" data-no-preview="true" title="Add Slide"/>
@@ -725,7 +734,7 @@
     </div>
 
     <div data-js="GalleryElement"
-        data-selector=".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
+        data-selector=".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item">
         <we-row string="Re-order" data-no-preview="true">
             <we-button class="fa fa-fw fa-angle-double-left" title="Move to first" data-position="first"/>
             <we-button class="fa fa-fw fa-angle-left" title="Move to previous" data-position="prev"/>
@@ -828,7 +837,7 @@
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
     <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_text_cover .row > .o_not_editable'"/>
-    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper'"/>
+    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block .s_col_no_resize, .s_quotes_carousel_wrapper, .s_carousel_intro_wrapper'"/>
 
     <t t-call="website.snippet_options_background_options">
         <t t-set="selector" t-value="both_bg_color_image_selector"/>
