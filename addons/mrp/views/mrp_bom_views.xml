@@ -152,7 +152,7 @@
                                     <field name="allow_operation_dependencies" groups="mrp.group_mrp_workorder_dependencies"/>
                                 </group>
                                 <group>
-                                    <field name="picking_type_id" invisible="type == 'phantom'" string="Routing" groups="stock.group_adv_location"/>
+                                    <field name="picking_type_id" invisible="type == 'phantom'" groups="stock.group_adv_location"/>
                                     <label for="produce_delay" string="Manuf. Lead Time"/>
                                     <div>
                                         <field name="produce_delay" class="oe_inline"/> days
