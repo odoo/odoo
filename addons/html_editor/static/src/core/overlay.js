@@ -29,7 +29,7 @@ export class EditorOverlay extends Component {
             useExternalListener(this.props.bus, "updatePosition", () => {
                 position.unlock();
             });
-            getTarget = this.getCurrentRect.bind(this);
+            getTarget = this.getSelectionTarget.bind(this);
         }
 
         const rootRef = useRef("root");
@@ -61,23 +61,22 @@ export class EditorOverlay extends Component {
         position = usePosition("root", getTarget, positionConfig);
     }
 
-    getCurrentRect() {
+    getSelectionTarget() {
         const doc = this.props.editable.ownerDocument;
         const selection = doc.getSelection();
         if (!selection || !selection.rangeCount) {
             return null;
         }
         const inEditable = this.props.editable.contains(selection.anchorNode);
-        let range, focusNode;
+        let range;
         if (inEditable) {
             range = selection.getRangeAt(0);
-            focusNode = selection.focusNode;
+            this.lastSelection = { range };
         } else {
             if (!this.lastSelection) {
                 return null;
             }
             range = this.lastSelection.range;
-            focusNode = this.lastSelection.focusNode;
         }
         let rect = range.getBoundingClientRect();
         if (rect.x === 0 && rect.width === 0 && rect.height === 0) {
@@ -89,15 +88,12 @@ export class EditorOverlay extends Component {
             shadowCaret.remove();
             clonedRange.detach();
         }
-        this.lastSelection = {
-            range,
-            focusNode,
-        };
-        // not proud of this...
-        if (focusNode.nodeType === Node.TEXT_NODE) {
-            focusNode.getBoundingClientRect = () => rect;
-        }
-        return focusNode;
+        // Disconnected html element with a patched getBoundingClientRect
+        // method. It represents the range as a (HTMLElement) target for the
+        // usePosition hook.
+        const rangeElement = doc.createElement("range-el");
+        rangeElement.getBoundingClientRect = () => rect;
+        return rangeElement;
     }
 
     updateVisibility(overlayElement, solution) {
