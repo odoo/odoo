@@ -83,6 +83,10 @@ pip() {
 source ~/.bashrc
 source /home/pi/.bashrc
 
+# copy the odoo.conf file to the overwrite directory
+mv -v "/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "/home/pi/"
+chown pi:pi "/home/pi/odoo.conf"
+
 apt-get update
 
 # At the first start it is necessary to configure a password
@@ -106,6 +110,7 @@ PKGS_TO_INSTALL="
     kpartx \
     libcups2-dev \
     libpq-dev \
+    libffi-dev \
     lightdm \
     localepurge \
     nginx-full \
