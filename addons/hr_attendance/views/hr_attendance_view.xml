@@ -204,7 +204,9 @@
                 <field name="employee_id" type="row"/>
                 <field name="check_in" type="col" interval="month"/>
                 <field name="worked_hours" type="measure" widget="float_time"/>
-                <field name="overtime_hours" type="measure" widget="float_time"/>
+                <field name="expected_hours" type="measure" widget="float_time"/>
+                <field name="overtime_hours" string="Balance" type="measure" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Validated Extra Hours" type="measure" widget="float_time"/>
             </pivot>
         </field>
     </record>
