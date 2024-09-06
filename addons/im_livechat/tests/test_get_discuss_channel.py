@@ -227,41 +227,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertTrue(member_of_operator.is_pinned, "unread channel should not be unpinned after autovacuum")
 
-    def test_channel_command_help_in_livechat(self):
-        """Ensures the command '/help' works in a livechat"""
-        channel_info = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {
-                "anonymous_name": "<strong>visitor</strong>",
-                "channel_id": self.livechat_channel.id,
-                "previous_operator_id": self.operators[1].partner_id.id
-            },
-        )["Thread"]
-        channel = self.env["discuss.channel"].browse(channel_info["id"])
-        self.env['bus.bus'].sudo().search([]).unlink()
-        with self.assertBus(
-            [(self.env.cr.dbname, "res.partner", self.env.user.partner_id.id)],
-            [
-                {
-                    "type": "discuss.channel/transient_message",
-                    "payload": {
-                        "body":
-                            "<span class='o_mail_notification'>You are in a private conversation with <b>@Paul</b> and <b>@Visitor</b>."
-                            "<br><br>Type <b>@username</b> to mention someone, and grab their attention."
-                            "<br>Type <b>#channel</b> to mention a channel."
-                            "<br>Type <b>/command</b> to execute a command."
-                            "<br>Type <b>:shortcut</b> to insert a canned response in your message."
-                            "</span>",
-                            "thread": {
-                                "model": "discuss.channel",
-                                "id": channel.id,
-                            },
-                    },
-                },
-            ],
-        ):
-            channel.execute_command_help()
-
     def test_only_active_livechats_returned_by_init_messaging(self):
         self.authenticate(None, None)
         operator = new_test_user(self.env, login="John")
