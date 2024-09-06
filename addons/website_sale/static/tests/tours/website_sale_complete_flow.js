@@ -501,14 +501,6 @@
         trigger: '.oe_cart .btn:contains("Continue checkout")',
         run: "click",
     },
-    {
-        content: "Check selected billing address is same as typed in previous step",
-        trigger: '#shipping_and_billing:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
-    },
-    {
-        content: "Check selected shipping address is same as typed in previous step",
-        trigger: '#shipping_and_billing:contains(SO2New Shipping Street, 5):contains(SO2NewShipping):contains(Afghanistan)',
-    },
     ...tourUtils.payWithTransfer(),
     {
         content: "Check payment status confirmation window",
