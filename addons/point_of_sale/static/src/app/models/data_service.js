@@ -7,6 +7,8 @@ import { batched } from "@web/core/utils/timing";
 import IndexedDB from "./utils/indexed_db";
 import { DataServiceOptions } from "./data_service_options";
 import { uuidv4 } from "@point_of_sale/utils";
+import { browser } from "@web/core/browser/browser";
+import { ConnectionLostError } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
 const INDEXED_DB_VERSION = 1;
@@ -45,6 +47,14 @@ export class PosData extends Reactive {
             }),
             [this.records]
         );
+
+        browser.addEventListener("online", () => {
+            this.setOnline();
+        });
+
+        browser.addEventListener("offline", () => {
+            this.setOffline();
+        });
     }
 
     async resetIndexedDB() {
@@ -260,6 +270,10 @@ export class PosData extends Reactive {
         this.network.loading = true;
 
         try {
+            if (this.network.offline) {
+                throw new ConnectionLostError();
+            }
+
             let result = true;
             let limitedFields = false;
             if (fields.length === 0) {
@@ -359,7 +373,6 @@ export class PosData extends Reactive {
                 result = results[model];
             }
 
-            this.setOnline();
             return result;
         } catch (error) {
             const uuids = this.network.unsyncData.map((d) => d.uuid);
