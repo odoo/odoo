@@ -85,6 +85,6 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                 'product_qty': line.product_qty,
                 'product_uom': line.product_uom.id,
                 'display_type': line.display_type,
-                'name': line.name,
+                **({'name': line.name} if line.display_type in ('line_section', 'line_note') else {}),
             }) for line in self.origin_po_id.order_line]
         return vals
