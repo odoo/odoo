@@ -55,7 +55,7 @@ export function makeAsyncHandler(fct, preventDefault, stopPropagation) {
 
         _lock();
         const result = fct.apply(this, arguments);
-        Promise.resolve(result).finally(_unlock);
+        Promise.resolve(result).then(_unlock, _unlock);
         return result;
     };
 }
@@ -105,7 +105,7 @@ export function makeButtonHandler(fct) {
         new Promise(resolve => setTimeout(resolve, DEBOUNCE)).then(() => {
             buttonEl.classList.remove("pe-none");
             const restore = addLoadingEffect(buttonEl);
-            return Promise.resolve(result).finally(restore);
+            return Promise.resolve(result).then(restore, restore);
         });
 
         return result;
