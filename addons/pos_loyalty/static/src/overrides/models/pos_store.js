@@ -26,10 +26,9 @@ function inverted(fn) {
 
 patch(PosStore.prototype, {
     async setup() {
-        await super.setup(...arguments);
-
         this.couponByLineUuidCache = {};
         this.rewardProductByLineUuidCache = {};
+        await super.setup(...arguments);
 
         effect(
             batched((orders) => {
