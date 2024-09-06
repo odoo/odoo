@@ -2755,8 +2755,9 @@ class SnippetsMenu extends Component {
             //     └ descendantInvisibleSnippet
             //          └ descendantOfDescendantInvisibleSnippet
             //               └ etc...
-            const createInvisibleElements = (snippetEls, isDescendant) => {
-                return Promise.all((snippetEls).map(async (snippetEl) => {
+            const createInvisibleElements = async (snippetEls, isDescendant) => {
+                const results = [];
+                for (const snippetEl of snippetEls) {
                     const descendantSnippetEls = descendantPerSnippet.get(snippetEl);
                     // An element is considered as "RootParent" if it has one or
                     // more invisible descendants but is not a descendant.
@@ -2765,8 +2766,9 @@ class SnippetsMenu extends Component {
                     if (descendantSnippetEls) {
                         invisibleElement.children = await createInvisibleElements(descendantSnippetEls, true);
                     }
-                    return invisibleElement;
-                }));
+                    results.push(invisibleElement);
+                }
+                return results;
             };
             this.state.invisibleElements = await createInvisibleElements(rootInvisibleSnippetEls, false, this.state.invisibleElements);
         }, false);
