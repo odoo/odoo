@@ -106,7 +106,7 @@ export class PosData extends Reactive {
         };
 
         for (const [model, params] of Object.entries(this.opts.databaseTable)) {
-            const nbrRecords = Object.values(records[model]).length;
+            const nbrRecords = records[model].size;
 
             if (!nbrRecords) {
                 continue;
@@ -231,8 +231,7 @@ export class PosData extends Reactive {
         const { models, records, indexedRecords } = createRelatedModels(
             relations,
             modelClasses,
-            this.opts.databaseIndex,
-            this.opts.databaseTable
+            this.opts
         );
 
         this.records = records;

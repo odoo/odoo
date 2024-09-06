@@ -361,25 +361,7 @@ export class FloorScreen extends Component {
     async onWillStart() {
         this.pos.searchProductWord = "";
         const table = this.pos.selectedTable;
-        const tableByIds = this.pos.models["restaurant.table"].getAllBy("id");
         if (table) {
-            const orders = this.pos.get_open_orders();
-            const tableOrders = orders.filter(
-                (order) => order.table_id?.id === table.id && !order.finalized
-            );
-            const qtyChange = tableOrders.reduce(
-                (acc, order) => {
-                    const quantityChange = this.pos.getOrderChanges(false, order);
-                    const quantitySkipped = this.pos.getOrderChanges(true, order);
-                    acc.changed += quantityChange.count;
-                    acc.skipped += quantitySkipped.count;
-                    return acc;
-                },
-                { changed: 0, skipped: 0 }
-            );
-
-            tableByIds[table.id].uiState.orderCount = tableOrders.length;
-            tableByIds[table.id].uiState.changeCount = qtyChange.changed;
             await this.pos.unsetTable();
         }
     }
@@ -924,7 +906,7 @@ export class FloorScreen extends Component {
         }
         const table_ids = floor.table_ids;
         for (const table of table_ids) {
-            changeCount += table.uiState.changeCount || 0;
+            changeCount += this.getChangeCount(table) || 0;
         }
 
         return changeCount;
@@ -962,28 +944,22 @@ export class FloorScreen extends Component {
             }
         }
     }
-    getOrderCount(table) {
+    getChangeCount(table) {
         // This information in uiState came by websocket
-        if (table.uiState.changeCount > 0) {
-            return table.uiState.changeCount;
-        }
-        if (table.uiState.skipCount > 0) {
-            return table.uiState.skipCount;
-        }
-
         // If the table is not synced, we need to count the unsynced orders
-        const orderCount = new Set();
+        let changeCount = 0;
+        let skipCount = 0;
         const tableOrders = this.pos.models["pos.order"].filter(
             (o) => o.table_id?.id === table.id && !o.finalized
         );
 
-        table.uiState.orderCount = tableOrders.length;
         for (const order of tableOrders) {
             const changes = getOrderChanges(order, false, this.pos.orderPreparationCategories);
-            table.uiState.changeCount += changes.nbrOfChanges;
+            changeCount += changes.nbrOfChanges;
+            skipCount += changes.nbrOfSkipped;
         }
 
-        return table.uiState.orderCount + orderCount.size || 0;
+        return { changes: changeCount, skip: skipCount };
     }
     setColor(hasSelectedTable, color) {
         if (hasSelectedTable) {

@@ -8,11 +8,8 @@ export class RestaurantTable extends Base {
         super.setup(vals);
 
         this.table_number = vals.table_number || 0;
-
         this.uiState = {
-            orderCount: 0,
-            changeCount: 0,
-            skipCount: 0,
+            initialPosition: {},
         };
     }
     isParent(t) {
@@ -64,6 +61,14 @@ export class RestaurantTable extends Base {
             x: this.getX() + this.width / 2,
             y: this.getY() + this.height / 2,
         };
+    }
+    get orders() {
+        return this.models["pos.order"].filter(
+            (o) =>
+                o.table_id?.id === this.id &&
+                // Include the orders that are in tipping state.
+                (!o.finalized || o.uiState.screen_data?.value?.name === "TipScreen")
+        );
     }
     getOrder() {
         return this.parent_id?.getOrder?.() || this["<-pos.order.table_id"][0];

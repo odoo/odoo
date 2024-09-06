@@ -32,7 +32,7 @@ patch(PosStore.prototype, {
             this.showScreen("FloorScreen", { floor: this.selectedTable?.floor || null });
             this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
             // Sync the number of orders on each table with other PoS
-            this.getTableOrderCount();
+            this.bus.subscribe("SYNC_ORDERS", this.ws_syncTableCount.bind(this));
         }
     },
     async onDeleteOrder(order) {
@@ -44,59 +44,17 @@ patch(PosStore.prototype, {
         }
         return super.onDeleteOrder(...arguments);
     },
-    async getTableOrderCount() {
-        const result = await this.data.call(
-            "pos.config",
-            "get_tables_order_count_and_printing_changes",
-            [this.config.id]
-        );
-        this.ws_syncTableCount({ order_count: result, table_ids: [] });
-        this.bus.subscribe("TABLE_ORDER_COUNT", this.ws_syncTableCount.bind(this));
-    },
     // using the same floorplan.
     async ws_syncTableCount(data) {
-        const missingTable = data["order_count"].find(
-            (table) => !(table.id in this.models["restaurant.table"].getAllBy("id"))
-        );
-
-        if (missingTable) {
-            const response = await this.data.searchRead("restaurant.floor", [
-                ["pos_config_ids", "in", this.config.id],
-            ]);
-
-            const table_ids = response.map((floor) => floor.raw.table_ids).flat();
-            await this.data.read("restaurant.table", table_ids);
+        if (data["login_number"] === this.session.login_number) {
+            return;
         }
-        const tableByIds = this.models["restaurant.table"].getAllBy("id");
-        const tables = data["table_ids"].map((id) => this.models["restaurant.table"].get(id));
-        const draftTableOrders = [
-            ...new Set(
-                tables
-                    .map((t) => t["<-pos.order.table_id"])
-                    .flat()
-                    .filter((o) => !o.finalized)
-            ),
-        ];
-        await this.loadServerOrders([
-            "|",
 
-            // draft table orders in the server
-            ["state", "=", "draft"],
-
-            // draft table orders in client but paid in the server
-            "&",
-            ["state", "in", ["paid", "invoiced"]],
-            ["id", "in", draftTableOrders.map((t) => t.id)],
-
-            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
-            ["table_id", "in", data["table_ids"]],
-            ["session_id", "=", odoo.pos_session_id],
-        ]);
-        for (const table of data["order_count"]) {
-            tableByIds[table.id].uiState.changeCount = table.changes;
-            tableByIds[table.id].uiState.orderCount = table.orders;
-            tableByIds[table.id].uiState.skipCount = table.skip_changes;
-        }
+        const orderIds = this.models["pos.order"]
+            .filter((order) => !order.finalized && typeof order.id === "number")
+            .map((o) => o.id);
+        const orderToLoad = new Set([...data["order_ids"], ...orderIds]);
+        await this.data.read("pos.order", [...orderToLoad]);
     },
     get categoryCount() {
         const orderChange = this.getOrderChanges().orderlines;
@@ -272,16 +230,22 @@ patch(PosStore.prototype, {
         this.selectedTable = table;
         try {
             this.loadingOrderState = true;
-            await this.syncAllOrders();
+            const orders = await this.syncAllOrders();
+            const orderUuids = orders.map((order) => order.uuid);
+
+            for (const order of table.orders) {
+                if (
+                    !orderUuids.includes(order.uuid) &&
+                    typeof order.id === "number" &&
+                    order.uiState.screen_data?.value?.name !== "TipScreen"
+                ) {
+                    order.delete();
+                }
+            }
         } finally {
             this.loadingOrderState = false;
 
-            const tableOrders = this.models["pos.order"].filter(
-                (o) =>
-                    o.table_id?.id === table.id &&
-                    // Include the orders that are in tipping state.
-                    (!o.finalized || o.uiState.screen_data?.value?.name === "TipScreen")
-            );
+            const tableOrders = table.orders;
 
             let currentOrder = tableOrders.find((order) =>
                 orderUuid ? order.uuid === orderUuid : !order.finalized
