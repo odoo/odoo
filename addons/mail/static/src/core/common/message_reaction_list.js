@@ -56,7 +56,7 @@ export class MessageReactionList extends Component {
                 );
             default:
                 return _t(
-                    "%(emoji)s reacted by%(person1)s, %(person2)s, %(person3)s, and %(count)s others",
+                    "%(emoji)s reacted by %(person1)s, %(person2)s, %(person3)s, and %(count)s others",
                     {
                         count: count - 3,
                         emoji,
