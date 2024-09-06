@@ -2328,45 +2328,56 @@ Please change the quantity done or the rounding precision of your unit of measur
         return False
 
     def _match_searched_availability(self, operator, value, get_comparison_date):
-        def get_stock_moves(moves, state):
-            if state == 'available':
-                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and not m.forecast_expected_date)
-            elif state == 'expected':
-                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and m.forecast_expected_date and m.forecast_expected_date <= get_comparison_date(m))
-            elif state == 'late':
-                return moves.filtered(lambda m: m.forecast_availability == m.product_qty and m.forecast_expected_date and m.forecast_expected_date > get_comparison_date(m))
-            elif state == 'unavailable':
-                return moves if moves.filtered(lambda m: m.forecast_availability < m.product_qty) else self.env['stock.move']
-            else:
+        def get_moves_by_state(moves, move_ids_per_state, state):
+            if state not in ['available', 'expected', 'late', 'unavailable']:
                 raise UserError(_('Selection not supported.'))
+
+            if state == 'unavailable':
+                # 'unavailable' availability means at least one move is 'unavailable'
+                return set(moves.ids) if len(move_ids_per_state['unavailable']) else move_ids_per_state['unavailable']
+            elif state == 'available':
+                # 'available' availability means all moves are 'available'
+                return move_ids_per_state['available']
+            elif state == 'expected':
+                # 'expected' availability means all moves are 'available' or 'expected' and at least one 'expected'
+                if len(move_ids_per_state['expected']):
+                    return move_ids_per_state['available'] | move_ids_per_state['expected']
+                return move_ids_per_state['expected']
+            else:
+                # 'late' availability means all moves are 'available', 'expected' or 'late' and at least one 'late'
+                if len(move_ids_per_state['late']):
+                    return move_ids_per_state['available'] | move_ids_per_state['expected'] | move_ids_per_state['late']
+                return move_ids_per_state['late']
 
         if not value:
             raise UserError(_('Search not supported without a value.'))
 
         # We consider an operation without any moves as always available since there is no goods to wait.
+        equal_check = operator in {'=', 'in'}
         if len(self) == 0:
             is_selected_available = any(val == 'available' for val in value) if isinstance(value, list) else value == 'available'
-            if is_selected_available == (operator in {'=', 'in'}):
-                return True
-            return False
-        moves = self
-        if operator == '=':
-            moves = get_stock_moves(moves, value)
-        elif operator == '!=':
-            moves = moves - get_stock_moves(moves, value)
-        elif operator == 'in':
-            search_moves = self.env['stock.move']
+            return is_selected_available == equal_check
+
+        move_ids_per_state = defaultdict(set)
+        for move in self:
+            if float_compare(move.forecast_availability, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) < 0:
+                move_ids_per_state['unavailable'].add(move.id)
+            elif not move.forecast_expected_date:
+                move_ids_per_state['available'].add(move.id)
+            elif move.forecast_expected_date <= get_comparison_date(move):
+                move_ids_per_state['expected'].add(move.id)
+            elif move.forecast_expected_date > get_comparison_date(move):
+                move_ids_per_state['late'].add(move.id)
+
+        if operator in ('=', '!='):
+            move_ids = get_moves_by_state(self, move_ids_per_state, value)
+        elif operator in ('in', 'not in'):
+            move_ids = set()
             for state in value:
-                search_moves |= get_stock_moves(moves, state)
-            moves = search_moves
-        elif operator == 'not in':
-            search_moves = self.env['stock.move']
-            for state in value:
-                search_moves |= get_stock_moves(moves, state)
-            moves = self - search_moves
+                move_ids.update(get_moves_by_state(self, move_ids_per_state, state))
         else:
             raise UserError(_('Operation not supported'))
-        return len(moves) == len(self)
+        return len(move_ids) == len(self) if equal_check else len(move_ids) != len(self)
 
     def _break_mto_link(self, parent_move):
         self.move_orig_ids = [Command.unlink(parent_move.id)]

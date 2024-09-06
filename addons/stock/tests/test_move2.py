@@ -1593,6 +1593,59 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(move_lines[0].lot_id.id, serial1.id)
         self.assertEqual(move_lines[1].lot_id.id, serial2.id)
 
+    def test_search_availability(self):
+        # Setup stock for productA & prepare late replenish for productB
+        self.env['stock.quant']._update_available_quantity(self.productA, self.env['stock.location'].browse(self.stock_location), 1.0)
+        move_replenish = self.env['stock.move'].create({
+            'name': 'replenish',
+            'product_id': self.productB.id,
+            'product_uom_qty': 1,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'date': datetime.today() + timedelta(days=7)
+        })
+        move_replenish._action_confirm()
+
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'move_ids': [
+                Command.create({
+                    'name': 'available',
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1,
+                    'location_id': self.stock_location,
+                    'location_dest_id': self.customer_location,
+                }),
+                Command.create({
+                    'name': 'late',
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 1,
+                    'location_id': self.stock_location,
+                    'location_dest_id': self.customer_location,
+                })
+            ]
+        })
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+
+        # Replenish move is scheduled in one week, products availability should be late
+        late_deliveries = self.env['stock.picking'].search([('products_availability_state', '=', 'late')])
+        available_deliveries = self.env['stock.picking'].search([('products_availability_state', '=', 'available')])
+        self.assertIn(delivery_order, late_deliveries)
+        self.assertNotIn(delivery_order, available_deliveries)
+
+        # Complete replenish move, products availability should be available
+        move_replenish.picked = True
+        move_replenish._action_done()
+        delivery_order.action_assign()
+        late_deliveries = self.env['stock.picking'].search([('products_availability_state', '=', 'late')])
+        available_deliveries = self.env['stock.picking'].search([('products_availability_state', '=', 'available')])
+        self.assertNotIn(delivery_order, late_deliveries)
+        self.assertIn(delivery_order, available_deliveries)
+
     def test_use_create_lot_use_existing_lot_1(self):
         """ Check the behavior of a picking when `use_create_lot` and `use_existing_lot` are
         set to False and there's a move for a tracked product.
