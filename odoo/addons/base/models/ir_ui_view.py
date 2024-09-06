@@ -418,11 +418,12 @@ actual arch.
                     err.context = e.context
                     raise err.with_traceback(e.__traceback__) from None
                 else:
+                    ctx = e.__context__ or e
                     err = ValidationError(_(
-                        "Error while validating view (%(view)s):\n\n%(error)s", view=self.key or self.id, error=tools.ustr(e.__context__),
+                        "Error while validating view (%(view)s):\n\n%(error)s", view=self.key or self.id, error=tools.ustr(ctx),
                     ))
                     err.context = {'name': 'invalid view'}
-                    raise err.with_traceback(e.__context__.__traceback__) from None
+                    raise err.with_traceback(ctx.__traceback__) from None
 
         return True
 
