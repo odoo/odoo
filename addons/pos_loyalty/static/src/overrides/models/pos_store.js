@@ -32,7 +32,7 @@ patch(PosStore.prototype, {
 
         effect(
             batched((orders) => {
-                const order = Object.values(orders).find(
+                const order = Array.from(orders.values()).find(
                     (order) => order.uuid === this.selectedOrderUuid
                 );
 
@@ -528,7 +528,7 @@ patch(PosStore.prototype, {
 
         this.computeDiscountProductIdsForAllRewards({
             model: "product.product",
-            ids: Object.keys(this.data.records["product.product"]),
+            ids: Array.from(this.data.records["product.product"].keys()),
         });
 
         this.models["product.product"].addEventListener(

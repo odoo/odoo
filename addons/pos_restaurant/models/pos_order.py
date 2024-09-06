@@ -47,19 +47,26 @@ class PosOrder(models.Model):
 
     def send_table_count_notification(self, table_ids):
         messages = []
-        a_config = None
+        a_config = []
         for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
             if config.current_session_id:
-                a_config = config
-                order_count = config.get_tables_order_count_and_printing_changes()
+                a_config.append(config)
+                draft_order_ids = self.search([
+                    ('table_id', 'in', table_ids.ids),
+                    ('state', '=', 'draft')
+                ]).ids
                 messages.append(
                     (
-                        "TABLE_ORDER_COUNT",
-                        {"order_count": order_count, "table_ids": table_ids.ids},
+                        "SYNC_ORDERS",
+                        {
+                            'login_number': self.env.context.get('login_number', False),
+                            'order_ids': draft_order_ids,
+                        }
                     )
                 )
         if messages:
-            a_config._notify(*messages, private=False)
+            for config in a_config:
+                config._notify(*messages, private=False)
 
     def action_pos_order_cancel(self):
         res = super().action_pos_order_cancel()
