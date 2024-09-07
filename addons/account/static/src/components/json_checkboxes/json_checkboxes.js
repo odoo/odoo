@@ -3,6 +3,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import {debounce} from "@web/core/utils/timing";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 
 export class JsonCheckboxes extends Component {
