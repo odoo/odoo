@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_rs_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='delivery_date']" position="after">
+                <field name="l10n_rs_tax_date_obligations_code" 
+                    invisible="country_code != 'RS' and move_type != 'out_invoice'"
+                    required="country_code == 'RS' and move_type == 'out_invoice'"/>
+            </xpath>
+
+            <xpath expr="//field[@name='delivery_date']" position="attributes">
+                <attribute name="required">country_code == 'RS' and l10n_rs_tax_date_obligations_code == '35'</attribute>
+            </xpath>
+
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_rs_edi_error">
+                        <div class="p-0 m-0">
+                            <i class="fa fa-warning" role="img" title="Serbian eFaktura"/>
+                            <span class="mx-1">Serbian E-invoice Error:</span>
+                        </div>
+                        <field name="l10n_rs_edi_error"/>
+                    </div>
+            </xpath>
+
+            <xpath expr="//page[@id='other_tab_entry']" position="before">
+                <page id="l10n_rs_edi"
+                      string="eFaktura"
+                      invisible="not l10n_rs_edi_state">
+                    <group>
+                        <group>
+                            <field name="l10n_rs_edi_state" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="l10n_rs_edi_invoice" readonly="1"/>
+                            <field name="l10n_rs_edi_sales_invoice" readonly="1"/>
+                            <field name="l10n_rs_edi_purchase_invoice" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="l10n_rs_edi_attachment_file" widget="binary" filename="l10n_rs_edi_attachment_file" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
