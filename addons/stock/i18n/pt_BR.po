@@ -1619,6 +1619,17 @@ msgstr "Alterar quantidade do produto"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Não é permitido alterar o número de lote/série para linhas de movimentação "
+"com produtos diferentes."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -8709,7 +8720,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "O número de lote/série (%s) está vinculado a outro produto."
 
 #. module: stock
 #. odoo-python
@@ -10603,6 +10614,12 @@ msgstr ""
 "Você não pode embalar quantidades de diferentes transferências na mesma "
 "embalagem nessa visualização. Tente adicioná-las a uma separação de lote e "
 "embalá-las lá."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr "You cannot duplicate stock quants."
 
 #. module: stock
 #. odoo-python
