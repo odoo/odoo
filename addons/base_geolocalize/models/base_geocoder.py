@@ -157,3 +157,44 @@ class GeoCoder(models.AbstractModel):
 
     def _raise_query_error(self, error):
         raise UserError(_('Error with geolocation server: %s', error))
+
+    @api.model
+    def _geo_reverse(self, lat, lon):
+        """
+        Use a location provider API to convert GPS coordinates into an address dict.
+        :param lat: Latitude
+        :param lon: Longitude
+        :return: Address dict or None if not found
+        """
+        provider = self._get_provider().tech_name
+        if hasattr(self, '_reverse_' + provider):
+            service = getattr(self, '_reverse_' + provider)
+            result = service(lat, lon)
+            return result
+        return None
+
+    @api.model
+    def _reverse_openstreetmap(self, lat, lon):
+        """
+        Use Openstreetmap Nominatim service to retrieve an address from coordinates
+        :param lat: Latitude
+        :param lon: Longitude
+        :return: Address dict or None if not found
+        """
+        if not (lat and lon):
+            _logger.info('invalid coordinates given')
+            return None
+        url = 'https://nominatim.openstreetmap.org/reverse'
+        try:
+            headers = {'User-Agent': 'Odoo (http://www.odoo.com/contactus)', 'accept-language': self.env.user.lang.split("_")[0]}
+            params = {'format': 'json', 'lat': lat, 'lon': lon}
+            response = requests.get(url, headers=headers, params=params, timeout=10)
+            _logger.info('openstreetmap nominatim reverse service called')
+            if response.status_code != 200:
+                _logger.warning('Request to openstreetmap failed.\nCode: %s\nContent: %s', response.status_code, response.content)
+                return None
+            result = response.json()
+            return result.get('address', None)
+        except UserError as e:
+            self._raise_query_error(e)
+            return None
