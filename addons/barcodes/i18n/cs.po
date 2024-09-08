@@ -7,7 +7,7 @@
 # Martin Trigaux, 2022
 # xlu <xlu@seznam.cz>, 2022
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
-# Jiří Podhorecký, 2022
+# Jiří Podhorecký <jirka.p@volny.cz>, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Tomáš Píšek, 2023
 # 
@@ -249,6 +249,13 @@ msgstr "Tabulky"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
 msgstr "Vzor shody čárového kódu"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
