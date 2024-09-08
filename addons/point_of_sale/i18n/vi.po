@@ -3550,7 +3550,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
 "Để trống để sử dụng tài khoản mặc định từ cài đặt công ty.\n"
-"Tài khoản được sử dụng làm tài khoản chưa thanh toán khi tạo tập dữ liệu thanh toán kế toán cho các khoản thanh toán qua ngân hàng."
+"Tài khoản được sử dụng làm tài khoản chưa thanh toán khi tạo bản ghi thanh toán kế toán cho các khoản thanh toán qua ngân hàng."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -7994,7 +7994,7 @@ msgstr "Loại thẻ được sử dụng"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8440,6 +8440,15 @@ msgstr ""
 msgid "You cannot use the same journal on multiples cash payment methods."
 msgstr ""
 "Bạn không thể sử dụng cùng một sổ nhật ký cho nhiều phương thức tiền mặt."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You do not have permission to open a POS session. Please try opening a "
+"session with a different user"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

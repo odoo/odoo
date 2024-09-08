@@ -6331,7 +6331,7 @@ msgstr "式"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_domain_engine_subformula_required
 msgid "Expressions using 'domain' engine should all have a subformula."
-msgstr "「ドメイン」エンジンを用いた式は全て部分論理式を持っている必要があります。"
+msgstr "'ドメイン' エンジンを用いた式は全てサブ計算式を持っている必要があります。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__external_formula
@@ -6936,7 +6936,7 @@ msgstr "生成された記帳"
 #. module: account
 #: model:account.report,name:account.generic_tax_report
 msgid "Generic Tax report"
-msgstr "汎用税務申告書"
+msgstr "汎用税レポート"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -11985,17 +11985,17 @@ msgstr "丸めツリー"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 msgid "Rule to match invoices/bills"
-msgstr "顧客請求書・仕入先請求書の照合規則"
+msgstr "顧客請求書/仕入先請求書を突合するルール"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 msgid "Rule to suggest counterpart entry"
-msgstr "相手勘定仕訳を提案する規則"
+msgstr "相手勘定仕訳を提案するルール"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr "消込モデルの規則"
+msgstr "消込モデルルール"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
@@ -16430,7 +16430,7 @@ msgstr "支払条件と一致しないため、支払/受取行を削除する�
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You cannot delete a tax line as it would impact the tax report"
-msgstr "税務申告に影響を与えるため、税目を削除することはできません。"
+msgstr "税レポートに影響を与えるため、税目を削除することはできません。"
 
 #. module: account
 #. odoo-python

@@ -14,6 +14,7 @@
 # コフスタジオ, 2024
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2024
 # Djordje Marjanovic <djordje_m@yahoo.com>, 2024
+# Geoinfo d.o.o. <geoinfobih@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-14 16:15+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Djordje Marjanovic <djordje_m@yahoo.com>, 2024\n"
+"Last-Translator: Geoinfo d.o.o. <geoinfobih@gmail.com>, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -532,7 +533,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/>na ovom računu:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1031,6 +1032,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
+"quick_edit_mode\">Nacrt</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1086,7 +1089,7 @@ msgstr "<span> dospelo </span>"
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
-msgstr ""
+msgstr "<span>na</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -3779,7 +3782,7 @@ msgstr "Kase"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_48
 msgid "Cash Restaurant"
-msgstr ""
+msgstr "Restoran sa prihvatom gotovine"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -3937,7 +3940,7 @@ msgstr "Konto računa postavljen!"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Check Partner(s)"
-msgstr ""
+msgstr "Partner(i) sa kojim se plaćanje vrši čekom"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -8660,14 +8663,14 @@ msgstr "Stavka izveštaja"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Journal Item %s created"
-msgstr ""
+msgstr "Stavka dnevnika %s je kreirana."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Journal Item %s deleted"
-msgstr ""
+msgstr "Stavka dnevnika %s je izbrisana"
 
 #. module: account
 #. odoo-python
@@ -8710,12 +8713,12 @@ msgstr "Naziv dnevnika"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_credit_account_id
 msgid "Journal Outstanding Payments"
-msgstr ""
+msgstr "Dnevnik nedospelih plaćanja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_debit_account_id
 msgid "Journal Outstanding Receipts"
-msgstr ""
+msgstr "Dnevnik nedospelih priznanica "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
@@ -9756,7 +9759,7 @@ msgstr "Negative value of amount field if payment_type is outbound"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "Ugnežđene grupe taksi nisu dozvoljene."
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -10872,7 +10875,7 @@ msgstr "Partner mapping for reconciliation models"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partner(s) should have an email address."
-msgstr ""
+msgstr "Partner(i) treba da ima e-adresu."
 
 #. module: account
 #. odoo-python
@@ -11716,7 +11719,7 @@ msgstr "Kreiranje nove sekvence"
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Read-only"
-msgstr ""
+msgstr "Samo za pregled"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12425,7 +12428,7 @@ msgstr "Primer obaveštenja"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Sample Ref"
-msgstr ""
+msgstr "Uzorak ref."
 
 #. module: account
 #. odoo-python
@@ -12548,7 +12551,7 @@ msgstr "Sekcija"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_main_report_ids
 msgid "Section Of"
-msgstr ""
+msgstr "Odeljak"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__section_report_ids
@@ -12822,7 +12825,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Sending invoices"
-msgstr ""
+msgstr "Slanje faktura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -13139,7 +13142,7 @@ msgstr "Snailmail"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Some documents are being sent by another process already."
-msgstr ""
+msgstr "Određeni dokumenti se već šalju od strane drugog procesa. "
 
 #. module: account
 #. odoo-python
@@ -13932,7 +13935,7 @@ msgstr "Tekstualna vrednost"
 #: code:addons/account/static/src/components/document_state/document_state_field.js:0
 #, python-format
 msgid "Text copied"
-msgstr ""
+msgstr "Tekst je kopiran"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -14221,6 +14224,8 @@ msgid ""
 "The country code of the foreign VAT number does not match any country in the"
 " group."
 msgstr ""
+"Oznaka zemlje za dati inostrani PDV broj ne odgovara nijednoj zemlji u "
+"grupi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14811,6 +14816,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Odabrana metoda plaćanja nije dostupna za ovo plaćanje, molimo vas da ponovo"
+" odaberete metodu plaćanja."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16353,7 +16360,7 @@ msgstr "Pregled"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Pogledaj partnera(e)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -16878,7 +16885,7 @@ msgstr ""
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "Ne možete da unesete uplate za ulazne i izlazne tokove u isto vreme. "
 
 #. module: account
 #. odoo-python
@@ -16888,6 +16895,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
+"Ne možete da povratite nacrt unosa u dnevnik. Potrebno je da umesto toga "
+"zatražite otkazivanje."
 
 #. module: account
 #. odoo-python
@@ -16939,6 +16948,8 @@ msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
 msgstr ""
+"Ne možete da kreirate fiskalnu poziciju za zemlju koja je izvan odabrane "
+"grupe zemalja. "
 
 #. module: account
 #. odoo-python
@@ -16989,7 +17000,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "Ne možete da kreirate rekurzivne grupe."
 
 #. module: account
 #. odoo-python
@@ -17666,7 +17677,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "has been applied."
-msgstr ""
+msgstr "je primenjeno."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
