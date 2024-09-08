@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Fernanda Alvarez, 2024
 # Wil Odoo, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1665,6 +1665,17 @@ msgstr "Cambiar cantidad de producto"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"No está permitido cambiar el número de serie o lote para las líneas de "
+"movimiento con distintos productos."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -2741,8 +2752,8 @@ msgid ""
 "replenished on order, etc."
 msgstr ""
 "Si cuenta con los módulos correspondientes instalados, esto le permitirá "
-"definir la ruta del producto en este empaquetado: si se comprará, se "
-"fabricará, se reabastecerá bajo pedido, etc."
+"definir la ruta del producto en este embalaje: si se comprará, se fabricará,"
+" se reabastecerá bajo pedido, etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -7522,12 +7533,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
 msgid "Reserve Packagings"
-msgstr "Reservar empaquetados"
+msgstr "Reservar embalajes"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__partial
 msgid "Reserve Partial Packagings"
-msgstr "Reservar empaquetado parcial"
+msgstr "Reservar embalajes parciales"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -8827,7 +8838,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "El número de serie o lote (%s) está vinculado a otro producto."
 
 #. module: stock
 #. odoo-python
@@ -10372,8 +10383,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_route__packaging_selectable
 msgid "When checked, the route will be selectable on the Product Packaging."
 msgstr ""
-"Cuando se selecciona, la ruta se podrá seleccionar en el empaquetado de "
-"producto. "
+"Cuando se selecciona, podrá seleccionar la ruta en el embalaje del producto."
+" "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -10813,6 +10824,12 @@ msgstr ""
 "No puede empaquetar cantidades de diferentes traslados en el mismo paquete "
 "desde esta vista. Trate de agregarlos a una recolección por lote y hágalo "
 "desde allí."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr "No puede duplicar cantidades de existencias. "
 
 #. module: stock
 #. odoo-python

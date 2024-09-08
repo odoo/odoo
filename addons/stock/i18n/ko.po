@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Sarah Park, 2024
-# Daye Jeong, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1608,6 +1608,15 @@ msgstr "연결된 이동이 있음"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "품목 수량 변경"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr "다른 제품이 포함된 이동 라인의 로트/일련 번호 변경은 허용되지 않습니다."
 
 #. module: stock
 #. odoo-python
@@ -8569,7 +8578,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "로트/일련 번호(%s)가 다른 제품에 연결되어 있습니다."
 
 #. module: stock
 #. odoo-python
@@ -9933,7 +9942,7 @@ msgstr "경고!"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Warning: change source location"
-msgstr ""
+msgstr "경고: 원본 위치 변경"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10406,6 +10415,12 @@ msgid ""
 msgstr ""
 "이 보기를 사용하여 서로 다른 전송의 수량을 동일한 패키지로 통합할 수 없습니다. 대신 일괄 피킹에 수량을 추가하고 그곳에서 포장할 수 "
 "있습니다."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr "재고량은 중복으로 사용할 수 없습니다."
 
 #. module: stock
 #. odoo-python

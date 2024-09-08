@@ -166,7 +166,7 @@ msgid ""
 "<span>Tip: At least one interaction (Question, Email, ...) is needed before the Bot can perform more complex actions (Forward to an Operator, ...). </span>\n"
 "                    <span>Use Channel Rules if you want the Bot to interact with visitors only when no operator is available.</span>"
 msgstr ""
-"<span>Mẹo: Cần có ít nhất một tương tác (Câu hỏi, Email,...) trước khi Bot có thể thực hiện các hành động phức tạp hơn (Chuyển tiếp cho Người đại diện, ...).</span>\n"
+"<span>Mẹo: Cần có ít nhất một tương tác (Câu hỏi, Email,...) trước khi Bot có thể thực hiện các tác vụ phức tạp hơn (Chuyển tiếp cho Người đại diện, ...).</span>\n"
 "                    <span>Hãy sử dụng Quy tắc kênh nếu bạn chỉ muốn Bot tương tác với khách truy cập khi không có người đại diện nào.</span>"
 
 #. module: im_livechat
@@ -177,8 +177,8 @@ msgid ""
 "...).</span>"
 msgstr ""
 "<span>Mẹo: Cần có ít nhất một tương tác (Câu hỏi, Email,...) trước khi Bot "
-"có thể thực hiện các hành động phức tạp hơn (Chuyển tiếp cho Người đại diện,"
-" ...).</span>"
+"có thể thực hiện các tác vụ phức tạp hơn (Chuyển tiếp cho Người đại diện, "
+"...).</span>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_step_view_form
@@ -212,7 +212,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__active
@@ -643,10 +643,10 @@ msgid ""
 "installed on your server, otherwise, the countries of the rule will not be "
 "taken into account."
 msgstr ""
-"Xác định quy tắc cho kênh hỗ trợ trực tiếp của bạn. Bạn có thể áp dụng hành "
-"động cho URL nhất định và theo mỗi quốc gia.<br/>Để xác định quốc gia, máy "
-"chủ của bạn phải cài đặt GeoIP; nếu không, các quốc gia trong quy tắc sẽ "
-"không được tính đến."
+"Xác định quy tắc cho kênh hỗ trợ trực tiếp của bạn. Bạn có thể áp dụng tác "
+"vụ cho URL nhất định và theo mỗi quốc gia.<br/>Để xác định quốc gia, máy chủ"
+" của bạn phải cài đặt GeoIP; nếu không, các quốc gia trong quy tắc sẽ không "
+"được tính đến."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
@@ -655,9 +655,8 @@ msgid ""
 "selected action must be 'Open automatically' otherwise this parameter will "
 "not be taken into account."
 msgstr ""
-"Độ trễ (tính theo giây) để tự động mở cửa sổ cuộc trò chuyện. Lưu ý: hành "
-"động được chọn phải là 'Tự động mở', nếu không biến này sẽ không được tính "
-"đến."
+"Độ trễ (tính theo giây) để tự động mở cửa sổ cuộc trò chuyện. Lưu ý: tác vụ "
+"được chọn phải là 'Tự động mở', nếu không biến này sẽ không được tính đến."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1255,7 +1254,7 @@ msgstr "Văn bản thông báo"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__chatbot_script_count
@@ -1757,9 +1756,9 @@ msgid ""
 " these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
 "Quy tắc sẽ chỉ được áp dụng đối với các quốc gia này. Ví dụ: Nếu bạn chọn "
-"'Bỉ' và 'Hoa Kỳ' và đặt hành động là 'Ẩn', thì nút trò chuyện trên URL đã "
-"xác định sẽ bị ẩn đối với khách truy cập từ 2 quốc gia này. Tính năng này "
-"yêu cầu cài đặt GeoIP trên máy chủ."
+"'Bỉ' và 'Hoa Kỳ' và đặt tác vụ là 'Ẩn', thì nút trò chuyện trên URL đã xác "
+"định sẽ bị ẩn đối với khách truy cập từ 2 quốc gia này. Tính năng này yêu "
+"cầu cài đặt GeoIP trên máy chủ."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1600,6 +1600,15 @@ msgstr "更改产品数量"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -2778,7 +2787,7 @@ msgstr "目的位置"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__location_dest_from_rule
 msgid "Destination location origin from rule"
-msgstr ""
+msgstr "使用规则的目标位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -5282,7 +5291,7 @@ msgstr "没有作业。让我们创建一个调拨！"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "未找到可生成序列号/批次的产品。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -8534,7 +8543,7 @@ msgstr "“手动作业”的值会在当前作业之后创建库存调拨。当
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "批次/序列号（%s）与另一个产品有关联。"
 
 #. module: stock
 #. odoo-python
@@ -10334,6 +10343,12 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr "您不能通过此视图，将不同转移的数量直接打包到同一个货包中。请尝试将它们添加到批次拣选中，然后在该处打包。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr ""
 
 #. module: stock
 #. odoo-python

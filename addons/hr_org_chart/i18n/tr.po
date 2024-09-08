@@ -1,33 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_org_chart
-#
+# 
 # Translators:
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# Buket Şeker <buket_skr@hotmail.com>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-#
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2024
+# Buket Şeker <buket_skr@hotmail.com>, 2024
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# Levent Karakaş <levent@mektup.at>, 2024
+# abc Def <hdogan1974@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2022\n"
+"POT-Creation-Date: 2024-03-26 15:05+0000\n"
+"PO-Revision-Date: 2024-03-27 13:34+0000\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid "<span class=\"o_stat_text\">Org Chart</span>"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid "Add a new employee"
+msgstr "Yeni Bir Personel Ekle"
 
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_base
 msgid "Basic Employee"
 msgstr "Temel Personel"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Direct Subordinates Count"
+msgstr ""
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
@@ -47,10 +73,16 @@ msgid "Employee"
 msgstr "Personel"
 
 #. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr "Personeller"
+
+#. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "In order to get an organigram, set a manager and save the record."
-msgstr "Organizasyon şemasını alabilmek için bir yönetici belirleyin ve kaydedin."
+msgstr ""
+"Organizasyon şemasını alabilmek için bir yönetici belirleyin ve kaydedin."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
@@ -74,6 +106,7 @@ msgstr ""
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "More managers"
 msgstr "Daha Fazla Yönetici"
 
@@ -87,6 +120,12 @@ msgstr "Silsile bilgisi yok."
 #. odoo-python
 #: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
 msgid "Operation not supported"
+msgstr "Operasyon desteklenmiyor"
+
+#. module: hr_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
+msgid "Org Chart"
 msgstr ""
 
 #. module: hr_org_chart
@@ -103,6 +142,7 @@ msgstr "Herkese Açık Personel"
 
 #. module: hr_org_chart
 #. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Redirect"
 msgstr "Yeniden yönlendir"
@@ -121,7 +161,7 @@ msgstr "Astları"
 
 #. module: hr_org_chart
 #. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.js:0
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
 msgid "Team"
 msgstr "Ekip"
 
@@ -136,3 +176,20 @@ msgstr "Bu personelin üst veya astı bulunmamaktadır."
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Total"
 msgstr "Toplam"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+msgstr ""
+"Odoo personel ekranına hızlıca göz atarak, \n"
+"                herkesle ilgili bilgileri kolayca bulabilirsiniz;\n"
+"                kontak bilgisi, iş posizyonu, iletişim bilgileri, müsaitlik, vb."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+msgid "people"
+msgstr ""

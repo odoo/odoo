@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -879,14 +879,14 @@ msgstr "Có thể đặt cảnh báo đối với đối tác (Tồn kho)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__action
 msgid "Action"
-msgstr "Hành động"
+msgstr "Tác vụ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_needaction
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_needaction
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__replenish_location
@@ -1648,6 +1648,15 @@ msgstr "Thay đổi số lượng sản phẩm"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -1657,14 +1666,14 @@ msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
 msgstr ""
-"Việc thay đổi công ty trong tập dữ liệu này hiện bị cấm, bạn nên lưu trữ và "
-"tạo một công ty mới."
+"Việc thay đổi công ty trong bản ghi này hiện bị cấm, bạn nên lưu trữ và tạo "
+"một công ty mới."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr "Việc thay đổi loại hoạt động của tập dữ liệu này hiện bị cấm."
+msgstr "Việc thay đổi loại hoạt động của bản ghi này hiện bị cấm."
 
 #. module: stock
 #. odoo-python
@@ -4075,8 +4084,7 @@ msgstr "Lô hàng đang nhập"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "Incorrect type of action submitted as a report, skipping action"
-msgstr ""
-"Loại hành động không chính xác được gửi dưới dạng báo cáo, bỏ qua hành động"
+msgstr "Loại tác vụ không chính xác được gửi dưới dạng báo cáo, bỏ qua tác vụ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_diff_quantity
@@ -5558,7 +5566,7 @@ msgstr "Tháng 11"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: stock
 #. odoo-javascript
@@ -7397,7 +7405,7 @@ msgstr "Tìm báo cáo bổ sung hàng"
 #. module: stock
 #: model:ir.model,name:stock.model_ir_actions_report
 msgid "Report Action"
-msgstr "Hành động báo cáo"
+msgstr "Tác vụ báo cáo"
 
 #. module: stock
 #. odoo-javascript
@@ -8228,8 +8236,7 @@ msgstr "Hiển thị điều chuyển"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Hiển thị tất cả tập dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -8751,7 +8758,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "Số lô/sê-ri (%s) này đã liên kết với một sản phẩm khác."
 
 #. module: stock
 #. odoo-python
@@ -9294,7 +9301,7 @@ msgstr "Số lượng này được hiện thị theo Đơn vị tính mặc đ�
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
 msgid "This record already exists."
-msgstr "Tập dữ liệu đã tồn tại."
+msgstr "Bản ghi đã tồn tại."
 
 #. module: stock
 #. odoo-python
@@ -9686,7 +9693,7 @@ msgstr "Loại hoạt động"
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
@@ -10718,6 +10725,12 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot modify inventory loss quantity"
 msgstr "Bạn không thể sửa đổi số lượng hàng tồn kho thất thoát"
 
@@ -10953,8 +10966,8 @@ msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
 msgstr ""
-"Bạn đã cố tạo một tập dữ liệu đã tồn tại. Thay vào đó, bạn nên điều chỉnh "
-"tập dữ liệu hiện có."
+"Bạn đã cố tạo một bản ghi đã tồn tại. Thay vào đó, bạn nên điều chỉnh bản "
+"ghi hiện có."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish

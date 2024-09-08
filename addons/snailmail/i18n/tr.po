@@ -1,31 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* snailmail
-#
+# 
 # Translators:
-# Buket Şeker <buket_skr@hotmail.com>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Murat Durmuş <muratd@projetgrup.com>, 2022
-# Martin Trigaux, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Halil, 2023
-#
+# Tugay Hatıl <tugayh@projetgrup.com>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Levent Karakaş <levent@mektup.at>, 2024
+# Buket Şeker <buket_skr@hotmail.com>, 2024
+# Murat Durmuş <muratd@projetgrup.com>, 2024
+# abc Def <hdogan1974@gmail.com>, 2024
+# Erol Erzi, 2024
+# Martin Trigaux, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# Halil, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Halil, 2023\n"
+"POT-Creation-Date: 2024-03-26 15:06+0000\n"
+"PO-Revision-Date: 2024-03-27 13:34+0000\n"
+"Last-Translator: Halil, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: snailmail
@@ -48,7 +49,7 @@ msgstr "Adres"
 
 #. module: snailmail
 #. odoo-javascript
-#: code:addons/snailmail/static/src/core/notification_group_model_patch.js:0
+#: code:addons/snailmail/static/src/core/failure_model_patch.js:0
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr "Snailmail ile mektup gönderilirken bir hata oluştu."
 
@@ -99,6 +100,7 @@ msgstr "Her iki taraf da"
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
+#: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
 msgid "Buy credits"
 msgstr "Kredi Satınal"
 
@@ -133,7 +135,7 @@ msgstr "Bildirimi başarısız olarak iptal et"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
-msgid "Canceled"
+msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: snailmail
@@ -152,7 +154,6 @@ msgid "Close"
 msgstr "Kapat"
 
 #. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
 msgstr "Renk"
@@ -194,14 +195,14 @@ msgstr "Kapak Sayfası"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_uid
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından Oluşturulan"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_date
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturulma Tarihi"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
@@ -289,14 +290,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__write_uid
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__write_uid
 msgid "Last Updated by"
-msgstr "Son Güncelleyen"
+msgstr "Tarafından Son Güncellendi"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_date
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__write_date
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__write_date
 msgid "Last Updated on"
-msgstr "Son Güncelleme"
+msgstr "Son Güncelleme Tarihi"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__letter_ids
@@ -331,12 +332,6 @@ msgstr "Mesaj"
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notifications"
 msgstr "Mesaj Bildirimleri"
-
-#. module: snailmail
-#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
-#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
-msgid "Message type: email for email message, notification for system message, comment for other messages such as user replies"
-msgstr "Mesaj türü: e-posta mesajı için e-posta, sistem mesajı için bildirim,bir kullanıcı cevaplar gibi diğer mesajlar için Yorum"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -426,7 +421,7 @@ msgstr "İlgili Kayıt"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr "Rapor İşlemi"
+msgstr "Rapor işlemi"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -456,6 +451,11 @@ msgstr "Snail Postaları başarıyla gönderildi"
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
 msgid "Snailmail"
 msgstr "Snailmail"
+
+#. module: snailmail
+#: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
+msgid "Snailmail Color"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -569,8 +569,12 @@ msgstr "Alıcının adresi tam değil"
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "The attachment of the letter could not be sent. Please check its content and contact the support if the problem persists."
-msgstr "Mektubun eki gönderilemedi. Lütfen içeriğini kontrol edin ve sorun devam ederse destek ekibiyle iletişime geçin."
+msgid ""
+"The attachment of the letter could not be sent. Please check its content and"
+" contact the support if the problem persists."
+msgstr ""
+"Mektubun eki gönderilemedi. Lütfen içeriğini kontrol edin ve sorun devam "
+"ederse destek ekibiyle iletişime geçin."
 
 #. module: snailmail
 #. odoo-python
@@ -581,24 +585,35 @@ msgstr "Ortağın ülkesi Snailmail kapsamında değildir."
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "The country to which you want to send the letter is not supported by our service."
-msgstr "Mektubu göndermek istediğiniz ülke hizmetimiz tarafından desteklenmemektedir."
+msgid ""
+"The country to which you want to send the letter is not supported by our "
+"service."
+msgstr ""
+"Mektubu göndermek istediğiniz ülke hizmetimiz tarafından "
+"desteklenmemektedir."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
-msgid "The customer address is not complete. Update the address here and re-send the letter."
-msgstr "Müşteri adresi tam değil. Adresi buradan güncelleyin ve mektubu yeniden gönderin."
+msgid ""
+"The customer address is not complete. Update the address here and re-send "
+"the letter."
+msgstr ""
+"Müşteri adresi tam değil. Adresi buradan güncelleyin ve mektubu yeniden "
+"gönderin."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
-msgstr "Belge posta yoluyla doğru bir şekilde gönderildi.<br>İzleme kimliği: %s"
+msgstr ""
+"Belge posta yoluyla doğru bir şekilde gönderildi.<br>İzleme kimliği: %s"
 
 #. module: snailmail
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core_ui/snailmail_error.xml:0
-msgid "The letter could not be sent due to insufficient credits on your IAP account."
+msgid ""
+"The letter could not be sent due to insufficient credits on your IAP "
+"account."
 msgstr "IAP hesabınızdaki yetersiz kredi nedeniyle mektup gönderilemedi."
 
 #. module: snailmail
@@ -628,6 +643,19 @@ msgid "Update address of partner"
 msgstr "İş ortağının adresini güncelleme"
 
 #. module: snailmail
+#: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
+#: model:ir.model.fields,help:snailmail.field_mail_message__message_type
+msgid ""
+"Used to categorize message generator\n"
+"'email': generated by an incoming email e.g. mailgateway\n"
+"'comment': generated by user input e.g. through discuss or composer\n"
+"'email_outgoing': generated by a mailing\n"
+"'notification': generated by system e.g. tracking messages\n"
+"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'user_notification': generated for a specific recipient"
+msgstr ""
+
+#. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
 msgid ""
 "When a letter is created, the status is 'Pending'.\n"
@@ -641,14 +669,22 @@ msgstr ""
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "You don't have an IAP account registered for this service.<br>Please go to <a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
-msgstr "Bu hizmet için kayıtlı bir IAP hesabınız yok.<br>Ücretsiz kredilerinizi almak için <a href=%s target=\"new\">iap.odoo.com</a> adresine gidin."
+msgid ""
+"You don't have an IAP account registered for this service.<br>Please go to "
+"<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
+msgstr ""
+"Bu hizmet için kayıtlı bir IAP hesabınız yok.<br>Ücretsiz kredilerinizi "
+"almak için <a href=%s target=\"new\">iap.odoo.com</a> adresine gidin."
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
-msgid "You don't have enough credits to perform this operation.<br>Please go to your <a href=%s target=\"new\">iap account</a>."
-msgstr "Bu işlemi gerçekleştirmek için yeterli krediniz yok.<br>Lütfen <a href=%s target=\"new\">iap hesabınıza</a> gidin."
+msgid ""
+"You don't have enough credits to perform this operation.<br>Please go to "
+"your <a href=%s target=\"new\">iap account</a>."
+msgstr ""
+"Bu işlemi gerçekleştirmek için yeterli krediniz yok.<br>Lütfen <a href=%s "
+"target=\"new\">iap hesabınıza</a> gidin."
 
 #. module: snailmail
 #. odoo-javascript

@@ -1,33 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_product_configurator
-#
+# 
 # Translators:
-# Mehmet Demirel <mdemirell@gmail.com>, 2022
-# Ugur Yilmaz <ugurlu2001@hotmail.com>, 2022
-# Martin Trigaux, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
-# Murat Durmuş <muratd@projetgrup.com>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-#
+# Levent Karakaş <levent@mektup.at>, 2024
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2024
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2024
+# Ugur Yilmaz <ugurlu2001@hotmail.com>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Murat Durmuş <muratd@projetgrup.com>, 2024
+# abc Def <hdogan1974@gmail.com>, 2024
+# Tugay Hatıl <tugayh@projetgrup.com>, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
+"POT-Creation-Date: 2024-03-26 15:06+0000\n"
+"PO-Revision-Date: 2024-03-27 13:34+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+msgid "Add"
+msgstr "Ekle"
 
 #. module: sale_product_configurator
 #. odoo-javascript
@@ -37,8 +43,8 @@ msgstr "Ekle"
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
-msgid "Add to cart"
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+msgid "Add optional products"
 msgstr ""
 
 #. module: sale_product_configurator
@@ -48,15 +54,9 @@ msgstr "Nitelik Değerleri"
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
-msgid "Available Options:"
-msgstr "Mevcut Seçenekler:"
-
-#. module: sale_product_configurator
-#. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
-msgid "Back"
-msgstr "Geri"
+msgid "Cancel"
+msgstr "İptal"
 
 #. module: sale_product_configurator
 #: model:product.template,name:sale_product_configurator.product_product_1_product_template
@@ -66,14 +66,20 @@ msgstr "Sandalye zemini koruması"
 #. module: sale_product_configurator
 #. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
-msgid "Configure"
-msgstr "Yapılandır"
+msgid "Configure your product"
+msgstr ""
 
 #. module: sale_product_configurator
 #. odoo-javascript
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 msgid "Confirm"
 msgstr "Onayla"
+
+#. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
+msgid "Enter a customized value"
+msgstr ""
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
@@ -86,12 +92,6 @@ msgid "Office chairs can harm your floor: protect it."
 msgstr "Ofis koltukları zemine zarar verebilir: koruyun."
 
 #. module: sale_product_configurator
-#. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
-msgid "Option not available"
-msgstr "Seçenek mevcut değil"
-
-#. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__optional_product_ids
 msgid "Optional Products"
@@ -100,8 +100,13 @@ msgstr "Tamamlayıcı Ürünler"
 #. module: sale_product_configurator
 #: model:ir.model.fields,help:sale_product_configurator.field_product_product__optional_product_ids
 #: model:ir.model.fields,help:sale_product_configurator.field_product_template__optional_product_ids
-msgid "Optional Products are suggested whenever the customer hits *Add to Cart* (cross-sell strategy, e.g. for computers: warranty, software, etc.)."
-msgstr "Tamamlayıcı Ürünler, müşteriye her \"Sepete Ekle\" butonuna tıkladığında önerilir (Çapraz satış stratejisi, örn. Bilgisayarlar için: garanti, yazılım, vb.)."
+msgid ""
+"Optional Products are suggested whenever the customer hits *Add to Cart* "
+"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
+msgstr ""
+"Tamamlayıcı Ürünler, müşteriye her \"Sepete Ekle\" butonuna tıkladığında "
+"önerilir (Çapraz satış stratejisi, örn. Bilgisayarlar için: garanti, "
+"yazılım, vb.)."
 
 #. module: sale_product_configurator
 #. odoo-javascript
@@ -118,6 +123,7 @@ msgstr "Ürün"
 
 #. module: sale_product_configurator
 #. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
 #: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
 msgid "Product Image"
 msgstr "Ürün Görseli"
@@ -145,18 +151,24 @@ msgid "Remove one"
 msgstr "Birini kaldır"
 
 #. module: sale_product_configurator
+#. odoo-javascript
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+msgid "Remove product"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Satış Sipariş Satırı"
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
-msgid "Total:"
+#: code:addons/sale_product_configurator/static/src/js/product/product.xml:0
+msgid "This option or combination of options is not available"
 msgstr ""
 
 #. module: sale_product_configurator
 #. odoo-javascript
-#: code:addons/sale_product_configurator/static/src/js/product_template_attribute_line/product_template_attribute_line.xml:0
-msgid "custom"
-msgstr ""
+#: code:addons/sale_product_configurator/static/src/js/product_list/product_list.xml:0
+msgid "Total:"
+msgstr "Toplam:"

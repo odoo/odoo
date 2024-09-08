@@ -15,10 +15,10 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
 # Corina Calin, 2024
-# Alin Miclea, 2024
 # Larisa_nexterp, 2024
 # Flavia0320, 2024
 # Wil Odoo, 2024
+# Alin Miclea, 2024
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-20 09:01+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Alin Miclea, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1655,6 +1655,15 @@ msgstr "Există mișcări înlănțuite"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Schimbă cantitate produs"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10731,6 +10740,12 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot modify inventory loss quantity"
 msgstr "Nu puteți modifica cantitatea de pierderi din inventar"
 
@@ -10983,6 +10998,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
 
 #. module: stock
 #. odoo-python
