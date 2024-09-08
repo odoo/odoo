@@ -1421,7 +1421,7 @@ msgstr "محطة عمل عصرية لأربعة أشخاص "
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Free text"
-msgstr ""
+msgstr "نص حر "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1900,7 +1900,7 @@ msgstr "نوع تنسيق الملف"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min Qty"
-msgstr ""
+msgstr "الحد الأدنى للكمية "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2691,7 +2691,7 @@ msgstr "وصف الشراء"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase Unit"
-msgstr ""
+msgstr "وحدة الشراء "
 
 #. module: product
 #. odoo-javascript
@@ -2803,7 +2803,7 @@ msgstr "نفقات المطعم "
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Round off to"
-msgstr ""
+msgstr "التقريب إلى "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
@@ -2883,6 +2883,9 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
 msgstr ""
+"تحديد قيمة السعر لتكون من مضاعفات هذه القيمة.\n"
+"يتم التقريب بعد تطبيق الخصم وقبل حساب الرسوم الإضافية \n"
+"حتى تتمكن من استخدام الأسعار التي تنتهي بـ 9.99، قم بالتقريب إلى 10.00، وقم بتعيين رسوم إضافية بقيمة -0.01 "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3024,7 +3027,7 @@ msgstr "المرجع الداخلي '%s' موجود بالفعل. "
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "The Reference '%s' already exists."
-msgstr ""
+msgstr "المرجع '%s' موجود بالفعل. "
 
 #. module: product
 #. odoo-python
@@ -3207,6 +3210,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %(min_precision)s and 1."
 msgstr ""
+"دقة التقريب هذه أعلى من الدقة العشرية (%(digits)s أرقام). \n"
+"قد يتسبب في عدم الاتساق في عمليات الاحتساب. \n"
+"يرجى تعيين الدقة بين %(min_precision)s و 1. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3334,7 +3340,7 @@ msgstr "رابط URL "
 msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
-msgstr ""
+msgstr "قم باستخدام قواعد الخصم وتفعيل إعدادات الخصم حتى يظهر الخصم للعملاء. "
 
 #. module: product
 #. odoo-python
@@ -3457,7 +3463,7 @@ msgstr "بائع المتغير "
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Variant Tags"
-msgstr ""
+msgstr "علامات تصنيف المتغيرات "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
@@ -3525,7 +3531,7 @@ msgstr "الموردين"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "View products"
-msgstr ""
+msgstr "عرض المنتجات "
 
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
@@ -3541,7 +3547,7 @@ msgstr "التصميم الداخلي الافتراضي"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Visible to all"
-msgstr ""
+msgstr "مرئي للكل "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
@@ -3651,7 +3657,7 @@ msgstr "بإمكانك تطبيق هامش الربح عن طريق ضبط خص�
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "بإمكانك تطبيق هامش الربح في التكلفة. "
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -3753,6 +3759,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"لا يمكنك حذف قائمة (قوائم) الأسعار هذه:\n"
+"(%(pricelists)s)\n"
+"إنها مستخدمة في قائمة (قوائم) أسعار أخرى:\n"
+"%(other_pricelists)s "
 
 #. module: product
 #. odoo-python
@@ -3777,6 +3787,8 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
+"لا يمكنك حذف القيمة %(value)s لأنها مستخدَمة في المنتجات التالية: \n"
+"%(products)s \n"
 
 #. module: product
 #. odoo-python
@@ -3878,7 +3890,7 @@ msgstr "خصم"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 msgid "e.g. 1234567890"
-msgstr ""
+msgstr "مثال: 1234567890 "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
@@ -3928,12 +3940,12 @@ msgstr "المنتج"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "round off to 10.00 and set an extra at -0.01"
-msgstr ""
+msgstr "التقريب إلى 10.00 وتعيين تكلفة إضافية بقيمة -0.01 "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "sales price"
-msgstr ""
+msgstr "سعر البيع "
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.view_partner_property_form

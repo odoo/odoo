@@ -55,11 +55,17 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Bereken het bedrag van de btw.\n"
+"\n"
+":param base: float, het werkelijke bedrag waarover de btw berekend wordt\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: een object dat het product weergeeft\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Aangepaste formule"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
@@ -70,7 +76,7 @@ msgstr "Formule"
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Malformed formula '%(formula)s' at position %(position)s"
-msgstr ""
+msgstr "Onjuiste formule '%(formula)s' op positie %(position)s"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax

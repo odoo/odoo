@@ -36,7 +36,7 @@ msgstr "%(model_name)s.%(field_name)s은 카드 캠페인에 사용할 수 없�
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "%(model_name)s.%(field_name)s does not seem reachable."
-msgstr ""
+msgstr "%(model_name)s.%(field_name)s에 연결할 수 없습니다."
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
@@ -53,7 +53,7 @@ msgstr "<i class=\"fa fa-fw fa-share\" aria-label=\"공유\" role=\"img\" title=
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "<small>Where does this link to?</small>"
-msgstr ""
+msgstr "<small>어디로 연결되나요?</small>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -62,6 +62,9 @@ msgid ""
 "                                Clicks\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                클릭\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -70,6 +73,9 @@ msgid ""
 "                                Opened\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                열림\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -78,6 +84,9 @@ msgid ""
 "                                Sent\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                전송됨\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -86,6 +95,9 @@ msgid ""
 "                                Shared\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                공유됨\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_needaction
@@ -180,53 +192,53 @@ msgstr "카드"
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_campaign_action
 msgid "Card Campaign"
-msgstr ""
+msgstr "카드 캠페인"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_click_count
 msgid "Card Click Count"
-msgstr ""
+msgstr "카드 클릭 수"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_count
 msgid "Card Count"
-msgstr ""
+msgstr "카드 수"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_element_ids
 msgid "Card Element"
-msgstr ""
+msgstr "카드 항목"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_image
 msgid "Card Element Image"
-msgstr ""
+msgstr "카드 항목 이미지"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_role
 msgid "Card Element Role"
-msgstr ""
+msgstr "카드 항목 역할"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_text
 msgid "Card Element Text"
-msgstr ""
+msgstr "카드 항목 텍스트"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_share_count
 msgid "Card Share Count"
-msgstr ""
+msgstr "카드 공유 수"
 
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_template_action
 #: model:ir.ui.menu,name:marketing_card.cards_template_menu
 msgid "Card Template"
-msgstr ""
+msgstr "카드 서식"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Click here for your reward!"
-msgstr ""
+msgstr "여기를 클릭하여 보상을 받으세요!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__color
@@ -241,7 +253,7 @@ msgstr "카드 캠페인을 만들어 파트너에게 카드 전송하기"
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid "Create a Sharing Campaign!"
-msgstr ""
+msgstr "나눔 캠페인을 만들어보세요!"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_template_action
@@ -271,7 +283,7 @@ msgstr "작성일자"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__default_background
 msgid "Default Background"
-msgstr ""
+msgstr "기본 배경"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__post_suggestion
@@ -316,17 +328,17 @@ msgstr "각 레코드는 캠페인에 대해 고유해야 합니다."
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card_share
 msgid "Email Marketing Cards Wizard"
-msgstr ""
+msgstr "이메일 마케팅 카드 마법사"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__field_path
 msgid "Field Path"
-msgstr ""
+msgstr "필드 경로"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Filter By"
-msgstr ""
+msgstr "필터링 기준"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
@@ -421,17 +433,17 @@ msgstr "이미지"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__image_1
 msgid "Image 1"
-msgstr ""
+msgstr "이미지 1"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__image_2
 msgid "Image 2"
-msgstr ""
+msgstr "이미지 2"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__image_preview
 msgid "Image Preview"
-msgstr ""
+msgstr "이미지 미리보기"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_is_follower
@@ -441,7 +453,7 @@ msgstr "팔로워임"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Join me at this event!"
-msgstr ""
+msgstr "이 이벤트에 참여해보세요!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__lang
@@ -490,32 +502,32 @@ msgstr "마케팅 카드"
 #: model:ir.model,name:marketing_card.model_card_campaign
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__card_campaign_id
 msgid "Marketing Card Campaign"
-msgstr ""
+msgstr "마케팅 카드 캠페인"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_element
 msgid "Marketing Card Campaign Element"
-msgstr ""
+msgstr "마케팅 카드 캠페인 요소"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_tag
 msgid "Marketing Card Campaign Tag"
-msgstr ""
+msgstr "마케팅 카드 캠페인 태그"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_manager
 msgid "Marketing Card Manager"
-msgstr ""
+msgstr "마케팅 카드 관리자"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_template
 msgid "Marketing Card Template"
-msgstr ""
+msgstr "마케팅 카드 템플릿"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_user
 msgid "Marketing Card User"
-msgstr ""
+msgstr "마케팅 카드 사용자"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__message
@@ -621,12 +633,12 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__post_suggestion
 msgid "Post Suggestion"
-msgstr ""
+msgstr "게시물 제안"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Powered By"
-msgstr ""
+msgstr "Powered By"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
@@ -637,17 +649,17 @@ msgstr "디자인과 콘텐츠를 준비하고 커뮤니티에서 널리 홍보�
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__preview_record_ref
 msgid "Preview Record"
-msgstr ""
+msgstr "레코드 미리보기"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__preview_record_url
 msgid "Preview Record Link"
-msgstr ""
+msgstr "레코드 미리보기 링크"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Preview Target"
-msgstr ""
+msgstr "타겟 미리보기"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__primary_color
@@ -657,7 +669,7 @@ msgstr "기본 색상"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__primary_text_color
 msgid "Primary Text Color"
-msgstr ""
+msgstr "기본 텍스트 색상"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -666,7 +678,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_4
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_5
 msgid "Profile Picture"
-msgstr ""
+msgstr "프로필 사진"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__rating_ids
@@ -691,7 +703,7 @@ msgstr "레코드 ID"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__render_type
 msgid "Render Type"
-msgstr ""
+msgstr "렌더 유형"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__render_model
@@ -712,7 +724,7 @@ msgstr "담당 사용자"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_target_url
 msgid "Reward Link"
-msgstr ""
+msgstr "리워드 링크"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_sms_error
@@ -722,12 +734,12 @@ msgstr "SMS 전송 에러"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Search Card"
-msgstr ""
+msgstr "카드 검색"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
 msgid "Search Share Campaign"
-msgstr ""
+msgstr "공유 캠페인 검색"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_color
@@ -737,22 +749,22 @@ msgstr "2차 색상"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_text_color
 msgid "Secondary Text Color"
-msgstr ""
+msgstr "2차 텍스트 색상"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__section_1
 msgid "Section 1"
-msgstr ""
+msgstr "섹션 1"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Select a preview record..."
-msgstr ""
+msgstr "미리 보기 레코드 선택..."
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Select where to share"
-msgstr ""
+msgstr "공유할 위치 선택"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -768,32 +780,32 @@ msgstr "전송 후 닫기"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Send Cards"
-msgstr ""
+msgstr "카드 보내기"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Share Campaign"
-msgstr ""
+msgstr "캠페인 공유"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_element_view_form
 msgid "Share Campaign Render Element"
-msgstr ""
+msgstr "캠페인 렌더링 요소 공유"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_list
 msgid "Share Card"
-msgstr ""
+msgstr "카드 공유"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_share_view_form
 msgid "Share Cards"
-msgstr ""
+msgstr "카드 공유"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__share_status
 msgid "Share Status"
-msgstr ""
+msgstr "현황 공유"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_template_view_form
@@ -803,7 +815,7 @@ msgstr "공유 서식"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_card__share_status__visited
 msgid "Share URL Visited"
-msgstr ""
+msgstr "방문 URL 공유"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -818,12 +830,12 @@ msgstr "공유됨"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__target_url
 msgid "Shared Link"
-msgstr ""
+msgstr "링크 공유"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_card__share_status__shared
 msgid "Shared on Social Networks"
-msgstr ""
+msgstr "소셜 네트워크에서 공유"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_state
@@ -846,12 +858,12 @@ msgstr "하위 제목"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_1
 msgid "Sub-Section 1"
-msgstr ""
+msgstr "하위 섹션 1"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_2
 msgid "Sub-Section 2"
-msgstr ""
+msgstr "하위 섹션 2"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__subject
@@ -898,7 +910,7 @@ msgstr "공유해 주셔서 감사합니다, 여기 보너스가 준비되었습
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
 msgid "Thanks to You Message"
-msgstr ""
+msgstr "감사 메시지"
 
 #. module: marketing_card
 #. odoo-python
@@ -927,7 +939,7 @@ msgstr "UTM 소스"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__render_type__text
 msgid "User Text"
-msgstr ""
+msgstr "사용자 텍스트"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.robots
@@ -935,6 +947,8 @@ msgid ""
 "User-agent: *\n"
 "                Allow: /cards/"
 msgstr ""
+"User-agent: *\n"
+"                Allow: /cards/"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__value_type
@@ -960,12 +974,12 @@ msgstr "웹사이트 대화 이력"
 #. odoo-python
 #: code:addons/marketing_card/wizards/card_card_share.py:0
 msgid "Your Card"
-msgstr ""
+msgstr "카드"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Your Home Page"
-msgstr ""
+msgstr "홈페이지"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -984,7 +998,7 @@ msgstr "예: \"https://www.mycompany.com/reward\""
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Odoo Experience Talks"
-msgstr ""
+msgstr "예: Odoo 체험 토크"
 
 #. module: marketing_card
 #. odoo-python

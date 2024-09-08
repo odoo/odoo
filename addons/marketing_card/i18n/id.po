@@ -26,18 +26,21 @@ msgstr ""
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "%(field_path)s cannot be used as an image value for %(element_role)s"
 msgstr ""
+"%(field_path)s tidak dapat digunakan sebagai image value untuk "
+"%(element_role)s"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "%(model_name)s.%(field_name)s cannot be used for card campaigns."
 msgstr ""
+"%(model_name)s.%(field_name)s tidak dapat digunakan untuk card campaign."
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "%(model_name)s.%(field_name)s does not seem reachable."
-msgstr ""
+msgstr "%(model_name)s.%(field_name)s sepertinya tidak dapat dijangkau."
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
@@ -45,16 +48,18 @@ msgid ""
 "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
 "title=\"Clicks\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
+"title=\"Klik\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" title=\"Shares\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "<small>Where does this link to?</small>"
-msgstr ""
+msgstr "<small>Link ini berujung ke mana?</small>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -63,6 +68,9 @@ msgid ""
 "                                Clicks\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Klik\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -71,6 +79,9 @@ msgid ""
 "                                Opened\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Dibuka\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -79,6 +90,9 @@ msgid ""
 "                                Sent\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Dikirim\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -87,6 +101,9 @@ msgid ""
 "                                Shared\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Di-Share\n"
+"                            </span>"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_needaction
@@ -122,7 +139,7 @@ msgstr "Ikon Jenis Aktifitas"
 #. odoo-python
 #: code:addons/marketing_card/controllers/marketing_card.py:0
 msgid "An error occurred when generating the image"
-msgstr ""
+msgstr "Terjadi error saat membuat gambar"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -181,53 +198,53 @@ msgstr "Kartu"
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_campaign_action
 msgid "Card Campaign"
-msgstr ""
+msgstr "Card Campaign"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_click_count
 msgid "Card Click Count"
-msgstr ""
+msgstr "Card Click Count"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_count
 msgid "Card Count"
-msgstr ""
+msgstr "Card Count"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_element_ids
 msgid "Card Element"
-msgstr ""
+msgstr "Card Element"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_image
 msgid "Card Element Image"
-msgstr ""
+msgstr "Card Element Image"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_role
 msgid "Card Element Role"
-msgstr ""
+msgstr "Card Element Role"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__card_element_text
 msgid "Card Element Text"
-msgstr ""
+msgstr "Card Element Text"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_share_count
 msgid "Card Share Count"
-msgstr ""
+msgstr "Card Share Count"
 
 #. module: marketing_card
 #: model:ir.actions.act_window,name:marketing_card.card_template_action
 #: model:ir.ui.menu,name:marketing_card.cards_template_menu
 msgid "Card Template"
-msgstr ""
+msgstr "Card Template"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Click here for your reward!"
-msgstr ""
+msgstr "Klik di sini untuk hadiah Anda!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_tag__color
@@ -237,17 +254,17 @@ msgstr "Warna"
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.cards_card_action
 msgid "Create a Card Campaign to send cards to your partners"
-msgstr ""
+msgstr "Buat Card Campaign untuk mengirimkan kartu ke partner-partner Anda"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid "Create a Sharing Campaign!"
-msgstr ""
+msgstr "Buat Kampanye Sharing!"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_template_action
 msgid "Create a design to use in Card Campaigns"
-msgstr ""
+msgstr "Buat desain untuk digunakan di Card Campaign"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__create_uid
@@ -272,12 +289,12 @@ msgstr "Dibuat pada"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__default_background
 msgid "Default Background"
-msgstr ""
+msgstr "Latar Belakang Default"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__post_suggestion
 msgid "Description below the card and default text when sharing on X"
-msgstr ""
+msgstr "Keterangan di bawah kartu dan teks default saat membagi ke X"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_template_id
@@ -308,26 +325,27 @@ msgstr "Dinamik"
 #: model:ir.model.constraint,message:marketing_card.constraint_card_campaign_element_role_uniq
 msgid "Each campaign should only have one element for each role."
 msgstr ""
+"Setiap kampanye harusnya hanya memiliki satu element untuk setiap peran."
 
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_card_campaign_record_unique
 msgid "Each record should be unique for a campaign"
-msgstr ""
+msgstr "Setiap record harus unik untuk kampanye"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card_share
 msgid "Email Marketing Cards Wizard"
-msgstr ""
+msgstr "Email Marketing Cards Wizard"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__field_path
 msgid "Field Path"
-msgstr ""
+msgstr "Field Path"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Filter By"
-msgstr ""
+msgstr "Filter Berdasarkan"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
@@ -371,11 +389,17 @@ msgid ""
 "\n"
 "Many thanks"
 msgstr ""
+"Halo semuanya\n"
+"\n"
+"Berikut link untuk menyebarkan partisipasi Anda.\n"
+"            Bantuan Anda dengan promosi ini sangat dihargai!\n"
+"\n"
+"Terimakasih sekali"
 
 #. module: marketing_card
 #: model:ir.module.category,description:marketing_card.module_category_marketing_card
 msgid "Helps you manage marketing card campaigns."
-msgstr ""
+msgstr "Membantu Anda mengelola card campaign marketing."
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
@@ -417,17 +441,17 @@ msgstr "Gambar"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__image_1
 msgid "Image 1"
-msgstr ""
+msgstr "Gambar 1"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__image_2
 msgid "Image 2"
-msgstr ""
+msgstr "Gambar 2"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__image_preview
 msgid "Image Preview"
-msgstr ""
+msgstr "Pratinjau Gambar"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_is_follower
@@ -437,7 +461,7 @@ msgstr "Adalah Follower"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Join me at this event!"
-msgstr ""
+msgstr "Bergabunglah dengan kami di acara ini!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__lang
@@ -486,32 +510,32 @@ msgstr "Kartu Marketing"
 #: model:ir.model,name:marketing_card.model_card_campaign
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__card_campaign_id
 msgid "Marketing Card Campaign"
-msgstr ""
+msgstr "Card Campaign Marketing"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_element
 msgid "Marketing Card Campaign Element"
-msgstr ""
+msgstr "Element Card Campaign Marketing"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_campaign_tag
 msgid "Marketing Card Campaign Tag"
-msgstr ""
+msgstr "Tag Card Campaign Marketing"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_manager
 msgid "Marketing Card Manager"
-msgstr ""
+msgstr "Manager Marketing Card"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_template
 msgid "Marketing Card Template"
-msgstr ""
+msgstr "Templat Marketing Car"
 
 #. module: marketing_card
 #: model:res.groups,name:marketing_card.marketing_card_group_user
 msgid "Marketing Card User"
-msgstr ""
+msgstr "User Marketing Card"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__message
@@ -619,33 +643,34 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__post_suggestion
 msgid "Post Suggestion"
-msgstr ""
+msgstr "Saran Post"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Powered By"
-msgstr ""
+msgstr "Powered By"
 
 #. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.card_campaign_action
 msgid ""
 "Prepare a design and some content and let your community spread the word!"
 msgstr ""
+"Siapkan desain dan beberapa konten dan biarkan komunitas Anda sebarkan!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__preview_record_ref
 msgid "Preview Record"
-msgstr ""
+msgstr "Pratinjau Recor"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__preview_record_url
 msgid "Preview Record Link"
-msgstr ""
+msgstr "Link Pratinjau Record"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Preview Target"
-msgstr ""
+msgstr "Pratinjau Target"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__primary_color
@@ -655,7 +680,7 @@ msgstr "Warna Primer"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__primary_text_color
 msgid "Primary Text Color"
-msgstr ""
+msgstr "Warna Utama Teks"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -664,7 +689,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_4
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_5
 msgid "Profile Picture"
-msgstr ""
+msgstr "Gambar Profil"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__rating_ids
@@ -689,7 +714,7 @@ msgstr "Record ID"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__render_type
 msgid "Render Type"
-msgstr ""
+msgstr "Tipe Render"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__render_model
@@ -710,7 +735,7 @@ msgstr "Tanggung-jawab"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_target_url
 msgid "Reward Link"
-msgstr ""
+msgstr "Link Reward"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_sms_error
@@ -720,12 +745,12 @@ msgstr "Kesalahan Pengiriman SMS`"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Search Card"
-msgstr ""
+msgstr "Cari Kartu"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_search
 msgid "Search Share Campaign"
-msgstr ""
+msgstr "Cari Share Campaig"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_color
@@ -735,22 +760,22 @@ msgstr "Warna Sekunder"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__secondary_text_color
 msgid "Secondary Text Color"
-msgstr ""
+msgstr "Warna Sekunder Teks"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__section_1
 msgid "Section 1"
-msgstr ""
+msgstr "Bagian 1"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Select a preview record..."
-msgstr ""
+msgstr "Pilih record pratinjau..."
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Select where to share"
-msgstr ""
+msgstr "Pilih di mana untuk dishare"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -766,32 +791,32 @@ msgstr "Kirim & Tutup"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Send Cards"
-msgstr ""
+msgstr "Kirim Kartu"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Share Campaign"
-msgstr ""
+msgstr "Share Kampanye"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_element_view_form
 msgid "Share Campaign Render Element"
-msgstr ""
+msgstr "Share Element Render Kampanye"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_list
 msgid "Share Card"
-msgstr ""
+msgstr "Share Kartu"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_share_view_form
 msgid "Share Cards"
-msgstr ""
+msgstr "Share Kartu-Kartu"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__share_status
 msgid "Share Status"
-msgstr ""
+msgstr "Share Status"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_template_view_form
@@ -801,12 +826,12 @@ msgstr "Share Templat"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_card__share_status__visited
 msgid "Share URL Visited"
-msgstr ""
+msgstr "Share URL yang Dikunjungi"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
 msgid "Share this design with your community!"
-msgstr ""
+msgstr "Share desain ini dengan komunitas Anda!"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
@@ -816,12 +841,12 @@ msgstr "Dibagikan"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__target_url
 msgid "Shared Link"
-msgstr ""
+msgstr "Link yang di-Share"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_card__share_status__shared
 msgid "Shared on Social Networks"
-msgstr ""
+msgstr "Di-Share pada Jaringan Sosial"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_state
@@ -839,17 +864,17 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subheader
 msgid "Sub-Header"
-msgstr ""
+msgstr "Sub-Header"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_1
 msgid "Sub-Section 1"
-msgstr ""
+msgstr "Sub-Bagian 1"
 
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__card_element_role__subsection_2
 msgid "Sub-Section 2"
-msgstr ""
+msgstr "Sub-Bagian 2"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card_share__subject
@@ -871,7 +896,7 @@ msgstr "Label"
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_campaign_tag_name_uniq
 msgid "Tags may not reuse existing names."
-msgstr ""
+msgstr "Tag tidak dapat menggunakan ulang nama yang tersedia."
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_tree
@@ -891,12 +916,12 @@ msgstr "Warna Teks"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Thanks for sharing, here is your reward!"
-msgstr ""
+msgstr "Terima kasih sudah membagi, berikut hadiah Anda!"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
 msgid "Thanks to You Message"
-msgstr ""
+msgstr "Pesan Thanks to You"
 
 #. module: marketing_card
 #. odoo-python
@@ -905,6 +930,8 @@ msgid ""
 "The UTM source '%s' cannot be deleted as it is used to promote marketing "
 "cards campaigns."
 msgstr ""
+"Sumber UTM '%s' tidak dapat dihapus karena digunakan untuk mempromosikan "
+"kampanye marketing card."
 
 #. module: marketing_card
 #. odoo-python
@@ -925,7 +952,7 @@ msgstr "Sumber UTM"
 #. module: marketing_card
 #: model:ir.model.fields.selection,name:marketing_card.selection__card_campaign_element__render_type__text
 msgid "User Text"
-msgstr ""
+msgstr "Teks User"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.robots
@@ -933,6 +960,8 @@ msgid ""
 "User-agent: *\n"
 "                Allow: /cards/"
 msgstr ""
+"User-agent: *\n"
+"                Allow: /cards/"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign_element__value_type
@@ -942,7 +971,7 @@ msgstr "Tipe Value"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Visited"
-msgstr ""
+msgstr "Dikunjungi"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__website_message_ids
@@ -963,7 +992,7 @@ msgstr "Kartu Anda"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "Your Home Page"
-msgstr ""
+msgstr "Beranda Anda"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_1
@@ -977,15 +1006,15 @@ msgstr "teks tombol"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. \"https://www.mycompany.com/reward\""
-msgstr ""
+msgstr "contoh, \"https://www.mycompany.com/reward\""
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
 msgid "e.g. Odoo Experience Talks"
-msgstr ""
+msgstr "contoh, Odoo Experience Talks"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign_element.py:0
 msgid "field path must be set on %(element_role)s"
-msgstr ""
+msgstr "field path harus ditetapkan pada %(element_role)s"

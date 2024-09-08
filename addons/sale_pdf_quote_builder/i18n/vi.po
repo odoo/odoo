@@ -33,7 +33,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "<i class=\"fa fa-arrow-right\"/> Watch Video"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Xem video"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -42,6 +42,9 @@ msgid ""
 "                        the sale order while <strong>Product documents</strong> are filled with data\n"
 "                        from the sale order line."
 msgstr ""
+"<strong>Tài liệu header và footer</strong> chứa dữ liệu (đường dẫn) của\n"
+"                        đơn bán hàng trong khi <strong>tài liệu Sản phẩm</strong> chứa dữ liệu \n"
+"                        từ dòng đơn bán hàng."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
@@ -52,15 +55,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"Cho phép bạn chia sẻ tài liệu với khách hàng của mình trong quá trình bán hàng.\n"
-"Để trống nếu bạn không muốn chia sẻ tài liệu này với khách hàng.\n"
-"Khi báo giá: tài liệu sẽ được gửi và khách hàng có thể truy cập bất cứ lúc nào.\n"
-"VD: tùy chọn này có thể hữu ích khi chia sẻ tệp mô tả Sản phẩm.\n"
-"Khi xác nhận đơn hàng: tài liệu sẽ được gửi và khách hàng có thể truy cập.\n"
-"VD: tùy chọn này có thể hữu ích khi chia sẻ Hướng dẫn sử dụng hoặc nội dung kỹ thuật số được mua trên sàn thương mại điện tử.\n"
-"Pdf bên trong báo giá: Tài liệu sẽ có trong tệp pdf của báo giá, nằm giữa trang mở đầu và bảng báo giá."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -83,21 +80,21 @@ msgstr "Cài đặt cấu hình"
 #: code:addons/sale_pdf_quote_builder/models/sale_order_template.py:0
 #: code:addons/sale_pdf_quote_builder/wizards/res_config_settings.py:0
 msgid "Configure Dynamic Fields"
-msgstr ""
+msgstr "Cấu hình trường động"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure dynamic fields"
-msgstr ""
+msgstr "Cấu hình trường động"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure the path to fill the form fields."
-msgstr ""
+msgstr "Cấu hình đường dẫn để điền các trường trong biểu mẫu."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__create_uid
@@ -132,24 +129,24 @@ msgstr "Tải xuống ví dụ"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
 msgid "Footer pages"
-msgstr "Trang kết thúc"
+msgstr "Trang footer"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field"
-msgstr ""
+msgstr "Trường trong biểu mẫu"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field Name as seen in the PF form"
-msgstr ""
+msgstr "Tên trường trong biểu mẫu như hiển thị trong biểu mẫu PF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
 msgid "Header pages"
-msgstr "Trang mở đầu"
+msgstr "Trang header"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_quote_builder_dynamic_fields_wizard_line__document_type__header_footer
@@ -225,6 +222,8 @@ msgid ""
 "Make your quote attractive by adding header, product descriptions and footer"
 " to your quote."
 msgstr ""
+"Làm cho báo giá của bạn trở nên hấp dẫn bằng cách thêm các header, mô tả sản"
+" phẩm và footer vào báo giá."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -235,7 +234,7 @@ msgstr "Không"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__path
 msgid "Odoo path to get the expected value to fill the PDF."
-msgstr ""
+msgstr "Đường dẫn Odoo để lấy giá trị mong đợi điền vào PDF."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -261,7 +260,7 @@ msgstr "Đường dẫn"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Preview Sample Quote"
-msgstr ""
+msgstr "Xem trước báo giá mẫu"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
@@ -282,36 +281,36 @@ msgstr "Mẫu báo giá"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
 msgid "Report Action"
-msgstr "Hành động báo cáo"
+msgstr "Tác vụ báo cáo"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Bán hàng: Hiển thị ở"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
 msgid "Sale Footer Name"
-msgstr "Sale Footer Name"
+msgstr "Tên footer"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
 msgid "Sale Header Name"
-msgstr "Sale Header Name"
+msgstr "Tên header"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard
 msgid "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
-msgstr ""
+msgstr "Công cụ cấu hình trường động của trình tạo báo giá PDF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard_line
 msgid "SalePdfQuoteBuilderDynamicFieldsWizardLine transient representation"
-msgstr ""
+msgstr "Hiển thị tạm thời SalePdfQuoteBuilderDynamicFieldsWizardLine"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -360,7 +359,7 @@ msgstr "Tính năng"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__wizard_line_ids
 msgid "Wizard Line"
-msgstr ""
+msgstr "Dòng công cụ"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -376,4 +375,4 @@ msgstr "tài liệu"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "for detailed explanations)"
-msgstr ""
+msgstr "để biết thông tin chi tiết)"

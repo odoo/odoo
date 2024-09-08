@@ -1734,6 +1734,17 @@ msgstr "Changer la quantité de produits"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"La modification du numéro de lot/série n'est pas autorisée pour des "
+"mouvements de stock concernant des produits différents."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -11141,6 +11152,12 @@ msgstr ""
 "Cette vue ne permet pas de regrouper directement des quantités provenant de "
 "différents transferts dans le même colis. Essayez de les ajouter à un "
 "transfert par lot et de les regrouper à ce niveau."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr "Vous ne pouvez pas dupliquer de quants."
 
 #. module: stock
 #. odoo-python

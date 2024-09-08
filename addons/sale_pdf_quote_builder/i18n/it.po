@@ -42,6 +42,9 @@ msgid ""
 "                        the sale order while <strong>Product documents</strong> are filled with data\n"
 "                        from the sale order line."
 msgstr ""
+"<strong>I documenti nell'intestazione e nel pié di pagina</strong> vengono compilati con i dati (percorso)\n"
+"                        dell'ordine di vendita mentre i <strong>documenti del prodotto</strong> vengono compilati con i dati\n"
+"                        della riga dell'ordine di vendita."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
@@ -52,7 +55,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
 "Consente di condividere il documento con i tuoi clienti al momento di una vendita.\n"
 "Lascia il campo vuoto se non vuoi condividere il documento con i clienti.\n"
@@ -60,7 +64,8 @@ msgstr ""
 "ad es. quest'opzione può essere utile per condividere file relativi alla descrizione del prodotto.\n"
 "Su ordine confermato: il documento verrà inviato e sarà accessibile ai clienti.\n"
 "ad es. quest'opzione può essere utile per condividere manuali utente o contenuti digitali acquistati sull'e-commerce. \n"
-"All'interno del preventivo in pdf: il documento verrà incluso nel pdf del preventivo tra l'intestazione e la tabella."
+"All'interno del preventivo: il documento verrà incluso nel pdf del preventivo\n"
+"e dell'ordine di vendita tra la pagina d'intestazione e la tabella del preventivo."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -97,7 +102,7 @@ msgstr "Configura campi dinamici"
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure the path to fill the form fields."
-msgstr ""
+msgstr "Configura il percorso per compilare i campi del modulo."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__create_uid
@@ -142,7 +147,7 @@ msgstr "Campo modulo"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field Name as seen in the PF form"
-msgstr ""
+msgstr "Nome campo modulo come visto nel modulo PF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
@@ -174,6 +179,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"Nome campo modulo non valido %(field_name)s. Un nome campo modulo "
+"nell'intestazione o nel pié di pagina non può iniziare con \"sol_id_\"."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -182,6 +189,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"Nome campo modulo non valido %(field_name)s. Deve contenere esclusivamente "
+"caratteri alfanumerici, trattini alti o bassi."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -190,6 +199,8 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"Percorso non valido %(path)s. Deve contenere esclusivamente caratteri "
+"alfanumerici, trattini alti, trattini bassi o punti."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -220,6 +231,8 @@ msgid ""
 "Make your quote attractive by adding header, product descriptions and footer"
 " to your quote."
 msgstr ""
+"Rendi i tuoi preventivi più interessanti aggiungendo un'intestazione, "
+"descrizioni dei prodotti e piè di pagina."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -230,7 +243,7 @@ msgstr "No"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__path
 msgid "Odoo path to get the expected value to fill the PDF."
-msgstr ""
+msgstr "Percorso Odoo per ottenere il valore atteso per compilare il PDF."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -256,7 +269,7 @@ msgstr "Percorso"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Preview Sample Quote"
-msgstr ""
+msgstr "Anteprima preventivo di esempio"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
@@ -282,7 +295,7 @@ msgstr "Azione resoconto"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Vendite: visibile a"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
@@ -302,11 +315,14 @@ msgstr "Nome intestazione"
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard
 msgid "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
 msgstr ""
+"Procedura guidata configuratore campi dinamici creazione preventivo PDF "
+"Vendite"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard_line
 msgid "SalePdfQuoteBuilderDynamicFieldsWizardLine transient representation"
 msgstr ""
+"Rappresentazione transitoria di SalePdfQuoteBuilderDynamicFieldsWizardLine"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -326,6 +342,14 @@ msgid ""
 "                            Data of the quotation (customer name, quotation reference, ... ) are injected in<br/>\n"
 "                            documents using pdf form fields. (see"
 msgstr ""
+"Il preventivo viene creato unendo pagine di intestazione, descrizioni dei prodotti<br/>\n"
+"                            e pié di pagina. <br/>\n"
+"                            Per aggiungere schede prodotto:<br/>\n"
+"                            1. apri il modulo di un prodotto, usa il pulsante \"documenti prodotto\"<br/>\n"
+"                            2. carica un PDF del prodotto<br/>\n"
+"                            3. imposta la visibilità su \"In preventivi\"<br/>\n"
+"                            I dati del preventivo (nome cliente, riferimento preventivo...) vengono inseriti nei<br/>\n"
+"                            documenti utilizzando i campi del modulo pdf. (vedi"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -347,7 +371,7 @@ msgstr "Procedura guidata"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__wizard_line_ids
 msgid "Wizard Line"
-msgstr ""
+msgstr "Riga procedura guidata"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -363,4 +387,4 @@ msgstr "documentazione"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "for detailed explanations)"
-msgstr ""
+msgstr "per spiegazioni dettagliate)"

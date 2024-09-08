@@ -1680,6 +1680,15 @@ msgstr "更改產品數量"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr "移動資料行若有不同產品，便不可更改批次/序號。"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -4460,7 +4469,7 @@ msgstr "六月"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr "看板概覽畫面圖表"
+msgstr "看板Dashboard圖表"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -8791,7 +8800,7 @@ msgstr "「手動操作」的值會在目前操作之後建立庫存移動.當�
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "批次/序號（%s）已連結至另一個產品。"
 
 #. module: stock
 #. odoo-python
@@ -10661,6 +10670,12 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr "你不可在此檢視畫面中，將不同轉移的數量直接打包至同一包裝內。請嘗試將它們添加至批量揀貨中，並在該處將其包裝。"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr "你不可複製庫存數量。"
 
 #. module: stock
 #. odoo-python

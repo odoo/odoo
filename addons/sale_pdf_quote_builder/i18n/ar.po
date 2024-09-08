@@ -32,7 +32,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "<i class=\"fa fa-arrow-right\"/> Watch Video"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> مشاهدة الفيديو "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -41,6 +41,9 @@ msgid ""
 "                        the sale order while <strong>Product documents</strong> are filled with data\n"
 "                        from the sale order line."
 msgstr ""
+"<strong>مستندات الترويسة والتذييل</strong> مليئة ببيانات (مسار)\n"
+"                        أمر البيع، بينما <strong>مستندات المنتج</strong> مليئة ببيانات\n"
+"                        من بند أمر البيع. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
@@ -51,7 +54,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
 "يتيح لك مشاركة المستند مع عملائك ضمن عملية بيع.\n"
 "اتركه فارغاً إذا كنت لا ترغب في مشاركة هذا المستند مع عميل المبيعات.\n"
@@ -59,7 +63,8 @@ msgstr ""
 "مثال: قد يكون هذا الخيار مفيداً لمشاركة ملفات وصف المنتج.\n"
 "في مرحلة التأكيد: سيتم إرسال المستند إلى العملاء وبمقدورهم الوصول إليه.\n"
 "مثال: قد يكون هذا الخيار مفيداً لمشاركة دليل المستخدم أو المحتوى الرقمي الذي تم شراؤه عن طريق المتجر الإلكتروني. \n"
-"داخل PDF عرض السعر: سيتم تضمين المستند في ملف pdf لعرض السعر بين صفحات الترويسة وجدول عرض السعر. "
+"داخل PDF عرض السعر: سيتم تضمين المستند في ملف pdf لعرض السعر \n"
+"وداخل أمر البيع بين صفحات الترويسة وجدول عرض السعر. "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -82,21 +87,21 @@ msgstr "تهيئة الإعدادات "
 #: code:addons/sale_pdf_quote_builder/models/sale_order_template.py:0
 #: code:addons/sale_pdf_quote_builder/wizards/res_config_settings.py:0
 msgid "Configure Dynamic Fields"
-msgstr ""
+msgstr "تهيئة الحقول الديناميكية "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure dynamic fields"
-msgstr ""
+msgstr "تهيئة الحقول الديناميكية "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure the path to fill the form fields."
-msgstr ""
+msgstr "قم بتهيئة المسار لتعبئة حقول الاستمارة. "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__create_uid
@@ -136,12 +141,12 @@ msgstr "صفحات التذييل "
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field"
-msgstr ""
+msgstr "حقل الاستمارة "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field Name as seen in the PF form"
-msgstr ""
+msgstr "اسم حقل الاستمارة كما هو موجود في الاستمارة "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
@@ -153,7 +158,7 @@ msgstr "صفحات الترويسة "
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_quote_builder_dynamic_fields_wizard_line__document_type__header_footer
 msgid "Header/Footer"
-msgstr ""
+msgstr "الترويسة/التذييل "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__id
@@ -173,6 +178,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"اسم حقل الاستمارة غير صالح %(field_name)s. لا يمكن أن يبدأ اسم حقل الاستمارة"
+" الموجود في الترويسة أو التذييل بـ \"sol_id_\". "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -181,6 +188,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"اسم حقل الاستمارة غير صالح %(field_name)s. يجب أن يحتوي فقط على حروف وأرقام "
+"أو شرطات أو شرطات سفلية. "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -189,6 +198,8 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"المسار غير صالح %(path)s. يجب أن يحتوي فقط على حروف وأرقام أو شرطات أو شرطات"
+" سفلية أو نقاط. "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -218,6 +229,8 @@ msgid ""
 "Make your quote attractive by adding header, product descriptions and footer"
 " to your quote."
 msgstr ""
+"اجعل عرض الأسعار الخاص بك جذاباً عن طريق إضافة الترويسة وأوصاف المنتج "
+"والتذييل إلى عرض الأسعار الخاص بك. "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -228,7 +241,7 @@ msgstr "لا"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__path
 msgid "Odoo path to get the expected value to fill the PDF."
-msgstr ""
+msgstr "مسار أودو للحصول على القيمة المتوقَّعة لتعبئة ملف PDF. "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -254,7 +267,7 @@ msgstr "المسار "
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Preview Sample Quote"
-msgstr ""
+msgstr "معاينة نموذج عرض السعر "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
@@ -280,7 +293,7 @@ msgstr "إجراء التقرير"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "البيع: مرئي في "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
@@ -300,6 +313,7 @@ msgstr "اسم ترويسة المبيعات "
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard
 msgid "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
 msgstr ""
+"معالج تهيئة الحقول الديناميكية لأداة إنشاء عروض أسعار البيع كملفات PDF "
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard_line
@@ -310,7 +324,7 @@ msgstr "SalePdfQuoteBuilderDynamicFieldsWizardLine transient representation"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/wizards/dynamic_fields_wizard.py:0
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
-msgstr ""
+msgstr "الحقل %(field_name)s غير موجود في النموذج %(model_name)s "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -324,6 +338,14 @@ msgid ""
 "                            Data of the quotation (customer name, quotation reference, ... ) are injected in<br/>\n"
 "                            documents using pdf form fields. (see"
 msgstr ""
+"يتم إنشاء عرض السعر عن طريق تجميع كل من صفحات الترويسة وأوصاف المنتجات<br/>\n"
+"                            وصفحات التذييل. <br/>\n"
+"                            لإضافة أوراق المنتجات:<br/>\n"
+"                            1. من استمارة المنتج، استخدم زر \"مستندات المنتج\"<br/>\n"
+"                            2. قم برفع ملف PDF للمنتج<br/>\n"
+"                            3. عيّن إمكانية الظهور إلى \"داخل عروض الأسعار\"<br/>\n"
+"                            يتم حقن بيانات عرض السعر (اسم العميل، مرجع عرض السعر، ... ) في<br/>\n"
+"                            المستندات باستخدام حقول استمارة ملف pdf. (ألقِ نظرة على "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -346,7 +368,7 @@ msgstr "المعالج"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__wizard_line_ids
 msgid "Wizard Line"
-msgstr ""
+msgstr "بند المعالج "
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -362,4 +384,4 @@ msgstr "التوثيق"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "for detailed explanations)"
-msgstr ""
+msgstr "للتوضيحات التفصيلية) "

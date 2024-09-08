@@ -1739,6 +1739,15 @@ msgstr "Produktmenge ändern"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -9089,7 +9098,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "Die Los-/Seriennummer (%s) ist mit einem anderen Proukt verknüpft-"
 
 #. module: stock
 #. odoo-python
@@ -11165,6 +11174,12 @@ msgstr ""
 "Sie können über diese Ansicht nicht direkt Mengen aus unterschiedlichen "
 "Transfers im selben Paket verpacken. Fügen Sie sie zu einer "
 "Stapelkommissionierung hinzu und verpacken Sie sie dort."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+msgid "You cannot duplicate stock quants."
+msgstr ""
 
 #. module: stock
 #. odoo-python

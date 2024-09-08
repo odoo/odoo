@@ -3,8 +3,8 @@
 # 	* sale_pdf_quote_builder
 # 
 # Translators:
-# Abe Manyo, 2024
 # Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "<i class=\"fa fa-arrow-right\"/> Watch Video"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Lihat Video"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -41,6 +41,9 @@ msgid ""
 "                        the sale order while <strong>Product documents</strong> are filled with data\n"
 "                        from the sale order line."
 msgstr ""
+"<strong>Header dan footer dokumen</strong> diisi dengan data (path) dari\n"
+"                        sale order sementara <strong>dokumen Produk</strong> diisi dengan data\n"
+"                        dari baris sale order."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
@@ -51,14 +54,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote pdf: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"Memungkinkan Anda untuk membagikan dokumen dengan pelanggan Anda dalam sale.\n"
-"Biarkan kosong bila Anda tidak ingin membagikan dokumen ini dengan pelanggan sales.\n"
-"Pada quote: dokumen akan dikirim ke dan dapat diakses oleh pelanggan kapanpun juga.\n"
-"Pada konfirmasi pesanan: dokumen akan dikirim ke dan dapat diakses oleh pelanggan.\n"
-"contoh opsi ini dapat berguna untuk membagikan User Manual atau konten digital yang dibeli pada ecommerce.\n"
-"Di dalam pdf quote: Dokumen akan dimasukkan dalam pdf quotation di antara halaman header dan table quotation."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -81,21 +79,21 @@ msgstr "Pengaturan Konfig"
 #: code:addons/sale_pdf_quote_builder/models/sale_order_template.py:0
 #: code:addons/sale_pdf_quote_builder/wizards/res_config_settings.py:0
 msgid "Configure Dynamic Fields"
-msgstr ""
+msgstr "Konfigurasikan Field Dinamik"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure dynamic fields"
-msgstr ""
+msgstr "Konfigurasikan field dinamik"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure the path to fill the form fields."
-msgstr ""
+msgstr "Konfigurasikan path untuk mengisi field form."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__create_uid
@@ -135,12 +133,12 @@ msgstr "Halaman footer"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field"
-msgstr ""
+msgstr "Field Form"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field Name as seen in the PF form"
-msgstr ""
+msgstr "Nama Field Form seperti yang dilihat di form PF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
@@ -152,7 +150,7 @@ msgstr "Halaman header"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_quote_builder_dynamic_fields_wizard_line__document_type__header_footer
 msgid "Header/Footer"
-msgstr ""
+msgstr "Header/Footer"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__id
@@ -172,6 +170,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"Nama field form tidak valid %(field_name)s. Nama field form di header atau "
+"footer tidak dapat dimulai dengan \"sol_id_\"."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -180,6 +180,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"Nama field form tidak valid %(field_name)s. Harus hanya memiliki "
+"alfanumerik, garis penghubung atau garis bawah."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -188,6 +190,8 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"Path tidak valid%(path)s. Harus hanya memiliki alfanumerik, garis "
+"penghubung, garis bawah atau titik."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -217,6 +221,8 @@ msgid ""
 "Make your quote attractive by adding header, product descriptions and footer"
 " to your quote."
 msgstr ""
+"Buat quotation Anda lebih indah dengan menambahkan header halaman, "
+"keterangan produk dan footer ke quotation Anda."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -227,7 +233,7 @@ msgstr "Tidak"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__path
 msgid "Odoo path to get the expected value to fill the PDF."
-msgstr ""
+msgstr "Path Odoo untuk mendapatkan value yang diharapkan untuk mengisi PDF."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -253,7 +259,7 @@ msgstr "Jalan"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Preview Sample Quote"
-msgstr ""
+msgstr "Pratinjau Sampel Quotation"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
@@ -279,7 +285,7 @@ msgstr "Laporkan Action"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Sale : Tampak pada"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
@@ -298,18 +304,18 @@ msgstr "Nama Header Sale"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard
 msgid "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
-msgstr ""
+msgstr "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard_line
 msgid "SalePdfQuoteBuilderDynamicFieldsWizardLine transient representation"
-msgstr ""
+msgstr "SalePdfQuoteBuilderDynamicFieldsWizardLine transient representation"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/wizards/dynamic_fields_wizard.py:0
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
-msgstr ""
+msgstr "Field %(field_name)s tidak tersedia pada model %(model_name)s"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -323,6 +329,14 @@ msgid ""
 "                            Data of the quotation (customer name, quotation reference, ... ) are injected in<br/>\n"
 "                            documents using pdf form fields. (see"
 msgstr ""
+"Quotation dibuat dengan membuat halaman header, deskripsi produk,<br/>\n"
+"                            dan halaman footer. <br/>\n"
+"                            Untuk menambahkan halaman produk:<br/>\n"
+"                            1. dari form produk, gunakan tombol \"dokumen produk\"<br/>\n"
+"                            2. unggah PDF dari produk<br/>\n"
+"                            3. tetapkan visibilitas menjadi \"Inside Quotes\"<br/>\n"
+"                            Data quotation (nama pelanggan, referensi quotation, ... ) dimasukkan di<br/>\n"
+"                            dokumen menggunakan field form pdf. (lihat"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -344,7 +358,7 @@ msgstr "Wisaya"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__wizard_line_ids
 msgid "Wizard Line"
-msgstr ""
+msgstr "Baris Wizard"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -360,4 +374,4 @@ msgstr "dokumentasi"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "for detailed explanations)"
-msgstr ""
+msgstr "untuk penjelasan lebih detail)"

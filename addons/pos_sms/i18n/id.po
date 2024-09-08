@@ -3,8 +3,8 @@
 # 	* pos_sms
 # 
 # Translators:
-# Abe Manyo, 2024
 # Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-08-18 03:00+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,9 @@ msgid ""
 "                {{ object.company_id.name }} : Your order with reference: {{ object.pos_reference }} was processed succesfully with amount {{  object.currency_id.format(object.amount_total) }}. Use {{ object.pos_reference }}  for further reference\n"
 "            "
 msgstr ""
+"\n"
+"                {{ object.company_id.name }} : Pesanan Anda dengan referensi: {{ object.pos_reference }} sukses diproses dengan jumlah {{  object.currency_id.format(object.amount_total) }}. Gunakan {{ object.pos_reference }}  untuk referensi masa depan\n"
+"            "
 
 #. module: pos_sms
 #: model:ir.model,name:pos_sms.model_res_config_settings
@@ -36,7 +39,7 @@ msgstr "Pengaturan Konfigurasi"
 #. module: pos_sms
 #: model:sms.template,name:pos_sms.sms_template_data_point_of_sale
 msgid "POS: Sent Order Confirmation via Text"
-msgstr ""
+msgstr "POS: Konfirmasi Order Dikirim melalui Tek"
 
 #. module: pos_sms
 #. odoo-javascript
@@ -63,10 +66,10 @@ msgstr "Templat resi"
 #: model:ir.model.fields,help:pos_sms.field_pos_config__sms_receipt_template_id
 #: model:ir.model.fields,help:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
 msgid "SMS will be sent to the customer based on this template"
-msgstr ""
+msgstr "SMS akan dikirim ke pelanggan berdasarkan pada templat ini"
 
 #. module: pos_sms
 #: model:ir.model.fields,field_description:pos_sms.field_pos_config__sms_receipt_template_id
 #: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
 msgid "Sms Receipt template"
-msgstr ""
+msgstr "Templat Resi SMS"
