@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale
-#
+# 	* website_sale
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
-# George Tarasidis <george_tarasidis@yahoo.com>, 2018
-# Giota Dandidou <giotadandidou@gmail.com>, 2018
+# Alexandros Kapetanios <alexandros@gnugr.org>, 2024
+# Giota Dandidou <giotadandidou@gmail.com>, 2024
+# George Tarasidis <george_tarasidis@yahoo.com>, 2024
+# Martin Trigaux, 2024
+# Kostas Goutoudis <goutoudis@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2018\n"
-"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
-"Language: el\n"
+"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2024\n"
+"Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale
@@ -28,7 +30,9 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "\"Optional\" allows guests to register from the order confirmation email to track their order."
+msgid ""
+"\"Optional\" allows guests to register from the order confirmation email to "
+"track their order."
 msgstr ""
 
 #. module: website_sale
@@ -43,8 +47,17 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "&amp;nbsp;(<i>Your shipping address will be requested later)</i>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
+msgid "&amp;nbsp;item(s)&amp;nbsp;-&amp;nbsp;"
 msgstr ""
 
 #. module: website_sale
@@ -83,6 +96,11 @@ msgid "66 percent"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
+msgid "<b class=\"w-100\">Order summary</b>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories_list
 msgid "<b>Categories</b>"
@@ -105,7 +123,6 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Shipping: </b>"
 msgstr ""
 
@@ -115,8 +132,9 @@ msgid "<b>Sort By</b>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
-msgid "<b>Your order: </b>"
+#: model_terms:ir.ui.view,arch_db:website_sale.filter_products_tags
+#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+msgid "<b>Tags</b>"
 msgstr ""
 
 #. module: website_sale
@@ -128,25 +146,22 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                                    Return to shipping"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
 msgid ""
 "<i class=\"fa fa-bolt me-2\"/>\n"
-"                <span style=\"font-weight:bold\">BUY NOW</span>"
+"                Buy now"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
 msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-msgid "<i class=\"fa fa-check\"/> Ship to this address"
-msgstr "<i class=\"fa fa-check\"/> Αποστολή σε αυτήν την διεύθυνση"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-msgid "<i class=\"fa fa-edit\"/> Edit"
 msgstr ""
 
 #. module: website_sale
@@ -162,16 +177,22 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
+msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.row_addresses
 msgid ""
-"<i class=\"fa fa-plus-square\"/>\n"
-"                                                        <span>Add an address</span>"
+"<i class=\"fa fa-plus me-md-2\"/><span class=\"d-none d-md-inline\">Add "
+"address</span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<i class=\"fa fa-print\"/> Print"
-msgstr "<i class=\"fa fa-print\"/> Εκτύπωση"
+msgid "<i class=\"fa fa-print me-2\"/>Print"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_re_order_btn
@@ -184,31 +205,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
-"                                                <span style=\"font-weight: bold\">ADD TO CART</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "<i class=\"oi oi-arrow-right\"/> Add payment providers"
+"                                                Add to cart"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"<i class=\"oi oi-chevron-left\"/>\n"
-"                                            <span>Back</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
-msgid ""
-"<i class=\"oi oi-chevron-left\"/>\n"
-"                                    <span>Return to Cart</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_footer
-msgid "<i class=\"oi oi-chevron-left\"/> Return to Cart"
+msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
 msgstr ""
 
 #. module: website_sale
@@ -244,7 +246,10 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "<small class=\"form-text text-muted\">Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>"
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. Please "
+"contact us directly for this operation.</small>"
 msgstr ""
 
 #. module: website_sale
@@ -255,8 +260,17 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
+msgid ""
+"<span class=\"d-md-none fa fa-shopping-cart\"/>\n"
+"                            <span class=\"d-none d-md-inline\">Add to cart</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -276,30 +290,31 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
-msgid "<span class=\"oi oi-chevron-down fa-border float-end\" role=\"img\" aria-label=\"Details\" title=\"Details\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
-msgid "<span class=\"oi oi-chevron-left fa-2x oe_unmovable\" role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_delivery_methods
 msgid ""
-"<span class=\"oi oi-chevron-left\"/>\n"
-"                                                <span>Continue<span class=\"d-none d-md-inline\"> Shopping</span></span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"oi oi-chevron-left\"/> Previous"
+"<span class=\"o_wsale_delivery_badge_price float-end fw-bold\" "
+"name=\"price\">Select to compute delivery rate</span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
-msgid "<span class=\"oi oi-chevron-right fa-2x oe_unmovable\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgid ""
+"<span class=\"oi oi-chevron-left fa-2x oe_unmovable\" role=\"img\" aria-"
+"label=\"Previous\" title=\"Previous\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
+msgid ""
+"<span class=\"oi oi-chevron-right fa-2x oe_unmovable\" role=\"img\" aria-"
+"label=\"Next\" title=\"Next\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+#: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
+msgid "<span class=\"px-3\">or</span>"
 msgstr ""
 
 #. module: website_sale
@@ -319,7 +334,9 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
-msgid "<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', '&lt;=', 1)]}\">Based on variants</span>"
+msgid ""
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based"
+" on variants</span>"
 msgstr ""
 
 #. module: website_sale
@@ -328,55 +345,13 @@ msgid "<span class=\"visually-hidden\">filters active</span>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
-msgid ""
-"<span>Confirm</span>\n"
-"                                    <i class=\"oi oi-chevron-right\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<span>Confirmed</span>"
-msgstr "<span>Επιβεβαιώθηκε</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"<span>Next</span>\n"
-"                                            <i class=\"oi oi-chevron-right\"/>"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Order</span>"
 msgstr "<span>Παραγγελία</span>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
-msgid ""
-"<span>Proceed to Checkout</span>\n"
-"                            <span class=\"oi oi-chevron-right\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<span>Process Checkout</span>\n"
-"                                                    <span class=\"oi oi-chevron-right\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<span>Sign In</span>\n"
-"                                                    <span class=\"fa fa-sign-in\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
-msgid ""
-"<span>Sign In</span>\n"
-"                            <span class=\"fa fa-sign-in\"/>"
+#: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
+msgid "<span>Show on product page</span>"
 msgstr ""
 
 #. module: website_sale
@@ -392,36 +367,28 @@ msgid "<span>Video Preview</span>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "<strong><i class=\"oi oi-arrow-right\"/> View alternatives</strong>"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
-msgid "<strong>Add to Cart</strong>"
-msgstr "<strong>Προσθήκη στο Καλάθι</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid ""
-"<strong>No suitable payment option could be found.</strong><br/>\n"
-"                                    If you believe that it is an error, please contact the website administrator."
+msgid "<strong>No suitable payment option could be found.</strong><br/>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid "<strong>Payment Information:</strong>"
-msgstr "<strong>Πληροφορίες Πληρωμής:</strong>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-#: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Σύνολο:</strong>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "<strong>Total</strong>"
+msgstr "<strong>Σύνολο</strong>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "<strong>Warning!</strong>"
 msgstr ""
 
@@ -479,30 +446,33 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
-msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Credit Note"
 msgstr ""
+"Περιγραφή του Είδους που θέλετε να επικοινωνήσετε με τους πελάτες σας. Αυτή "
+"η περιγραφή θα αντιγραφεί σε κάθε Εντολή Παραγγελίας, Παραγγελία Παράδοσης "
+"και Τιμολόγιο Πελατών / Πιστωτικό "
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
-msgid "A preview will be available at this URL."
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid ""
+"A detailed, formatted description to promote your product on this page. Use "
+"'/' to discover more features."
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
-msgid "A product can be either a physical product or a service that you sell to your customers."
+msgid ""
+"A product can be either a physical product or a service that you sell to "
+"your customers."
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "A short description that will also appear on documents."
 msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "AT A GLANCE"
-msgstr "ΜΕ ΜΙΑ ΜΑΤΙΑ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -517,9 +487,7 @@ msgstr "Εγκαταλειμμένο Καλάθι"
 
 #. module: website_sale
 #. odoo-python
-#. odoo-javascript
 #: code:addons/website_sale/models/crm_team.py:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
@@ -547,16 +515,6 @@ msgid "About cross selling products"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid "About us"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Accept Terms & Conditions"
 msgstr ""
@@ -574,7 +532,9 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
-msgid "Accessories show up when the customer reviews the cart before payment (cross-sell strategy)."
+msgid ""
+"Accessories show up when the customer reviews the cart before payment "
+"(cross-sell strategy)."
 msgstr ""
 
 #. module: website_sale
@@ -586,17 +546,17 @@ msgstr "Βοηθητικά Είδη"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Action"
-msgstr ""
+msgstr "Ενέργεια"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Απαιτείται ενέργεια"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Add"
-msgstr ""
+msgstr "Προσθήκη"
 
 #. module: website_sale
 #. odoo-javascript
@@ -624,7 +584,9 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Add a reference price per UoM on products (i.e $/kg), in addition to the sale price"
+msgid ""
+"Add a reference price per UoM on products (i.e $/kg), in addition to the "
+"sale price"
 msgstr ""
 
 #. module: website_sale
@@ -633,12 +595,8 @@ msgid "Add a strikethrough price, as a comparison"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Add download link for customers at the end of checkout"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
@@ -667,7 +625,7 @@ msgid "Add to Cart Button"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Address"
 msgstr "Διεύθυνση"
 
@@ -696,7 +654,9 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow shoppers to compare products based on their attributes"
-msgstr "Επιτρέψτε στους αγοραστές να συγκρίνουν τα είδη βάσει των χαρακτηριστικών τους"
+msgstr ""
+"Επιτρέψτε στους αγοραστές να συγκρίνουν τα είδη βάσει των χαρακτηριστικών "
+"τους"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -729,8 +689,14 @@ msgstr "Ποσό από Εγκαταλειμμένα Καλάθια"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
+#: code:addons/website_sale/controllers/delivery.py:0
 #, python-format
 msgid "Anonymous express checkout partner for order %s"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Apartment, suite, etc."
 msgstr ""
 
 #. module: website_sale
@@ -743,19 +709,6 @@ msgstr "Εφαρμογή"
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #, python-format
 msgid "Are you sure you want to delete this badge?"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid ""
-"As a leading professional services firm,\n"
-"                                we know that success is all about the\n"
-"                                commitment we put on strong services."
 msgstr ""
 
 #. module: website_sale
@@ -786,21 +739,22 @@ msgid "Automatically send abandoned checkout emails"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Average Order"
-msgstr "Μέση Παραγγελία"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
 msgid "Average Rating"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Back to cart"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Background"
-msgstr ""
+msgstr "Φόντο"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -852,27 +806,20 @@ msgid "Benelux"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Best Sellers"
-msgstr "Κορυφαία σε Πωλήσεις"
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__big
 msgid "Big"
-msgstr ""
+msgstr "Μεγάλο"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Billing"
 msgstr "Χρεώσεις"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
-msgid "Billing Address"
-msgstr "Διεύθυνση Χρέωσης"
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Billing address"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -888,13 +835,17 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products."
+msgid ""
+"Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift "
+"Card, Loyalty. Specific conditions can be set (products, customers, minimum "
+"purchase amount, period). Rewards can be discounts (% or amount) or free "
+"products."
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Both"
-msgstr ""
+msgstr "Και τα δύο"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -916,7 +867,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.attribute,name:website_sale.product_attribute_brand
 msgid "Brand"
-msgstr ""
+msgstr "Μάρκα"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_contact_us_button_url
@@ -953,13 +904,6 @@ msgid "Cabinets"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Campaigns"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
 msgstr ""
@@ -969,20 +913,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
 msgid "Can Publish"
 msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Capture order payments when the delivery is completed."
-msgstr "Καταγραφή πληρωμών παραγγελίας όταν η αποστολή έχει ολοκληρωθεί."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1017,13 +947,6 @@ msgid "Cart recovery email already sent"
 msgstr "Email ανάκτησης καλαθιού αποστάλθηκε"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Carts"
-msgstr "Καλάθια"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Carts are flagged as abandoned after this delay."
 msgstr ""
@@ -1053,7 +976,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Category"
-msgstr ""
+msgstr "Κατηγορία"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_description
@@ -1079,19 +1002,34 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
 msgstr ""
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation."
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Η αλλαγή του ονόματός σας δεν επιτρέπεται μετά την έκδοση τιμολογίων για το "
+"λογαριασμό σας. Επικοινωνήστε μαζί μας άμεσα για αυτή τη διαδικασία."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Checkout"
 msgstr ""
 
 #. module: website_sale
@@ -1107,7 +1045,7 @@ msgstr "Κατηγορίες Κατώτερες"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_delivery
 msgid "Choose a delivery method"
-msgstr ""
+msgstr "Επιλέξτε έναν τρόπο αποστολής"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1126,8 +1064,11 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "Click <i>'New'</i> in the top-right corner to create your first product."
-msgstr "Κάντε κλικ στο <i>'Νέο'</i> στην επάνω δεξιά γωνία για να δημιουργήσετε το πρώτο σας είδος."
+msgid ""
+"Click <i>'New'</i> in the top-right corner to create your first product."
+msgstr ""
+"Κάντε κλικ στο <i>'Νέο'</i> στην επάνω δεξιά γωνία για να δημιουργήσετε το "
+"πρώτο σας είδος."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -1153,7 +1094,16 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Click on this button so your customers can see it."
-msgstr "Κάντε κλικ σε αυτό το κουμπί, ώστε οι πελάτες σας να μπορούν να το δουν."
+msgstr ""
+"Κάντε κλικ σε αυτό το κουμπί, ώστε οι πελάτες σας να μπορούν να το δουν."
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/notification/cart_notification/cart_notification.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+#, python-format
+msgid "Close"
+msgstr "Κλείσιμο"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1163,7 +1113,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Color"
-msgstr ""
+msgstr "Χρώμα"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1172,7 +1122,9 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
-msgid "Comma-separated list of parts of product names, barcodes or internal reference"
+msgid ""
+"Comma-separated list of parts of product names, barcodes or internal "
+"reference"
 msgstr ""
 
 #. module: website_sale
@@ -1181,7 +1133,10 @@ msgid "Companies"
 msgstr "Εταιρίες"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Company Name"
 msgstr "Επωνυμία Εταιρίας"
 
@@ -1205,6 +1160,11 @@ msgstr "Εξαρτήματα"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Shiprocket"
 msgstr ""
 
 #. module: website_sale
@@ -1240,7 +1200,7 @@ msgstr "Υπολογίστε τα έξοδα αποστολής στις παρ�
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ρυθμίσεις διαμόρφωσης"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1248,22 +1208,26 @@ msgid "Configure Form"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-#: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Confirm"
+msgstr "Επιβεβαίωση"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "Confirm Order"
 msgstr "Επιβεβαίωση Εντολής"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Confirm orders when you get paid."
-msgstr "Επιβεβαιώστε τις παραγγελίες όταν πληρωθείτε."
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Confirm order"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Confirmed"
-msgstr ""
+msgstr "Επιβεβαιώθηκε"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1277,11 +1241,8 @@ msgstr "Επαφή"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_5
 msgid "Contact Us"
-msgstr ""
+msgstr "Επικοινωνήστε μαζί μας"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__contact_us_button_url
@@ -1291,14 +1252,29 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Content"
+msgstr "Περιεχόμενα"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
+msgid "Continue checkout"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid ""
+"Continue checkout\n"
+"                                    <i class=\"fa fa-angle-right ms-2 fw-light\"/>"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
 #, python-format
-msgid "Conversion"
-msgstr "Μετατροπή"
+msgid "Continue shopping"
+msgstr ""
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1314,7 +1290,7 @@ msgstr "Χώρα"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Create"
-msgstr ""
+msgstr "Δημιουργία"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -1342,7 +1318,7 @@ msgstr "Δημιουργήθηκε στις"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Creation Date"
-msgstr ""
+msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -1363,7 +1339,7 @@ msgstr "Πελάτης"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "Λογαριασμός Πελάτη"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__account_on_checkout
@@ -1413,6 +1389,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
+#: code:addons/website_sale/models/res_config_settings.py:0
 #, python-format
 msgid "Customize Email Templates"
 msgstr ""
@@ -1428,9 +1405,14 @@ msgid "DHL Shipping Methods"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default"
-msgstr ""
+msgstr "Προεπιλογή"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1456,7 +1438,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_website_base_unit__name
-msgid "Define a custom unit to display in the price per unit of measure field."
+msgid ""
+"Define a custom unit to display in the price per unit of measure field."
 msgstr ""
 
 #. module: website_sale
@@ -1470,9 +1453,14 @@ msgid "Delete Badge"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_delivery
+msgid "Delivery"
+msgstr "Παράδοση"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Ποσό παράδοσης"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__access_point_address
@@ -1485,24 +1473,19 @@ msgid "Delivery will be updated after choosing a new delivery method"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_delivery
-msgid "Delivery:"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Description"
-msgstr ""
+msgstr "Περιγραφή"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Περιγραφή που εμφανίζεται στο eshop και στις online προσφορές."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr ""
+msgstr "Περιγραφή για τις Online Προσφορές"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
@@ -1527,11 +1510,6 @@ msgid "Digest"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
-msgid "Digital Content"
-msgstr "Ψηφιακό Περιεχόμενο"
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__disabled
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__disabled
 msgid "Disabled (buy as guest)"
@@ -1542,6 +1520,11 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Discard"
+msgstr "Απόρριψη"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
+msgid "Discount code..."
 msgstr ""
 
 #. module: website_sale
@@ -1566,12 +1549,14 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Display Type"
-msgstr ""
+msgstr "Τύπος Οθόνης"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_count
-msgid "Display base unit price on your eCommerce pages. Set to 0 to hide it for this product."
+msgid ""
+"Display base unit price on your eCommerce pages. Set to 0 to hide it for "
+"this product."
 msgstr ""
 
 #. module: website_sale
@@ -1582,7 +1567,9 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_name
-msgid "Displays the custom unit for the products if defined or the selected unit of measure otherwise."
+msgid ""
+"Displays the custom unit for the products if defined or the selected unit of"
+" measure otherwise."
 msgstr ""
 
 #. module: website_sale
@@ -1600,9 +1587,17 @@ msgid "Do you wish to clear your cart before adding products to it?"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__done
-msgid "Done"
-msgstr "Ολοκληρωμένη"
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Documents"
+msgstr "Έγγραφα"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_document.py:0
+#, python-format
+msgid ""
+"Documents shown on product page cannot be restricted to a specific variant"
+msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -1646,6 +1641,11 @@ msgid "E-Commerce Extra Info Shown on product page"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_document_form
+msgid "E-commerce"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "E-commerce Promotional Code"
 msgstr "Κωδικός προσφοράς eshop"
@@ -1677,11 +1677,6 @@ msgid "Edit"
 msgstr "Επεξεργασία"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
@@ -1701,7 +1696,7 @@ msgstr "Email"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
 msgid "Embed Code"
-msgstr ""
+msgstr "Κώδικας Ενσωμάτωσης"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_delivery
@@ -1716,13 +1711,6 @@ msgid "Enter a name for your new product"
 msgstr "Εισαγάγετε ένα όνομα για το νέο σας είδος"
 
 #. module: website_sale
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "Ergonomic"
-msgstr ""
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_public_category.py:0
 #, python-format
@@ -1735,7 +1723,9 @@ msgid "Extra Images"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.extra_info_option
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
 msgid "Extra Info"
 msgstr "Περισσότερες Πληροφορίες"
 
@@ -1747,13 +1737,13 @@ msgid "Extra Product Media"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_extra_checkout_step
-msgid "Extra Step During Checkout"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Extra Step"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Extra Step Option"
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_extra_checkout_step
+msgid "Extra Step During Checkout"
 msgstr ""
 
 #. module: website_sale
@@ -1764,6 +1754,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 msgid "Extra Variant Media"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "Extra info"
 msgstr ""
 
 #. module: website_sale
@@ -1786,17 +1781,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
 msgid "Field"
-msgstr ""
+msgstr "Πεδίο"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__label
 msgid "Field Label"
-msgstr ""
+msgstr "Όνομα Πεδίου"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__name
 msgid "Field Name"
-msgstr ""
+msgstr "Όνομα Πεδίου"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1809,21 +1804,26 @@ msgid "Fill in your address"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
+msgid "Fiscal Position"
+msgstr "Φορολογική Θέση"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Ακόλουθοι"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Ακόλουθοι (Συνεργάτες)"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_delivery.js:0
 #, python-format
 msgid "Free"
-msgstr ""
+msgstr "Δωρεάν"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1831,20 +1831,19 @@ msgid "From Website"
 msgstr "Από Ιστότοπο"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Full name"
+msgstr ""
+
+#. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
 msgid "Furnitures"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Generate an invoice from orders ready for invoicing."
-msgstr "Δημιουργία τιμολογίων από παραγγελίες έτοιμες προς τιμολόγηση."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Generate the invoice automatically when the online payment is confirmed"
+msgid ""
+"Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
 
 #. module: website_sale
@@ -1861,27 +1860,12 @@ msgid "Go to cart"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid ""
-"Great quotation templates will significantly\n"
-"                                <strong>boost your success rate</strong>. The\n"
-"                                first section is usually about your company,\n"
-"                                your references, your methodology or\n"
-"                                guarantees, your team, SLA, terms and conditions, etc."
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Grid"
-msgstr ""
+msgstr "Πλέγμα"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1903,7 +1887,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__visibility__hidden
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__none
 msgid "Hidden"
-msgstr ""
+msgstr "Κρυφό"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale
@@ -1921,14 +1905,9 @@ msgid "Huge file size. The image should be optimized/reduced."
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
+#: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 msgid "I agree to the"
 msgstr "Συμφωνώ με το"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.reduction_code
-msgid "I have a promo code"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
@@ -1940,9 +1919,14 @@ msgid "ID"
 msgstr "Κωδικός"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_tag_form_view_inherit_website_sale
+msgid "If an image is set, the color will not be used on eCommerce."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_error
@@ -1957,26 +1941,32 @@ msgstr ""
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
-msgid "If the setting is set, sent to authenticated visitors who abandoned their cart"
+msgid ""
+"If the setting is set, sent to authenticated visitors who abandoned their "
+"cart"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid ""
-"If you edit a quotation from the 'Preview' of a quotation, you will\n"
-"                        update that quotation only. If you edit the quotation\n"
-"                        template (from the Configuration menu), all future quotations will\n"
-"                        use this modified template."
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid ""
+"If you believe that it is an error, please contact the website "
+"administrator."
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__image
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Image"
 msgstr "Εικόνα"
@@ -2058,12 +2048,12 @@ msgstr "Τιμολόγηση"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Πολιτική Τιμολόγησης"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Είναι Ακόλουθος"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__is_published
@@ -2089,25 +2079,31 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 #, python-format
-msgid "It seems that a delivery method is not compatible with your address. Please refresh the page and try again."
+msgid ""
+"It seems that a delivery method is not compatible with your address. Please "
+"refresh the page and try again."
 msgstr ""
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 #, python-format
-msgid "It seems that there is already a transaction for your order, you can not change the delivery method anymore"
+msgid ""
+"It seems that there is already a transaction for your order, you can not "
+"change the delivery method anymore"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
+#, python-format
+msgid "Item(s) added to your cart"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
 msgid "Journal Entry"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__just_done
-msgid "Just done"
-msgstr ""
+msgstr "Εγγραφή Ημερολογίου"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
@@ -2136,7 +2132,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Month"
-msgstr ""
+msgstr "Τελευταίος Μήνας"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
@@ -2167,14 +2163,14 @@ msgstr "Τελευταία Ενημέρωση στις"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Week"
-msgstr ""
+msgstr "Προηγ. Εβδομάδα"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Year"
-msgstr ""
+msgstr "Τελευταίο Έτος"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2184,7 +2180,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Left"
-msgstr ""
+msgstr "Αριστερά"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2207,7 +2203,9 @@ msgstr "Ας δημιουργήσουμε το πρώτο σας είδος."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
-msgid "Let's now take a look at your eCommerce dashboard to get your eCommerce website ready in no time."
+msgid ""
+"Let's now take a look at your eCommerce dashboard to get your eCommerce "
+"website ready in no time."
 msgstr ""
 
 #. module: website_sale
@@ -2232,21 +2230,7 @@ msgstr "Συνδεδεμένη Γραμμή Εντολής"
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "List"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "Locally handmade"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "Looking for a custom bamboo stain to match existing furniture? Contact us for a quote."
-msgstr ""
+msgstr "Λίστα"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2255,7 +2239,9 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Mail only sent to signed in customers with items available for sale in their cart."
+msgid ""
+"Mail only sent to signed in customers with items available for sale in their"
+" cart."
 msgstr ""
 
 #. module: website_sale
@@ -2270,7 +2256,9 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Manage pricelists to apply specific prices per country, customer, products, etc"
+msgid ""
+"Manage pricelists to apply specific prices per country, customer, products, "
+"etc"
 msgstr ""
 
 #. module: website_sale
@@ -2280,12 +2268,9 @@ msgid "Mandatory (no guest checkout)"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
-#, python-format
 msgid "Medium"
-msgstr ""
+msgstr "Μέσο"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error
@@ -2295,7 +2280,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Μηνύματα"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2310,22 +2295,22 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
 msgid "Move to first"
-msgstr ""
+msgstr "Μεταφορά σε πρώτο"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
 msgid "Move to last"
-msgstr ""
+msgstr "Μεταφορά σε τελευταίο "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
 msgid "Move to next"
-msgstr ""
+msgstr "Μεταφορά σε επόμενο"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
 msgid "Move to previous"
-msgstr ""
+msgstr "Μεταφορά σε προηγούμενο"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia
@@ -2333,10 +2318,7 @@ msgid "Multimedia"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_cart.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
-#, python-format
 msgid "My Cart"
 msgstr "Το Καλάθι μου"
 
@@ -2344,7 +2326,6 @@ msgstr "Το Καλάθι μου"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
-#: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 msgid "Name"
 msgstr "Περιγραφή"
@@ -2360,6 +2341,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
 msgid "Name Short"
 msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_public_category.py:0
+#, python-format
+msgid "New"
+msgstr "Νέα"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
@@ -2391,16 +2379,11 @@ msgid "Next (Right-Arrow)"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "Next <span class=\"oi oi-chevron-right\"/>"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "No"
-msgstr ""
+msgstr "Όχι"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -2421,7 +2404,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
+msgid "No product defined in this category."
 msgstr ""
 
 #. module: website_sale
@@ -2448,14 +2431,26 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "No shipping method is available for your current order and shipping address. Please contact us for more information."
+msgid ""
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
+msgstr ""
+"Καμία μέθοδος αποστολής δεν είναι διαθέσιμη για την τρέχουσα παραγγελία σας "
+"και τη διεύθυνση αποστολής. Παρακαλούμε επικοινωνήστε μαζί μας για "
+"περισσότερες πληροφορίες."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "No shipping method is selected."
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
-msgstr ""
+msgstr "Κανένα"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -2470,11 +2465,6 @@ msgid "Not available with %s"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__not_done
-msgid "Not done"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
 msgid "Number of Abandoned Carts"
 msgstr "Πλήθος Εγκαταλειμμένων Καλαθιών"
@@ -2482,7 +2472,7 @@ msgstr "Πλήθος Εγκαταλειμμένων Καλαθιών"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Πλήθος ενεργειών"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error_counter
@@ -2496,7 +2486,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: website_sale
@@ -2571,7 +2561,9 @@ msgstr "Ηλεκτρονικό Eμπόριο Ανοικτού Κώδικα"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
-msgid "Optimization required! Reduce the image size or increase your compression settings."
+msgid ""
+"Optimization required! Reduce the image size or increase your compression "
+"settings."
 msgstr ""
 
 #. module: website_sale
@@ -2597,7 +2589,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Options"
-msgstr ""
+msgstr "Επιλογές"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__option_line_ids
@@ -2623,17 +2615,14 @@ msgid "Order Lines displayed on Website"
 msgstr "Γραμμές Παραγγελίας εμφανίζονται στον Ιστότοπο"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
-msgid "Order Total"
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Order overview"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_orders
 #: model:ir.ui.menu,name:website_sale.menu_orders_orders
-#, python-format
 msgid "Orders"
 msgstr "Ταξινομήσεις"
 
@@ -2641,50 +2630,6 @@ msgstr "Ταξινομήσεις"
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
 msgstr "Παραγγελίες Προς Τιμολόγηση"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Orders to Invoice"
-msgstr "Παραγγελίες προς Τιμολόγηση"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Orders/Day"
-msgstr "Παραγγελίες/Ημέρα"
-
-#. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid "Our Offer"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid "Our Quality"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid "Our Service"
-msgstr ""
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
@@ -2707,19 +2652,28 @@ msgid "Parents And Self"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay Now"
-msgstr "Εξόφληση Τώρα"
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Pay now"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Pay with"
-msgstr "Πληρωμή με"
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Payment"
+msgstr "Πληρωμή"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Payment Information"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
 msgid "Payment Methods"
-msgstr ""
+msgstr "Μέθοδοι Πληρωμής"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
@@ -2727,21 +2681,19 @@ msgid "Payment Providers"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_token
+msgid "Payment Token"
+msgstr "Διακριτικό Πληρωμής"
+
+#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Διακριτικά Πληρωμής"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "Συναλλαγές Πληρωμής"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Payments to Capture"
-msgstr "Πληρωμές για Καταγραφή"
 
 #. module: website_sale
 #. odoo-python
@@ -2754,6 +2706,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Phone"
 msgstr "Τηλέφωνο"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Phone Number"
+msgstr "Αριθμός τηλεφώνου"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2783,14 +2742,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Position"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "Press a button and watch your desk glide effortlessly from sitting to standing height in seconds."
-msgstr ""
+msgstr "Θέση"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
@@ -2805,38 +2757,9 @@ msgid "Previous (Left-Arrow)"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/backend.py:0
-#, python-format
-msgid "Previous Month"
-msgstr "Προηγούμενος Μήνας"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/backend.py:0
-#, python-format
-msgid "Previous Week"
-msgstr "Προηγ. Εβδομάδα"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/backend.py:0
-#, python-format
-msgid "Previous Year"
-msgstr "Προηγούμενο Έτος"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
 #, python-format
 msgid "Price"
 msgstr "ΤΙΜΗ"
@@ -2906,12 +2829,9 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2928,7 +2848,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute
 msgid "Product Attribute"
-msgstr ""
+msgstr "Χαρακτηριστικό Είδους"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -2945,6 +2865,11 @@ msgstr "Κατηγορία Είδους"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Comparison Tool"
 msgstr "Εργαλείο Σύγκρισης Ειδών"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_document
+msgid "Product Document"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
@@ -3014,10 +2939,14 @@ msgid "Product Tag"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.actions.act_window,name:website_sale.product_public_tags_action
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__product_tag_ids
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_tags
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Tags"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Product Tags Filter"
 msgstr ""
 
 #. module: website_sale
@@ -3031,6 +2960,11 @@ msgid "Product Template Attribute Line"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_product_template_attribute_value
+msgid "Product Template Attribute Value"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
 msgid "Product Tmpl"
 msgstr ""
@@ -3039,7 +2973,7 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
 msgid "Product Variant"
-msgstr ""
+msgstr "Μεταβλητή Είδους"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3070,19 +3004,6 @@ msgid "Product not found"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid ""
-"Product quality is the foundation we\n"
-"                                stand on; we build it with a relentless\n"
-"                                focus on fabric, performance and craftsmanship."
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
 msgid "Product ribbon"
 msgstr ""
@@ -3092,7 +3013,6 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_pages
-#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_sale.products_breadcrumb
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
@@ -3138,15 +3058,11 @@ msgid "Promo Code"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Provide customers with product-specific links or downloadable content in the confirmation page of the checkout process if the payment gets through. To do so, attach some files to a product using the new Files button and publish them."
-msgstr ""
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_image.py:0
 #, python-format
-msgid "Provided video URL for '%s' is not valid. Please enter a valid video URL."
+msgid ""
+"Provided video URL for '%s' is not valid. Please enter a valid video URL."
 msgstr ""
 
 #. module: website_sale
@@ -3177,36 +3093,21 @@ msgid "Push up"
 msgstr "Μεταφορά μία θέση πιο επάνω"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
-msgid "Qty:"
-msgstr "Ποσ:"
-
-#. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
 msgstr "Ποσότητα"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "REVENUE BY"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Radio"
-msgstr ""
+msgstr "Κουμπί Επιλογής"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Rating"
-msgstr ""
+msgstr "Βαθμολόγηση"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg_text
@@ -3216,17 +3117,17 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Τελευταίο Σχόλιο Βαθμολογίας"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Τελευταία Εικόνα Βαθμολογίας"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Τελευταία Τιμή Βαθμολογίας"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_percentage_satisfaction
@@ -3241,11 +3142,18 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Πλήθος Βαθμολογιών"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
 msgid "Ratings"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
+#, python-format
+msgid "Re-Order"
 msgstr ""
 
 #. module: website_sale
@@ -3290,9 +3198,10 @@ msgid "Reinforced for heavy loads"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
 msgid "Remove"
-msgstr ""
+msgstr "Αφαίρεση"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3306,6 +3215,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
@@ -3335,13 +3245,21 @@ msgid "Resume Order"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Return to shipping"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
 msgid "Review Order"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
-#: model:ir.model.fields,field_description:website_sale.field_product_tag__ribbon_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 msgid "Ribbon"
 msgstr ""
@@ -3369,7 +3287,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Right"
-msgstr ""
+msgstr "Δεξιά"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
@@ -3393,19 +3311,17 @@ msgid "Sale Analysis"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
 #: model_terms:ir.ui.view,arch_db:website_sale.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
-#, python-format
 msgid "Sales"
 msgstr "Πωλήσεις"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Analysis"
-msgstr ""
+msgstr "Ανάλυση Πωλήσεων"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_report
@@ -3415,33 +3331,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Παραγγελία"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Γραμμή Παραγγελίας"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sales Since Last Month"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sales Since Last Week"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sales Since Last Year"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -3474,21 +3369,35 @@ msgid "Sample"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Save address"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Search Abandoned Sales Orders"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Select"
+msgid "Search bar"
 msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Select"
+msgstr "Επιλογή"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
-msgid "Select <b>New Product</b> to create it and manage its properties to boost your sales."
-msgstr "Επιλέξτε <b>Νέο Είδος</b> για να το δημιουργήσετε και να διαχειριστείτε τις ιδιότητές του για να αυξήσετε τις πωλήσεις σας."
+msgid ""
+"Select <b>New Product</b> to create it and manage its properties to boost "
+"your sales."
+msgstr ""
+"Επιλέξτε <b>Νέο Είδος</b> για να το δημιουργήσετε και να διαχειριστείτε τις "
+"ιδιότητές του για να αυξήσετε τις πωλήσεις σας."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3500,16 +3409,6 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_delivery.js:0
 #, python-format
 msgid "Select a pick-up point"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
-msgid "Select this address"
-msgstr "Επιλογή αυτής της διεύθυνσης"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_delivery_methods
-msgid "Select to compute delivery rate"
 msgstr ""
 
 #. module: website_sale
@@ -3533,13 +3432,6 @@ msgid "Send a Recovery Email"
 msgstr "Αποστολή Email Ανάκτησης"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Send a recovery email to visitors who haven't completed their order."
-msgstr "Στείλτε email ανάκτησης καλαθιού σε επισκέπτες που δεν ολοκλήρωσαν την παραγγελία τους."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send after"
 msgstr ""
@@ -3547,7 +3439,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send by Email"
-msgstr ""
+msgstr "Αποστολή με Email"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email
@@ -3575,24 +3467,24 @@ msgstr "Υπηρεσίες"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Share"
-msgstr ""
+msgstr "Κοινοποίηση"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid ""
-"Ship to the same address\n"
-"                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>"
+msgid "Ship to the same address"
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, python-format
 msgid "Shipping"
 msgstr "Αποστολή"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_delivery_invoice_address
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shipping Address"
 msgstr "Διεύθυνση Παράδοσης"
 
@@ -3606,6 +3498,21 @@ msgstr "Έξοδα Αποστολής"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shipping Methods"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Shipping address"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shiprocket Shipping Methods"
 msgstr ""
 
 #. module: website_sale
@@ -3636,7 +3543,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
-msgid "Shop - Select Payment Provider"
+msgid "Shop - Select Payment Method"
 msgstr ""
 
 #. module: website_sale
@@ -3651,13 +3558,35 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Show Empty Cart"
+msgid "Show Empty"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show b2b Fields"
 msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
+msgid "Show on Ecommerce"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
+msgid "Show on product page"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show/hide shopping cart"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Sign In"
+msgstr "Σύνδεση"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -3667,7 +3596,7 @@ msgstr "Εγγραφή"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
-msgstr ""
+msgstr "Σύνδεση"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3706,14 +3635,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__small
 msgid "Small"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sold"
-msgstr "Εξαντλήθηκε"
+msgstr "Μικρό"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
@@ -3732,19 +3654,12 @@ msgstr "Ορισμένα υποχρεωτικά πεδία είναι κενά."
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr ""
+msgstr "Δυστυχώς, δεν είμαστε σε θέση να αποστείλουμε την παραγγελία σας"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Sort by"
-msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sources"
-msgstr ""
+msgstr "Ταξινόμηση κατά"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
@@ -3759,11 +3674,6 @@ msgid "State / Province"
 msgstr "Νομός/Πολιτεία/Επαρχία"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_provider_state
-msgid "State of the website sale onboarding payment provider step"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Status"
 msgstr "Κατάσταση"
@@ -3775,28 +3685,32 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Street 2"
-msgstr "Οδός 2"
+msgid "Street and Number"
+msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Street <span class=\"d-none d-md-inline\"> and Number</span>"
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Style"
-msgstr ""
+msgstr "Στύλ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Subtotal:"
-msgstr "Μερικό σύνολο:"
+msgid "Subtotal"
+msgstr "Μερικό σύνολο"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
-msgid "Suggest alternatives to your customer (upsell strategy). Those products show up on the product page."
+msgid ""
+"Suggest alternatives to your customer (upsell strategy). Those products show"
+" up on the product page."
 msgstr ""
 
 #. module: website_sale
@@ -3806,8 +3720,8 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
-msgid "Suggested Accessories:"
-msgstr "Προτεινόμενα επιπλέον είδη:"
+msgid "Suggested accessories"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -3815,19 +3729,14 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "TIN / VAT"
-msgstr "ΑΦΜ"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
-msgstr ""
+msgstr "Εικέτα"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Tags"
-msgstr ""
+msgstr "Ετικέτες"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
@@ -3851,13 +3760,13 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Taxes:"
-msgstr "Φόροι:"
+msgid "Taxes"
+msgstr "Φόροι"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
-msgstr ""
+msgstr "Κείμενο"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
@@ -3884,7 +3793,8 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
 #: model:ir.model.fields,help:website_sale.field_product_template__compare_list_price
-msgid "The amount will be displayed strikethroughed on the eCommerce product page"
+msgid ""
+"The amount will be displayed strikethroughed on the eCommerce product page"
 msgstr ""
 
 #. module: website_sale
@@ -3898,7 +3808,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
-msgid "The company of the website you are trying to sale from (%s) is different than the one you want to use (%s)"
+msgid ""
+"The company of the website you are trying to sale from (%s) is different "
+"than the one you want to use (%s)"
 msgstr ""
 
 #. module: website_sale
@@ -3907,12 +3819,14 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
 msgstr ""
+"Η πλήρης διεύθυνση (URL) για την πρόσβαση στο έγγραφο μέσω του ιστοτόπου."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
-msgid "The given combination does not exist therefore it cannot be added to cart."
+msgid ""
+"The given combination does not exist therefore it cannot be added to cart."
 msgstr ""
 
 #. module: website_sale
@@ -3926,20 +3840,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
-msgid "The given product does not have a price therefore it cannot be added to cart."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "The minimum height is 65 cm, and for standing work the maximum height position is 125 cm."
+msgid ""
+"The given product does not have a price therefore it cannot be added to "
+"cart."
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "The mode selected here applies as invoicing policy of any new product created but not of products already existing."
-msgstr "Ο τρόπος που επιλέξατε εδώ ισχύει ως πολιτική τιμολόγησης για κάθε νέο είδος που θα δημιουργηθεί, αλλά όχι για είδη που υπάρχουν ήδη."
+msgid ""
+"The mode selected here applies as invoicing policy of any new product "
+"created but not of products already existing."
+msgstr ""
+"Ο τρόπος που επιλέξατε εδώ ισχύει ως πολιτική τιμολόγησης για κάθε νέο είδος"
+" που θα δημιουργηθεί, αλλά όχι για είδη που υπάρχουν ήδη."
 
 #. module: website_sale
 #. odoo-python
@@ -3951,7 +3864,10 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
-msgid "The product will be available in each mentioned eCommerce category. Go to Shop > Edit Click on the page and enable 'Categories' to view all eCommerce categories."
+msgid ""
+"The product will be available in each mentioned eCommerce category. Go to "
+"Shop > Edit Click on the page and enable 'Categories' to view all eCommerce "
+"categories."
 msgstr ""
 
 #. module: website_sale
@@ -3963,7 +3879,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/product_product.py:0
 #, python-format
-msgid "The value of Base Unit Count must be greater than 0. Use 0 to hide the price per unit on this product."
+msgid ""
+"The value of Base Unit Count must be greater than 0. Use 0 to hide the price"
+" per unit on this product."
 msgstr ""
 
 #. module: website_sale
@@ -3972,43 +3890,15 @@ msgid "There is no confirmed order from the website"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "There is no recent confirmed order."
-msgstr "Δεν υπάρχει πρόσφατη επιβεβαιωμένη παραγγελία."
-
-#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "There isn't any UTM tag detected in orders"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
 msgstr "Αυτός ο συνδυασμός δεν υπάρχει."
-
-#. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid ""
-"This is a <strong>sample quotation template</strong>. You should\n"
-"                                customize it to fit your own needs from the <i>Sales</i>\n"
-"                                application, using the menu: Configuration /\n"
-"                                Quotation Templates."
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -4019,7 +3909,10 @@ msgstr "Αυτό είναι το τρέχον καλάθι σας."
 #. odoo-python
 #: code:addons/website_sale/models/res_partner.py:0
 #, python-format
-msgid "This partner has an open cart. Please note that the pricelist will not be updated on that cart. Also, the cart might not be visible for the customer until you update the pricelist of that cart."
+msgid ""
+"This partner has an open cart. Please note that the pricelist will not be "
+"updated on that cart. Also, the cart might not be visible for the customer "
+"until you update the pricelist of that cart."
 msgstr ""
 
 #. module: website_sale
@@ -4059,11 +3952,14 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Thumbnails"
-msgstr ""
+msgstr "Μικρογραφίες"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
+msgid ""
+"To send invitations in B2B mode, open a contact or select several ones in "
+"list view and click on 'Portal Access Management' option in the dropdown "
+"menu *Action*."
 msgstr ""
 
 #. module: website_sale
@@ -4081,7 +3977,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "Σύνολο"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
@@ -4094,13 +3990,10 @@ msgid "Total number of views on products"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "True"
-msgstr "Αληθές"
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_snippet_filter__product_cross_selling
-msgid "True only for product filters that require a product_id because they relate to cross selling"
+msgid ""
+"True only for product filters that require a product_id because they relate "
+"to cross selling"
 msgstr ""
 
 #. module: website_sale
@@ -4112,11 +4005,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "UPS"
 msgstr "UPS"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__terms_url
-msgid "URL"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
@@ -4141,15 +4029,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
-msgstr ""
+msgstr "Μη Εξοφλημένη"
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
-#, python-format
 msgid "Unpaid Orders"
 msgstr "Απλήρωτες Παραγγελίες"
 
@@ -4157,13 +4042,6 @@ msgstr "Απλήρωτες Παραγγελίες"
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Unpublished"
 msgstr "Μη Δημοσιευμένο"
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Untaxed Total Sold"
-msgstr "Αφορολόγητο Σύνολο Πωληθέντων"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4178,6 +4056,11 @@ msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr "ΦΠΑ"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
 msgid "VAT Excluded"
 msgstr ""
@@ -4190,12 +4073,17 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
+msgstr "Παραλλαγή"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__ribbon_id
+msgid "Variant Ribbon"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Variants"
-msgstr ""
+msgstr "Παραλλαγές"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4209,14 +4097,16 @@ msgid "Video URL"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
-msgid "View Cart ("
-msgstr "Προβολή Καλαθιού ("
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_centered
 msgid "View Product"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.xml:0
+#, python-format
+msgid "View cart"
 msgstr ""
 
 #. module: website_sale
@@ -4234,17 +4124,22 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__visibility
 msgid "Visibility"
-msgstr ""
+msgstr "Ορατότητα"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__visibility__visible
 msgid "Visible"
-msgstr ""
+msgstr "Ορατό"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
 msgid "Visible on current website"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__visible_on_ecommerce
+msgid "Visible on eCommerce"
 msgstr ""
 
 #. module: website_sale
@@ -4269,12 +4164,15 @@ msgid "Visitor Product Views History"
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__shop_warning
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
+#, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Προσοχή"
 
 #. module: website_sale
 #: model:product.template,name:website_sale.product_product_1_product_template
@@ -4283,35 +4181,14 @@ msgstr "Εγγύηση"
 
 #. module: website_sale
 #: model:product.template,description_sale:website_sale.product_product_1_product_template
-msgid "Warranty, issued to the purchaser of an article by its manufacturer, promising to repair or replace it if necessary within a specified period of time."
-msgstr "Εγγύηση, παραδίδεται στον αγοραστή ενός προϊόντος από τον κατασκευαστή του, που υπόσχεται να επισκευάσει ή να αντικαταστήσει, αν είναι απαραίτητο, εντός συγκεκριμένης χρονικής περιόδου."
-
-#. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
 msgid ""
-"We always ensure that our products are\n"
-"                                set at a fair price so that you will be\n"
-"                                happy to buy them."
+"Warranty, issued to the purchaser of an article by its manufacturer, "
+"promising to repair or replace it if necessary within a specified period of "
+"time."
 msgstr ""
-
-#. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/website_sale_validate.js:0
-#, python-format
-msgid "We are waiting for confirmation from the bank or the payment provider"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_2
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_3
-#: model_terms:sale.order.line,website_description:website_sale.website_sale_order_line_5
-msgid "We pay special attention to detail, which is why our desks are of a superior quality."
-msgstr ""
+"Εγγύηση, παραδίδεται στον αγοραστή ενός προϊόντος από τον κατασκευαστή του, "
+"που υπόσχεται να επισκευάσει ή να αντικαταστήσει, αν είναι απαραίτητο, εντός"
+" συγκεκριμένης χρονικής περιόδου."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -4335,7 +4212,7 @@ msgstr "Ιστότοπος"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Μηνύματα Ιστότοπου"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -4370,7 +4247,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
 msgid "Website URL"
-msgstr ""
+msgstr "Διεύθυνση URL Ιστότοπου"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_visitor
@@ -4380,7 +4257,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -4429,6 +4306,11 @@ msgid "What should be done on \"Add to Cart\"?"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_tag__visible_on_ecommerce
+msgid "Whether the tag is displayed on the eCommerce."
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
@@ -4442,8 +4324,14 @@ msgstr "Λίστα επιθυμιών"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "With the first mode you can set several prices in the product config form (from Sales tab). With the second one, you set prices and computation rules from Pricelists."
-msgstr "Με την πρώτη λειτουργία μπορείτε να ορίσετε διάφορες τιμές στη φόρμα ρύθμισης παραμέτρων του είδους (από την καρτέλα Πωλήσεις). Με τη δεύτερη, καθορίζετε τιμές και κανόνες υπολογισμού από τιμοκαταλόγους."
+msgid ""
+"With the first mode you can set several prices in the product config form "
+"(from Sales tab). With the second one, you set prices and computation rules "
+"from Pricelists."
+msgstr ""
+"Με την πρώτη λειτουργία μπορείτε να ορίσετε διάφορες τιμές στη φόρμα "
+"ρύθμισης παραμέτρων του είδους (από την καρτέλα Πωλήσεις). Με τη δεύτερη, "
+"καθορίζετε τιμές και κανόνες υπολογισμού από τιμοκαταλόγους."
 
 #. module: website_sale
 #. odoo-python
@@ -4457,7 +4345,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Yes"
-msgstr ""
+msgstr "Ναι"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4467,18 +4355,10 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_2
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_3
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_4
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_5
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-msgid ""
-"You can <strong>set a description per product</strong>. Odoo will\n"
-"                        automatically create a quotation using the descriptions\n"
-"                        of all products in the proposal. The table of content\n"
-"                        on the left is generated automatically using the styles you\n"
-"                        used in your description (heading 1, heading 2, ...)"
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
 msgstr ""
 
 #. module: website_sale
@@ -4505,11 +4385,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Your Address"
-msgstr "Η διεύθυνσή σας"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
 msgid ""
 "Your Dynamic Snippet will be displayed here...\n"
@@ -4517,11 +4392,40 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Email"
+msgstr "Το email σας"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
+#, python-format
+msgid "Your Name"
+msgstr "Το Όνομά σας"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid ""
+"Your account is not allowed to pay in company %s. Please log out and create "
+"a new account for this website, or contact the website administrator."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Your cart is empty!"
 msgstr "Το καλάθι σας είναι άδειο"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "Your cart is not ready to be paid, please verify previous steps."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -4544,11 +4448,6 @@ msgid "Zip Prefix"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost"
 msgstr "bpost"
@@ -4557,11 +4456,6 @@ msgstr "bpost"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost Shipping Methods"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
-msgid "code..."
-msgstr "κωδικός..."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_add
@@ -4589,6 +4483,12 @@ msgid "eCommerce Categories"
 msgstr "Κατηγορίες eshop"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__description_ecommerce
+#: model:ir.model.fields,field_description:website_sale.field_product_template__description_ecommerce
+msgid "eCommerce Description"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
@@ -4605,6 +4505,11 @@ msgid "eCommerce Shop"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
 msgstr ""
@@ -4612,21 +4517,21 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
-msgstr "εάν θέλετε να συγχωνεύσετε το προηγούμενο καλάθι σας με το τρέχον καλάθι."
+msgstr ""
+"εάν θέλετε να συγχωνεύσετε το προηγούμενο καλάθι σας με το τρέχον καλάθι."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid "if you want to restore your previous cart. Your current cart will be replaced with your previous cart."
-msgstr "εάν θέλετε να επαναφέρετε το προηγούμενο καλάθι σας. Το τρέχον καλάθι σας θα αντικατασταθεί από το προηγούμενο καλάθι σας."
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"εάν θέλετε να επαναφέρετε το προηγούμενο καλάθι σας. Το τρέχον καλάθι σας θα"
+" αντικατασταθεί από το προηγούμενο καλάθι σας."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
-msgid "item(s))"
 msgstr ""
 
 #. module: website_sale
@@ -4637,10 +4542,22 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "or"
+msgstr "ή"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "remove"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/website_sale_delivery.js:0
+#, python-format
+msgid "select to see available Pick-Up Locations"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 msgid "terms &amp; conditions"
 msgstr "όροι &amp; προϋποθέσεις"
 
