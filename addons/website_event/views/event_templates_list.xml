@@ -345,8 +345,10 @@
                                 <span t-field="event.name" itemprop="name"/>
                             </h5>
                             <!-- Start Date & Time -->
-                            <small class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
+                            <!-- TODO remove t-out one in master -->
+                            <small t-if="False" class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
                             </small>
+                            <small class="opacity-75" itemprop="description" t-field="event.subtitle"/>
                         </div>
                         <!-- Location -->
                         <small class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
