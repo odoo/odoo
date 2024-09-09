@@ -5958,7 +5958,7 @@ test("quick create column should be opened if there is no column", async () => {
     });
 });
 
-test("quick create column should not be closed on window click if there is no column", async () => {
+test("quick create column should close on window click if there is no column", async () => {
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -5981,8 +5981,8 @@ test("quick create column should not be closed on window click if there is no co
     });
     // click outside should not discard quick create column
     await contains(".o_kanban_example_background_container").click();
-    expect(".o_column_quick_create input").toHaveCount(1, {
-        message: "the quick create should still be opened",
+    expect(".o_column_quick_create input").toHaveCount(0, {
+        message: "the quick create should be closed",
     });
 });
 

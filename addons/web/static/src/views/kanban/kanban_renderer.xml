@@ -87,7 +87,7 @@
                 <t t-if="canCreateGroup()">
                     <KanbanColumnQuickCreate
                         folded="state.columnQuickCreateIsFolded"
-                        onFoldChange="folded => state.columnQuickCreateIsFolded = props.list.groups.length > 0 and folded"
+                        onFoldChange="folded => state.columnQuickCreateIsFolded = folded"
                         onValidate="props.list.createGroup.bind(props.list)"
                         exampleData="exampleData"
                         groupByField="props.list.groupByField"
