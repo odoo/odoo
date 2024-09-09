@@ -208,6 +208,15 @@
                                     </list>
                                 </field>
                             </group>
+                            <group id="invoice_send_settings"
+                                   string="Customer Invoices"
+                                   groups="account.group_account_invoice,account.group_account_readonly">
+                                <field name="invoice_sending_method"/>
+                                <field name="invoice_edi_format" invisible="not display_invoice_edi_format"/>
+                                <field name="invoice_template_pdf_report_id"
+                                       invisible="not display_invoice_template_pdf_report_id"
+                                       options="{'no_create': True, 'no_edit': True}"/>
+                            </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
                                 <field name="currency_id" invisible="1"/>
                                 <field name="property_account_receivable_id"/>
@@ -262,6 +271,17 @@
             </field>
         </record>
 
+        <record id="res_partner_view_tree" model="ir.ui.view">
+            <field name="name">res.partner.list.inherit.account</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="invoice_edi_format" string="EDI Format" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="res_partner_view_search" model="ir.ui.view">
             <field name="name">res.partner.search.inherit</field>
             <field name="model">res.partner</field>
@@ -272,6 +292,9 @@
                    <filter string="Customer Invoices" name="customer" domain="[('customer_rank','>', 0)]"/>
                    <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
                    <separator/>
+                </xpath>
+                <xpath expr="//group[@name='group_by']" position="after">
+                    <filter name="invoice_edi_format" string="EDI Format" context="{'group_by':'invoice_edi_format'}"/>
                 </xpath>
             </field>
         </record>

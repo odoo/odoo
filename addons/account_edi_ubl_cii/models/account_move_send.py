@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import base64
 import logging
 import io
@@ -13,119 +12,66 @@ from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 _logger = logging.getLogger(__name__)
 
 
-class AccountMoveSend(models.TransientModel):
+class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
-    enable_ubl_cii_xml = fields.Boolean(compute='_compute_enable_ubl_cii_xml')
-    checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')
-    checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
-
-    def _get_wizard_values(self):
-        # EXTENDS 'account'
-        values = super()._get_wizard_values()
-        values['ubl_cii_xml'] = self.checkbox_ubl_cii_xml
-        return values
-
-    @api.model
-    def _get_wizard_vals_restrict_to(self, only_options):
-        # EXTENDS 'account'
-        values = super()._get_wizard_vals_restrict_to(only_options)
-        return {
-            'checkbox_ubl_cii_xml': False,
-            **values,
-        }
-
     # -------------------------------------------------------------------------
-    # COMPUTE METHODS
+    # ALERTS
     # -------------------------------------------------------------------------
 
-    @api.depends('move_ids')
-    def _compute_checkbox_ubl_cii_label(self):
-        for wizard in self:
-            wizard.checkbox_ubl_cii_label = False
-            if wizard.mode in ('invoice_single', 'invoice_multi'):
-                code_to_label = dict(wizard.move_ids.partner_id._fields['ubl_cii_format'].selection)
-                codes = wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')
-                if any(codes):
-                    wizard.checkbox_ubl_cii_label = ", ".join(code_to_label[c] for c in set(codes) if c)
-
-    @api.depends('move_ids')
-    def _compute_enable_ubl_cii_xml(self):
-        for wizard in self:
-            wizard.enable_ubl_cii_xml = any(m._need_ubl_cii_xml() for m in wizard.move_ids)
-
-    @api.depends('checkbox_ubl_cii_xml')
-    def _compute_mail_attachments_widget(self):
-        # EXTENDS 'account' - add depends
-        super()._compute_mail_attachments_widget()
-
-    @api.depends('enable_ubl_cii_xml')
-    def _compute_checkbox_ubl_cii_xml(self):
-        for wizard in self:
-            wizard.checkbox_ubl_cii_xml = wizard.enable_ubl_cii_xml and (wizard.checkbox_ubl_cii_xml or wizard.company_id.invoice_is_ubl_cii)
-
-    @api.depends('checkbox_ubl_cii_xml')
-    def _compute_warnings(self):
+    def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
-        super()._compute_warnings()
-        for wizard in self:
-            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201'}:
-                continue
+        alerts = super()._get_alerts(moves, moves_data)
+        if not set(moves.partner_id.commercial_partner_id.mapped('invoice_edi_format')) - {False, 'facturx', 'oioubl_201'}:
+            return alerts
 
-            warnings = {}
-            if wizard.checkbox_ubl_cii_xml:
-                show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
-                if show_ubl_company_warning:
-                    warnings['account_edi_ubl_cii_configure_company'] = {
-                        'message': _("Please fill in Peppol EAS and Peppol Endpoint in your company form to generate a complete file."),
-                        'level': 'info',
-                        'action_text': _("View Company"),
-                        'action': wizard.company_id.partner_id._get_records_action(),
-                    }
-
-                not_configured_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
-                    lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
-                )
-                if not_configured_partners:
-                    warnings['account_edi_ubl_cii_configure_partner'] = {
-                        'message': _("These partners are missing Peppol EAS or Peppol Endpoint field. "
-                                     "Please check those in their Accounting tab. "
-                                     "Otherwise, the generated files will be incomplete."),
-                        'level': 'info',
-                        'action_text': _("View Partner(s)"),
-                        'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
-                    }
-
-                moves_without_bank = self.move_ids.filtered(lambda m: not m.partner_bank_id)
-                if moves_without_bank:
-                    warnings['account_edi_ubl_cii_configure_bank'] = {
-                        'message': _("Please add a Recipient bank in the 'Other Info' tab to generate a complete file."),
-                        'level': 'info',
-                        'action_text': _("View Invoice(s)"),
-                        'action': moves_without_bank._get_records_action(name=_("Check Invoice(s)")),
-                    }
-
-            if warnings:
-                wizard.warnings = {**(wizard.warnings or {}), **warnings}
+        ubl_formats = set(self.env['res.partner']._get_ubl_cii_formats())
+        if ubl_moves := moves.filtered(lambda m: moves_data[m]['invoice_edi_format'] and moves_data[m]['invoice_edi_format'] in ubl_formats):
+            not_configured_company_partners = ubl_moves.company_id.partner_id.filtered(
+                lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
+            )
+            if not_configured_company_partners:
+                alerts['account_edi_ubl_cii_configure_company'] = {
+                    'message': _("Please fill in Peppol EAS and Peppol Endpoint in your company form to generate a complete file."),
+                    'level': 'info',
+                    'action_text': _("View Company"),
+                    'action': not_configured_company_partners._get_records_action(),
+                }
+            not_configured_partners = ubl_moves.partner_id.commercial_partner_id.filtered(
+                lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
+            )
+            if not_configured_partners:
+                alerts['account_edi_ubl_cii_configure_partner'] = {
+                    'message': _("These partners are missing Peppol EAS or Peppol Endpoint field. "
+                                 "Please check those in their Accounting tab. "
+                                 "Otherwise, the generated files will be incomplete."),
+                    'level': 'info',
+                    'action_text': _("View Partner(s)"),
+                    'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
+                }
+            moves_without_bank = ubl_moves.filtered(lambda m: not m.partner_bank_id)
+            if moves_without_bank:
+                alerts['account_edi_ubl_cii_configure_bank'] = {
+                    'message': _("Please add a Recipient bank in the 'Other Info' tab to generate a complete file."),
+                    'level': 'danger' if len(moves_without_bank) == 1 else 'warning',
+                    'action_text': _("View Invoice(s)"),
+                    'action': moves_without_bank._get_records_action(name=_("Check Invoice(s)")),
+                }
+        return alerts
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
     # -------------------------------------------------------------------------
 
-    @api.model
     def _get_invoice_extra_attachments(self, move):
         # EXTENDS 'account'
         return super()._get_invoice_extra_attachments(move) + move.ubl_cii_xml_id
 
-    def _needs_ubl_cii_placeholder(self):
-        return self.enable_ubl_cii_xml and self.checkbox_ubl_cii_xml
-
-    def _get_placeholder_mail_attachments_data(self, move):
+    def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edi=None):
         # EXTENDS 'account'
-        results = super()._get_placeholder_mail_attachments_data(move)
-
-        if self.mode == 'invoice_single' and self._needs_ubl_cii_placeholder():
-            builder = move.partner_id.commercial_partner_id._get_edi_builder()
+        results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edi=extra_edi)
+        if move._need_ubl_cii_xml(invoice_edi_format):
+            builder = move.partner_id.commercial_partner_id._get_edi_builder(invoice_edi_format)
             filename = builder._export_invoice_filename(move)
             results.append({
                 'id': f'placeholder_{filename}',
@@ -133,20 +79,18 @@ class AccountMoveSend(models.TransientModel):
                 'mimetype': 'application/xml',
                 'placeholder': True,
             })
-
         return results
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
-        if invoice_data.get('ubl_cii_xml') and invoice._need_ubl_cii_xml():
-            builder = invoice.partner_id.commercial_partner_id._get_edi_builder()
+        if invoice._need_ubl_cii_xml(invoice_data['invoice_edi_format']):
+            builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
             xml_content, errors = builder._export_invoice(invoice)
             filename = builder._export_invoice_filename(invoice)
 
@@ -167,11 +111,10 @@ class AccountMoveSend(models.TransientModel):
                     'res_field': 'ubl_cii_xml_file',  # Binary field
                 }
                 invoice_data['ubl_cii_xml_options'] = {
-                    'ubl_cii_format': invoice.partner_id.commercial_partner_id.ubl_cii_format,
+                    'ubl_cii_format': invoice_data['invoice_edi_format'],
                     'builder': builder,
                 }
 
-    @api.model
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
@@ -197,7 +140,7 @@ class AccountMoveSend(models.TransientModel):
             return
 
         # Read pdf content.
-        pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         reader_buffer = io.BytesIO(pdf_values['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
@@ -212,8 +155,8 @@ class AccountMoveSend(models.TransientModel):
                 and not writer.is_pdfa:
             try:
                 writer.convert_to_pdfa()
-            except Exception as e:
-                _logger.exception("Error while converting to PDF/A: %s", e)
+            except Exception:
+                _logger.exception("Error while converting to PDF/A")
 
             # Extra metadata to be Factur-x PDF-A compliant.
             content = self.env['ir.qweb']._render(
@@ -241,7 +184,7 @@ class AccountMoveSend(models.TransientModel):
             return
 
         xmlns_move_type = 'Invoice' if invoice.move_type == 'out_invoice' else 'CreditNote'
-        pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         filename = pdf_values['name']
         content = pdf_values['raw']
 
@@ -274,7 +217,6 @@ class AccountMoveSend(models.TransientModel):
             cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8'
         )
 
-    @api.model
     def _link_invoice_documents(self, invoices_data):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoices_data)
@@ -286,5 +228,5 @@ class AccountMoveSend(models.TransientModel):
         ]
         if attachments_vals:
             attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
-            res_ids = [attachment.res_id for attachment in attachments]
+            res_ids = attachments.mapped('res_id')
             self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['ubl_cii_xml_id', 'ubl_cii_xml_file'])

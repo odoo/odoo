@@ -146,14 +146,10 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         })
 
     def create_send_and_print(self, invoices, **kwargs):
-        template = self.env.ref(invoices._get_mail_template())
-        return self.env['account.move.send'].with_context(
-            active_model='account.move',
-            active_ids=invoices.ids,
-        ).create({
-            'mail_template_id': template.id,
-            **kwargs,
-        })
+        wizard_model = 'account.move.send.wizard' if len(invoices) == 1 else 'account.move.send.batch.wizard'
+        return self.env[wizard_model]\
+            .with_context(active_model='account.move', active_ids=invoices.ids)\
+            .create(kwargs)
 
     def test_generate_signed_xml(self, date=None):
         random.seed(42)
@@ -191,7 +187,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 patch(f"{self.move_module}.sha1", lambda x: sha1()):
             invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]},],)
             invoice.action_post()
-            wizard = self.create_send_and_print(invoice)
+            wizard = self.create_send_and_print(invoice, invoice_edi_format='es_facturae')
             with self.assertRaises(UserError):
                 wizard.action_send_and_print()
 
@@ -300,7 +296,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 invoice_line_ids=[{'product_id': self.product_a.id, 'price_unit': 1000.0, 'discount': 100.0, 'quantity': 2}],
             )
             invoice.action_post()
-            wizard = self.create_send_and_print(invoice)
+            wizard = self.create_send_and_print(invoice, invoice_edi_format='es_facturae')
             result = wizard.action_send_and_print()
 
             self.assertEqual(result['type'], 'ir.actions.act_url')

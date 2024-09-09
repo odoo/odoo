@@ -123,6 +123,11 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
+        content: "Set sending method: 'email'",
+        trigger: "div[name='sending_method'] select:eq(0)",
+        run: "selectByLabel by Email",
+    },
+    {
         trigger: "div[name=account_missing_email] a",
         content: _t("Complete the partner data with email"),
         run: "click",

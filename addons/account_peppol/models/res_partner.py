@@ -18,6 +18,10 @@ NON_PEPPOL_FORMAT = (False, 'facturx', 'oioubl_201', 'ciusro')
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    invoice_sending_method = fields.Selection(
+        selection_add=[('peppol', 'by Peppol')],
+    )
+
     peppol_verification_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
@@ -123,8 +127,8 @@ class ResPartner(models.Model):
     def _update_peppol_state_per_company(self, vals=None):
         partners = self.env['res.partner']
         if vals is None:
-            partners = self.filtered(lambda p: all([p.peppol_eas, p.peppol_endpoint, p.ubl_cii_format, p.country_code in PEPPOL_LIST]))
-        elif {'peppol_eas', 'peppol_endpoint', 'ubl_cii_format'}.intersection(vals.keys()):
+            partners = self.filtered(lambda p: all([p.peppol_eas, p.peppol_endpoint, p.is_ubl_format, p.country_code in PEPPOL_LIST]))
+        elif {'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'}.intersection(vals.keys()):
             partners = self.filtered(lambda p: p.country_code in PEPPOL_LIST)
 
         all_companies = None
@@ -143,10 +147,11 @@ class ResPartner(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('ubl_cii_format')
+    @api.depends_context('company')
+    @api.depends('invoice_edi_format')
     def _compute_is_peppol_edi_format(self):
         for partner in self:
-            partner.is_peppol_edi_format = partner.ubl_cii_format not in NON_PEPPOL_FORMAT
+            partner.is_peppol_edi_format = partner.invoice_edi_format not in NON_PEPPOL_FORMAT
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -182,7 +187,7 @@ class ResPartner(models.Model):
         old_value = self.peppol_verification_state
         if (
             not (self.peppol_eas and self.peppol_endpoint)
-            or self.ubl_cii_format in NON_PEPPOL_FORMAT
+            or self.with_company(self.company_id).invoice_edi_format in NON_PEPPOL_FORMAT
         ):
             self.peppol_verification_state = False
         else:
@@ -193,8 +198,12 @@ class ResPartner(models.Model):
             else:
                 is_participant_on_network = self._check_peppol_participant_exists(participant_info, edi_identification)
                 if is_participant_on_network:
-                    is_valid_format = self._check_document_type_support(participant_info, self.ubl_cii_format)
-                    self.peppol_verification_state = 'valid' if is_valid_format else 'not_valid_format'
+                    is_valid_format = self._check_document_type_support(participant_info, self.with_company(self.company_id).invoice_edi_format)
+                    if is_valid_format:
+                        self.peppol_verification_state = 'valid'
+                        self.invoice_sending_method = 'peppol'
+                    else:
+                        self.peppol_verification_state = 'not_valid_format'
                 else:
                     self.peppol_verification_state = 'not_valid'
 

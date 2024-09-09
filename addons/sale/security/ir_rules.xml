@@ -144,16 +144,30 @@
     </record>
 
     <!-- Wizard access rules -->
-    <record id="account_invoice_send_rule_see_personal" model="ir.rule">
-        <field name="name">Personal Invoice Send and Print</field>
-        <field name="model_id" ref="account.model_account_move_send"/>
+    <record id="account_invoice_send_single_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoice Send and Print (single mode)</field>
+        <field name="model_id" ref="account.model_account_move_send_wizard"/>
+        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_send_batch_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoice Send and Print (batch mode)</field>
+        <field name="model_id" ref="account.model_account_move_send_batch_wizard"/>
         <field name="domain_force">[('move_ids.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_ids.invoice_user_id', '=', user.id), ('move_ids.invoice_user_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
-    <record id="account_invoice_send_rule_see_all" model="ir.rule">
-        <field name="name">All Invoice Send and Print</field>
-        <field name="model_id" ref="account.model_account_move_send"/>
+    <record id="account_invoice_send_single_rule_see_all" model="ir.rule">
+        <field name="name">All Invoice Send and Print (single mode)</field>
+        <field name="model_id" ref="account.model_account_move_send_wizard"/>
+        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="account_invoice_send_batch_rule_see_all" model="ir.rule">
+        <field name="name">All Invoice Send and Print (batch mode)</field>
+        <field name="model_id" ref="account.model_account_move_send_batch_wizard"/>
         <field name="domain_force">[('move_ids.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>

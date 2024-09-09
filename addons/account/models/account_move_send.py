@@ -1,107 +1,120 @@
-# -*- coding: utf-8 -*-
 from collections import defaultdict
 from markupsafe import Markup
-from werkzeug.urls import url_encode
 
-from odoo import _, api, fields, models, modules, tools, Command
+from odoo import _, api, models, modules, tools
 from odoo.exceptions import UserError
-from odoo.tools.misc import get_lang
 
 
-class AccountMoveSend(models.TransientModel):
+class AccountMoveSend(models.AbstractModel):
+    """ Shared class between the two sending wizards.
+    See 'account.move.send.batch.wizard' for multiple invoices sending wizard (async)
+    and 'account.move.send.wizard' for single invoice sending wizard (sync).
+    """
     _name = 'account.move.send'
     _description = "Account Move Send"
 
-    @api.model
-    def _get_default_pdf_template_id(self):
-        return self.env.ref('account.account_invoices')
-
-    company_id = fields.Many2one(comodel_name='res.company', compute='_compute_company_id', store=True)
-    move_ids = fields.Many2many(comodel_name='account.move')
-    mode = fields.Selection(
-        selection=[
-            ('invoice_single', "Invoice Single"),
-            ('invoice_multi', "Invoice Multi"),
-        ],
-        compute='_compute_mode',
-        readonly=False,
-        store=True,
-    )
-
-    # == PRINT ==
-    enable_download = fields.Boolean(compute='_compute_enable_download')
-    checkbox_download = fields.Boolean(
-        string="Download",
-        compute='_compute_checkbox_download',
-        store=True,
-        readonly=False,
-    )
-
-    # == MAIL ==
-    enable_send_mail = fields.Boolean(compute='_compute_enable_send_mail')
-    checkbox_send_mail = fields.Boolean(
-        string="Email",
-        compute='_compute_checkbox_send_mail',
-        store=True,
-        readonly=False,
-    )
-    display_mail_composer = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    warnings = fields.Json(compute='_compute_warnings')
-    send_mail_readonly = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    mail_template_id = fields.Many2one(
-        comodel_name='mail.template',
-        string="Email template",
-        domain="[('model', '=', 'account.move')]",
-    )
-    pdf_template_id = fields.Many2one(
-        comodel_name='ir.actions.report',
-        string="Invoice template:",
-        domain="[('is_invoice_report', '=', True)]",
-        default=_get_default_pdf_template_id,
-    )
-    show_pdf_template_menu = fields.Boolean(compute='_compute_show_pdf_template_menu')
-    mail_lang = fields.Char(
-        string="Lang",
-        compute='_compute_mail_lang',
-    )
-    mail_partner_ids = fields.Many2many(
-        comodel_name='res.partner',
-        string="Recipients",
-        compute='_compute_mail_partner_ids',
-        store=True,
-        readonly=False,
-    )
-    mail_subject = fields.Char(
-        string="Subject",
-        compute='_compute_mail_subject_body',
-        store=True,
-        readonly=False,
-    )
-    mail_body = fields.Html(
-        string="Contents",
-        sanitize_style=True,
-        compute='_compute_mail_subject_body',
-        store=True,
-        readonly=False,
-    )
-    mail_attachments_widget = fields.Json(
-        compute='_compute_mail_attachments_widget',
-        store=True,
-        readonly=False,
-    )
+    # -------------------------------------------------------------------------
+    # DEFAULTS
+    # -------------------------------------------------------------------------
 
     @api.model
-    def default_get(self, fields_list):
-        # EXTENDS 'base'
-        results = super().default_get(fields_list)
+    def _get_default_sending_method(self, move):
+        return move.partner_id.with_company(move.company_id).invoice_sending_method or 'email'
 
-        if 'move_ids' in fields_list and 'move_ids' not in results:
-            move_ids = self._context.get('active_ids', [])
-            if any(move.state == 'draft' for move in self.env['account.move'].browse(move_ids)):
-                raise UserError(_("You can't Send & Print invoice(s) in draft state."))
-            results['move_ids'] = [Command.set(move_ids)]
+    @api.model
+    def _get_default_invoice_edi_format(self, move):
+        return move.partner_id.with_company(move.company_id).invoice_edi_format
 
-        return results
+    @api.model
+    def _get_default_pdf_report_id(self, move):
+        return move.partner_id.with_company(move.company_id).invoice_template_pdf_report_id or self.env.ref('account.account_invoices')
+
+    @api.model
+    def _get_default_extra_edi_checkboxes(self, move):
+        """ extra_edi in essence are declaration B2G edi's
+       We build a dict representing edi_key: checkbox_values such as:
+       {
+           edi_key : {
+                'checked': boolean, (whether the EDI checkbox should be selected for the move),
+                'readonly': boolean, (whether the EDI checkbox should be readonly)
+                'label': _t(string), (the label of the checkbox)
+                'help': _t(string), (an optional help)
+                'question_circle': _t(string), (an optional text showed an icon question_circle title)
+           ...
+       }
+       """
+        return {}
+
+    @api.model
+    def _get_default_extra_edi(self, move):
+        """ Returns the set of selected extra_edi keywords."""
+        return self._get_checked_extra_edi(self._get_default_extra_edi_checkboxes(move))
+
+    @api.model
+    def _get_default_mail_template_id(self, move):
+        return move._get_mail_template()
+
+    @api.model
+    def _get_default_sending_settings(self, move, from_cron=False, **custom_settings):
+        """ Returns a dict with all the necessary data to generate and send invoices.
+        Either takes the provided custom_settings, or the default value.
+        """
+        def get_setting(key, from_cron=False, default_value=None):
+            return custom_settings.get(key) if key in custom_settings else move.sending_data.get(key) if from_cron else default_value
+        vals = {
+            'sending_method': get_setting('sending_method') or self._get_default_sending_method(move),
+            'invoice_edi_format': get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move)),
+            'extra_edi': get_setting('extra_edi', default_value=self._get_default_extra_edi(move)),
+            'pdf_report': get_setting('pdf_report') or self._get_default_pdf_report_id(move),
+            'author_user_id': get_setting('author_user_id', from_cron=from_cron) or self.env.user.id,
+            'author_partner_id': get_setting('author_partner_id', from_cron=from_cron) or self.env.user.partner_id.id,
+        }
+        if vals['sending_method'] == 'email':
+            mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
+            mail_lang = get_setting('mail_lang') or self._get_default_mail_lang(move, mail_template)
+            vals.update({
+                'mail_template': mail_template,
+                'mail_lang': mail_lang,
+                'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
+                'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
+                'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
+                'mail_attachments_widget': get_setting('mail_attachments_widget', default_value=self._get_default_mail_attachments_widget(move, mail_template, extra_edi=vals['extra_edi'])),
+            })
+        return vals
+
+    # -------------------------------------------------------------------------
+    # ALERTS
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _get_alerts(self, moves, moves_data):
+        """ Returns a dict of all alerts corresponding to moves with the given context (sending method,
+        edi format to generate, extra_edi to generate).
+        An alert can have some information:
+        - level (danger, info, warning, ...)  (! danger alerts are considered blocking and will be raised)
+        - message to display
+        - action_text for the text to show on the clickable link
+        - action the action to run when the link is clicked
+        """
+        alerts = {}
+        if partners_without_mail := moves.filtered(lambda m: moves_data[m]['sending_method'] == 'email' and not m.partner_id.email).partner_id:
+            alerts['account_missing_email'] = {
+                'level': 'danger' if len(partners_without_mail) == 1 else 'warning',
+                'message': _("Partner(s) should have an email address."),
+                'action_text': _("View Partner(s)"),
+                'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)")),
+            }
+        if moves.invoice_pdf_report_id:
+            alerts['account_pdf_exist'] = {
+                'level': 'info',
+                'message': _("Some invoice(s) already have a generated pdf. The existing pdf will be used for sending. "
+                             "If you want to regenerate them, please delete the attachment from the invoice."),
+            }
+        return alerts
+
+    # -------------------------------------------------------------------------
+    # MAIL
+    # -------------------------------------------------------------------------
 
     @api.model
     def _get_mail_default_field_value_from_template(self, mail_template, lang, move, field, **kwargs):
@@ -111,9 +124,11 @@ class AccountMoveSend(models.TransientModel):
             .with_context(lang=lang)\
             ._render_field(field, move.ids, **kwargs)[move._origin.id]
 
-    def _get_default_mail_lang(self, move, mail_template=None):
-        return mail_template._render_lang([move.id]).get(move.id) if mail_template else get_lang(self.env).code
+    @api.model
+    def _get_default_mail_lang(self, move, mail_template):
+        return mail_template._render_lang([move.id]).get(move.id)
 
+    @api.model
     def _get_default_mail_body(self, move, mail_template, mail_lang):
         return self._get_mail_default_field_value_from_template(
             mail_template,
@@ -123,6 +138,7 @@ class AccountMoveSend(models.TransientModel):
             options={'post_process': True},
         )
 
+    @api.model
     def _get_default_mail_subject(self, move, mail_template, mail_lang):
         return self._get_mail_default_field_value_from_template(
             mail_template,
@@ -131,6 +147,7 @@ class AccountMoveSend(models.TransientModel):
             'subject',
         )
 
+    @api.model
     def _get_default_mail_partner_ids(self, move, mail_template, mail_lang):
         partners = self.env['res.partner'].with_company(move.company_id)
         if mail_template.email_to:
@@ -147,46 +164,20 @@ class AccountMoveSend(models.TransientModel):
             partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
         return partners
 
-    def _get_default_mail_attachments_widget(self, move, mail_template):
-        return self._get_placeholder_mail_attachments_data(move) \
+    # -------------------------------------------------------------------------
+    # ATTACHMENTS
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _get_default_mail_attachments_widget(self, move, mail_template, invoice_edi_format=None, extra_edi=None):
+        return self._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edi=extra_edi) \
             + self._get_invoice_extra_attachments_data(move) \
             + self._get_mail_template_attachments_data(mail_template)
 
-    def _get_wizard_values(self):
-        self.ensure_one()
-        return {
-            'mail_template_id': self.mail_template_id.id,
-            'sp_partner_id': self.env.user.partner_id.id,
-            'sp_user_id': self.env.user.id,
-            'download': self.checkbox_download,
-            'send_mail': self.checkbox_send_mail,
-            'pdf_report_id': self.pdf_template_id.id,
-        }
-
     @api.model
-    def _get_wizard_vals_restrict_to(self, only_options):
-        return {
-            'checkbox_download': False,
-            'checkbox_send_mail': False,
-            **only_options,
-        }
-
-    def _get_mail_move_values(self, move, wizard=None):
-        mail_template_id = move.send_and_print_values and move.send_and_print_values.get('mail_template_id')
-        mail_template = wizard and wizard.mail_template_id or self.env['mail.template'].browse(mail_template_id)
-        mail_lang = self._get_default_mail_lang(move, mail_template)
-        return {
-            'mail_template_id': mail_template,
-            'mail_lang': mail_lang,
-            'mail_body': wizard and wizard.mail_body or self._get_default_mail_body(move, mail_template, mail_lang),
-            'mail_subject': wizard and wizard.mail_subject or self._get_default_mail_subject(move, mail_template, mail_lang),
-            'mail_partner_ids': wizard and wizard.mail_partner_ids or self._get_default_mail_partner_ids(move, mail_template, mail_lang),
-            'mail_attachments_widget': wizard and wizard.mail_attachments_widget or self._get_default_mail_attachments_widget(move, mail_template),
-        }
-
-    def _get_placeholder_mail_attachments_data(self, move):
+    def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edi=None):
         """ Returns all the placeholder data.
-        Should be extended to add placeholder based on the checkboxes.
+        Should be extended to add placeholder based on the sending method.
         :param: move:       The current move.
         :returns: A list of dictionary for each placeholder.
         * id:               str: The (fake) id of the attachment, this is needed in rendering in t-key.
@@ -224,8 +215,7 @@ class AccountMoveSend(models.TransientModel):
 
     @api.model
     def _get_mail_template_attachments_data(self, mail_template):
-        """ Returns all the placeholder data and mail template data
-        """
+        """ Returns all mail template data. """
         return [
             {
                 'id': attachment.id,
@@ -238,106 +228,27 @@ class AccountMoveSend(models.TransientModel):
         ]
 
     # -------------------------------------------------------------------------
-    # COMPUTE METHODS
+    # HELPERS
     # -------------------------------------------------------------------------
 
-    @api.depends('move_ids')
-    def _compute_show_pdf_template_menu(self):
-        available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
-        for wizard in self:
-            # show pdf template menu if there are more than 1 template available and there is at least one move that needs a pdf
-            wizard.show_pdf_template_menu = available_templates_count > 1 and any(self._need_invoice_document(move) for move in wizard.move_ids)
+    @api.model
+    def _raise_danger_alerts(self, alerts):
+        danger_alert_messages = [alert['message'] for _key, alert in alerts.items() if alert.get('level') == 'danger']
+        if danger_alert_messages:
+            raise UserError('\n'.join(danger_alert_messages))
 
-    @api.depends('move_ids')
-    def _compute_company_id(self):
-        for wizard in self:
-            if len(wizard.move_ids.company_id) > 1:
-                raise UserError(_("You can only send from the same company."))
-            wizard.company_id = wizard.move_ids.company_id.id
+    @api.model
+    def _check_move_constrains(self, moves):
+        if any(move.state != 'posted' for move in moves):
+            raise UserError(_("You can't Print & Send invoices that are not posted."))
+        if any(not move.is_sale_document(include_receipts=True) for move in moves):
+            raise UserError(_("You can only Print & Send sales documents."))
 
-    @api.depends('move_ids')
-    def _compute_mode(self):
-        for wizard in self:
-            wizard.mode = 'invoice_single' if len(wizard.move_ids) == 1 else 'invoice_multi'
-
-    @api.depends('move_ids')
-    def _compute_enable_download(self):
-        for wizard in self:
-            wizard.enable_download = wizard.mode in ('invoice_single', 'invoice_multi')
-
-    @api.depends('enable_download')
-    def _compute_checkbox_download(self):
-        for wizard in self:
-            wizard.checkbox_download = wizard.enable_download and wizard.company_id.invoice_is_download
-
-    @api.depends('move_ids')
-    def _compute_enable_send_mail(self):
-        for wizard in self:
-            wizard.enable_send_mail = wizard.mode in ('invoice_single', 'invoice_multi')
-
-    @api.depends('enable_send_mail')
-    def _compute_checkbox_send_mail(self):
-        for wizard in self:
-            wizard.checkbox_send_mail = wizard.company_id.invoice_is_email and not wizard.send_mail_readonly
-
-    @api.depends('checkbox_send_mail')
-    def _compute_send_mail_extra_fields(self):
-        for wizard in self:
-            wizard.display_mail_composer = wizard.mode == 'invoice_single'
-            invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
-            wizard.send_mail_readonly = invoices_without_mail_data == wizard.move_ids
-
-    @api.depends('move_ids', 'checkbox_send_mail', 'send_mail_readonly')
-    def _compute_warnings(self):
-        for wizard in self:
-            warnings = {}
-
-            partners_without_mail = wizard.move_ids.filtered(lambda x: not x.partner_id.email).partner_id
-            if wizard.send_mail_readonly or (wizard.checkbox_send_mail and partners_without_mail):
-                warnings['account_missing_email'] = {
-                    'message': _("Partner(s) should have an email address."),
-                    'action_text': _("View Partner(s)"),
-                    'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)"))
-                }
-
-            wizard.warnings = warnings
-
-    @api.depends('mail_template_id')
-    def _compute_mail_lang(self):
-        for wizard in self:
-            if wizard.mode == 'invoice_single':
-                wizard.mail_lang = self._get_default_mail_lang(wizard.move_ids, wizard.mail_template_id)
-            else:
-                wizard.mail_lang = get_lang(self.env).code
-
-    @api.depends('mail_template_id', 'mail_lang')
-    def _compute_mail_partner_ids(self):
-        for wizard in self:
-            if wizard.mode == 'invoice_single' and wizard.mail_template_id:
-                wizard.mail_partner_ids = self._get_default_mail_partner_ids(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
-            else:
-                wizard.mail_partner_ids = None
-
-    @api.depends('mail_template_id', 'mail_lang')
-    def _compute_mail_subject_body(self):
-        for wizard in self:
-            if wizard.mode == 'invoice_single' and wizard.mail_template_id:
-                wizard.mail_subject = self._get_default_mail_subject(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
-                wizard.mail_body = self._get_default_mail_body(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
-            else:
-                wizard.mail_subject = wizard.mail_body = None
-
-    @api.depends('mail_template_id')
-    def _compute_mail_attachments_widget(self):
-        for wizard in self:
-            if wizard.mode == 'invoice_single':
-                manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
-                wizard.mail_attachments_widget = (
-                        wizard._get_default_mail_attachments_widget(wizard.move_ids, wizard.mail_template_id)
-                        + manual_attachments_data
-                )
-            else:
-                wizard.mail_attachments_widget = []
+    @api.model
+    def _get_checked_extra_edi(self, extra_edi_checkboxes):
+        if not extra_edi_checkboxes:
+            return {}
+        return {extra_edi_key for extra_edi_key, extra_edi_vals in extra_edi_checkboxes.items() if extra_edi_vals['checked']}
 
     @api.model
     def _format_error_text(self, error):
@@ -368,20 +279,21 @@ class AccountMoveSend(models.TransientModel):
             return error
 
     # -------------------------------------------------------------------------
-    # BUSINESS ACTIONS
+    # SENDING METHODS
     # -------------------------------------------------------------------------
 
-    def action_open_partners_without_email(self, res_ids=None):
-        # TODO: remove this method in master
-        return self.move_ids.mapped("partner_id").filtered(lambda x: not x.email)._get_records_action(name=_("Partners without email"))
+    @api.model
+    def _is_applicable_to_company(self, method, company):
+        """ TO OVERRIDE - used to determine if we should display the sending method in the selection."""
+        return True
 
     @api.model
-    def _need_invoice_document(self, invoice):
-        """ Determine if we need to generate the documents for the invoice passed as parameter.
-        :param invoice:         An account.move record.
-        :return: True if the PDF / electronic documents must be generated, False otherwise.
-        """
-        return not invoice.invoice_pdf_report_id and invoice.state == 'posted'
+    def _is_applicable_to_move(self, method, move):
+        """ TO OVERRIDE - """
+        if method == 'email':
+            return bool(move.partner_id.email)
+        else:
+            return method == 'manual'
 
     @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
@@ -402,12 +314,11 @@ class AccountMoveSend(models.TransientModel):
         company_id = next(iter(invoices_data)).company_id
         grouped_invoices_by_report = defaultdict(dict)
         for invoice, invoice_data in invoices_data.items():
-            grouped_invoices_by_report[invoice_data['pdf_report_id']][invoice] = invoice_data
+            grouped_invoices_by_report[invoice_data['pdf_report']][invoice] = invoice_data
 
-        for pdf_report_id, group_invoices_data in grouped_invoices_by_report.items():
+        for pdf_report, group_invoices_data in grouped_invoices_by_report.items():
             ids = [inv.id for inv in group_invoices_data]
 
-            pdf_report = self.env['ir.actions.report'].browse(pdf_report_id)
             content, report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
             content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
 
@@ -427,7 +338,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
-        pdf_report = self.env['ir.actions.report'].browse(invoice_data['pdf_report_id'])
+        pdf_report = invoice_data['pdf_report']
         content, report_type = self.env['ir.actions.report'].with_company(invoice.company_id)._pre_render_qweb_pdf(pdf_report.report_name, invoice.ids, data={'proforma': True})
         content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
 
@@ -456,24 +367,27 @@ class AccountMoveSend(models.TransientModel):
         """
         # create an attachment that will become 'invoice_pdf_report_file'
         # note: Binary is used for security reason
-        attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values()]
+        attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values() if invoice_data.get('pdf_attachment_values')]
+        if not attachment_to_create:
+            return
+
         attachments = self.env['ir.attachment'].create(attachment_to_create)
         res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
 
         for invoice, invoice_date in invoices_data.items():
-            invoice.message_main_attachment_id = res_id_to_attachment[invoice.id]
-            invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
-            invoice.is_move_sent = True
+            if attachment := res_id_to_attachment.get(invoice.id):
+                invoice.message_main_attachment_id = attachment
+                invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
+                invoice.is_move_sent = True
 
     @api.model
-    def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
+    def _hook_if_errors(self, moves_data, allow_raising=True):
         """ Process errors found so far when generating the documents.
         :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
                             error.
         :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
                                     proforma PDF report instead.
         """
-        allow_raising = not from_cron and not allow_fallback_pdf
         for move, move_data in moves_data.items():
             error = move_data['error']
             if allow_raising:
@@ -482,14 +396,13 @@ class AccountMoveSend(models.TransientModel):
             move.with_context(no_new_invoice=True).message_post(body=self._format_error_html(error))
 
     @api.model
-    def _hook_if_success(self, moves_data, from_cron=False, allow_fallback_pdf=False):
-        """ Process successful documents.
-        :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
-                            error.
-        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
-                                    proforma PDF report instead.
-        """
-        to_send_mail = {move: move_data for move, move_data in moves_data.items() if move_data.get('send_mail')}
+    def _hook_if_success(self, moves_data):
+        """ Process (typically send) successful documents."""
+        to_send_mail = {
+            move: move_data
+            for move, move_data in moves_data.items()
+            if move_data['sending_method'] == 'email' and self._is_applicable_to_move('email', move)
+        }
         self._send_mails(to_send_mail)
 
     @api.model
@@ -505,13 +418,13 @@ class AccountMoveSend(models.TransientModel):
             ).message_post(
                 message_type='comment',
                 **kwargs,
-                **{
+                **{  # noqa: PIE804
                     'email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
                     'email_add_signature': not mail_template,
                     'mail_auto_delete': mail_template.auto_delete,
                     'mail_server_id': mail_template.mail_server_id.id,
                     'reply_to_force_new': False,
-                },
+                }
             )
 
         # Prevent duplicated attachments linked to the invoice.
@@ -529,9 +442,8 @@ class AccountMoveSend(models.TransientModel):
         # to 'mail_attachments_widget'.
         mail_attachments_widget = move_data.get('mail_attachments_widget')
         seen_attachment_ids = set()
-        to_exclude = {x['name'] for x in mail_attachments_widget if x.get('skip')}
         for attachment_data in self._get_invoice_extra_attachments_data(move) + mail_attachments_widget:
-            if attachment_data['name'] in to_exclude:
+            if attachment_data.get('skip'):
                 continue
 
             try:
@@ -547,11 +459,11 @@ class AccountMoveSend(models.TransientModel):
         ]
 
         return {
+            'author_id': move_data['author_partner_id'],
             'body': move_data['mail_body'],
             'subject': move_data['mail_subject'],
-            'partner_ids': move_data['mail_partner_ids'].ids,
+            'partner_ids': move_data['mail_partner_ids'],
             'attachments': mail_attachments,
-            'author_id': move_data['sp_partner_id'],
         }
 
     @api.model
@@ -559,7 +471,7 @@ class AccountMoveSend(models.TransientModel):
         subtype = self.env.ref('mail.mt_comment')
 
         for move, move_data in [(move, move_data) for move, move_data in moves_data.items() if move.partner_id.email]:
-            mail_template = move_data['mail_template_id']
+            mail_template = move_data['mail_template']
             mail_lang = move_data['mail_lang']
             mail_params = self._get_mail_params(move, move_data)
             if not mail_params:
@@ -603,16 +515,15 @@ class AccountMoveSend(models.TransientModel):
     @api.model
     def _generate_invoice_documents(self, invoices_data, allow_fallback_pdf=False):
         """ Generate the invoice PDF and electronic documents.
+        :param invoices_data:   The collected data for invoices so far.
         :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
                                     proforma PDF report instead.
-        :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
-            if self._need_invoice_document(invoice):
-                self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
-                invoice_data['blocking_error'] = invoice_data.get('error') \
-                                                 and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
-                invoice_data['error_but_continue'] = allow_fallback_pdf and invoice_data.get('error_but_continue')
+            self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
+            invoice_data['blocking_error'] = invoice_data.get('error') \
+                                             and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
+            invoice_data['error_but_continue'] = allow_fallback_pdf and invoice_data.get('error_but_continue')
 
         invoices_data_web_service = {
             invoice: invoice_data
@@ -633,7 +544,7 @@ class AccountMoveSend(models.TransientModel):
         batches = []
         pdf_to_generate = {}
         for invoice, invoice_data in invoices_data_pdf.items():
-            if self._need_invoice_document(invoice) and not invoice_data.get('error') and not invoice.invoice_pdf_report_id:
+            if not invoice_data.get('error') and not invoice.invoice_pdf_report_id:  # we don't regenerate pdf if it already exists
                 pdf_to_generate[invoice] = invoice_data
 
                 if (len(pdf_to_generate) > int(batch_size)):
@@ -647,7 +558,7 @@ class AccountMoveSend(models.TransientModel):
             self._prepare_invoice_pdf_report(batch)
 
         for invoice, invoice_data in invoices_data_pdf.items():
-            if self._need_invoice_document(invoice) and not invoice_data.get('error'):
+            if not invoice_data.get('error'):
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Cleanup the error if we don't want to block the regular pdf generation.
@@ -658,7 +569,7 @@ class AccountMoveSend(models.TransientModel):
                 if invoice_data.get('pdf_attachment_values') and invoice_data.get('error')
             }
             if invoices_data_pdf_error:
-                self._hook_if_errors(invoices_data_pdf_error, allow_fallback_pdf=allow_fallback_pdf)
+                self._hook_if_errors(invoices_data_pdf_error, allow_raising=not allow_fallback_pdf)
 
         # Web-service after the PDF generation.
         invoices_data_web_service = {
@@ -673,7 +584,7 @@ class AccountMoveSend(models.TransientModel):
         invoices_to_link = {
             invoice: invoice_data
             for invoice, invoice_data in invoices_data_web_service.items()
-            if self._need_invoice_document(invoice) and (not invoice_data.get('error') or allow_fallback_pdf)
+            if not invoice_data.get('error') or allow_fallback_pdf
         }
         self._link_invoice_documents(invoices_to_link)
 
@@ -683,107 +594,66 @@ class AccountMoveSend(models.TransientModel):
         :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
-            if self._need_invoice_document(invoice) and invoice_data.get('error'):
+            if not invoice.invoice_pdf_report_id and invoice_data.get('error'):
                 invoice_data.pop('error')
                 self._prepare_invoice_proforma_pdf_report(invoice, invoice_data)
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
                 invoice_data['proforma_pdf_attachment'] = self.env['ir.attachment']\
                     .create(invoice_data.pop('proforma_pdf_attachment_values'))
 
-    @api.model
-    def _action_download(self, attachments):
-        """ Download the PDF attachment, or a zip of attachments if there are more than one. """
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/account/download_invoice_attachments/{",".join(map(str, attachments.ids))}',
-            'close': True,
-        }
-
-    @api.model
-    def _process_send_and_print(self, moves, wizard=None, allow_fallback_pdf=False, **kwargs):
-        """ Process the moves given their individual configuration set on move.send_and_print_values.
-        :param moves: account.move to process
-        :param wizard: account.move.send wizard if exists. If not we avoid raising any error.
-        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a proforma PDF report instead.
+    def _check_sending_data(self, moves, **custom_settings):
+        """Assert the data provided to _generate_and_send_invoices are correct.
+        This is a security in case the method is called directly without going through the wizards.
         """
-        from_cron = not wizard
+        assert all(move.state == 'posted' for move in moves)
+        assert all(self._get_default_pdf_report_id(move).is_invoice_report for move in moves)
+        assert custom_settings['pdf_report'].is_invoice_report if custom_settings.get('pdf_report') else True
+        assert custom_settings['sending_method'] in dict(self.env['res.partner']._fields['invoice_sending_method'].selection) if 'sending_method' in custom_settings else True
 
+    @api.model
+    def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
+        """ Generate and send the moves given custom_settings if provided, else their default configuration set on related partner/company.
+        :param moves: account.move to process
+        :param from_cron: whether the processing comes from a cron.
+        :param allow_raising: whether the process can raise errors, or should log them on the move's chatter.
+        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a proforma PDF report instead.
+        :param custom_settings: settings to apply instead of related partner's defaults settings.
+        """
+        self._check_sending_data(moves, **custom_settings)
         moves_data = {
             move: {
-                **(move.send_and_print_values if not wizard else wizard._get_wizard_values()),
-                **self._get_mail_move_values(move, wizard),
+                **self._get_default_sending_settings(move, from_cron=from_cron, **custom_settings),
             }
             for move in moves
         }
 
-        # Generate all invoice documents.
+        # Generate all invoice documents (PDF and electronic documents if relevant).
         self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
 
         # Manage errors.
         errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
         if errors:
-            self._hook_if_errors(errors, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+            self._hook_if_errors(errors, allow_raising=not from_cron and not allow_fallback_pdf and allow_raising)
 
         # Fallback in case of error.
         errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
         if allow_fallback_pdf and errors:
             self._generate_invoice_fallback_documents(errors)
 
-        # Send mail.
+        # Successfully generated a PDF - Process sending.
         success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error')}
         if success:
-            self._hook_if_success(success, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+            self._hook_if_success(success)
 
-        # Update send and print values of moves
+        # Update sending data of moves
         for move, move_data in moves_data.items():
             if from_cron and move_data.get('error'):
-                move.send_and_print_values = {'error': True}
+                move.sending_data = {'error': True}
             else:
-                move.send_and_print_values = False
+                move.sending_data = False
 
-        to_download = {move: move_data for move, move_data in moves_data.items() if move_data.get('download')}
-        if to_download:
-            attachments = self.env['ir.attachment']
-            for move, move_data in to_download.items():
-                attachments += self._get_invoice_extra_attachments(move) or move_data.get('proforma_pdf_attachment')
-            if attachments:
-                return self._action_download(attachments)
-
-        return {'type': 'ir.actions.act_window_close'}
-
-    def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False, **kwargs):
-        """ Create the documents and send them to the end customers.
-        If we are sending multiple invoices and not downloading them we will process the moves asynchronously.
-        :param force_synchronous:   Flag indicating if the method should be done synchronously.
-        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
-                                    proforma PDF report instead.
-        """
-        self.ensure_one()
-
-        if self.mode == 'invoice_multi' and self.checkbox_send_mail and not self.mail_template_id:
-            raise UserError(_('Please select a mail template to send multiple invoices.'))
-
-        force_synchronous = force_synchronous or self.checkbox_download
-        process_later = self.mode == 'invoice_multi' and not force_synchronous
-        if process_later:
-            # Set sending information on moves
-            for move in self.move_ids:
-                move.send_and_print_values = self._get_wizard_values()
-            self.env.ref('account.ir_cron_account_move_send')._trigger()
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'type': 'info',
-                    'title': _('Sending invoices'),
-                    'message': _('Invoices are being sent in the background.'),
-                    'next': {'type': 'ir.actions.act_window_close'},
-                },
-            }
-
-        return self._process_send_and_print(
-            self.move_ids,
-            wizard=self,
-            allow_fallback_pdf=allow_fallback_pdf,
-            **kwargs,
-        )
+        # Return generated attachments.
+        attachments = self.env['ir.attachment']
+        for move, move_data in success.items():
+            attachments += self._get_invoice_extra_attachments(move) or move_data['proforma_pdf_attachment']
+        return attachments

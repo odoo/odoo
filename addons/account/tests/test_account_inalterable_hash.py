@@ -301,8 +301,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         # Should not raise
         invoice.action_post()
-        wizard = self.env['account.move.send'].with_context(active_model='account.move', active_ids=invoice.ids).create({})
-        wizard.action_send_and_print()
+        invoice._generate_and_send(allow_fallback_pdf=False)
 
         self.assertEqual(invoice.amount_total, 1410.0)
         self.assertEqual(invoice.amount_untaxed, 1200.0)

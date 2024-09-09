@@ -90,12 +90,11 @@ class AccountMove(models.Model):
 
         return super()._get_edi_decoder(file_data, new=new)
 
-    def _need_ubl_cii_xml(self):
+    def _need_ubl_cii_xml(self, ubl_cii_format):
         self.ensure_one()
-        return not self.invoice_pdf_report_id \
-            and not self.ubl_cii_xml_id \
+        return not self.ubl_cii_xml_id \
             and self.is_sale_document() \
-            and bool(self.partner_id.commercial_partner_id.ubl_cii_format)
+            and ubl_cii_format in self.env['res.partner']._get_ubl_cii_formats()
 
     @api.model
     def _get_line_vals_list(self, lines_vals):

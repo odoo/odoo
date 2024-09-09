@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import re
 from stdnum.fr import siret
 
@@ -12,9 +10,8 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPIN
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    ubl_cii_format = fields.Selection(
-        string="Format",
-        selection=[
+    invoice_edi_format = fields.Selection(
+        selection_add=[
             ('facturx', "Factur-X (CII)"),
             ('ubl_bis3', "BIS Billing 3.0"),
             ('xrechnung', "XRechnung CIUS"),
@@ -22,10 +19,8 @@ class ResPartner(models.Model):
             ('ubl_a_nz', "BIS Billing 3.0 A-NZ"),
             ('ubl_sg', "BIS Billing 3.0 SG"),
         ],
-        compute='_compute_ubl_cii_format',
-        store=True,
-        readonly=False,
     )
+    is_ubl_format = fields.Boolean(compute='_compute_is_ubl_format')
     peppol_endpoint = fields.Char(
         string="Peppol Endpoint",
         help="Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'.",
@@ -131,6 +126,10 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_ubl_cii_formats(self):
+        return ['ubl_bis3', 'xrechnung', 'ubl_a_nz', 'nlcius', 'facturx', 'ubl_sg']
+
+    @api.model
+    def _get_ubl_cii_formats_by_country(self):
         return {
             'DE': 'xrechnung',
             'AU': 'ubl_a_nz',
@@ -140,22 +139,33 @@ class ResPartner(models.Model):
             'SG': 'ubl_sg',
         }
 
+    def _get_suggested_invoice_edi_format(self):
+        # EXTENDS 'account'
+        res = super()._get_suggested_invoice_edi_format()
+        format_mapping = self._get_ubl_cii_formats_by_country()
+        country_code = self._deduce_country_code()
+        if country_code in format_mapping:
+            return format_mapping[country_code]
+        elif country_code in EAS_MAPPING:
+            return 'ubl_bis3'
+        else:
+            return res
+
     def _peppol_eas_endpoint_depends(self):
         # field dependencies of methods _compute_peppol_endpoint() and _compute_peppol_eas()
         # because we need to extend depends in l10n modules
         return ['country_code', 'vat', 'company_registry']
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends())
-    def _compute_ubl_cii_format(self):
-        format_mapping = self._get_ubl_cii_formats()
+    def _compute_invoice_edi_format(self):
+        # EXTENDS 'account' - add depends
+        super()._compute_invoice_edi_format()
+
+    @api.depends_context('company')
+    @api.depends('invoice_edi_format')
+    def _compute_is_ubl_format(self):
         for partner in self:
-            country_code = partner._deduce_country_code()
-            if country_code in format_mapping:
-                partner.ubl_cii_format = format_mapping[country_code]
-            elif country_code in EAS_MAPPING:
-                partner.ubl_cii_format = 'ubl_bis3'
-            else:
-                partner.ubl_cii_format = partner.ubl_cii_format
+            partner.is_ubl_format = partner.invoice_edi_format in self._get_ubl_cii_formats()
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends() + ['peppol_eas'])
     def _compute_peppol_endpoint(self):
@@ -203,17 +213,17 @@ class ResPartner(models.Model):
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
 
-    def _get_edi_builder(self):
-        self.ensure_one()
-        if self.ubl_cii_format == 'xrechnung':
+    @api.model
+    def _get_edi_builder(self, invoice_edi_format):
+        if invoice_edi_format == 'xrechnung':
             return self.env['account.edi.xml.ubl_de']
-        if self.ubl_cii_format == 'facturx':
+        if invoice_edi_format == 'facturx':
             return self.env['account.edi.xml.cii']
-        if self.ubl_cii_format == 'ubl_a_nz':
+        if invoice_edi_format == 'ubl_a_nz':
             return self.env['account.edi.xml.ubl_a_nz']
-        if self.ubl_cii_format == 'nlcius':
+        if invoice_edi_format == 'nlcius':
             return self.env['account.edi.xml.ubl_nl']
-        if self.ubl_cii_format == 'ubl_bis3':
+        if invoice_edi_format == 'ubl_bis3':
             return self.env['account.edi.xml.ubl_bis3']
-        if self.ubl_cii_format == 'ubl_sg':
+        if invoice_edi_format == 'ubl_sg':
             return self.env['account.edi.xml.ubl_sg']

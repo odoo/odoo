@@ -555,6 +555,30 @@ class ResPartner(models.Model):
     ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
+    invoice_sending_method = fields.Selection(
+        string="Invoice sending",
+        selection=[
+            ('manual', 'Manually (download)'),
+            ('email', 'by Email'),
+        ],
+        company_dependent=True,
+    )
+    invoice_edi_format = fields.Selection(
+        # company_dependent-like field
+        string="eInvoice format",
+        selection=[],  # to extend
+        compute='_compute_invoice_edi_format',
+        search='_search_invoice_edi_format',
+        inverse='_inverse_invoice_edi_format',
+    )
+    display_invoice_edi_format = fields.Boolean(compute='_compute_display_invoice_edi_format')
+    invoice_template_pdf_report_id = fields.Many2one(
+        comodel_name='ir.actions.report',
+        domain="[('is_invoice_report', '=', True)]",
+        readonly=False,
+        store=True,
+    )
+    display_invoice_template_pdf_report_id = fields.Boolean(compute='_compute_display_invoice_template_pdf_report_id')
     # Computed fields to order the partners as suppliers/customers according to the
     # amount of their generated incoming/outgoing account moves
     supplier_rank = fields.Integer(default=0, copy=False)
@@ -607,6 +631,35 @@ class ResPartner(models.Model):
         domain = expression.AND([domain, [('partner_id', '!=', self._origin.id)]])
         return self.env['res.partner.bank'].search(domain)
 
+    @api.depends('company_id')
+    def _compute_display_invoice_edi_format(self):
+        self.display_invoice_edi_format = len(self._fields['invoice_edi_format'].selection)
+
+    @api.depends('company_id')
+    def _compute_display_invoice_template_pdf_report_id(self):
+        available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
+        self.display_invoice_template_pdf_report_id = available_templates_count > 1
+
+    @api.depends_context('company')
+    def _compute_invoice_edi_format(self):
+        values = self.env['ir.property'].sudo()._get_multi('invoice_edi_format', self._name, self.ids)
+        for partner in self:
+            if partner.id not in values:
+                partner.invoice_edi_format = partner._get_suggested_invoice_edi_format()
+            else:
+                partner.invoice_edi_format = values[partner.id]
+
+    def _search_invoice_edi_format(self, operator, value):
+        return self._fields['invoice_edi_format']._search_company_dependent(self.with_company(self.env.company.root_id), operator, value)
+
+    def _inverse_invoice_edi_format(self):
+        values = {
+            # Need to access record.code with `company = self.env.company`
+            record.id: self._fields['invoice_edi_format'].convert_to_write(record.invoice_edi_format, record)
+            for record in self
+        }
+        self.env['ir.property'].sudo()._set_multi('invoice_edi_format', 'res.partner', values)
+
     @api.depends('bank_ids')
     def _compute_duplicated_bank_account_partners_count(self):
         for partner in self:
@@ -627,6 +680,11 @@ class ResPartner(models.Model):
     def _compute_show_credit_limit(self):
         for partner in self:
             partner.show_credit_limit = self.env.company.account_use_credit_limit
+
+    def _get_suggested_invoice_edi_format(self):
+        # TO OVERRIDE
+        self.ensure_one()
+        return False
 
     def _find_accounting_partner(self, partner):
         ''' Find the partner for which the accounting entries will be created '''
@@ -710,7 +768,16 @@ class ResPartner(models.Model):
                     vals['customer_rank'] = 1
                 elif is_supplier and 'supplier_rank' not in vals:
                     vals['supplier_rank'] = 1
-        return super().create(vals_list)
+        if res := super().create(vals_list):
+            # we need the partner record to set the property 'invoice_edi_format'
+            # we need to bypass the write of partner for account_peppol else it will try to
+            # _update_peppol_state_per_company as if the record wasn't new
+            for partner, vals in zip(res, vals_list):
+                if 'invoice_edi_format' not in vals:
+                    self.env.cache.set(partner, self._fields['invoice_edi_format'], partner._get_suggested_invoice_edi_format())
+        res._inverse_invoice_edi_format()
+        res.invalidate_recordset(fnames=['invoice_edi_format'])
+        return res
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_partner_in_account_move(self):
