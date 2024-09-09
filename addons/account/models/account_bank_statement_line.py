@@ -431,7 +431,7 @@ class AccountBankStatementLine(models.Model):
     def write(self, vals):
         # OVERRIDE
 
-        res = super().write(vals)
+        res = super(AccountBankStatementLine, self.with_context(skip_readonly_check=True)).write(vals)
         self._synchronize_to_moves(set(vals.keys()))
         return res
 
