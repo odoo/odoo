@@ -2,9 +2,9 @@
 <templates>
 
     <t t-name="sale_pdf_quote_builder.customFieldCard">
-        <div class="card align-items-stretch flex-column my-2 w-auto border-0">
-            <h5 t-out="this.props.name" class="card-title text-primary mt-1 mx-2"/>
-            <div class="card-body py-0">
+        <div>
+            <h5 t-out="this.props.name" class="text-primary"/>
+            <div class="mb-3">
                 <span t-attf-class="card-text #{this.props.value ? '' : 'text-muted'}">
                     <textarea
                         t-ref="customFieldCardTextArea"

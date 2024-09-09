@@ -6,21 +6,22 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
         <field name="arch" type="xml">
+            <!-- Needed by customContentKanbanLikeWidget to save selected documents on the product. -->
+            <!-- Desktop view -->
             <xpath expr="//field[@name='order_line']//list" position="inside">
-                <!-- TODO VCR test mobile view ? -->
+                <field name="product_document_ids" column_invisible="1"/>
+            </xpath>
+            <!-- Mobile view -->
+            <xpath expr="//field[@name='order_line']//kanban" position="inside">
                 <field name="product_document_ids" column_invisible="1"/>
             </xpath>
             <page name="optional_products" position="after">
                 <page
                     name="pdf_quote_builder"
                     string="Quote Builder"
-                    invisible="not is_pdf_quote_builder_available"
+                    invisible="not (partner_id and is_pdf_quote_builder_available)"
                 >
-                    <div invisible="id">
-                        This feature requires the Sales Order to be saved first.
-                        Please save the sales order and refresh the page.
-                    </div>
-                    <!-- Needed by customContentKanbanLikeWidget to save the selected documents -->
+                    <!-- Needed by customContentKanbanLikeWidget to save selected documents. -->
                     <field name="quotation_document_ids" invisible="1"/>
                     <field name="customizable_pdf_form_fields" invisible="1"/>
                     <widget
