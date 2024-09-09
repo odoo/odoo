@@ -26,7 +26,7 @@ class ResPartner(models.Model):
 
     def action_view_certifications(self):
         action = self.env["ir.actions.actions"]._for_xml_id("survey.res_partner_action_certifications")
-        action['view_mode'] = 'tree'
+        action['view_mode'] = 'list'
         action['domain'] = ['|', ('partner_id', 'in', self.ids), ('partner_id', 'in', self.child_ids.ids)]
 
         return action

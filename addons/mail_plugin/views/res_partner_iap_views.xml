@@ -3,7 +3,7 @@
     <record id="res_partner_iap_action" model="ir.actions.act_window">
         <field name="name">IAP Partner</field>
         <field name="res_model">res.partner.iap</field>
-        <field name='view_mode'>tree,form</field>
+        <field name='view_mode'>list,form</field>
     </record>
 
     <record id="res_partner_iap_view_form" model="ir.ui.view">
@@ -23,13 +23,13 @@
     </record>
 
     <record id="res_partner_iap_view_tree" model="ir.ui.view">
-        <field name="name">res.partner.iap.view.tree</field>
+        <field name="name">res.partner.iap.view.list</field>
         <field name="model">res.partner.iap</field>
         <field name="arch" type="xml">
-            <tree string="IAP Partner">
+            <list string="IAP Partner">
                 <field name="partner_id"/>
                 <field name="iap_search_domain"/>
-            </tree>
+            </list>
         </field>
     </record>
 

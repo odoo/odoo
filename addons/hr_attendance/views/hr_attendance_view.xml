@@ -4,10 +4,10 @@
     <!-- views -->
 
     <record id="view_attendance_tree" model="ir.ui.view">
-        <field name="name">hr.attendance.tree</field>
+        <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false" js_class="attendance_list_view">
+            <list string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false" js_class="attendance_list_view">
                 <header>
                     <button class="btn-primary" string="Approve Extra Hours" name="action_approve_overtime" type="object"/>
                     <button class="btn-primary" string="Refuse Extra Hours" name="action_refuse_overtime" type="object"/>
@@ -33,7 +33,7 @@
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
                 <field name="color" column_invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -263,7 +263,7 @@
         <field name="name">Attendances</field>
         <field name="path">attendances</field>
         <field name="res_model">hr.attendance</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">
             {
                 "search_default_employee": 1
@@ -316,10 +316,10 @@
     </record>
 
     <record id="view_attendance_tree_management" model="ir.ui.view">
-        <field name="name">hr.attendance.tree</field>
+        <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Employee attendances" editable="bottom" create="0">
+            <list string="Employee attendances" editable="bottom" create="0">
                 <header>
                     <button class="btn-primary" string="Approve Extra Hours" name="action_approve_overtime" type="object"/>
                     <button class="btn-primary" string="Refuse Extra Hours" name="action_refuse_overtime" type="object"/>
@@ -333,14 +333,14 @@
                 <field name="overtime_status" widget="badge" decoration-warning="overtime_status == 'to_approve'" decoration-success="overtime_status == 'approved'" decoration-danger="overtime_status == 'refused'"/>
                 <button class="oe_stat_button" string="Approve" invisible="overtime_status not in ['to_approve', 'refused']" name="action_approve_overtime" icon="fa-check" type="object"/>
                 <button class="oe_stat_button" string="Refuse" invisible="overtime_status not in ['to_approve', 'approved']" name="action_refuse_overtime" icon="fa-times" type="object"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="hr_attendance_management_action" model="ir.actions.act_window">
         <field name="name">Management</field>
         <field name="res_model">hr.attendance</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="hr_attendance_management_view_filter"/>
         <field name="view_id" ref="view_attendance_tree_management"/>
         <field name="context">

@@ -3,10 +3,10 @@
     <data>
 
         <record id="view_tax_tree" model="ir.ui.view">
-            <field name="name">account.tax.tree</field>
+            <field name="name">account.tax.list</field>
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
-                <tree string="Account Tax" decoration-muted="not active">
+                <list string="Account Tax" decoration-muted="not active">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="description" optional="show"/>
@@ -16,27 +16,27 @@
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     <field name="country_id" optional="hide"/>
                     <field name="active" widget="boolean_toggle"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="view_onboarding_tax_tree" model="ir.ui.view">
-            <field name="name">account.onboarding.tax.tree</field>
+            <field name="name">account.onboarding.tax.list</field>
             <field name="model">account.tax</field>
             <field name="inherit_id" ref="account.view_tax_tree" />
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
+                <xpath expr="//list" position="attributes">
                     <attribute name="default_order">active desc, type_tax_use desc, amount desc, sequence</attribute>
                 </xpath>
             </field>
         </record>
 
         <record id="tax_repartition_line_tree" model="ir.ui.view">
-            <field name="name">account.tax.repartition.line.tree</field>
+            <field name="name">account.tax.repartition.line.list</field>
             <field name="model">account.tax.repartition.line</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" create="1" delete="1">
+                <list editable="bottom" create="1" delete="1">
                     <field name="sequence" widget="handle"/>
                     <field name="factor_percent" invisible="repartition_type == 'base'"/>
                     <field name="repartition_type"/>
@@ -50,7 +50,7 @@
                            invisible="repartition_type == 'base'"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="tag_ids_domain" column_invisible="True"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -58,11 +58,11 @@
             <field name="name">account.invoice.line.tax.search</field>
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
-                <tree string="Account Tax">
+                <list string="Account Tax">
                     <field name="display_name" string="Name"/>
                     <field name="tax_scope"/>
                     <field name="description"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -161,12 +161,12 @@
                                 </group>
                             </div>
                             <field name="children_tax_ids" invisible="amount_type != 'group' or type_tax_use == 'none'" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">
-                                <tree string="Children Taxes">
+                                <list string="Children Taxes">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="amount_type"/>
                                     <field name="amount"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Advanced Options" name="advanced_options">
@@ -206,7 +206,7 @@
         <record id="action_tax_form" model="ir.actions.act_window">
             <field name="name">Taxes</field>
             <field name="res_model">account.tax</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'active_test': False}</field>
             <field name="view_id" ref="view_tax_tree"/>
             <field name="help" type="html">
@@ -231,10 +231,10 @@
         </record>
 
         <record id="view_tax_group_tree" model="ir.ui.view">
-            <field name="name">account.tax.group.tree</field>
+            <field name="name">account.tax.group.list</field>
             <field name="model">account.tax.group</field>
             <field name="arch" type="xml">
-                <tree string="Account Tax Group" editable="bottom" create="false">
+                <list string="Account Tax Group" editable="bottom" create="false">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="country_id"/>
@@ -247,7 +247,7 @@
                     <field name="advance_tax_payment_account_id"/>
 
                     <field name="preceding_subtotal" optional="hide"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -281,7 +281,7 @@
         <record id="action_tax_group" model="ir.actions.act_window">
             <field name="name">Tax Groups</field>
             <field name="res_model">account.tax.group</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="view_id" ref="view_tax_group_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

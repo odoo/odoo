@@ -14,7 +14,7 @@
     </record>
 
     <record id="product_product_website_tree_view" model="ir.ui.view">
-        <field name="name">product.product.website.tree</field>
+        <field name="name">product.product.website.list</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
@@ -38,7 +38,7 @@
 
     <!-- We want website_id to be shown outside of website module like other models -->
     <record id="product_template_view_tree" model="ir.ui.view">
-        <field name="name">product.template.view.tree.inherit.website_sale</field>
+        <field name="name">product.template.view.list.inherit.website_sale</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
@@ -53,14 +53,14 @@
 
     <!-- only website module template view should use the website_sequence -->
     <record id="product_template_view_tree_website_sale" model="ir.ui.view">
-        <field name="name">product.template.view.tree.website_sale</field>
+        <field name="name">product.template.view.list.website_sale</field>
         <field name="mode">primary</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="website_sale.product_template_view_tree"/>
         <field name="arch" type="xml">
-            <tree position="attributes">
+            <list position="attributes">
                 <attribute name="default_order">website_sequence</attribute>
-            </tree>
+            </list>
             <field name="is_favorite" position="before">
                 <field name="website_sequence" widget="handle"/>
             </field>
@@ -86,12 +86,12 @@
     <record id="product_template_action_website" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_mode">kanban,list,form,activity</field>
         <field name="view_id"/>
         <field name="search_view_id" ref="product_template_search_view_website"/>
         <field name="context">{
             'search_default_published': 1,
-            'tree_view_ref': 'website_sale.product_template_view_tree_website_sale',
+            'list_view_ref': 'website_sale.product_template_view_tree_website_sale',
             'kanban_view_ref': 'website_sale.product_template_view_kanban_website_sale'
         }</field>
         <field name="help" type="html">

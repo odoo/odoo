@@ -24,7 +24,7 @@
     <record id="rating_rating_action_livechat" model="ir.actions.act_window">
         <field name="name">Ratings for livechat channel</field>
         <field name="res_model">rating.rating</field>
-        <field name="view_mode">kanban,tree,graph,pivot,form</field>
+        <field name="view_mode">kanban,list,graph,pivot,form</field>
         <field name="domain">[('parent_res_model', '=', 'im_livechat.channel'), ('consumed','=',True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_livechat"/>
         <field name="help" type="html">
@@ -52,11 +52,11 @@
     </record>
 
     <record id="im_livechat.rating_rating_view_tree" model="ir.ui.view">
-        <field name="name">im_livechat.rating.rating.view.tree</field>
+        <field name="name">im_livechat.rating.rating.view.list</field>
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="type">object</attribute>
                 <attribute name="action">action_open_rated_object</attribute>
             </xpath>
@@ -72,7 +72,7 @@
 
     <record id="rating_rating_action_livechat_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="rating_rating_action_livechat"/>
         <field name="view_id" ref="im_livechat.rating_rating_view_tree"/>
     </record>
@@ -87,7 +87,7 @@
     <record id="rating_rating_action_livechat_report" model="ir.actions.act_window">
         <field name="name">Customer Ratings</field>
         <field name="res_model">rating.rating</field>
-        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="view_mode">kanban,list,pivot,graph,form</field>
         <field name="domain">[('parent_res_model','=','im_livechat.channel'), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_livechat"/>
         <field name="help" type="html">

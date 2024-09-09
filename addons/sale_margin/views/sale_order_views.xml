@@ -34,11 +34,11 @@
     </record>
 
     <record model="ir.ui.view" id="sale_margin_sale_order_line_form">
-        <field name="name">sale.order.line.tree.margin.view.form</field>
+        <field name="name">sale.order.line.list.margin.view.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-           <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
+           <xpath expr="//field[@name='order_line']/list//field[@name='price_unit']" position="after">
                 <field name="price_subtotal" column_invisible="True"/>
                 <field name="purchase_price" optional="hide"/>
                 <field name="margin" optional="hide"/>

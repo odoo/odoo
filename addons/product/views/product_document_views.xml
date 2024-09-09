@@ -93,12 +93,12 @@
         <field name="name">product.document.list</field>
         <field name="model">product.document</field>
         <field name="arch" type="xml">
-            <tree editable="top" multi_edit="true">
+            <list editable="top" multi_edit="true">
                 <field name="res_model" column_invisible="True"/>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
-            </tree>
+            </list>
         </field>
     </record>
 

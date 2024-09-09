@@ -3,16 +3,16 @@
     <data>
 
         <record model="ir.ui.view" id="view_message_subtype_tree">
-            <field name="name">mail.message.subtype.tree</field>
+            <field name="name">mail.message.subtype.list</field>
             <field name="model">mail.message.subtype</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Subtype">
+                <list string="Subtype">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="res_model"/>
                     <field name="default"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -59,7 +59,7 @@
         <record model="ir.actions.act_window" id="action_view_message_subtype">
             <field name="name">Subtypes</field>
             <field name="res_model">mail.message.subtype</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
 
     </data>

@@ -32,7 +32,7 @@ class Project(models.Model):
             'name': _('Purchase Orders'),
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
-            'views': [[False, 'tree'], [False, 'form']],
+            'views': [[False, 'list'], [False, 'form']],
             'domain': purchase_orders_domain,
             'context': {
                 'default_project_id': self.id,
@@ -50,7 +50,7 @@ class Project(models.Model):
                 'name': _('Purchase Order Items'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'purchase.order.line',
-                'views': [[False, 'tree'], [False, 'form']],
+                'views': [[False, 'list'], [False, 'form']],
                 'domain': domain,
                 'context': {
                     'create': False,

@@ -69,13 +69,13 @@ QUnit.module("UpdateFlagFields", (hooks) => {
                         <field name="session_speed_rating"/>
                         <field name="session_speed_rating_time_limit"/>
                     </group>
-                    <field name="question_and_page_ids" no-label="1" mode="tree">  
-                        <tree>
+                    <field name="question_and_page_ids" no-label="1" mode="list">  
+                        <list>
                             <field name="title"/>
                             <field name="is_time_limited"/>
                             <field name="time_limit"/>
                             <field name="is_time_customized"/>
-                        </tree>
+                        </list>
                         <form>
                             <group>
                                 <field name="is_time_customized"/>

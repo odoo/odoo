@@ -23,10 +23,10 @@
     </record>
 
     <record id="view_move_tree" model="ir.ui.view">
-        <field name="name">account.move.tree</field>
+        <field name="name">account.move.list</field>
         <field name="model">account.move</field>
         <field name="arch" type="xml">
-            <tree string="Invoices" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
+            <list string="Invoices" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
                 <field name="made_sequence_gap" column_invisible="True"/>
                 <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap"/>
                 <field name="invoice_partner_display_name" string="Customer"/>
@@ -35,7 +35,7 @@
                 <field name="currency_id" column_invisible="True"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
                 <field name="l10n_it_edi_doi_amount" decoration-bf="1" sum="Total" string="Tax excluded"/>
-            </tree>
+            </list>
         </field>
     </record>
 

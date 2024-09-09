@@ -31,10 +31,10 @@ QUnit.module("Widgets", (hooks) => {
                         <widget name="account_file_uploader"/>
                         <field name="display_name" required="1"/>
                     </form>`,
-                "partner,false,list": `<tree>
+                "partner,false,list": `<list>
                         <field name="id"/>
                         <field name="display_name"/>
-                    </tree>`,
+                    </list>`,
                 "partner,false,search": `<search/>`,
             },
         };

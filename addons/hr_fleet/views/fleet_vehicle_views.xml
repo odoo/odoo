@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="fleet_vehicle_odometer_view_tree" model="ir.ui.view">
-        <field name="name">fleet.vehicle.odometer.view.tree.inherit.hr.fleet</field>
+        <field name="name">fleet.vehicle.odometer.view.list.inherit.hr.fleet</field>
         <field name="model">fleet.vehicle.odometer</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_odometer_view_tree" />
         <field name="arch" type="xml">
@@ -13,7 +13,7 @@
 
     <!-- main view for fleet-->
     <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
-        <field name="name">fleet.vehicle.assignation.log.view.tree.inherit.hr.fleet</field>
+        <field name="name">fleet.vehicle.assignation.log.view.list.inherit.hr.fleet</field>
         <field name="model">fleet.vehicle.assignation.log</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_assignation_log_view_list" />
@@ -33,7 +33,7 @@
 
     <!-- for employee cars -->
     <record id="fleet_vehicle_assignation_log_employee_view_list" model="ir.ui.view">
-        <field name="name">fleet.vehicle.assignation.log.view.tree.inherit.hr.fleet</field>
+        <field name="name">fleet.vehicle.assignation.log.view.list.inherit.hr.fleet</field>
         <field name="model">fleet.vehicle.assignation.log</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_assignation_log_view_list" />

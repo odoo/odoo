@@ -6,11 +6,11 @@ from odoo.addons.web.controllers.utils import fix_view_modes
 class ActionMungerTest(BaseCase):
     def test_actual_treeview(self):
         action = {
-            "views": [[False, "tree"], [False, "form"],
+            "views": [[False, "list"], [False, "form"],
                       [False, "calendar"]],
             "view_type": "tree",
             "view_id": False,
-            "view_mode": "tree,form,calendar"
+            "view_mode": "list,form,calendar"
         }
         changed = action.copy()
         del action['view_type']
@@ -20,11 +20,11 @@ class ActionMungerTest(BaseCase):
 
     def test_list_view(self):
         action = {
-            "views": [[False, "tree"], [False, "form"],
+            "views": [[False, "list"], [False, "form"],
                       [False, "calendar"]],
             "view_type": "form",
             "view_id": False,
-            "view_mode": "tree,form,calendar"
+            "view_mode": "list,form,calendar"
         }
         fix_view_modes(action)
 
@@ -38,11 +38,11 @@ class ActionMungerTest(BaseCase):
     def test_redundant_views(self):
 
         action = {
-            "views": [[False, "tree"], [False, "form"],
+            "views": [[False, "list"], [False, "form"],
                       [False, "calendar"], [42, "tree"]],
             "view_type": "form",
             "view_id": False,
-            "view_mode": "tree,form,calendar"
+            "view_mode": "list,form,calendar"
         }
         fix_view_modes(action)
 

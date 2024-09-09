@@ -19,11 +19,11 @@
     </record>
 
     <record id="view_quotation_tree" model="ir.ui.view">
-        <field name="name">sale.order.tree</field>
+        <field name="name">sale.order.list</field>
         <field name="model">sale.order</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <tree class="o_sale_order"
+            <list class="o_sale_order"
                   string="Sales Orders"
                   sample="1"
                   decoration-muted="state == 'cancel'">
@@ -37,7 +37,7 @@
                        decoration-primary="state == 'sent'"
                        widget="badge"/>
                 <field name="l10n_it_edi_doi_not_yet_invoiced" decoration-bf="1" sum="Total" string="Not Yet Invoiced Amount"/>
-            </tree>
+            </list>
         </field>
     </record>
 

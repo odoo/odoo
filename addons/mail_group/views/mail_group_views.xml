@@ -4,12 +4,12 @@
         <field name="name">mail.group.view.list</field>
         <field name="model">mail.group</field>
         <field name="arch" type="xml">
-            <tree sample="1">
+            <list sample="1">
                 <field name="name"/>
                 <field name="alias_email" string="Alias"/>
                 <field name="moderation" string="Moderated"/>
                 <field name="member_count" string="Members"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record id="mail_group_view_kanban" model="ir.ui.view">
@@ -168,7 +168,7 @@
     <record id="mail_group_action" model="ir.actions.act_window">
         <field name="name">Mail Groups</field>
         <field name="res_model">mail.group</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Create a Mail Group</p>
             <p>Mailing groups are communities that like to discuss a specific topic together.</p>

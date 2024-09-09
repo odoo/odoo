@@ -9,11 +9,11 @@
                     <group>
                         <field name="name"/>
                         <field name="tag_ids" context="{'default_category_id': id}">
-                            <tree string="Tags" editable="bottom">
+                            <list string="Tags" editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>
                                 <field name="color" widget="color_picker"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>
@@ -25,18 +25,18 @@
         <field name="name">event.track.tag.category.view.list</field>
         <field name="model">event.track.tag.category</field>
         <field name="arch" type="xml">
-            <tree string="Track Tags Category">
+            <list string="Track Tags Category">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="event_track_tag_category_action" model="ir.actions.act_window">
         <field name="name">Track Tag Categories</field>
         <field name="res_model">event.track.tag.category</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record model="ir.ui.view" id="view_event_track_tag_form">
@@ -59,12 +59,12 @@
         <field name="name">Tracks Tag</field>
         <field name="model">event.track.tag</field>
         <field name="arch" type="xml">
-            <tree string="Event Track Tag" editable="bottom">
+            <list string="Event Track Tag" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="color" widget="color_picker"/>
-            </tree>
+            </list>
         </field>
     </record>
 

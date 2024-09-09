@@ -29,7 +29,7 @@
     </record>
 
     <record id="mailing_contact_view_tree" model="ir.ui.view">
-        <field name="name">mailing.contact.view.tree.inherit.sms</field>
+        <field name="name">mailing.contact.view.list.inherit.sms</field>
         <field name="model">mailing.contact</field>
         <field name="inherit_id" ref="mass_mailing.mailing_contact_view_tree"/>
         <field name="priority">20</field>
@@ -76,7 +76,7 @@
     <record id="mailing_contact_action_sms" model="ir.actions.act_window">
         <field name="name">Mailing List Contacts</field>
         <field name="res_model">mailing.contact</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'mailing_sms': True, 'search_default_filter_not_phone_bl': 1, }</field>
         <field name="view_id" ref="mailing_contact_view_tree"/>
         <field name="help" type="html">

@@ -147,7 +147,7 @@ class SaleOrder(models.Model):
                 if view_type == 'kanban':
                     action['views'][idx] = (kanban_view_id, 'kanban')
                 elif view_type == 'tree':
-                    action['views'][idx] = (list_view_id, 'tree')
+                    action['views'][idx] = (list_view_id, 'list')
                 elif view_type == 'form':
                     action['views'][idx] = (form_view_id, 'form')
         else:  # 1 or 0 tasks -> form view
@@ -212,8 +212,8 @@ class SaleOrder(models.Model):
             'name': _('Projects'),
             'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.with_context(active_test=False).project_ids.ids), ('active', 'in', [True, False])],
             'res_model': 'project.project',
-            'views': [(False, 'kanban'), (False, 'tree'), (False, 'form')],
-            'view_mode': 'kanban,tree,form',
+            'views': [(False, 'kanban'), (False, 'list'), (False, 'form')],
+            'view_mode': 'kanban,list,form',
             'context': {
                 **self._context,
                 'default_partner_id': self.partner_id.id,
@@ -238,8 +238,8 @@ class SaleOrder(models.Model):
             'name': _('Milestones'),
             'domain': [('sale_line_id', 'in', self.order_line.ids)],
             'res_model': 'project.milestone',
-            'views': [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, 'tree')],
-            'view_mode': 'tree',
+            'views': [(self.env.ref('sale_project.sale_project_milestone_view_tree').id, 'list')],
+            'view_mode': 'list',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     No milestones found. Let's create one!

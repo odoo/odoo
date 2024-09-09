@@ -59,7 +59,7 @@ class PaymentTransaction(models.Model):
             action['view_mode'] = 'form'
             action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
         else:
-            action['view_mode'] = 'tree,form'
+            action['view_mode'] = 'list,form'
             action['domain'] = [('id', 'in', invoice_ids)]
         return action
 

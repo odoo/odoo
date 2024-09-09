@@ -24,21 +24,21 @@
         </record>
 
         <record id="l10n_es_edi_tbai_certificate_tree" model="ir.ui.view">
-            <field name="name">l10n_es_edi_tbai.certificate.tree</field>
+            <field name="name">l10n_es_edi_tbai.certificate.list</field>
             <field name="model">l10n_es_edi_tbai.certificate</field>
             <field name="arch" type="xml">
-                <tree>
+                <list>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="l10n_es_edi_tbai_certificate_action" model="ir.actions.act_window">
             <field name="name">Certificates for EDI TicketBAI invoices on Spain</field>
             <field name="res_model">l10n_es_edi_tbai.certificate</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Create the first certificate</p>
             </field>

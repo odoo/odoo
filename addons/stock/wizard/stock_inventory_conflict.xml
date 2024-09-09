@@ -21,7 +21,7 @@
                     <br/>
                     <field name="quant_ids" invisible="1"/>
                     <field name="quant_to_fix_ids" readonly="1" style="margin-top:10px;">
-                        <tree editable="bottom" create="0" delete="0">
+                        <list editable="bottom" create="0" delete="0">
                             <field name="id" column_invisible="True"/>
                             <field name="tracking" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
@@ -35,7 +35,7 @@
                             <field name="inventory_diff_quantity" string="Difference" decoration-muted="inventory_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
                             <field name="product_uom_id" groups="uom.group_uom"/>
                             <field name='company_id' groups="base.group_multi_company" optional="show"/>
-                        </tree>
+                        </list>
                     </field>
                 </div>
                 <footer>

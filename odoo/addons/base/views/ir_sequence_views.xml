@@ -32,11 +32,11 @@
                           </group>
                         </group>
                         <field name="date_range_ids" invisible="not use_date_range">
-                            <tree string="Sequences" editable="top">
+                            <list string="Sequences" editable="top">
                                 <field name="date_from"/>
                                 <field name="date_to"/>
                                 <field name="number_next_actual" string="Next Number"/>
-                            </tree>
+                            </list>
                         </field>
                         <group col="3" string="Legend (for prefix, suffix)">
                             <group>
@@ -73,7 +73,7 @@
         <record id="sequence_view_tree" model="ir.ui.view">
             <field name="model">ir.sequence</field>
             <field name="arch" type="xml">
-                <tree string="Sequences">
+                <list string="Sequences">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="prefix"/>
@@ -82,7 +82,7 @@
                     <field name="number_next_actual" string="Next Number"/>
                     <field name="number_increment"/>
                     <field name="implementation"/>
-                </tree>
+                </list>
             </field>
         </record>
 

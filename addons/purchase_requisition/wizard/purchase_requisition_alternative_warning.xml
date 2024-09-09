@@ -7,14 +7,14 @@
             <field name="arch" type="xml">
                 <form string="Alternative Warning">
                     <field name="alternative_po_ids" nolabel="1" readonly="1">
-                        <tree create="0" delete="0" edit="0">
+                        <list create="0" delete="0" edit="0">
                             <field name="currency_id" column_invisible="1"/>
                             <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']"/>
                             <field name="name" string="Reference"/>
                             <field name="date_planned"/>
                             <field name="amount_total"/>
                             <field name="state"/>
-                        </tree>
+                        </list>
                     </field>
                     <footer>
                         <button name="action_cancel_alternatives" string="Cancel Alternatives" data-hotkey="q" type="object" colspan="1" class="btn-primary"/>

@@ -196,7 +196,7 @@ class Picking(models.Model):
             else:
                 action.update({
                     'name': _('Repair Orders'),
-                    'view_mode': 'tree,form',
+                    'view_mode': 'list,form',
                     'domain': [('id', 'in', self.repair_ids.ids)],
                 })
             return action

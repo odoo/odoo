@@ -36,7 +36,7 @@ class ProjectProject(models.Model):
             'res_model': 'mrp.bom',
             'domain': [('project_id', '=', self.id)],
             'name': _('Bills of Materials'),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'context': {'default_project_id': self.id},
         }
         boms = self.env['mrp.bom'].search([('project_id', '=', self.id)])

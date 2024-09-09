@@ -14,10 +14,10 @@
     </record>
 
     <record id="product_pricelist_view_tree" model="ir.ui.view">
-        <field name="name">product.pricelist.tree</field>
+        <field name="name">product.pricelist.list</field>
         <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
-            <tree string="Products Price List" sample="1">
+            <list string="Products Price List" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="country_group_ids"
@@ -25,7 +25,7 @@
                     placeholder="All countries"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -69,7 +69,7 @@
                     <notebook>
                         <page name="pricelist_rules" string="Price Rules">
                             <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
-                                <tree string="Pricelist Rules">
+                                <list string="Pricelist Rules">
                                     <field name="product_tmpl_id" column_invisible="True"/>
                                     <field name="name" string="Apply on"/>
                                     <field name="price" string="Price"/>
@@ -80,7 +80,7 @@
                                     <field name="price_discount" column_invisible="True"/>
                                     <field name="applied_on" column_invisible="True"/>
                                     <field name="compute_price" column_invisible="True"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -94,7 +94,7 @@
         <field name="name">Pricelists</field>
         <field name="res_model">product.pricelist</field>
         <field name="path">pricelists</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="product_pricelist_view_search" />
         <field name="context">{"default_base":'list_price'}</field>
         <field name="help" type="html">
@@ -112,7 +112,7 @@
     <record id="product_pricelist_item_action" model="ir.actions.act_window">
         <field name="name">Price Rules</field>
         <field name="res_model">product.pricelist.item</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>

@@ -37,7 +37,7 @@
         </record>
 
         <record id="view_stock_product_tree" model="ir.ui.view">
-            <field name="name">product.stock.tree.inherit</field>
+            <field name="name">product.stock.list.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
@@ -49,7 +49,7 @@
         </record>
 
         <record id="view_stock_product_template_tree" model="ir.ui.view">
-            <field name="name">product.template.stock.tree.inherit</field>
+            <field name="name">product.template.stock.list.inherit</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_tree_view"/>
             <field name="arch" type="xml">
@@ -184,7 +184,7 @@
         </record>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
-            <field name="name">product.packaging.tree.view.stock</field>
+            <field name="name">product.packaging.list.view.stock</field>
             <field name="model">product.packaging</field>
             <field name="inherit_id" ref="product.product_packaging_tree_view"/>
             <field name="arch" type="xml">
@@ -533,11 +533,11 @@
 
         <!-- Stock Report View -->
         <record model="ir.ui.view" id="product_product_stock_tree">
-            <field name="name">product.product.stock.tree</field>
+            <field name="name">product.product.stock.list</field>
             <field name="model">product.product</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <tree sample="1" js_class="stock_report_list_view" duplicate="0">
+                <list sample="1" js_class="stock_report_list_view" duplicate="0">
                     <header>
                         <button name="%(action_inventory_at_date)d" invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))" string="Inventory at Date" type="action" class="btn-primary ms-1" display="always"/>
                     </header>
@@ -560,7 +560,7 @@
                         icon="fa-cubes" context="{'search_default_product_id': id, 'default_product_id': id}" invisible="qty_available == 0"/>
                     <button name="action_product_forecast_report" string="Forecast" type="object" class="btn-link"
                         icon="fa-area-chart" context="{'default_product_id': id}" invisible="incoming_qty == 0 and outgoing_qty == 0"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -589,7 +589,7 @@
             <field name="name">Stock</field>
             <field name="res_model">product.product</field>
             <field name="path">stock-report</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="view_id" ref="product_product_stock_tree"/>
             <field name="search_view_id" ref="product_search_form_view_stock_report"/>
             <field name="context">{'default_is_storable': True}</field>
@@ -607,7 +607,7 @@
         <record id="product_template_action_product" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="res_model">product.template</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="search_view_id" ref="product_template_search_form_view_stock"/>
             <field name="context">{"search_default_goods": 1, 'default_is_storable': True}</field>
             <field name="help" type="html">
@@ -622,7 +622,7 @@
         <record id="stock_product_normal_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="res_model">product.product</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">list,form,kanban</field>
             <field name="search_view_id" ref="stock_product_search_form_view"/>
         </record>
 

@@ -559,7 +559,7 @@ class TestCommonCustomFields(common.TransactionCase):
         return self.env['ir.ui.view'].create({
             'name': 'yet another view',
             'model': self.MODEL,
-            'arch': '<tree string="X"><field name="%s"/></tree>' % name,
+            'arch': '<list string="X"><field name="%s"/></list>' % name,
         })
 
 

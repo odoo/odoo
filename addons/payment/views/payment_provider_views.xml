@@ -121,14 +121,14 @@
         <field name="name">payment.provider.list</field>
         <field name="model">payment.provider</field>
         <field name="arch" type="xml">
-            <tree string="Payment Providers" create="false">
+            <list string="Payment Providers" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code" groups="base.group_no_one"/>
                 <field name="state"/>
                 <field name="available_country_ids" widget="many2many_tags" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -216,7 +216,7 @@
     <record id="action_payment_provider" model="ir.actions.act_window">
         <field name="name">Payment Providers</field>
         <field name="res_model">payment.provider</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new payment provider

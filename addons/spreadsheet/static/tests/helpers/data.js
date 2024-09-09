@@ -52,12 +52,12 @@ export function getBasicPivotArch() {
  */
 export function getBasicListArch() {
     return /* xml */ `
-        <tree string="Partners">
+        <list string="Partners">
             <field name="foo"/>
             <field name="bar"/>
             <field name="date"/>
             <field name="product_id"/>
-        </tree>
+        </list>
     `;
 }
 

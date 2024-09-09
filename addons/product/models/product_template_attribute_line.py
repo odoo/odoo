@@ -257,7 +257,7 @@ class ProductTemplateAttributeLine(models.Model):
             'type': 'ir.actions.act_window',
             'name': _("Product Variant Values"),
             'res_model': 'product.template.attribute.value',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', self.product_template_value_ids.ids)],
             'views': [
                 (self.env.ref('product.product_template_attribute_value_view_tree').id, 'list'),

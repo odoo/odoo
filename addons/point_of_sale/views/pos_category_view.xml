@@ -25,15 +25,15 @@
         </field>
     </record>
     <record id="product_pos_category_tree_view" model="ir.ui.view">
-        <field name="name">pos.category.tree</field>
+        <field name="name">pos.category.list</field>
         <field name="model">pos.category</field>
         <field name="arch" type="xml">
-            <tree string="Product Product Categories">
+            <list string="Product Product Categories">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name" string="PoS Product Category"/>
                 <field name="parent_id" optional="hide"/>
                 <field name="color" widget="color_picker" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -59,7 +59,7 @@
     <record id="product_pos_category_action" model="ir.actions.act_window">
         <field name="name">PoS Product Categories</field>
         <field name="res_model">pos.category</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="view_id" eval="False"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

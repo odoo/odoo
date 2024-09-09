@@ -3,7 +3,7 @@
     <record id="website_visitor_action_from_track" model="ir.actions.act_window">
         <field name="name">Visitors Wishlist</field>
         <field name="res_model">website.visitor</field>
-        <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="view_mode">kanban,list,form,graph</field>
         <field name="domain">[('event_track_wishlisted_ids', 'in', [active_id])]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -241,10 +241,10 @@
     </record>
 
     <record model="ir.ui.view" id="view_event_track_tree">
-        <field name="name">event.track.tree</field>
+        <field name="name">event.track.list</field>
         <field name="model">event.track</field>
         <field name="arch" type="xml">
-            <tree string="Event Track" multi_edit="1">
+            <list string="Event Track" multi_edit="1">
                 <field name="name"/>
                 <field name="active" column_invisible="True"/>
                 <field name="partner_name"/>
@@ -257,7 +257,7 @@
                 <field name="stage_id"/>
                 <field name="color" widget="color_picker" optional="hide"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -277,7 +277,7 @@
     <record model="ir.actions.act_window" id="action_event_track">
         <field name="name">Event Tracks</field>
         <field name="res_model">event.track</field>
-        <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
+        <field name="view_mode">kanban,list,form,calendar,graph,activity</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
               Create a Track
@@ -290,7 +290,7 @@
     <record model="ir.actions.act_window" id="action_event_track_from_event">
         <field name="res_model">event.track</field>
         <field name="name">Event Tracks</field>
-        <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
+        <field name="view_mode">kanban,list,form,calendar,graph,activity</field>
         <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -304,7 +304,7 @@
     <record id="event_track_action_from_visitor" model="ir.actions.act_window">
         <field name="name">Wishlisted Tracks</field>
         <field name="res_model">event.track</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('wishlist_visitor_ids', 'in', [active_id])]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">

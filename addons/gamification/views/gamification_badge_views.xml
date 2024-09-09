@@ -16,7 +16,7 @@
     <record id="badge_list_action" model="ir.actions.act_window">
         <field name="name">Badges</field>
         <field name="res_model">gamification.badge</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="gamification_badge_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -34,13 +34,13 @@
         <field name="name">Badge List</field>
         <field name="model">gamification.badge</field>
         <field name="arch" type="xml">
-            <tree string="Badge List">
+            <list string="Badge List">
                 <field name="name"/>
                 <field name="granted_count"/>
                 <field name="stat_this_month"/>
                 <field name="stat_my"/>
                 <field name="rule_auth"/>
-            </tree>
+            </list>
         </field>
     </record>
 

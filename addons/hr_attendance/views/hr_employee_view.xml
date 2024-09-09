@@ -154,7 +154,7 @@
     </record>
 
     <record id="view_employee_tree_inherit_leave" model="ir.ui.view">
-        <field name="name">hr.employee.tree.leave</field>
+        <field name="name">hr.employee.list.leave</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
@@ -165,27 +165,27 @@
     </record>
 
     <record id="hr_attendance_employee_simple_tree_view" model="ir.ui.view">
-        <field name="name">hr.attendance.tree</field>
+        <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree sample="1">
+            <list sample="1">
                 <field name="check_in"/>
                 <field name="check_out"/>
                 <field name="worked_hours" string="Work Hours" widget="float_time"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="hr_attendance_validated_hours_employee_simple_tree_view" model="ir.ui.view">
-        <field name="name">hr.attendance.tree</field>
+        <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree sample="1">
+            <list sample="1">
                 <field name="check_in"/>
                 <field name="check_out"/>
                 <field name="worked_hours" string="Worked Hours" widget="float_time"/>
                 <field name="validated_overtime_hours" string="Extra Hours" widget="float_time"/>
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>

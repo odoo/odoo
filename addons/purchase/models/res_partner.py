@@ -74,5 +74,5 @@ class res_partner(models.Model):
             'name': _("Purchase Matching"),
             'res_model': 'purchase.bill.line.match',
             'domain': [('partner_id', '=', self.id), ('company_id', 'in', [self.env.company.id])],
-            'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'tree')],
+            'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'list')],
         }

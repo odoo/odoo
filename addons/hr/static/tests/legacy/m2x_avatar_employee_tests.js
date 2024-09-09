@@ -56,7 +56,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         ]);
         const views = {
             "m2x.avatar.employee,false,list":
-                '<tree><field name="employee_id" widget="many2one_avatar_employee"/></tree>',
+                '<list><field name="employee_id" widget="many2one_avatar_employee"/></list>',
         };
         const { openView } = await start({ serverData: { views } });
         await openView({
@@ -322,9 +322,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                     },
                 },
                 views: {
-                    "hr.employee.public,false,list": `<tree><field name="display_name"/></tree>`,
+                    "hr.employee.public,false,list": `<list><field name="display_name"/></list>`,
                     "hr.employee.public,false,search": `<search></search>`,
-                    "hr.employee,false,list": `<tree><field name="display_name"/></tree>`,
+                    "hr.employee,false,list": `<list><field name="display_name"/></list>`,
                     "hr.employee,false,search": `<search></search>`,
                 },
             },
@@ -532,7 +532,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         });
         const views = {
             "m2x.avatar.employee,false,list":
-                '<tree><field name="employee_ids" widget="many2many_avatar_employee"/></tree>',
+                '<list><field name="employee_ids" widget="many2many_avatar_employee"/></list>',
         };
         const { openView } = await start({
             serverData: { views },

@@ -44,10 +44,10 @@
     </record>
 
     <record id="pos_payment_method_view_tree" model="ir.ui.view">
-        <field name="name">pos.payment.method.tree</field>
+        <field name="name">pos.payment.method.list</field>
         <field name="model">pos.payment.method</field>
         <field name="arch" type="xml">
-            <tree string="Payment Methods" create="1" delete="1">
+            <list string="Payment Methods" create="1" delete="1">
                 <field name="type" column_invisible="True"/>
                 <field name="sequence" widget="handle"/>
                 <field name="name" />
@@ -57,7 +57,7 @@
                 <field name="receivable_account_id" groups="account.group_account_readonly" optional="hide" invisible="split_transactions" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="config_ids" widget="many2many_tags"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -82,7 +82,7 @@
     <record id="action_pos_payment_method_form" model="ir.actions.act_window">
         <field name="name">Payment Methods</field>
         <field name="res_model">pos.payment.method</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="view_id" eval="False"/>
         <field name="domain">[]</field>
         <field name="context">{'search_default_group_by_account': 1}</field>
@@ -105,6 +105,6 @@
         <field name="name">Payments Methods</field>
         <field name="res_model">pos.payment.method</field>
         <field name="view_id" ref="pos_payment_method_view_tree"/>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
     </record>
 </odoo>

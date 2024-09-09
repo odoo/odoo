@@ -137,7 +137,7 @@ class ProjectTask(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             "name": _("Sales Order"),
-            "views": [[False, "tree"], [False, "kanban"], [False, "form"]],
+            "views": [[False, "list"], [False, "kanban"], [False, "form"]],
             "context": {"create": False, "show_sale": True},
             "domain": [["id", "in", so_ids]],
         }

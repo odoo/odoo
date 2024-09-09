@@ -5,10 +5,10 @@
         <!-- VIEWS -->
 
         <record id="view_account_payment_tree" model="ir.ui.view">
-            <field name="name">account.payment.tree</field>
+            <field name="name">account.payment.list</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <list edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
                     <header>
                         <button name="action_post" type="object" string="Confirm"/>
                     </header>
@@ -27,12 +27,12 @@
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="amount_company_currency_signed" widget="monetary" string="Amount" sum="Total"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="view_account_supplier_payment_tree" model="ir.ui.view">
-            <field name="name">account.supplier.payment.tree</field>
+            <field name="name">account.supplier.payment.list</field>
             <field name="model">account.payment</field>
             <field name="inherit_id" ref="account.view_account_payment_tree"/>
             <field name="mode">primary</field>
@@ -44,7 +44,7 @@
         </record>
 
         <record id="view_account_various_payment_tree" model="ir.ui.view">
-            <field name="name">account.supplier.payment.tree</field>
+            <field name="name">account.supplier.payment.list</field>
             <field name="model">account.payment</field>
             <field name="inherit_id" ref="account.view_account_payment_tree"/>
             <field name="mode">primary</field>
@@ -345,14 +345,14 @@
         <record id="action_account_all_payments" model="ir.actions.act_window">
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>
-            <field name="view_mode">tree,kanban,form,graph,activity</field>
+            <field name="view_mode">list,kanban,form,graph,activity</field>
             <field name="view_id" ref="view_account_payment_tree"/>
         </record>
 
         <record id="action_account_payments" model="ir.actions.act_window">
             <field name="name">Customer Payments</field>
             <field name="res_model">account.payment</field>
-            <field name="view_mode">tree,kanban,form,graph,activity</field>
+            <field name="view_mode">list,kanban,form,graph,activity</field>
             <field name="context">{
                 'default_payment_type': 'inbound',
                 'default_partner_type': 'customer',
@@ -373,7 +373,7 @@
         <record id="action_account_payments_payable" model="ir.actions.act_window">
             <field name="name">Vendor Payments</field>
             <field name="res_model">account.payment</field>
-            <field name="view_mode">tree,kanban,form,graph,activity</field>
+            <field name="view_mode">list,kanban,form,graph,activity</field>
             <field name="context">{
                 'default_payment_type': 'outbound',
                 'default_partner_type': 'supplier',
@@ -394,7 +394,7 @@
         <record id="action_account_payments_transfer" model="ir.actions.act_window">
             <field name="name">Internal Transfers</field>
             <field name="res_model">account.payment</field>
-            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="view_mode">list,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'outbound', 'search_default_transfers_filter': 1, 'display_account_trust': True}</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>

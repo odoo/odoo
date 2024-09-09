@@ -320,7 +320,7 @@ class Currency(models.Model):
                 [['inverse_company_rate', 'inverse_rate'], _('%s per Unit', currency_name)],
             ]
             for fnames, label in fields_maps:
-                xpath_expression = '//tree//field[' + " or ".join(f"@name='{f}'" for f in fnames) + "][1]"
+                xpath_expression = '//list//field[' + " or ".join(f"@name='{f}'" for f in fnames) + "][1]"
                 node = arch.xpath(xpath_expression)
                 if node:
                     node[0].set('string', label)

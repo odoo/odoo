@@ -179,15 +179,15 @@
 
         <!-- im_livechat.channel.rule -->
         <record id="im_livechat_channel_rule_view_tree" model="ir.ui.view">
-            <field name="name">im.livechat.channel.rule.tree</field>
+            <field name="name">im.livechat.channel.rule.list</field>
             <field name="model">im_livechat.channel.rule</field>
             <field name="arch" type="xml">
-                <tree string="Rules">
+                <list string="Rules">
                     <field name="sequence" widget="handle"/>
                     <field name="regex_url"/>
                     <field name="action"/>
                     <field name="country_ids" widget="many2many_tags"/>
-                </tree>
+                </list>
             </field>
         </record>
 

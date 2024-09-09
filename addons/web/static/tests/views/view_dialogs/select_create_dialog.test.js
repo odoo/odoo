@@ -72,10 +72,10 @@ beforeEach(() => onRpc("has_group", () => true));
 test("SelectCreateDialog use domain, group_by and search default", async () => {
     expect.assertions(3);
     Partner._views["list,false"] = /* xml */ `
-        <tree string="Partner">
+        <list string="Partner">
             <field name="name"/>
             <field name="foo"/>
-        </tree>
+        </list>
     `;
     Partner._views["search,false"] = /* xml */ `
         <search>
@@ -188,10 +188,10 @@ test("SelectCreateDialog correctly evaluates domains", async () => {
     expect.assertions(1);
 
     Partner._views["list,false"] = /* xml */ `
-        <tree string="Partner">
+        <list string="Partner">
             <field name="name"/>
             <field name="foo"/>
-        </tree>
+        </list>
     `;
     Partner._views["search,false"] = /* xml */ `<search><field name="foo"/></search>`;
     onRpc("web_search_read", ({ kwargs }) => {
@@ -210,10 +210,10 @@ test("SelectCreateDialog correctly evaluates domains", async () => {
 
 test("SelectCreateDialog list view in readonly", async () => {
     Partner._views["list,false"] = /* xml */ `
-        <tree string="Partner" editable="bottom">
+        <list string="Partner" editable="bottom">
             <field name="name"/>
             <field name="foo"/>
-        </tree>
+        </list>
     `;
     Partner._views["search,false"] = /* xml */ `<search/>`;
     await mountWithCleanup(WebClient);
@@ -238,20 +238,20 @@ test("SelectCreateDialog cascade x2many in create mode", async () => {
     Partner._views["form,false"] = /* xml */ `
         <form>
             <field name="name"/>
-            <field name="instrument" widget="one2many" mode="tree"/>
+            <field name="instrument" widget="one2many" mode="list"/>
         </form>
     `;
     Instrument._views["form,false"] = /* xml */ `
         <form>
             <field name="name"/>
             <field name="badassery">
-                <tree>
+                <list>
                     <field name="level"/>
-                </tree>
+                </list>
             </field>
         </form>
     `;
-    Badassery._views["list,false"] = /* xml */ `<tree><field name="level"/></tree>`;
+    Badassery._views["list,false"] = /* xml */ `<list><field name="level"/></list>`;
     Badassery._views["search,false"] = /* xml */ `<search><field name="level"/></search>`;
 
     onRpc(async ({ route, args }) => {
@@ -280,10 +280,10 @@ test("SelectCreateDialog cascade x2many in create mode", async () => {
             <form>
                 <field name="name"/>
                 <field name="partner" widget="one2many" >
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
                         <field name="instrument"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -321,7 +321,7 @@ test("SelectCreateDialog cascade x2many in create mode", async () => {
 
 test("SelectCreateDialog: save current search", async () => {
     expect.assertions(5);
-    Partner._views["list,false"] = /* xml */ `<tree><field name="name"/> </tree>`;
+    Partner._views["list,false"] = /* xml */ `<list><field name="name"/> </list>`;
     Partner._views[
         "search,false"
     ] = /* xml */ `<search><filter name="bar" help="Bar" domain="[('bar', '=', True)]"/></search>`;
@@ -381,10 +381,10 @@ test("SelectCreateDialog calls on_selected with every record matching the domain
     expect.assertions(1);
 
     Partner._views["list,false"] = /* xml */ `
-        <tree limit="2" string="Partner">
+        <list limit="2" string="Partner">
             <field name="name"/>
             <field name="foo"/>
-        </tree>
+        </list>
     `;
     Partner._views["search,false"] = /* xml */ `<search><field name="foo"/></search>`;
 
@@ -406,10 +406,10 @@ test("SelectCreateDialog calls on_selected with every record matching the domain
 test("SelectCreateDialog calls on_selected with every record matching without selecting a domain", async () => {
     expect.assertions(1);
     Partner._views["list,false"] = /* xml */ `
-        <tree limit="2" string="Partner">
+        <list limit="2" string="Partner">
             <field name="name"/>
             <field name="foo"/>
-        </tree>
+        </list>
     `;
     Partner._views["search,false"] = /* xml */ `<search><field name="foo"/></search>`;
 
@@ -430,7 +430,7 @@ test("SelectCreateDialog calls on_selected with every record matching without se
 });
 
 test("SelectCreateDialog: multiple clicks on record", async () => {
-    Partner._views["list,false"] = /* xml */ `<tree><field name="name"/></tree>`;
+    Partner._views["list,false"] = /* xml */ `<list><field name="name"/></list>`;
     Partner._views["search,false"] = /* xml */ `<search><field name="foo"/></search>`;
 
     await mountWithCleanup(WebClient);
@@ -450,7 +450,7 @@ test("SelectCreateDialog: multiple clicks on record", async () => {
 });
 
 test("SelectCreateDialog: default props, create a record", async () => {
-    Partner._views["list,false"] = /* xml */ `<tree><field name="name"/></tree>`;
+    Partner._views["list,false"] = /* xml */ `<list><field name="name"/></list>`;
     Partner._views["search,false"] = /* xml */ `
         <search>
             <filter name="bar" help="Bar" domain="[('bar', '=', True)]"/>
@@ -490,10 +490,10 @@ test("SelectCreateDialog: default props, create a record", async () => {
 test("SelectCreateDialog empty list, default no content helper", async () => {
     Partner._records = [];
     Partner._views["list,false"] = /* xml */ `
-        <tree>
+        <list>
             <field name="name"/>
             <field name="foo"/>
-        </tree>
+        </list>
     `;
     Partner._views["search,false"] = /* xml */ `<search/>`;
     await mountWithCleanup(WebClient);
@@ -510,10 +510,10 @@ test("SelectCreateDialog empty list, default no content helper", async () => {
 test("SelectCreateDialog empty list, noContentHelp props", async () => {
     Partner._records = [];
     Partner._views["list,false"] = /* xml */ `
-        <tree>
+        <list>
             <field name="name"/>
             <field name="foo"/>
-        </tree>
+        </list>
     `;
     Partner._views["search,false"] = /* xml */ `<search/>`;
 

@@ -60,7 +60,7 @@
                     <notebook>
                         <page name="tax_mapping" string="Tax Mapping">
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
-                                <tree name="tax_map_tree" string="Tax Mapping" editable="bottom" no_open="1" decoration-muted="tax_dest_id and not tax_dest_active">
+                                <list name="tax_map_tree" string="Tax Mapping" editable="bottom" no_open="1" decoration-muted="tax_dest_id and not tax_dest_active">
                                     <field name="tax_dest_active" column_invisible="1"/>
                                     <field name="tax_src_id"
                                         domain="[
@@ -78,7 +78,7 @@
                                             '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"
                                         context="{'append_type_to_tax_name': True}"
                                     />
-                                </tree>
+                                </list>
                                 <form name="tax_map_form" string="Tax Mapping">
                                     <group>
                                         <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
@@ -89,10 +89,10 @@
                         </page>
                         <page name="account_mapping" string="Account Mapping" groups="account.group_account_readonly">
                             <field name="account_ids" widget="one2many" nolabel="1">
-                                <tree string="Account Mapping" editable="bottom">
+                                <list string="Account Mapping" editable="bottom">
                                     <field name="account_src_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
                                     <field name="account_dest_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
-                                </tree>
+                                </list>
                                 <form string="Account Mapping">
                                     <field name="account_src_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
                                     <field name="account_dest_id" domain="['|', ('company_ids', '=', parent.company_id), ('account_type', '!=', 'off_balance')]"/>
@@ -116,14 +116,14 @@
             </field>
         </record>
         <record id="view_account_position_tree" model="ir.ui.view">
-            <field name="name">account.fiscal.position.tree</field>
+            <field name="name">account.fiscal.position.list</field>
             <field name="model">account.fiscal.position</field>
             <field name="arch" type="xml">
-                <tree string="Fiscal Position">
+                <list string="Fiscal Position">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -164,7 +164,7 @@
         <record id="action_account_fiscal_position_form" model="ir.actions.act_window">
             <field name="name">Fiscal Positions</field>
             <field name="res_model">account.fiscal.position</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="view_account_position_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -199,13 +199,13 @@
                         <group>
                             <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="bank_ids" nolabel="1" context="{'default_partner_id': id}" widget="auto_save_res_partner">
-                                    <tree>
+                                    <list>
                                         <field name="sequence" widget="handle"/>
                                         <field name="acc_number"/>
                                         <field name="bank_id"/>
                                         <field name="allow_out_payment"/>
                                         <field name="acc_holder_name" column_invisible="True"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
@@ -280,7 +280,7 @@
             <field name="name">Customers</field>
             <field name="res_model">res.partner</field>
             <field name="path">customers</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="context">{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -295,7 +295,7 @@
             <field name="name">Vendors</field>
             <field name="res_model">res.partner</field>
             <field name="path">vendors</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="context">{'search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company': True, 'default_supplier_rank': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -307,13 +307,13 @@
         </record>
 
         <record id="partner_missing_account_list_view" model="ir.ui.view">
-            <field name="name">res.partner.tree</field>
+            <field name="name">res.partner.list</field>
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
-                <tree string="Partners Missing a bank account" create="false" edit="false" delete="false"
+                <list string="Partners Missing a bank account" create="false" edit="false" delete="false"
                       import="false" open_form_view="True">
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </record>
     </data>

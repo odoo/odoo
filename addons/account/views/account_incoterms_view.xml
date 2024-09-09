@@ -3,14 +3,14 @@
     <data>
         <!-- account incoterms -->
         <record id="view_incoterms_tree" model="ir.ui.view">
-            <field name="name">account.incoterms.tree</field>
+            <field name="name">account.incoterms.list</field>
             <field name="model">account.incoterms</field>
             <field name="arch" type="xml">
-                <tree string="Incoterms" editable="bottom">
+                <list string="Incoterms" editable="bottom">
                     <field name="active" column_invisible="True"/>
                     <field name="code"/>
                     <field colspan="4" name="name"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -46,7 +46,7 @@
         <record id="action_incoterms_tree" model="ir.actions.act_window">
             <field name="name">Incoterms</field>
             <field name="res_model">account.incoterms</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new incoterm

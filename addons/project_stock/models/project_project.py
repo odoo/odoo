@@ -31,7 +31,7 @@ class ProjectProject(models.Model):
             'name': action_name,
             'type': 'ir.actions.act_window',
             'res_model': 'stock.picking',
-            'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
+            'views': [[False, 'list'], [False, 'form'], [False, 'kanban']],
             'domain': domain,
             'context': context,
         }

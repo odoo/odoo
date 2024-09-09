@@ -120,7 +120,7 @@ test("formviewdialog buttons in footer are not duplicated", async () => {
     Partner._records[0].poney_ids = [];
     Partner._views["form,false"] = /* xml */ `
         <form string="Partner">
-            <field name="poney_ids"><tree editable="top"><field name="name"/></tree></field>
+            <field name="poney_ids"><list editable="top"><field name="name"/></list></field>
             <footer><button string="Custom Button" type="object" class="my_button"/></footer>
         </form>
     `;
@@ -157,10 +157,10 @@ test.tags("desktop")("Form dialog and subview with _view_ref contexts", async ()
     Instrument._views["form,false"] = /* xml */ `
         <form>
             <field name="name"/>
-            <field name="badassery" widget="many2many" context="{'tree_view_ref': 'some_other_tree_view'}"/>
+            <field name="badassery" widget="many2many" context="{'list_view_ref': 'some_other_tree_view'}"/>
         </form>
     `;
-    Badassery._views["list,false"] = /* xml */ `<tree><field name="level"/></tree>`;
+    Badassery._views["list,false"] = /* xml */ `<list><field name="level"/></list>`;
 
     onRpc(({ kwargs, method, model }) => {
         if (method === "get_formview_id") {
@@ -171,7 +171,7 @@ test.tags("desktop")("Form dialog and subview with _view_ref contexts", async ()
                 {
                     allowed_company_ids: [1],
                     lang: "en",
-                    tree_view_ref: "some_tree_view",
+                    list_view_ref: "some_tree_view",
                     tz: "taht",
                     uid: 7,
                 },
@@ -186,7 +186,7 @@ test.tags("desktop")("Form dialog and subview with _view_ref contexts", async ()
                 {
                     allowed_company_ids: [1],
                     lang: "en",
-                    tree_view_ref: "some_other_tree_view",
+                    list_view_ref: "some_other_tree_view",
                     tz: "taht",
                     uid: 7,
                 },
@@ -205,7 +205,7 @@ test.tags("desktop")("Form dialog and subview with _view_ref contexts", async ()
         arch: /* xml */ `
             <form>
                 <field name="name"/>
-                <field name="instrument" context="{'tree_view_ref': 'some_tree_view'}"/>
+                <field name="instrument" context="{'list_view_ref': 'some_tree_view'}"/>
             </form>
         `,
     });

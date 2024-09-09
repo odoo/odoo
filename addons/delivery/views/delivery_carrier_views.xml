@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="view_delivery_carrier_tree" model="ir.ui.view">
-        <field name="name">delivery.carrier.tree</field>
+        <field name="name">delivery.carrier.list</field>
         <field name="model">delivery.carrier</field>
         <field name="arch" type="xml">
-            <tree string="Carrier">
+            <list string="Carrier">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="delivery_type"/>
@@ -15,7 +15,7 @@
                 <field name="max_volume" optional="hide"/>
                 <field name="must_have_tag_ids" widget="many2many_tags" optional="hide"/>
                 <field name="excluded_tag_ids" widget="many2many_tags" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -202,7 +202,7 @@
     <record id="action_delivery_carrier_form" model="ir.actions.act_window">
         <field name="name">Delivery Methods</field>
         <field name="res_model">delivery.carrier</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'search_default_group_by_provider': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

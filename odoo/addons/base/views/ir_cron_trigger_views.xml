@@ -16,13 +16,13 @@
     </record>
 
     <record id="ir_cron_trigger_view_tree" model="ir.ui.view">
-        <field name="name">ir.cron.trigger.view.tree</field>
+        <field name="name">ir.cron.trigger.view.list</field>
         <field name="model">ir.cron.trigger</field>
         <field name="arch" type="xml">
-            <tree string="Cron Triggers">
+            <list string="Cron Triggers">
                 <field name="cron_id"/>
                 <field name="call_at"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -40,7 +40,7 @@
     <record id="ir_cron_trigger_action" model="ir.actions.act_window">
         <field name="name">Scheduled Actions Triggers</field>
         <field name="res_model">ir.cron.trigger</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <menuitem id="ir_cron_trigger_menu"

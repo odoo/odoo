@@ -5,7 +5,7 @@
    <record id="action_mrp_unbuild_moves" model="ir.actions.act_window">
         <field name="name">Stock Moves</field>
         <field name="res_model">stock.move.line</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
@@ -170,10 +170,10 @@
 
 
         <record id="mrp_unbuild_tree_view" model="ir.ui.view">
-            <field name="name">mrp.unbuild.tree</field>
+            <field name="name">mrp.unbuild.list</field>
             <field name="model">mrp.unbuild</field>
             <field name="arch" type="xml">
-                <tree sample="1">
+                <list sample="1">
                     <field name="name" decoration-bf="1"/>
                     <field name="product_id" readonly="state == 'done'"/>
                     <field name="bom_id" readonly="state == 'done'"/>
@@ -185,14 +185,14 @@
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="state == 'done'"/>
                     <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
-                </tree>
+                </list>
             </field>
         </record>
 
     <record model="ir.actions.act_window" id="mrp_unbuild">
         <field name="name">Unbuild Orders</field>
         <field name="res_model">mrp.unbuild</field>
-        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_mode">list,kanban,form,activity</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No unbuild order found

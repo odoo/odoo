@@ -62,7 +62,7 @@ class AccountAnalyticAccount(models.Model):
             "domain": [('id', 'in', account_move_lines.move_id.ids)],
             "context": {"create": False, 'default_move_type': 'out_invoice'},
             "name": _("Customer Invoices"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }
 
     def action_view_vendor_bill(self):
@@ -77,5 +77,5 @@ class AccountAnalyticAccount(models.Model):
             "domain": [('id', 'in', account_move_lines.move_id.ids)],
             "context": {"create": False, 'default_move_type': 'in_invoice'},
             "name": _("Vendor Bills"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }

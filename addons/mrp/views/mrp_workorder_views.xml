@@ -28,7 +28,7 @@
     <record id="action_mrp_routing_time" model="ir.actions.act_window">
         <field name="name">Work Orders</field>
         <field name="res_model">mrp.workorder</field>
-        <field name="view_mode">graph,pivot,tree,form,calendar</field>
+        <field name="view_mode">graph,pivot,list,form,calendar</field>
         <field name="context">{'search_default_done': True}</field>
         <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
         <field name="domain">[('operation_id.bom_id', '=', active_id), ('state', '=', 'done')]</field>
@@ -44,7 +44,7 @@
     <record model="ir.actions.act_window" id="action_mrp_workorder_production_specific">
         <field name="name">Work Orders</field>
         <field name="res_model">mrp.workorder</field>
-        <field name="view_mode">tree,form,calendar,pivot,graph</field>
+        <field name="view_mode">list,form,calendar,pivot,graph</field>
         <field name="domain">[('production_id', '=', active_id)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -57,11 +57,11 @@
     </record>
 
     <record model="ir.ui.view" id="mrp_production_workorder_tree_editable_view">
-        <field name="name">mrp.production.work.order.tree.editable</field>
+        <field name="name">mrp.production.work.order.list.editable</field>
         <field name="model">mrp.workorder</field>
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
-            <tree editable="bottom" js_class="mrp_workorder_list_view" multi_edit="1">
+            <list editable="bottom" js_class="mrp_workorder_list_view" multi_edit="1">
                 <field name="consumption" column_invisible="True"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="is_produced" column_invisible="True"/>
@@ -98,20 +98,20 @@
                 <widget name="mo_view_list_dropdown"/>
                 <field name="show_json_popover" column_invisible="True"/>
                 <field name="json_popover" widget="mrp_workorder_popover" string=" " invisible="not show_json_popover"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="mrp_production_workorder_tree_editable_view_mo_form" model="ir.ui.view">
-        <field name="name">mrp.production.work.order.tree.editable</field>
+        <field name="name">mrp.production.work.order.list.editable</field>
         <field name="model">mrp.workorder</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="mrp_production_workorder_tree_editable_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='qty_remaining']" position="attributes">
+            <xpath expr="//list/field[@name='qty_remaining']" position="attributes">
                 <attribute name="column_invisible">parent.state == 'done'</attribute>
             </xpath>
-            <xpath expr="//tree/field[@name='qty_remaining']" position="after">
+            <xpath expr="//list/field[@name='qty_remaining']" position="after">
                 <field name="qty_produced" optional="show" string="Quantity Produced" column_invisible="parent.state != 'done'"/>
             </xpath>
             <xpath expr="//field[@name='show_json_popover']" position='before'>
@@ -124,13 +124,13 @@
     </record>
 
     <record id="mrp_production_workorder_tree_view" model="ir.ui.view">
-        <field name="name">mrp.production.work.order.tree</field>
+        <field name="name">mrp.production.work.order.list</field>
         <field name="model">mrp.workorder</field>
         <field name="mode">primary</field>
         <field name="priority" eval="10"/>
         <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="create">0</attribute>
                 <attribute name="sample">1</attribute>
                 <attribute name="editable"/>
@@ -204,7 +204,7 @@
                 <notebook>
                     <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="user_id"/>
                                 <field name="duration" widget="float_time" readonly="id"/>
                                 <field name="date_start"/>
@@ -212,7 +212,7 @@
                                 <field name="workcenter_id" column_invisible="True"/>
                                 <field name="company_id" column_invisible="True"/>
                                 <field name="loss_id" string="Productivity" optional="show"/>
-                            </tree>
+                            </list>
                             <form>
                                 <group>
                                     <group>
@@ -238,7 +238,7 @@
                 </page>
                 <page string="Components" name="components">
                     <field name="move_raw_ids" readonly="1">
-                        <tree>
+                        <list>
                             <field name="state" column_invisible="True"/>
                             <field name="product_id" readonly="state == 'done'"/>
                             <field name="product_qty" string="To Consume"/>
@@ -246,7 +246,7 @@
                             <field name="picked" string="Consumed"/>
                             <field name="product_qty_available" string="On Hand" invisible="not is_storable"/>
                             <field name="product_virtual_available" string="Forecasted" invisible="not is_storable"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
                 <page string="Work Instruction" name="workorder_page_work_instruction" invisible="not worksheet and not worksheet_google_slide and not operation_note">
@@ -258,7 +258,7 @@
                 <field name="allow_workorder_dependencies" invisible="1"/>
                 <page string="Blocked By" name="dependencies" invisible="not allow_workorder_dependencies">
                     <field name="blocked_by_workorder_ids" nolabel="1">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="company_id" column_invisible="True"/>
                             <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                             <field name="company_id" optional="hide" groups="base.group_multi_company"/>
@@ -271,7 +271,7 @@
                                 column_invisible="parent.state == 'draft'"
                                 invisible="production_state == 'draft'"/>
                             <button class="oe_link float-end" string="View WorkOrder" name="action_open_wizard" type="object"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
                 </notebook>
@@ -417,7 +417,7 @@
         <field name="name">Work Orders Planning</field>
         <field name="res_model">mrp.workorder</field>
         <field name="path">workcenter-planning</field>
-        <field name="view_mode">tree,form,calendar,pivot,graph</field>
+        <field name="view_mode">list,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
@@ -435,7 +435,7 @@
         <field name="res_model">mrp.workorder</field>
         <field name="path">production-planning</field>
         <field name="domain">[('production_state','not in',('done','cancel'))]</field>
-        <field name="view_mode">tree,form,calendar,pivot,graph</field>
+        <field name="view_mode">list,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
@@ -459,7 +459,7 @@
     <record model="ir.actions.act_window" id="mrp_workorder_todo">
         <field name="name">Work Orders</field>
         <field name="res_model">mrp.workorder</field>
-        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph</field>
         <field name="view_id" ref="mrp.mrp_production_workorder_tree_view"/>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True, 'search_default_waiting': True}</field>

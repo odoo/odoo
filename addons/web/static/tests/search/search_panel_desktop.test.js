@@ -127,7 +127,7 @@ class Partner extends models.Model {
     ];
     _views = {
         toy: /* xml */ `<toy/>`,
-        list: /* xml */ `<tree><field name="foo"/></tree>`,
+        list: /* xml */ `<list><field name="foo"/></list>`,
         kanban: /* xml */ `
             <kanban>
                 <templates>
@@ -1884,7 +1884,7 @@ test("search panel is not instantiated in dialogs", async () => {
         name: `Company${i + 1}`,
     }));
     Company._views = {
-        [["list", false]]: /* xml */ `<tree><field name="name"/></tree>`,
+        [["list", false]]: /* xml */ `<list><field name="name"/></list>`,
         [["search", false]]: /* xml */ `
             <search>
                 <field name="name"/>

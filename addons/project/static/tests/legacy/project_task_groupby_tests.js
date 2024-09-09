@@ -49,7 +49,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,list": `<tree js_class="project_task_list"/>`,
+            "project.task,false,list": `<list js_class="project_task_list"/>`,
         };
         const { openView } = await start({
             serverData: { views },
@@ -66,7 +66,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,list": `<tree js_class="project_task_list"/>`,
+            "project.task,false,list": `<list js_class="project_task_list"/>`,
         };
         const { openView } = await start({
             serverData: { views },
@@ -84,7 +84,7 @@ QUnit.module("Project", (hooks) => {
         assert.expect(1);
 
         const views = {
-            "project.task,false,list": `<tree js_class="project_task_list"/>`,
+            "project.task,false,list": `<list js_class="project_task_list"/>`,
         };
         const { openView } = await start({
             serverData: { views },

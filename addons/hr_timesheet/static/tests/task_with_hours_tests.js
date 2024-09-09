@@ -90,11 +90,11 @@ QUnit.module("hr_timesheet", (hooks) => {
             type: "list",
             resModel: "project.task",
             arch: `
-                <tree>
+                <list>
                     <field name="name"/>
                     <field name="project_id"/>
                     <field name="progress" widget="project_task_progressbar" options="{'overflow_class': 'bg-danger'}"/>
-                </tree>
+                </list>
             `,
         });
 

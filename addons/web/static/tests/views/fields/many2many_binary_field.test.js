@@ -48,7 +48,7 @@ test("widget many2many_binary", async () => {
         },
     }));
 
-    IrAttachment._views.list = '<tree string="Pictures"><field name="name"/></tree>';
+    IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';
     onRpc((args) => {
         if (args.method !== "get_views") {
             expect.step(args.route);
@@ -161,7 +161,7 @@ test("widget many2many_binary displays notification on error", async () => {
         },
     }));
 
-    IrAttachment._views.list = '<tree string="Pictures"><field name="name"/></tree>';
+    IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';
 
     await mountView({
         type: "form",

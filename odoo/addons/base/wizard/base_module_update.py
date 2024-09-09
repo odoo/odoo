@@ -21,7 +21,7 @@ class BaseModuleUpdate(models.TransientModel):
         res = {
             'domain': str([]),
             'name': 'Modules',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'ir.module.module',
             'view_id': False,
             'type': 'ir.actions.act_window',

@@ -39,7 +39,7 @@ viewsRegistry.category("activity").add(
 );
 viewsRegistry.category("form").add("default", /* xml */ `<form />`);
 viewsRegistry.category("kanban").add("default", /* xml */ `<kanban><templates /></kanban>`);
-viewsRegistry.category("list").add("default", /* xml */ `<tree />`);
+viewsRegistry.category("list").add("default", /* xml */ `<list />`);
 viewsRegistry.category("search").add("default", /* xml */ `<search />`);
 
 viewsRegistry.category("form").add(

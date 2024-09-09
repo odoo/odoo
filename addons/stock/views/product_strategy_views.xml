@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="stock_putaway_list" model="ir.ui.view">
-        <field name="name">stock.putaway.rule.tree</field>
+        <field name="name">stock.putaway.rule.list</field>
         <field name="model">stock.putaway.rule</field>
         <field name="arch" type="xml">
-            <tree string="Putaway Rules" editable="bottom" sample='1'>
+            <list string="Putaway Rules" editable="bottom" sample='1'>
                 <field name="company_id" column_invisible="True"/>
                 <field name="package_type_ids" column_invisible="True"/>
                 <field name="sequence" widget="handle"
@@ -42,7 +42,7 @@
                        placeholder="Any Category"
                        optional="show"/>
                 <field name="company_id" groups="stock.group_stock_multi_locations" force_save="1" readonly="context.get('fixed_location', False)" options="{'no_create': True}" optional="show"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -62,7 +62,7 @@
     <record id="action_putaway_tree" model="ir.actions.act_window">
         <field name="name">Putaways Rules</field>
         <field name="res_model">stock.putaway.rule</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="stock_putaway_list"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

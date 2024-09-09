@@ -1197,10 +1197,10 @@ class Picking(models.Model):
         view_id = self.env.ref('stock.view_stock_move_line_detailed_operation_tree').id
         return {
             'name': _('Detailed Operations'),
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'type': 'ir.actions.act_window',
             'res_model': 'stock.move.line',
-            'views': [(view_id, 'tree')],
+            'views': [(view_id, 'list')],
             'domain': [('id', 'in', self.move_line_ids.ids)],
             'context': {
                 'default_picking_id': self.id,
@@ -1227,7 +1227,7 @@ class Picking(models.Model):
             'name': _('Next Transfers'),
             "type": "ir.actions.act_window",
             "res_model": "stock.picking",
-            "views": [[False, "tree"], [False, "form"]],
+            "views": [[False, "list"], [False, "form"]],
             "domain": [('id', 'in', next_transfers.ids)],
         }
 
@@ -1891,7 +1891,7 @@ class Picking(models.Model):
     def action_picking_move_tree(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.stock_move_action")
         action['views'] = [
-            (self.env.ref('stock.view_picking_move_tree').id, 'tree'),
+            (self.env.ref('stock.view_picking_move_tree').id, 'list'),
         ]
         action['context'] = self.env.context
         action['domain'] = [('picking_id', 'in', self.ids)]
@@ -1955,7 +1955,7 @@ class Picking(models.Model):
             'name': _('Returns'),
             "type": "ir.actions.act_window",
             "res_model": "stock.picking",
-            "views": [[False, "tree"], [False, "form"]],
+            "views": [[False, "list"], [False, "form"]],
             "domain": [('id', 'in', self.return_ids.ids)],
         }
 

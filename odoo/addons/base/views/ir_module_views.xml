@@ -95,18 +95,18 @@
                             <group>
                                 <group string="Dependencies">
                                     <field name="dependencies_id" nolabel="1">
-                                        <tree string="Dependencies">
+                                        <list string="Dependencies">
                                             <field name="name"/>
                                             <field name="state"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </group>
                                 <group string="Exclusions">
                                     <field name="exclusion_ids" nolabel="1">
-                                        <tree string="Exclusions">
+                                        <list string="Exclusions">
                                             <field name="name"/>
                                             <field name="state"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </group>
                             </group>
@@ -126,10 +126,10 @@
             </field>
         </record>
         <record id="module_tree" model="ir.ui.view">
-            <field name="name">ir.module.module.tree</field>
+            <field name="name">ir.module.module.list</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <tree create="false" string="Apps" decoration-info="state == 'uninstalled'" decoration-muted="state == 'uninstallable'">
+                <list create="false" string="Apps" decoration-info="state == 'uninstalled'" decoration-muted="state == 'uninstallable'">
                     <header>
                         <button name="button_immediate_install" type="object" string="Activate" groups="base.group_system"/>
                         <button name="button_immediate_upgrade" type="object" string="Upgrade" groups="base.group_system"/>
@@ -143,7 +143,7 @@
                         decoration-muted="state == 'uninstallable'"
                         decoration-info="state  == 'uninstalled'"
                         decoration-success="state == 'installed'"/>
-                </tree>
+                </list>
             </field>
         </record>
         <record model="ir.ui.view" id="module_view_kanban">
@@ -195,7 +195,7 @@
             <field name="name">Apps</field>
             <field name="path">apps</field>
             <field name="res_model">ir.module.module</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="context">{'search_default_app':1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
             <field name="help" type="html">
