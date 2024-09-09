@@ -280,7 +280,7 @@ class MassMailing(models.Model):
 
     def _compute_total(self):
         for mass_mailing in self:
-            total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
+            total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._get_recipients_domain())
             if total and mass_mailing.ab_testing_enabled and mass_mailing.ab_testing_pc < 100:
                 total = max(int(total / 100.0 * mass_mailing.ab_testing_pc), 1)
             mass_mailing.total = total
@@ -996,7 +996,7 @@ class MassMailing(models.Model):
         }
 
     def _get_recipients(self):
-        mailing_domain = self._parse_mailing_domain()
+        mailing_domain = self._get_recipients_domain()
         res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
 
         # randomly choose a fragment
@@ -1014,6 +1014,10 @@ class MassMailing(models.Model):
                 topick = len(remaining)
             res_ids = random.sample(sorted(remaining), topick)
         return res_ids
+
+    def _get_recipients_domain(self):
+        """Overridable getter used to get the domain of the recipients at the time of sending."""
+        return self._parse_mailing_domain()
 
     def _get_remaining_recipients(self):
         res_ids = self._get_recipients()
@@ -1069,6 +1073,9 @@ class MassMailing(models.Model):
         return url
 
     def action_send_mail(self, res_ids=None):
+        return self._action_send_mail(res_ids)
+
+    def _action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
         for mailing in self:
@@ -1148,7 +1155,7 @@ class MassMailing(models.Model):
             )
             if len(mass_mailing._get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
-                mass_mailing.action_send_mail()
+                mass_mailing._action_send_mail()
             else:
                 mass_mailing.write({
                     'state': 'done',

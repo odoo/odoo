@@ -5,10 +5,12 @@
         <field name="model">card.card</field>
         <field name="arch" type="xml">
             <tree string="Share Card">
-                <field name="res_model" readonly="1" optional="hidden"/>
-                <field name="record_ref" readonly="1"/>
-                <field name="campaign_id" readonly="1" optional="hidden"/>
-                <field name="share_status" readonly="1"/>
+                <field name="create_date"/>
+                <field name="create_uid"/>
+                <field name="display_name"/>
+                <field name="res_model" optional="hidden"/>
+                <field name="campaign_id" optional="hidden"/>
+                <field name="share_status"/>
             </tree>
         </field>
     </record>

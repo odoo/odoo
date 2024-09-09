@@ -466,7 +466,7 @@ class BaseModel(models.AbstractModel):
         if isinstance(field_value, models.Model):
             return ' '.join((value.display_name or '') for value in field_value)
         if any(isinstance(value, datetime) for value in field_value):
-            tz = self._whatsapp_get_timezone()
+            tz = self._mail_get_timezone()
             return ' '.join([f"{tools.format_datetime(self.env, value, tz=tz)} {tz}"
                              for value in field_value if value and isinstance(value, datetime)])
         # find last field / last model when having chained fields
@@ -486,12 +486,15 @@ class BaseModel(models.AbstractModel):
             )
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
 
-    # TODO rename this or remove and inline with common tz fields
-    def _whatsapp_get_timezone(self):
+    def _mail_get_timezone(self):
         """To be override to get desired timezone of the model
 
         :returns: selected timezone (e.g. 'UTC' or 'Asia/Kolkata')
         """
         if self:
             self.ensure_one()
-        return self.env.user.tz or 'UTC'
+        tz = self.env.user.tz or 'UTC'
+        for tz_field in ('date_tz', 'tz', 'timezone'):
+            if tz_field in self:
+                tz = self[tz_field] or tz
+        return tz
