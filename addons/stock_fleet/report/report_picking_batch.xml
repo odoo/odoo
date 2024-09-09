@@ -22,8 +22,8 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th>Sequence</th>
                         <th>Transfer</th>
+                        <th t-if="o.vehicle_id">Address</th>
                         <th>Barcode</th>
                         <th>Status</th>
                         <th>Scheduled Date</th>
@@ -32,10 +32,13 @@
                 <tbody>
                    <tr t-foreach="o.picking_ids" t-as="pick" order="batch_sequence">
                         <td>
-                            <span t-field="pick.batch_sequence"/>
-                        </td>
-                        <td>
                             <span t-field="pick.display_name">Transfer Name</span>
+                        </td>
+                        <td t-if="o.vehicle_id">
+                            <span t-field="pick.partner_id.contact_address">Deco Addict
+                            77 Santa Barbara Rd
+                            Pleasant Hill CA 94523
+                            United States</span>
                         </td>
                         <td>
                             <span t-field="pick.name" t-options="{'widget': 'barcode', 'quiet': 0, 'width': 400, 'height': 100, 'img_style': 'width:200px;height:50px;'}">Transfer</span>
