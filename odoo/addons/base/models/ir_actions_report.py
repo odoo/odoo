@@ -468,7 +468,7 @@ class IrActionsReport(models.Model):
                 wkhtmltoimage = [_get_wkhtmltoimage_bin()] + command_args + [input_file.name, output_file.name]
                 # start and block, no need for parallelism for now
                 completed_process = subprocess.run(wkhtmltoimage, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=False)
-                if completed_process.stderr:
+                if completed_process.returncode:
                     message = _(
                         'Wkhtmltoimage failed (error code: %(error_code)s). Message: %(error_message_end)s',
                         error_code=completed_process.returncode,
