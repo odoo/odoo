@@ -2430,3 +2430,485 @@ class TestTourBoM(HttpCase):
         """
         url = '/odoo/action-mrp.mrp_bom_form_action'
         self.start_tour(url, 'test_manufacture_from_bom', login='admin', timeout=100)
+
+    def test_bom_document_tour_no_variants(self):
+        # This tour ensures that documents are correctly displayed in BoMs
+        # Remove the variants
+        self.env.user.groups_id -= self.env.ref('product.group_product_variant')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        # create the product and the components
+        self.bom_product_template, self.component_template = self.env['product.template'].create([
+            {'name': 'bom_product'},
+            {'name': 'component'}
+        ])
+        component_product = self.env['product.product'].search([('product_tmpl_id', '=', self.component_template.id)])
+        # doc on the product
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': component_product.id,
+            'res_model': 'product.product',
+        })
+        # doc on the template
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': self.component_template.id,
+            'res_model': 'product.template',
+        })
+
+        # the two lines should give the exact same result
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.bom_product_template.id,
+            'product_uom_id': uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_tmpl_id': self.component_template.id,
+                    'product_qty': 1,
+                }),
+            ]
+        })
+
+        self.start_tour('/odoo/mrp.bom', 'test_mrp_bom_document_no_variant', login='admin')
+
+    def test_bom_document_tour_with_variants(self):
+        # This tour ensures that documents are correctly displayed in BoMs
+        uom_unit = self.env.ref('uom.product_uom_unit')
+
+        # create the product and the components
+        self.bom_product_template, self.component_template = self.env['product.template'].create([
+            {'name': 'bom_product'},
+            {'name': 'component'}
+        ])
+
+        size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id,
+            'sequence': 1,
+        } for name in ('M', 'L')])
+
+        odoo_attribute = self.env['product.attribute'].create({'name': 'Odoo', 'sequence': 5})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': odoo_attribute.id,
+            'sequence': 1,
+        } for name in ('Developper', 'Product Ower', 'Customer')])
+
+        # Create the attribute lines for the product and the component
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': self.bom_product_template.id,
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+            },
+            {
+                'product_tmpl_id': self.component_template.id,
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+            }
+        ])
+        # Check that two product variant are created to enable auto matching
+        product_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product_template.id)])
+        components_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.component_template.id)])
+        self.assertEqual(len(product_ids), 2)
+        self.assertEqual(len(components_ids), 2)
+        # doc on the product
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': components_ids[0].id,
+            'res_model': 'product.product',
+        })
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': components_ids[1].id,
+            'res_model': 'product.product',
+        })
+        # doc on the template
+        self.env['product.document'].create({
+            'name': 'doc_compo_bom',
+            'attached_on_mrp': 'bom',
+            'res_id': self.component_template.id,
+            'res_model': 'product.template',
+        })
+
+        # create BoM
+        # preparation for two checks in the tour:
+        #       - the line with product selected will always return the docs of the variant and the template
+        #       - the line with template selected should trigger a method that will set the product variant on the line
+        #           and thus should give us the same result as the previous line
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.bom_product_template.id,
+            'product_uom_id': uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': components_ids[0].id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_tmpl_id': self.component_template.id,
+                    'product_qty': 1,
+                }),
+            ]
+        })
+
+        self.start_tour('/odoo/mrp.bom', 'test_mrp_bom_document', login='admin')
+
+
+class TestBoMConfigurator(TestMrpCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.bom_product, cls.component = cls.env['product.template'].create([
+            {'name': 'bom_product'},
+            {'name': 'component'}
+        ])
+
+    def test_bom_configurator_same_attribute_1(self):
+        # This will test the matching for the same attribute and same values on BoM and BoM line product
+        # Create the attribute size with two values ('M', 'L')
+        size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id,
+            'sequence': 1,
+        } for name in ('M', 'L')])
+        # Create the attribute lines for the product and the component
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': self.bom_product.id,
+                 'attribute_id': size_attribute.id,
+                 'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+            },
+            {
+                'product_tmpl_id': self.component.id,
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+            }
+        ])
+        # Check that two product variant are created
+        product_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product.id)])
+        components_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.component.id)])
+        self.assertEqual(len(product_ids), 2)
+        self.assertEqual(len(components_ids), 2)
+
+        # Create a BoM with the product and the component
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+
+        # Saving should not raise an user error
+        bom_form = bom_form.save()
+
+        # The matching has to work when using an MO, with all the products
+        for product in product_ids:
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = product
+            mo = mo_form.save()
+            # A move line is created if matching succeeded
+            self.assertEqual(len(mo.move_raw_ids), 1)
+            # The line has to contain the correct product with the correct attribute_value_ids
+            self.assertEqual(product.product_template_attribute_value_ids.product_attribute_value_id, mo.move_raw_ids.product_id.product_template_attribute_value_ids.product_attribute_value_id)
+
+    def test_bom_configurator_same_attribute_2(self):
+        # Same attribute on BoM and BoM line product but more values on BoM product
+        # Create the attribute size with three values ('S', 'M', 'L')
+        size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        attr_s, attr_m, attr_l = self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id,
+            'sequence': 1,
+        } for name in ('S', 'M', 'L')])
+        # Create the attribute lines for the product and the component.
+        # The product has one more value
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': self.bom_product.id,
+                 'attribute_id': size_attribute.id,
+                 'value_ids': [(6, 0, (attr_s + attr_m + attr_l).ids)]
+            },
+            {
+                'product_tmpl_id': self.component.id,
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, (attr_s + attr_m).ids)]
+            }
+        ])
+        # Check that the correct amount of product variants are created
+        product_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product.id)])
+        components_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.component.id)])
+        self.assertEqual(len(product_ids), 3)
+        self.assertEqual(len(components_ids), 2)
+
+        # Create a BoM with the product and a component having the same attribute
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+        # Saving will raise an UserError as the matching could not be done on value "L"
+        with self.assertRaises(exceptions.UserError):
+            bom_form = bom_form.save()
+
+        # Setting the two correct product variant where to apply the matching
+        match_possible_product_attribute_values = self.bom_product.attribute_line_ids.product_template_value_ids.filtered(lambda x: x.product_attribute_value_id.id in (attr_s.id, attr_m.id))
+        match_impossible_product_attribute_values = self.bom_product.attribute_line_ids.product_template_value_ids.filtered(lambda x: x.product_attribute_value_id.id not in (attr_s.id, attr_m.id))
+
+        # adding a line only for values matching
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+            line.bom_product_template_attribute_value_ids = match_possible_product_attribute_values
+
+        # adding a line for the non-matching value but with too many values on the component
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+            line.selected_product_template_attribute_value_ids = self.component.attribute_line_ids.product_template_value_ids
+            line.bom_product_template_attribute_value_ids = match_impossible_product_attribute_values
+        with self.assertRaises(exceptions.UserError):
+            bom_form = bom_form.save()
+
+        # adding a line for the non-matching value
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+            line.bom_product_template_attribute_value_ids = match_possible_product_attribute_values
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+            line.selected_product_template_attribute_value_ids = self.component.attribute_line_ids.product_template_value_ids[0]
+            line.bom_product_template_attribute_value_ids = match_impossible_product_attribute_values
+        bom_form = bom_form.save()
+
+        # The matching has to work when using an MO, with all the products
+        for product in product_ids:
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = product
+            mo = mo_form.save()
+            # A move line is created if matching succeeded
+            self.assertEqual(len(mo.move_raw_ids), 1)
+            # The line has to contain the correct product with the correct attribute_value_ids
+            # if auto-match
+            if product.product_template_attribute_value_ids.product_attribute_value_id in (attr_s + attr_m):
+                self.assertEqual(product.product_template_attribute_value_ids.product_attribute_value_id, mo.move_raw_ids.product_id.product_template_attribute_value_ids.product_attribute_value_id)
+            # else our manual match
+            else:
+                self.assertEqual(self.component.attribute_line_ids.product_template_value_ids[0].product_attribute_value_id, mo.move_raw_ids.product_id.product_template_attribute_value_ids.product_attribute_value_id)
+
+    def test_bom_configurator_same_attribute_3(self):
+        # Same attribute on BoM and BoM line product but more values on BoM product line
+        # Create the attribute size with three values ('S', 'M', 'L')
+        size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        attr_s, attr_m, attr_l = self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id,
+            'sequence': 1,
+        } for name in ('S', 'M', 'L')])
+        # Create the attribute lines for the product and the component.
+        # The product has one more value
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': self.bom_product.id,
+                 'attribute_id': size_attribute.id,
+                 'value_ids': [(6, 0, (attr_s + attr_m).ids)]
+            },
+            {
+                'product_tmpl_id': self.component.id,
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, (attr_s + attr_m + attr_l).ids)]
+            }
+        ])
+        # Check that the correct amount of product variants are created
+        product_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product.id)])
+        components_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.component.id)])
+        self.assertEqual(len(product_ids), 2)
+        self.assertEqual(len(components_ids), 3)
+
+        # Create a BoM with the product and a component having the same attribute
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+        # Saving will not raise an error as there will never be a match on the component additional attribute value
+        bom_form = bom_form.save()
+
+        # The matching has to work when using an MO, with all the products
+        for product in product_ids:
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = product
+            mo = mo_form.save()
+            # A move line is created if matching succeeded
+            self.assertEqual(len(mo.move_raw_ids), 1)
+            # The line has to contain the correct product with the correct attribute_value_ids
+            self.assertEqual(product.product_template_attribute_value_ids.product_attribute_value_id, mo.move_raw_ids.product_id.product_template_attribute_value_ids.product_attribute_value_id)
+
+    def test_bom_configurator_more_attribute_product(self):
+        # This will test the matching for a product having attributes values, but not the component.
+        # Create the attribute size with two values ('M', 'L')
+        size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id,
+            'sequence': 1,
+        } for name in ('M', 'L')])
+        # Create the attribute lines for the product and the component
+        self.env['product.template.attribute.line'].create([{
+                'product_tmpl_id': self.bom_product.id,
+                 'attribute_id': size_attribute.id,
+                 'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+            }])
+        # Check that two product variant are created
+        product_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product.id)])
+        self.assertEqual(len(product_ids), 2)
+
+        # Create a BoM with the product and the component
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+
+        # Saving should not raise an user error
+        bom_form = bom_form.save()
+
+        # The matching has to work when using an MO, with all the products
+        for product in product_ids:
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = product
+            mo = mo_form.save()
+            # A move line is created if matching succeeded
+            self.assertEqual(len(mo.move_raw_ids), 1)
+
+    def test_bom_configurator_more_attribute_component(self):
+        # This will test the matching for a component having attributes values, but not the main product.
+        # Create the attribute size with two values ('M', 'L')
+        size_attribute = self.env['product.attribute'].create({'name': 'Size', 'sequence': 4})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id,
+            'sequence': 1,
+        } for name in ('M', 'L')])
+        # Create the attribute lines for the product and the component
+        self.env['product.template.attribute.line'].create([{
+                'product_tmpl_id': self.component.id,
+                 'attribute_id': size_attribute.id,
+                 'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+            }])
+        # Check that two product variant are created
+        component_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.component.id)])
+        self.assertEqual(len(component_ids), 2)
+
+        # Create a BoM with the product and the component
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+
+        # Saving should raise an user error
+        with self.assertRaises(exceptions.UserError):
+            bom_form = bom_form.save()
+
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+            line.selected_product_template_attribute_value_ids = self.component.attribute_line_ids.product_template_value_ids[0]
+
+        # We specified the value so it should not throw an error
+        bom_form = bom_form.save()
+
+        bom_product_product = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product.id)])
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = bom_product_product
+        mo = mo_form.save()
+        # A move line is created if matching succeeded
+        self.assertEqual(len(mo.move_raw_ids), 1)
+        # The line has to contain the correct product with the correct attribute_value_ids
+        self.assertEqual(self.component.attribute_line_ids.product_template_value_ids[0].product_attribute_value_id, mo.move_raw_ids.product_id.product_template_attribute_value_ids.product_attribute_value_id)
+
+    def test_bom_configurator_dynamic_attribute(self):
+        # This will test the matching for the same attribute and same values on BoM and BoM line product for dynamic attributes
+        # Create the attribute size with two values ('M', 'L')
+        size_attribute = self.env['product.attribute'].create({'name': 'Size'})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': size_attribute.id,
+            'sequence': 1,
+        } for name in ('M', 'L')])
+        # Create the attribute lines for the product and the component
+        self.env['product.template.attribute.line'].create([{
+                'product_tmpl_id': self.bom_product.id,
+                 'attribute_id': size_attribute.id,
+                 'value_ids': [(6, 0, size_attribute.value_ids.ids)]}
+        ])
+        self.env['product.template.attribute.line'].create([{
+                'product_tmpl_id': self.component.id,
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, size_attribute.value_ids.ids)]}
+        ])
+        #
+        other_attribute = self.env['product.attribute'].create({'name': 'other', 'create_variant': 'dynamic'})
+        self.env['product.attribute.value'].create([{
+            'name': name,
+            'attribute_id': other_attribute.id,
+            'sequence': 1,
+        } for name in ('A', 'B')])
+        self.env['product.template.attribute.line'].create([{
+                'product_tmpl_id': self.component.id,
+                'attribute_id': other_attribute.id,
+                'value_ids': [(6, 0, other_attribute.value_ids.ids)]}
+        ])
+        # Check that the product variant are created but not the component variants
+        product_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product.id)])
+        components_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.component.id)])
+        self.assertEqual(len(product_ids), 2)
+        self.assertEqual(len(components_ids), 0)
+
+        # Create a BoM with the product and the component
+        bom_form = Form(self.env['mrp.bom'])
+        bom_form.product_tmpl_id = self.bom_product
+        with bom_form.bom_line_ids.new() as line:
+            line.product_tmpl_id = self.component
+            line.product_qty = 1
+            line.selected_product_template_attribute_value_ids = self.component.attribute_line_ids.filtered(lambda l: l.attribute_id == other_attribute).product_template_value_ids[0]
+
+        # Saving should not raise an user error
+        bom_form = bom_form.save()
+
+        # The matching has to work when using an MO, with all the products
+        for product in product_ids:
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = product
+            mo = mo_form.save()
+            # A move line is created if matching succeeded
+            self.assertEqual(len(mo.move_raw_ids), 1)
+            # The line has to contain the correct product with the correct attribute_value_ids
+            self.assertEqual(product.product_template_attribute_value_ids.product_attribute_value_id,
+                mo.move_raw_ids.product_id.product_template_attribute_value_ids.filtered(lambda l: l.attribute_id == size_attribute).product_attribute_value_id)
+
+        # assert that the variants have been created
+        product_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.bom_product.id)])
+        components_ids = self.env['product.product'].search([('product_tmpl_id', '=', self.component.id)])
+        self.assertEqual(len(product_ids), 2)
+        self.assertEqual(len(components_ids), 2)

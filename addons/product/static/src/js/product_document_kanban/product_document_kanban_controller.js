@@ -9,7 +9,11 @@ export class ProductDocumentKanbanController extends KanbanController {
     setup() {
         super.setup();
         this.uploadRoute = '/product/document/upload';
-        this.formData = {
+        this.formData = this.buildFormData();
+    }
+
+    buildFormData() {
+        return {
             'res_model': this.props.context.default_res_model,
             'res_id': this.props.context.default_res_id,
         };

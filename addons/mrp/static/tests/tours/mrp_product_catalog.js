@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('test_mrp_bom_product_catalog', {
             run: "click",
         },
         {
-            trigger: 'div.o_field_one2many:contains("Component")',
+            trigger: 'div.o_field_one2many:contains("Product")',
         },
 ]});
 
@@ -49,4 +49,3 @@ registry.category("web_tour.tours").add('test_mrp_production_product_catalog', {
             trigger: 'div.o_field_widget:contains("WH/MO/")',
         },
 ]});
-

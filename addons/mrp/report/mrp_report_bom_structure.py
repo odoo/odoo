@@ -291,7 +291,7 @@ class ReportBomStructure(models.AbstractModel):
             if not line.child_bom_id:
                 no_bom_lines |= line
                 # Update product_info for all the components before computing closest forecasted.
-                qty_product_uom = line.product_uom_id._compute_quantity(line_quantity, line.product_id.uom_id)
+                qty_product_uom = line.product_uom_id._compute_quantity(line_quantity, line.product_tmpl_id.uom_id)
                 self._update_product_info(line.product_id, bom.id, product_info, warehouse, qty_product_uom, bom=False, parent_bom=bom, parent_product=product)
         components_closest_forecasted = self._get_components_closest_forecasted(no_bom_lines, line_quantities, bom, product_info, product, ignore_stock)
         for component_index, line in enumerate(bom.bom_line_ids):
@@ -299,14 +299,20 @@ class ReportBomStructure(models.AbstractModel):
             if product and line._skip_bom_line(product):
                 continue
             line_quantity = line_quantities.get(line.id, 0.0)
-            if line.child_bom_id:
-                component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
+            line_product = line.get_product_variant(product)
+            if not line_product:
+                continue
+            child_bom = line._get_child_bom_by_product(line_product)
+            if child_bom:
+                component = self._get_bom_data(child_bom, warehouse, line_product, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
                                                parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock,
                                                simulated_leaves_per_workcenter=simulated_leaves_per_workcenter)
             else:
                 component = self.with_context(
                     components_closest_forecasted=components_closest_forecasted,
                 )._get_component_data(bom, product, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
+                if not component:
+                    continue
             for component_bom in components:
                 if component['product_id'] == component_bom['product_id'] and component['uom'].id == component_bom['uom'].id:
                     self._merge_components(component_bom, component)
@@ -352,7 +358,10 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _get_component_data(self, parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock=False):
         company = parent_bom.company_id or self.env.company
-        price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity
+        bom_line_product = bom_line.product_id or bom_line.get_product_variant(parent_product)
+        if not bom_line_product:
+            return False
+        price = bom_line_product.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.product_uom_id) * line_quantity
         rounded_price = company.currency_id.round(price)
 
         key = bom_line.product_id.id
@@ -367,19 +376,19 @@ class ReportBomStructure(models.AbstractModel):
 
         has_attachments = False
         if not self.env.context.get('minimized', False):
-            has_attachments = self.env['product.document'].search_count(['&', ('attached_on_mrp', '=', 'bom'), '|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom_line.product_id.id),
-                                                              '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom_line.product_id.product_tmpl_id.id)]) > 0
+            has_attachments = self.env['product.document'].search_count(['&', ('attached_on_mrp', '=', 'bom'), '|', '&', ('res_model', '=', 'product.product'), ('res_id', '=', bom_line_product.id),
+                                                              '&', ('res_model', '=', 'product.template'), ('res_id', '=', bom_line_product.product_tmpl_id.id)]) > 0
 
         return {
             'type': 'component',
             'index': index,
             'bom_id': False,
-            'product': bom_line.product_id,
-            'product_id': bom_line.product_id.id,
-            'product_template_id': bom_line.product_tmpl_id.id,
-            'link_id': bom_line.product_id.id if bom_line.product_id.product_variant_count > 1 else bom_line.product_id.product_tmpl_id.id,
-            'link_model': 'product.product' if bom_line.product_id.product_variant_count > 1 else 'product.template',
-            'name': bom_line.product_id.display_name,
+            'product': bom_line_product,
+            'product_id': bom_line_product.id,
+            'product_template_id': bom_line_product.product_tmpl_id.id,
+            'link_id': bom_line_product.id if bom_line_product.product_variant_count > 1 else bom_line.product_tmpl_id.id,
+            'link_model': 'product.product' if bom_line_product.product_variant_count > 1 else 'product.template',
+            'name': bom_line_product.display_name,
             'code': '',
             'currency': company.currency_id,
             'currency_id': company.currency_id.id,

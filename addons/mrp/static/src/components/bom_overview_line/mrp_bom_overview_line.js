@@ -88,8 +88,9 @@ export class BomOverviewLine extends Component {
             target: "current",
             context:{
                 'bom_id': true,
-                'default_res_id': this.data.product_id,
-                'default_res_model': "product.product"
+                'default_res_id': this.data.link_id,
+                'default_res_model': this.data.link_model,
+                'attached_on_bom': true
             }
         });
     }
