@@ -597,13 +597,24 @@ class Message(models.Model):
             ),
         )
 
-    def _validate_access_for_current_persona(self, operation):
-        if not self:
-            return False
-        self.ensure_one()
-        self.sudo(False).check_access_rule(operation)
-        self.sudo(False).check_access_rights(operation)
-        return True
+    @api.model
+    def _get_with_access(self, message_id, operation):
+        """Return the message with the given id if it exists and if the current
+        user can access it for the given operation."""
+        message = self.browse(message_id).exists()
+        if not message:
+            return self.env["mail.message"]
+        try:
+            if not self.env.user._is_public() or not self.env["mail.guest"]._get_guest_from_context():
+                # Don't check_access_rights for public user with a guest, as the rules are
+                # incorrect due to historically having no reason to allow operations on messages to
+                # public user before the introduction of guests. Even with ignoring the rights,
+                # check_access_rule and its sub methods are already covering all the cases properly.
+                message.sudo(False).check_access_rights(operation)
+            message.sudo(False).check_access_rule(operation)
+            return message
+        except AccessError:
+            return self.env["mail.message"]
 
     @api.model_create_multi
     def create(self, values_list):
@@ -848,7 +859,7 @@ class Message(models.Model):
             "mail.message/toggle_star", {"message_ids": [self.id], "starred": starred}
         )
 
-    def _message_reaction(self, content, action, partner, guest, store: Store):
+    def _message_reaction(self, content, action, partner, guest, store: Store = None):
         self.ensure_one()
         # search for existing reaction
         domain = [
@@ -869,8 +880,9 @@ class Message(models.Model):
             self.env["mail.message.reaction"].create(create_values)
         if action == "remove" and reaction:
             reaction.unlink()
-        # fill the store to use for non logged in portal users in mail_message_reaction()
-        self._reaction_group_to_store(store, content)
+        if store:
+            # fill the store to use for non logged in portal users in mail_message_reaction()
+            self._reaction_group_to_store(store, content)
         # send the reaction group to bus for logged in users
         self._bus_send_reaction_group(content)
 
