@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.RecurrenceUpdateSelect">
+        <t t-set="edit_recurrent_event">Edit Recurrent event</t>
+        <div size="'sm'" title="edit_recurrent_event">
+            <t t-foreach="Object.entries(state.possibleValues)" t-as="value" t-key="value[0]">
+                <t t-set="name" t-value="value[0]"/>
+                <t t-set="state" t-value="value[1]"/>
+                <div class="form-check o_radio_item">
+                    <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" t-att-checked="state.checked" t-att-value="name" t-att-id="name" t-on-click="(ev) => this.selected = ev.target.value"/>
+                    <label class="form-check-label o_form_label" t-att-for="name" t-esc="state.label"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

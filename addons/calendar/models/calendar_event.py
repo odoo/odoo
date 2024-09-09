@@ -250,6 +250,7 @@ class Meeting(models.Model):
     tentative_count = fields.Integer(compute='_compute_attendees_count')
     awaiting_count = fields.Integer(compute="_compute_attendees_count")
     user_can_edit = fields.Boolean(compute='_compute_user_can_edit')
+    show_all_events = fields.Boolean(store=False, copy=False, default=True)
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
@@ -369,6 +370,13 @@ class Meeting(models.Model):
             event.stop = event.start and event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
             if event.allday:
                 event.stop -= timedelta(seconds=1)
+
+    @api.onchange('start')
+    def _onchange_start(self):
+        if self.start and self._origin.start:
+            old_day = self._origin.start.date().day
+            new_day = self.start.date().day
+            self.show_all_events = old_day == new_day
 
     @api.onchange('start_date', 'stop_date')
     def _onchange_date(self):
