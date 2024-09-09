@@ -474,7 +474,7 @@ msgstr ""
 "                                nội bộ có thể nhìn thấy trong lịch sử nhắn tin.\n"
 "                            </span>\n"
 "                            <span invisible=\"mail_post_method != 'comment'\">\n"
-"                                Tin nhắn sẽ được đăng dưới dạng tin nhắn trong tập dữ liệu để thông báo\n"
+"                                Tin nhắn sẽ được đăng dưới dạng tin nhắn trong bản ghi để thông báo\n"
 "                                cho tất cả người theo dõi. Nó sẽ xuất hiện trong lịch sử nhắn tin.\n"
 "                            </span>"
 
@@ -500,7 +500,7 @@ msgstr "<span>Nếu việc này không phải bạn thực hiện:</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "<span>Open Record</span>"
-msgstr "<span>Mở tập dữ liệu</span>"
+msgstr "<span>Mở bản ghi</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -541,8 +541,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo tập"
-" dữ liệu mới cho bí danh này. "
+"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo bản"
+" ghi mới cho bí danh này. "
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
@@ -642,7 +642,7 @@ msgstr "Tài khoản"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__activity_category
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
 msgid "Action"
-msgstr "Hành động"
+msgstr "Tác vụ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction
@@ -654,12 +654,12 @@ msgstr "Hành động"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "Chế độ xem cửa sổ hành động"
+msgstr "Chế độ xem cửa sổ tác vụ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -669,13 +669,13 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Hành động có thể kích hoạt thao tác cụ thể như mở chế độ xem lịch hoặc tự "
-"động đánh dấu là hoàn thành khi tài liệu được tải lên"
+"Tác vụ có thể kích hoạt thao tác cụ thể như mở chế độ xem lịch hoặc tự động "
+"đánh dấu là hoàn thành khi tài liệu được tải lên"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "Hành động cần Thực hiện khi có Email gửi đến"
+msgstr "Tác vụ cần Thực hiện khi có Email gửi đến"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -727,8 +727,7 @@ msgstr "Hoạt động cần tạo"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
 msgid "Activities have to be linked to records with a not null res_id."
-msgstr ""
-"Hoạt động phải được liên kết với các tập dữ liệu có res_id không rỗng."
+msgstr "Hoạt động phải được liên kết với các bản ghi có res_id không rỗng."
 
 #. module: mail
 #. odoo-javascript
@@ -2799,7 +2798,7 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
-"Người nhận mặc định của tập dữ liệu:\n"
+"Người nhận mặc định của bản ghi:\n"
 "- đối tác (sử dụng id của đối tác hoặc trường partner_id) HOẶC\n"
 "- email (sử dụng trường email_from hoặc trường email)"
 
@@ -3453,8 +3452,8 @@ msgid ""
 "Email aliases %(alias_name)s cannot be used on several records at the same "
 "time. Please update records one by one."
 msgstr ""
-"Không thể sử dụng bí danh email %(alias_name)s trên nhiều tập dữ liệu cùng "
-"một lúc. Vui lòng cập nhật từng tập dữ liệu một."
+"Không thể sử dụng bí danh email %(alias_name)s trên nhiều bản ghi cùng một "
+"lúc. Vui lòng cập nhật từng bản ghi một."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -3637,8 +3636,8 @@ msgid ""
 "Error without exception. Probably due to concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
-"Lỗi không có ngoại lệ. Có thể là do đồng thời cập nhật truy cập các tập dữ "
-"liệu thông báo. Vui lòng liên hệ quản trị viên."
+"Lỗi không có ngoại lệ. Có thể là do đồng thời cập nhật truy cập các bản ghi "
+"thông báo. Vui lòng liên hệ quản trị viên."
 
 #. module: mail
 #. odoo-python
@@ -4468,8 +4467,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID của tập dữ liệu chính chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm "
-"vụ)"
+"ID của bản ghi chính chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm vụ)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__im_status
@@ -4899,7 +4897,7 @@ msgid ""
 "record or an XMLID"
 msgstr ""
 "Mẫu hoặc nguồn chế độ xem %(svalue)s không hợp lệ (loại %(stype)s), phải là "
-"một tập dữ liệu hoặc XMLID"
+"một bản ghi hoặc XMLID"
 
 #. module: mail
 #. odoo-python
@@ -4918,8 +4916,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr ""
-"Mẫu hoặc tập dữ liệu nguồn chế độ xem %(svalue)s không hợp lệ, thay vào đó "
-"là %(model)s."
+"Mẫu hoặc bản ghi nguồn chế độ xem %(svalue)s không hợp lệ, thay vào đó là "
+"%(model)s."
 
 #. module: mail
 #. odoo-python
@@ -5698,8 +5696,8 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
-"Trình soạn thảo email ở chế độ bình luận phải chạy trên ít nhất một tập dữ "
-"liệu. Không tìm thấy tập dữ liệu nào (mô hình %(model_name)s)."
+"Trình soạn thảo email ở chế độ bình luận phải chạy trên ít nhất một bản ghi."
+" Không tìm thấy bản ghi nào (mô hình %(model_name)s)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -5986,7 +5984,7 @@ msgstr "Phản ứng tin nhắn"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__record_name
 #: model:ir.model.fields,field_description:mail.field_mail_message__record_name
 msgid "Message Record Name"
-msgstr "Tên tập dữ liệu thông điệp"
+msgstr "Tên bản ghi thông điệp"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_translation
@@ -6044,10 +6042,10 @@ msgid ""
 "on its wall."
 msgstr ""
 "Kiểu phụ của tin nhắn cung cấp kiểu chính xác hơn cho tin nhắn, đặc biệt "
-"thông báo hệ thống. Ví dụ: đó có thể là thông báo liên quan tới tập dữ liệu "
-"mới (Mới), hoặc với thay đổi giai đoạn trong một quá trình (Thay đổi giai "
-"đoạn). Kiểu phụ của tin nhắn cho phép tinh chỉnh chính xác thông báo mà "
-"người dùng muốn nhận."
+"thông báo hệ thống. Ví dụ: đó có thể là thông báo liên quan tới bản ghi mới "
+"(Mới), hoặc với thay đổi giai đoạn trong một quá trình (Thay đổi giai đoạn)."
+" Kiểu phụ của tin nhắn cho phép tinh chỉnh chính xác thông báo mà người dùng"
+" muốn nhận."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -6160,7 +6158,7 @@ msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
 msgstr ""
-"Mixin để tính thời gian một tập dữ liệu sử dụng cho mỗi giá trị mà trường "
+"Mixin để tính thời gian một bản ghi sử dụng cho mỗi giá trị mà trường "
 "many2one có thể lấy"
 
 #. module: mail
@@ -6273,7 +6271,7 @@ msgstr "Tên"
 #: model:ir.model.fields,field_description:mail.field_mail_message__needaction
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
-msgstr "Cần có hành động"
+msgstr "Cần có tác vụ"
 
 #. module: mail
 #. odoo-javascript
@@ -6540,7 +6538,7 @@ msgstr "Không tìm thấy người dùng"
 #: code:addons/mail/controllers/mail.py:0
 #, python-format
 msgid "Non existing record or wrong token."
-msgstr "Tập dữ liệu không tồn tại hoặc token không chính xác."
+msgstr "Bản ghi không tồn tại hoặc token không chính xác."
 
 #. module: mail
 #. odoo-javascript
@@ -6646,8 +6644,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received "
 "%(aids)s)"
 msgstr ""
-"Thông báo sẽ nhận các tập dữ liệu đính kèm dưới dạng danh sách ID (%(aids)s "
-"đã nhận)"
+"Thông báo sẽ nhận các bản ghi đính kèm dưới dạng danh sách ID (%(aids)s đã "
+"nhận)"
 
 #. module: mail
 #. odoo-python
@@ -6704,7 +6702,7 @@ msgstr "Thông báo đã khóa"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -6900,7 +6898,7 @@ msgstr "Mở"
 #: code:addons/mail/static/src/core/common/chat_window.js:0
 #, python-format
 msgid "Open Actions Menu"
-msgstr "Mở menu hành động"
+msgstr "Mở menu tác vụ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
@@ -6953,9 +6951,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID tùy chọn của một luồng (tập dữ liệu) tập hợp tất cả tin nhắn nhận được, "
-"thậm chí nếu đó là tin nhắn không có phản hồi. Nếu cài đặt, điều này sẽ tắt "
-"hoàn toàn việc tạo các tập dữ liệu mới. "
+"ID tùy chọn của một luồng (bản ghi) tập hợp tất cả tin nhắn nhận được, thậm "
+"chí nếu đó là tin nhắn không có phản hồi. Nếu cài đặt, điều này sẽ tắt hoàn "
+"toàn việc tạo các bản ghi mới. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
@@ -7156,7 +7154,7 @@ msgstr "Mô hình chính"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID luồng tập dữ liệu chính"
+msgstr "ID luồng bản ghi chính"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -7224,7 +7222,7 @@ msgstr "Đối tác"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notified_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__notified_partner_ids
 msgid "Partners with Need Action"
-msgstr "Đối tác cần có hành động"
+msgstr "Đối tác cần có tác vụ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__password
@@ -7502,8 +7500,8 @@ msgid ""
 "Posting a message should receive attachments records as a list of IDs "
 "(received %(aids)s)"
 msgstr ""
-"Việc đăng một tin nhắn sẽ nhận các tập dữ liệu đính kèm dưới dạng danh sách "
-"ID (%(aids)s đã nhận)"
+"Việc đăng một tin nhắn sẽ nhận các bản ghi đính kèm dưới dạng danh sách ID "
+"(%(aids)s đã nhận)"
 
 #. module: mail
 #. odoo-python
@@ -7783,7 +7781,7 @@ msgstr "Record Name"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "ID luồng tập dữ liệu"
+msgstr "ID luồng bản ghi"
 
 #. module: mail
 #. odoo-python
@@ -7913,7 +7911,7 @@ msgstr "Remove email from blacklist wizard"
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
-"Xóa hành động theo ngữ cảnh để sử dụng mẫu này trên các tài liệu liên quan"
+"Xóa tác vụ theo ngữ cảnh để sử dụng mẫu này trên các tài liệu liên quan"
 
 #. module: mail
 #. odoo-javascript
@@ -8229,7 +8227,7 @@ msgstr "Lên lịch hoạt động"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "Schedule Activity On Selected Records"
-msgstr "Lên lịch hoạt động trên các tập dữ liệu đã chọn"
+msgstr "Lên lịch hoạt động trên các bản ghi đã chọn"
 
 #. module: mail
 #. odoo-javascript
@@ -8264,7 +8262,7 @@ msgstr "Lên lịch một hoạt động"
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #, python-format
 msgid "Schedule an activity on selected records"
-msgstr "Lên lịch hoạt động trên các tập dữ liệu đã chọn"
+msgstr "Lên lịch hoạt động trên các bản ghi đã chọn"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__scheduled_date
@@ -8583,7 +8581,7 @@ msgstr "Máy chủ & Đăng nhập"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
 msgid "Server Action"
-msgstr "Hành động phía máy chủ"
+msgstr "Tác vụ phía máy chủ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -8753,8 +8751,7 @@ msgstr "Hiển thị tất cả người nhận"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records which has next action date is before today"
-msgstr ""
-"Hiển thị tất cả tập dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+msgstr "Hiển thị tất cả bản ghi có ngày xử lý tiếp theo trước ngày hôm nay"
 
 #. module: mail
 #. odoo-javascript
@@ -8797,7 +8794,7 @@ msgstr "Hiển thị"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
 msgid "Sidebar action"
-msgstr "Thanh hành động"
+msgstr "Thanh tác vụ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__ref_ir_act_window
@@ -8977,7 +8974,7 @@ msgstr "Dừng trả lời"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
 msgstr ""
-"Lưu trữ email và email trả lời trong cửa sổ trò chuyện của từng tập dữ liệu"
+"Lưu trữ email và email trả lời trong cửa sổ trò chuyện của từng bản ghi"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_link_preview
@@ -9241,7 +9238,7 @@ msgstr "Kiểm thử & Xác nhận"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Test Record:"
-msgstr "Tập dữ liệu kiểm thử:"
+msgstr "Bản ghi kiểm thử:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
@@ -9412,8 +9409,8 @@ msgid ""
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
 "Mô hình (Loại tài liệu Odoo) mà bí danh này tương tác. Mọi email đến mà "
-"không phải là email trả lời một tập dữ liệu hiện có sẽ tạo ra một tập dữ "
-"liệu mới trong mô hình này. (ví dụ: Nhiệm vụ dự án) "
+"không phải là email trả lời một bản ghi hiện có sẽ tạo ra một bản ghi mới "
+"trong mô hình này. (ví dụ: Nhiệm vụ dự án) "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -9450,7 +9447,7 @@ msgstr "Quản lý hàng đợi sẽ gửi email sau ngày"
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 #, python-format
 msgid "The records must belong to the same company."
-msgstr "Các tập dữ liệu phải thuộc về cùng một công ty."
+msgstr "Các bản ghi phải thuộc về cùng một công ty."
 
 #. module: mail
 #. odoo-python
@@ -9522,14 +9519,14 @@ msgstr "Hành động này chỉ có thể được thực hiện trên mô hìn
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
 msgid "This action cannot be done on transient models."
-msgstr "Không thể thực hiện hành động này trên các mô hình tạm thời."
+msgstr "Không thể thực hiện tác vụ này trên các mô hình tạm thời."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.xml:0
 #, python-format
 msgid "This action will send an email."
-msgstr "Hành động này sẽ gửi một email."
+msgstr "Tác vụ này sẽ gửi một email."
 
 #. module: mail
 #. odoo-javascript
@@ -9918,11 +9915,11 @@ msgid ""
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
 "Loại hành động máy chủ. Các giá trị sau đây khả dụng:\n"
-"- 'Cập nhật tập dữ liệu': cập nhật giá trị của tập dữ liệu\n"
+"- 'Cập nhật bản ghi': cập nhật giá trị của bản ghi\n"
 "- 'Tạo hoạt động': tạo một hoạt động (Thảo luận)\n"
 "- 'Gửi email': gửi tin nhắn, ghi chú hoặc email (Thảo luận)\n"
-"- 'Gửi SMS': gửi SMS, thêm chúng vào tài liệu (SMS)- 'Thêm/Xóa người theo dõi': thêm hoặc xóa người theo dõi vào/khỏi một tập dữ liệu (Thảo luận)\n"
-"- 'Tạo tập dữ liệu': tạo một tập dữ liệu mới với các giá trị mới\n"
+"- 'Gửi SMS': gửi SMS, thêm chúng vào tài liệu (SMS)- 'Thêm/Xóa người theo dõi': thêm hoặc xóa người theo dõi vào/khỏi một bản ghi (Thảo luận)\n"
+"- 'Tạo bản ghi': tạo một bản ghi mới với các giá trị mới\n"
 "- 'Thực thi mã': một khối mã Python sẽ được thực thi\n"
 "- 'Gửi thông báo Webhook': gửi yêu cầu POST tới hệ thống bên ngoài, hay còn gọi là Webhook\n"
 "- 'Thực thi hành động hiện có': xác định một hành động kích hoạt một số hành động máy chủ khác\n"
@@ -9932,7 +9929,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong bản ghi."
 
 #. module: mail
 #. odoo-javascript
@@ -10189,7 +10186,7 @@ msgid ""
 msgstr ""
 "Dùng 'Người dùng cụ thể' để luôn phân công cùng một người dùng cho hoạt động"
 " tiếp theo. Sử dụng 'Người dùng không cố định' để chỉ định tên trường của "
-"người dùng cần chọn trong tập dữ liệu. "
+"người dùng cần chọn trong bản ghi. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -10212,8 +10209,8 @@ msgstr "Sử dụng máy chủ Gmail"
 #, python-format
 msgid "Use a local script to fetch your emails and create new records."
 msgstr ""
-"Sử dụng ngôn ngữ kịch bản cục bộ để tìm nạp email của bạn và tạo tập dữ liệu"
-" mới."
+"Sử dụng ngôn ngữ kịch bản cục bộ để tìm nạp email của bạn và tạo bản ghi "
+"mới."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11331,8 +11328,8 @@ msgstr "bí danh được định cấu hình sai"
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
 msgstr ""
-"bí danh được định cấu hình không chính xác (tập dữ liệu tham chiếu không xác"
-" định)"
+"bí danh được định cấu hình không chính xác (bản ghi tham chiếu không xác "
+"định)"
 
 #. module: mail
 #. odoo-python

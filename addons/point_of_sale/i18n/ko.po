@@ -6,8 +6,8 @@
 # Martin Trigaux, 2023
 # JH CHOI <hwangtog@gmail.com>, 2024
 # Sarah Park, 2024
-# Daye Jeong, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7040,6 +7040,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"거래의 유효성을 확인하려면 결제 금액의 금액을 반올림해야 합니다. 반올림 정밀도가 %s이므로 %s 또는 %s를 %s 대신 결제 금액으로 "
+"사용해야 합니다."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8241,6 +8243,15 @@ msgstr "진행 중인 주문은 동일한 통화를 사용하지 않는 구성�
 #, python-format
 msgid "You cannot use the same journal on multiples cash payment methods."
 msgstr "동일한 전표를 여러 개의 현금 결제 방법에 사용할 수 없습니다."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You do not have permission to open a POS session. Please try opening a "
+"session with a different user"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
