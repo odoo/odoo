@@ -15,7 +15,7 @@ class SpreadsheetDashboard(models.Model):
     is_published = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company')
     group_ids = fields.Many2many('res.groups', default=lambda self: self.env.ref('base.group_user'))
-
+    main_data_model_ids = fields.Many2many('ir.model')
 
     def get_readonly_dashboard(self):
         self.ensure_one()
