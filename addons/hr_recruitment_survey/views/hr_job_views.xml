@@ -24,7 +24,7 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='manager_id']" position="after">
+            <xpath expr="//field[@name='active']" position="after">
                 <field name="survey_id"/>
             </xpath>
             <xpath expr="//div[@name='menu_view_applications']" position="after">
