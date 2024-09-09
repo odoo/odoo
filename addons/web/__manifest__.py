@@ -54,6 +54,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_core'),
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/src/libs/fontawesome6/css/font-awesome-6.css',
             'web/static/lib/odoo_ui_icons/*',
             'web/static/src/webclient/navbar/navbar.scss',
             'web/static/src/scss/animation.scss',
