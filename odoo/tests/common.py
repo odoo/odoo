@@ -90,7 +90,7 @@ except ImportError:
     websocket = None
 
 _logger = logging.getLogger(__name__)
-if config['test_enable']:
+if 'pytest' in sys.modules or config['test_enable']:
     _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 else:
     _logger.error(
