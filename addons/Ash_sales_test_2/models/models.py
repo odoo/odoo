@@ -77,7 +77,7 @@ class SaleOrder(models.Model):
                     'products': products_data,
                 }
                 # Send data to external API
-                release_url = "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
+                release_url = "https://shiperooconnect-prod.automation.shiperoo.com/api/odoo_release"
 
                 headers = {
                     "Content-Type": "application/json"
