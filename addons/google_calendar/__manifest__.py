@@ -15,6 +15,7 @@
         'views/google_calendar_views.xml',
         ],
     'installable': True,
+    'auto_install': True,
     'assets': {
         'web.assets_backend': [
             'google_calendar/static/src/scss/google_calendar.scss',
