@@ -40,7 +40,7 @@
                 </t>
 
                 <t t-set-slot="control-panel-additional-actions">
-                    <CogMenu t-if="!nbSelected"/>
+                    <CogMenu t-if="!nbSelected and !model.root.isDomainSelected"/>
                 </t>
                 <t t-set-slot="control-panel-selection-actions">
                     <div t-if="hasSelectedRecords" class="d-flex gap-1">
