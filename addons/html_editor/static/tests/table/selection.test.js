@@ -1,9 +1,15 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { bold, resetSize, setColor } from "../_helpers/user_actions";
-import { getContent } from "../_helpers/selection";
-import { queryAll } from "@odoo/hoot-dom";
+import { bold, resetSize, setColor, insertText } from "../_helpers/user_actions";
+import { getContent, setSelection } from "../_helpers/selection";
+import { queryAll, press } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { nodeSize } from "@html_editor/utils/position";
+
+function expectContentToBe(el, html) {
+    expect(getContent(el)).toBe(unformat(html));
+}
 
 describe("custom selection", () => {
     test("should indicate selected cells with blue background", async () => {
@@ -1097,5 +1103,135 @@ describe("select columns on cross over", () => {
                     </table>`),
             });
         });
+    });
+});
+
+describe("symmetrical selection", () => {
+    test("select cells symmetrically when pressing shift + arrow key", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+
+        // Select single empty cell
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+
+        // Select two cells consecutively
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+
+        press(["Shift", "ArrowDown"]);
+        await animationFrame();
+
+        // Extend selection from two cells to four cells
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+
+        // Shrink selection from four cells to two cells
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+
+        press(["Shift", "ArrowUp"]);
+        await animationFrame();
+
+        // Shrink selection from two cells to single cell
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+    });
+
+    test("select single cell containing text when pressing shift + arrow key", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+        insertText(editor, "ab");
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td>ab[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+        const firstTd = el.querySelector("td");
+        setSelection({
+            anchorNode: firstTd,
+            anchorOffset: 0,
+            focusNode: firstTd,
+            focusOffset: nodeSize(firstTd),
+        }); // <td>[ab]</td>
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[ab<br>]</td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
     });
 });
