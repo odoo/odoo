@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.osv import expression
-
 
 
 class Partner(models.Model):
@@ -11,7 +9,11 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('type', '=', 'opportunity')])
-    opportunity_count = fields.Integer("Opportunity", compute='_compute_opportunity_count')
+    opportunity_count = fields.Integer(
+        string="Opportunity Count",
+        groups='sales_team.group_sale_salesman',
+        compute='_compute_opportunity_count',
+    )
 
     @api.model
     def default_get(self, fields):
@@ -36,6 +38,10 @@ class Partner(models.Model):
         return rec
 
     def _compute_opportunity_count(self):
+        self.opportunity_count = 0
+        if not self.env.user._has_group('sales_team.group_sale_salesman'):
+            return
+
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search_fetch(
             [('id', 'child_of', self.ids)], ['parent_id'],
@@ -47,7 +53,6 @@ class Partner(models.Model):
         )
         self_ids = set(self._ids)
 
-        self.opportunity_count = 0
         for partner, count in opportunity_data:
             while partner:
                 if partner.id in self_ids:

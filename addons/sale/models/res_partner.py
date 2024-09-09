@@ -1,14 +1,18 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.osv import expression
 
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    sale_order_count = fields.Integer(compute='_compute_sale_order_count', string='Sale Order Count')
+    sale_order_count = fields.Integer(
+        string="Sale Order Count",
+        groups='sales_team.group_sale_salesman',
+        compute='_compute_sale_order_count',
+    )
     sale_order_ids = fields.One2many('sale.order', 'partner_id', 'Sales Order')
     sale_warn = fields.Selection(WARNING_MESSAGE, 'Sales Warnings', default='no-message', help=WARNING_HELP)
     sale_warn_msg = fields.Text('Message for Sales Order')
@@ -18,6 +22,10 @@ class ResPartner(models.Model):
         return []
 
     def _compute_sale_order_count(self):
+        self.sale_order_count = 0
+        if not self.env.user._has_group('sales_team.group_sale_salesman'):
+            return
+
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search_fetch(
             [('id', 'child_of', self.ids)],
@@ -29,7 +37,6 @@ class ResPartner(models.Model):
         )
         self_ids = set(self._ids)
 
-        self.sale_order_count = 0
         for partner, count in sale_order_groups:
             while partner:
                 if partner.id in self_ids:
