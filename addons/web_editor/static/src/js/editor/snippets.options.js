@@ -8858,45 +8858,6 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
     },
     /**
-     * Saves current background position and enables overlay.
-     *
-     * @see this.selectClass for params
-     */
-    backgroundPositionOverlay: async function (previewMode, widgetValue, params) {
-        // Updates the internal image
-        await new Promise(resolve => {
-            this.img = document.createElement('img');
-            this.img.addEventListener('load', () => resolve());
-            this.img.src = getBgImageURL(this.$target[0]);
-        });
-
-        const position = this.$target.css('background-position').split(' ').map(v => parseInt(v));
-        const delta = this._getBackgroundDelta();
-        // originalPosition kept in % for when movement in one direction doesn't make sense
-        this.originalPosition = {
-            left: position[0],
-            top: position[1],
-        };
-        // Convert % values to pixels for current position because mouse movement is in pixels
-        this.currentPosition = {
-            left: position[0] / 100 * delta.x || 0,
-            top: position[1] / 100 * delta.y || 0,
-        };
-        // Make sure the element is in a visible area.
-        const rect = this.$target[0].getBoundingClientRect();
-        const viewportTop = $(window).scrollTop();
-        const viewportBottom = viewportTop + $(window).height();
-        const visibleHeight = rect.top < viewportTop
-            ? Math.max(0, Math.min(viewportBottom, rect.bottom) - viewportTop) // Starts above
-            : rect.top < viewportBottom
-                ? Math.min(viewportBottom, rect.bottom) - rect.top // Starts inside
-                : 0; // Starts after
-        if (visibleHeight < 200) {
-            await scrollTo(this.$target[0], { behavior: "smooth", offset: 50 });
-        }
-        this._toggleBgOverlay(true);
-    },
-    /**
      * @override
      */
     selectStyle: function (previewMode, widgetValue, params) {
