@@ -371,6 +371,18 @@ class Lang(models.Model):
         self.env.registry.clear_cache()
         return super(Lang, self).unlink()
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        for record, vals in zip(self, vals_list):
+            if "name" not in default:
+                vals["name"] = _("%s (copy)", record.name)
+            if "code" not in default:
+                vals["code"] = _("%s (copy)", record.code)
+            if "url_code" not in default:
+                vals["url_code"] = _("%s (copy)", record.url_code)
+        return vals_list
+
     def format(self, percent: str, value, grouping: bool = False) -> str:
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()
