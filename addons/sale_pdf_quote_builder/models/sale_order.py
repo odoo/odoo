@@ -50,7 +50,11 @@ class SaleOrder(models.Model):
 
     def get_update_included_pdf_params(self):
         if not self:
-            return {}
+            return {
+                'headers': {},
+                'files': {},
+                'footers': {},
+            }
         self.ensure_one()
         existing_mapping = (
             self.customizable_pdf_form_fields

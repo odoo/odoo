@@ -101,9 +101,20 @@
                                     </div>
                                     <div class="o_kanban_record_bottom flex-column" name="bottom">
                                         <div class="mt-2">
-                                            <span>Document type:</span>
+                                            <span class="pe-2">Document type:</span>
                                             <field
-                                                name="document_type" class="ms-2" widget="selection"
+                                                name="document_type" widget="selection"
+                                            />
+                                        </div>
+                                        <div
+                                            t-if="!!record.quotation_template_ids.raw_value.length"
+                                            class="mt-2"
+                                        >
+                                            <span class="pe-2">Templates:</span>
+                                            <field
+                                                name="quotation_template_ids"
+                                                class="d-inline-block"
+                                                widget="many2many_tags"
                                             />
                                         </div>
                                     </div>
