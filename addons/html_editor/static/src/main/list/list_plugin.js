@@ -248,7 +248,12 @@ export class ListPlugin extends Plugin {
             if (isProtected(element) || isProtecting(element)) {
                 continue;
             }
-            for (const fn of [this.liWithoutParentToP, this.mergeSimilarLists, this.normalizeLI]) {
+            for (const fn of [
+                this.liWithoutParentToP,
+                this.mergeSimilarLists,
+                this.normalizeLI,
+                this.normalizeNestedList,
+            ]) {
                 fn.call(this, element);
             }
         }
@@ -410,6 +415,20 @@ export class ListPlugin extends Plugin {
         if ([...element.children].some(isBlock)) {
             const cursors = this.shared.preserveSelection();
             wrapInlinesInBlocks(element, cursors);
+            cursors.restore();
+        }
+    }
+
+    normalizeNestedList(element) {
+        if (element.tagName === "LI") {
+            return;
+        }
+        if (["UL", "OL"].includes(element.parentElement?.tagName)) {
+            const cursors = this.shared.preserveSelection();
+            const li = this.document.createElement("li");
+            element.parentElement.insertBefore(li, element);
+            li.appendChild(element);
+            li.classList.add("oe-nested");
             cursors.restore();
         }
     }
