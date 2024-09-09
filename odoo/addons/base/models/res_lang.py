@@ -332,6 +332,16 @@ class Lang(models.Model):
 
         return formatted
 
+    def copy_data(self, default=None):
+        default = dict(default or {})
+
+        if "name" not in default:
+            default["name"] = _("%s (copy)", self.name)
+        if "code" not in default:
+            default["code"] = _("%s (copy)", self.code)
+        if "url_code" not in default:
+            default["url_code"] = _("%s (copy)", self.url_code)
+        return super().copy_data(default=default)
 
 def split(l, counts):
     """
