@@ -1056,7 +1056,7 @@ actual arch.
         return tree
 
     def _postprocess_features_to_cache(self, tree):
-        group_features = {'base.group_no_one'}
+        group_features = {'base.group_no_one', 'base.group_multi_company'}
         remove = {f'!{group}' for group in group_features}
         group_features |= remove
         for node in tree.xpath("//*[@groups]"):
@@ -1068,9 +1068,12 @@ actual arch.
 
     def _postprocess_features(self, tree):
         debug = request and request.session.debug
+        multi = len(self.env.user.company_ids) > 1
         group_features = {
             'base.group_no_one': debug,
             '!base.group_no_one': not debug,
+            'base.group_multi_company': multi,
+            '!base.group_multi_company': not multi,
         }
         for node in tree.xpath('//*[@__features__]'):
             features = node.attrib.pop('__features__')
