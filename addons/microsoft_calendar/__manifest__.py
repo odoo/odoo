@@ -15,6 +15,7 @@
         'views/microsoft_calendar_views.xml',
         ],
     'installable': True,
+    'auto_install': True,
     'post_init_hook': 'init_initiating_microsoft_uuid',
     'assets': {
         'web.assets_backend': [
