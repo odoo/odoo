@@ -66,8 +66,7 @@ class IrConfigParameter(models.Model):
     #     google translate;
     #   * 'mail.web_push_vapid_private_key' and 'mail.web_push_vapid_public_key':
     #     configuration parameters when using web push notifications;
-    #   * 'mail.use_twilio_rtc_servers', 'mail.sfu_server_url' and 'mail.
-    #     sfu_server_key': rtc server usage and configuration;
+    #   * 'mail.use_twilio_rtc_servers': rtc server usage and configuration;
     #   * 'discuss.tenor_api_key', 'discuss.tenor_gif_limit' and 'discuss.
     #     tenor_content_filter' used for gif fetch service;
     _inherit = 'ir.config_parameter'

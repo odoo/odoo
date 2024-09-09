@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import os
 from collections import defaultdict
 from datetime import date, datetime
 
@@ -17,21 +16,6 @@ def get_twilio_credentials(env) -> (str, str):
     account_sid = params.get_param("mail.twilio_account_sid")
     auth_token = params.get_param("mail.twilio_account_token")
     return account_sid, auth_token
-
-
-def get_sfu_url(env) -> str | None:
-    sfu_url = env['ir.config_parameter'].sudo().get_param("mail.sfu_server_url")
-    if not sfu_url:
-        sfu_url = os.getenv("ODOO_SFU_URL")
-    if sfu_url:
-        return sfu_url.rstrip("/")
-
-
-def get_sfu_key(env) -> str | None:
-    sfu_key = env['ir.config_parameter'].sudo().get_param('mail.sfu_server_key')
-    if not sfu_key:
-        return os.getenv("ODOO_SFU_KEY")
-    return sfu_key
 
 
 ids_by_model = defaultdict(lambda: ("id",))

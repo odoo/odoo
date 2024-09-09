@@ -17,7 +17,7 @@ import { callActionsRegistry } from "./call_actions";
 /**
  * @return {Promise<{ SfuClient: import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient, SFU_CLIENT_STATE: import("@mail/static/libs/odoo_sfu/odoo_sfu").SFU_CLIENT_STATE }>}
  */
-const loadSfuAssets = memoize(async () => await loadBundle("mail.assets_odoo_sfu"));
+const loadSfuAssets = memoize(async () => await loadBundle("rtc.assets_odoo_sfu"));
 
 const ORDERED_TRANSCEIVER_NAMES = ["audio", "screen", "camera"];
 export const CONNECTION_TYPES = { P2P: "p2p", SERVER: "server" };
@@ -321,7 +321,7 @@ export class Rtc extends Record {
         }
         try {
             await loadSfuAssets();
-            const sfuModule = odoo.loader.modules.get("@mail/../lib/odoo_sfu/odoo_sfu");
+            const sfuModule = odoo.loader.modules.get("@rtc/../lib/odoo_sfu/odoo_sfu");
             this.disconnectFromSfu();
             this.SFU_CLIENT_STATE = sfuModule.SFU_CLIENT_STATE;
             this.sfuClient = new sfuModule.SfuClient();

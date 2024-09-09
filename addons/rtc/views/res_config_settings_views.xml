@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.rtc</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@name='integration']" position="inside">
+                    <setting string="SFU server">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="sfu_server_url" string="URL" class="col-lg-3"/>
+                                <field name="sfu_server_url"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="sfu_server_key" string="Key" class="col-lg-3"/>
+                                <field name="sfu_server_key"/>
+                            </div>
+                        </div>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
