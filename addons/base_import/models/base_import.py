@@ -299,18 +299,17 @@ class Import(models.TransientModel):
             'required': False,
             'fields': [],
             'type': 'id',
+            'model_name': model,
         }]
         if not depth:
             return importable_fields
 
-        model_fields = Model.fields_get()
+        model_fields = Model.fields_get(
+            attributes=['string', 'required', 'type', 'readonly', 'relation'],
+        )
         blacklist = models.MAGIC_COLUMNS
         for name, field in model_fields.items():
             if name in blacklist:
-                continue
-            # an empty string means the field is deprecated, @deprecated must
-            # be absent or False to mean not-deprecated
-            if field.get('deprecated', False) is not False:
                 continue
             if field.get('readonly'):
                 continue
@@ -339,7 +338,6 @@ class Import(models.TransientModel):
 
             importable_fields.append(field_value)
 
-        # TODO: cache on model?
         return importable_fields
 
     def _filter_fields_by_types(self, model_fields_tree, header_types):
@@ -798,24 +796,17 @@ class Import(models.TransientModel):
             }
 
         if '/' not in header:
-            # Then, try exact match
-            if header:
-                field_rec = (
-                    self.env['ir.model.fields'].sudo().with_context(lang='en_US')
-                    .search([('field_description', '=', header)], limit=1)
-                    .with_env(self.env)
-                )
-                translated_header = (field_rec.sudo().field_description or header).lower()
-            else:
-                translated_header = ""
+            IrModelFieldsUs = self.with_context(lang='en_US').env['ir.model.fields']
             for field in fields_tree:
+                fname = field['name']
                 # exact match found based on the field technical name
-                if header.casefold() == field['name'].casefold():
+                if header.casefold() == fname.casefold():
                     break
-
-                field_string = field.get('string', '').casefold()
                 # match found using either user translation, either model defined field label
-                if translated_header == field_string or header.casefold() == field_string:
+                if header.casefold() == field['string'].casefold():
+                    break
+                field_strings_en = IrModelFieldsUs.get_field_string(field['model_name'])
+                if fname in field_strings_en and header.casefold() == field_strings_en[fname].casefold():
                     break
             else:
                 field = None
@@ -835,19 +826,24 @@ class Import(models.TransientModel):
             min_dist = 1
             min_dist_field = False
             for field in filtered_fields:
-                field_string = field.get('string', '').casefold()
-
+                fname = field['name']
                 # use string distance for fuzzy match only on most likely field types
-                name_field_dist = self._get_distance(header.casefold(), field['name'].casefold())
-                string_field_dist = self._get_distance(header.casefold(), field_string)
-                translated_string_field_dist = self._get_distance(translated_header.casefold(), field_string)
+                distances = [
+                    self._get_distance(header.casefold(), fname.casefold()),
+                    self._get_distance(header.casefold(), field['string'].casefold()),
+                ]
+
+                if field_string_en := IrModelFieldsUs.get_field_string(field['model_name']).get(fname):
+                    distances.append(
+                        self._get_distance(header.casefold(), field_string_en.casefold()),
+                    )
 
                 # Keep only the closest mapping suggestion. Note that in case of multiple mapping on the same field,
                 # a mapping suggestion could be canceled by another one that has a smaller distance on the same field.
                 # See 'deduplicate_mapping_suggestions' method for more info.
-                current_field_dist = min([name_field_dist, string_field_dist, translated_string_field_dist])
+                current_field_dist = min(distances)
                 if current_field_dist < min_dist:
-                    min_dist_field = field['name']
+                    min_dist_field = fname
                     min_dist = current_field_dist
 
             if min_dist < self.FUZZY_MATCH_DISTANCE:
