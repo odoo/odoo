@@ -106,6 +106,7 @@ export class LinkPlugin extends Plugin {
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
     /** @type { (p: LinkPlugin) => Record<string, any> } */
     static resources = (p) => ({
+        onBeforeInput: { handler: p.onBeforeInput.bind(p), sequence: 10 },
         toolbarCategory: {
             id: "link",
             sequence: 40,
@@ -165,11 +166,6 @@ export class LinkPlugin extends Plugin {
             if (ev.target.tagName === "A" && ev.target.isContentEditable) {
                 ev.preventDefault();
                 this.toggleLinkTools({ link: ev.target });
-            }
-        });
-        this.addDomListener(this.editable, "keydown", (ev) => {
-            if (ev.key === "Enter" || ev.key === " ") {
-                this.handleAutomaticLinkInsertion();
             }
         });
         // link creation is added to the command service because of a shortcut conflict,
@@ -492,6 +488,15 @@ export class LinkPlugin extends Plugin {
         }
     }
 
+    onBeforeInput(ev) {
+        if (
+            ev.inputType === "insertParagraph" ||
+            ev.inputType === "insertLineBreak" ||
+            (ev.inputType === "insertText" && ev.data === " ")
+        ) {
+            this.handleAutomaticLinkInsertion();
+        }
+    }
     /**
      * Inserts a link in the editor. Called after pressing space or (shif +) enter.
      * Performs a regex check to determine if the url has correct syntax.
