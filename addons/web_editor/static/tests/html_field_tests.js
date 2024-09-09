@@ -268,9 +268,9 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             resModel: "partner",
             serverData,
             arch: `
-                <tree editable="top">
+                <list editable="top">
                     <field name="txt" widget="html_legacy"/>
-                </tree>`,
+                </list>`,
             mockRPC(route, args) {
                 if (args.method === "web_save" && args.model === 'partner') {
                     assert.equal(args.args[1].txt, expectedValue);

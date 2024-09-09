@@ -158,7 +158,7 @@ class ProjectProject(models.Model):
             action_window.update({
                 'domain': [('id', 'in', all_sale_order_lines.ids)],
                 'views': [
-                    (self.env.ref('sale_project.view_order_line_tree_with_create').id, 'tree'),
+                    (self.env.ref('sale_project.view_order_line_tree_with_create').id, 'list'),
                     (self.env.ref('sale_project.sale_order_line_view_form_editable').id, 'form'),
                 ],
             })
@@ -193,7 +193,7 @@ class ProjectProject(models.Model):
         else:
             action_window.update({
                 "domain": [('id', 'in', all_sale_orders.ids)],
-                "views": [[False, "tree"], [False, "kanban"], [False, "calendar"], [False, "pivot"],
+                "views": [[False, "list"], [False, "kanban"], [False, "calendar"], [False, "pivot"],
                            [False, "graph"], [False, "activity"], [False, "form"]],
             })
         return action_window
@@ -201,7 +201,7 @@ class ProjectProject(models.Model):
     def action_get_list_view(self):
         action = super().action_get_list_view()
         if self.allow_billable:
-            action['views'] = [(self.env.ref('sale_project.project_milestone_view_tree').id, 'tree'), (False, 'form')]
+            action['views'] = [(self.env.ref('sale_project.project_milestone_view_tree').id, 'list'), (False, 'form')]
         return action
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
@@ -272,7 +272,7 @@ class ProjectProject(models.Model):
             'name': _('Invoices'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
-            'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
+            'views': [[False, 'list'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', invoice_ids)],
             'context': {
                 'default_move_type': 'out_invoice',
@@ -822,7 +822,7 @@ class ProjectProject(models.Model):
             'name': _('Vendor Bills'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
-            'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
+            'views': [[False, 'list'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', vendor_bill_ids)],
             'context': {
                 'default_move_type': 'in_invoice',

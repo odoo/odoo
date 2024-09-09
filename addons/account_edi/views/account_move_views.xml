@@ -5,12 +5,12 @@
         <record id="account_edi.action_open_edi_documents" model="ir.actions.act_window">
             <field name="name">Electronic invoicing</field>
             <field name="res_model">account.edi.document</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="domain">[('move_id', '=', active_id), ('error', '!=', False)]</field>
         </record>
 
         <record id="view_out_invoice_tree_inherit" model="ir.ui.view">
-            <field name="name">account.move.tree.inherit</field>
+            <field name="name">account.move.list.inherit</field>
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_out_invoice_tree" />
             <field name="arch" type="xml">
@@ -27,7 +27,7 @@
         </record>
 
         <record id="view_out_credit_note_tree_inherit" model="ir.ui.view">
-            <field name="name">account.move.tree.inherit</field>
+            <field name="name">account.move.list.inherit</field>
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_out_credit_note_tree" />
             <field name="arch" type="xml">
@@ -40,7 +40,7 @@
         </record>
 
         <record id="view_in_invoice_refund_tree_inherit" model="ir.ui.view">
-            <field name="name">account.move.tree.inherit</field>
+            <field name="name">account.move.list.inherit</field>
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_in_invoice_refund_tree" />
             <field name="arch" type="xml">
@@ -137,7 +137,7 @@
                           groups="base.group_no_one"
                           invisible="not edi_document_ids">
                         <field name="edi_document_ids">
-                            <tree create="false" delete="false" edit="false" decoration-danger="error" no_open="1">
+                            <list create="false" delete="false" edit="false" decoration-danger="error" no_open="1">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>
                                 <field name="state"/>
@@ -149,7 +149,7 @@
                                         string="Download"
                                         groups="base.group_no_one"
                                         invisible="not error or blocking_level == 'info'"/>
-                            </tree>
+                            </list>
                         </field>
                     </page>
                 </xpath>

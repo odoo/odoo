@@ -26,10 +26,10 @@
         </record>
 
         <record id="report_pos_order_view_tree" model="ir.ui.view">
-            <field name="name">report.pos.order.view.tree</field>
+            <field name="name">report.pos.order.view.list</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
-                <tree string="Point of Sale Analysis">
+                <list string="Point of Sale Analysis">
                     <field name="date"/>
                     <field name="order_id" optional="hide"/>
                     <field name="partner_id" optional="hide"/>
@@ -39,7 +39,7 @@
                     <field name="company_id" optional="show" groups="base.group_multi_company"/>
                     <field name="price_total" optional="show"/>
                     <field name="state" optional="show"/>
-                </tree>
+                </list>
             </field>
         </record>
 

@@ -256,7 +256,7 @@ test.tags("desktop")("Can pass domain to search more", async () => {
         { id: 8, name: "Helen" },
         { id: 9, name: "Ivy" },
     );
-    Partner._views["list,false"] = /* xml */ `<tree><field name="name"/></tree>`;
+    Partner._views["list,false"] = /* xml */ `<list><field name="name"/></list>`;
     Partner._views["search,false"] = /* xml */ `<search/>`;
     await mountMultiRecordSelector({
         resModel: "partner",

@@ -18,10 +18,10 @@
     </record>
 
     <record id="slide_slide_partner_view_tree" model="ir.ui.view">
-        <field name="name">slide.slide.partner.view.tree</field>
+        <field name="name">slide.slide.partner.view.list</field>
         <field name="model">slide.slide.partner</field>
         <field name="arch" type="xml">
-            <tree string="Attendees" create="0" delete="0">
+            <list string="Attendees" create="0" delete="0">
                 <field name="create_date" string="Accessed on"/>
                 <field name="partner_id"/>
                 <field name="slide_id" optional="hide"/>
@@ -31,7 +31,7 @@
                     sum="# Total Attempts"/>
                 <field name="vote" readonly="1"
                     sum="# Likes"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -62,7 +62,7 @@
     <record id="slide_slide_partner_action_from_slide" model="ir.actions.act_window">
         <field name="name">Attendees</field>
         <field name="res_model">slide.slide.partner</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="search_view_id" ref="website_slides.slide_slide_partner_view_search"/>
         <field name="context">{'default_slide_id': active_id}</field>
         <field name="domain">[('slide_id', '=', active_id)]</field>

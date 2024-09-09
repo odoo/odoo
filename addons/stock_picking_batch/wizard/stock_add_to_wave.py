@@ -55,7 +55,7 @@ class StockPickingToWave(models.TransientModel):
             'name': _('Add Operations'),
             'type': 'ir.actions.act_window',
             'view_mode': 'list',
-            'views': [(view.id, 'tree')],
+            'views': [(view.id, 'list')],
             'res_model': 'stock.move.line',
             'target': 'new',
             'domain': [

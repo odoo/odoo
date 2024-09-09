@@ -24,17 +24,17 @@
         </record>
 
         <record id="crm_activity_report_view_tree" model="ir.ui.view">
-            <field name="name">crm.activity.report.tree</field>
+            <field name="name">crm.activity.report.list</field>
             <field name="model">crm.activity.report</field>
             <field name="arch" type="xml">
-                <tree default_order="date desc">
+                <list default_order="date desc">
                     <field name="date"/>
                     <field name="author_id" widget="many2one_avatar"/>
                     <field name="mail_activity_type_id"/>
                     <field name="body" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="tag_ids" string="Lead Tags" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -83,7 +83,7 @@
        <record id="crm_activity_report_action" model="ir.actions.act_window">
            <field name="name">Activities</field>
            <field name="res_model">crm.activity.report</field>
-           <field name="view_mode">graph,pivot,tree</field>
+           <field name="view_mode">graph,pivot,list</field>
            <field name="context">{
                 'search_default_completion_date': 1,
                 'pivot_column_groupby': ['subtype_id', 'mail_activity_type_id'],
@@ -104,7 +104,7 @@
         <record id="crm_activity_report_action_team" model="ir.actions.act_window">
             <field name="name">Pipeline Activities</field>
             <field name="res_model">crm.activity.report</field>
-            <field name="view_mode">graph,pivot,tree</field>
+            <field name="view_mode">graph,pivot,list</field>
             <field name="context">{'search_default_team_id': active_id}</field>
             <field name="domain">[]</field>
             <field name="help" type="html">

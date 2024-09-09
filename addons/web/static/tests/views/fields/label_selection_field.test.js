@@ -66,11 +66,11 @@ test("LabelSelectionField in editable list view", async () => {
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="selection" widget="label_selection"
                 options="{'classes': {'normal': 'secondary', 'blocked': 'warning','done': 'success'}}"/>
-            </tree>`,
+            </list>`,
     });
 
     expect(".o_field_widget .badge:not(:empty)").toHaveCount(3, {

@@ -260,7 +260,7 @@ class StockLot(models.Model):
             action.update({
                 'name': _("Delivery orders of %s", self.display_name),
                 'domain': [('id', 'in', self.delivery_ids.ids)],
-                'view_mode': 'tree,form'
+                'view_mode': 'list,form'
             })
         return action
 

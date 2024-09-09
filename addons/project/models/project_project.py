@@ -761,8 +761,8 @@ class Project(models.Model):
             'name': _("%(name)s's Milestones", name=self.name),
             'domain': [('project_id', '=', self.id)],
             'res_model': 'project.milestone',
-            'views': [(self.env.ref('project.project_milestone_view_tree').id, 'tree')],
-            'view_mode': 'tree',
+            'views': [(self.env.ref('project.project_milestone_view_tree').id, 'list')],
+            'view_mode': 'list',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     No milestones found. Let's create one!

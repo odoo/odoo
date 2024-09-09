@@ -139,7 +139,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     // test if clicking on last button redirects to records in list view
-    QUnit.test("redirect to tree view and discards edits when clicking on last button with more than 3 records on field", async function (assert) {
+    QUnit.test("redirect to list view and discards edits when clicking on last button with more than 3 records on field", async function (assert) {
         assert.expect(3);
         const form = await makeView({
             resModel: "account.move",

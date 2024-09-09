@@ -3,17 +3,17 @@
 
 	<!-- EVENT.TYPE.TICKET -->
 	<record id="event_type_ticket_view_tree_from_type" model="ir.ui.view">
-        <field name="name">event.type.ticket.view.tree.from.type</field>
+        <field name="name">event.type.ticket.view.list.from.type</field>
         <field name="model">event.type.ticket</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
-            <tree string="Event Template Tickets" editable="bottom">
+            <list string="Event Template Tickets" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="description" optional="hide"/>
                 <field name="seats_max"/>
                 <field name="seats_limited"/>
-            </tree>
+            </list>
         </field>
 	</record>
 
@@ -36,13 +36,13 @@
     </record>
 
     <record id="event_type_ticket_view_tree" model="ir.ui.view">
-        <field name="name">event.type.ticket.view.tree</field>
+        <field name="name">event.type.ticket.view.list</field>
         <field name="model">event.type.ticket</field>
         <field name="inherit_id" ref="event_type_ticket_view_tree_from_type"/>
         <field name="mode">primary</field>
         <field name="priority" eval="10"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="editable"></attribute>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
@@ -66,11 +66,11 @@
 
     <!-- EVENT.TICKET -->
     <record id="event_event_ticket_view_tree_from_event" model="ir.ui.view">
-        <field name="name">event.event.ticket.view.tree.from.event</field>
+        <field name="name">event.event.ticket.view.list.from.event</field>
         <field name="model">event.event.ticket</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
-            <tree string="Tickets" editable="bottom">
+            <list string="Tickets" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="description" optional="hide"/>
@@ -79,7 +79,7 @@
                 <field name="seats_max" sum="Total" width="105px" string="Maximum"/>
                 <field name="seats_taken" sum="Total" width="105px" string="Registration"/>
                 <field name="color" widget="color" optional="hidden"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -125,13 +125,13 @@
     </record>
 
     <record id="event_event_ticket_view_tree" model="ir.ui.view">
-        <field name="name">event.event.ticket.view.tree</field>
+        <field name="name">event.event.ticket.view.list</field>
         <field name="model">event.event.ticket</field>
         <field name="inherit_id" ref="event_event_ticket_view_tree_from_event"/>
         <field name="mode">primary</field>
         <field name="priority" eval="10"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="editable"></attribute>
             </xpath>
             <field name="name" position="after">

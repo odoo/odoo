@@ -171,7 +171,7 @@ class AccountMoveReversal(models.TransientModel):
             })
         else:
             action.update({
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
                 'domain': [('id', 'in', moves_to_redirect.ids)],
             })
             if len(set(moves_to_redirect.mapped('move_type'))) == 1:

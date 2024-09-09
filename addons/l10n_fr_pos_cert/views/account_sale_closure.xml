@@ -3,7 +3,7 @@
         <field name="name">Sales Closings</field>
         <field name="model">account.sale.closing</field>
         <field name="arch" type="xml">
-            <tree create="false" import="false">
+            <list create="false" import="false">
                 <field name="date_closing_start"/>
                 <field name="date_closing_stop"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -12,7 +12,7 @@
                 <field name="sequence_number" groups="base.group_no_one"/>
                 <field name="total_interval"/>
                 <field name="cumulative_total"/>
-            </tree>
+            </list>
         </field>
     </record>
 

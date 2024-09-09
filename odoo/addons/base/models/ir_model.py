@@ -2646,7 +2646,7 @@ class WizardModelMenu(models.TransientModel):
             vals = {
                 'name': menu.name,
                 'res_model': model.model,
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
             }
             action_id = self.env['ir.actions.act_window'].create(vals)
             self.env['ir.ui.menu'].create({

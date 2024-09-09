@@ -68,7 +68,7 @@ class ProductDocument(models.Model):
             'name': _('Form Fields'),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.pdf.form.field',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'context': {
                 'default_document_type': 'product_document',
                 'default_product_document_ids': self.id,

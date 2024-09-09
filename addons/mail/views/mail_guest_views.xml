@@ -2,17 +2,17 @@
 <odoo>
 
     <record id="mail_guest_view_tree" model="ir.ui.view">
-        <field name="name">mail.guest.tree</field>
+        <field name="name">mail.guest.list</field>
         <field name="model">mail.guest</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Guests">
+            <list string="Guests">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="country_id"/>
                 <field name="lang"/>
                 <field name="timezone"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -41,7 +41,7 @@
     <record id="mail_guest_action" model="ir.actions.act_window">
         <field name="name">Guests</field>
         <field name="res_model">mail.guest</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>

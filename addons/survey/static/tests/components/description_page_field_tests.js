@@ -66,11 +66,11 @@ QUnit.module("DescriptionPageField", (hooks) => {
                 arch: `
                 <form>
                     <field name="lines" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" widget="survey_description_page"/>
                             <field name="random_questions_count" />
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,

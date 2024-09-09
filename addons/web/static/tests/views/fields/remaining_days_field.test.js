@@ -30,7 +30,7 @@ test("RemainingDaysField on a date field in list view", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree><field name="date" widget="remaining_days" /></tree>`,
+        arch: /* xml */ `<list><field name="date" widget="remaining_days" /></list>`,
     });
 
     const cells = queryAll(".o_data_cell");
@@ -92,7 +92,7 @@ test.tags("desktop")("RemainingDaysField on a date field in multi edit list view
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree multi_edit="1"><field name="date" widget="remaining_days" /></tree>`,
+        arch: /* xml */ `<list multi_edit="1"><field name="date" widget="remaining_days" /></list>`,
     });
 
     const cells = queryAll(".o_data_cell");
@@ -143,7 +143,7 @@ test.tags("desktop")(
         await mountView({
             type: "list",
             resModel: "partner",
-            arch: /* xml */ `<tree multi_edit="1"><field name="date" widget="remaining_days" /></tree>`,
+            arch: /* xml */ `<list multi_edit="1"><field name="date" widget="remaining_days" /></list>`,
         });
 
         const cells = queryAll(".o_data_cell");
@@ -282,7 +282,7 @@ test("RemainingDaysField on a datetime field in list view in UTC", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree><field name="datetime" widget="remaining_days" /></tree>`,
+        arch: /* xml */ `<list><field name="datetime" widget="remaining_days" /></list>`,
     });
 
     expect(queryAllTexts(".o_data_cell")).toEqual([
@@ -322,7 +322,7 @@ test("RemainingDaysField on a datetime field in list view in UTC+6", async () =>
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree><field name="datetime" widget="remaining_days" /></tree>`,
+        arch: /* xml */ `<list><field name="datetime" widget="remaining_days" /></list>`,
     });
 
     expect(queryAllTexts(".o_data_cell")).toEqual([
@@ -349,7 +349,7 @@ test("RemainingDaysField on a date field in list view in UTC-6", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree><field name="date" widget="remaining_days" /></tree>`,
+        arch: /* xml */ `<list><field name="date" widget="remaining_days" /></list>`,
     });
     expect(queryAllTexts(".o_data_cell")).toEqual([
         "Today",
@@ -375,7 +375,7 @@ test("RemainingDaysField on a datetime field in list view in UTC-8", async () =>
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree><field name="datetime" widget="remaining_days" /></tree>`,
+        arch: /* xml */ `<list><field name="datetime" widget="remaining_days" /></list>`,
     });
 
     expect(queryAllTexts(".o_data_cell")).toEqual([

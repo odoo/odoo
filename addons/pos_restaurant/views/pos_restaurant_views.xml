@@ -17,7 +17,7 @@
                             <field name="background_color" groups="base.group_no_one" />
                         </group>
                         <field name="table_ids">
-                            <tree string='Tables' editable="bottom">
+                            <list string='Tables' editable="bottom">
                                 <field name="table_number" />
                                 <field name="seats" />
                                 <field name="shape" />
@@ -25,7 +25,7 @@
                                 <field name="width" optional="hide" />
                                 <field name="color" widget="color" optional="hide" />
                                 <field name="active" optional="hide" />
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>
@@ -36,11 +36,11 @@
             <field name="name">Restaurant Floors</field>
             <field name="model">restaurant.floor</field>
             <field name="arch" type="xml">
-                <tree string="Restaurant Floors">
+                <list string="Restaurant Floors">
                     <field name="sequence" widget="handle" />
                     <field name="name" />
                     <field name="pos_config_ids" widget="many2many_tags"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -75,7 +75,7 @@
         <record id="action_restaurant_floor_form" model="ir.actions.act_window">
             <field name="name">Floor Plans</field>
             <field name="res_model">restaurant.floor</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new restaurant floor

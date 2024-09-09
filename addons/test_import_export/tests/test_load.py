@@ -20,7 +20,7 @@ def moreaction(**kwargs):
         target='new',
         context={'create': False},
         name='Possible Values',
-        view_mode='tree,form',
+        view_mode='list,form',
         views=[(False, 'list'), (False, 'form')],
         help="See all possible values",
     )

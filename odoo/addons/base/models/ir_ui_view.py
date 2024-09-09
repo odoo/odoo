@@ -1483,7 +1483,7 @@ actual arch.
         self._validate_tag_form(node, name_manager, node_info)
         if not node_info['validate']:
             return
-        # inline tree views inside form views aren't rng validated, so we must validate the
+        # inline list views inside form views aren't rng validated, so we must validate the
         # editable attribute in python
         editable_attr = node.get("editable")
         if editable_attr and editable_attr not in ["top", "bottom"]:

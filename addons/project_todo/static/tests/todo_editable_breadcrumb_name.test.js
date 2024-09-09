@@ -24,10 +24,10 @@ defineTodoModels();
 beforeEach(() => {
     ProjectTask._views = {
         list: `
-            <tree js_class="todo_list">
+            <list js_class="todo_list">
                 <field name="name" nolabel="1"/>
                 <field name="state" widget="todo_done_checkmark" nolabel="1"/>
-            </tree>`,
+            </list>`,
         form: `
             <form string="To-do" class="o_todo_form_view" js_class="todo_form">
                 <field name="name"/>

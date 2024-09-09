@@ -52,16 +52,16 @@
     </record>
 
     <record model="ir.ui.view" id="utm_campaign_view_tree">
-        <field name="name">utm.campaign.view.tree</field>
+        <field name="name">utm.campaign.view.list</field>
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
-            <tree string="UTM Campaigns" multi_edit="1" sample="1">
+            <list string="UTM Campaigns" multi_edit="1" sample="1">
                 <field name="title" string="Name" readonly="1"/>
                 <field name="name" column_invisible="True"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="stage_id" decoration-bf="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -135,7 +135,7 @@
     <record id="utm_campaign_action" model="ir.actions.act_window">
         <field name="name">Campaigns</field>
         <field name="res_model">utm.campaign</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a campaign

@@ -49,7 +49,7 @@
             <field name="model">account.analytic.account</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Analytic Accounts" multi_edit="1">
+                <list string="Analytic Accounts" multi_edit="1">
                     <field name="company_id" column_invisible="True"/>
                     <field name="currency_id" column_invisible="True"/>
                     <field name="name" string="Name"/>
@@ -61,7 +61,7 @@
                     <field name="debit" sum="Debit" column_invisible="True"/>
                     <field name="credit" sum="Credit" column_invisible="True"/>
                     <field name="balance" sum="Balance"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -72,9 +72,9 @@
             <field eval="18" name="priority"/>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
             <field name="arch" type="xml">
-                <tree position="attributes">
+                <list position="attributes">
                     <attribute name="multi_edit">0</attribute>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -118,7 +118,7 @@
         <record id="action_analytic_account_form" model="ir.actions.act_window">
             <field name="name">Chart of Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="view_account_analytic_account_search"/>
             <field name="context">{'search_default_active':1}</field>
             <field name="view_id" ref="view_account_analytic_account_list"/>
@@ -134,7 +134,7 @@
             <field name="res_model">account.analytic.account</field>
             <field name="search_view_id" ref="view_account_analytic_account_search"/>
             <field name="context">{'search_default_active':1}</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Add a new analytic account

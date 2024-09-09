@@ -3519,7 +3519,7 @@ test("quick create record and click Edit, name_create fails", async () => {
             </templates>
         </kanban>`;
     Partner._views["search,false"] = "<search/>";
-    Partner._views["list,false"] = '<tree><field name="foo"/></tree>';
+    Partner._views["list,false"] = '<list><field name="foo"/></list>';
     Partner._views["form,false"] = `
         <form>
             <field name="product_id"/>
@@ -7209,7 +7209,7 @@ test.tags("desktop")("sample data does not change after reload with sample data"
         </kanban>`;
     Partner._views["search,false"] = "<search/>";
     // list-view so that there is a view switcher, unused
-    Partner._views["list,false"] = '<tree><field name="foo"/></tree>';
+    Partner._views["list,false"] = '<list><field name="foo"/></list>';
 
     onRpc("web_read_group", function ({ kwargs, parent }) {
         const result = parent();

@@ -394,10 +394,10 @@ test("list activity widget: batch selection from list", async (assert) => {
     ]);
     const views = {
         "res.partner,false,list": `
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="activity_ids" widget="list_activity"/>
-            </tree>`,
+            </list>`,
     };
     const { env, openView } = await start({
         serverData: { views },
@@ -524,9 +524,9 @@ test("list activity exception widget with activity", async () => {
     });
     const views = {
         "res.users,false,list": `
-            <tree>
+            <list>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         `,
     };
     const { openView } = await start({ serverData: { views } });

@@ -97,7 +97,7 @@ class FleetVehicleModel(models.Model):
         self.ensure_one()
         context = {'default_model_id': self.id}
         if self.vehicle_count:
-            view_mode = 'kanban,tree,form'
+            view_mode = 'kanban,list,form'
             name = _('Vehicles')
             context['search_default_model_id'] = self.id
         else:

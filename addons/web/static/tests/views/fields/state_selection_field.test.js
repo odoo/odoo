@@ -168,10 +168,10 @@ test("StateSelectionField for list view with hide_label option", async () => {
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
-            <tree>
+            <list>
                 <field name="graph_type" widget="state_selection" options="{'hide_label': True}"/>
                 <field name="selection" widget="state_selection" options="{'hide_label': False}"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -202,10 +202,10 @@ test("StateSelectionField in editable list view", async () => {
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="selection" widget="state_selection"/>
-            </tree>
+            </list>
         `,
     });
 

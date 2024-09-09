@@ -2,7 +2,7 @@
 
 <odoo>
     <record id="product_supplierinfo_replenishment_tree_view" model="ir.ui.view">
-        <field name="name">product.supplierinfo.replenishment.tree.view</field>
+        <field name="name">product.supplierinfo.replenishment.list.view</field>
         <field name="model">product.supplierinfo</field>
         <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
         <field name="mode">primary</field>
@@ -14,7 +14,7 @@
                 <button name="action_set_supplier" type="object" string="Set as Supplier" class="btn btn-link"
                         invisible="not show_set_supplier_button"/>
             </field>
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="decoration-bf">parent.supplierinfo_id == id</attribute>
             </xpath>
             <field name="min_qty" position="attributes">
@@ -37,7 +37,7 @@
             <xpath expr="//page" position="before">
                 <page string="Vendors" name="page_vendors">
                     <field name="supplierinfo_id" invisible="1"/>
-                    <field name="supplierinfo_ids" readonly="1" context="{'tree_view_ref': 'purchase_stock.product_supplierinfo_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
+                    <field name="supplierinfo_ids" readonly="1" context="{'list_view_ref': 'purchase_stock.product_supplierinfo_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
                 </page>
             </xpath>
         </field>

@@ -238,7 +238,7 @@ class PaymentTransaction(models.Model):
             action['res_id'] = refund_tx.id
             action['view_mode'] = 'form'
         else:
-            action['view_mode'] = 'tree,form'
+            action['view_mode'] = 'list,form'
             action['domain'] = [('source_transaction_id', '=', self.id)]
         return action
 

@@ -419,7 +419,7 @@ test(`filter panel autocomplete: updates when typing`, async () => {
 
 test(`check the avatar of the attendee in the calendar filter panel`, async () => {
     CalendarPartner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         search: `<search/>`,
     };
     CalendarPartner._records.push(
@@ -462,7 +462,7 @@ test(`check the avatar of the attendee in the calendar filter panel`, async () =
 
 test(`Select multiple attendees in the calendar filter panel autocomplete`, async () => {
     CalendarPartner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         search: `<search/>`,
     };
     CalendarPartner._records.push(
@@ -533,7 +533,7 @@ test(`Select multiple attendees in the calendar filter panel autocomplete`, asyn
 
 test(`add a filter with the search more dialog`, async () => {
     CalendarPartner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         search: `<search/>`,
     };
     CalendarPartner._records.push(
@@ -3993,10 +3993,10 @@ test("sample data are not removed when switching back from calendar view", async
     Event._views = {
         calendar: `<calendar date_start="start" date_stop="stop" mode="day"/>`,
         list: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="start"/>
                 <field name="stop"/>
-            </tree>
+            </list>
         `,
         search: `<search/>`,
     };
@@ -4077,10 +4077,10 @@ test(`Retaining the 'all' filter value on re-rendering`, async () => {
             </calendar>
         `,
         list: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="start"/>
                 <field name="stop"/>
-            </tree>
+            </list>
         `,
         search: `<search/>`,
     };
@@ -4129,10 +4129,10 @@ test("save selected date during view switching", async () => {
     Event._views = {
         calendar: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
         list: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="start"/>
                 <field name="stop"/>
-            </tree>
+            </list>
         `,
         search: `<search />`,
     };

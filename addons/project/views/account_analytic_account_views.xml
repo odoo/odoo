@@ -24,10 +24,10 @@
         <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
         <field name="priority">40</field>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="js_class">analytic_account_list_view</attribute>
             </xpath>
-            <xpath expr="//tree" position="inside">
+            <xpath expr="//list" position="inside">
                 <field name="project_count" column_invisible="1"/>
             </xpath>
         </field>

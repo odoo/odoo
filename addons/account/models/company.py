@@ -479,7 +479,7 @@ class ResCompany(models.Model):
             if draft_entries:
                 error_msg = _('There are still draft entries in the period you want to hard lock. You should either post or delete them.')
                 action_error = {
-                    'view_mode': 'tree',
+                    'view_mode': 'list',
                     'name': _('Draft Entries'),
                     'res_model': 'account.move',
                     'type': 'ir.actions.act_window',
@@ -540,7 +540,7 @@ class ResCompany(models.Model):
                     'name': _('Journal Entries to Hash'),
                     'res_model': 'account.move',
                     'domain': [('id', 'in', move_ids)],
-                    'views': [(False, 'tree'), (False, 'form')],
+                    'views': [(False, 'list'), (False, 'form')],
                 }
                 if len(move_ids) == 1:
                     action.update({

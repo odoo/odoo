@@ -45,7 +45,7 @@ class GamificationBadge(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Granted Employees',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': 'kanban,list,form',
             'res_model': 'hr.employee.public',
             'domain': [('id', 'in', employee_ids)]
         }

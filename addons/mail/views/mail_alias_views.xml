@@ -55,10 +55,10 @@
 
         <!-- Alias List View -->
         <record  model="ir.ui.view" id="mail_alias_view_tree">
-            <field name="name">mail.alias.view.tree</field>
+            <field name="name">mail.alias.view.list</field>
             <field name="model">mail.alias</field>
             <field name="arch" type="xml">
-                <tree string="Alias">
+                <list string="Alias">
                     <field name="alias_name"/>
                     <field name="alias_domain_id"/>
                     <field name="alias_model_id"/>
@@ -78,7 +78,7 @@
                     <button name="open_parent_document" type="object"
                             string="Open Owner" icon="fa-sitemap"
                             invisible="not alias_parent_model_id or alias_parent_thread_id == 0"/>
-                </tree>
+                </list>
             </field>
         </record>
 

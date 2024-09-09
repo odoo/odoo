@@ -714,7 +714,7 @@ class ResPartner(models.Model):
                 'name': _("Partners"),
                 'type': 'ir.actions.act_window',
                 'res_model': 'res.partner',
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
                 'views': [(False, 'list'), (False, 'form')],
                 'domain': [('id', 'in', bank_partners.partner_id.ids)],
             }

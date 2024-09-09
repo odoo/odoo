@@ -13,7 +13,7 @@
                     <field name="total_amount_currency_original" invisible="1"/>
                     <field name="expense_id" invisible="1"/>
                     <field name="expense_split_line_ids" widget="one2many" context="{'default_expense_id': expense_id}">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="currency_id" column_invisible="True"/>
                             <field name="expense_id" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
@@ -28,7 +28,7 @@
                                 optional="show"
                                 groups="analytic.group_analytic_accounting"/>
                             <field name="total_amount_currency" force_save="1" readonly="product_has_cost"/>
-                        </tree>
+                        </list>
                     </field>
                     <field name="currency_id" invisible="1"/>
                     <group class="oe_subtotal_footer" colspan="2" name="expense_total">

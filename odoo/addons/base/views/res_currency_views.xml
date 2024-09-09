@@ -12,17 +12,17 @@
         </record>
 
         <record id="view_currency_rate_tree" model="ir.ui.view">
-            <field name="name">res.currency.rate.tree</field>
+            <field name="name">res.currency.rate.list</field>
             <field name="model">res.currency.rate</field>
             <field name="arch" type="xml">
-                <tree string="Currency Rates" editable="bottom">
+                <list string="Currency Rates" editable="bottom">
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_rate" digits="[12,12]"/>
                     <field name="inverse_company_rate" digits="[12,12]"/>
                     <field name="rate" digits="[12,12]" optional="hide"/>
                     <field name="write_date" optional="hide"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -52,7 +52,7 @@
         <record id="act_view_currency_rates" model="ir.actions.act_window">
             <field name="name">Show Currency Rates</field>
             <field name="res_model">res.currency.rate</field>
-            <field name='view_mode'>tree,form</field>
+            <field name='view_mode'>list,form</field>
             <field name='view_id' ref='view_currency_rate_tree'/>
             <field name="domain">[('currency_id','=', active_id)]</field>
             <field name="context">{'default_currency_id': active_id}</field>
@@ -80,10 +80,10 @@
         </record>
 
         <record id="view_currency_tree" model="ir.ui.view">
-            <field name="name">res.currency.tree</field>
+            <field name="name">res.currency.list</field>
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
-                <tree string="Currencies" decoration-muted="(not active)">
+                <list string="Currencies" decoration-muted="(not active)">
                     <field name="name"/>
                     <field name="symbol"/>
                     <field name="full_name" string="Name" optional="show"/>
@@ -91,7 +91,7 @@
                     <field name="rate" digits="[12,6]"/>
                     <field name="inverse_rate" digits="[12,6]" optional="hide"/>
                     <field name="active" widget="boolean_toggle"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -164,14 +164,14 @@
                         <notebook class="o_currency_rate_list" invisible="is_current_company_currency">
                             <page string="Rates" name="rates">
                                 <field name="rate_ids" widget="one2many">
-                                    <tree string="Rates"  editable="top" limit="25">
+                                    <list string="Rates"  editable="top" limit="25">
                                         <field name="name"/>
                                         <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="company_rate" digits="[12,12]"/>
                                         <field name="inverse_company_rate" digits="[12,12]"/>
                                         <field name="rate" digits="[12,12]" optional="hide"/>
                                         <field name="write_date" optional="hide"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -183,7 +183,7 @@
         <record id="action_currency_form" model="ir.actions.act_window">
             <field name="name">Currencies</field>
             <field name="res_model">res.currency</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
             <field name="context">{'active_test': False}</field>
         </record>

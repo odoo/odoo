@@ -32,10 +32,10 @@ test("in a list view", async () => {
         resModel: "localization",
         resId: 1,
         arch: /*xml*/ `
-            <tree string="Localizations" editable="top">
+            <list string="Localizations" editable="top">
                 <field name="tz_offset" column_invisible="True"/>
                 <field name="country" widget="timezone_mismatch" />
-            </tree>
+            </list>
         `,
     });
     expect("td:contains(Belgium)").toHaveCount(1);

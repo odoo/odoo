@@ -56,7 +56,7 @@ class MailingSubscription(models.Model):
         action = {
             'name': _('Mailing Contacts'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', self.contact_id.ids)],
             'res_model': 'mailing.contact',
         }

@@ -23,20 +23,20 @@
                             <field name="step_type"/>
                             <field name="triggering_answer_ids" widget="chatbot_triggering_answers_widget"
                                     options="{'no_create': True}">
-                                <tree>
+                                <list>
                                     <!-- added only to correctly fetch the display_name for the tag display -->
                                     <field name="display_name" column_invisible="True"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                         <group>
                             <field name="answer_ids" invisible="step_type != 'question_selection'" nolabel="1">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="display_name" column_invisible="True"/>
                                     <field name="name"/>
                                     <field name="redirect_link" string="Optional Link"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </group>
@@ -46,16 +46,16 @@
     </record>
 
     <record id="chatbot_script_step_view_tree" model="ir.ui.view">
-        <field name="name">chatbot.script.step.view.tree</field>
+        <field name="name">chatbot.script.step.view.list</field>
         <field name="model">chatbot.script.step</field>
         <field name="arch" type="xml">
-            <tree default_order="sequence asc">
+            <list default_order="sequence asc">
                 <field name="sequence" widget="handle"/>
                 <field name="message"/>
                 <field name="step_type"/>
                 <field name="answer_ids" widget="many2many_tags"/>
                 <field name="triggering_answer_ids" widget="many2many_tags"/>
-            </tree>
+            </list>
         </field>
     </record>
 

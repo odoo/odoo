@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <odoo>
     <record id="mail_group_moderation_view_tree" model="ir.ui.view">
-        <field name="name">mail.group.moderation.view.tree</field>
+        <field name="name">mail.group.moderation.view.list</field>
         <field name="model">mail.group.moderation</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <tree string="Moderation Lists" editable="bottom" sample="1">
+            <list string="Moderation Lists" editable="bottom" sample="1">
                 <field name="mail_group_id"/>
                 <field name="email"/>
                 <field name="status"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record id="mail_group_moderation_view_search" model="ir.ui.view">
@@ -35,7 +35,7 @@
     <record id="mail_group_moderation_action" model="ir.actions.act_window">
         <field name="name">Moderation</field>
         <field name="res_model">mail.group.moderation</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="mail_group_moderation_view_search"/>
     </record>
 </odoo>

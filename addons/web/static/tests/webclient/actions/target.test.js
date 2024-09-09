@@ -50,8 +50,8 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "list,false": `<tree><field name="display_name"/></tree>`,
-        "list,2": `<tree limit="3"><field name="display_name"/></tree>`,
+        "list,false": `<list><field name="display_name"/></list>`,
+        "list,2": `<list limit="3"><field name="display_name"/></list>`,
         "search,false": `<search/>`,
     };
 }

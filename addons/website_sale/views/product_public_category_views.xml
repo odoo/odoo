@@ -22,21 +22,21 @@
     </record>
 
     <record id="product_public_category_tree_view" model="ir.ui.view">
-        <field name="name">product.public.category.tree</field>
+        <field name="name">product.public.category.list</field>
         <field name="model">product.public.category</field>
         <field name="arch" type="xml">
-            <tree string="Product Public Categories">
+            <list string="Product Public Categories">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="website_id" groups="website.group_multi_website"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="product_public_category_action" model="ir.actions.act_window">
         <field name="name">eCommerce Categories</field>
         <field name="res_model">product.public.category</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" eval="False"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

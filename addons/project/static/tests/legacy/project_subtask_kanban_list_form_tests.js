@@ -65,11 +65,11 @@ QUnit.module('Subtask Kanban List tests', {
             "project.task,false,form":
                 `<form>
                     <field name="child_ids" widget="subtasks_one2many">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="display_in_project" force_save="1"/>
                             <field name="project_id" widget="project"/>
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`
         };

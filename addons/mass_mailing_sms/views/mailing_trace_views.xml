@@ -14,7 +14,7 @@
     </record>
 
     <record id="mailing_trace_view_tree" model="ir.ui.view">
-        <field name="name">mailing.trace.view.tree.inherit.sms</field>
+        <field name="name">mailing.trace.view.list.inherit.sms</field>
         <field name="model">mailing.trace</field>
         <field name="inherit_id" ref="mass_mailing.mailing_trace_view_tree"/>
         <field name="arch" type="xml">
@@ -28,11 +28,11 @@
     </record>
 
     <record id="mailing_trace_view_tree_sms" model="ir.ui.view">
-        <field name="name">mailing.trace.view.tree.sms</field>
+        <field name="name">mailing.trace.view.list.sms</field>
         <field name="model">mailing.trace</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <tree string="SMS Traces" create="0">
+            <list string="SMS Traces" create="0">
                 <field name="mass_mailing_id"/>
                 <field name="sms_number"/>
                 <field name="sent_datetime"/>
@@ -43,7 +43,7 @@
                 <field name="reply_datetime" optional="hide"/>
                 <button name="action_view_contact" type="object"
                         string="Open Recipient" icon="fa-user"/>
-            </tree>
+            </list>
         </field>
     </record>
 

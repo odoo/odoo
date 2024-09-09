@@ -24,17 +24,17 @@
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_line_id" string="Sales Order Item" options='{"no_open": True}' readonly="1" invisible="not partner_id" context="{'create': False, 'edit': False, 'delete': False}"/>
             </xpath>
-            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="after">
+            <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="after">
                 <field name="allow_billable" column_invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="after">
+            <xpath expr="//field[@name='depend_on_ids']/list/field[@name='partner_id']" position="after">
                 <field name="allow_billable" column_invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
+            <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="attributes">
                 <attribute name="column_invisible">not parent.allow_billable</attribute>
                 <attribute name="invisible">not allow_billable</attribute>
             </xpath>
-            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="attributes">
+            <xpath expr="//field[@name='depend_on_ids']/list/field[@name='partner_id']" position="attributes">
                 <attribute name="column_invisible">not parent.allow_billable</attribute>
                 <attribute name="invisible">not allow_billable</attribute>
             </xpath>
@@ -42,7 +42,7 @@
     </record>
 
     <record id="project_sharing_inherit_project_task_view_tree" model="ir.ui.view">
-        <field name="name">project.task.view.tree.inherit</field>
+        <field name="name">project.task.view.list.inherit</field>
         <field name="model">project.task</field>
         <field name="priority">300</field>
         <field name="inherit_id" ref="project.project_sharing_project_task_view_tree"/>

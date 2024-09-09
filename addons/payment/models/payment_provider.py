@@ -423,7 +423,7 @@ class PaymentProvider(models.Model):
             'type': 'ir.actions.act_window',
             'name': _("Payment Methods"),
             'res_model': 'payment.method',
-            'view_mode': 'tree,kanban,form',
+            'view_mode': 'list,kanban,form',
             'domain': [('id', 'in', self.with_context(active_test=False).payment_method_ids.ids)],
             'context': {'active_test': False, 'create': False},
         }

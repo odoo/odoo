@@ -101,14 +101,14 @@
         </field>
     </record>
     <record id="hr_accrual_plan_view_tree" model="ir.ui.view">
-        <field name="name">hr.leave.accrual.plan.tree</field>
+        <field name="name">hr.leave.accrual.plan.list</field>
         <field name="model">hr.leave.accrual.plan</field>
         <field name="arch" type="xml">
-            <tree string="Accrual Plans">
+            <list string="Accrual Plans">
                 <field name="name"/>
                 <field name="level_count"/>
                 <field name="employees_count"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record id="hr_accrual_plan_view_form" model="ir.ui.view">
@@ -257,7 +257,7 @@
     <record id="open_view_accrual_plans" model="ir.actions.act_window">
         <field name="name">Accrual Plans</field>
         <field name="res_model">hr.leave.accrual.plan</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>

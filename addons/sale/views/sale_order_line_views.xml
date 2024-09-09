@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="view_order_line_tree" model="ir.ui.view">
-        <field name="name">sale.order.line.tree</field>
+        <field name="name">sale.order.line.list</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
-            <tree string="Sales Order Lines" create="false">
+            <list string="Sales Order Lines" create="false">
                 <field name="order_id"/>
                 <field name="order_partner_id"/>
                 <field name="name"/>
@@ -17,7 +17,7 @@
                 <field name="product_uom" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="price_subtotal" sum="Total" widget="monetary"/>
                 <field name="currency_id" column_invisible="True"/>
-            </tree>
+            </list>
         </field>
     </record>
 

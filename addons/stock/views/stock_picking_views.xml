@@ -76,10 +76,10 @@
         </record>
 
         <record id="vpicktree" model="ir.ui.view">
-            <field name="name">stock.picking.tree</field>
+            <field name="name">stock.picking.list</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree string="Picking list" multi_edit="1" sample="1" js_class="stock_list_view">
+                <list string="Picking list" multi_edit="1" sample="1" js_class="stock_list_view">
                     <header>
                         <button name="do_unreserve" type="object" string="Unreserve"/>
                         <button name="action_assign" type="object" string="Check Availability"/>
@@ -115,7 +115,7 @@
                            decoration-warning="state not in ('draft','cancel','done','assigned')"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="json_popover" widget="stock_rescheduling_popover" nolabel="1" invisible="not json_popover"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -259,12 +259,12 @@
                     <field name="picking_properties" columns="2"/>
                     <notebook>
                         <page string="Operations" name="operations">
-                            <field name="move_ids_without_package" mode="tree,kanban"
+                            <field name="move_ids_without_package" mode="list,kanban"
                                 widget="stock_move_one2many"
                                 readonly="state == 'done' and is_locked"
                                 context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}"
                                 add-label="Add a Product">
-                                <tree decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
+                                <list decoration-muted="scrapped == True or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="name" column_invisible="True"/>
                                     <field name="state" readonly="0" column_invisible="True"/>
@@ -319,7 +319,7 @@
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
-                                </tree>
+                                </list>
                             </field>
                             <field name="id" invisible="1"/>
                             <field name="package_level_ids" context="{'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}" invisible="not picking_type_entire_packs" readonly="state == 'done'" />
@@ -404,7 +404,7 @@
         <record id="action_picking_tree_all" model="ir.actions.act_window">
             <field name="name">Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0]}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -414,7 +414,7 @@
             <field name="name">Receipts</field>
             <field name="res_model">stock.picking</field>
             <field name="path">receipts</field>
-            <field name="view_mode">tree,kanban,form,calendar,activity</field>
+            <field name="view_mode">list,kanban,form,calendar,activity</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'incoming', 'search_default_reception': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -424,7 +424,7 @@
             <field name="name">Deliveries</field>
             <field name="res_model">stock.picking</field>
             <field name="path">deliveries</field>
-            <field name="view_mode">tree,kanban,form,calendar,activity</field>
+            <field name="view_mode">list,kanban,form,calendar,activity</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'outgoing', 'search_default_delivery': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -433,7 +433,7 @@
         <record id="action_picking_tree_internal" model="ir.actions.act_window">
             <field name="name">Internal Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'internal', 'search_default_internal': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
@@ -553,7 +553,7 @@
         <record id="action_picking_tree_ready" model="ir.actions.act_window">
             <field name="name">To Do</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
        </record>
@@ -561,7 +561,7 @@
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
             <field name="name">Waiting Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_waiting': 1}</field>
         </record>
@@ -569,7 +569,7 @@
         <record id="action_picking_tree_late" model="ir.actions.act_window">
             <field name="name">Late Transfers</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_planning_issues': 1}</field>
         </record>
@@ -577,7 +577,7 @@
         <record id="action_picking_tree_backorder" model="ir.actions.act_window">
             <field name="name">Backorders</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,kanban,form,calendar</field>
+            <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_backorder': 1}</field>
         </record>
@@ -645,7 +645,7 @@
             <field name="name">Operations</field>
             <field name="res_model">stock.move.line</field>
             <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('stock.view_move_line_tree_detailed')})]"/>
+                (0, 0, {'view_mode': 'list', 'view_id': ref('stock.view_move_line_tree_detailed')})]"/>
             <field name="domain">[('picking_type_id', '=', active_id), ('picking_id', '!=', False)]</field>
             <field name="context">{
                 'search_default_todo': '1',
@@ -677,7 +677,7 @@
         <record id="do_view_pickings" model="ir.actions.act_window">
             <field name="name">Transfers for Groups</field>
             <field name="res_model">stock.picking</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="domain">[('group_id','=',active_id)]</field>
         </record>
         <record id="stock_split_picking" model="ir.actions.server">

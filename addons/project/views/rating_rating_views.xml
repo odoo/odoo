@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="rating_rating_view_tree_project" model="ir.ui.view">
-        <field name="name">rating.rating.tree.project</field>
+        <field name="name">rating.rating.list.project</field>
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_tree"/>
         <field name="mode">primary</field>
@@ -153,7 +153,7 @@
     <record id="rating_rating_action_view_project_rating" model="ir.actions.act_window">
         <field name="name">Ratings</field>
         <field name="res_model">rating.rating</field>
-        <field name="view_mode">kanban,tree,graph,pivot,form</field>
+        <field name="view_mode">kanban,list,graph,pivot,form</field>
         <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id', '=', active_id)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
@@ -172,7 +172,7 @@
 
     <record id="rating_rating_action_view_project_rating_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="rating_rating_action_view_project_rating"/>
         <field name="view_id" ref="rating_rating_view_tree_project"/>
     </record>
@@ -201,7 +201,7 @@
     <record id="rating_rating_action_task" model="ir.actions.act_window">
         <field name="name">Ratings</field>
         <field name="res_model">rating.rating</field>
-        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="view_mode">kanban,list,pivot,graph,form</field>
         <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
@@ -223,7 +223,7 @@
 
     <record id="rating_rating_action_task_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="rating_rating_action_task"/>
         <field name="view_id" ref="rating_rating_view_tree_project"/>
     </record>
@@ -252,7 +252,7 @@
     <record id="rating_rating_action_project_report" model="ir.actions.act_window">
         <field name="name">Customer Ratings</field>
         <field name="res_model">rating.rating</field>
-        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="view_mode">kanban,list,pivot,graph,form</field>
         <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
@@ -278,7 +278,7 @@
 
     <record id="rating_rating_action_project_report_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="rating_rating_action_project_report"/>
         <field name="view_id" ref="rating_rating_view_tree_project"/>
     </record>

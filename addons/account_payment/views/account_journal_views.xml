@@ -17,7 +17,7 @@
                         invisible="not payment_provider_id"
                         groups="base.group_system"/>
             </xpath>
-            <xpath expr="//field[@name='inbound_payment_method_line_ids']/tree" position="attributes">
+            <xpath expr="//field[@name='inbound_payment_method_line_ids']/list" position="attributes">
                 <attribute name="decoration-muted">payment_provider_state == 'disabled'</attribute>
             </xpath>
         </field>

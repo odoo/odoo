@@ -81,7 +81,7 @@ class ResConfigSettings(models.TransientModel):
         return {
             "type": "ir.actions.act_window",
             "res_model": "pos_self_order.custom_link",
-            "views": [[False, "tree"]],
+            "views": [[False, "list"]],
             "domain": ['|', ['pos_config_ids', 'in', self.pos_config_id.id], ["pos_config_ids", "=", False]],
         }
 

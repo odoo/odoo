@@ -1024,7 +1024,7 @@ class IrActionsReport(models.Model):
                 'name': _('Problematic record(s)'),
                 'res_model': report_sudo.model,
                 'domain': [('id', 'in', error_record_ids)],
-                'views': [(False, 'tree'), (False, 'form')],
+                'views': [(False, 'list'), (False, 'form')],
             }
             num_errors = len(error_record_ids)
             if num_errors == 1:

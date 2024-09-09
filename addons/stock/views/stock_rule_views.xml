@@ -43,17 +43,17 @@
 
         <!-- <Rules> -->
         <record id="view_stock_rule_tree" model="ir.ui.view">
-            <field name="name">stock.rule.tree</field>
+            <field name="name">stock.rule.list</field>
             <field name="model">stock.rule</field>
             <field name="arch" type="xml">
-                <tree string="Rules">
+                <list string="Rules">
                     <field name="action"/>
                     <field name="location_src_id" options="{'no_create': True}"/>
                     <field name="location_dest_id" options="{'no_create': True}"/>
                     <field name="route_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="name" optional="hide"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -137,7 +137,7 @@
         <record id="action_rules_form" model="ir.actions.act_window">
             <field name="name">Rules</field>
             <field name="res_model">stock.rule</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
 
         <menuitem action="action_rules_form" id="menu_action_rules_form"

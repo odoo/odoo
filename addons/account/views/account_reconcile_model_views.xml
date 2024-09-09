@@ -43,16 +43,16 @@
         </record>
 
         <record id="view_account_reconcile_model_tree" model="ir.ui.view">
-            <field name="name">account.reconcile.model.tree</field>
+            <field name="name">account.reconcile.model.list</field>
             <field name="model">account.reconcile.model</field>
             <field name="arch" type="xml">
-                <tree string="Bank Reconciliation Move Presets">
+                <list string="Bank Reconciliation Move Presets">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="rule_type"/>
                     <field name="auto_reconcile"/>
                     <field name="match_journal_ids" optional="hidden" widget="many2many_tags"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -183,7 +183,7 @@
                                     <field name="line_ids"
                                            default="{'default_model_id': self, 'default_company_id': self.company_id}"
                                            nolabel="1">
-                                        <tree editable="bottom">
+                                        <list editable="bottom">
                                             <field name="show_force_tax_included" column_invisible="True"/>
                                             <field name="company_id" column_invisible="True"/>
 
@@ -210,7 +210,7 @@
                                                    column_invisible="parent.rule_type == 'writeoff_button' and parent.counterpart_type != 'general'"
                                                    optional="hide"/>
                                             <field name="label"/>
-                                        </tree>
+                                        </list>
                                     </field>
                                 </group>
                             </page>
@@ -220,14 +220,14 @@
                                   invisible="rule_type not in ('invoice_matching', 'writeoff_suggestion')">
                                 <field name="partner_mapping_line_ids"
                                        nolabel="1">
-                                    <tree editable="bottom">
+                                    <list editable="bottom">
                                         <field name="company_id"/>
                                         <field name="payment_ref_regex"
                                                required="not narration_regex"/>
                                         <field name="narration_regex"
                                                required="not payment_ref_regex"/>
                                         <field name="partner_id"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -267,7 +267,7 @@
         <record id="action_account_reconcile_model" model="ir.actions.act_window">
             <field name="name">Reconciliation Models</field>
             <field name="res_model">account.reconcile.model</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="view_account_reconcile_model_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

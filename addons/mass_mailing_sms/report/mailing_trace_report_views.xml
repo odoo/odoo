@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="mailing_trace_report_sms_view_tree" model="ir.ui.view">
-        <field name="name">mailing.sms.trace.report.view.tree</field>
+        <field name="name">mailing.sms.trace.report.view.list</field>
         <field name="model">mailing.trace.report</field>
         <field name="inherit_id" ref="mass_mailing.mailing_trace_report_view_tree"/>
         <field name="priority" eval="50"/>
@@ -50,7 +50,7 @@
     <record id="mailing_trace_report_action_sms" model="ir.actions.act_window">
         <field name="name">SMS Marketing Analysis</field>
         <field name="res_model">mailing.trace.report</field>
-        <field name="view_mode">graph,pivot,tree</field>
+        <field name="view_mode">graph,pivot,list</field>
         <field name="domain">[('mailing_type', '=', 'sms')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -77,7 +77,7 @@
 
     <record id="mailing_trace_report_action_sms_view_tree" model="ir.actions.act_window.view">
         <field name="sequence">2</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="mailing_trace_report_action_sms"/>
         <field name="view_id" ref="mailing_trace_report_sms_view_tree"/>
     </record>

@@ -836,7 +836,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             }
         return {
             'type': 'ir.actions.act_window',
-            'view_mode': [[False, 'tree'], [False, 'form']],
+            'view_mode': [[False, 'list'], [False, 'form']],
             'domain': [('id', 'in', leave_ids.ids)],
             'res_model': 'hr.leave',
         }

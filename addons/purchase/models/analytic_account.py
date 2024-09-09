@@ -26,7 +26,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "purchase.order",
             "domain": [['id', 'in', purchase_orders.ids]],
             "name": _("Purchase Orders"),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }
         if len(purchase_orders) == 1:
             result['view_mode'] = 'form'

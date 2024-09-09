@@ -65,7 +65,7 @@ test("SelectionField in a list view", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: '<tree string="Colors" editable="top"><field name="color"/></tree>',
+        arch: '<list string="Colors" editable="top"><field name="color"/></list>',
     });
 
     expect(".o_data_row").toHaveCount(3);

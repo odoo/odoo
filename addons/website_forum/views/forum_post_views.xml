@@ -50,12 +50,12 @@
                 </group>
                 <group name="answers" string="Answers" invisible="parent_id">
                     <field name="child_ids" nolabel="1">
-                        <tree>
+                        <list>
                             <field name="create_uid" string="Answered by"/>
                             <field name="vote_count"/>
                             <field name="state"/>
                             <field name="is_correct"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </sheet>
@@ -103,11 +103,11 @@
 </record>
 
 <record id="forum_post_view_tree" model="ir.ui.view">
-    <field name="name">forum.post.view.tree</field>
+    <field name="name">forum.post.view.list</field>
     <field name="model">forum.post</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree js_class="website_pages_list" create="false" type="object" action="go_to_website" multi_edit="1">
+        <list js_class="website_pages_list" create="false" type="object" action="go_to_website" multi_edit="1">
             <field name="active" column_invisible="True"/>
             <field name="name"/>
             <field name="website_url"/>
@@ -123,7 +123,7 @@
             <field name="is_seo_optimized"/>
 
             <field name="website_id" groups="website.group_multi_website"/>
-        </tree>
+        </list>
     </field>
 </record>
 
@@ -165,9 +165,9 @@
 <record id="forum_post_action" model="ir.actions.act_window">
     <field name="name">Forum Post Pages</field>
     <field name="res_model">forum.post</field>
-    <field name="view_mode">tree,kanban,graph</field>
+    <field name="view_mode">list,kanban,graph</field>
     <field name="view_ids" eval="[(5, 0, 0),
-        (0, 0, {'view_mode': 'tree', 'view_id': ref('forum_post_view_tree')}),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('forum_post_view_tree')}),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('forum_post_view_kanban')}),
     ]"/>
     <field name="search_view_id" ref="forum_post_view_search"/>
@@ -182,14 +182,14 @@
 <record id="forum_post_action_favorites" model="ir.actions.act_window">
     <field name="name">Users favorite posts</field>
     <field name="res_model">forum.post</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">list,form</field>
     <field name="domain">[('forum_id', '=', active_id), ('favourite_count', '>', 0), ('state', 'in', ('active', 'close'))]</field>
 </record>
 
 <record id="forum_post_action_forum_main" model="ir.actions.act_window">
     <field name="name">Posts</field>
     <field name="res_model">forum.post</field>
-    <field name="view_mode">tree,form</field>
+    <field name="view_mode">list,form</field>
     <field name="domain">[('forum_id', '=', active_id), ('parent_id', '=', False), ('state', 'in', ('active', 'close'))]</field>
 </record>
 

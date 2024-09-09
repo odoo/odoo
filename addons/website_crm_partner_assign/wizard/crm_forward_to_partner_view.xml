@@ -16,13 +16,13 @@
                         </group>
                     </group>
                     <field name="assignation_lines" invisible="forward_type in ['single', False]">
-                        <tree create="false" editable="bottom">
+                        <list create="false" editable="bottom">
                             <field name="lead_id" readonly="1" force_save="1" />
                             <field name="lead_location" readonly="1"/>
                             <field name="partner_assigned_id"/>
                             <field name="partner_location" readonly="1"/>
                             <field name="lead_link" column_invisible="True"/>
-                        </tree>
+                        </list>
                     </field>
                     <notebook colspan="4" groups="base.group_no_one">
                         <page string="Email Template" name="email_template">

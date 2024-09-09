@@ -37,10 +37,10 @@ test("HandleField in x2m", async () => {
         arch: /* xml */ `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="sequence" widget="handle" />
                         <field name="display_name" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -71,10 +71,10 @@ test("HandleField with falsy values", async () => {
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
-            <tree>
+            <list>
                 <field name="sequence" widget="handle" />
                 <field name="display_name" />
-            </tree>`,
+            </list>`,
     });
 
     expect(".o_row_handle:visible").toHaveCount(Partner._records.length, {
@@ -91,10 +91,10 @@ test("HandleField in a readonly one2many", async () => {
         arch: /* xml */ `
             <form>
                 <field name="p" readonly="1">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="sequence" widget="handle" />
                         <field name="display_name" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,

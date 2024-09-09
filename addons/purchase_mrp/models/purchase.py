@@ -39,7 +39,7 @@ class PurchaseOrder(models.Model):
             action.update({
                 'name': _("Manufacturing Source of %s", self.name),
                 'domain': [('id', 'in', mrp_production_ids)],
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
             })
         return action
 

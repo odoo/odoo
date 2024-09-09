@@ -220,7 +220,7 @@ class ProjectProject(models.Model):
             'domain': [('project_id', '!=', False)],
             'res_model': 'account.analytic.line',
             'view_id': False,
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'help': _("""
                 <p class="o_view_nocontent_smiling_face">
                     Record timesheets

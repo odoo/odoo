@@ -170,5 +170,5 @@ class ResConfigSettings(models.TransientModel):
             'domain': [('model', '=', 'sale.order')],
             'res_model': 'mail.template',
             'view_id': False,
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }

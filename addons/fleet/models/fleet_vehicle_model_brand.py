@@ -29,7 +29,7 @@ class FleetVehicleModelBrand(models.Model):
         self.ensure_one()
         view = {
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'fleet.vehicle.model',
             'name': 'Models',
             'context': {'search_default_brand_id': self.id, 'default_brand_id': self.id}

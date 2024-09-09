@@ -250,9 +250,9 @@
     <record model="ir.actions.act_window" id="action_hr_job_config">
         <field name="name">Job Positions</field>
         <field name="res_model">hr.job</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('hr.view_hr_job_tree')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('hr.view_hr_job_tree')}),
             (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr.hr_job_view_kanban')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('hr.view_hr_job_form')})]"/>
         <field name="context">{'search_default_in_recruitment': 1}</field>
@@ -308,11 +308,11 @@
         <field name="name">Job Positions</field>
         <field name="path">recruitement</field>
         <field name="res_model">hr.job</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="hr_recruitment.view_hr_job_kanban"/>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_recruitment.view_hr_job_kanban')}),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_recruitment.hr_job_view_tree_inherit')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('hr_recruitment.hr_job_view_tree_inherit')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('hr.view_hr_job_form')})]"/>
         <field name="context">{}</field>
         <field name="help" type="html">
@@ -359,21 +359,21 @@
     </record>
 
     <record id="hr_job_platform_tree" model="ir.ui.view">
-        <field name="name">hr.job.platform.tree</field>
+        <field name="name">hr.job.platform.list</field>
         <field name="model">hr.job.platform</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="email"/>
                 <field name="regex"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record model="ir.actions.act_window" id="action_hr_job_platforms">
         <field name="name">Emails</field>
         <field name="res_model">hr.job.platform</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No rules have been defined.

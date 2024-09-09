@@ -23,11 +23,11 @@
             <xpath expr="//notebook/page[@id='aml_tab']" position="before">
                 <page name="withholding_tab" string="TDS Information" invisible="not l10n_in_withholding_line_ids">
                     <field name="l10n_in_withholding_line_ids" nolabel="1" colspan="4">
-                        <tree editable="bottom" string="TDS Information">
+                        <list editable="bottom" string="TDS Information">
                             <field name="tax_ids" string="Tax" widget="many2many_tags"/>
                             <field name="price_subtotal" string="Base Amount" sum="Total"/>
                             <field name="l10n_in_withhold_tax_amount" string="TDS Amount" sum="Total"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </xpath>

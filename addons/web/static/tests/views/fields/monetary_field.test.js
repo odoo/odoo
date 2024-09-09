@@ -294,10 +294,10 @@ test("basic flow in editable list view - float field", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="float_field" widget="monetary"/>
                 <field name="currency_id" column_invisible="1"/>
-            </tree>`,
+            </list>`,
     });
 
     const dollarValues = queryAll("td:contains($)");
@@ -365,10 +365,10 @@ test("basic flow in editable list view - monetary field", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="monetary_field"/>
                 <field name="currency_id" column_invisible="1"/>
-            </tree>`,
+            </list>`,
     });
 
     const dollarValues = queryAll("td:contains($)");
@@ -508,10 +508,10 @@ test("should keep the focus when being edited in x2many lists", async () => {
     });
     Partner._views = {
         list: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="float_field" widget="monetary"/>
                 <field name="currency_id" invisible="1"/>
-            </tree>`,
+            </list>`,
     };
 
     await mountView({
@@ -558,11 +558,11 @@ test("MonetaryField with currency set by an onchange", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="int_field"/>
                 <field name="float_field" widget="monetary"/>
                 <field name="currency_id" invisible="1"/>
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_control_panel_main_buttons .o_list_button_add").click();

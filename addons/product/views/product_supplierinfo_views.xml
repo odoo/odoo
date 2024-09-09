@@ -85,10 +85,10 @@
     </record>
 
     <record id="product_supplierinfo_tree_view" model="ir.ui.view">
-        <field name="name">product.supplierinfo.tree.view</field>
+        <field name="name">product.supplierinfo.list.view</field>
         <field name="model">product.supplierinfo</field>
         <field name="arch" type="xml">
-            <tree string="Vendor Information" multi_edit="1">
+            <list string="Vendor Information" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="partner_id" readonly="1"/>
                 <field name="product_id" optional="hide"
@@ -110,14 +110,14 @@
                 <field name="discount" optional="hide"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="delay" optional="show"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="product_supplierinfo_type_action" model="ir.actions.act_window">
         <field name="name">Vendor Pricelists</field>
         <field name="res_model">product.supplierinfo</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="context">{'visible_product_tmpl_id': False, 'search_default_active_products': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

@@ -177,9 +177,9 @@ test.tags("desktop")("char field in editable list view", async () => {
         type: "list",
         resModel: "res.partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="name" />
-            </tree>`,
+            </list>`,
     });
 
     expect("tbody td:not(.o_list_record_selector)").toHaveCount(5, {
@@ -500,10 +500,10 @@ test.tags("desktop")("input field: change value before pending onchange returns"
         <form>
             <sheet>
                 <field name="partner_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="product_id" />
                         <field name="name" />
-                    </tree>
+                    </list>
                 </field>
             </sheet>
         </form>`,
@@ -594,11 +594,11 @@ test.tags("desktop")(
             arch: `
         <form>
             <field name="partner_ids">
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="product_id"/>
                     <field name="name"/>
                     <field name="int_field"/>
-                </tree>
+                </list>
             </field>
         </form>`,
         });
@@ -797,10 +797,10 @@ test.tags("desktop")("input field: set and remove value, then wait for onchange"
         arch: `
         <form>
             <field name="partner_ids">
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="product_id"/>
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </form>`,
     });
@@ -881,9 +881,9 @@ test("edit a char field should display the status indicator buttons without flic
         arch: `
         <form>
             <field name="partner_ids">
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </form>`,
     });

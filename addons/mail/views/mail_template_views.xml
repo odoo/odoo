@@ -113,10 +113,10 @@
         </record>
 
         <record model="ir.ui.view" id="email_template_tree">
-            <field name="name">email.template.tree</field>
+            <field name="name">email.template.list</field>
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
-                <tree string="Templates">
+                <list string="Templates">
                     <field name="mail_server_id" column_invisible="True"/>
                     <field name="name"/>
                     <field name="model_id" groups="base.group_no_one"/>
@@ -126,7 +126,7 @@
                     <field name="email_from" optional="hidden"/>
                     <field name="email_to" optional="hidden"/>
                     <field name="partner_to" optional="hidden"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -153,7 +153,7 @@
             <field name="name">Email Templates</field>
             <field name="res_model">mail.template</field>
             <field name="path">email-templates</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,list</field>
             <field name="view_id" ref="email_template_tree" />
             <field name="search_view_id" ref="view_email_template_search"/>
             <field name="context">{'search_default_base_templates': 1}</field>
