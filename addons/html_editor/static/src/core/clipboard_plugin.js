@@ -4,6 +4,7 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
+import { getTableCells } from "../utils/table";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -147,9 +148,7 @@ export class ClipboardPlugin extends Plugin {
             const isTableFullySelected =
                 (table.parentElement &&
                     !!closestElement(table.parentElement, "td.o_selected_td")) ||
-                [...table.querySelectorAll("td")]
-                    .filter((td) => closestElement(td, "table") === table)
-                    .every((td) => td.classList.contains("o_selected_td"));
+                getTableCells(table).every((td) => td.classList.contains("o_selected_td"));
             if (!isTableFullySelected) {
                 for (const td of tableClone.querySelectorAll("td:not(.o_selected_td)")) {
                     if (closestElement(td, "table") === tableClone) {
