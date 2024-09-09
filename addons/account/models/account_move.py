@@ -4113,6 +4113,67 @@ class AccountMove(models.Model):
             for key, mapping in res.items()
         }
 
+    @api.model
+    def _create_credit_note_for_early_payment_discount(self, aml_values_list, open_balance, group_payment=False):
+        invoice_ids = [aml_value['aml'].move_id.id for aml_value in aml_values_list]
+        invoices = self.env['account.move'].browse(invoice_ids)
+        move_type = 'out_refund' if any(invoice.is_sale_document() for invoice in invoices) else 'in_refund'
+        for invoice in invoices:
+            if not invoice.invoice_payment_term_id.early_pay_credit_note:
+                continue
+            if group_payment:
+                discount_percentage = invoice.invoice_payment_term_id.discount_percentage
+                open_balance = round(invoice.amount_total * (discount_percentage / 100), 2)
+            cash_discount_account = (
+                invoice.company_id.account_journal_early_pay_discount_loss_account_id
+                if invoice.is_inbound(include_receipts=True)
+                else invoice.company_id.account_journal_early_pay_discount_gain_account_id
+            )
+            total_amount = (
+                invoice.amount_total
+                if invoice.invoice_payment_term_id.early_pay_discount_computation == "included"
+                else invoice.amount_untaxed
+            )
+            discount_factor = open_balance / total_amount
+            credit_note_vals = {
+                'move_type': move_type,
+                'partner_id': invoice.partner_id.id,
+                'journal_id': invoice.journal_id.id,
+                'invoice_origin': invoice.name,
+                'reversed_entry_id': invoice.id,
+                'invoice_line_ids': [],
+            }
+            early_pay_computation = invoice.invoice_payment_term_id.early_pay_discount_computation
+
+            # Create credit note lines with early discount calculation
+            for line in invoice.invoice_line_ids:
+                discount_amount = line.price_subtotal * discount_factor
+                if not float_is_zero(discount_amount, precision_rounding=line.currency_id.rounding):
+                    credit_note_line_vals = {
+                        'name': "Early Discount: " + line.name,
+                        'account_id': cash_discount_account.id,
+                        'quantity': 1,
+                        'price_unit': discount_amount * (-1 if move_type == "in_refund" else 1),
+                        'tax_ids': [(6, 0, line.tax_ids.ids)] if early_pay_computation == 'included' else [],
+                    }
+                    credit_note_vals['invoice_line_ids'].append((0, 0, credit_note_line_vals))
+
+            if credit_note_vals['invoice_line_ids']:
+                credit_note = self.env['account.move'].create(credit_note_vals)
+                # Handle rounding issues (if needed)
+                remaining_unpaid_amount = round(open_balance - credit_note.amount_total, 2)
+                if remaining_unpaid_amount == 0.01 or remaining_unpaid_amount == -0.01:
+                    settlement_credit_note_line_vals = {
+                        'name': "Settlement Amount",
+                        'account_id': cash_discount_account.id,
+                        'quantity': 1,
+                        'price_unit': remaining_unpaid_amount * (-1 if move_type == "in_refund" else 1),
+                    }
+                    # Append the settlement line to the existing credit note
+                    credit_note.write({
+                        'invoice_line_ids': [(0, 0, settlement_credit_note_line_vals)]
+                    })
+
     def _affect_tax_report(self):
         return any(line._affect_tax_report() for line in (self.line_ids | self.invoice_line_ids))
 

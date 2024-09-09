@@ -1004,6 +1004,7 @@ class AccountPaymentRegister(models.TransientModel):
                 early_payment_values = self.env['account.move']._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
                 for aml_values_list in early_payment_values.values():
                     payment_vals['write_off_line_vals'] += aml_values_list
+                self.env['account.move']._create_credit_note_for_early_payment_discount(epd_aml_values_list, open_balance, self.group_payment)
 
             elif not self.currency_id.is_zero(self.payment_difference):
 
@@ -1086,6 +1087,7 @@ class AccountPaymentRegister(models.TransientModel):
                 ._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
             for aml_values_list in early_payment_values.values():
                 payment_vals['write_off_line_vals'] += aml_values_list
+            self.env['account.move']._create_credit_note_for_early_payment_discount(epd_aml_values_list, open_balance, self.group_payment)
 
         return payment_vals
 
