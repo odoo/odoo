@@ -11771,6 +11771,43 @@ test.tags("desktop")(
     }
 );
 
+test("new record, receive more create commands than limit", async () => {
+    Partner._fields.sequence = fields.Integer();
+    Partner._onChanges = {
+        p: function (obj) {
+            obj.p = [
+                [0, 0, { sequence: 1, display_name: "Record 1" }],
+                [0, 0, { sequence: 2, display_name: "Record 2" }],
+                [0, 0, { sequence: 3, display_name: "Record 3" }],
+                [0, 0, { sequence: 4, display_name: "Record 4" }],
+            ];
+        },
+    };
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="p">
+                        <list limit="2">
+                            <field name="sequence"/>
+                            <field name="display_name"/>
+                        </list>
+                    </field>
+                </group>
+            </form>`,
+    });
+
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual([
+        "Record 1",
+        "Record 2",
+        "Record 3",
+        "Record 4",
+    ]);
+    expect(".o_x2m_control_panel .o_pager").toHaveCount(0);
+});
+
 test("active actions are passed to o2m field", async () => {
     Partner._records[0].turtles = [1, 2, 3];
 
