@@ -504,12 +504,10 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         c_EUR = self.env.ref('base.europe')
         c_BENELUX = self.env['res.country.group'].create({
             'name': 'BeNeLux',
-            'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
+            'country_ids': [(6, 0, self.env.ref('base.be', 'base.lu', 'base.nl').ids)]
         })
 
-        self.BE = self.env.ref('base.be')
-        self.US = self.env.ref('base.us')
-        NL = self.env.ref('base.nl')
+        self.BE, self.US, NL = self.env.ref('base.be', 'base.us', 'base.nl')
         c_BE, c_NL = self.env['res.country.group'].create([
             {'name': 'Belgium', 'country_ids': [(6, 0, [self.BE.id])]},
             {'name': 'Netherlands', 'country_ids': [(6, 0, [NL.id])]},
