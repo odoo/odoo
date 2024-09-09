@@ -10,10 +10,10 @@ class ProjectProject(models.Model):
     _inherit = 'project.project'
 
     def _get_expenses_profitability_items(self, with_action=True):
-        expenses_read_group = self.env['hr.expense']._read_group(
+        expenses_read_group = self.env['hr.expense'].with_context(account_id=self.account_id.id)._read_group(
             [('state', 'in', ['posted', 'in_payment', 'paid']), ('analytic_distribution', 'in', self.account_id.ids)],
             groupby=['sale_order_id', 'product_id', 'currency_id'],
-            aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
+            aggregates=['id:array_agg', 'untaxed_amount_currency:analytic_sum'],
         )
         if not expenses_read_group:
             return {}
