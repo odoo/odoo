@@ -232,7 +232,7 @@ test("insert the response from ChatGPT translate dialog", async () => {
 
     // Expect to undo and redo the inserted text.
     editor.dispatch("HISTORY_UNDO");
-    expect(getContent(el)).toBe(`<p>[]Hello</p>`);
+    expect(getContent(el)).toBe(`<p>[Hello]</p>`);
     editor.dispatch("HISTORY_REDO");
     expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
 });

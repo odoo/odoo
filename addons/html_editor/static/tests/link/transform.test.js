@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, press } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent, setSelection } from "../_helpers/selection";
 import { insertText, undo } from "../_helpers/user_actions";
@@ -7,7 +7,8 @@ import { cleanLinkArtifacts } from "../_helpers/format";
 
 async function insertSpace(editor) {
     manuallyDispatchProgrammaticEvent(editor.editable, "keydown", { key: " " });
-    manuallyDispatchProgrammaticEvent(editor.editable, "input", {
+    // InputEvent is required to simulate the insert text.
+    manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
         inputType: "insertText",
         data: " ",
     });
@@ -37,6 +38,11 @@ async function insertSpace(editor) {
     setSelection({
         anchorNode: node,
         anchorOffset: offset,
+    });
+
+    manuallyDispatchProgrammaticEvent(editor.editable, "input", {
+        inputType: "insertText",
+        data: " ",
     });
 
     // KeyUpEvent is not required but is triggered like the browser would.
@@ -106,8 +112,10 @@ test("should transform url after enter", async () => {
     await testEditor({
         contentBefore: "<p>a http://test.com b http://test.com[] c http://test.com d</p>",
         stepFunction: async (editor) => {
-            press("enter");
-            editor.dispatch("SPLIT_BLOCK");
+            // Simulate "Enter"
+            manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+                inputType: "insertParagraph",
+            });
         },
         contentAfter:
             '<p>a http://test.com b <a href="http://test.com">http://test.com</a></p><p>[]&nbsp;c http://test.com d</p>',
@@ -118,8 +126,10 @@ test("should transform url after shift+enter", async () => {
     await testEditor({
         contentBefore: "<p>a http://test.com b http://test.com[] c http://test.com d</p>",
         stepFunction: async (editor) => {
-            press(["shift", "enter"]);
-            editor.dispatch("INSERT_LINEBREAK");
+            // Simulate "Shift + Enter"
+            manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+                inputType: "insertLineBreak",
+            });
         },
         contentAfter:
             '<p>a http://test.com b <a href="http://test.com">http://test.com</a><br>[]&nbsp;c http://test.com d</p>',
