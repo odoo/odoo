@@ -2921,10 +2921,11 @@ we-select.o_grid we-toggler {
                 outline: 6px solid transparent;
                 z-index: 1;
             }
-            &:hover {
+            &:hover, &:focus-visible {
                 box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
                 &::after {
                     outline: 6px solid $o-we-handles-accent-color;
+
                 }
             }
             &.o_snippet_preview_install {

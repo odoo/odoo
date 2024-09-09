@@ -173,13 +173,16 @@ export class AddSnippetDialog extends Component {
                 clonedSnippetEl = snippet.baseBody.cloneNode(true);
             }
             clonedSnippetEl.classList.remove("oe_snippet_body");
+            clonedSnippetEl.setAttribute("inert", "");
             const snippetPreviewWrapEl = document.createElement("div");
             snippetPreviewWrapEl.classList.add("o_snippet_preview_wrap", "position-relative", "fade");
             snippetPreviewWrapEl.dataset.snippetId = snippet.name;
             snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
+            snippetPreviewWrapEl.setAttribute("tabindex", "0");
             snippetPreviewWrapEl.appendChild(clonedSnippetEl);
-            this.__onSnippetPreviewClick = this._onSnippetPreviewClick.bind(this);
-            snippetPreviewWrapEl.addEventListener("click", this.__onSnippetPreviewClick);
+            this.__onSnippetPreviewSelect = this._onSnippetPreviewSelect.bind(this);
+            snippetPreviewWrapEl.addEventListener("click", this.__onSnippetPreviewSelect);
+            snippetPreviewWrapEl.addEventListener("keypress", this.__onSnippetPreviewSelect);
 
             // Add an "Install" button for installable snippets.
             if (snippet.installable) {
@@ -293,7 +296,10 @@ export class AddSnippetDialog extends Component {
         await Promise.all(linkPromises);
     }
 
-    _onSnippetPreviewClick(ev) {
+    _onSnippetPreviewSelect(ev) {
+        if (ev.key && ev.key !== "Enter") {
+            return;
+        }
         let selectedSnippetEl = ev.currentTarget.querySelector("[data-name]");
         const snippetKey = parseInt(ev.currentTarget.dataset.snippetKey);
         const moduleId = parseInt(selectedSnippetEl?.dataset.moduleId);
