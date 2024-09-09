@@ -1158,6 +1158,16 @@ class Session(collections.abc.MutableMapping):
         self.is_dirty = True
         return new_trace
 
+    @contextlib.contextmanager
+    def no_trace(self):
+        # The session will no longer trigger the generation of device logs.
+        # Must be effective on other transactions (not yet started).
+        self['_trace_disable'] = True
+        root.session_store.save(self)
+        yield
+        self.pop('_trace_disable', None)
+        root.session_store.save(self)
+
 
 # =========================================================
 # GeoIP
