@@ -1075,6 +1075,7 @@
                                                domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance')), ('company_id', 'parent_of', parent.company_id)]"
                                                required="display_type not in ('line_note', 'line_section')"/>
                                         <field name="analytic_distribution" widget="analytic_distribution"
+                                               string="Analytic"
                                                groups="analytic.group_analytic_accounting"
                                                optional="show"
                                                options="{'product_field': 'product_id', 'account_field': 'account_id', 'amount_field': 'price_subtotal'}"
