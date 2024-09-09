@@ -70,7 +70,7 @@ class ProjectTags(models.Model):
             # optimisation for large projects, we look first for tags present on the last 1000 tasks of said project.
             # when not enough results are found, we complete them with a fallback on a regular search
             tag_sql = SQL("""
-                SELECT DISTINCT project_tasks_tags.id
+                (SELECT DISTINCT project_tasks_tags.id
                 FROM (
                     SELECT rel.project_tags_id AS id
                     FROM project_tags_project_task_rel AS rel
@@ -80,7 +80,7 @@ class ProjectTags(models.Model):
                     ORDER BY task.id DESC
                     LIMIT 1000
                 ) AS project_tasks_tags
-            """, project_id=self.env.context['project_id'])
+            )""", project_id=self.env.context['project_id'])
             tags += self.search_fetch(expression.AND([[('id', 'in', tag_sql)], domain]), ['display_name'], limit=limit)
         if len(tags) < limit:
             tags += self.search_fetch(expression.AND([[('id', 'not in', tags.ids)], domain]), ['display_name'], limit=limit - len(tags))
