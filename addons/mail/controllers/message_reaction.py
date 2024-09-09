@@ -12,8 +12,8 @@ class MessageReactionController(http.Controller):
     @http.route("/mail/message/reaction", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def mail_message_reaction(self, message_id, content, action):
-        message = request.env["mail.message"].browse(int(message_id)).exists()
-        if not message._validate_access_for_current_persona("write"):
+        message = request.env["mail.message"]._get_with_access(int(message_id), "create")
+        if not message:
             raise NotFound()
         partner, guest = request.env["res.partner"]._get_current_persona()
         if not partner and not guest:
