@@ -3518,6 +3518,9 @@ class AccountMove(models.Model):
                         return True
                     continue
                 moves_to_hash = self.env['account.move'].sudo().search(domain, order='sequence_number')
+                unreconciled = False in moves_to_hash.statement_line_ids.mapped('is_reconciled')
+                if unreconciled:
+                    raise UserError(_("An error occurred when computing the inalterability. All entries have to be reconciled."))
                 if not moves_to_hash and force_hash and raise_if_no_document:
                     raise UserError(_(
                         "This move could not be locked either because "

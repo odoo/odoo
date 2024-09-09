@@ -671,3 +671,18 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
 
         with patch('odoo.addons.account.models.company.INTEGRITY_HASH_BATCH_SIZE', 12):
             self._verify_integrity(moves, "Entries are correctly hashed", moves[0], moves[-1], moves[0].journal_id.name)
+
+    def test_error_on_unreconciled_bank_statement_lines(self):
+        """
+        Check that an error is raised when we try to hash entries with unreconciled bank statement lines.
+        """
+        unreconciled_bank_statement_line = self.env['account.bank.statement.line'].create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': '2017-01-01',
+            'payment_ref': '2017_unreconciled',
+            'amount': 10.0,
+        })
+        unreconciled_move = unreconciled_bank_statement_line.move_id
+        unreconciled_move.journal_id.restrict_mode_hash_table = True
+        with self.assertRaisesRegex(UserError, "An error occurred when computing the inalterability. All entries have to be reconciled."), self.env.cr.savepoint():
+            unreconciled_move.button_hash()
