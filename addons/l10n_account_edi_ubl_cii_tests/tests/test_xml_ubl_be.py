@@ -90,8 +90,6 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
         })
 
-        cls.env.company.invoice_is_ubl_cii = True
-
         cls.pay_term = cls.env['account.payment.term'].create({
             'name': "2/7 Net 30",
             'note': "Payment terms: 30 Days, 2% Early Payment Discount under 7 days",
@@ -527,7 +525,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         ]
 
         invoice.action_post()
-        invoice._generate_pdf_and_send_invoice(self.move_template)
+        invoice._generate_and_send(mail_template_id=self.move_template.id)
 
         self.assertRecordValues(invoice, [{
             'amount_untaxed': 600.00,
@@ -875,13 +873,12 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 },
             ],
         )
-        wizard = self.create_send_and_print(invoice)
-        wizard._compute_send_mail_extra_fields()
+        self.assertEqual(self.partner_2.invoice_edi_format, 'ubl_bis3')
+        wizard = self.create_send_and_print(invoice, sending_methods=['manual'])
         self.assertRecordValues(wizard, [{
-            'mode': 'invoice_single',
-            'checkbox_ubl_cii_label': "BIS Billing 3.0",
-            'enable_ubl_cii_xml': True,
-            'checkbox_ubl_cii_xml': True,
+            'sending_methods': ['manual'],
+            'invoice_edi_format': 'ubl_bis3',
+            'extra_edi_checkboxes': False,
         }])
         self._assert_mail_attachments_widget(wizard, [
             {
@@ -910,12 +907,10 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self.assertEqual(len(invoice_attachments), 2)
 
         # Send again.
-        wizard = self.create_send_and_print(invoice)
+        wizard = self.create_send_and_print(invoice, sending_methods=['manual'])
         self.assertRecordValues(wizard, [{
-            'mode': 'invoice_single',
-            'checkbox_ubl_cii_label': 'BIS Billing 3.0',
-            'enable_ubl_cii_xml': False,
-            'checkbox_ubl_cii_xml': False,
+            'sending_methods': ['manual'],
+            'invoice_edi_format': 'ubl_bis3',
         }])
         self._assert_mail_attachments_widget(wizard, [
             {

@@ -51,6 +51,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'zip': '4000',
             'country_id': cls.env.ref('base.hu').id,
             'vat': '14933477-2-13',
+            'invoice_edi_format': False,
         })
         cls.partner_group_company_1 = cls.env['res.partner'].create({
             'name': 'MOL Nyrt.',
@@ -291,7 +292,8 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         """ Create an invoice, send it, and create a cancellation wizard for it. """
         invoice = self.create_invoice_simple()
         invoice.action_post()
-        send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+        send_and_print = self.create_send_and_print(invoice)
+        self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
         self.assertFalse(invoice._l10n_hu_edi_check_invoices())
         send_and_print.action_send_and_print()
         cancel_wizard = self.env['l10n_hu_edi.cancellation'].with_context({"default_invoice_id": invoice.id}).create({

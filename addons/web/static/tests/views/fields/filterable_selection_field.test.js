@@ -10,10 +10,13 @@ class Program extends models.Model {
             ["gift_card", "Gift card"],
         ],
     });
+    available_types = fields.Json({
+        required: true,
+    });
 
     _records = [
-        { id: 1, type: "coupon" },
-        { id: 2, type: "gift_card" },
+        { id: 1, type: "coupon", available_types: "['coupon', 'promotion']" },
+        { id: 2, type: "gift_card", available_types: "['gift_card', 'promotion']" },
     ];
 }
 defineModels([Program]);
@@ -72,6 +75,23 @@ test(`FilterableSelectionField test with invalid value`, async () => {
     await contains(`.o_field_widget[name="type"] select`).select(`"coupon"`);
     expect(`select option`).toHaveCount(3);
     expect(`.o_field_widget[name="type"] select option[value='"gift_card"']`).toHaveCount(0);
+    expect(`.o_field_widget[name="type"] select option[value='"coupon"']`).toHaveCount(1);
+    expect(`.o_field_widget[name="type"] select option[value='"promotion"']`).toHaveCount(1);
+});
+
+test(`FilterableSelectionField test whitelist_fname`, async () => {
+    await mountView({
+        resModel: "program",
+        type: "form",
+        arch: `
+            <form>
+                <field name="available_types" invisible="1"/>
+                <field name="type" widget="filterable_selection" options="{'whitelist_fname': 'available_types'}"/>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`select option`).toHaveCount(3);
     expect(`.o_field_widget[name="type"] select option[value='"coupon"']`).toHaveCount(1);
     expect(`.o_field_widget[name="type"] select option[value='"promotion"']`).toHaveCount(1);
 });

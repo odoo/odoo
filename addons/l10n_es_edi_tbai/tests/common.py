@@ -9,9 +9,10 @@ from unittest.mock import Mock
 
 from odoo.tools import file_open
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 
 
-class TestEsEdiTbaiCommon(AccountTestInvoicingCommon):
+class TestEsEdiTbaiCommon(TestAccountMoveSendCommon):
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('es')
@@ -41,6 +42,7 @@ class TestEsEdiTbaiCommon(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.be').id,
             'street': 'Rue Sans Souci 1',
             'zip': 93071,
+            'invoice_edi_format': False,
         })
 
         cls.partner_b.write({
@@ -117,12 +119,9 @@ class TestEsEdiTbaiCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def _get_invoice_send_wizard(cls, invoice):
-        option_vals = cls.env['account.move.send']._get_wizard_vals_restrict_to({
-            'l10n_es_tbai_checkbox_send': True,
-        })
-        out_invoice_send_wizard = cls.env['account.move.send']\
-                                        .with_context(active_model='account.move', active_ids=invoice.ids)\
-                                        .create(option_vals)
+        out_invoice_send_wizard = cls.env['account.move.send.wizard']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({})
         return out_invoice_send_wizard
 
     @classmethod

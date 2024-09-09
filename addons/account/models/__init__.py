@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import sequence_mixin
 from . import partner
 from . import res_partner_bank
@@ -15,6 +13,7 @@ from . import account_payment_term
 from . import account_move
 from . import account_move_line
 from . import account_move_line_tax_details
+from . import account_move_send
 from . import account_partial_reconcile
 from . import account_full_reconcile
 from . import account_payment
@@ -40,6 +39,7 @@ from . import ir_actions_report
 from . import ir_module
 from . import ir_ui_menu
 from . import mail_message
+from . import mail_template
 from . import mail_tracking_value
 from . import merge_partner_automatic
 from . import res_currency
