@@ -169,3 +169,51 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
                 'revenues': {'data': [], 'total': {'to_invoice': 0.0, 'invoiced': 0.0}},
             },
         )
+
+    def test_project_profitability_with_analytic_contribution(self):
+        """
+        Now analytic accouts allow analytic contribution in expenses. Thus the amount reflected in AAL
+        must be according the contribution set to multiple AA's.
+        """
+        analytic_account_project_bb = self.env['account.analytic.account'].create({
+            'name': 'Project - BB',
+            'code': 'BB-1234',
+            'plan_id': self.analytic_plan.id,
+        })
+        project_bb = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Project - BB',
+            'partner_id': self.partner.id,
+            'account_id': analytic_account_project_bb.id,
+        })
+        expense_contribution = self.env['hr.expense'].create({
+            'name': 'Test Contribution Expense',
+            'employee_id': self.expense_employee.id,
+            'total_amount_currency': 350.00,
+            'tax_ids': [],
+            'company_id': self.env.company.id,
+            'analytic_distribution': {
+                self.project.account_id.id: 75,
+                project_bb.account_id.id: 25,
+            },
+        })
+        expense_sheet = self.env["hr.expense.sheet"].create({
+            "name": "Expense for Test Contribution Expense",
+            "employee_id": self.expense_employee.id,
+            "expense_line_ids": expense_contribution,
+        })
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_post()
+
+        self.assertDictEqual(
+            project_bb._get_expenses_profitability_items(False),
+            {
+                "costs": {
+                    "id": "expenses",
+                    "sequence": 13,
+                    "billed": -87.5,
+                    "to_bill": 0.0,
+                }
+            },
+            "An expense with analytic contribution of 25% to the project should be equal to having billed amount -87.5 and id expense with sequence 13."
+        )
