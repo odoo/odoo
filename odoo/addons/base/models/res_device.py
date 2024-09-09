@@ -165,7 +165,10 @@ class ResDevice(models.Model):
 
     @api.model
     def _order_by(self):
-        return "ORDER BY D.user_id, D.session_identifier, D.platform, D.browser, D.last_activity DESC"
+        return """
+            ORDER BY D.user_id, D.session_identifier, D.platform, D.browser,
+            D.last_activity DESC, D.id DESC
+        """
 
     @property
     def _query(self):
