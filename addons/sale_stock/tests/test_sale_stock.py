@@ -2034,3 +2034,49 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         ship02.move_ids.write({'quantity': 7, 'picked': True})
         ship02.button_validate()
         self.assertEqual(so.delivery_status, 'full')
+
+    def test_double_return_on_so(self):
+        """
+        Check that the return of a return of a delivery linked to an SO
+        is seen as an outgoing move for the related procurements.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'sol_p1',
+                    'product_id': self.env['product.product'].create({'name': 'p1'}).id,
+                    'product_uom_qty': 5,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                }),
+            ],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        delivery.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
+        # create and validate a return
+        return_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=delivery.id,
+            active_model='stock.picking'))
+        return_wiz = return_form.save()
+        res = return_wiz.action_create_returns()
+        do_return = self.env['stock.picking'].browse(res['res_id'])
+        do_return.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 0.0)
+        # create and validate the return of the return
+        return_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=do_return.id,
+            active_model='stock.picking'))
+        return_wiz = return_form.save()
+        res = return_wiz.action_create_returns()
+        do_return_return = self.env['stock.picking'].browse(res['res_id'])
+        do_return_return.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line_form:
+                line_form.product_uom_qty = 8.0
+        delivery_2 = so.picking_ids - delivery - do_return - do_return_return
+        self.assertTrue(delivery_2)
+        self.assertEqual(delivery_2.move_ids.product_uom_qty, 3.0)
+        self.assertEqual(so.order_line.qty_delivered, 5.0)
