@@ -439,12 +439,12 @@
                 <span t-field="website.prevent_zero_price_sale_text"/>
             </t>
             <t t-elif="not data.get('is_sample')">
-                <span t-esc="data['price']"
+                <span t-out="data['price']"
                       class="fw-bold"
                       name="product_price"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                 <del t-if="data.get('has_discounted_price')" class="text-danger ms-1 h6" style="white-space: nowrap;"
-                     t-esc="data['list_price']"
+                     t-out="data['list_price']"
                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
             </t>
         </template>

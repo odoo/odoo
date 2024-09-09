@@ -103,7 +103,7 @@
                             <span class="fs-3">
                                 <i t-if="record.is_homepage.raw_value" class="fa fa-home pe-2"
                                     title="Home page of the current website"/>
-                                <t t-esc="record.name.value"/>
+                                <t t-out="record.name.value"/>
                             </span>
                             <div class="text-muted">
                                 <t t-if="record.website_id.value">
@@ -111,7 +111,7 @@
                                     <field name="website_id" groups="website.group_multi_website"/>
                                 </t>
                             </div>
-                            <span class="text-primary" t-esc="record.website_url.value"/>
+                            <span class="text-primary" t-out="record.website_url.value"/>
                         </div>
                         <div><field name="is_in_menu" widget="boolean"/> In Main Menu</div>
                         <div><field name="is_seo_optimized" widget="boolean"/> SEO Optimized</div>
