@@ -585,23 +585,23 @@ class AccountChartTemplate(models.AbstractModel):
     def _post_load_demo_data(self, company=False):
         if company.account_fiscal_country_id.code == "IN":
             if company.state_id:
-                invoices = (
-                    self.ref('demo_invoice_b2b_1')
-                    + self.ref('demo_invoice_b2b_2')
-                    + self.ref('demo_invoice_b2cs')
-                    + self.ref('demo_invoice_b2cl')
-                    + self.ref('demo_invoice_exp')
-                    + self.ref('demo_invoice_nill')
-                    + self.ref('demo_invoice_cdnr_1')
-                    + self.ref('demo_invoice_cdnr_2')
-                    + self.ref('demo_invoice_cdnur')
-                    + self.ref('demo_bill_b2b_1')
-                    + self.ref('demo_bill_b2b_2')
-                    + self.ref('demo_bill_b2b_3')
-                    + self.ref('demo_bill_imp')
-                    + self.ref('demo_bill_cdnr_1')
-                    + self.ref('demo_bill_cdnr_2')
-                    + self.ref('demo_invoice_service')
+                invoices = self.ref(
+                    'demo_invoice_b2b_1',
+                    'demo_invoice_b2b_2',
+                    'demo_invoice_b2cs',
+                    'demo_invoice_b2cl',
+                    'demo_invoice_exp',
+                    'demo_invoice_nill',
+                    'demo_invoice_cdnr_1',
+                    'demo_invoice_cdnr_2',
+                    'demo_invoice_cdnur',
+                    'demo_bill_b2b_1',
+                    'demo_bill_b2b_2',
+                    'demo_bill_b2b_3',
+                    'demo_bill_imp',
+                    'demo_bill_cdnr_1',
+                    'demo_bill_cdnr_2',
+                    'demo_invoice_service',
                 )
                 for move in invoices:
                     try:

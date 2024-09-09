@@ -65,22 +65,22 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     def _post_load_demo_data(self, company=False):
-        invoices = (
-            self.ref('demo_invoice_1')
-            + self.ref('demo_invoice_2')
-            + self.ref('demo_invoice_3')
-            + self.ref('demo_invoice_followup')
-            + self.ref('demo_invoice_5')
-            + self.ref('demo_invoice_equipment_purchase')
-            + self.ref('demo_move_auto_reconcile_1')
-            + self.ref('demo_move_auto_reconcile_2')
-            + self.ref('demo_move_auto_reconcile_3')
-            + self.ref('demo_move_auto_reconcile_4')
-            + self.ref('demo_move_auto_reconcile_5')
-            + self.ref('demo_move_auto_reconcile_6')
-            + self.ref('demo_move_auto_reconcile_7')
-            + self.ref('demo_move_auto_reconcile_8')
-            + self.ref('demo_move_auto_reconcile_9')
+        invoices = self.ref(
+            'demo_invoice_1',
+            'demo_invoice_2',
+            'demo_invoice_3',
+            'demo_invoice_followup',
+            'demo_invoice_5',
+            'demo_invoice_equipment_purchase',
+            'demo_move_auto_reconcile_1',
+            'demo_move_auto_reconcile_2',
+            'demo_move_auto_reconcile_3',
+            'demo_move_auto_reconcile_4',
+            'demo_move_auto_reconcile_5',
+            'demo_move_auto_reconcile_6',
+            'demo_move_auto_reconcile_7',
+            'demo_move_auto_reconcile_8',
+            'demo_move_auto_reconcile_9',
         )
 
         # the invoice_extract acts like a placeholder for the OCR to be ran and doesn't contain

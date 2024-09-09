@@ -24,22 +24,22 @@ class AccountChartTemplate(models.AbstractModel):
     def _post_load_demo_data(self, company=False):
         if company.account_fiscal_country_id.code != "UY":
             return super()._post_load_demo_data(company)
-        invoices = (
-            self.ref('demo_invoice_1')
-            + self.ref('demo_invoice_2')
-            + self.ref('demo_invoice_3')
-            + self.ref('demo_invoice_4')
-            + self.ref('demo_invoice_5')
-            + self.ref('demo_invoice_6')
-            + self.ref('demo_invoice_8')
-            + self.ref('demo_invoice_9')
-            + self.ref('demo_sup_invoice_1')
-            + self.ref('demo_sup_invoice_2')
-            + self.ref('demo_sup_invoice_3')
-            + self.ref('demo_sup_invoice_6')
-            + self.ref('demo_sup_invoice_7')
-            + self.ref('demo_sup_invoice_8')
-            + self.ref('demo_sup_invoice_9')
+        invoices = self.ref(
+            'demo_invoice_1',
+            'demo_invoice_2',
+            'demo_invoice_3',
+            'demo_invoice_4',
+            'demo_invoice_5',
+            'demo_invoice_6',
+            'demo_invoice_8',
+            'demo_invoice_9',
+            'demo_sup_invoice_1',
+            'demo_sup_invoice_2',
+            'demo_sup_invoice_3',
+            'demo_sup_invoice_6',
+            'demo_sup_invoice_7',
+            'demo_sup_invoice_8',
+            'demo_sup_invoice_9',
         )
         # the invoice_extract acts like a placeholder for the OCR to be ran and
         # doesn't contain any lines yet
@@ -50,13 +50,13 @@ class AccountChartTemplate(models.AbstractModel):
                 _logger.exception('Error while posting invoices')
 
         # Post the reversal moves
-        invoices_to_revert = (
-            self.ref('demo_refund_invoice_1')
-            + self.ref('demo_refund_invoice_2')
-            + self.ref('demo_refund_invoice_3')
-            + self.ref('demo_refund_invoice_4')
-            + self.ref('demo_sup_refund_invoice_3')
-            + self.ref('demo_sup_refund_invoice_2')
+        invoices_to_revert = self.ref(
+            'demo_refund_invoice_1',
+            'demo_refund_invoice_2',
+            'demo_refund_invoice_3',
+            'demo_refund_invoice_4',
+            'demo_sup_refund_invoice_2',
+            'demo_sup_refund_invoice_3',
         )
         for move in invoices_to_revert:
             try:

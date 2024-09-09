@@ -1966,7 +1966,7 @@ class UsersView(models.Model):
 
         missing_groups = {}
         # We don't want to show warning for "Technical" and "Extra Rights" groups
-        categories_to_ignore = self.env.ref('base.module_category_hidden') + self.env.ref('base.module_category_usability')
+        categories_to_ignore = self.env.ref('base.module_category_hidden', 'base.module_category_usability')
         for group in current_groups:
             # Get the updated group from current groups
             missing_implied_groups = group.implied_ids - user.groups_id
