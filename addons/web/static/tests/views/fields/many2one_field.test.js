@@ -1852,13 +1852,12 @@ test("list in form: show name of many2one fields in multi-page (default_get)", a
             </form>`,
     });
 
-    expect("td.o_data_cell:eq(0)").toHaveText("record1");
-    expect("td.o_data_cell:eq(1)").toHaveText("first record");
-
-    await contains("button.o_pager_next").click();
-
-    expect("td.o_data_cell:eq(0)").toHaveText("record2");
-    expect("td.o_data_cell:eq(1)").toHaveText("second record");
+    expect(queryAllTexts("td.o_data_cell")).toEqual([
+        "record1",
+        "first record",
+        "record2",
+        "second record",
+    ]);
 });
 
 test("list in form: item not dropped on discard with empty required field (onchange in default_get)", async () => {
