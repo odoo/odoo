@@ -275,7 +275,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         # groups: which groups are implied by the group Employee
         for name, groups, implied_group in classified['group']:
-            res[name] = all(implied_group in group.implied_ids for group in groups)
+            res[name] = all(implied_group in group.all_implied_ids for group in groups)
             if self._fields[name].type == 'selection':
                 res[name] = str(int(res[name]))     # True, False -> '1', '0'
 

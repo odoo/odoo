@@ -31,9 +31,7 @@ class ResUsers(models.Model):
         If base_setup.default_user_rights is set, only the "Employee" group is used
         """
         if not str2bool(self.env['ir.config_parameter'].sudo().get_param("base_setup.default_user_rights"), default=False):
-            employee_group = self.env.ref("base.group_user")
-            # force the trans_implied_ids during default for consistency in the interface
-            return employee_group | employee_group.trans_implied_ids
+            return self.env.ref("base.group_user")
         return super()._default_groups()
 
     def _apply_groups_to_existing_employees(self):

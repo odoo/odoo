@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, _
+from odoo import api, models, _, Command
 
 
 class ResUsers(models.Model):
@@ -20,10 +20,10 @@ class ResUsers(models.Model):
     def write(self, vals):
         """ Trigger automatic subscription based on updated user groups """
         res = super().write(vals)
-        sanitized_vals = self._remove_reified_groups(vals)
-        if sanitized_vals.get('groups_id'):
-            added_group_ids = [command[1] for command in sanitized_vals['groups_id'] if command[0] == 4]
-            added_group_ids += [id for command in sanitized_vals['groups_id'] if command[0] == 6 for id in command[2]]
+        if 'group_ids' in vals:
+            group_ids = [command[1] for command in vals['group_ids'] if command[0] == Command.LINK]
+            group_ids += [id_ for command in vals['group_ids'] if command[0] == Command.SET for id_ in command[2]]
+            added_group_ids = self.env['res.groups'].browse(group_ids).all_implied_ids.ids
             self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', added_group_ids)])._action_add_members(self.mapped('partner_id'))
         return res
 

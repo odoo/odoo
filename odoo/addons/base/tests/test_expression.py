@@ -2051,57 +2051,57 @@ class TestMany2many(TransactionCase):
         group = self.env.ref('base.group_user')
         rule = group.rule_groups[0]
 
-        self.User.search([('groups_id', 'in', group.ids)], order='id')
-        self.User.search([('groups_id.name', 'like', group.name)], order='id')
-        self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+        self.User.search([('all_group_ids', 'in', group.ids)], order='id')
+        self.User.search([('group_ids.name', 'like', group.name)], order='id')
+        self.User.search([('group_ids.rule_groups.name', 'like', rule.name)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
             WHERE EXISTS (
-                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
-                WHERE "res_users__groups_id"."uid" = "res_users"."id"
-                AND "res_users__groups_id"."gid" IN %s
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id"
+                AND "res_users__group_ids"."gid" IN %s
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id', 'in', group.ids)], order='id')
+            self.User.search([('group_ids', 'in', group.ids)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
             WHERE NOT EXISTS (
-                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
-                WHERE "res_users__groups_id"."uid" = "res_users"."id"
-                AND "res_users__groups_id"."gid" IN %s
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id"
+                AND "res_users__group_ids"."gid" IN %s
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id', 'not in', group.ids)], order='id')
+            self.User.search([('group_ids', 'not in', group.ids)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
             WHERE EXISTS (
-                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
-                WHERE "res_users__groups_id"."uid" = "res_users"."id"
-                AND "res_users__groups_id"."gid" IN (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id"
+                AND "res_users__group_ids"."gid" IN (
                     SELECT "res_groups"."id"
                     FROM "res_groups"
-                    WHERE ("res_groups"."color" = %s)
+                    WHERE ("res_groups"."share" is TRUE)
                 )
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id.color', '=', 1)], order='id')
+            self.User.search([('group_ids.share', '=', True)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
             WHERE EXISTS (
-                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
-                WHERE "res_users__groups_id"."uid" = "res_users"."id"
-                AND "res_users__groups_id"."gid" IN (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id"
+                AND "res_users__group_ids"."gid" IN (
                     SELECT "res_groups"."id"
                     FROM "res_groups"
                     WHERE EXISTS (
@@ -2117,12 +2117,12 @@ class TestMany2many(TransactionCase):
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+            self.User.search([('group_ids.rule_groups.name', 'like', rule.name)], order='id')
 
     def test_autojoin(self):
-        self.patch(self.User._fields['groups_id'], 'auto_join', True)
+        self.patch(self.User._fields['group_ids'], 'auto_join', True)
         with self.assertRaises(NotImplementedError):
-            self.User.search([('groups_id.name', '=', 'foo')])
+            self.User.search([('group_ids.name', '=', 'foo')])
 
     def test_name_search(self):
         self.User.search([('company_ids', 'like', self.company.name)], order='id')
@@ -2144,30 +2144,30 @@ class TestMany2many(TransactionCase):
             self.User.search([('company_ids', 'like', self.company.name)], order='id')
 
     def test_empty(self):
-        self.User.search([('groups_id', '!=', False)], order='id')
-        self.User.search([('groups_id', '=', False)], order='id')
+        self.User.search([('group_ids', '!=', False)], order='id')
+        self.User.search([('group_ids', '=', False)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
             WHERE EXISTS (
-                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
-                WHERE "res_users__groups_id"."uid" = "res_users"."id"
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id"
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id', '!=', False)], order='id')
+            self.User.search([('group_ids', '!=', False)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
             WHERE NOT EXISTS (
-                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
-                WHERE "res_users__groups_id"."uid" = "res_users"."id"
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
+                WHERE "res_users__group_ids"."uid" = "res_users"."id"
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id', '=', False)], order='id')
+            self.User.search([('group_ids', '=', False)], order='id')
 
 
 class TestPrettifyDomain(BaseCase):
