@@ -69,7 +69,6 @@ class Sponsor(models.Model):
     is_in_opening_hours = fields.Boolean(
         'Within opening hours', compute='_compute_is_in_opening_hours')
     # chat room
-    chat_room_id = fields.Many2one(readonly=False)
     room_name = fields.Char(readonly=False)
     # country information (related to ease frontend templates)
     country_id = fields.Many2one(
@@ -130,11 +129,11 @@ class Sponsor(models.Model):
         computed field, an onchange used in form view is sufficient. """
         for sponsor in self:
             if sponsor.exhibitor_type == 'online' and not sponsor.room_name:
-                if sponsor.name:
-                    room_name = "odoo-exhibitor-%s" % sponsor.name
-                else:
-                    room_name = self.env['chat.room']._default_name(objname='exhibitor')
-                sponsor.room_name = self._jitsi_sanitize_name(room_name)
+                sponsor.room_name = sponsor.name or 'exhibitor'
+                if not sponsor.chat_room_id:
+                    sponsor.chat_room_id = self.env['chat.room'].create({
+                        'name': sponsor.room_name,
+                    })
             if sponsor.exhibitor_type == 'online' and not sponsor.room_max_capacity:
                 sponsor.room_max_capacity = '8'
 
@@ -200,19 +199,17 @@ class Sponsor(models.Model):
     @api.model_create_multi
     def create(self, values_list):
         for values in values_list:
-            if values.get('is_exhibitor') and not values.get('room_name'):
-                exhibitor_name = values['name'] if values.get('name') else self.env['res.partner'].browse(values['partner_id']).name
-                name = 'odoo-exhibitor-%s' % exhibitor_name or 'sponsor'
-                values['room_name'] = name
+            if values.get('exhibitor_type') == 'online' and not values.get('room_name'):
+                values['room_name'] = values['name'] if values.get('name') else self.env['res.partner'].browse(values['partner_id']).name
         return super(Sponsor, self).create(values_list)
 
     def write(self, values):
         toupdate = self.env['event.sponsor']
-        if values.get('is_exhibitor') and not values.get('chat_room_id') and not values.get('room_name'):
+        if values.get('exhibitor_type') == 'online' and not values.get('chat_room_id') and not values.get('room_name'):
             toupdate = self.filtered(lambda exhibitor: not exhibitor.chat_room_id)
             # go into sequential update in order to create a custom room name for each sponsor
             for exhibitor in toupdate:
-                values['room_name'] = 'odoo-exhibitor-%s' % exhibitor.name
+                values['room_name'] = exhibitor.name
                 super(Sponsor, exhibitor).write(values)
         return super(Sponsor, self - toupdate).write(values)
 

@@ -10,11 +10,15 @@
     'website': 'https://www.odoo.com/app/events',
     'depends': [
         'website_event',
-        'website_jitsi',
+        'website_discuss_room',
     ],
     'data': [
         'views/res_config_settings_views.xml',
     ],
-    'auto_install': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_event_jitsi/static/src/js/chat_room.js',
+        ],
+    },
     'license': 'LGPL-3',
 }

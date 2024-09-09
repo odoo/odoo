@@ -18,7 +18,7 @@
                 <sheet>
                     <label for="name"/>
                     <h1>
-                        <field name="name"/>
+                        <field name="name" class="d-block"/>
                     </h1>
                     <group>
                         <group>
@@ -26,6 +26,7 @@
                             <field name="lang_id" options="{'no_create': True}"/>
                             <field name="participant_count"/>
                             <field name="max_capacity"/>
+                            <field name="chat_room_provider" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <notebook>

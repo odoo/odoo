@@ -1,16 +1,16 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
 {
-    "name": "Website Jitsi",
+    "name": "Website Discuss Room",
     'category': 'Hidden',
     'version': '1.0',
-    "summary": "Create Jitsi room on website.",
+    "summary": "Create Discuss room on website.",
     'website': 'https://www.odoo.com/app/events',
-    "description": "Create Jitsi room on website.",
+    "description": "Create Discuss room on website.",
     "depends": [
-        "website"
+        "website",
+        "mail"
     ],
     "data": [
         'views/chat_room_templates.xml',
@@ -19,9 +19,9 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_jitsi/static/src/css/chat_room.css',
-            'website_jitsi/static/src/js/chat_room.js',
-            'website_jitsi/static/src/xml/chat_room_modal.xml',
+            'website_discuss_room/static/src/scss/chat_room.scss',
+            'website_discuss_room/static/src/js/chat_room.js',
+            'website_discuss_room/static/src/xml/chat_room_modal.xml',
         ],
     },
     'license': 'LGPL-3',

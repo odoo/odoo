@@ -128,10 +128,9 @@
                             invisible="exhibitor_type != 'online'">
                             <group>
                                 <group>
-                                    <field name="room_name" required="exhibitor_type == 'online'" string="Jitsi Name"/>
-                                    <field name="room_lang_id"/>
+                                    <field name="chat_room_id" required="exhibitor_type == 'online'"/>
+                                    <field name="room_lang_id" options="{'no_create': True}"/>
                                     <field name="room_max_capacity" required="exhibitor_type == 'online'"/>
-                                    <field name="chat_room_id" groups="base.group_no_one"/>
                                 </group>
                             </group>
                         </page>

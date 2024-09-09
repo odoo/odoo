@@ -1,16 +1,16 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.website_discuss_room.controllers import main
 
 
-class WebsiteJitsiController(http.Controller):
+class WebsiteChatRoomController(main.WebsiteChatRoomController):
 
-    @http.route(["/jitsi/update_status"], type="json", auth="public")
-    def jitsi_update_status(self, room_name, participant_count, joined):
+    @http.route(["/chat_room/update_status"], type="json", auth="public")
+    def chat_room_update_status(self, room_name, participant_count):
         """ Update room status: participant count, max reached
 
         Use the SQL keywords "FOR UPDATE SKIP LOCKED" in order to skip if the row
@@ -46,14 +46,3 @@ class WebsiteJitsiController(http.Controller):
             """,
             [room_name, participant_count, participant_count]
         )
-
-    @http.route(["/jitsi/is_full"], type="json", auth="public")
-    def jitsi_is_full(self, room_name):
-        return self._chat_room_exists(room_name).is_full
-
-    # ------------------------------------------------------------
-    # TOOLS
-    # ------------------------------------------------------------
-
-    def _chat_room_exists(self, room_name):
-        return request.env["chat.room"].sudo().search([("name", "=", room_name)], limit=1)
