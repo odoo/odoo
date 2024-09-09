@@ -125,3 +125,42 @@ describe("Inlines and blocks in list item", () => {
         });
     });
 });
+
+describe("Nested lists without class oe-nested", () => {
+    test("should normalize nested lists without class oe-nested", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li>abc</li>
+                    <li>def</li>
+                    <ul>
+                        <li>ghi</li>
+                        <li>jkl</li>
+                    </ul>
+                    <ol>
+                        <li>mno</li>
+                        <li>pqr</li>
+                    </ol>
+                </ul>
+            `),
+            contentAfter: unformat(`
+                <ul>
+                    <li>abc</li>
+                    <li>def</li>
+                    <li class="oe-nested">
+                        <ul>
+                            <li>ghi</li>
+                            <li>jkl</li>
+                        </ul>
+                    </li>
+                    <li class="oe-nested">
+                        <ol>
+                            <li>mno</li>
+                            <li>pqr</li>
+                        </ol>
+                    </li>
+                </ul>
+            `),
+        });
+    });
+});
