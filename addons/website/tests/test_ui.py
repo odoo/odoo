@@ -629,3 +629,17 @@ class TestUi(odoo.tests.HttpCase):
             self.env['website'].with_context(website_id=website.id).viewref(key).active = active
 
         self.start_tour('/', 'website_no_dirty_lazy_image', login='admin')
+
+    def test_website_edit_menus_delete_parent(self):
+        website = self.env['website'].browse(1)
+        menu_tree = self.env['website.menu'].get_tree(website.id)
+
+        parent_menu = menu_tree['children'][0]['fields']
+        child_menu = menu_tree['children'][1]['fields']
+        child_menu['parent_id'] = parent_menu['id']
+
+        self.env['website.menu'].save(website.id, {'data': [parent_menu, child_menu]})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_menus_delete_parent', login='admin')
+
+    def test_snippet_carousel(self):
+        self.start_tour('/', 'snippet_carousel', login='admin')

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, users, tagged
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class TestProjectProfitabilityCommon(TransactionCase):
@@ -61,3 +62,23 @@ class TestProfitability(TestProjectProfitabilityCommon):
             self.project_profitability_items_empty,
             'The profitability data of the project should be return no data and so 0 for each total amount.'
         )
+
+
+@tagged('-at_install', 'post_install')
+class TestProjectProfitabilityAccess(TestProjectProfitabilityCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.project_user = mail_new_test_user(cls.env, 'Project User', groups='project.group_project_user')
+        cls.project_manager = mail_new_test_user(cls.env, 'Project Admin', groups='project.group_project_manager')
+
+    @users('Project User', 'Project Admin')
+    def test_project_profitability_read(self):
+        """ Test the project profitability read access rights
+
+            In other modules, project profitability may contain some data.
+            The project user and project admin should have read access rights to project profitability.
+        """
+        self.project.with_user(self.env.user)._get_profitability_items(False)

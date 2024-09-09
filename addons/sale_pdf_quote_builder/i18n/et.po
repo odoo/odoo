@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tairi Tiimann, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -50,15 +50,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"Võimaldab teil jagada dokumenti oma klientidega.\n"
-"Jäta tühjaks, kui sa ei soovi seda dokumenti kliendiga jagada.\n"
-"Pakkumine: dokument saadetakse ja on klientidele vaatamiseks lubatud.\n"
-"nt see valik on kasulik siis kui soovid tooteinfot kliendiga jagada.\n"
-"Kinnitatud tellimus: dokument saadetakse ja on klientidele vaatamiseks lubatud.\n"
-"nt see valik on kasulik siis kui soovid kasutusjuhendi kliendiga jagada.\n"
-"Pakkumine: dokument lisatakse pakkumise pdf faili päise/tabeli vahele."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -69,17 +63,6 @@ msgstr "Ettevõtted"
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
 msgid "Config Settings"
 msgstr "Seadistused"
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/utils.py:0
-#, python-format
-msgid ""
-"It seems that we're not able to process this pdf inside a quotation. It is "
-"either encrypted, or encoded in a format we do not support."
-msgstr ""
-"Tundub, et seda PDF faili ei saa pakkumises töödelda. See on kas "
-"krüpteeritud või kodeeritud formaadis, mida me ei toeta."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -101,6 +84,17 @@ msgid "Inside quote"
 msgstr "Pakkumisele lisamine"
 
 #. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"Tundub, et seda PDF faili ei saa pakkumises töödelda. See on kas "
+"krüpteeritud või kodeeritud formaadis, mida me ei toeta."
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Learn more from the documentation."
 msgstr "Loe rohkem dokumentatsioonist."
@@ -120,13 +114,6 @@ msgstr ""
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "Ainult PDF dokumente saab pakkumisele lisada."
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, python-format
-msgid "When attached inside a quote, the document must be a file, not a URL."
-msgstr "Kui lisate pakkumisse dokumendi, peab see olema fail, mitte URL."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -218,3 +205,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "Nähtav "
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr "Kui lisate pakkumisse dokumendi, peab see olema fail, mitte URL."

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -213,14 +213,19 @@ msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
 msgstr ""
+"لا تطابق الدولة التي تم رصدها لرقم ضريبة القيمة المضافة هذا أي من الدول التي"
+" تشكّل مجموعة الدولة التي تم تعيينها لهذا الوضع المالي. "
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position or set a country group"
 msgstr ""
+"تعذر رصد دولة رقم ضريبة القيمة المضافة الأجنبية. يُرجى تعيين دولة للوضع "
+"المالي أو قم بتعيين مجموعة دولة "
 
 #. module: base_vat
 #. odoo-python
@@ -261,6 +266,14 @@ msgstr "Vies Vat To Check"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 أرقام] ويجب أن تضع بعين الاعتبار Luhn algorithm checksum "
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
 msgstr "إما 11 رقم لـ CPF أو 14 رقم لـ CNPJ "
 
@@ -277,10 +290,3 @@ msgstr "الوضع المالي [%s] "
 #, python-format
 msgid "partner [%s]"
 msgstr "الشريك [%s] "
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
-msgstr ""

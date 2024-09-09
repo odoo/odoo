@@ -42,6 +42,8 @@ export async function removeGlobalFilter(model, id) {
 
 /**
  * Edit a global filter and ensure the data sources are completely reloaded
+ * @param {Model} model
+ * @param {CmdGlobalFilter} filter
  */
 export async function editGlobalFilter(model, filter) {
     const result = model.dispatch("EDIT_GLOBAL_FILTER", { filter });

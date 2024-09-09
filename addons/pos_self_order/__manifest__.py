@@ -75,7 +75,7 @@
             "pos_self_order/static/src/overrides/components/receipt_header/*",
             "point_of_sale/static/src/app/printer/base_printer.js",
             "point_of_sale/static/src/app/printer/printer_service.js",
-            'web_editor/static/lib/html2canvas.js',
+            'point_of_sale/static/src/app/utils/html-to-image.js',
             "point_of_sale/static/src/app/printer/render_service.js",
             "pos_self_order/static/src/app/**/*",
             "point_of_sale/static/src/app/printer/hw_printer.js",

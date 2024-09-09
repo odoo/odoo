@@ -41,6 +41,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
         'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
         'submit': '_onClickConfirmOrder',
+        "change select[name='state_id']": "_onChangeState",
     }),
 
     /**
@@ -96,8 +97,15 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         });
 
         // This allows conditional styling for the filmstrip
-        if (isBrowserFirefox() || hasTouch()) {
-            this.el.querySelector('.o_wsale_filmstip_container')?.classList.add('o_wsale_filmstip_fancy_disabled');
+        const filmstripContainer = this.el.querySelector('.o_wsale_filmstip_container');
+        const filmstripContainerWidth = filmstripContainer
+            ? filmstripContainer.getBoundingClientRect().width : 0;
+        const filmstripWrapper = this.el.querySelector('.o_wsale_filmstip_wrapper');
+        const filmstripWrapperWidth = filmstripWrapper
+            ? filmstripWrapper.getBoundingClientRect().width : 0;
+        const isFilmstripScrollable = filmstripWrapperWidth < filmstripContainerWidth
+        if (isBrowserFirefox() || hasTouch() || isFilmstripScrollable) {
+            filmstripContainer?.classList.add('o_wsale_filmstip_fancy_disabled');
         }
 
         this.getRedirectOption();
@@ -636,6 +644,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             return;
         }
         return this._changeCountry();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeState: function (ev) {
+        return Promise.resolve();
     },
     /**
      * @private

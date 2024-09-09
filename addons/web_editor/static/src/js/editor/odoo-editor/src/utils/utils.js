@@ -955,7 +955,8 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
         correctTripleClick &&
         !endOffset &&
         (start !== end || startOffset !== endOffset) &&
-        (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleTextNode(beforeEnd) && !isZWS(beforeEnd)))
+        (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleTextNode(beforeEnd) && !isZWS(beforeEnd))) &&
+        !closestElement(endLeaf, 'table')
     ) {
         const previous = previousLeaf(endLeaf, editable, true);
         if (previous && closestElement(previous).isContentEditable) {
@@ -2044,6 +2045,7 @@ export function commonParentGet(node1, node2, root = undefined) {
 }
 
 export function getListMode(pnode) {
+    if (!["UL", "OL"].includes(pnode.tagName)) return;
     if (pnode.tagName == 'OL') return 'OL';
     return pnode.classList.contains('o_checklist') ? 'CL' : 'UL';
 }
@@ -2067,6 +2069,57 @@ export function insertListAfter(afterNode, mode, content = []) {
         }),
     );
     return list;
+}
+
+export function toggleList(node, mode, offset = 0) {
+    let pnode = node.closest('ul, ol');
+    if (!pnode) return;
+    const listMode = getListMode(pnode) + mode;
+    if (['OLCL', 'ULCL'].includes(listMode)) {
+        pnode.classList.add('o_checklist');
+        for (let li = pnode.firstElementChild; li !== null; li = li.nextElementSibling) {
+            if (li.style.listStyle !== 'none') {
+                li.style.listStyle = null;
+                if (!li.style.all) li.removeAttribute('style');
+            }
+        }
+        pnode = setTagName(pnode, 'UL');
+    } else if (['CLOL', 'CLUL'].includes(listMode)) {
+        toggleClass(pnode, 'o_checklist');
+        pnode = setTagName(pnode, mode);
+    } else if (['OLUL', 'ULOL'].includes(listMode)) {
+        pnode = setTagName(pnode, mode);
+    } else {
+        // toggle => remove list
+        let currNode = node;
+        while (currNode) {
+            currNode = currNode.oShiftTab(offset);
+        }
+        return;
+    }
+    return pnode;
+}
+
+/**
+ * Converts a list element and its nested elements to the specified list mode.
+ *
+ * @param {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - HTML element
+ * representing a list or list item.
+ * @param {string} toMode - Target list mode
+ * @returns {HTMLUListElement|HTMLOListElement|HTMLLIElement} node - Modified
+ * list element after conversion.
+ */
+export function convertList(node, toMode) {
+    if (!["UL", "OL", "LI"].includes(node.nodeName)) return;
+    const listMode = getListMode(node);
+    if (listMode && toMode !== listMode) {
+        node = toggleList(node, toMode);
+    }
+    for (const child of node.childNodes) {
+        convertList(child, toMode);
+    }
+
+    return node;
 }
 
 export function toggleClass(node, className) {

@@ -45,7 +45,7 @@
                                 className="'ms-1'"
                                 message="props.message"
                                 thread="props.thread"/>
-                            <small t-if="!isOriginThread and !message.is_transient" t-on-click.prevent="openRecord" class="ms-1 text-500">
+                            <small t-if="isPersistentMessageFromAnotherThread" t-on-click.prevent="openRecord" class="ms-1 text-500">
                                 <t t-if="message.model !== 'discuss.channel'">
                                     on <a t-att-href="message.resUrl"><t t-esc="message.originThread?.displayName"/></a>
                                 </t>
@@ -53,7 +53,7 @@
                                     (from <a t-att-href="message.resUrl"><t t-esc="message.originThread?.prefix"/><t t-esc="message.originThread?.displayName"/></a>)
                                 </t>
                             </small>
-                            <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
+                            <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': (props.isInChatWindow and isAlignedRight) or (isPersistentMessageFromAnotherThread) }" t-att-title="messageService.scheduledDateSimple(props.message)">
                                 <span class="text-600 cursor-pointer">
                                     <i class="fa fa-calendar-o"/>
                                 </span>
@@ -91,7 +91,7 @@
                                                     <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
-                                                        <div t-if="message.type and message.type.includes('email')" t-ref="shadowBody"/>
+                                                        <div class="overflow-x-auto" t-if="message.type and message.type.includes('email')" t-ref="shadowBody"/>
                                                         <t t-elif="state.showTranslation" t-out="message.translationValue"/>
                                                         <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
                                                         <p class="fst-italic text-muted small" t-if="state.showTranslation">

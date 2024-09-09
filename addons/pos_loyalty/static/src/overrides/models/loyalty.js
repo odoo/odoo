@@ -749,7 +749,7 @@ patch(Order.prototype, {
      */
     pointsForPrograms(programs) {
         pointsForProgramsCountedRules = {};
-        const orderLines = this.get_orderlines();
+        const orderLines = this.get_orderlines().filter((line) => !line.refunded_orderline_id);
         const linesPerRule = {};
         for (const line of orderLines) {
             const reward = line.reward_id ? this.pos.reward_by_id[line.reward_id] : undefined;
@@ -1127,7 +1127,7 @@ patch(Order.prototype, {
      */
     _getCheapestLine() {
         let cheapestLine;
-        for (const line of this.get_orderlines()) {
+        for (const line of this.get_orderlines().filter((line) => !line.comboLines)) {
             if (line.reward_id || !line.get_quantity()) {
                 continue;
             }
@@ -1183,6 +1183,7 @@ patch(Order.prototype, {
         const linesToDiscount = [];
         const discountLinesPerReward = {};
         const orderLines = this.get_orderlines();
+        const orderProducts = orderLines.map((line) => line.product.id);
         const remainingAmountPerLine = {};
         for (const line of orderLines) {
             if (!line.get_quantity() || !line.price) {
@@ -1196,7 +1197,15 @@ patch(Order.prototype, {
                 linesToDiscount.push(line);
             } else if (line.reward_id) {
                 const lineReward = this.pos.reward_by_id[line.reward_id];
-                if (lineReward.id === reward.id) {
+                if (lineReward.id === reward.id ||
+                    (
+                        orderProducts.some(product =>
+                            lineReward.all_discount_product_ids.has(product) &&
+                            applicableProducts.has(product)
+                        ) &&
+                        lineReward.reward_type === 'discount'
+                    )
+                ) {
                     linesToDiscount.push(line);
                 }
                 if (!discountLinesPerReward[line.reward_identifier_code]) {
@@ -1223,39 +1232,25 @@ patch(Order.prototype, {
                 continue;
             }
             const commonLines = linesToDiscount.filter((line) => discountedLines.includes(line));
-            if (lineReward.discount_mode === "percent") {
-                const discount = lineReward.discount / 100;
-                for (const line of discountedLines) {
-                    if (line.reward_id) {
-                        continue;
-                    }
-                    if (lineReward.discount_applicability === "cheapest") {
-                        remainingAmountPerLine[line.cid] *= 1 - discount / line.get_quantity();
-                    } else {
-                        remainingAmountPerLine[line.cid] *= 1 - discount;
-                    }
+            const nonCommonLines = discountedLines.filter(
+                (line) => !linesToDiscount.includes(line)
+            );
+            const discountedAmounts = lines.reduce((map, line) => {
+                map[line.get_taxes().map((t) => t.id)];
+                return map;
+            }, {});
+            const process = (line) => {
+                const key = line.get_taxes().map((t) => t.id);
+                if (!discountedAmounts[key] || line.reward_id) {
+                    return;
                 }
-            } else {
-                const nonCommonLines = discountedLines.filter(
-                    (line) => !linesToDiscount.includes(line)
-                );
-                const discountedAmounts = lines.reduce((map, line) => {
-                    map[line.get_taxes().map((t) => t.id)];
-                    return map;
-                }, {});
-                const process = (line) => {
-                    const key = line.get_taxes().map((t) => t.id);
-                    if (!discountedAmounts[key] || line.reward_id) {
-                        return;
-                    }
-                    const remaining = remainingAmountPerLine[line.cid];
-                    const consumed = Math.min(remaining, discountedAmounts[key]);
-                    discountedAmounts[key] -= consumed;
-                    remainingAmountPerLine[line.cid] -= consumed;
-                };
-                nonCommonLines.forEach(process);
-                commonLines.forEach(process);
-            }
+                const remaining = remainingAmountPerLine[line.cid];
+                const consumed = Math.min(remaining, discountedAmounts[key]);
+                discountedAmounts[key] -= consumed;
+                remainingAmountPerLine[line.cid] -= consumed;
+            };
+            nonCommonLines.forEach(process);
+            commonLines.forEach(process);
         }
 
         let discountable = 0;
@@ -1542,9 +1537,15 @@ patch(Order.prototype, {
                   Math.ceil(unclaimedQty / reward.reward_product_qty),
                   Math.floor(points / reward.required_points)
               );
-        const cost = reward.clear_wallet ? points : claimable_count * reward.required_points;
+        const cost = reward.clear_wallet
+            ? points
+            : Math.min(claimable_count * reward.required_points, args["cost"] || Infinity);
         // In case the reward is the product multiple times, give it as many times as possible
-        const freeQuantity = Math.min(unclaimedQty, reward.reward_product_qty * claimable_count);
+        const freeQuantity = Math.min(
+            unclaimedQty,
+            reward.reward_product_qty * claimable_count,
+            args["quantity"] || Infinity
+        );
         return [
             {
                 product: reward.discount_line_product_id,
@@ -1553,12 +1554,12 @@ patch(Order.prototype, {
                     this.pos.currency.decimal_places
                 ),
                 tax_ids: product.taxes_id,
-                quantity: args["quantity"] || freeQuantity,
+                quantity: freeQuantity,
                 reward_id: reward.id,
                 is_reward_line: true,
                 reward_product_id: product.id,
                 coupon_id: args["coupon_id"],
-                points_cost: args["cost"] || cost,
+                points_cost: cost,
                 reward_identifier_code: _newRandomRewardCode(),
                 merge: false,
             },

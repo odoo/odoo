@@ -190,11 +190,10 @@ class EventMailScheduler(models.Model):
                     continue
                 # do not send emails if the mailing was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.mail_attendees(scheduler.template_ref.id)
-                    # Mail is sent to all attendees (unconfirmed as well), so count all attendees
+                    scheduler.event_id.mail_attendees(scheduler.template_ref.id, filter_func=lambda reg: reg.state not in ('cancel', 'draft'))
                     scheduler.update({
                         'mail_done': True,
-                        'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel'))
+                        'mail_count_done': scheduler.event_id.seats_taken,
                     })
         return True
 

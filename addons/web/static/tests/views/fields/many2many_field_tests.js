@@ -808,7 +808,49 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=int_field] input", "2");
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
+    QUnit.test("many2many list (editable): edition concurrence", async function (assert) {
+        assert.expect(5);
+        serverData.models.partner.records[0].timmy = [12, 14];
+        serverData.models.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });
+        serverData.models.partner_type.fields.float_field = { string: "Float", type: "float" };
 
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,search": '<search><field name="display_name"/></search>',
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree editable="top">
+                            <field name="display_name"/>
+                            <field name="float_field"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "web_save") {
+                    //check that delete command is not duplicate
+                    assert.deepEqual(args.args, [
+                        [1],
+                        {
+                            timmy: [[3, 12]],
+                        },
+                    ]);
+                }
+            },
+            resId: 1,
+        });
+        const t = target.querySelector(".o_list_record_remove");
+        click(t);
+        click(t);
+        await clickSave(target);
+        assert.verifySteps(["get_views", "web_read", "web_save"]);
+    });
     QUnit.test("many2many list (editable): edition", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.models.partner_type.records.push({ id: 15, display_name: "bronze", color: 6 });

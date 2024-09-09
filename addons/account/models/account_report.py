@@ -157,10 +157,10 @@ class AccountReport(models.Model):
             else:
                 report[field_name] = default_value
 
-    @api.depends('root_report_id')
+    @api.depends('root_report_id', 'country_id')
     def _compute_default_availability_condition(self):
         for report in self:
-            if report.root_report_id:
+            if report.root_report_id and report.country_id:
                 report.availability_condition = 'country'
             else:
                 report.availability_condition = 'always'
@@ -541,8 +541,7 @@ class AccountReportExpression(models.Model):
     carryover_target = fields.Char(
         string="Carry Over To",
         help="Formula in the form line_code.expression_label. This allows setting the target of the carryover for this expression "
-             "(on a _carryover_*-labeled expression), in case it is different from the parent line. 'custom' is also allowed as value"
-             " in case the carryover destination requires more complex logic."
+             "(on a _carryover_*-labeled expression), in case it is different from the parent line."
     )
 
     _sql_constraints = [
@@ -557,6 +556,14 @@ class AccountReportExpression(models.Model):
             "The expression label must be unique per report line."
         ),
     ]
+
+    @api.constrains('carryover_target', 'label')
+    def _check_carryover_target(self):
+        for expression in self:
+            if expression.carryover_target and not expression.label.startswith('_carryover_'):
+                raise UserError(_("You cannot use the field carryover_target in an expression that does not have the label starting with _carryover_"))
+            elif expression.carryover_target and not expression.carryover_target.split('.')[1].startswith('_applied_carryover_'):
+                raise UserError(_("When targeting an expression for carryover, the label of that expression must start with _applied_carryover_"))
 
     @api.constrains('formula')
     def _check_domain_formula(self):

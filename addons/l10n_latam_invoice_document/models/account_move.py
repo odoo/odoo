@@ -114,13 +114,15 @@ class AccountMove(models.Model):
         remaining = self - recs_with_name
         remaining.l10n_latam_document_number = False
 
-    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
+    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'partner_id')
     def _inverse_l10n_latam_document_number(self):
         for rec in self.filtered(lambda x: x.l10n_latam_document_type_id):
             if not rec.l10n_latam_document_number:
                 rec.name = '/'
             else:
-                l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
+                l10n_latam_document_number = rec.l10n_latam_document_number
+                if not rec._skip_format_document_number():
+                    l10n_latam_document_number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
                 if rec.l10n_latam_document_number != l10n_latam_document_number:
                     rec.l10n_latam_document_number = l10n_latam_document_number
                 rec.name = "%s %s" % (rec.l10n_latam_document_type_id.doc_code_prefix, l10n_latam_document_number)
@@ -144,6 +146,11 @@ class AccountMove(models.Model):
         if self.l10n_latam_use_documents:
             return 'never'
         return super(AccountMove, self)._deduce_sequence_number_reset(name)
+
+    def _skip_format_document_number(self):
+        """Hook to be overridden in localisation"""
+        self.ensure_one()
+        return False
 
     def _get_starting_sequence(self):
         if self.journal_id.l10n_latam_use_documents:
@@ -212,7 +219,7 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_latam_available_document_type_ids')
     def _compute_l10n_latam_document_type(self):
-        for rec in self.filtered(lambda x: x.state == 'draft' and not x.posted_before):
+        for rec in self.filtered(lambda x: x.state == 'draft' and (not x.posted_before if x.move_type in ['out_invoice', 'out_refund'] else True)):
             document_types = rec.l10n_latam_available_document_type_ids._origin
             rec.l10n_latam_document_type_id = document_types and document_types[0].id
 

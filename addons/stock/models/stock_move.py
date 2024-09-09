@@ -263,7 +263,7 @@ class StockMove(models.Model):
         for move in self:
             move.is_quantity_done_editable = move.product_id
 
-    @api.depends('picking_id', 'name')
+    @api.depends('picking_id', 'name', 'picking_id.name')
     def _compute_reference(self):
         for move in self:
             move.reference = move.picking_id.name if move.picking_id else move.name
@@ -470,9 +470,13 @@ Please change the quantity done or the rounding precision of your unit of measur
             if not warehouse:  # No prediction possible if no warehouse.
                 continue
             moves = self.browse(moves_ids)
-            forecast_info = moves._get_forecast_availability_outgoing(warehouse)
+            moves_per_location = defaultdict(lambda: self.env['stock.move'])
             for move in moves:
-                move.forecast_availability, move.forecast_expected_date = forecast_info[move]
+                moves_per_location[move.location_id] |= move
+            for location, mvs in moves_per_location.items():
+                forecast_info = mvs._get_forecast_availability_outgoing(warehouse, location)
+                for move in mvs:
+                    move.forecast_availability, move.forecast_expected_date = forecast_info[move]
 
     def _set_date_deadline(self, new_deadline):
         # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
@@ -549,8 +553,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 if move.priority == '1':
                     days = move.picking_type_id.reservation_days_before_priority
                 move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
-            else:
-                move.reservation_date = False
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state', 'origin_returned_move_id', 'product_id.detailed_type', 'picking_code')
     def _compute_show_info(self):
@@ -2241,15 +2243,16 @@ Please change the quantity done or the rounding precision of your unit of measur
         self.filtered(lambda m: m.id in unseen).move_orig_ids._rollup_move_origs(seen)
         return seen
 
-    def _get_forecast_availability_outgoing(self, warehouse):
+    def _get_forecast_availability_outgoing(self, warehouse, location_id=False):
         """ Get forcasted information (sum_qty_expected, max_date_expected) of self for the warehouse's locations.
         :param warehouse: warehouse to search under
+        :param  location_id: location source of outgoing moves
         :return: a defaultdict of outgoing moves from warehouse for product_id in self, values are tuple (sum_qty_expected, max_date_expected)
         :rtype: defaultdict
         """
-        wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
+        wh_location_query = self.env['stock.location']._search([('id', 'child_of', location_id.id if location_id else warehouse.view_location_id.id)])
 
-        forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, self.product_id.ids, wh_location_query, warehouse.lot_stock_id, read=False)
+        forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, self.product_id.ids, wh_location_query, location_id or warehouse.lot_stock_id, read=False)
         result = defaultdict(lambda: (0.0, False))
         for line in forecast_lines:
             move_out = line.get('move_out')

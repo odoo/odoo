@@ -290,13 +290,10 @@ registry.category("web_tour.tours").add("CashRoundingPayment", {
             PaymentScreen.totalIs("1.90"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.pressNumpad("1 ."),
-            PaymentScreen.pressNumpad("2 4"),
-            PaymentScreen.fillPaymentLineAmountMobile("Cash", "1.24"),
-            PaymentScreen.selectedPaymentlineHas("Cash", "1.24"),
+            PaymentScreen.pressNumpad("9 4"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "1.94"),
+            PaymentScreen.selectedPaymentlineHas("Cash", "1.94"),
+            PaymentScreen.clickValidate(),
             ErrorPopup.isShown(),
-            ErrorPopup.messageBodyContains(
-                // Verify the value displayed are as expected
-                "The rounding precision is 0.10 so you should set 1.20 or 1.30 as payment amount instead of 1.24."
-            ),
         ].flat(),
 });

@@ -764,7 +764,7 @@ export class Record extends DataPoint {
                     staticList = this._createStaticListDatapoint(data, fieldName);
                 }
                 if (valueIsCommandList) {
-                    staticList._applyCommands(value);
+                    staticList._applyInitialCommands(value);
                 }
                 parsedValues[fieldName] = staticList;
             } else {
@@ -1179,7 +1179,11 @@ export class Record extends DataPoint {
             { withReadonly: true }
         );
         if (this.config.relationField) {
-            localChanges[this.config.relationField] = this._parentRecord._getChanges();
+            const parentRecord = this._parentRecord;
+            localChanges[this.config.relationField] = parentRecord._getChanges(
+                parentRecord._changes,
+                { withReadonly: true }
+            );
             if (!this._parentRecord.isNew) {
                 localChanges[this.config.relationField].id = this._parentRecord.resId;
             }

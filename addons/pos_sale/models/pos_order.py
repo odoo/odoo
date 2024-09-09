@@ -159,9 +159,9 @@ class PosOrderLine(models.Model):
 
     def _export_for_ui(self, orderline):
         result = super()._export_for_ui(orderline)
-        # NOTE We are not exporting 'sale_order_line_id' because it is being used in any views in the POS App.
         result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
         result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
+        result['sale_order_line_id'] = bool(orderline.sale_order_line_id) and orderline.sale_order_line_id.read(fields=['name'])[0]
         return result
 
     def _order_line_fields(self, line, session_id=None):

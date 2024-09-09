@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -44,15 +44,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sales order between the header pages and the quote table. "
 msgstr ""
-"允許您在銷售中與客戶共享文檔。\n"
-"如果不想與銷售客戶共享此文檔，請將其留空。\n"
-"報價: 文件將發送給客戶，客戶可隨時訪問。\n"
-"例如，該選項可用於共享產品描述文件。\n"
-"確認訂單：該文件將發送給客戶並供其訪問。\n"
-"例如，此選項可用於共享用戶手冊或在電子商務上購買的數字內容。\n"
-"內部引用:文件將包含在報價單的PDF文件中,位於頁眉和報價表之間。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_company
@@ -63,15 +57,6 @@ msgstr "公司"
 #: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
 msgid "Config Settings"
 msgstr "配置設定"
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/utils.py:0
-#, python-format
-msgid ""
-"It seems that we're not able to process this pdf inside a quotation. It is "
-"either encrypted, or encoded in a format we do not support."
-msgstr "我們似乎無法處理在報價單內的這個 pdf 檔案。可能是檔案已被加密，或使用了我們不支援的格式進行編碼。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
@@ -93,6 +78,15 @@ msgid "Inside quote"
 msgstr "內部引用"
 
 #. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr "我們似乎無法處理在報價單內的這個 pdf 檔案。可能是檔案已被加密，或使用了我們不支援的格式進行編碼。"
+
+#. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Learn more from the documentation."
 msgstr "請參閱使用說明，以了解更多。"
@@ -110,13 +104,6 @@ msgstr "加入頁首、產品描述及頁尾，令報價單更具吸引力。"
 #, python-format
 msgid "Only PDF documents can be attached inside a quote."
 msgstr "報價中只能附加 PDF文檔。"
-
-#. module: sale_pdf_quote_builder
-#. odoo-python
-#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
-#, python-format
-msgid "When attached inside a quote, the document must be a file, not a URL."
-msgstr "附加至引用內時，文件必須是一個檔案，不可是網址。"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -212,3 +199,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
 msgid "Visible at"
 msgstr "可見在"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "When attached inside a quote, the document must be a file, not a URL."
+msgstr "附加至引用內時，文件必須是一個檔案，不可是網址。"

@@ -323,13 +323,15 @@ class StockMoveLine(models.Model):
             if move_line.move_id or not move_line.picking_id:
                 continue
             if move_line.picking_id.state != 'done':
-                moves = move_line.picking_id.move_ids.filtered(lambda x: x.product_id == move_line.product_id)
-                moves = sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+                moves = move_line._get_linkable_moves()
                 if moves:
-                    move_line.write({
+                    vals = {
                         'move_id': moves[0].id,
                         'picking_id': moves[0].picking_id.id,
-                    })
+                    }
+                    if moves[0].picked:
+                        vals['picked'] = True
+                    move_line.write(vals)
                 else:
                     create_move(move_line)
             else:
@@ -380,6 +382,9 @@ class StockMoveLine(models.Model):
     def write(self, vals):
         if 'product_id' in vals and any(vals.get('state', ml.state) != 'draft' and vals['product_id'] != ml.product_id.id for ml in self):
             raise UserError(_("Changing the product is only allowed in 'Draft' state."))
+
+        if ('lot_id' in vals or 'quant_id' in vals) and len(self.product_id) > 1:
+            raise UserError(_("Changing the Lot/Serial number for move lines with different products is not allowed."))
 
         moves_to_recompute_state = self.env['stock.move']
         triggers = [
@@ -987,3 +992,8 @@ class StockMoveLine(models.Model):
                 'message': _("The inventory adjustments have been reverted."),
             }
         }
+
+    def _get_linkable_moves(self):
+        self.ensure_one()
+        moves = self.picking_id.move_ids.filtered(lambda x: x.product_id == self.product_id)
+        return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)

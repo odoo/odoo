@@ -141,7 +141,7 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account"/>
+                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', '=ilike', self + '%')]" string="Account"/>
                     <filter string="Receivable" name="receivableacc" domain="[('account_type','=','asset_receivable')]"/>
                     <filter string="Payable" name="payableacc" domain="[('account_type','=','liability_payable')]"/>
                     <filter string="Equity" name="equityacc" domain="[('internal_group','=', 'equity')]"/>

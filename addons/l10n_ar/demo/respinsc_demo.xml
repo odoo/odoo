@@ -36,6 +36,13 @@
         <value model="res.company" eval="obj().env.ref('l10n_ar.company_ri')"/>
     </function>
 
+    <!-- Products created before the company don't get the default tax set, by default, 
+    although the tests are expecting it... Hence we force it -->
+    <function model="product.template" name="_force_default_tax">
+        <value model="product.template" eval="obj().search([]).ids"/>
+        <value model="res.company" eval="obj().env.ref('l10n_ar.company_ri')"/>
+    </function>
+
     <record id="bank_account_ri" model="res.partner.bank">
         <field name="acc_number">7982898111100056688080</field>
         <field name="partner_id" ref="l10n_ar.partner_ri"/>

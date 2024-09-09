@@ -24,27 +24,68 @@ echo "export XAUTHORITY=/run/lightdm/pi/xauthority" >> /home/pi/.bashrc
 echo "export XAUTHORITY=/run/lightdm/root/:0" >> ~/.bashrc
 # Aliases
 echo  "alias ll='ls -al'" | tee -a ~/.bashrc /home/pi/.bashrc
-echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo='sudo systemctl stop odoo; /usr/bin/python3 /home/pi/odoo/odoo-bin --config /home/pi/odoo.conf --load=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias odoo_logs='less +F /var/log/odoo/odoo-server.log'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias write_mode='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_conf='cat /home/pi/odoo.conf'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias read_mode='sudo mount -o remount,ro / && sudo mount -o remount,ro /root_bypass_ramdisks'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias install='sudo mount -o remount,rw / && sudo mount -o remount,rw /root_bypass_ramdisks; sudo chroot /root_bypass_ramdisks/; mount -t proc proc /proc'" | tee -a ~/.bashrc /home/pi/.bashrc
 echo  "alias blackbox='ls /dev/serial/by-path/'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias nano='write_mode; nano -l'" | tee -a /home/pi/.bashrc
+echo  "alias vim='write_mode; sudo vim'" | tee -a /home/pi/.bashrc
+echo  "alias odoo_luxe='printf \" ______\n< Luxe >\n ------\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\ \n                ||----w |\n                ||     ||\n\"'" | tee -a ~/.bashrc /home/pi/.bashrc
+echo  "alias odoo_start='sudo systemctl start odoo'" >> /home/pi/.bashrc
+echo  "alias odoo_stop='sudo systemctl stop odoo'" >> /home/pi/.bashrc
+echo  "alias odoo_restart='sudo systemctl restart odoo'" >> /home/pi/.bashrc
 echo "
-show_odoo_aliases() {
+odoo_help() {
   echo 'Welcome to Odoo IoTBox tools'
   echo 'odoo                Starts/Restarts Odoo server manually (not through odoo.service)'
   echo 'odoo_logs           Displays Odoo server logs in real time'
+  echo 'odoo_conf           Displays Odoo configuration file content'
   echo 'write_mode          Enables system write mode'
   echo 'read_mode           Switches system to read-only mode'
   echo 'install             Bypasses ramdisks to allow package installation'
   echo 'blackbox            Lists all serial connected devices'
+  echo 'odoo_start          Starts Odoo service'
+  echo 'odoo_stop           Stops Odoo service'
+  echo 'odoo_restart        Restarts Odoo service'
+  echo 'odoo_dev <branch>   Resets Odoo on the specified branch from odoo-dev repository'
 }
-alias odoo_help='show_odoo_aliases'
+
+odoo_dev() {
+  if [ -z \"\$1\" ]; then
+    odoo_help
+    return
+  fi
+  write_mode
+  pwd=\$(pwd)
+  cd /home/pi/odoo
+  git remote add dev https://github.com/odoo-dev/odoo.git
+  git fetch dev \$1 --depth=1 --prune
+  git reset --hard dev/\$1
+  cd \$pwd
+}
+
+pip() {
+  if [[ -z \"\$1\" || -z \"\$2\" ]]; then
+    odoo_help
+    return 1
+  fi
+  additional_arg=\"\"
+  if [ \"\$1\" == \"install\" ]; then
+    additional_arg=\"--user\"
+  fi
+  pip3 \"\$1\" \"\$2\" --break-system-package \"\$additional_arg\"
+}
 " | tee -a ~/.bashrc /home/pi/.bashrc
 
 source ~/.bashrc
 source /home/pi/.bashrc
+
+# copy the odoo.conf file to the overwrite directory
+mv -v "/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "/home/pi/"
+chown pi:pi "/home/pi/odoo.conf"
 
 apt-get update
 
@@ -69,6 +110,7 @@ PKGS_TO_INSTALL="
     kpartx \
     libcups2-dev \
     libpq-dev \
+    libffi-dev \
     lightdm \
     localepurge \
     nginx-full \
@@ -152,7 +194,9 @@ PIP_TO_INSTALL="
     cryptography==36.0.2 \
     screeninfo==0.8.1 \
     zeep==4.2.1 \
-    num2words==0.5.13"
+    num2words==0.5.13 \
+    freezegun==1.2.1 \
+    schedule==1.2.1"
 
 pip3 install ${PIP_TO_INSTALL} --break-system-package
 

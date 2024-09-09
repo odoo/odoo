@@ -50,7 +50,7 @@ class Project(models.Model):
         action.update({
             'display_name': _('Expenses'),
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban'], [False, 'graph'], [False, 'pivot']],
-            'context': {'default_analytic_distribution': {self.analytic_account_id.id: 100}},
+            'context': {'project_id': self.id},
             'domain': domain or [('id', 'in', expense_ids)],
         })
         if len(expense_ids) == 1:
@@ -87,7 +87,7 @@ class Project(models.Model):
         # As both purchase orders and expenses (paid by employee) create vendor bills,
         # we need to make sure they are exclusive in the profitability report.
         move_line_ids = super()._get_already_included_profitability_invoice_line_ids()
-        query = self.env['account.move.line']._search([
+        query = self.env['account.move.line'].sudo()._search([
             ('move_id.expense_sheet_id', '!=', False),
             ('id', 'not in', move_line_ids),
         ])

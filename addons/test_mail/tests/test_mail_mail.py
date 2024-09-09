@@ -286,6 +286,60 @@ class TestMailMail(MailCommon):
             for mail, expected_state in zip(mails, expected_states):
                 self.assertEqual(mail.state, expected_state)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
+    def test_mail_mail_send_configuration(self):
+        """ Test configuration and control of email queue """
+        self.env['mail.mail'].search([]).unlink()  # cleanup queue
+
+        # test 'mail.mail.queue.batch.size': cron fetch size
+        for queue_batch_size, exp_send_count in [
+            (3, 3),
+            (0, 10),  # maximum available
+            (False, 10),  # maximum available
+        ]:
+            with self.subTest(queue_batch_size=queue_batch_size), \
+                 self.mock_mail_gateway():
+                self.env['ir.config_parameter'].sudo().set_param('mail.mail.queue.batch.size', queue_batch_size)
+                mails = self.env['mail.mail'].create([
+                    {
+                        'auto_delete': False,
+                        'body_html': f'Batch Email {idx}',
+                        'email_from': 'test.from@mycompany.example.com',
+                        'email_to': 'test.outgoing@test.example.com',
+                        'state': 'outgoing',
+                    }
+                    for idx in range(10)
+                ])
+
+                self.env['mail.mail'].process_email_queue()
+                self.assertEqual(len(self._mails), exp_send_count)
+                mails.write({'state': 'sent'})  # avoid conflicts between batch
+
+        # test 'mail.session.batch.size': batch send size
+        self.env['ir.config_parameter'].sudo().set_param('mail.mail.queue.batch.size', False)
+        for session_batch_size, exp_call_count in [
+            (3, 4),  # 10 mails -> 4 iterations of 3
+            (0, 1),
+            (False, 1),
+        ]:
+            with self.subTest(session_batch_size=session_batch_size), \
+                 self.mock_mail_gateway():
+                self.env['ir.config_parameter'].sudo().set_param('mail.session.batch.size', session_batch_size)
+                mails = self.env['mail.mail'].create([
+                    {
+                        'auto_delete': False,
+                        'body_html': f'Batch Email {idx}',
+                        'email_from': 'test.from@mycompany.example.com',
+                        'email_to': 'test.outgoing@test.example.com',
+                        'state': 'outgoing',
+                    }
+                    for idx in range(10)
+                ])
+
+                self.env['mail.mail'].process_email_queue()
+                self.assertEqual(self.mail_mail_private_send_mocked.call_count, exp_call_count)
+                mails.write({'state': 'sent'})  # avoid conflicts between batch
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_mail_send_exceptions_origin(self):
         """ Test various use case with exceptions and errors and see how they are

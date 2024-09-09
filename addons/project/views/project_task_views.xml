@@ -154,6 +154,7 @@
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>
             <field name="context">{
+                'active_model': 'project.project',
                 'default_project_id': active_id,
                 'show_project_update': True,
                 'search_default_open_tasks': 1,
@@ -888,7 +889,7 @@
                     <attribute name="default_group_by"/>
                 </tree>
                 <field name="project_id" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                    <attribute name="column_invisible">0</attribute>
                 </field>
             </field>
         </record>

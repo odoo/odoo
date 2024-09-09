@@ -82,9 +82,7 @@ class Binary(http.Controller):
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        res = stream.get_response(**send_file_kwargs)
-        res.headers['Content-Security-Policy'] = "default-src 'none'"
-        return res
+        return stream.get_response(**send_file_kwargs)
 
     @http.route([
         '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public")
@@ -195,9 +193,7 @@ class Binary(http.Controller):
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        res = stream.get_response(**send_file_kwargs)
-        res.headers['Content-Security-Policy'] = "default-src 'none'"
-        return res
+        return stream.get_response(**send_file_kwargs)
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, model, id, ufile, callback=None):

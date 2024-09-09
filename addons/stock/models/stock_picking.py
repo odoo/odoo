@@ -959,6 +959,7 @@ class Picking(models.Model):
             'views': [(view_id, 'tree')],
             'domain': [('id', 'in', self.move_line_ids.ids)],
             'context': {
+                'create': self.state != 'done' or not self.is_locked,
                 'default_picking_id': self.id,
                 'default_location_id': self.location_id.id,
                 'default_location_dest_id': self.location_dest_id.id,

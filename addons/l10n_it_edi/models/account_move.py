@@ -245,7 +245,9 @@ class AccountMove(models.Model):
         base_lines = [invl._convert_to_tax_base_line_dict() for invl in lines]
         inverse_factor = (-1 if reverse_charge_refund else 1)
         for num, line in enumerate(base_lines):
+            sign = -1 if line['record'].move_id.is_inbound() else 1
             line['sequence'] = num
+            line['price_subtotal'] = line['record'].balance * sign if convert_to_euros else line['price_subtotal']
             line['price_subtotal'] = line['price_subtotal'] * inverse_factor
             if line['discount'] != 100.0 and line['quantity']:
                 gross_price = line['price_subtotal'] / (1 - line['discount'] / 100.0)
@@ -287,7 +289,8 @@ class AccountMove(models.Model):
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
-                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor,
+                'subtotal_price_eur': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor,
+                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor * line_dict['rate'],
                 'unit_price': line_dict['price_unit'],
                 'discount_amount': ((line_dict['discount_amount'] - line_dict['discount_amount_before_dispatching']) / line.quantity) if line.quantity else 0,
                 'vat_tax': line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0),
@@ -430,6 +433,7 @@ class AccountMove(models.Model):
             'partner_bank': self.partner_bank_id,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
+            'payment_method': 'MP05',
             'tax_details': tax_details,
             'downpayment_moves': downpayment_moves,
             'rc_refund': reverse_charge_refund,
@@ -499,6 +503,26 @@ class AccountMove(models.Model):
             and self.amount_total <= 400
         )
 
+    def _l10n_it_edi_is_fee_statement(self):
+        """
+            This function returns a boolean value based on the comparison of the lines values with a product.
+            If the total value of the lines associated with services exceeds the total value of the lines associated with goods, the function assumes that the document is a fee statement.
+            This is particularly useful for documents that represent downpayments.
+        """
+        self.ensure_one()
+        service_value = 0
+        good_or_conso_value = 0
+        for line in self.invoice_line_ids:
+            if line.display_type in ('line_note', 'line_section'):
+                continue
+
+            if line.product_id.type == "service":
+                service_value += line.price_total
+            else:
+                good_or_conso_value += line.price_total
+
+        return service_value > good_or_conso_value
+
     def _l10n_it_edi_features_for_document_type_selection(self):
         """ Returns a dictionary of features to be compared with the TDxx FatturaPA
             document type requirements. """
@@ -514,6 +538,7 @@ class AccountMove(models.Model):
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
+            'fee_statement': self._l10n_it_edi_is_fee_statement(),  # For downpayment
         }
 
     def _l10n_it_edi_document_type_mapping(self):
@@ -523,16 +548,33 @@ class AccountMove(models.Model):
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': False},
+                     'downpayment': False,
+                     'fee_statement': False},  # Needed because downpayment move will be set as TD01 otherwise
             'TD02': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': True},
+            'TD03': {'move_types': ['out_invoice'],
+                     'import_type': 'in_invoice',
+                     'self_invoice': False,
+                     'simplified': False,
+                     'downpayment': False,
+                     'fee_statement': True},
             'TD04': {'move_types': ['out_refund'],
                      'import_type': 'in_refund',
                      'self_invoice': False,
                      'simplified': False},
+            'TD05': {'move_types': ['out_refund'],
+                     'import_type': 'in_refund',
+                     'self_invoice': False,
+                     'simplified': False},
+            'TD06': {'move_types': ['out_invoice'],
+                     'import_type': 'in_invoice',
+                     'self_invoice': False,
+                     'simplified': False,
+                     'downpayment': True,
+                     'fee_statement': True},
             'TD07': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,

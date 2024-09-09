@@ -1049,6 +1049,9 @@ $-transition-duration: 200ms;
             width: 100%;
             flex: auto;
         }
+        > .o_mega_menu_container_size {
+            transform: unset;
+        }
     }
 }
 
@@ -1337,6 +1340,16 @@ header {
         z-index: -1;
         pointer-events: none;
         background: rgba(0, 0, 0, .05);
+    }
+}
+
+// TODO in master: remove this and create the SCSS file for the "Big Icons
+// Subtitles" mega menu template, as it cannot be added in stable.
+.s_mega_menu_big_icons_subtitles:not([data-vcss]) {
+    @include media-breakpoint-only(md) {
+        .row > div.col-md-6 {
+            min-width: fit-content;
+        }
     }
 }
 
@@ -1784,6 +1797,7 @@ input[value*="data-oe-translation-initial-sha"] {
         // best workaround for now.
         > main {
             overflow-x: hidden;
+            overflow-y: hidden;
         }
     }
     .o_footer_slideout {

@@ -177,7 +177,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     async createRibbon(previewMode, widgetValue, params) {
         await this._setRibbon(false);
         this.$ribbon.text(_t('Badge Text'));
-        this.$ribbon.addClass('bg-primary o_ribbon_left');
+        this.$ribbon.addClass('o_ribbon_left');
         this.ribbonEditMode = true;
         await this._saveRibbon(true);
     },
@@ -376,8 +376,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         $ribbons.removeClass(htmlClasses);
 
         $ribbons.addClass(ribbon.html_class || '');
-        $ribbons.attr('style',
-            `background-color: ${ribbon.bg_color ? `${ribbon.bg_color} !important` : 'inherit'}`);
+        $ribbons.css('background-color', ribbon.bg_color || '');
         $ribbons.css('color', ribbon.text_color || '');
 
         if (!this.ribbons[ribbonId]) {
