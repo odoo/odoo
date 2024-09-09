@@ -790,20 +790,42 @@ class TestTaxesComputation(TestTaxCommon):
 
         # tax       price_incl      incl_base_amount
         # -----------------------------------------------
+        # tax1
+        # tax2                      T
+        # tax3
+        tax2.price_include = False
+        self.assert_taxes_computation(
+            tax1 + tax2 + tax3,
+            100.0,
+            {
+                'total_included': 124.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 1.0),
+                    (100.0, 21.0),
+                    (121.0, 2.0),
+                ),
+            },
+            rounding_method='round_globally'
+        )
+
+        # tax       price_incl      incl_base_amount
+        # -----------------------------------------------
         # tax1      T
         # tax2      T               T
         # tax3
         tax1.price_include = True
+        tax2.price_include = True
         self.assert_taxes_computation(
             tax1 + tax2 + tax3,
-            121.0,
+            122.0,
             {
-                'total_included': 123.0,
-                'total_excluded': 99.0,
+                'total_included': 124.0,
+                'total_excluded': 100.0,
                 'taxes_data': (
-                    (99.0, 1.0),
+                    (100.0, 1.0),
                     (100.0, 21.0),
-                    (121.0, 2.0),
+                    (122.0, 2.0),
                 ),
             },
             rounding_method='round_globally',
@@ -817,14 +839,14 @@ class TestTaxesComputation(TestTaxCommon):
         tax2.include_base_amount = False
         self.assert_taxes_computation(
             tax1 + tax2 + tax3,
-            121.0,
+            122.0,
             {
-                'total_included': 123.0,
-                'total_excluded': 99.0,
+                'total_included': 124.0,
+                'total_excluded': 100.0,
                 'taxes_data': (
-                    (99.0, 1.0),
+                    (100.0, 1.0),
                     (100.0, 21.0),
-                    (121.0, 2.0),
+                    (122.0, 2.0),
                 ),
             },
             rounding_method='round_globally',
