@@ -1,6 +1,4 @@
-/** @odoo-module **/
-
-import { Component, onWillStart, onWillUpdateProps, useEffect, useState } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 import {
     CustomFieldCard
 } from "@sale_pdf_quote_builder/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card";
@@ -24,35 +22,21 @@ export class CustomContentKanbanLikeWidget extends Component {
             footers: {},
         });
 
-        onWillUpdateProps(async (nextProps) => {
-            await this.updateState(nextProps.record.resId);
-        });
-        onWillStart(async () => {
-            await this.updateState(this.props.record.resId);
-        });
-        // Update the available documents when updating the quotation template.
+        // Initialize the state and update available documents when updating the quotation template.
         useEffect((saleOrderTemplate) => {
-            this.updateState(this.props.record.resId);
+            this.updateState();
         }, () => [this.props.record.data.sale_order_template_id]);
-        // useEffect((customizablePdfFormFields) => {
-        //     const { headers, line, footers } = JSON.parse(customizablePdfFormFields);
-        //     // this.state.headers = headers;
-        //     // this.state.lines = line;
-        //     // this.state.footers = footers;
-        // }, () => [this.props.record.data.customizable_pdf_form_fields]);
     }
 
-    async updateState(id) {
+    async updateState() {
         const saved = await this.props.record.save();  // To display documents of potentially unsaved SOL.
         if (saved) {  // do not fetch wrong form data if record was not saved.
-            // FIXME VCR the route is called twice, why ?
-            // FIXME VCR called on save/leave, should be avoided
             const { headers, lines, footers } = await this.orm.call(
-                'sale.order', 'get_update_included_pdf_params', [id]
+                'sale.order', 'get_update_included_pdf_params', [this.props.record.resId]
             )
             this.state.headers = headers;
             this.state.lines = lines;
-            this.state.footers = footers
+            this.state.footers = footers;
         }
     }
 
