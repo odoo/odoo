@@ -15,10 +15,8 @@ export class DynamicRecordList extends DynamicList {
     _setData(data) {
         /** @type {import("./record").Record[]} */
         this.records = data.records.map((r) => this._createRecordDatapoint(r));
-        if (this.isDomainSelected) {
-            this.records.forEach((r) => (r.selected = true));
-        }
         this._updateCount(data);
+        this._selectDomain(this.isDomainSelected);
     }
 
     // -------------------------------------------------------------------------
@@ -158,6 +156,13 @@ export class DynamicRecordList extends DynamicList {
             const offset = Math.max(this.offset - this.limit, 0);
             this.model._updateConfig(this.config, { offset }, { reload: false });
         }
+    }
+
+    _selectDomain(value) {
+        if (value) {
+            this.records.forEach((r) => (r.selected = true));
+        }
+        super._selectDomain(value);
     }
 
     _updateCount(data) {

@@ -1697,7 +1697,6 @@ export class ListRenderer extends Component {
             record.toggleSelection();
         }
         this.lastCheckedRecord = record;
-        this.props.list.selectDomain(false);
     }
 
     toggleRecordShiftSelection(record) {
