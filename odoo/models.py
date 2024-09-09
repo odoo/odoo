@@ -1231,10 +1231,6 @@ class BaseModel(metaclass=MetaModel):
             if field_path[0] in (None, 'id', '.id'):
                 continue
             model_fields = self._fields
-            if isinstance(model_fields[field_path[0]], odoo.fields.Many2one):
-                # this only applies for toplevel m2o (?) fields
-                if field_path[0] in (self.env.context.get('name_create_enabled_fieds') or {}):
-                    creatable_models.add(model_fields[field_path[0]].comodel_name)
             for field_name in field_path:
                 if field_name in (None, 'id', '.id'):
                     break
