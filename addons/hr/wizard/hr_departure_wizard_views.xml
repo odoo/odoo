@@ -7,9 +7,9 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <h1><field name="employee_id" readonly="1" options="{'no_open': True}"/></h1>
                         <group>
                             <group id="info">
+                                <field name="employee_ids" widget="many2many_tags"/>
                                 <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
                                 <field name="departure_date"/>
                             </group>

@@ -53,6 +53,17 @@ class HrEmployee(models.Model):
             if not employee.legal_name:
                 employee.legal_name = employee.name
 
+    def _get_departure_date(self):
+        # Primarily used in the archive wizard
+        # to pick a good default for the departure date
+        self.ensure_one()
+        if self.contract_id.state == "open":
+            return False
+        expired_contract = self.env['hr.contract'].search([('employee_id', '=', self.id), ('state', '=', 'close')], limit=1, order='date_end desc')
+        if expired_contract:
+            return expired_contract.date_end
+        return super()._get_departure_date()
+
     def _get_first_contracts(self):
         self.ensure_one()
         contracts = self.sudo().contract_ids.filtered(lambda c: c.state != 'cancel')

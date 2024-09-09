@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, timedelta
 
+from odoo import Command
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -16,7 +17,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         cls.departure_wizard = cls.env['hr.departure.wizard'].create({
             'departure_reason_id': departure_reason.id,
             'departure_date': cls.departure_date,
-            'employee_id': cls.employee.id,
+            'employee_ids': [Command.link(cls.employee.id)],
         })
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
