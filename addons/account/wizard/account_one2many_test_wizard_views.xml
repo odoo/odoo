@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_one2many_test_wizard_form" model="ir.ui.view">
+            <field name="name">account.one2many.test.wizard.form</field>
+            <field name="model">account.one2many.test.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="some_field"/>
+                    <label for="wizard_line_ids" string="These are the wizard lines:"/>
+                    <field name="wizard_line_ids" class="d-block">
+                        <tree string="Wizard Lines" editable="bottom" create="0" delete="0">
+                            <field name="sequence"/>
+                            <field name="account_id"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_one2many_test_wizard_action" model="ir.actions.act_window">
+            <field name="name">Test One2many widget</field>
+            <field name="res_model">account.one2many.test.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_one2many_test_wizard_form"/>
+            <field name="target">new</field>
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_manager')])]"/>
+            <field name="binding_model_id" ref="account.model_account_account"/>
+            <field name="binding_type">action</field>
+            <field name="binding_view_types">list</field>
+        </record>
+    </data>
+</odoo>
