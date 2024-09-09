@@ -13,6 +13,7 @@
     'installable': True,
     'assets': {
         'web.assets_backend': [
+            'test_translation_import/static/src/js/js_codefile.js',
             'test_translation_import/static/src/xml/js_templates.xml',
         ],
     },
