@@ -251,7 +251,7 @@ class Page(models.Model):
         )
         results = most_specific_pages.filtered_domain(domain)  # already sudo
 
-        if with_description and search:
+        if with_description and search and most_specific_pages:
             # Perform search in translations
             # TODO Remove when domains will support xml_translate fields
             query = sql.SQL("""
