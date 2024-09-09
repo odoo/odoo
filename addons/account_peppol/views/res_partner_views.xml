@@ -7,12 +7,15 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name='ubl_cii_format']" position="before">
+                <xpath expr="//field[@name='invoice_edi_format']" position="attributes">
+                    <attribute name="required">invoice_sending_method == 'peppol'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='peppol_eas']" position="before">
                     <field name="bank_account_count" invisible="1"/>
                     <div class="alert alert-warning mb-0"
                          colspan="2"
                          role="alert"
-                         invisible="country_code != 'BE' or ubl_cii_format in (False, 'facturx') or peppol_eas in (False, '0208')">
+                         invisible="country_code != 'BE' or invoice_edi_format in (False, 'facturx') or peppol_eas in (False, '0208')">
                          The recommended EAS code for Belgium is 0208. The Endpoint should be the Company Registry number.
                     </div>
                     <div class="alert alert-warning"

@@ -127,16 +127,6 @@ class PaymentTransaction(models.Model):
             order.message_post(body=message, author_id=author.id)
 
     def _send_invoice(self):
-        template_id = int(self.env['ir.config_parameter'].sudo().get_param(
-            'sale.default_invoice_email_template',
-            default=0
-        ))
-        if not template_id:
-            return
-        template = self.env['mail.template'].browse(template_id).exists()
-        if not template:
-            return
-
         for tx in self:
             tx = tx.with_company(tx.company_id).with_context(
                 company_id=tx.company_id.id,
@@ -145,7 +135,11 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            invoice_to_send.with_user(SUPERUSER_ID)._generate_pdf_and_send_invoice(template)
+            self.env['account.move.send'].with_user(SUPERUSER_ID)._generate_and_send_invoices(
+                invoice_to_send,
+                allow_raising=False,
+                allow_fallback_pdf=True,
+            )
 
     def _cron_send_invoice(self):
         """

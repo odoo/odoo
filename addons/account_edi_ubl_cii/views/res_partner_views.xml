@@ -4,27 +4,10 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
-            <group name="accounting_entries" position="after">
-                <group string="Electronic Invoicing" name="electronic_invoicing">
-                    <field name="ubl_cii_format" widget="selection"/>
-                    <field name="peppol_eas" widget="selection"
-                           invisible="ubl_cii_format in ('facturx', False)"/>
-                    <field name="peppol_endpoint"
-                           invisible="ubl_cii_format in ('facturx', False)"/>
-                </group>
-            </group>
-        </field>
-    </record>
-
-    <record id="res_partner_view_search" model="ir.ui.view">
-        <field name="name">res.partner.search.inherit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='group_by']" position="after">
-                <filter name="ubl_cii_format" string="EDI Format" context="{'group_by':'ubl_cii_format'}"/>
+            <xpath expr="//group[@id='invoice_send_settings']" position="inside">
+                <field name="peppol_eas" invisible="invoice_edi_format in ('facturx', False)"/>
+                <field name="peppol_endpoint" invisible="invoice_edi_format in ('facturx', False)"/>
             </xpath>
         </field>
     </record>
-
 </odoo>

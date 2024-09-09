@@ -10,7 +10,6 @@ from json import dumps
 import logging
 from markupsafe import Markup
 import math
-import psycopg2
 import re
 from textwrap import shorten
 
@@ -629,7 +628,7 @@ class AccountMove(models.Model):
         string='Cash Rounding Method',
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
-    send_and_print_values = fields.Json(copy=False)
+    sending_data = fields.Json(copy=False)
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
         string="PDF Attachment",
@@ -743,9 +742,10 @@ class AccountMove(models.Model):
             else:
                 move.invoice_user_id = False
 
+    @api.depends('sending_data')
     def _compute_is_being_sent(self):
         for move in self:
-            move.is_being_sent = bool(move.send_and_print_values)
+            move.is_being_sent = bool(move.sending_data)
 
     @api.depends('is_move_sent')
     def compute_move_sent_values(self):
@@ -4793,20 +4793,15 @@ class AccountMove(models.Model):
         return action
 
     def action_send_and_print(self):
-        template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
-
-        if any(not x.is_sale_document(include_receipts=True) for x in self):
-            raise UserError(_("You can only send sales documents"))
-
         return {
             'name': _("Print & Send"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_model': 'account.move.send',
+            'res_model': 'account.move.send.wizard' if len(self) == 1 else 'account.move.send.batch.wizard',
             'target': 'new',
             'context': {
+                'active_model': 'account.move',
                 'active_ids': self.ids,
-                'default_mail_template_id': template and template.id or False,
             },
         }
 
@@ -4980,7 +4975,7 @@ class AccountMove(models.Model):
         """
         :return: the correct mail template based on the current move type
         """
-        return (
+        return self.env.ref(
             'account.email_template_edi_credit_note'
             if all(move.move_type == 'out_refund' for move in self)
             else 'account.email_template_edi_invoice'
@@ -5047,7 +5042,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _cron_account_move_send(self, job_count=10):
-        """ Handle Send & Print async processing.
+        """ Process invoices generation and sending asynchronously.
         :param job_count: maximum number of jobs to process if specified.
         """
         def get_account_notification(moves, is_success: bool):
@@ -5070,39 +5065,35 @@ class AccountMove(models.Model):
 
         limit = job_count + 1
         to_process = self.env['account.move'].search(
-            [('send_and_print_values', '!=', False)],
+            [('sending_data', '!=', False)],
             limit=limit,
         )
         need_retrigger = len(to_process) > job_count
         if not to_process:
             return
 
-        all_moves = to_process[:job_count]
-        for _company, moves in all_moves.grouped('company_id').items():
-            try:
-                # Lock moves
-                with self.env.cr.savepoint(flush=False):
-                    self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(moves.ids)])
+        to_process = to_process[:job_count]
+        if not self.env['res.company']._with_locked_records(to_process, allow_raising=False):
+            return
 
-            except psycopg2.errors.LockNotAvailable:
-                _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
-                continue
+        # Collect moves by res.partner that executed the Send & Print wizard, must be done before the _process
+        # that modify sending_data.
+        moves_by_partner = to_process.grouped(lambda m: m.sending_data['author_partner_id'])
 
-            # Collect moves by res.partner that executed the Send & Print wizard, must be done before the _process
-            # that modify send_and_print_values.
-            moves_by_partner = moves.grouped(lambda m: m.send_and_print_values['sp_partner_id'])
+        self.env['account.move.send']._generate_and_send_invoices(
+            to_process,
+            from_cron=True,
+        )
 
-            self.env['account.move.send']._process_send_and_print(moves)
-
-            for partner_id, partner_moves in moves_by_partner.items():
-                partner = self.env['res.partner'].browse(partner_id)
-                partner_moves_error = partner_moves.filtered(lambda m: m.send_and_print_values and m.send_and_print_values.get('error'))
-                if partner_moves_error:
-                    partner._bus_send(*get_account_notification(partner_moves_error, False))
-                partner_moves_success = partner_moves - partner_moves_error
-                if partner_moves_success:
-                    partner._bus_send(*get_account_notification(partner_moves_success, True))
-                partner_moves_error.send_and_print_values = False
+        for partner_id, partner_moves in moves_by_partner.items():
+            partner = self.env['res.partner'].browse(partner_id)
+            partner_moves_error = partner_moves.filtered(lambda m: m.sending_data and m.sending_data.get('error'))
+            if partner_moves_error:
+                partner._bus_send(*get_account_notification(partner_moves_error, False))
+            partner_moves_success = partner_moves - partner_moves_error
+            if partner_moves_success:
+                partner._bus_send(*get_account_notification(partner_moves_success, True))
+            partner_moves_error.sending_data = False
 
         if need_retrigger:
             self.env.ref('account.ir_cron_account_move_send')._trigger()
@@ -5374,24 +5365,31 @@ class AccountMove(models.Model):
 
         return rslt
 
-    def _get_pdf_and_send_invoice_vals(self, template, **kwargs):
-        return {
-            'mail_template_id': template.id,
-            'move_ids': self.ids,
-            'checkbox_send_mail': True,
-            'checkbox_download': False,
-            **kwargs,
-        }
-
-    def _generate_pdf_and_send_invoice(self, template, force_synchronous=True, allow_fallback_pdf=True, **kwargs):
-        """ Generate the pdf for the current invoices and send them by mail using the send & print wizard.
-        :param force_synchronous:   Flag indicating if the method should be done synchronously.
+    def _generate_and_send(self, force_synchronous=True, allow_fallback_pdf=True, **custom_settings):
+        """ Generate the pdf and electronic format(s) for the current invoices and send them given default settings
+        (on partner or company) or given provided custom_settings.
+        :param force_synchronous: whether to process (as)synchronously (! only relevant for batch sending (multiple invoices))
         :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
                                     proforma PDF report instead.
+        :param custom_settings: custom settings to create the wizard (! only relevant for single sending (one invoice))
+        (Since default settings are use for batch sending.
+        If you are looking for something more flexible, directly call env[account.move.send]._generate_and_send_invoices method.)
         """
-        composer_vals = self._get_pdf_and_send_invoice_vals(template, **kwargs)
-        composer = self.env['account.move.send'].create(composer_vals)
-        return composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf)
+        if not self:
+            return
+        if len(self) == 1:
+            wizard = self.env['account.move.send.wizard'].with_context(
+                active_model='account.move',
+                active_ids=self.ids,
+            ).create(custom_settings)
+            wizard.action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)
+        else:
+            wizard = self.env['account.move.send.batch.wizard'].with_context(
+                active_model='account.move',
+                active_ids=self.ids,
+            ).create({})
+            wizard.action_send_and_print(force_synchronous=force_synchronous)
+        return wizard
 
     def _get_invoice_pdf_proforma(self):
         """ Generate the Proforma of the invoice.

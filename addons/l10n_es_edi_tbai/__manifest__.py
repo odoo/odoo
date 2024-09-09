@@ -38,7 +38,6 @@ You need to configure your certificate and the tax agency.
         'views/res_company_views.xml',
 
         'wizards/account_move_reversal_views.xml',
-        'wizards/account_move_send_views.xml',
     ],
     'demo': [
         'demo/demo_certificate.xml',

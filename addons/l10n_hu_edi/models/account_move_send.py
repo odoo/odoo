@@ -5,68 +5,50 @@ from odoo import api, fields, models, _
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConnection
 
 
-class AccountMoveSend(models.TransientModel):
+class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
-    l10n_hu_edi_enable_nav_30 = fields.Boolean(
-        compute='_compute_l10n_hu_edi_enable_nav_30'
-    )
-    l10n_hu_edi_checkbox_nav_30 = fields.Boolean(
-        string='NAV 3.0',
-        compute='_compute_l10n_hu_edi_checkbox_nav_30',
-        store=True,
-        readonly=False,
-    )
-
-    def _get_wizard_values(self):
-        # EXTENDS 'account'
-        return {
-            **super()._get_wizard_values(),
-            'l10n_hu_edi_checkbox_nav_30': self.l10n_hu_edi_checkbox_nav_30,
-        }
-
-    # -------------------------------------------------------------------------
-    # COMPUTE METHODS
-    # -------------------------------------------------------------------------
-
-    @api.depends('move_ids')
-    def _compute_l10n_hu_edi_enable_nav_30(self):
-        for wizard in self:
-            enabled_moves = wizard.move_ids.filtered(lambda m: 'upload' in m._l10n_hu_edi_get_valid_actions())._origin
-            wizard.l10n_hu_edi_enable_nav_30 = wizard.mode in ('invoice_single', 'invoice_multi') and enabled_moves
-
-    @api.depends('l10n_hu_edi_enable_nav_30')
-    def _compute_l10n_hu_edi_checkbox_nav_30(self):
-        for wizard in self:
-            wizard.l10n_hu_edi_checkbox_nav_30 = wizard.l10n_hu_edi_enable_nav_30
-
-    @api.depends('l10n_hu_edi_checkbox_nav_30')
-    def _compute_warnings(self):
-        # EXTENDS 'account'
-        super()._compute_warnings()
-        for wizard in self:
-            if enabled_moves := wizard.move_ids.filtered(lambda m: 'upload' in m._l10n_hu_edi_get_valid_actions())._origin:
-                warnings = {**(wizard.warnings or {}), **enabled_moves._l10n_hu_edi_check_invoices()}
-                if not wizard.l10n_hu_edi_checkbox_nav_30:
-                    warnings['l10n_hu_edi_checkbox_not_ticked'] = {
-                        'message': _("Invoices issued in Hungary must, with few exceptions, be reported to the NAV's Online-Invoice system.")
-                    }
-                wizard.warnings = warnings
-
-    # -------------------------------------------------------------------------
-    # BUSINESS ACTIONS
-    # -------------------------------------------------------------------------
-
     @api.model
-    def _need_invoice_document(self, invoice):
+    def _is_hu_edi_applicable(self, move):
+        return 'upload' in move._origin._l10n_hu_edi_get_valid_actions()
+
+    def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
-        # If the send & print triggers the NAV 3.0 flow, we want to re-generate the PDF.
-        if invoice.country_code != 'HU':
-            return super()._need_invoice_document(invoice)
+        res = super()._get_all_extra_edis()
+        res.update({'hu_nav_30': {'label': _("NAV 3.0"), 'is_applicable': self._is_hu_edi_applicable}})
+        return res
+
+    # -------------------------------------------------------------------------
+    # ALERTS
+    # -------------------------------------------------------------------------
+
+    def _get_alerts(self, moves, moves_data):
+        # EXTENDS 'account'
+        alerts = super()._get_alerts(moves, moves_data)
+        hu_moves = moves.filtered(lambda m: 'hu_nav_30' in moves_data[m]['extra_edis'])
+        enabled_moves = moves.filtered(lambda m: 'upload' in m._l10n_hu_edi_get_valid_actions())._origin
+        if hu_moves - enabled_moves:
+            alerts['l10n_hu_edi_checkbox_not_ticked'] = {
+                'message': _("Invoices issued in Hungary must, with few exceptions, be reported to the NAV's Online-Invoice system.")
+            }
         else:
-            return invoice._l10n_hu_edi_get_valid_actions()
+            alerts.update(enabled_moves._l10n_hu_edi_check_invoices())
+        return alerts
+
+    # -------------------------------------------------------------------------
+    # SENDING METHODS
+    # -------------------------------------------------------------------------
 
     @api.model
+    def _l10n_hu_edi_cron_update_status(self):
+        final_states = [False, 'confirmed', 'confirmed_warning', 'rejected', 'cancel_pending', 'cancelled']
+        invoices_pending = self.env['account.move'].search([('l10n_hu_edi_state', 'not in', final_states)])
+        invoices_pending.l10n_hu_edi_button_update_status(from_cron=True)
+
+        if any(m.state not in final_states for m in invoices_pending):
+            # Trigger cron again in 10 minutes.
+            self.env.ref('l10n_hu_edi.ir_cron_update_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=10))
+
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
@@ -74,7 +56,7 @@ class AccountMoveSend(models.TransientModel):
         invoices_hu = self.env['account.move'].browse([
             invoice.id
             for invoice, invoice_data in invoices_data.items()
-            if invoice_data.get('l10n_hu_edi_checkbox_nav_30')
+            if 'hu_nav_30' in invoice_data['extra_edis']
                and 'upload' in invoice._l10n_hu_edi_get_valid_actions()
         ])
 
@@ -123,13 +105,3 @@ class AccountMoveSend(models.TransientModel):
 
         if self._can_commit():
             self.env.cr.commit()
-
-    @api.model
-    def _l10n_hu_edi_cron_update_status(self):
-        final_states = [False, 'confirmed', 'confirmed_warning', 'rejected', 'cancel_pending', 'cancelled']
-        invoices_pending = self.env['account.move'].search([('l10n_hu_edi_state', 'not in', final_states)])
-        invoices_pending.l10n_hu_edi_button_update_status(from_cron=True)
-
-        if any(m.state not in final_states for m in invoices_pending):
-            # Trigger cron again in 10 minutes.
-            self.env.ref('l10n_hu_edi.ir_cron_update_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=10))

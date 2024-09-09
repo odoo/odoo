@@ -1,70 +1,28 @@
 import logging
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 
-class AccountMoveSend(models.TransientModel):
+class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
-
-    l10n_es_edi_facturae_enable_xml = fields.Boolean(compute='_compute_l10n_es_edi_facturae_enable_xml')
-    l10n_es_edi_facturae_checkbox_xml = fields.Boolean(
-        string="Generate Facturae edi file",
-        default=True,
-        readonly=False,
-        store=True,
-    )
-
-    def _get_wizard_values(self):
-        # EXTENDS 'account'
-        values = super()._get_wizard_values()
-        values['l10n_es_edi_facturae_xml'] = self.l10n_es_edi_facturae_checkbox_xml
-        return values
-
-    @api.model
-    def _get_wizard_vals_restrict_to(self, only_options):
-        # EXTENDS 'account'
-        values = super()._get_wizard_vals_restrict_to(only_options)
-        return {
-            'l10n_es_edi_facturae_checkbox_xml': False,
-            **values,
-        }
-
-    # -------------------------------------------------------------------------
-    # COMPUTE METHODS
-    # -------------------------------------------------------------------------
-
-    @api.depends('move_ids')
-    def _compute_l10n_es_edi_facturae_enable_xml(self):
-        for wizard in self:
-            wizard.l10n_es_edi_facturae_enable_xml = any(move._l10n_es_edi_facturae_get_default_enable() for move in wizard.move_ids)
-
-    @api.depends('l10n_es_edi_facturae_enable_xml')
-    def _compute_l10n_es_edi_facturae_checkbox_xml(self):
-        for wizard in self:
-            wizard.l10n_es_edi_facturae_checkbox_xml = wizard.l10n_es_edi_facturae_enable_xml
-
-    @api.depends('l10n_es_edi_facturae_checkbox_xml')
-    def _compute_mail_attachments_widget(self):
-        # EXTENDS 'account' - add depends
-        super()._compute_mail_attachments_widget()
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
     # -------------------------------------------------------------------------
 
-    @api.model
     def _get_invoice_extra_attachments(self, move):
         # EXTENDS 'account'
         return super()._get_invoice_extra_attachments(move) + move.l10n_es_edi_facturae_xml_id
 
-    def _get_placeholder_mail_attachments_data(self, move):
+    def _get_placeholder_mail_attachments_data(self, move, extra_edis=None):
         # EXTENDS 'account'
-        results = super()._get_placeholder_mail_attachments_data(move)
+        results = super()._get_placeholder_mail_attachments_data(move, extra_edis=extra_edis)
 
-        if self.mode == 'invoice_single' and self.l10n_es_edi_facturae_enable_xml and self.l10n_es_edi_facturae_checkbox_xml:
+        partner_edi_format = self._get_default_invoice_edi_format(move)
+        if not move.l10n_es_edi_facturae_xml_id and partner_edi_format == 'es_facturae' and move._l10n_es_edi_facturae_get_default_enable():
             filename = f'{move.name.replace("/", "_")}_facturae_signed.xml'
             results.append({
                 'id': f'placeholder_{filename}',
@@ -76,15 +34,14 @@ class AccountMoveSend(models.TransientModel):
         return results
 
     # -------------------------------------------------------------------------
-    # BUSINESS ACTIONS
+    # SENDING METHODS
     # -------------------------------------------------------------------------
 
-    @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
-        if invoice_data.get('l10n_es_edi_facturae_xml') and invoice._l10n_es_edi_facturae_get_default_enable():
+        if invoice_data['invoice_edi_format'] == 'es_facturae' and invoice._l10n_es_edi_facturae_get_default_enable():
             try:
                 xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
                 if errors:
@@ -111,7 +68,6 @@ class AccountMoveSend(models.TransientModel):
                 else:
                     raise
 
-    @api.model
     def _link_invoice_documents(self, invoices_data):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoices_data)
@@ -123,5 +79,5 @@ class AccountMoveSend(models.TransientModel):
         ]
         if attachments_vals:
             attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
-            res_ids = [attachment.res_id for attachment in attachments]
+            res_ids = attachments.mapped('res_id')
             self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'])

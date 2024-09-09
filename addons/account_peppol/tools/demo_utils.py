@@ -84,6 +84,7 @@ def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
     self.ensure_one()
     old_value = self.peppol_verification_state
     self.peppol_verification_state = 'valid'
+    self.invoice_sending_method = 'peppol'
     self._log_verification_state_update(self.env.company, old_value, 'valid')
 
 def _mock_user_creation(func, self, *args, **kwargs):

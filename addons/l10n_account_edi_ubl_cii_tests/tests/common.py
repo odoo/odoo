@@ -22,8 +22,6 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         # Required for `product_uom_id` to be visible in the form views
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')
 
-        cls.company.invoice_is_ubl_cii = True
-
         # remove this tax, otherwise, at import, this tax with children taxes can be selected and the total is wrong
         cls.tax_armageddon.children_tax_ids.unlink()
         cls.tax_armageddon.unlink()
@@ -172,7 +170,8 @@ class TestUBLCommon(AccountTestInvoicingCommon):
 
         account_move.action_post()
         if send:
-            account_move._generate_pdf_and_send_invoice(self.move_template)
+            # will set the right UBL format by default thanks to the partner's compute
+            account_move._generate_and_send(sending_methods=['manual'])
         return account_move
 
     def _assert_invoice_attachment(self, attachment, xpaths, expected_file_path):

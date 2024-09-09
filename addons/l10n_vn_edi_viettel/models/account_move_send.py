@@ -3,55 +3,21 @@
 import base64
 import json
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, _, api, models
 
 
-class AccountMoveSend(models.TransientModel):
+class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
-    l10n_vn_edi_enable = fields.Boolean(
-        compute='_compute_l10n_vn_edi_enable',
-    )
-    l10n_vn_edi_send_checkbox = fields.Boolean(
-        compute='_compute_l10n_vn_edi_send_checkbox',
-        string='Send to SInvoice',
-        readonly=False,
-        store=True,
-    )
-    l10n_vn_edi_generate_file_checkbox = fields.Boolean(
-        compute='_compute_l10n_vn_edi_generate_file_checkbox',
-        string='Generate SInvoice file',
-        readonly=False,
-        store=True,
-    )
+    @api.model
+    def _is_vn_edi_applicable(self, move):
+        return move.l10n_vn_edi_invoice_state == 'ready_to_send' and move._l10n_vn_edi_get_credentials_company()
 
-    def _get_wizard_values(self):
+    def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
-        values = super()._get_wizard_values()
-        values['l10n_vn_edi_send'] = self.l10n_vn_edi_send_checkbox
-        values['l10n_vn_edi_generate'] = self.l10n_vn_edi_generate_file_checkbox
-        return values
-
-    @api.depends('move_ids')
-    def _compute_l10n_vn_edi_enable(self):
-        for wizard in self:
-            wizard.l10n_vn_edi_enable = any(self._l10n_vn_edi_needed(move) for move in wizard.move_ids)
-
-    @api.depends('l10n_vn_edi_enable')
-    def _compute_l10n_vn_edi_generate_file_checkbox(self):
-        # E-invoicing is a legal requirement in Vietnam, so we can enable by default.
-        for wizard in self:
-            wizard.l10n_vn_edi_generate_file_checkbox = wizard.l10n_vn_edi_enable
-
-    @api.depends('l10n_vn_edi_enable')
-    def _compute_l10n_vn_edi_send_checkbox(self):
-        # E-invoicing is a legal requirement in Vietnam, so we can enable by default.
-        for wizard in self:
-            wizard.l10n_vn_edi_send_checkbox = wizard.l10n_vn_edi_enable
-
-    def _l10n_vn_edi_needed(self, invoice):
-        """ Return true if the invoice state is ready to send, and there are credentials setup on the company. """
-        return invoice.l10n_vn_edi_invoice_state == 'ready_to_send' and invoice._l10n_vn_edi_get_credentials_company()
+        res = super()._get_all_extra_edis()
+        res.update({'vn_sinvoice_send': {'label': _("Send to SInvoice"), 'is_applicable': self._is_vn_edi_applicable}})
+        return res
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
@@ -60,7 +26,6 @@ class AccountMoveSend(models.TransientModel):
     @api.model
     def _get_invoice_extra_attachments(self, move):
         # EXTENDS 'account'
-
         # we require these to be downloadable for a better UX. It was also said that the xml and pdf files are
         # important files that needs to be shared with the customer.
         return (
@@ -69,20 +34,11 @@ class AccountMoveSend(models.TransientModel):
             + move.l10n_vn_edi_sinvoice_pdf_file_id
         )
 
-    @api.depends('l10n_vn_edi_send_checkbox')
-    def _compute_mail_attachments_widget(self):
-        # EXTENDS 'account' - add depends
-        super()._compute_mail_attachments_widget()
-
-    def _needs_sinvoice_placeholder(self):
-        # These should only show when sending to sinvoice, since the additional files are downloaded from sinvoice.
-        return self.l10n_vn_edi_enable and self.l10n_vn_edi_generate_file_checkbox and self.l10n_vn_edi_send_checkbox
-
-    def _get_placeholder_mail_attachments_data(self, move):
+    def _get_placeholder_mail_attachments_data(self, move, extra_edis=None):
         # EXTENDS 'account'
-        results = super()._get_placeholder_mail_attachments_data(move)
-
-        if self.mode == 'invoice_single' and self._needs_sinvoice_placeholder():
+        results = super()._get_placeholder_mail_attachments_data(move, extra_edis=extra_edis)
+        partner_edi_format = self._get_default_invoice_edi_format(move)
+        if partner_edi_format == 'vn_sinvoice' and move._l10n_vn_edi_get_credentials_company():
             results.extend([{
                 'id': 'placeholder_sinvoice.pdf',
                 'name': f'{move.company_id.vat}-{move.l10n_vn_edi_invoice_symbol.name}101.pdf',
@@ -97,18 +53,19 @@ class AccountMoveSend(models.TransientModel):
 
         return results
 
-    @api.model
-    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
-        # EXTENDS 'account'
-        super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
-        self._generate_sinvoice_file_date(invoice, invoice_data)
+    # -------------------------------------------------------------------------
+    # SENDING METHODS
+    # -------------------------------------------------------------------------
 
     @api.model
     def _generate_sinvoice_file_date(self, invoice, invoice_data):
         # Ensure that we still generate the file if 'generate' is ul10n_vn_edi_invoice_transaction_id-checked but send it.
-        need_file = invoice_data.get('l10n_vn_edi_generate') or invoice_data.get('l10n_vn_edi_send')
+        need_file = (
+            (invoice_data['invoice_edi_format'] == 'vn_sinvoice' and invoice._l10n_vn_edi_get_credentials_company())
+            or 'vn_sinvoice_send' in invoice_data['extra_edis']
+        )
         # In case we already have a json file existing on the invoice, we skip regenerating it.
-        if need_file and self._l10n_vn_edi_needed(invoice) and not invoice.l10n_vn_edi_sinvoice_file:
+        if need_file and not invoice.l10n_vn_edi_sinvoice_file:
             errors = invoice._l10n_vn_edi_check_invoice_configuration()
             if not errors:
                 json_data = invoice._l10n_vn_edi_generate_invoice_json()
@@ -126,12 +83,16 @@ class AccountMoveSend(models.TransientModel):
                     'errors': errors,
                 }
 
-    @api.model
+    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+        # EXTENDS 'account'
+        super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
+        self._generate_sinvoice_file_date(invoice, invoice_data)
+
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
         for invoice, invoice_data in invoices_data.items():
-            if invoice_data.get('l10n_vn_edi_send') and self._l10n_vn_edi_needed(invoice):
+            if 'vn_sinvoice_send' in invoice_data['extra_edis']:
                 errors = invoice._l10n_vn_edi_check_invoice_configuration()
                 if not errors:
                     if 'sinvoice_attachments' in invoice_data:

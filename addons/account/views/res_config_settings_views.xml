@@ -106,22 +106,6 @@
                             </setting>
                         </block>
                         <block title="Customer Invoices" id="invoicing_settings">
-                            <setting id="default_setting_options" string="Default Sending Options" help="Those options will be selected by default when clicking &quot;Print &amp; Send&quot; on invoices">
-                                <div class="mt16">
-                                    <div class="content-group" id="send_default">
-                                        <div>
-                                            <field name="invoice_is_download"/>
-                                            <label for="invoice_is_download"/>
-                                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
-                                        </div>
-                                        <div>
-                                            <field name="invoice_is_email"/>
-                                            <label for="invoice_is_email"/>
-                                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </setting>
                             <setting id="send_invoices_followups" help="Send invoices and payment follow-ups by post"
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/snailmail.html">
                                 <field name="module_snailmail_account"/>

@@ -16,6 +16,13 @@ class TestSnailmailOnInvoice(TransactionCase):
             'email': False,
         })
 
+        partner_without_email.write({
+            'country_id': self.env.ref('base.us'),
+            'street': 'Test street',
+            'zip': '12345',
+            'city': 'testcity',
+        })
+
         product = self.env['product.product'].create({
             'name': 'product',
             'sale_ok': True,
@@ -30,12 +37,11 @@ class TestSnailmailOnInvoice(TransactionCase):
         })
         invoice.action_post()
 
-        print_wiz = self.env['account.move.send'].create({
-            'move_ids': invoice.ids,
-            'checkbox_download': False,
-            'checkbox_send_mail': False,
-            'checkbox_send_by_post': True,
+        print_wiz = self.env['account.move.send.wizard'].create({
+            'move_id': invoice.id,
+            'sending_methods': ['snailmail'],
         })
+        self.assertFalse(print_wiz.invoice_edi_format)
         print_wiz.action_send_and_print()
 
         letter = self.env['snailmail.letter'].search([

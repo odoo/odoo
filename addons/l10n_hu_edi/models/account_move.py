@@ -238,10 +238,7 @@ class AccountMove(models.Model):
             if self.l10n_hu_edi_state in ['confirmed', 'confirmed_warning']:
                 valid_actions.append('request_cancel')
             if not valid_actions:
-                # Placeholder to denote that the invoice was already processed with a NAV flow,
-                # useful e.g. for account_move_send's _need_invoice_document which gets called
-                # at various points in the flow, including after the invoice state has been changed
-                # to a final state.
+                # Placeholder to denote that the invoice was already processed with a NAV flow
                 valid_actions.append(True)
         return valid_actions
 
