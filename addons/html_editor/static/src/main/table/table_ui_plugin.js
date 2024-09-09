@@ -88,11 +88,6 @@ export class TableUIPlugin extends Plugin {
     }
 
     openPicker() {
-        const range = this.document.getSelection().getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-        if (rect.width === 0 && rect.height === 0 && rect.x === 0) {
-            range.startContainer.parentElement.appendChild(this.document.createElement("br"));
-        }
         this.picker.open({
             props: {
                 dispatch: this.dispatch,

@@ -110,9 +110,7 @@ export class HistoryPlugin extends Plugin {
         this.addDomListener(this.document, "input", this._onDocumentInput.bind(this));
         this.addDomListener(this.editable, "pointerup", () => {
             this.stageSelection();
-            this.stageNextSelection = true;
         });
-        this.addDomListener(this.editable, "keydown", this.stageSelection);
         this.observer = new MutationObserver(this.handleNewRecords.bind(this));
         this._cleanups.push(() => this.observer.disconnect());
         this.clean();
@@ -144,12 +142,7 @@ export class HistoryPlugin extends Plugin {
         this.steps = [];
         /** @type { HistoryStep } */
         this.currentStep = this.processHistoryStep({
-            selection: {
-                anchorNodeId: undefined,
-                anchorOffset: undefined,
-                focusNodeId: undefined,
-                focusOffset: undefined,
-            },
+            selection: {},
             mutations: [],
             id: this.generateId(),
             previousStepId: undefined,
@@ -171,6 +164,7 @@ export class HistoryPlugin extends Plugin {
      */
     reset(content) {
         this.clean();
+        this.stageSelection();
         this.steps.push(this.makeSnapshotStep());
         this.dispatch("HISTORY_RESET", { content });
     }
@@ -181,6 +175,7 @@ export class HistoryPlugin extends Plugin {
         this.disableObserver();
         this.editable.replaceChildren();
         this.clean();
+        this.stageSelection();
         for (const step of steps) {
             this.applyMutations(step.mutations);
         }
@@ -364,8 +359,31 @@ export class HistoryPlugin extends Plugin {
         // @todo @phoenix allow an option to filter mutation records.
         return filteredRecords;
     }
+
+    /**
+     * Set the serialized selection of the currentStep.
+     *
+     * This method is used to save a serialized selection in the currentStep.
+     * It will be necessary if the step is reverted at some point because we need
+     * to set the selection to where it was before any mutation was made.
+     *
+     * It means that we should not call this method in the middle of mutations
+     * because if a selection is set onto a node that is edited/added/removed
+     * within the same step, it might become impossible to set the selection
+     * when reverting the step.
+     */
     stageSelection() {
         const selection = this.shared.getEditableSelection();
+        if (
+            this.currentStep.mutations.find((m) =>
+                ["characterData", "remove", "add"].includes(m.type)
+            )
+        ) {
+            console.warn(
+                `should not have any "characterData", "remove" or "add" mutations in current step when you update the selection`
+            );
+            return;
+        }
         this.currentStep.selection = this.serializeSelection(selection);
     }
     /**

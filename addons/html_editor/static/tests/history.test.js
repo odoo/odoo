@@ -1,14 +1,14 @@
-import { expect, describe, test } from "@odoo/hoot";
-import { setupEditor, testEditor } from "./_helpers/editor";
-import { addStep, deleteBackward, insertText, redo, undo } from "./_helpers/user_actions";
+import { Editor } from "@html_editor/editor";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { getContent, setSelection } from "./_helpers/selection";
-import { pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
-import { Editor } from "@html_editor/editor";
 import { parseHTML } from "@html_editor/utils/html";
+import { describe, expect, test } from "@odoo/hoot";
+import { click, pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { setupEditor, testEditor } from "./_helpers/editor";
+import { getContent, setSelection } from "./_helpers/selection";
+import { addStep, deleteBackward, insertText, redo, undo } from "./_helpers/user_actions";
 
 describe("reset", () => {
     test("should not add mutations in the current step from the normalization when calling reset", async () => {
@@ -28,6 +28,25 @@ describe("reset", () => {
         const historyPlugin = editor.plugins.find((p) => p.constructor.name === "history");
         expect(el.firstChild.getAttribute("data-test-normalize")).toBe("1");
         expect(historyPlugin.steps.length).toBe(1);
+        expect(historyPlugin.currentStep.mutations.length).toBe(0);
+    });
+
+    test.tags("desktop")("open table picker shouldn't add mutations", async () => {
+        const { editor, el } = await setupEditor("<p>[]</p>");
+
+        insertText(editor, "/tab");
+        press("enter");
+        await animationFrame();
+        expect(".o-we-tablepicker").toHaveCount(1);
+        expect(getContent(el)).toBe(
+            `<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`
+        );
+        const historyPlugin = editor.plugins.find((p) => p.constructor.name === "history");
+        expect(historyPlugin.currentStep.mutations.length).toBe(0);
+
+        click(".odoo-editor-editable p");
+        await animationFrame();
+        expect(".o-we-tablepicker").toHaveCount(0);
         expect(historyPlugin.currentStep.mutations.length).toBe(0);
     });
 });

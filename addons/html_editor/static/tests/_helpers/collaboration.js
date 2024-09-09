@@ -102,6 +102,7 @@ export const setupMultiEditor = async (spec) => {
         peerInfo.editor = base.editor;
         if (selection && selection.anchorNode) {
             base.editor.shared.setSelection(selection);
+            base.plugins.get("history").stageSelection();
         } else {
             base.editor.document.getSelection().removeAllRanges();
         }

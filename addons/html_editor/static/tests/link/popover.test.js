@@ -454,7 +454,7 @@ describe("Link creation", () => {
             expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="#">Hello[]</a></p>');
 
             undo(editor);
-            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[]Hello</p>");
+            expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[Hello]</p>");
         });
         test("extend a link on selection and undo it", async () => {
             const { el, editor } = await setupEditor(
@@ -470,7 +470,7 @@ describe("Link creation", () => {
 
             undo(editor);
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                `<p><a href="https://www.test.com">Hello[]</a> my friend</p>`
+                `<p>[<a href="https://www.test.com">Hello</a> my friend]</p>`
             );
         });
     });

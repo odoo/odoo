@@ -10,6 +10,7 @@ import { findUpTo } from "@html_editor/utils/dom_traversal";
  */
 export class OverlayPlugin extends Plugin {
     static name = "overlay";
+    static dependencies = ["history"];
     static shared = ["createOverlay"];
 
     handleCommand(command) {
@@ -99,6 +100,10 @@ export class Overlay {
                     initialSelection,
                     bus: this.bus,
                     getContainer: this.getContainer,
+                    history: {
+                        enableObserver: this.plugin.shared.enableObserver,
+                        disableObserver: this.plugin.shared.disableObserver,
+                    },
                 }),
                 {
                     sequence: this.config.sequence || 50,
