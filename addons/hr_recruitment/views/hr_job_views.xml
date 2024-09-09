@@ -11,8 +11,8 @@
         <field name="name">hr.job.kanban</field>
         <field name="model">hr.job</field>
         <field name="arch" type="xml">
-            <kanban
-                class="o_kanban_dashboard o_hr_recruitment_kanban"
+            <kanban highlight_color="color"
+                class="o_hr_recruitment_kanban"
                 on_create="hr_recruitment.create_job_simple"
                 sample="1"
                 limit="40"
@@ -21,22 +21,12 @@
                 js_class="recruitment_kanban_view"
                 >
                 <field name="active"/>
-                <field name="name"/>
                 <field name="alias_email"/>
-                <field name="is_favorite"/>
-                <field name="department_id"/>
-                <field name="no_of_recruitment"/>
-                <field name="color"/>
-                <field name="new_application_count"/>
-                <field name="no_of_hired_employee"/>
-                <field name="manager_id"/>
-                <field name="user_id"/>
-                <field name="application_count"/>
                 <templates>
                     <t t-name="kanban-menu" groups="hr_recruitment.group_hr_recruitment_user">
                         <div class="container">
                             <div class="row">
-                                <div class="col-6 o_kanban_card_manage_section">
+                                <div class="col-6">
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <span>View</span>
                                     </h5>
@@ -50,7 +40,7 @@
                                         <a name="%(action_hr_job_sources)d" type="action" context="{'default_job_id': id}">Trackers</a>
                                     </div>
                                 </div>
-                                <div class="col-6 o_kanban_card_manage_section">
+                                <div class="col-6">
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <span>New</span>
                                     </h5>
@@ -58,7 +48,7 @@
                                         <a name="%(hr_recruitment.action_hr_applicant_new)d" type="action">Application</a>
                                     </div>
                                 </div>
-                                <div class="col-6 o_kanban_card_manage_section">
+                                <div class="col-6">
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <span>Reporting</span>
                                     </h5>
@@ -69,7 +59,7 @@
                             </div>
                             <div class="o_kanban_card_manage_settings row">
                                 <div class="col-6" role="menuitem" aria-haspopup="true">
-                                    <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                    <field name="color" widget="kanban_color_picker"/>
                                 </div>
                                 <div class="col-6" role="menuitem">
                                     <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
@@ -79,55 +69,41 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
-                            <div class="o_kanban_card_header d-flex align-items-baseline gap-1">
-                                <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
-                                <div class="o_kanban_card_header_title">
-                                    <div class="o_primary">
-                                        <span><t t-esc="record.name.value"/></span>
-                                    </div>
-                                    <div class="text-muted">
-                                        <field name="user_id" />
-                                    </div>
-                                    <div class="o_secondary" groups="base.group_multi_company">
-                                        <small><i class="fa fa-building-o" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/></small>
-                                    </div>
-                                    <div t-if="record.alias_email.value" class="o_secondary o_job_alias">
-                                        <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/></small>
-                                    </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex align-items-baseline gap-1 ms-2">
+                            <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                            <div class="o_kanban_card_header_title d-flex flex-column">
+                                <field name="name" class="fw-bold fs-4"/>
+                                <field name="user_id" class="text-muted"/>
+                                <div class="small" groups="base.group_multi_company">
+                                    <i class="fa fa-building-o" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/>
                                 </div>
-                            </div>
-                            <div class="container o_recruitment_job_container o_kanban_card_content mt-0 mt-sm-3">
-                                <div class="row">
-                                    <div class="col-7">
-                                        <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
-                                            <field name="new_application_count"/> New Applications
-                                        </button>
-                                    </div>
-                                    <ul class="col-5 o_job_activities">
-                                        <li>
-                                            <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_user">
-                                                <field name="no_of_recruitment"/> To Recruit
-                                            </a>
-                                            <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_user">
-                                                <field name="no_of_recruitment"/> To Recruit
-                                            </span>
-                                        </li>
-                                        <li t-if="record.application_count.raw_value > 0">
-                                            <field name="application_count"/> Applications
-                                        </li>
-                                        <li class="text-warning" t-if="record.activities_today.raw_value > 0">
-                                            <a name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> Activities Today</a>
-                                        </li>
-                                        <li t-if="record.activities_overdue.raw_value > 0">
-                                            <a name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> Late Activities</a>
-                                        </li>
-                                    </ul>
+                                <div t-if="record.alias_email.value" class="small o_job_alias">
+                                    <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/>
                                 </div>
-                                <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"></div>
                             </div>
                         </div>
+                        <div class="row g-0 mt-0 mt-sm-3 ms-2">
+                            <div class="col-7">
+                                <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
+                                    <field name="new_application_count"/> New Applications
+                                </button>
+                            </div>
+                            <div class="col-5">
+                                <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_user">
+                                    <field name="no_of_recruitment"/> To Recruit
+                                </a>
+                                <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_user">
+                                    <field name="no_of_recruitment"/> To Recruit
+                                </span>
+                                <div t-if="record.application_count.raw_value > 0">
+                                    <field name="application_count"/> Applications
+                                </div>
+                                <a t-if="record.activities_today.raw_value > 0" name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> Activities Today</a>
+                                <a t-if="record.activities_overdue.raw_value > 0" name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> Late Activities</a>
+                            </div>
+                        </div>
+                        <div name="kanban_boxes" class="row g-0 flex-nowrap mt-auto" groups="hr_recruitment.group_hr_recruitment_user"></div>
                     </t>
                 </templates>
             </kanban>

@@ -8,14 +8,12 @@
             <xpath expr="//kanban" position="attributes">
                 <attribute name="default_order">is_published desc, is_favorite desc, create_date DESC</attribute>
             </xpath>
-            <xpath expr="//div[hasclass('o_kanban_card_header')]" position="before">
+            <xpath expr="//t[@t-name='kanban-card']/div" position="before">
                 <field name="website_published" invisible="1"/>
-                <div class="ribbon ribbon-top-right" invisible="not website_published">
-                    <span class="text-bg-success">Published</span>
-                </div>
+                <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published"/>
             </xpath>
             <xpath expr="//div[@name='kanban_boxes']" position="attributes">
-                <attribute name="class" add="border-top pt-2" separator=" "/>
+                <attribute name="class" add="border-top pt-2 mx-n2 px-3" separator=" "/>
             </xpath>
             <xpath expr="//div[@name='kanban_boxes']" position="inside">
                 <field name="website_url" invisible="1"/>
