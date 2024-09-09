@@ -42,6 +42,12 @@ class Company(models.Model):
         string='Day of the month', default=31,
         help="""Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.
         If greater than the last day of a month, then the last day of the month will be selected instead.""")
+    stock_replenishment_info_periods = fields.Selection([
+        ('month', 'Monthly'),
+        ('year', 'Yearly'),
+    ], string='Stock Replenishment Info Periods',
+        default='year',
+        help="The stock replenishment info can be either ordered yearly or monthly")
 
     def _create_transit_location(self):
         '''Create a transit location with company_id being the given company_id. This is needed
