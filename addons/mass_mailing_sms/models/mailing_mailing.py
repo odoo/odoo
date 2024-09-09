@@ -234,11 +234,11 @@ class Mailing(models.Model):
             'mass_sms_allow_unsubscribe': self.sms_allow_unsubscribe,
         }
 
-    def action_send_mail(self, res_ids=None):
+    def _action_send_mail(self, res_ids=None):
         mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')
         if mass_sms:
             mass_sms.action_send_sms(res_ids=res_ids)
-        return super(Mailing, self - mass_sms).action_send_mail(res_ids=res_ids)
+        return super(Mailing, self - mass_sms)._action_send_mail(res_ids=res_ids)
 
     def action_send_sms(self, res_ids=None):
         for mailing in self:
