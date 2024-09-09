@@ -1,3 +1,4 @@
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -36,6 +37,28 @@ export class TableMenu extends Component {
     colItems() {
         const ltr = this.props.direction === "ltr";
         return [
+            {
+                name: "toggle_borders",
+                get text() {
+                    return this.enabled() ? _t("Turn borders off") : _t("Turn borders on");
+                },
+                enabled: () => {
+                    const table = closestElement(this.props.target, "table");
+                    return (
+                        table &&
+                        table.classList.contains("table-bordered") &&
+                        !table.classList.contains("table-borderless")
+                    );
+                },
+                get icon() {
+                    return this.enabled() ? "fa-toggle-on" : "fa-toggle-off";
+                },
+                action: () => {
+                    this.props.dispatch("TOGGLE_TABLE_BORDER", {
+                        table: closestElement(this.props.target, "table"),
+                    });
+                },
+            },
             !this.isFirst && {
                 name: "move_left",
                 icon: "fa-chevron-left disabled",
