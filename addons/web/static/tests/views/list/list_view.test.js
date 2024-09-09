@@ -3364,13 +3364,14 @@ test(`selection box: grouped list, select domain, open group`, async () => {
     expect(".o_data_row").toHaveCount(0);
     expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(0);
 
-    // open first group and select all domain
+    // select all domain by ticking the thead checkbox
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`.o_list_selection_box`).toHaveText("All 4 selected");
+
+    // open first group
     await contains(".o_group_header").click();
-    await contains("thead .o_list_record_selector input").click();
-    await contains(".o_list_selection_box .o_list_select_domain").click();
     expect(".o_data_row").toHaveCount(2);
-    expect(".o_control_panel_actions .o_list_selection_box").toHaveCount(1);
-    expect(".o_list_selection_box").toHaveText("All 4 selected");
+    expect(".o_data_row .o_list_record_selector input:checked").toHaveCount(2);
 
     // open another group
     await contains(queryAll(".o_group_header")[1]).click();
