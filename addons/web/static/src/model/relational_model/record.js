@@ -1166,6 +1166,9 @@ export class Record extends DataPoint {
         } else {
             this.selected = !this.selected;
         }
+        if (!this.selected && this.model.root.isDomainSelected) {
+            this.model.root._selectDomain(false);
+        }
     }
 
     async _getOnchangeValues(changes) {

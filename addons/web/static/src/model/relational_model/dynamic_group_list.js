@@ -14,6 +14,7 @@ export class DynamicGroupList extends DynamicList {
     setup(config, data) {
         super.setup(...arguments);
         this.isGrouped = true;
+        this._nbRecordsMatchingDomain = null;
         this._setData(data);
     }
 
@@ -21,7 +22,7 @@ export class DynamicGroupList extends DynamicList {
         /** @type {import("./group").Group[]} */
         this.groups = data.groups.map((g) => this._createGroupDatapoint(g));
         this.count = data.length;
-        this._nbRecordsMatchingDomain = null;
+        this._selectDomain(this.isDomainSelected);
     }
 
     // -------------------------------------------------------------------------
@@ -314,6 +315,9 @@ export class DynamicGroupList extends DynamicList {
             { offset, limit, orderBy, domain },
             { commit: this._setData.bind(this) }
         );
+        if (this.isDomainSelected) {
+            await this._ensureCorrectRecordCount();
+        }
     }
 
     _removeGroup(group) {
