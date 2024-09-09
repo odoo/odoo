@@ -236,6 +236,7 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
 
 export const productLabelSectionAndNoteField = {
     ...many2OneField,
+    listViewWidth: [240, 400],
     component: ProductLabelSectionAndNoteField,
 };
 registry
