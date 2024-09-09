@@ -66,41 +66,28 @@ class SaleOrder(models.Model):
                 })
 
             # Update order status
-            auth_url = "https://shiperooconnect.automation.shiperoo.com/api/authenticate"
-            auth_data = {
-                "client_id": "valid_client",
-                "client_secret": "valid_secret"
-            }
-            auth_response = requests.post(auth_url, json=auth_data)
+            logger.info("Proceeding without authentication...")
 
-            if auth_response.status_code == 200:
-                session_id = auth_response.json().get("session_id")
-                logger.info(f"Authenticated successfully. Session ID: {session_id}")
+            # Proceed with the release process
+            if all_products_available:
+                order.is_released = 'released'
+                # Prepare data to send to external system
+                data_to_send = {
+                    'order_number': order.name,
+                    'products': products_data,
+                }
+                # Send data to external API
+                release_url = "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
 
-                # Proceed with the release process
-                if all_products_available:
-                    order.is_released = 'released'
-                    # Prepare data to send to external system
-                    data_to_send = {
-                        'order_number': order.name,
-                        'products': products_data,
-                    }
-                    # Send data to external API
-                    release_url = "https://shiperooconnect.automation.shiperoo.com/api/odoo_release"
-
-                    headers = {
-                        "shipConnect": session_id,
-                        "Content-Type": "application/json"
-                    }
-                    response = requests.post(release_url, json=data_to_send, headers=headers)
-                    if response.status_code == 200:
-                        logger.info(f"Order {order.name} data successfully sent to external system.")
-                    else:
-                        logger.error(f"Failed to send order {order.name} data to external system. Response: {response.text}")
-                        order.is_released = 'unreleased'
+                headers = {
+                    "Content-Type": "application/json"
+                }
+                response = requests.post(release_url, json=data_to_send, headers=headers)
+                if response.status_code == 200:
+                    logger.info(f"Order {order.name} data successfully sent to external system.")
                 else:
+                    logger.error(f"Failed to send order {order.name} data to external system. Response: {response.text}")
                     order.is_released = 'unreleased'
-                logger.info(f"Order {order.name} released: {order.is_released}")
-
             else:
-                logger.error("Failed to authenticate. Cannot proceed with the release process.")
+                order.is_released = 'unreleased'
+            logger.info(f"Order {order.name} released: {order.is_released}")
