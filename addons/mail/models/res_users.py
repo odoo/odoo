@@ -30,9 +30,9 @@ class ResUsers(models.Model):
         'Only internal user can receive notifications in Odoo',
     )
 
-    @api.depends('share', 'groups_id')
+    @api.depends('share', 'all_group_ids')
     def _compute_notification_type(self):
-        # Because of the `groups_id` in the `api.depends`,
+        # Because of the `group_ids` in the `api.depends`,
         # this code will be called for any change of group on a user,
         # even unrelated to the group_mail_notification_type_inbox or share flag.
         # e.g. if you add HR > Manager to a user, this method will be called.
@@ -41,14 +41,16 @@ class ResUsers(models.Model):
         inbox_group_id = self.env['ir.model.data']._xmlid_to_res_id('mail.group_mail_notification_type_inbox')
 
         self.filtered_domain([
-            ('groups_id', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
+            ('group_ids', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
         ]).notification_type = 'inbox'
         self.filtered_domain([
-            ('groups_id', 'not in', inbox_group_id), ('notification_type', '=', 'inbox')
+            ('group_ids', 'not in', inbox_group_id), ('notification_type', '=', 'inbox')
         ]).notification_type = 'email'
 
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
-        self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')]).notification_type = 'email'
+        new_portal_users = self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')])
+        new_portal_users.notification_type = 'email'
+        new_portal_users.write({"group_ids": [Command.unlink(inbox_group_id)]})
 
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
@@ -87,7 +89,7 @@ class ResUsers(models.Model):
         return users
 
     def write(self, vals):
-        log_portal_access = 'groups_id' in vals and not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
+        log_portal_access = 'group_ids' in vals and not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
         user_portal_access_dict = {
             user.id: user._is_portal()
             for user in self

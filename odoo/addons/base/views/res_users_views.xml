@@ -59,10 +59,29 @@
             <field name="arch" type="xml">
                 <search string="Groups">
                     <field name="name" filter_domain="['|', ('full_name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
+                    <field name="implied_by_ids" filter_domain="[('implied_by_ids.full_name','ilike',self)]" string="Added from"/>
+                    <field name="implied_ids" filter_domain="[('implied_ids.full_name','ilike',self)]" string="Implied"/>
+                    <separator orientation="vertical"/>
+                    <filter name="filter_master_group" string="Master groups" domain="[('implied_by_ids','=',False)]"/>
                     <separator orientation="vertical"/>
                     <field name="share"/>
                     <filter name="filter_no_share" string="Internal Groups" domain="[('share','=',False)]"/>
+                    <separator orientation="vertical"/>
+                    <filter name="filter_visible_category" string="Hide technical groups" domain="[('visible','=',True)]"/>
                 </search>
+            </field>
+        </record>
+        <record id="view_groups_list" model="ir.ui.view">
+            <field name="name">res.groups.list</field>
+            <field name="model">res.groups</field>
+            <field name="arch" type="xml">
+                <list string="Implied groups" default_order="category_id,name">
+                    <field name="category_id"/>
+                    <field name="name"/>
+                    <field name="comment" optional="hide"/>
+                    <field name="implied_ids" widget="many2many_tags" optional="hide"/>
+                    <field name="implied_by_ids" widget="many2many_tags" optional="hide"/>
+                </list>
             </field>
         </record>
         <record id="view_groups_form" model="ir.ui.view">
@@ -84,6 +103,10 @@
                         <page string="Inherited" name="inherit_groups">
                             <label for="implied_ids" string="Users added to this group are automatically added in the following groups."/>
                             <field name="implied_ids"/>
+                            <label for="implied_by_ids" string="Users added the groups are automatically added in the current groups."/>
+                            <field name="implied_by_ids"/>
+                            <label for="disjoint_ids"/>
+                            <field name="disjoint_ids" widget="many2many_tags"/>
                         </page>
                         <page string="Menus" name="menus">
                             <field name="menu_access"/>
@@ -155,10 +178,10 @@
                         </div>
                         <group name="phone_numbers">
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
-                            <label for="groups_id" string="Access Rights"
+                            <label for="group_ids" string="Access Rights"
                                     invisible="id &gt; 0" groups="base.group_no_one"/>
                             <div invisible="id &gt; 0" groups="base.group_no_one">
-                                <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
+                                <field name="group_ids" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
@@ -218,7 +241,45 @@
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
                                     <field string="Default Company" name="company_id" context="{'user_preference': 0}"/>
                                 </group>
-                                <field name="groups_id"/>
+                                <group string="Groups">
+                                    <group>
+                                        <label for="group_ids" string="Selected groups"/>
+                                        <field name="group_ids" colspan="2" nolabel="1" context="{'search_default_filter_visible_category': 1}">
+                                            <list string="Selected groups" default_order="category_id,name"
+                                                    decoration-success="id in parent.view_visible_implied_group_ids"
+                                                    decoration-warning="id in parent.view_all_disjoint_group_ids"
+                                                    decoration-danger="id in parent.view_disjoint_group_ids">
+                                                <field name="category_id"/>
+                                                <field name="name"/>
+                                                <field name="comment" optional="show"/>
+                                                <field name="implied_ids" widget="many2many_tags" optional="hide"/>
+                                                <field name="disjoint_ids" widget="many2many_tags" optional="hide"/>
+                                            </list>
+                                        </field>
+                                        <div class="o_stat_info" colspan="2">
+                                            <div class="text-muted">The colored <span class="text-success">groups</span> is already added from a group implied.</div>
+                                            <div class="text-muted">The colored <span class="text-danger">groups</span> are disjoint and cannot be together on the same user.</div>
+                                            <div class="text-muted">The italic <span class="fst-italic">groups</span> is directly implied by one of the selected groups.</div>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <label for="view_visible_implied_group_ids"/>
+                                        <field name="view_visible_implied_group_ids" colspan="2" nolabel="1">
+                                            <list string="Implied groups" default_order="category_id,name"
+                                                    decoration-it="set(implied_by_ids).difference(parent.view_visible_implied_group_ids).intersection(parent.group_ids)"
+                                                    decoration-success="id in parent.group_ids"
+                                                    decoration-warning="id in parent.view_all_disjoint_group_ids"
+                                                    decoration-danger="id in parent.view_disjoint_group_ids">
+                                                <field name="category_id"/>
+                                                <field name="name"/>
+                                                <field name="comment" optional="hide"/>
+                                                <field name="implied_by_ids" widget="many2many_tags" optional="hide"/>
+                                                <field name="disjoint_ids" widget="many2many_tags" optional="hide"/>
+                                            </list>
+                                        </field>
+                                        <field name="view_show_technical_groups"/>
+                                    </group>
+                                </group>
                             </page>
                             <page string="Preferences" name="preferences">
                                 <group>
@@ -314,15 +375,7 @@
                 </search>
             </field>
         </record>
-        <record id="user_groups_view" model="ir.ui.view">
-            <field name="name">res.users.groups</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="view_users_form"/>
-            <field name="arch" type="xml">
-                <!-- dummy, will be modified by groups -->
-                <field name="groups_id" position="after"/>
-            </field>
-        </record>
+
         <!-- dummy update on group, to force the view above to be update -->
         <record model="res.groups" id="group_no_one"/>
         <record id="action_res_users" model="ir.actions.act_window">
@@ -332,7 +385,7 @@
             <field name="view_mode">list,kanban,form</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="search_view_id" ref="view_users_search"/>
-            <field name="context">{'search_default_filter_no_share': 1, 'show_user_group_warning': True}</field>
+            <field name="context">{'search_default_filter_no_share': 1, 'view_user_settings': True}</field>
             <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
         </record>
         <record id="action_res_users_view1" model="ir.actions.act_window.view">
@@ -518,7 +571,7 @@
         <record model="ir.ui.view" id="view_apikeys">
             <field name="name">API Keys Listing</field>
             <field name="model">res.users.apikeys</field>
-            <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="arch" type="xml">
                 <list create="false" edit="false" delete="false" editable="bottom">
                     <field name="user_id"/>
@@ -533,7 +586,7 @@
             <field name="name">API Keys Listing</field>
             <field name="res_model">res.users.apikeys</field>
             <field name="view_mode">list</field>
-            <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="view_id" ref="base.view_apikeys"/>
         </record>
 

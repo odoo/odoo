@@ -198,7 +198,7 @@ class IrActionsActions(models.Model):
             try:
                 action = self.env[action_model].sudo().browse(action_id)
                 fields = ['name', 'binding_view_types']
-                for field in ('groups_id', 'res_model', 'sequence', 'domain'):
+                for field in ('group_ids', 'res_model', 'sequence', 'domain'):
                     if field in action._fields:
                         fields.append(field)
                 action = action.read(fields)[0]

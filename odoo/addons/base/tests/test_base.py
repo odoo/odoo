@@ -9,7 +9,6 @@ from odoo import Command
 from odoo.tests.common import TransactionCase, BaseCase
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
 class TestSafeEval(BaseCase):
@@ -212,17 +211,18 @@ class TestGroups(TransactionCase):
         portal = self.env.ref('base.group_portal')
         p = self.env['res.users'].create({'login': 'p', 'name': 'P', 'groups_id': [Command.set([portal.id])]})
 
-        a = self.env['res.groups'].create({'name': 'A', 'users': [Command.set(u1.ids)]})
-        b = self.env['res.groups'].create({'name': 'B', 'users': [Command.set(u1.ids)]})
-        c = self.env['res.groups'].create({'name': 'C', 'implied_ids': [Command.set(a.ids)], 'users': [Command.set([p.id, u2.id, default.id])]})
-        d = self.env['res.groups'].create({'name': 'D', 'implied_ids': [Command.set(a.ids)], 'users': [Command.set([u2.id, default.id])]})
+        a = self.env['res.groups'].create({'name': 'A', 'user_ids': [Command.set(u1.ids)]})
+        b = self.env['res.groups'].create({'name': 'B', 'user_ids': [Command.set(u1.ids)]})
+        c = self.env['res.groups'].create({'name': 'C', 'implied_ids': [Command.set(a.ids)], 'user_ids': [Command.set([p.id, u2.id, default.id])]})
+        d = self.env['res.groups'].create({'name': 'D', 'implied_ids': [Command.set(a.ids)], 'user_ids': [Command.set([u2.id, default.id])]})
 
         def assertUsersEqual(users, group):
             self.assertEqual(
                 sorted([r.login for r in users]),
-                sorted([r.login for r in group.with_context(active_test=False).users])
+                sorted(group.with_context(active_test=False).mapped('all_user_ids.login'))
             )
         # sanity checks
+        self.assertEqual([u1.login], a.with_context(active_test=False).mapped('user_ids.login'))
         assertUsersEqual([u1, u2, p, default], a)
         assertUsersEqual([u1], b)
         assertUsersEqual([u2, p, default], c)
@@ -247,8 +247,8 @@ class TestGroups(TransactionCase):
 
         # When adding the template user to a new group, it should add it to existing internal users
         e = self.env['res.groups'].create({'name': 'E'})
-        default.write({'groups_id': [Command.link(e.id)]})
-        self.assertIn(u1, e.users)
-        self.assertIn(u2, e.users)
-        self.assertIn(default, e.with_context(active_test=False).users)
-        self.assertNotIn(p, e.users)
+        default.write({'group_ids': [Command.link(e.id)]})
+        self.assertIn(u1, e.user_ids)
+        self.assertIn(u2, e.user_ids)
+        self.assertIn(default, e.with_context(active_test=False).user_ids)
+        self.assertNotIn(p, e.user_ids)

@@ -4,6 +4,7 @@
 from markupsafe import Markup
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.addons.mail.tests import common
 from odoo.exceptions import AccessError
 from odoo.tests import Form, tagged, users
@@ -150,8 +151,8 @@ class TestMailRenderCommon(common.MailCommon):
             notification_type='inbox',
             signature='--\nErnest'
         )
-        cls.user_rendering_restricted.groups_id -= cls.env.ref('mail.group_mail_template_editor')
-        cls.user_employee.groups_id += cls.env.ref('mail.group_mail_template_editor')
+        cls.env.ref('mail.group_mail_template_editor').write({'implied_by_ids': [Command.clear()]})
+        cls.user_employee.group_ids += cls.env.ref('mail.group_mail_template_editor')
 
 
 @tagged('mail_render')

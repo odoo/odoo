@@ -116,7 +116,8 @@
     <record id="group_validate_bank_account" model="res.groups">
         <field name="name">Validate bank account</field>
         <field name="category_id" ref="account.module_category_accounting_bank"/>
-        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
 </data>
