@@ -160,7 +160,7 @@ except ImportError:
     from .tools._vendor.send_file import send_file as _send_file
 
 import odoo
-from .exceptions import UserError, AccessError, AccessDenied
+from .exceptions import UserError, RedirectWarning, AccessError, AccessDenied
 from .modules.module import get_manifest
 from .modules.registry import Registry
 from .service import security, model as service_model
@@ -2075,7 +2075,7 @@ class Application:
                 # Logs the error here so the traceback starts with ``__call__``.
                 if hasattr(exc, 'loglevel'):
                     _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
-                elif isinstance(exc, HTTPException):
+                elif isinstance(exc, (HTTPException, RedirectWarning)):
                     pass
                 elif isinstance(exc, SessionExpiredException):
                     _logger.info(exc)
