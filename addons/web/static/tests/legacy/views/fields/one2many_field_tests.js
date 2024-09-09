@@ -13873,6 +13873,44 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_x2m_control_panel .o_pager");
     });
 
+    QUnit.test("new record, receive more create commands than limit", async function (assert) {
+        serverData.models.partner.fields.sequence = { type: "integer" };
+        serverData.models.partner.onchanges = {
+            p: function (obj) {
+                obj.p = [
+                    [0, 0, { sequence: 1, display_name: "Record 1" }],
+                    [0, 0, { sequence: 2, display_name: "Record 2" }],
+                    [0, 0, { sequence: 3, display_name: "Record 3" }],
+                    [0, 0, { sequence: 4, display_name: "Record 4" }],
+                ];
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="p">
+                            <tree limit="2">
+                                <field name="sequence"/>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
+            "Record 1",
+            "Record 2",
+            "Record 3",
+            "Record 4",
+        ]);
+        assert.containsNone(target, ".o_x2m_control_panel .o_pager");
+    });
+
     QUnit.test("active actions are passed to o2m field", async (assert) => {
         serverData.models.partner.records[0].turtles = [1, 2, 3];
 
