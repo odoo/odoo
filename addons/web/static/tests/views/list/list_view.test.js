@@ -3301,10 +3301,12 @@ test(`selection box: grouped list, all groups folded`, async () => {
     expect(`.o_data_row`).toHaveCount(0);
     expect(`.o_searchview`).toHaveCount(1);
     expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
+    expect(`.o_control_panel_breadcrumbs_actions .o_cp_action_menus`).toHaveCount(1);
 
     // click on the checkbox in the thead
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
+    expect(`.o_control_panel_breadcrumbs_actions .o_cp_action_menus`).toHaveCount(0);
     expect(`.o_searchview`).toHaveCount(0);
     expect(`.o_list_selection_box`).toHaveText("All 4 selected");
 
