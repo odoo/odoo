@@ -552,6 +552,11 @@ class HrEmployee(models.Model):
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return []
 
+    def _get_departure_date(self):
+        # for overloads
+        self.ensure_one()
+        return self.departure_date
+
     def action_unarchive(self):
         res = super().action_unarchive()
         self.write({
