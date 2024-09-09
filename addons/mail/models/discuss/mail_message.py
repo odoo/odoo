@@ -7,16 +7,6 @@ from odoo.addons.mail.tools.discuss import Store
 class MailMessage(models.Model):
     _inherit = "mail.message"
 
-    def _validate_access_for_current_persona(self, operation):
-        if not self:
-            return False
-        self.ensure_one()
-        if self.env.user._is_public():
-            guest = self.env["mail.guest"]._get_guest_from_context()
-            # sudo: mail.guest - current guest can read channels they are member of
-            return guest and self.model == "discuss.channel" and self.res_id in guest.sudo().channel_ids.ids
-        return super()._validate_access_for_current_persona(operation)
-
     def _extras_to_store(self, store: Store, format_reply):
         super()._extras_to_store(store, format_reply=format_reply)
         if format_reply:
