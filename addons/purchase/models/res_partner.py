@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -10,6 +9,10 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     def _compute_purchase_order_count(self):
+        self.purchase_order_count = 0
+        if not self.env.user._has_group('purchase.group_purchase_user'):
+            return
+
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search_fetch(
             [('id', 'child_of', self.ids)],
@@ -21,7 +24,6 @@ class res_partner(models.Model):
         )
         self_ids = set(self._ids)
 
-        self.purchase_order_count = 0
         for partner, count in purchase_order_groups:
             while partner:
                 if partner.id in self_ids:
@@ -56,7 +58,11 @@ class res_partner(models.Model):
     property_purchase_currency_id = fields.Many2one(
         'res.currency', string="Supplier Currency", company_dependent=True,
         help="This currency will be used, instead of the default one, for purchases from the current partner")
-    purchase_order_count = fields.Integer(compute='_compute_purchase_order_count', string='Purchase Order Count')
+    purchase_order_count = fields.Integer(
+        string="Purchase Order Count",
+        groups='purchase.group_purchase_user',
+        compute='_compute_purchase_order_count',
+    )
     supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
     purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, default="no-message")
     purchase_warn_msg = fields.Text('Message for Purchase Order')
