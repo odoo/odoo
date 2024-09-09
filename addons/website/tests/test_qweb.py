@@ -30,7 +30,7 @@ class TestQwebProcessAtt(TransactionCase):
         super(TestQwebProcessAtt, self).setUp()
         self.website = self.env.ref('website.default_website')
         self.env['res.lang']._activate_lang('fr_FR')
-        self.website.language_ids = self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')
+        self.website.language_ids = self.env.ref('base.lang_en', 'base.lang_fr')
         self.website.default_lang_id = self.env.ref('base.lang_en')
         self.website.cdn_activated = True
         self.website.cdn_url = "http://test.cdn"

@@ -14,8 +14,8 @@ class TestLeadMine(TestCrmCommon, MockIAPReveal):
         super(TestLeadMine, cls).setUpClass()
         cls.registry.enter_test_mode(cls.cr)
 
-        cls.test_industry_tags = cls.env.ref('crm_iap_mine.crm_iap_mine_industry_33') + cls.env.ref('crm_iap_mine.crm_iap_mine_industry_148')
-        cls.test_roles = cls.env.ref('crm_iap_mine.crm_iap_mine_role_11') + cls.env.ref('crm_iap_mine.crm_iap_mine_role_19')
+        cls.test_industry_tags = cls.env.ref('crm_iap_mine.crm_iap_mine_industry_33', 'crm_iap_mine.crm_iap_mine_industry_148')
+        cls.test_roles = cls.env.ref('crm_iap_mine.crm_iap_mine_role_11', 'crm_iap_mine.crm_iap_mine_role_19')
         cls.test_seniority = cls.env.ref('crm_iap_mine.crm_iap_mine_seniority_2')
 
         cls.test_crm_tags = cls.env['crm.tag'].create([

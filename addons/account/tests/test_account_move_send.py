@@ -55,10 +55,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             'country_id': cls.env.ref('base.be').id,
             'email': 'e.e@example.com',
             'groups_id': [
-                (6, 0, [cls.env.ref('base.group_user').id,
-                        cls.env.ref('account.group_account_invoice').id,
-                        cls.env.ref('base.group_partner_manager').id
-                       ])
+                (6, 0, cls.env.ref('base.group_user', 'account.group_account_invoice', 'base.group_partner_manager').ids)
             ],
             'login': 'user_account',
             'name': 'Ernest Employee Account',
@@ -71,10 +68,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             'country_id': cls.env.ref('base.be').id,
             'email': 'e.e.other@example.com',
             'groups_id': [
-                (6, 0, [cls.env.ref('base.group_user').id,
-                        cls.env.ref('account.group_account_invoice').id,
-                        cls.env.ref('base.group_partner_manager').id
-                       ])
+                (6, 0, cls.env.ref('base.group_user', 'account.group_account_invoice', 'base.group_partner_manager').ids)
             ],
             'login': 'user_account_other',
             'name': 'Eglantine Employee AccountOther',
