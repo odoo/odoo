@@ -351,7 +351,7 @@ WHERE sub.user_id IN %s""",
             'res_model': 'gamification.karma.tracking',
             'target': 'current',
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'context': {
                 'default_user_id': self.id,
                 'search_default_user_id': self.id,

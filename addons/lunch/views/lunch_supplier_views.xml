@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="lunch_supplier_view_tree" model="ir.ui.view">
-        <field name="name">lunch.supplier.view.tree</field>
+        <field name="name">lunch.supplier.view.list</field>
         <field name="model">lunch.supplier</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="phone" class="o_force_ltr"/>
                 <field name="email"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -68,12 +68,12 @@
                         </group>
                         <div>
                             <field name="topping_ids_1" nolabel="1">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="name"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="price" widget="monetary"/>
-                                </tree>
+                                </list>
                             </field>
                         </div>
                         <group>
@@ -82,12 +82,12 @@
                         </group>
                         <div>
                             <field name="topping_ids_2" nolabel="1">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="name"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="price" widget="monetary"/>
-                                </tree>
+                                </list>
                             </field>
                         </div>
                         <group>
@@ -96,12 +96,12 @@
                         </group>
                         <div>
                             <field name="topping_ids_3" nolabel="1">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="name"/>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="price" widget="monetary"/>
-                                </tree>
+                                </list>
                             </field>
                         </div>
                     </group>
@@ -148,7 +148,7 @@
     <record id="lunch_vendors_action" model="ir.actions.act_window">
         <field name="name">Vendors</field>
         <field name="res_model">lunch.supplier</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="lunch_supplier_view_search"/>
     </record>
 </odoo>

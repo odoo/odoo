@@ -24,21 +24,21 @@
             </field>
         </record>        
         <record id="view_oauth_provider_tree" model="ir.ui.view">
-            <field name="name">auth.oauth.provider.tree</field>
+            <field name="name">auth.oauth.provider.list</field>
             <field name="model">auth.oauth.provider</field>
             <field name="arch" type="xml">
-                <tree string="arch">
+                <list string="arch">
                     <field name="sequence" widget="handle"/>
                     <field name="name" />
                     <field name="client_id" />
                     <field name="enabled" />
-                </tree>
+                </list>
             </field>
         </record>
         <record id="action_oauth_provider" model="ir.actions.act_window">
             <field name="name">Providers</field>
             <field name="res_model">auth.oauth.provider</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
         <menuitem id="menu_oauth_providers" name="OAuth Providers"
             parent="base.menu_users" sequence="30"

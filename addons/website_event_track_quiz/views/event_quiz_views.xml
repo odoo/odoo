@@ -17,14 +17,14 @@
     </record>
 
     <record id="event_quiz_view_tree" model="ir.ui.view">
-        <field name="name">event.quiz.view.tree</field>
+        <field name="name">event.quiz.view.list</field>
         <field name="model">event.quiz</field>
         <field name="arch" type="xml">
-            <tree string="Quizzes">
+            <list string="Quizzes">
                 <field name="name"/>
                 <field name="event_id"/>
                 <field name="event_track_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -50,7 +50,7 @@
                     <group name="questions">
                         <field name="question_ids" nolabel="1"
                             context="{
-                                'tree_view_ref': 'website_event_track_quiz.event_quiz_question_view_tree_from_quiz',
+                                'list_view_ref': 'website_event_track_quiz.event_quiz_question_view_tree_from_quiz',
                                 'form_view_ref': 'website_event_track_quiz.event_quiz_question_view_form_from_quiz'
                             }"/>
                     </group>
@@ -62,7 +62,7 @@
     <record id="event_quiz_action" model="ir.actions.act_window">
         <field name="name">Event Quizzes</field>
         <field name="res_model">event.quiz</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

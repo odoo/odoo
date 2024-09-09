@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
     <record id="onboarding_onboarding_view_tree" model="ir.ui.view">
-        <field name="name">onboarding.onboarding.view.tree</field>
+        <field name="name">onboarding.onboarding.view.list</field>
         <field name="model">onboarding.onboarding</field>
         <field name="arch" type="xml">
-            <tree string="Onboardings">
+            <list string="Onboardings">
                 <header>
                     <button name="action_toggle_visibility" type="object" string="Toggle visibility"/>
                 </header>
@@ -13,7 +13,7 @@
                 <field name="current_onboarding_state"/>
                 <field name="is_onboarding_closed"/>
                 <field name="is_per_company" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -47,16 +47,16 @@
     </record>
 
     <record id="onboarding_onboarding_step_view_tree" model="ir.ui.view">
-        <field name="name">onboarding.onboarding.step.view.tree</field>
+        <field name="name">onboarding.onboarding.step.view.list</field>
         <field name="model">onboarding.onboarding.step</field>
         <field name="arch" type="xml">
-            <tree string="Onboarding Steps">
+            <list string="Onboarding Steps">
                 <field name="sequence" widget="handle"/>
                 <field name="title"/>
                 <field name="onboarding_ids" optional="hide"/>
                 <field name="current_step_state"/>
                 <field name="is_per_company" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -98,12 +98,12 @@
     <record id="action_view_onboarding_onboarding" model="ir.actions.act_window">
         <field name="name">Onboardings</field>
         <field name="res_model">onboarding.onboarding</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_view_onboarding_step" model="ir.actions.act_window">
         <field name="name">Onboarding Steps</field>
         <field name="res_model">onboarding.onboarding.step</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>

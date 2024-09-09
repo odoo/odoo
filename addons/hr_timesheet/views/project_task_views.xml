@@ -6,7 +6,7 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='child_ids']/tree/field[@name='company_id']" position="after">
+                <xpath expr="//field[@name='child_ids']/list/field[@name='company_id']" position="after">
                     <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Time Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-tasks Time Spent" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
@@ -38,8 +38,8 @@
                         <field name="analytic_account_active" invisible="1"/>
                     </t>
                     <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user">
-                    <field name="timesheet_ids" mode="tree,kanban" readonly="not analytic_account_active" context="{'default_project_id': project_id, 'default_name': ''}">
-                        <tree editable="bottom" string="Timesheet Activities" default_order="date" decoration-muted="readonly_timesheet == True">
+                    <field name="timesheet_ids" mode="list,kanban" readonly="not analytic_account_active" context="{'default_project_id': project_id, 'default_name': ''}">
+                        <list editable="bottom" string="Timesheet Activities" default_order="date" decoration-muted="readonly_timesheet == True">
                             <field name="readonly_timesheet" column_invisible="True"/>
                             <field name="date" readonly="readonly_timesheet"/>
                             <field name="user_id" column_invisible="True"/>
@@ -52,7 +52,7 @@
                             <field name="project_id" column_invisible="True"/>
                             <field name="task_id" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
-                        </tree>
+                        </list>
                         <kanban class="o_kanban_mobile">
                             <templates>
                                 <t t-name="kanban-card">
@@ -118,7 +118,7 @@
                     </group>
                 </page>
                 </xpath>
-                <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='company_id']" position="after">
+                <xpath expr="//field[@name='depend_on_ids']/list//field[@name='company_id']" position="after">
                     <field name="progress" column_invisible="True" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="allocated_hours" widget="timesheet_uom_no_toggle" sum="Total Allocated Time" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="hide" groups="hr_timesheet.group_hr_timesheet_user"/>
@@ -131,7 +131,7 @@
         </record>
 
         <record id="view_task_tree2_inherited" model="ir.ui.view">
-            <field name="name">project.task.tree.inherited</field>
+            <field name="name">project.task.list.inherited</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.project_task_view_tree_main_base" />
             <field name="arch" type="xml">

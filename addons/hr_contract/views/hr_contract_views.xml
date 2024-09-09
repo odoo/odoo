@@ -254,10 +254,10 @@
         </record>
 
         <record id="hr_contract_view_tree" model="ir.ui.view">
-            <field name="name">hr.contract.tree</field>
+            <field name="name">hr.contract.list</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contracts" multi_edit="1" sample="1" default_order='date_start DESC'>
+                <list string="Contracts" multi_edit="1" sample="1" default_order='date_start DESC'>
                     <field name="company_id" column_invisible="True"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="name" readonly="1"/>
@@ -272,7 +272,7 @@
                     <field name="kanban_state" widget="state_selection" nolabel="1"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hidden"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -334,7 +334,7 @@
             <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
             <field name="path">employee-contracts</field>
-            <field name="view_mode">tree,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,activity</field>
             <field name="domain">[('employee_id', '!=', False)]</field>
             <field name="context">{'search_default_group_by_state': 1}</field>
             <field name="search_view_id" ref="hr_contract_view_search"/>

@@ -28,7 +28,7 @@ class HrEmployee(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': _('%s work entries', self.display_name),
-            'view_mode': 'calendar,tree,form',
+            'view_mode': 'calendar,list,form',
             'res_model': 'hr.work.entry',
             'context': ctx,
             'domain': [('employee_id', '=', self.id)],

@@ -91,8 +91,8 @@ class Employee(models.AbstractModel):
         return {
             "type": "ir.actions.act_window",
             "res_model": "hr.employee",
-            "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "tree"], [False, "form"]],
-            'view_mode': 'kanban,tree,form',
+            "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "list"], [False, "form"]],
+            'view_mode': 'kanban,list,form',
             "domain": [],
             "name": _("Employee's Presence to Define"),
             "search_view_id": [self.env.ref('hr_presence.hr_employee_view_presence_search').id, 'search'],

@@ -160,7 +160,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
             'views': [
-                (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'tree'),
+                (self.env.ref('l10n_latam_check.view_account_third_party_check_operations_tree').id, 'list'),
                 (False, 'form')
             ],
             'context': {'create': False},

@@ -6,7 +6,7 @@
         <record id="gamification_karma_ranks_action" model="ir.actions.act_window">
             <field name="name">Ranks</field>
             <field name="res_model">gamification.karma.rank</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create a new rank
@@ -31,14 +31,14 @@
         </record>
 
         <record id="gamification_karma_ranks_view_tree" model="ir.ui.view">
-            <field name="name">gamification.karma.ranks.view.tree</field>
+            <field name="name">gamification.karma.ranks.view.list</field>
             <field name="model">gamification.karma.rank</field>
             <field name="arch" type="xml">
-                <tree string="Ranks List">
+                <list string="Ranks List">
                     <field name="name"/>
                     <field name="karma_min"/>
                     <field name="rank_users_count"/>
-                </tree>
+                </list>
             </field>
         </record>
 

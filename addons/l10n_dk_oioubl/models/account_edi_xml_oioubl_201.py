@@ -44,7 +44,7 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
     _description = "OIOUBL 2.01"
 
     # Data validation Schematron available at the following URL:
-    # https://rep.erst.dk/git/openebusiness/common/-/tree/master/resources/Schematrons/OIOUBL
+    # https://rep.erst.dk/git/openebusiness/common/-/list/master/resources/Schematrons/OIOUBL
 
     # -------------------------------------------------------------------------
     # EXPORT

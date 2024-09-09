@@ -21,7 +21,7 @@ class MrpProduction(models.Model):
             'res_model': 'account.analytic.account',
             'domain': [('id', 'in', self.project_id._get_analytic_accounts().ids)],
             'name': _('Analytic Accounts'),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         }
 
     def write(self, vals):

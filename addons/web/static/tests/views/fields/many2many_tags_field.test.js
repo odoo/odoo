@@ -228,17 +228,17 @@ test("Many2ManyTagsField with color: rendering and edition", async () => {
     expect(".o_tag_popover .form-check input").not.toBeChecked();
 });
 
-test("Many2ManyTagsField in tree view", async () => {
+test("Many2ManyTagsField in list view", async () => {
     Partner._records[0].timmy = [12, 14];
 
     await mountView({
         type: "list",
         resModel: "partner",
         arch: `
-            <tree>
+            <list>
                 <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="foo"/>
-            </tree>`,
+            </list>`,
         selectRecord: () => {
             expect.step("selectRecord");
         },
@@ -264,17 +264,17 @@ test("Many2ManyTagsField in tree view", async () => {
     expect(".o_colorlist").toHaveCount(0);
 });
 
-test("Many2ManyTagsField in tree view -- multi edit", async () => {
+test("Many2ManyTagsField in list view -- multi edit", async () => {
     Partner._records[0].timmy = [12, 14];
 
     await mountView({
         type: "list",
         resModel: "partner",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="foo"/>
-            </tree>`,
+            </list>`,
         selectRecord: () => {
             expect.step("selectRecord");
         },
@@ -533,9 +533,9 @@ test("Many2ManyTagsField in editable list", async () => {
         resModel: "partner",
         context: { take: "five" },
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="timmy" widget="many2many_tags"/>
-            </tree>`,
+            </list>`,
     });
     expect(".o_data_row:nth-child(1) .o_field_many2many_tags .badge").toHaveCount(1);
 
@@ -784,7 +784,7 @@ test("input and remove text without selecting any tag or option", async () => {
 test("Many2ManyTagsField in one2many with name", async () => {
     Turtle._records[0].partner_ids = [2];
     Partner._views = {
-        list: '<tree><field name="foo"/></tree>',
+        list: '<list><field name="foo"/></list>',
     };
 
     await mountView({
@@ -793,9 +793,9 @@ test("Many2ManyTagsField in one2many with name", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="partner_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="partner_ids"/>
                     </form>
@@ -846,7 +846,7 @@ test("many2many read, field context is properly sent", async () => {
 
 test("Many2ManyTagsField: select multiple records", async () => {
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
 
@@ -888,7 +888,7 @@ test("Many2ManyTagsField: select multiple records doesn't show already added tag
     Partner._records[0].timmy = [12];
 
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
 
@@ -931,7 +931,7 @@ test("Many2ManyTagsField: save&new in edit mode doesn't close edit window", asyn
     }
 
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
         form: '<form><field name="name"/></form>',
     };
@@ -1031,7 +1031,7 @@ test("Many2ManyTagsField: conditional create/delete actions", async () => {
     }
 
     Partner._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: "<search/>",
     };
 
@@ -1172,9 +1172,9 @@ test("navigation in tags (mode 'readonly')", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="timmy" widget="many2many_tags"/>
-            </tree>`,
+            </list>`,
     });
     expect(".o_searchview_input").toBeFocused();
     press("ArrowDown");
@@ -1196,10 +1196,10 @@ test("navigation in tags (mode 'edit')", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="timmy" widget="many2many_tags"/>
                 <field name="name"/>
-            </tree>`,
+            </list>`,
     });
 
     await contains("tr.o_data_row:eq(0) .o_many2many_tags_cell").click();
@@ -1491,9 +1491,9 @@ test("Many2ManyTagsField doesn't use virtualId for 'name_search'", async () => {
         arch: `<form>
             <field name="turtles" widget="many2many_tags"/>
             <field name="turtles">
-                <tree>
+                <list>
                     <field name="name"/>
-                </tree>
+                </list>
                 <form>
                     <field name="name"/>
                 </form>
@@ -1518,9 +1518,9 @@ test("Many2ManyTagsField selected records still pickable and not duplicable", as
         type: "form",
         resModel: "partner",
         arch: `
-            <tree>
+            <list>
                 <field name="turtles" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
     });
 

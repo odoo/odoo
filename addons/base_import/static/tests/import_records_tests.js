@@ -51,7 +51,7 @@ QUnit.module("Base Import Tests", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree><field name="foo"/></tree>',
+            arch: '<list><field name="foo"/></list>',
             config: {
                 actionType: "ir.actions.act_window",
             },
@@ -70,7 +70,7 @@ QUnit.module("Base Import Tests", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree create="0"><field name="foo"/></tree>',
+                arch: '<list create="0"><field name="foo"/></list>',
                 config: {
                     actionType: "ir.actions.act_window",
                 },
@@ -88,7 +88,7 @@ QUnit.module("Base Import Tests", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree import="0"><field name="foo"/></tree>',
+                arch: '<list import="0"><field name="foo"/></list>',
                 config: {
                     actionType: "ir.actions.act_window",
                 },
@@ -104,7 +104,7 @@ QUnit.module("Base Import Tests", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            arch: "<tree/>",
+            arch: "<list/>",
             config: {
                 actionType: "ir.actions.act_window",
             },
@@ -236,7 +236,7 @@ QUnit.module("Base Import Tests", (hooks) => {
             serverData.models.foo.fields.m2o = { string: "M2O", type: "many2one", relation: "bar" };
 
             serverData.views = {
-                "bar,false,list": '<tree><field name="display_name"/></tree>',
+                "bar,false,list": '<list><field name="display_name"/></list>',
                 "bar,false,search": "<search></search>",
             };
             await makeView({

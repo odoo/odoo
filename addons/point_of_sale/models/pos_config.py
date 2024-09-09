@@ -649,7 +649,7 @@ class PosConfig(models.Model):
         self._check_pricelists()  # The pricelist company might have changed after the first opening of the session
         return {
             'name': _('Session'),
-            'view_mode': 'form,tree',
+            'view_mode': 'form,list',
             'res_model': 'pos.session',
             'res_id': session_id,
             'view_id': False,

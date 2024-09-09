@@ -63,10 +63,10 @@
     </record>
 
     <record id='fleet_vehicle_log_contract_view_tree' model='ir.ui.view'>
-        <field name="name">fleet.vehicle.log.contract.tree</field>
+        <field name="name">fleet.vehicle.log.contract.list</field>
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
-            <tree string="Contract logs"
+            <list string="Contract logs"
                 decoration-warning="expires_today"
                 decoration-danger="days_left==0 and not expires_today and not has_open_contract"
                 decoration-muted="state=='closed'"
@@ -86,7 +86,7 @@
                 <field name="cost_frequency"/>
                 <field name="state" widget="badge" decoration-info="state == 'open'" decoration-danger="state == 'expired' and not has_open_contract" />
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -181,7 +181,7 @@
     <record id='fleet_vehicle_log_contract_action' model='ir.actions.act_window'>
         <field name="name">Contracts</field>
         <field name="res_model">fleet.vehicle.log.contract</field>
-        <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
+        <field name="view_mode">list,kanban,form,graph,pivot,activity</field>
         <field name="context">{'search_default_open': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -238,10 +238,10 @@
     </record>
 
     <record id='fleet_vehicle_log_services_view_tree' model='ir.ui.view'>
-        <field name="name">fleet.vehicle.log.services.tree</field>
+        <field name="name">fleet.vehicle.log.services.list</field>
         <field name="model">fleet.vehicle.log.services</field>
         <field name="arch" type="xml">
-            <tree string="Services Logs" multi_edit="1" expand="1">
+            <list string="Services Logs" multi_edit="1" expand="1">
                 <field name="date" readonly="1" />
                 <field name="description" />
                 <field name="service_type_id" />
@@ -253,7 +253,7 @@
                 <field name="amount" sum="Total" widget="monetary"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="state" readonly="1" widget="badge" decoration-success="state == 'done'" decoration-warning="state == 'new'"  decoration-info="state == 'running'" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -355,7 +355,7 @@
     <record id='fleet_vehicle_log_services_action' model='ir.actions.act_window'>
         <field name="name">Services</field>
         <field name="res_model">fleet.vehicle.log.services</field>
-        <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
+        <field name="view_mode">list,kanban,form,graph,pivot,activity</field>
         <field name="context">{'search_default_groupby_service_type_id': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

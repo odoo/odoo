@@ -298,7 +298,7 @@ test("Many2ManyCheckBoxesField in a one2many", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree><field name="id"/></tree>
+                    <list><field name="id"/></list>
                     <form>
                         <field name="timmy" widget="many2many_checkboxes"/>
                     </form>

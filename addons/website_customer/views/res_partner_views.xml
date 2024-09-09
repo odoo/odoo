@@ -35,12 +35,12 @@
             <field name="model">res.partner.tag</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Website Tags" editable="bottom">
+                <list string="Website Tags" editable="bottom">
                     <field name="name"/>
                     <field name="classname"/>
                     <field name="is_published"/>
                     <field name="active" column_invisible="True"/>
-                </tree>
+                </list>
             </field>
         </record>
 

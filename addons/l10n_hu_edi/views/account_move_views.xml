@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_invoice_tree_inherit_l10n_hu_edi" model="ir.ui.view">
-        <field name="name">account.invoice.tree.inherit.l10n_hu_edi</field>
+        <field name="name">account.invoice.list.inherit.l10n_hu_edi</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="inside">
+            <xpath expr="//list" position="inside">
                 <field name="l10n_hu_edi_state" optional="hide"/>
             </xpath>
         </field>

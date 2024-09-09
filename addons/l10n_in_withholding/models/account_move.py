@@ -55,7 +55,7 @@ class AccountMove(models.Model):
             'name': "TDS Entries",
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', self.l10n_in_withhold_move_ids.ids)],
         }
 

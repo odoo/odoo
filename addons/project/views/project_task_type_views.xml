@@ -54,24 +54,24 @@
         </record>
 
         <record id="task_type_tree" model="ir.ui.view">
-            <field name="name">project.task.type.tree</field>
+            <field name="name">project.task.type.list</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <tree string="Task Stage" delete="0" sample="1" multi_edit="1" editable="bottom" open_form_view="True">
+                <list string="Task Stage" delete="0" sample="1" multi_edit="1" editable="bottom" open_form_view="True">
                     <field name="sequence" widget="handle" optional="show"/>
                     <field name="name" placeholder="e.g. To Do"/>
                     <field name="fold" optional="show"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="task_type_tree_inherited" model="ir.ui.view">
-            <field name="name">project.task.type.tree.inherited</field>
+            <field name="name">project.task.type.list.inherited</field>
             <field name="model">project.task.type</field>
             <field name="mode">primary</field>
             <field name="inherit_id" ref="task_type_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
+                <xpath expr="//list" position="attributes">
                     <attribute name="default_group_by">project_ids</attribute>
                 </xpath>
                 <xpath expr="//field[@name='name']" position="after">
@@ -109,7 +109,7 @@
         <record id="open_task_type_form" model="ir.actions.act_window">
             <field name="name">Task Stages</field>
             <field name="res_model">project.task.type</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="view_id" ref="task_type_tree_inherited"/>
             <field name="domain">[('user_id', '=', False)]</field>
             <field name="context">{'default_project_id': False}</field>
@@ -125,7 +125,7 @@
         <record id="open_task_type_form_domain" model="ir.actions.act_window">
             <field name="name">Task Stages</field>
             <field name="res_model">project.task.type</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="domain">[('project_ids','=', project_id)]</field>
             <field name="view_id" ref="task_type_tree_inherited"/>
             <field name="help" type="html">

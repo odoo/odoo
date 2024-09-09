@@ -416,7 +416,7 @@ class IrFieldsConverter(models.AbstractModel):
         action = {
             'name': 'Possible Values',
             'type': 'ir.actions.act_window', 'target': 'new',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'views': [(False, 'list'), (False, 'form')],
             'context': {'create': False},
             'help': _(u"See all possible values")}

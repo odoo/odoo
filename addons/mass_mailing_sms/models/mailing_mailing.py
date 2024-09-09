@@ -132,7 +132,7 @@ class Mailing(models.Model):
     def _action_view_traces_filtered(self, view_filter):
         action = super(Mailing, self)._action_view_traces_filtered(view_filter)
         if self.mailing_type == 'sms':
-            action['views'] = [(self.env.ref('mass_mailing_sms.mailing_trace_view_tree_sms').id, 'tree'),
+            action['views'] = [(self.env.ref('mass_mailing_sms.mailing_trace_view_tree_sms').id, 'list'),
                                (self.env.ref('mass_mailing_sms.mailing_trace_view_form_sms').id, 'form')]
         return action
 

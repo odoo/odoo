@@ -11,14 +11,14 @@
     </record>
 
     <record model="ir.ui.view" id="utm_stage_view_tree">
-        <field name="name">utm.stage.view.tree</field>
+        <field name="name">utm.stage.view.list</field>
         <field name="model">utm.stage</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Stages" editable="top">
+            <list string="Stages" editable="top">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -41,7 +41,7 @@
     <record id="action_view_utm_stage" model="ir.actions.act_window">
         <field name="name">UTM Stages</field>
         <field name="res_model">utm.stage</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a stage for your campaigns

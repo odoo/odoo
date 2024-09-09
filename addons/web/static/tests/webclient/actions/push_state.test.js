@@ -117,7 +117,7 @@ class Partner extends models.Model {
                 </templates>
             </kanban>
         `,
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         form: `
             <form>
                 <header>
@@ -143,7 +143,7 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         form: `<form><field name="name"/></form>`,
         search: `<search/>`,
     };

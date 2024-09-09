@@ -125,7 +125,7 @@ test("many2many_avatar_resource widget in form view", async () => {
 test("many2many_avatar_resource widget in list view", async () => {
     await start();
     await openListView("resource.task", {
-        arch: '<tree><field name="display_name"/><field name="resource_ids" widget="many2many_avatar_resource"/></tree>',
+        arch: '<list><field name="display_name"/><field name="resource_ids" widget="many2many_avatar_resource"/></list>',
     });
     await contains(
         ".o_m2m_avatar",

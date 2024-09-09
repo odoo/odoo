@@ -57,10 +57,10 @@
         </record>
 
         <record id="init_accounts_tree" model="ir.ui.view">
-            <field name="name">account.setup.opening.move.line.tree</field>
+            <field name="name">account.setup.opening.move.line.list</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree editable="top" create="1" delete="1" decoration-muted="opening_debit == 0 and opening_credit == 0" open_form_view="True">
+                <list editable="top" create="1" delete="1" decoration-muted="opening_debit == 0 and opening_credit == 0" open_form_view="True">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="company_ids" column_invisible="True"/>
@@ -72,7 +72,7 @@
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
-                </tree>
+                </list>
             </field>
         </record>
 

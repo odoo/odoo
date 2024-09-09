@@ -2,10 +2,10 @@
 <odoo>
     <data>
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
-            <field name="name">account.analytic.line.tree.hr_timesheet</field>
+            <field name="name">account.analytic.line.list.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True">
+                <list editable="bottom" string="Timesheet Activities" sample="1" decoration-muted="readonly_timesheet == True">
                     <field name="readonly_timesheet" column_invisible="True"/>
                     <field name="date" readonly="readonly_timesheet"/>
                     <field name="employee_id" column_invisible="True" readonly="readonly_timesheet"/>
@@ -19,18 +19,18 @@
                         decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0" decoration-muted="unit_amount == 0"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="user_id" column_invisible="True"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="hr_timesheet_line_portal_tree" model="ir.ui.view">
-            <field name="name">portal.hr_timesheet.account.analytic.line.tree</field>
+            <field name="name">portal.hr_timesheet.account.analytic.line.list</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet_line_tree"/>
             <field name="mode">primary</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
+                <xpath expr="//list" position="attributes">
                     <attribute name="edit">0</attribute>
                     <attribute name="create">0</attribute>
                     <attribute name="delete">0</attribute>
@@ -42,7 +42,7 @@
         </record>
 
         <record id="timesheet_view_tree_user" model="ir.ui.view">
-            <field name="name">account.analytic.line.view.tree.with.user</field>
+            <field name="name">account.analytic.line.view.list.with.user</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet_line_tree"/>
             <field name="mode">primary</field>
@@ -187,7 +187,7 @@
         </record>
 
         <record id="timesheet_view_form_user" model="ir.ui.view">
-            <field name="name">account.analytic.line.tree.with.user</field>
+            <field name="name">account.analytic.line.list.with.user</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="mode">primary</field>
@@ -330,7 +330,7 @@
             <field name="name">My Timesheets</field>
             <field name="path">timesheets</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="view_mode">tree,form,kanban,pivot,graph</field>
+            <field name="view_mode">list,form,kanban,pivot,graph</field>
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
             <field name="context">{
                 "search_default_week":1,
@@ -348,7 +348,7 @@
         </record>
 
         <record id="act_hr_timesheet_line_view_tree" model="ir.actions.act_window.view">
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="sequence" eval="4"/>
             <field name="view_id" ref="hr_timesheet_line_tree"/>
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
@@ -389,7 +389,7 @@
                 'is_timesheet': 1,
             }</field>
             <field name="domain">[('task_id', 'in', active_ids)]</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
         </record>
 
@@ -400,7 +400,7 @@
                 'is_timesheet': 1,
             }</field>
             <field name="domain">[('project_id', 'in', active_ids)]</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
         </record>
 
@@ -408,7 +408,7 @@
             <field name="name">All Timesheets</field>
             <field name="res_model">account.analytic.line</field>
             <field name="path">all-timesheets</field>
-            <field name="view_mode">tree,form,kanban,pivot,graph</field>
+            <field name="view_mode">list,form,kanban,pivot,graph</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{
@@ -427,7 +427,7 @@
 
         <record id="timesheet_action_view_all_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="4"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
@@ -484,7 +484,7 @@
             <field name="name">Timesheets</field>
             <field name="res_model">account.analytic.line</field>
             <field name="path">project-timesheets</field>
-            <field name="view_mode">tree,kanban,pivot,graph,form</field>
+            <field name="view_mode">list,kanban,pivot,graph,form</field>
             <field name="view_id" ref="timesheet_view_tree_user"/>
             <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{
@@ -520,7 +520,7 @@
         </record>
 
         <record id="act_hr_timesheet_line_by_project_view_tree" model="ir.actions.act_window.view">
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="sequence" eval="1"/>
             <field name="view_id" ref="timesheet_view_tree_user"/>
             <field name="act_window_id" ref="act_hr_timesheet_line_by_project"/>

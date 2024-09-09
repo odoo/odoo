@@ -31,7 +31,7 @@ class SurveyQuestion(models.Model):
         items around.
 
         It also removes on level of encoding by directly having 'Add a page' and 'Add a question'
-        links on the tree view of questions, enabling a faster encoding.
+        links on the list view of questions, enabling a faster encoding.
 
         However, this has the downside of making the code reading a little bit more complicated.
         Efforts were made at the model level to create computed fields so that the use of these models

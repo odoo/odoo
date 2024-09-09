@@ -4,15 +4,15 @@
 
         <!--  FOLLOWERS !-->
         <record model="ir.ui.view" id="view_followers_tree">
-            <field name="name">mail.followers.tree</field>
+            <field name="name">mail.followers.list</field>
             <field name="model">mail.followers</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Followers">
+                <list string="Followers">
                     <field name="res_model"/>
                     <field name="res_id"/>
                     <field name="partner_id"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -40,7 +40,7 @@
         <record id="action_view_followers" model="ir.actions.act_window">
             <field name="name">Followers</field>
             <field name="res_model">mail.followers</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
 
     </data>

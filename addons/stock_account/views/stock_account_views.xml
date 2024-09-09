@@ -14,7 +14,7 @@
         </record>
 
         <record id="view_stock_quant_tree_inventory_editable_inherit_stock_account" model="ir.ui.view">
-            <field name="name">stock.quant.inventory.tree.editable.inherit.stock.account</field>
+            <field name="name">stock.quant.inventory.list.editable.inherit.stock.account</field>
             <field name="model">stock.quant</field>
             <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable"/>
             <field name="arch" type="xml">
@@ -45,7 +45,7 @@
             <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
             <field name="model">stock.return.picking</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='product_return_moves']/tree" position="inside">
+                <xpath expr="//field[@name='product_return_moves']/list" position="inside">
                     <field name="to_refund" groups="base.group_no_one"/>
                 </xpath>
             </field>

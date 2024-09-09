@@ -40,10 +40,10 @@
                 <group name="storage_categories" groups="stock.group_stock_multi_locations">
                     <group>
                         <field name="storage_category_capacity_ids" context="{'default_package_type_id': id}">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="storage_category_id"/>
                                 <field name="quantity"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </group>
@@ -53,10 +53,10 @@
 </record>
 
 <record model="ir.ui.view" id="stock_package_type_tree">
-    <field name="name">stock.package.type.tree</field>
+    <field name="name">stock.package.type.list</field>
     <field name="model">stock.package.type</field>
     <field name="arch" type="xml">
-        <tree string="Package Types">
+        <list string="Package Types">
             <field name="sequence" widget="handle"/>
             <field name="name"/>
             <field name="height"/>
@@ -64,7 +64,7 @@
             <field name="packaging_length"/>
             <field name="max_weight"/>
             <field name="barcode" optional="hide"/>
-        </tree>
+        </list>
     </field>
 </record>
 
@@ -72,7 +72,7 @@
     <field name="name">Package Types</field>
     <field name="res_model">stock.package.type</field>
     <field name="view_ids" eval="[(5, 0, 0),
-        (0, 0, {'view_mode': 'tree', 'view_id': ref('stock.stock_package_type_tree')}),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('stock.stock_package_type_tree')}),
         (0, 0, {'view_mode': 'form', 'view_id': ref('stock.stock_package_type_form')})]"/>
 </record>
 

@@ -26,13 +26,13 @@
     </record>
 
     <record id="sales_team_crm_tag_view_tree" model="ir.ui.view">
-        <field name="name">sales.team.crm.tag.view.tree</field>
+        <field name="name">sales.team.crm.tag.view.list</field>
         <field name="model">crm.tag</field>
         <field name="arch" type="xml">
-            <tree string="Tags" editable="bottom" sample="1">
+            <list string="Tags" editable="bottom" sample="1">
                 <field name="name"/>
                 <field name="color" widget="color_picker" />
-            </tree>
+            </list>
         </field>
     </record>
 

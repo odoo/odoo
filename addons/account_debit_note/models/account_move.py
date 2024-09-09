@@ -25,7 +25,7 @@ class AccountMove(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Debit Notes'),
             'res_model': 'account.move',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('debit_origin_id', '=', self.id)],
         }
 

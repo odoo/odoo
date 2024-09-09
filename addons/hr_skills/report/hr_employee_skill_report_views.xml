@@ -15,13 +15,13 @@
     <record id="hr_employee_skill_report_view_list" model="ir.ui.view">
         <field name="model">hr.employee.skill.report</field>
         <field name="arch" type="xml">
-            <tree expand="0">
+            <list expand="0">
                 <field name="employee_id" widget="many2one_avatar_user"/>
                 <field name="skill_type_id"/>
                 <field name="skill_id"/>
                 <field name="skill_level"/>
                 <field name="level_progress" widget="percentage"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -52,7 +52,7 @@
         <field name="name">Employee Skills</field>
         <field name="res_model">hr.employee.skill.report</field>
         <field name="search_view_id" ref="hr_employee_skill_report_view_search"/>
-        <field name="view_mode">tree,pivot</field>
+        <field name="view_mode">list,pivot</field>
         <field name="context">{
             'search_default_employee': 1,
             'search_default_employees_with_skills': 1,

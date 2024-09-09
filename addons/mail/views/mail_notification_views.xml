@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <odoo><data>
     <record id="mail_notification_view_tree" model="ir.ui.view">
-        <field name="name">mail.notification.view.tree</field>
+        <field name="name">mail.notification.view.list</field>
         <field name="model">mail.notification</field>
         <field name="arch" type="xml">
-            <tree string="Notifications">
+            <list string="Notifications">
                 <field name="mail_message_id"/>
                 <field name="notification_type"/>
                 <field name="res_partner_id"/>
                 <field name="is_read"/>
                 <field name="failure_type"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -45,7 +45,7 @@
     <record id="mail_notification_action" model="ir.actions.act_window">
         <field name="name">Notifications</field>
         <field name="res_model">mail.notification</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </data></odoo>

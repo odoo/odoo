@@ -5,13 +5,13 @@
         <field name="name">sale.pdf.form.field.list</field>
         <field name="model">sale.pdf.form.field</field>
         <field name="arch" type="xml">
-            <tree editable="top" multi_edit="true" create="false">
+            <list editable="top" multi_edit="true" create="false">
                 <field name="name"/>
                 <field name="path"/>
                 <field name="document_type"/>
                 <field name="product_document_ids" widget="many2many_tags" optional="hide"/>
                 <field name="quotation_document_ids" widget="many2many_tags" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 

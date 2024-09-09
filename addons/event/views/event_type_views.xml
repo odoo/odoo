@@ -34,30 +34,30 @@
                            <field name="event_type_ticket_ids"
                                   class="w-100"
                                   context="{
-                                     'tree_view_ref': 'event.event_type_ticket_view_tree_from_type',
+                                     'list_view_ref': 'event.event_type_ticket_view_tree_from_type',
                                      'form_view_ref': 'event.event_type_ticket_view_form_from_type'
                                   }"
                            />
                        </page>
                        <page string="Communication" name="event_type_communication">
                            <field name="event_type_mail_ids" class="w-100">
-                               <tree string="Communication" editable="bottom">
+                               <list string="Communication" editable="bottom">
                                    <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}" widget="EventMailTemplateReferenceField"/>
                                    <field name="interval_nbr" readonly="interval_unit == 'now'"/>
                                    <field name="interval_unit"/>
                                     <field name="interval_type"/>
-                               </tree>
+                               </list>
                            </field>
                        </page>
                         <page string="Questions" name="page_questions">
                             <field name="question_ids" class="w-100">
-                                <tree sample="1">
+                                <list sample="1">
                                     <field name="title"/>
                                     <field name="is_mandatory_answer" string="Mandatory"/>
                                     <field name="once_per_order" string="Once per Order"/>
                                     <field name="question_type" />
                                     <field name="answer_ids" widget="many2many_tags"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                        <page string="Notes" name="notes">
@@ -79,13 +79,13 @@
     </record>
 
     <record model="ir.ui.view" id="view_event_type_tree">
-        <field name="name">event.type.tree</field>
+        <field name="name">event.type.list</field>
         <field name="model">event.type</field>
         <field name="arch" type="xml">
-            <tree string="Event Template" sample="1">
+            <list string="Event Template" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 

@@ -73,17 +73,17 @@
         </record>
 
         <record id="view_warehouse_tree" model="ir.ui.view">
-            <field name="name">stock.warehouse.tree</field>
+            <field name="name">stock.warehouse.list</field>
             <field name="model">stock.warehouse</field>
             <field name="arch" type="xml">
-                <tree string="Warehouse">
+                <list string="Warehouse">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="active" column_invisible="True"/>
                     <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
 

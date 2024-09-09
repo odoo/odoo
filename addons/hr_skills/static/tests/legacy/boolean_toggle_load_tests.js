@@ -56,9 +56,9 @@ QUnit.module("Fields", (hooks) => {
             arch:`
             <form>
                 <field name="partner_ids">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="bar" widget="boolean_toggle_load"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
             mockRPC(route, { args, method }) {

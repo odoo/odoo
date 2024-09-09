@@ -51,10 +51,10 @@
     </record>
 
     <record id="mailing_subscription_view_tree" model="ir.ui.view">
-        <field name="name">mailing.subscription.view.tree</field>
+        <field name="name">mailing.subscription.view.list</field>
         <field name="model">mailing.subscription</field>
         <field name="arch" type="xml">
-            <tree string="Mailing List Subscriptions" create="0" type="object" action="open_mailing_contact">
+            <list string="Mailing List Subscriptions" create="0" type="object" action="open_mailing_contact">
                 <field name="create_date" string="Subscription Date"/>
                 <field name="contact_id" string="Mailing Contact"/>
                 <field name="is_blacklisted" optional="hide"/>
@@ -62,7 +62,7 @@
                 <field name="opt_out_datetime" readonly="1"/>
                 <field name="opt_out_reason_id"/>
                 <field name="message_bounce" optional="hide" sum="Total"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -90,7 +90,7 @@
     <record id="mailing_subscription_action_report_optout" model="ir.actions.act_window">
         <field name="name">Opt-Out Report</field>
         <field name="res_model">mailing.subscription</field>
-        <field name="view_mode">graph,pivot,tree,form</field>
+        <field name="view_mode">graph,pivot,list,form</field>
         <field name="context">{
             'search_default_group_by_opt_out_reason_id': 1,
         }</field>

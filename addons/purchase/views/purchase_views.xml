@@ -56,7 +56,7 @@
     <record id="product_normal_action_puchased" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="view_mode">kanban,list,form,activity</field>
         <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template": 1}</field>
         <field name="search_view_id" ref="product.product_template_search_view"/>
         <field name="view_id" eval="False"/> <!-- Force empty -->
@@ -77,7 +77,7 @@
         <record id="product_product_action" model="ir.actions.act_window">
             <field name="name">Product Variants</field>
             <field name="res_model">product.product</field>
-            <field name="view_mode">tree,kanban,form,activity</field>
+            <field name="view_mode">list,kanban,form,activity</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
             <field name="context">{"search_default_filter_to_purchase": 1}</field>
             <field name="help" type="html">
@@ -218,10 +218,10 @@
                             <field name="tax_country_id" invisible="1"/>
                             <field name="order_line"
                                 widget="product_label_section_and_note_field_o2m"
-                                mode="tree,kanban"
+                                mode="list,kanban"
                                 context="{'default_state': 'draft'}"
                                 readonly="state in ('done', 'cancel')">
-                                <tree string="Purchase Order Lines" editable="bottom">
+                                <list string="Purchase Order Lines" editable="bottom">
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
@@ -262,13 +262,13 @@
                                         options="{'no_open': True}"
                                         force_save="1" optional="show"/>
                                     <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging" optional="show"/>
-                                    <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
+                                    <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'list_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
                                     <button name="action_purchase_history" type="object" icon="fa-history" title="Purchase History" invisible="not id"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
                                     <field name="discount" string="Disc.%" readonly="qty_invoiced != 0" optional="hide"/>
                                     <field name="price_subtotal" string="Amount"/>
-                                </tree>
+                                </list>
                                 <form string="Purchase Order Line">
                                         <field name="tax_calculation_rounding_method" invisible="1"/>
                                         <field name="state" invisible="1"/>
@@ -292,7 +292,7 @@
                                                 <field name="qty_received" string="Received Quantity" invisible="parent.state not in ('purchase', 'done')" readonly="qty_received_method != 'manual'"/>
                                                 <field name="qty_invoiced" string="Billed Quantity" invisible="parent.state not in ('purchase', 'done')"/>
                                                 <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging"/>
-                                                <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
+                                                <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'list_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                                 <field name="price_unit"/>
                                                 <field name="discount"/>
                                                 <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
@@ -513,11 +513,11 @@
         </record>
 
         <record id="purchase_order_tree" model="ir.ui.view">
-            <field name="name">purchase.order.tree</field>
+            <field name="name">purchase.order.list</field>
             <field name="model">purchase.order</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order"
+                <list string="Purchase Order"
                       decoration-muted="state=='cancel'" sample="1">
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="partner_ref" optional="hide"/>
@@ -536,18 +536,18 @@
                     <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="invoice_status" column_invisible="context.get('quotation_only', False)" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <!-- Unfortunately we want the purchase kpis table to only show up in some list views,
              so we have to duplicate code to support both view versions -->
         <record id="purchase_order_kpis_tree" model="ir.ui.view">
-            <field name="name">purchase.order.inherit.purchase.order.tree</field>
+            <field name="name">purchase.order.inherit.purchase.order.list</field>
             <field name="model">purchase.order</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" decoration-info="state in ['draft', 'sent']"
+                <list string="Purchase Order" decoration-info="state in ['draft', 'sent']"
                 decoration-muted="state == 'cancel'"
                 class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
                     <header>
@@ -579,15 +579,15 @@
                     <field name="state" optional="show" widget="badge" decoration-success="state == 'purchase' or state == 'done'"
                         decoration-warning="state == 'to approve'" decoration-info="state == 'draft' or state == 'sent'"/>
                     <field name="invoice_status" optional="hide"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="purchase_order_view_tree" model="ir.ui.view">
-            <field name="name">purchase.order.view.tree</field>
+            <field name="name">purchase.order.view.list</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'"
+                <list decoration-muted="state == 'cancel'"
                     decoration-info="invoice_status == 'to invoice'"
                     string="Purchase Order"
                     class="o_purchase_order"
@@ -616,7 +616,7 @@
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="show"/>
                     <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -651,7 +651,7 @@
             <field name="name">Requests for Quotation</field>
             <field name="path">purchase</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,calendar,activity</field>
             <field name="view_id" ref="purchase_order_kpis_tree"/>
             <field name="domain">[]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
@@ -673,9 +673,9 @@
             <field name="name">Purchase Orders</field>
             <field name="res_model">purchase.order</field>
             <field name="path">purchase-orders</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
+            <field name="view_mode">list,kanban,form,pivot,graph,calendar,activity</field>
             <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('purchase.purchase_order_view_tree')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
             ]"/>
             <field name="domain">[('state','in',('purchase', 'done'))]</field>
@@ -692,10 +692,10 @@
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" sequence="6"/>
 
         <record id="purchase_order_line_tree" model="ir.ui.view">
-            <field name="name">purchase.order.line.tree</field>
+            <field name="name">purchase.order.line.list</field>
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
-                <tree string="Purchase Order Lines" create="false">
+                <list string="Purchase Order Lines" create="false">
                     <field name="order_id"/>
                     <field name="name"/>
                     <field name="partner_id" string="Vendor" />
@@ -706,7 +706,7 @@
                     <field name="price_subtotal" widget="monetary"/>
                     <field name="currency_id" column_invisible="True"/>
                     <field name="date_planned"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -780,10 +780,10 @@
         </record>
 
     <record id="purchase_history_tree" model="ir.ui.view">
-        <field name="name">purchase.history.tree</field>
+        <field name="name">purchase.history.list</field>
         <field name="model">purchase.order.line</field>
         <field name="arch" type="xml">
-            <tree create="false" default_order="order_id asc" action="action_open_order" type="object">
+            <list create="false" default_order="order_id asc" action="action_open_order" type="object">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="order_id" widget="many2one"/>
                 <field name="date_approve"/>
@@ -793,7 +793,7 @@
                 <field name="price_unit" widget="monetary"/>
                 <field name="price_subtotal" widget="monetary" string="Total Untaxed"/>
                 <field name="state" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -821,7 +821,7 @@
 
     <record id="action_purchase_history" model="ir.actions.act_window">
         <field name="res_model">purchase.order.line</field>
-        <field name="view_mode">tree,pivot,graph</field>
+        <field name="view_mode">list,pivot,graph</field>
         <field name="view_id" ref="purchase.purchase_history_tree"/>
         <field name="context">{
                 'search_default_purchase_state': 1,
@@ -895,7 +895,7 @@
         <field name="name">Confirm RFQ</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
-        <field name="binding_view_types">tree</field>
+        <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">
 if records:

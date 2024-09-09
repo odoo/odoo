@@ -55,10 +55,10 @@ QUnit.module('Widgets', (hooks) => {
             arch: `
             <form>
                 <field name="line_ids" widget="payment_term_line_ids">
-                    <tree string="Payment Terms" editable="top">
+                    <list string="Payment Terms" editable="top">
                         <field name="value_amount"/>
 
-                    </tree>
+                    </list>
                 </field>
             </form>
             `,

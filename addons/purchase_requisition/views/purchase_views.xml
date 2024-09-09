@@ -30,7 +30,7 @@
                         </group>
                     </group>
                     <field name="alternative_po_ids" readonly="not id" widget="many2many_alt_pos" context="{'quotation_only': True}">
-                        <tree string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase', 'done']" decoration-bf="id == parent.id">
+                        <list string="Alternative Purchase Order" decoration-muted="state in ['cancel', 'purchase', 'done']" decoration-bf="id == parent.id">
                             <control>
                                 <create string="Link to Existing RfQ"/>
                             </control>
@@ -42,7 +42,7 @@
                             <field name="company_currency_id" column_invisible="1"/>
                             <field name="amount_total_cc" widget="monetary" optional="hide"/>
                             <field name="state"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </xpath>
@@ -61,7 +61,7 @@
     </record>
 
     <record id="purchase_order_kpis_tree_inherit_purchase_requisition" model="ir.ui.view">
-        <field name="name">purchase.order.kpis.tree.inherit.purchase.requisition</field>
+        <field name="name">purchase.order.kpis.list.inherit.purchase.requisition</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
         <field name="arch" type="xml">
@@ -76,7 +76,7 @@
     </record>
 
     <record id="purchase_order_tree_inherit_purchase_requisition" model="ir.ui.view">
-        <field name="name">purchase.order.tree.inherit.purchase.requisition</field>
+        <field name="name">purchase.order.list.inherit.purchase.requisition</field>
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_tree"/>
         <field name="arch" type="xml">
@@ -91,11 +91,11 @@
     </record>
 
     <record id="purchase_order_line_compare_tree" model="ir.ui.view">
-        <field name="name">purchase.order.line.compare.tree</field>
+        <field name="name">purchase.order.line.compare.list</field>
         <field name="model">purchase.order.line</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <tree string="Purchase Order Lines"
+            <list string="Purchase Order Lines"
             decoration-muted="state in ['cancel', 'purchase', 'done']"
                 create="0" delete="0" edit="0" expand="1"
                 js_class="purchase_order_line_compare">
@@ -119,7 +119,7 @@
                     invisible="product_qty &lt;= 0.0"/>
                 <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="fa-times"
                     invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase', 'done']"/>
-            </tree>
+            </list>
         </field>
     </record>
 

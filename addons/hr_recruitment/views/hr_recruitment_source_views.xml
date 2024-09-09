@@ -24,10 +24,10 @@
         </record>
 
         <record model="ir.ui.view" id="hr_recruitment_source_tree">
-            <field name="name">hr.recruitment.source.tree</field>
+            <field name="name">hr.recruitment.source.list</field>
             <field name="model">hr.recruitment.source</field>
             <field name="arch" type="xml">
-                <tree string="Sources of Applicants" editable="top" sample="1">
+                <list string="Sources of Applicants" editable="top" sample="1">
                     <field name="has_domain" column_invisible="True"/>
                     <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" readonly="id"/>
                     <field name="medium_id" optional="hidden"/>
@@ -35,7 +35,7 @@
                     <field name="email" widget="email"
                            invisible="not email or not has_domain"/>
                     <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" invisible="not has_domain or email"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -53,7 +53,7 @@
         <record model="ir.actions.act_window" id="action_hr_job_sources">
             <field name="name">Jobs Sources</field>
             <field name="res_model">hr.recruitment.source</field>
-            <field name="view_mode">tree,kanban</field>
+            <field name="view_mode">list,kanban</field>
             <field name="search_view_id" ref="hr_recruitment_source_view_search"/>
             <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
             <field name="help" type="html">

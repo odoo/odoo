@@ -24,10 +24,10 @@
         </record>
 
         <record id="purchase_report_view_tree" model="ir.ui.view">
-            <field name="name">purchase.report.view.tree</field>
+            <field name="name">purchase.report.view.list</field>
             <field name="model">purchase.report</field>
             <field name="arch" type="xml">
-                <tree string="Purchase Analysis">
+                <list string="Purchase Analysis">
                     <field name="date_order"/>
                     <field name="order_id" optional="show"/>
                     <field name="partner_id" optional="show"/>
@@ -42,7 +42,7 @@
                     <field name="untaxed_total" optional="hide" widget="monetary" sum="Sum of Untaxed Total"/>
                     <field name="price_total" optional="show" widget="monetary" sum="Sum of Total"/>
                     <field name="state" optional="show"/>
-                </tree>
+                </list>
             </field>
         </record>
 

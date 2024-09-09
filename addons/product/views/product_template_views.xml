@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="product_template_tree_view" model="ir.ui.view">
-        <field name="name">product.template.product.tree</field>
+        <field name="name">product.template.product.list</field>
         <field name="model">product.template</field>
         <field name="arch" type="xml">
-            <tree string="Product" multi_edit="1" sample="1">
+            <list string="Product" multi_edit="1" sample="1">
             <header>
                 <button string="Print Labels" type="object" name="action_open_label_layout"/>
             </header>
@@ -26,7 +26,7 @@
                 <field name="uom_id" string="Unit" readonly="1" optional="show" groups="uom.group_uom"/>
                 <field name="active" column_invisible="True"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -67,7 +67,7 @@
                     invisible="type == 'combo'"
                 >
                     <field name="attribute_line_ids" widget="one2many" context="{'show_attribute': False}">
-                        <tree string="Variants" editable="bottom" decoration-info="value_count &lt;= 1">
+                        <list string="Variants" editable="bottom" decoration-info="value_count &lt;= 1">
                             <field name="value_count" column_invisible="True"/>
                             <field name="sequence" widget="handle"/>
                             <field name="attribute_id" readonly="id"/>
@@ -75,7 +75,7 @@
                             <button string="Configure" class="float-end btn-secondary"
                                 type="object" name="action_open_attribute_values"
                                 groups="product.group_product_variant"/>
-                        </tree>
+                        </list>
                     </field>
                         <p class="oe_grey oe_edit_only">
                         <strong>Warning</strong>: adding or deleting attributes
@@ -152,7 +152,7 @@
     <record id="product_template_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="product_template_kanban_view"/>
         <field name="search_view_id" ref="product.product_template_search_view"/>
         <field name="context">{"search_default_filter_to_sell":1}</field>

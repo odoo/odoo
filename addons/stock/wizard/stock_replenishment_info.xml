@@ -38,10 +38,10 @@
     </record>
 
     <record id="replenishment_option_tree_view" model="ir.ui.view">
-        <field name="name">stock.replenishment.option.tree.view</field>
+        <field name="name">stock.replenishment.option.list.view</field>
         <field name="model">stock.replenishment.option</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="qty_to_order" column_invisible="True"/>
                 <field name="warehouse_id" string="Warehouse"/>
                 <field name="location_id" string="Warehouse Location"/>
@@ -50,7 +50,7 @@
                 <field name="route_id"/>
                 <field name="lead_time"/>
                 <button name="select_route" string="Select Route" type="object" class="btn btn-link"/>
-            </tree>
+            </list>
         </field>
     </record>
 

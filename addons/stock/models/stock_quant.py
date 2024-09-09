@@ -1305,7 +1305,7 @@ class StockQuant(models.Model):
         })
         if extend:
             action.update({
-                'view_mode': 'tree,form,pivot,graph',
+                'view_mode': 'list,form,pivot,graph',
                 'views': [
                     (action['view_id'], 'list'),
                     (form_view, 'form'),

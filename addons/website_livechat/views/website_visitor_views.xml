@@ -3,7 +3,7 @@
     <record id="website_visitor_livechat_session_action" model="ir.actions.act_window">
         <field name="name">Visitor's Sessions</field>
         <field name="res_model">discuss.channel</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="im_livechat.discuss_channel_view_tree"/>
         <field name="domain">[('livechat_visitor_id', '=', active_id), ('has_message', '=', True)]</field>
         <field name="context">{
@@ -14,7 +14,7 @@
 
     <record id="website_visitor_livechat_session_action_tree" model="ir.actions.act_window.view">
         <field name="sequence">1</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="im_livechat.discuss_channel_view_tree"/>
         <field name="act_window_id" ref="website_livechat.website_visitor_livechat_session_action"/>
     </record>
@@ -112,7 +112,7 @@
     </record>
 
     <record id="website_visitor_view_tree" model="ir.ui.view">
-        <field name="name">website.visitor.view.tree.inherit.website.livechat</field>
+        <field name="name">website.visitor.view.list.inherit.website.livechat</field>
         <field name="model">website.visitor</field>
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">

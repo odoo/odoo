@@ -99,11 +99,11 @@
     </record>
 
     <record id="view_location_tree2" model="ir.ui.view">
-        <field name="name">stock.location.tree</field>
+        <field name="name">stock.location.list</field>
         <field name="model">stock.location</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <tree string="Stock Location" decoration-info="usage=='view'" multi_edit="1">
+            <list string="Stock Location" decoration-info="usage=='view'" multi_edit="1">
                 <field name="company_id" column_invisible="True"/>
                 <field name="active" column_invisible="True"/>
                 <field name="complete_name" string="Location"/>
@@ -111,7 +111,7 @@
                 <field name="is_empty" invisible="usage not in ['internal', 'transit']"/>
                 <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -120,7 +120,7 @@
         <field name="model">stock.location</field>
         <field name="inherit_id" ref="stock.view_location_tree2"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="create">false</attribute>
             </xpath>
         </field>
@@ -129,14 +129,14 @@
     <record model="ir.actions.act_window" id="action_storage_category_locations">
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('storage_category_id', '=', active_id)]</field>
     </record>
 
     <record id="action_location_form" model="ir.actions.act_window">
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_location_tree2"/>
         <field name="search_view_id" ref="view_location_search"/>
         <field name="context">{'search_default_in_location':1}</field>
@@ -162,7 +162,7 @@
     <record id="action_prod_inv_location_form" model="ir.actions.act_window">
         <field name="name">Locations</field>
         <field name="res_model">stock.location</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="view_id" ref="view_location_tree2"/>
         <field name="search_view_id" ref="view_location_search"/>
         <field name="context">{'search_default_prod_inv_location': 1}</field>
@@ -173,15 +173,15 @@
 
         <!--Routes-->
         <record id="stock_location_route_tree" model="ir.ui.view">
-            <field name="name">stock.location.route.tree</field>
+            <field name="name">stock.location.route.list</field>
             <field name="model">stock.route</field>
             <field name="arch" type="xml">
-                <tree string="Routes">
+                <list string="Routes">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="active" column_invisible="True"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -224,12 +224,12 @@
                     </group>
                     <group string="Rules" >
                         <field name="rule_ids" nolabel="1" context="{'default_company_id': company_id, 'form_view_ref':'stock.view_route_rule_form'}">
-                            <tree>
+                            <list>
                                 <field name="sequence" widget="handle"/>
                                 <field name="action"/>
                                 <field name="location_src_id" options="{'no_create': True}"/>
                                 <field name="location_dest_id" options="{'no_create': True}"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                     </sheet>
@@ -251,7 +251,7 @@
         <record id="action_routes_form" model="ir.actions.act_window">
             <field name="name">Routes</field>
             <field name="res_model">stock.route</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="view_id" ref="stock_location_route_tree" />
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

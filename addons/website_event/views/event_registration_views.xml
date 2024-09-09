@@ -3,7 +3,7 @@
     <record id="event_registration_action_from_visitor" model="ir.actions.act_window">
         <field name="name">Registrations</field>
         <field name="res_model">event.registration</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('visitor_id', 'in', [active_id])]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
@@ -24,7 +24,7 @@
     </record>
 
     <record id="event_registration_view_tree" model="ir.ui.view">
-        <field name="name">event.registration.view.tree.inherit.online</field>
+        <field name="name">event.registration.view.list.inherit.online</field>
         <field name="model">event.registration</field>
         <field name="inherit_id" ref="event.view_event_registration_tree"/>
         <field name="arch" type="xml">

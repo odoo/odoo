@@ -113,11 +113,11 @@
     </record>
 
     <record id="sale_order_tree" model="ir.ui.view">
-        <field name="name">sale.order.tree</field>
+        <field name="name">sale.order.list</field>
         <field name="model">sale.order</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <tree class="o_sale_order"
+            <list class="o_sale_order"
                   string="Sales Orders"
                   sample="1"
                   decoration-muted="state == 'cancel'">
@@ -176,7 +176,7 @@
                 <field name="amount_to_invoice" optional="hide"/>
                 <field name="client_order_ref" optional="hide"/>
                 <field name="validity_date" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -188,9 +188,9 @@
         <field name="priority">2</field>
         <field name="arch" type="xml">
             <!-- Dummy view content since empty views are not supported atm -->
-            <tree position="attributes">
+            <list position="attributes">
                 <attribute name="string">Sales Orders</attribute>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -201,9 +201,9 @@
         <field name="mode">primary</field>
         <field name="priority">4</field>
         <field name="arch" type="xml">
-            <tree position="attributes">
+            <list position="attributes">
                 <attribute name="string">Quotations</attribute>
-            </tree>
+            </list>
             <field name="date_order" position="replace">
                 <field name="create_date" string="Creation Date" optional="show"/>
             </field>
@@ -220,12 +220,12 @@
     </record>
 
     <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
-        <field name="name">sale.order.tree</field>
+        <field name="name">sale.order.list</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="view_quotation_tree"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="js_class">sale_onboarding_list</attribute>
             </xpath>
         </field>
@@ -379,7 +379,7 @@
                         <field
                             name="order_line"
                             widget="sol_o2m"
-                            mode="tree,kanban"
+                            mode="list,kanban"
                             readonly="state == 'cancel' or locked">
                             <form>
                                 <field name="display_type" invisible="1"/>
@@ -444,7 +444,7 @@
                                             <field name="qty_invoiced"/>
                                         </div>
                                         <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging"/>
-                                        <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
+                                        <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'list_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" />
                                         <field name="price_unit"/>
                                         <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use', '=', 'sale'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                             readonly="qty_invoiced &gt; 0"/>
@@ -483,7 +483,7 @@
                                 <field name="state" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
                             </form>
-                            <tree
+                            <list
                                 string="Sales Order Lines"
                                 editable="bottom"
                                 limit="200"
@@ -544,10 +544,10 @@
                                     placeholder="Type to find a product..."/>
                                 <field name="product_template_attribute_value_ids" column_invisible="1" />
                                 <field name="product_custom_attribute_value_ids" column_invisible="1" >
-                                    <tree>
+                                    <list>
                                         <field name="custom_product_template_attribute_value_id" />
                                         <field name="custom_value" />
-                                    </tree>
+                                    </list>
                                 </field>
                                 <field name="product_no_variant_attribute_value_ids" column_invisible="1" />
                                 <field name="is_configurable_product" column_invisible="1" />
@@ -609,7 +609,7 @@
                                     width="80px"
                                     readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment"/>
                                 <field name="product_packaging_qty" invisible="not product_id or not product_packaging_id" groups="product.group_stock_packaging" optional="show"/>
-                                <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
+                                <field name="product_packaging_id" invisible="not product_id" context="{'default_product_id': product_id, 'list_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" groups="product.group_stock_packaging" optional="show"/>
                                 <field
                                     name="price_unit"
                                     readonly="qty_invoiced &gt; 0"/>
@@ -643,7 +643,7 @@
                                 <field name="currency_id" column_invisible="True"/>
                                 <field name="price_tax" column_invisible="True"/>
                                 <field name="company_id" column_invisible="True"/>
-                            </tree>
+                            </list>
                             <kanban class="o_kanban_mobile">
                                 <field name="name"/>
                                 <field name="product_id"/>
@@ -886,7 +886,7 @@
     <record id="action_orders" model="ir.actions.act_window">
         <field name="name">Sales Orders</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
         <field name="context">{}</field>
         <field name="path">orders</field>
@@ -902,7 +902,7 @@
 
     <record id="sale_order_action_view_order_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="sale.view_order_tree"/>
         <field name="act_window_id" ref="action_orders"/>
     </record>
@@ -947,7 +947,7 @@
         <field name="path">sales</field>
         <field name="res_model">sale.order</field>
         <field name="view_id" ref="view_quotation_tree_with_onboarding"/>
-        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
         <field name="context">{'search_default_my_quotation': 1}</field>
         <field name="help" type="html">
@@ -971,7 +971,7 @@
     <record id="action_quotations" model="ir.actions.act_window">
         <field name="name">Quotations</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
         <field name="context">{'search_default_my_quotation': 1}</field>
         <field name="help" type="html">
@@ -993,7 +993,7 @@
 
     <record id="sale_order_action_view_quotation_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
         <field name="act_window_id" ref="action_quotations_with_onboarding"/>
     </record>
@@ -1036,7 +1036,7 @@
     <record id="action_orders_to_invoice" model="ir.actions.act_window">
         <field name="name">Orders to Invoice</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
+        <field name="view_mode">list,form,calendar,graph,pivot,kanban,activity</field>
         <field name="context">{'create': False}</field>
         <field name="domain">[('invoice_status','=','to invoice')]</field>
         <field name="search_view_id" ref="view_sales_order_filter"/>
@@ -1053,7 +1053,7 @@
     <record id="action_orders_upselling" model="ir.actions.act_window">
         <field name="name">Orders to Upsell</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
+        <field name="view_mode">list,form,calendar,graph,pivot,kanban,activity</field>
         <field name="domain">[('invoice_status','=','upselling')]</field>
         <field name="context">{'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter"/>

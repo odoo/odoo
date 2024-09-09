@@ -15,7 +15,7 @@
                 <group string="Opportunities" invisible="name != 'merge'">
                     <field name="lead_id" invisible="1"/>
                     <field name="duplicated_lead_ids" nolabel="1">
-                        <tree>
+                        <list>
                             <field name="create_date"/>
                             <field name="name"/>
                             <field name="type" optional="hide"/>
@@ -25,7 +25,7 @@
                             <field name="stage_id"/>
                             <field name="user_id" widget="many2one_avatar_user"/>
                             <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" optional="hide"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
                 <group name="action" invisible="name != 'convert'" string="Customer" col="1">

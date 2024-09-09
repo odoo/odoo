@@ -269,7 +269,7 @@ class HrCandidate(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Similar Candidates'),
             'res_model': self._name,
-            'view_mode': 'tree,kanban,form,activity',
+            'view_mode': 'list,kanban,form,activity',
             'domain': [('id', 'in', similar_candidates.ids)],
             'context': {
                 'active_test': False,
@@ -282,7 +282,7 @@ class HrCandidate(models.Model):
             'name': _('Applications'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.applicant',
-            'view_mode': 'tree,kanban,form,pivot,graph,calendar,activity',
+            'view_mode': 'list,kanban,form,pivot,graph,calendar,activity',
             'domain': [('id', 'in', self.applicant_ids.ids)],
             'context': {
                 'active_test': False,
@@ -403,9 +403,9 @@ class HrCandidate(models.Model):
                 'default_res_id': self.ids[0],
                 'show_partner_name': 1,
             },
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'views': [
-                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'tree'),
+                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'list'),
                 (False, 'form'),
             ],
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,

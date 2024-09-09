@@ -1280,7 +1280,7 @@ class AccountPaymentRegister(models.TransientModel):
             })
         else:
             action.update({
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
                 'domain': [('id', 'in', payments.ids)],
             })
         return action
@@ -1308,7 +1308,7 @@ class AccountPaymentRegister(models.TransientModel):
             action = {
                 "type": "ir.actions.act_window",
                 "res_model": "res.partner.bank",
-                "views": [[False, "tree"], [self.env.ref("account.view_partner_bank_form_inherit_account").id, "form"]],
+                "views": [[False, "list"], [self.env.ref("account.view_partner_bank_form_inherit_account").id, "form"]],
                 "domain": [["id", "in", self.untrusted_bank_ids.ids]],
             }
 

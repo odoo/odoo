@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="utm_source_view_tree" model="ir.ui.view">
-        <field name="name">utm.source.view.tree</field>
+        <field name="name">utm.source.view.list</field>
         <field name="model">utm.source</field>
         <field name="arch" type="xml">
-            <tree string="Source" editable="bottom" sample="1">
+            <list string="Source" editable="bottom" sample="1">
                 <field name="name" placeholder='e.g. "Christmas Mailing"'/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -27,7 +27,7 @@
     <record id="utm_source_action" model="ir.actions.act_window">
         <field name="name">Sources</field>
         <field name="res_model">utm.source</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Sources yet!

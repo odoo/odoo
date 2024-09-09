@@ -8,13 +8,13 @@ const { DateTime } = luxon;
 let target, serverData;
 
 const arch =
-    '<tree editable="top" js_class="inventory_report_list">'+
+    '<list editable="top" js_class="inventory_report_list">'+
     '<field name="name"/>'+
     '<field name="age"/>'+
     '<field name="job"/>'+
     '<field name="create_date" invisible="1"/>'+
     '<field name="write_date" invisible="1"/>'+
-    '</tree>';
+    '</list>';
 
 const setup_date = DateTime.fromISO('2022-01-03T08:03:44+00:00').toSQL();
 

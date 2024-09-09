@@ -193,17 +193,17 @@
     </record>
 
     <record id="card_campaign_view_tree" model="ir.ui.view">
-        <field name="name">card.campaign.view.tree</field>
+        <field name="name">card.campaign.view.list</field>
         <field name="model">card.campaign</field>
         <field name="arch" type="xml">
-            <tree sample="1">
+            <list sample="1">
                 <field name="create_date"/>
                 <field name="name"/>
                 <field name="user_id" widget="many2one_avatar"/>
                 <field name="res_model" optional="hide"/>
                 <field name="target_url" optional="hide"/>
                 <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -231,7 +231,7 @@
         <field name="name">Card Campaign</field>
         <field name="res_model">card.campaign</field>
         <field name="search_view_id" ref="card_campaign_view_search"/>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Create a Sharing Campaign!</p>
             <p>Prepare a design and some content and let your community spread the word!</p>

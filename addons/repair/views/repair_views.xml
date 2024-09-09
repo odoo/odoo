@@ -23,10 +23,10 @@
     </record>
 
     <record id="view_repair_order_tree" model="ir.ui.view">
-        <field name="name">repair.tree</field>
+        <field name="name">repair.list</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <tree string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+            <list string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                 <field name="company_id" column_invisible="True"/>
                 <field name="priority" optional="show" widget="priority" nolabel="1"/>
                 <field name="name"/>
@@ -50,7 +50,7 @@
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -125,7 +125,7 @@
                     <page string="Parts" name="parts">
                         <field name="move_ids" readonly="state == 'cancel' or state == 'done'"
                         context="{'default_repair_id': id, 'default_product_uom_qty': 1, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add'}">
-                            <tree string="Operations" editable="bottom">
+                            <list string="Operations" editable="bottom">
                                 <control>
                                     <create string="Add a line"/>
                                     <button name="action_add_from_catalog_repair" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
@@ -172,7 +172,7 @@
                                         invisible="not show_details_visible" options='{"warn": true}'
                                         context="{'default_location_dest_id': location_dest_id}"
                                     />
-                            </tree>
+                            </list>
                         </field>
                         <div class="clearfix"/>
                     </page>
@@ -291,7 +291,7 @@
             <field name="name">Repair Orders</field>
             <field name="path">repairs</field>
             <field name="res_model">repair.order</field>
-            <field name="view_mode">tree,kanban,graph,pivot,form,activity</field>
+            <field name="view_mode">list,kanban,graph,pivot,form,activity</field>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -312,7 +312,7 @@
             }
             </field>
             <field name="res_model">repair.order</field>
-            <field name="view_mode">tree,kanban,graph,pivot,form</field>
+            <field name="view_mode">list,kanban,graph,pivot,form</field>
             <field name="view_id" ref="view_repair_graph"/>
         </record>
 
@@ -320,7 +320,7 @@
             <field name="name">Repair Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">repair.order</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="domain">[('picking_type_id', '=', active_id)]</field>
@@ -342,12 +342,12 @@
         </record>
 
         <record id="view_repair_tag_tree" model="ir.ui.view">
-            <field name="name">repair.tag.tree</field>
+            <field name="name">repair.tag.list</field>
             <field name="model">repair.tags</field>
             <field name="arch" type="xml">
-                <tree string="Tags" editable="bottom">
+                <list string="Tags" editable="bottom">
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </record>
 

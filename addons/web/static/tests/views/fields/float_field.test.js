@@ -244,9 +244,9 @@ test.tags("desktop")("float field in editable list view", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="float_field" widget="float" digits="[5,3]" />
-            </tree>`,
+            </list>`,
     });
 
     // switch to edit mode
@@ -380,9 +380,9 @@ test.tags("desktop")(
             type: "list",
             resModel: "partner",
             arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="float_field" widget="float" digits="[5,3]" options="{'enable_formatting': false}" />
-            </tree>`,
+            </list>`,
         });
 
         // switch to edit mode

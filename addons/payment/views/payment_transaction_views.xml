@@ -69,7 +69,7 @@
         <field name="name">payment.transaction.list</field>
         <field name="model">payment.transaction</field>
         <field name="arch" type="xml">
-            <tree string="Payment Transactions" create="false">
+            <list string="Payment Transactions" create="false">
                 <field name="reference"/>
                 <field name="create_date"/>
                 <field name="payment_method_id"/>
@@ -81,7 +81,7 @@
                 <field name="amount"/>
                 <field name="state"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -126,7 +126,7 @@
     <record id="action_payment_transaction" model="ir.actions.act_window">
         <field name="name">Payment Transactions</field>
         <field name="res_model">payment.transaction</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_neutral_face">
                 There are no transactions to show
@@ -137,7 +137,7 @@
     <record id="action_payment_transaction_linked_to_token" model="ir.actions.act_window">
         <field name="name">Payment Transactions Linked To Token</field>
         <field name="res_model">payment.transaction</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('token_id','=', active_id)]</field>
         <field name="context">{'create': False}</field>
     </record>

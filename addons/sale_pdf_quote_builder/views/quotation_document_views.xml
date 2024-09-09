@@ -120,12 +120,12 @@
         <field name="name">quotation.document.list</field>
         <field name="model">quotation.document</field>
         <field name="arch" type="xml">
-            <tree editable="top" multi_edit="true">
+            <list editable="top" multi_edit="true">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="document_type"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -157,7 +157,7 @@
     <record id="quotation_document_action" model="ir.actions.act_window">
         <field name="name">Headers/Footers</field>
         <field name="res_model">quotation.document</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Upload quotation headers and footers

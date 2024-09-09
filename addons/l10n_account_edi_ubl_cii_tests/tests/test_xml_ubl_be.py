@@ -695,7 +695,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_imported_invoice_from_file(filename='bis3_out_invoice_no_prices.xml', **kwargs)
 
     def test_import_invoice_xml_open_peppol_examples(self):
-        # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples
+        # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/list/master/rules/examples
         subfolder = 'tests/test_files/from_peppol-bis-invoice-3_doc'
         # source: Allowance-example.xml
         self._assert_imported_invoice_from_file(

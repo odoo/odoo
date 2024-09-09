@@ -60,7 +60,7 @@
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">
-                      <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" mode="tree,kanban">
+                      <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" mode="list,kanban">
                             <kanban class="o_kanban_mobile">
                                 <t t-name="kanban-card" class="row g-0">
                                     <aside class="col-2 pe-3">
@@ -80,7 +80,7 @@
                                     </main>
                                 </t>
                             </kanban>
-                            <tree string="Order lines" editable="bottom">
+                            <list string="Order lines" editable="bottom">
                                 <field name="name" column_invisible="True"/>
                                 <field name="full_product_name" optional="hide" readonly="1"/>
                                 <field name="product_id" widget="product_label_section_and_note_field" />
@@ -101,7 +101,7 @@
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
                                 <field name="currency_id" column_invisible="True"/>
                                 <field name="refunded_qty" optional="hide" />
-                            </tree>
+                            </list>
                             <form string="Order lines">
                                 <group col="4">
                                     <field name="product_id" />
@@ -151,7 +151,7 @@
                     </page>
                     <page string="Payments" name="payments">
                         <field name="payment_ids" colspan="4" nolabel="1" readonly="state in ['invoiced', 'done']">
-                            <tree string="Payments" create="1" editable="bottom">
+                            <list string="Payments" create="1" editable="bottom">
                                 <field name="currency_id" column_invisible="True" />
                                 <field name="payment_date"/>
                                 <field name="payment_method_id" domain="[('id', 'in', parent.available_payment_method_ids)]" />
@@ -160,7 +160,7 @@
                                 <field name="card_no" invisible="not card_no"/>
                                 <field name="card_brand" string="Card's Brand" invisible="not card_brand or not card_no"/>
                                 <field name="cardholder_name" invisible="not cardholder_name or not card_no"/>
-                            </tree>
+                            </list>
                         </field>
                         <group class="oe_subtotal_footer" colspan="2" name="order_total">
                             <field name="amount_total" class="h3" widget="monetary"/>
@@ -253,7 +253,7 @@
         <field name="name">Orders</field>
         <field name="res_model">pos.order</field>
         <field name="path">pos-orders</field>
-        <field name="view_mode">tree,form,kanban,pivot</field>
+        <field name="view_mode">list,form,kanban,pivot</field>
         <field name="view_id" eval="False"/>
         <field name="domain">[]</field>
         <field name="help" type="html">
@@ -268,7 +268,7 @@
     <record id="action_pos_sale_graph" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="res_model">pos.order</field>
-        <field name="view_mode">graph,tree,form,kanban,pivot</field>
+        <field name="view_mode">graph,list,form,kanban,pivot</field>
         <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -280,10 +280,10 @@
     </record>
 
     <record id="view_pos_order_tree" model="ir.ui.view">
-        <field name="name">pos.order.tree</field>
+        <field name="name">pos.order.list</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" duplicate="0">
+            <list string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" duplicate="0">
                 <field name="currency_id" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="session_id"  readonly="state != 'draft'"/>
@@ -296,7 +296,7 @@
                 <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
                 <field name="is_edited" readonly="1" optional="hide"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record id="view_pos_order_tree_no_session_id" model="ir.ui.view">
@@ -324,10 +324,10 @@
     <menuitem id="menu_point_ofsale" parent="menu_point_of_sale" action="action_pos_pos_form" sequence="2" groups="group_pos_manager,group_pos_user"/>
 
     <record id="view_pos_order_line" model="ir.ui.view">
-        <field name="name">pos.order.line.tree</field>
+        <field name="name">pos.order.line.list</field>
         <field name="model">pos.order.line</field>
         <field name="arch" type="xml">
-            <tree string="POS Order lines">
+            <list string="POS Order lines">
                 <field name="product_id" readonly="1"/>
                 <field name="qty" readonly="1" sum="Total qty"/>
                 <field name="discount" readonly="1"/>
@@ -336,7 +336,7 @@
                 <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="create_date" readonly="1"/>
                 <field name="currency_id" column_invisible="True"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -360,37 +360,37 @@
     <record id="action_pos_order_line" model="ir.actions.act_window">
         <field name="name">Sale line</field>
         <field name="res_model">pos.order.line</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_pos_order_line"/>
     </record>
 
     <record id="action_pos_order_line_form" model="ir.actions.act_window">
         <field name="name">Sale line</field>
         <field name="res_model">pos.order.line</field>
-        <field name="view_mode">form,tree</field>
+        <field name="view_mode">form,list</field>
         <field name="view_id" ref="view_pos_order_line_form"/>
     </record>
 
     <record id="action_pos_order_line_day" model="ir.actions.act_window">
         <field name="name">Sale line</field>
         <field name="res_model">pos.order.line</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="view_pos_order_line"/>
         <field name="domain">[('create_date', '&gt;=', time.strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
     </record>
 
     <record id="view_pos_order_tree_all_sales_lines" model="ir.ui.view">
-        <field name="name">pos.order.line.all.sales.tree</field>
+        <field name="name">pos.order.line.all.sales.list</field>
         <field name="model">pos.order.line</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders lines">
+            <list string="POS Orders lines">
                 <field name="order_id" />
                 <field name="create_date" />
                 <field name="product_id" />
                 <field name="qty" />
                 <field name="price_unit" widget="monetary"/>
                 <field name="currency_id" column_invisible="True"/>
-            </tree>
+            </list>
         </field>
     </record>
      <record id="action_pos_all_sales_lines" model="ir.actions.act_window">
@@ -447,7 +447,7 @@
         <field name="name">Send Email</field>
         <field name="model_id" ref="model_pos_order"/>
         <field name="binding_model_id" ref="model_pos_order"/>
-        <field name="binding_view_types">tree</field>
+        <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">
             action = records.action_send_mail()

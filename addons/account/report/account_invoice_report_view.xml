@@ -25,10 +25,10 @@
     </record>
 
      <record id="account_invoice_report_view_tree" model="ir.ui.view">
-         <field name="name">account.invoice.report.view.tree</field>
+         <field name="name">account.invoice.report.view.list</field>
          <field name="model">account.invoice.report</field>
          <field name="arch" type="xml">
-             <tree string="Invoices Analysis">
+             <list string="Invoices Analysis">
                 <field name="move_id" string="Invoice Number"/>
                 <field name="journal_id" optional="hide"/>
                 <field name="partner_id" optional="show"/>
@@ -49,7 +49,7 @@
                 <field name="state" optional="hide"/>
                 <field name="payment_state" optional="hide"/>
                 <field name="move_type" optional="hide"/>
-             </tree>
+             </list>
          </field>
      </record>
 

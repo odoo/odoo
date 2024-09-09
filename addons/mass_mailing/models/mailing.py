@@ -680,7 +680,7 @@ class MassMailing(models.Model):
         return {
             'name': model_name,
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'link.tracker',
             'domain': [('mass_mailing_id', '=', self.id)],
             'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
@@ -711,7 +711,7 @@ class MassMailing(models.Model):
         filter_key = 'search_default_filter_%s' % (view_filter)
         action['context'][filter_key] = True
         action['views'] = [
-            (self.env.ref('mass_mailing.mailing_trace_view_tree_mail').id, 'tree'),
+            (self.env.ref('mass_mailing.mailing_trace_view_tree_mail').id, 'list'),
             (self.env.ref('mass_mailing.mailing_trace_view_form').id, 'form')
         ]
         return action
@@ -774,7 +774,7 @@ class MassMailing(models.Model):
         action = {
             'name': model_name,
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': self.mailing_model_real,
             'domain': [('id', 'in', res_ids)],
             'context': dict(self._context, create=False),
@@ -839,7 +839,7 @@ class MassMailing(models.Model):
         return {
             'name': _('A/B Tests'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,kanban,form,calendar,graph',
+            'view_mode': 'list,kanban,form,calendar,graph',
             'res_model': 'mailing.mailing',
             'domain': expression.AND([
                 [('campaign_id', '=', self.campaign_id.id)],

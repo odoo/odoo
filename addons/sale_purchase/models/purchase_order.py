@@ -33,7 +33,7 @@ class PurchaseOrder(models.Model):
             action.update({
                 'name': _('Sources Sale Orders %s', self.name),
                 'domain': [('id', 'in', sale_order_ids)],
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
             })
         return action
 

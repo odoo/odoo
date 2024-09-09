@@ -331,7 +331,7 @@ class User(models.Model):
                 'name': _('Related Employees'),
                 'type': 'ir.actions.act_window',
                 'res_model': model,
-                'view_mode': 'kanban,tree,form',
+                'view_mode': 'kanban,list,form',
                 'domain': [('id', 'in', employees.ids)],
             }
         return {

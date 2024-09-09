@@ -529,7 +529,7 @@ test("auto save record when field toggled", async () => {
 
 test("For the same record, a single rpc is done to recover the specialData", async () => {
     Partner._views = {
-        "list,3": '<tree><field name="display_name"/></tree>',
+        "list,3": '<list><field name="display_name"/></list>',
         "search,9": `<search></search>`,
         "form,false": `
             <form>
@@ -570,7 +570,7 @@ test("For the same record, a single rpc is done to recover the specialData", asy
 
 test("open form with statusbar, leave and come back to another one with other domain", async () => {
     Partner._views = {
-        "list,3": '<tree><field name="display_name"/></tree>',
+        "list,3": '<list><field name="display_name"/></list>',
         "search,9": `<search/>`,
         "form,false": `
             <form>

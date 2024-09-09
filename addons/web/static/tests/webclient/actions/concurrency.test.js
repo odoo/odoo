@@ -56,7 +56,7 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "list,false": `<tree><field name="display_name"/></tree>`,
+        "list,false": `<list><field name="display_name"/></list>`,
         "search,false": `<search/>`,
     };
 }
@@ -70,7 +70,7 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        "list,false": `<tree><field name="name"/></tree>`,
+        "list,false": `<list><field name="name"/></list>`,
         "form,false": `<form><field name="name"/></form>`,
         "search,false": `<search/>`,
     };

@@ -42,7 +42,7 @@ class MassMailing(models.Model):
             'name': _("Leads Analysis"),
             'res_model': 'crm.lead',
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree,pivot,graph,form',
+            'view_mode': 'list,pivot,graph,form',
         }
 
     def _prepare_statistics_email_values(self):

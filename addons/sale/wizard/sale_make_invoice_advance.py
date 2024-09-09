@@ -139,7 +139,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return {
             'name': _('Draft Invoices'),
             'type': 'ir.actions.act_window',
-            'view_mode': 'tree',
+            'view_mode': 'list',
             'views': [(False, 'list'), (False, 'form')],
             'res_model': 'account.move',
             'domain': [('line_ids.sale_line_ids.order_id', 'in', self.sale_order_ids.ids), ('state', '=', 'draft')],

@@ -1176,7 +1176,7 @@ class Warehouse(models.Model):
             'res_model': 'stock.route',
             'type': 'ir.actions.act_window',
             'view_id': False,
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'limit': 20,
             'context': dict(self._context, default_warehouse_selectable=True, default_warehouse_ids=self.ids)
         }

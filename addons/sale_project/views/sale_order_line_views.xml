@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_order_line_tree_with_create" model="ir.ui.view">
-        <field name="name">sale.order.line.tree.with.create</field>
+        <field name="name">sale.order.line.list.with.create</field>
         <field name="model">sale.order.line</field>
         <field name="inherit_id" ref="sale.view_order_line_tree"/>
         <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <tree position="attributes">
+            <list position="attributes">
                 <attribute name="create">true</attribute>
-            </tree>
+            </list>
         </field>
     </record>
 

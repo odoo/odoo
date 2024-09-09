@@ -622,7 +622,7 @@ class PosOrder(models.Model):
     def action_view_refund_orders(self):
         return {
             'name': _('Refund Orders'),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'res_model': 'pos.order',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.mapped('lines.refund_orderline_ids.order_id').ids)],

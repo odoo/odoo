@@ -88,9 +88,9 @@ test("render ActionMenus in list view", async () => {
         },
         loadActionMenus: true,
         arch: /* xml */ `
-              <tree>
+              <list>
                   <field name="value"/>
-              </tree>
+              </list>
          `,
     });
     expect.verifySteps([
@@ -221,7 +221,7 @@ test("render ActionMenus in list view with extraPrintItems", async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree js_class="extra_print"><field name="value"/></tree>`,
+        arch: `<list js_class="extra_print"><field name="value"/></list>`,
         actionMenus: {
             action: [],
             print: printItems,

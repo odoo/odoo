@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="mail_blacklist_view_tree" model="ir.ui.view">
-        <field name="name">mail.blacklist.view.tree</field>
+        <field name="name">mail.blacklist.view.list</field>
         <field name="model">mail.blacklist</field>
         <field name="arch" type="xml">
-            <tree string="Email Blacklist">
+            <list string="Email Blacklist">
                 <field name="create_date" string="Blacklist Date"/>
                 <field name="email"/>
-            </tree>
+            </list>
         </field>
     </record>
 

@@ -64,7 +64,7 @@
     <field name="model">website.page</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1" default_order="url asc, id asc">
+        <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1" default_order="url asc, id asc">
             <field name="is_homepage" column_invisible="True"/>
             <field name="name" string="Page Title"/>
             <field name="website_url" string="Page URL"/>
@@ -82,7 +82,7 @@
             <field name="website_id" groups="website.group_multi_website"/>
 
             <button name="action_page_debug_view" type="object" title="Settings" icon="fa-bug fa-lg" groups="base.group_no_one"/>
-        </tree>
+        </list>
     </field>
 </record>
 
@@ -153,9 +153,9 @@
 <record id="action_website_pages_list" model="ir.actions.act_window">
     <field name="name">Website Pages</field>
     <field name="res_model">website.page</field>
-    <field name="view_mode">tree,kanban</field>
+    <field name="view_mode">list,kanban</field>
     <field name="view_ids" eval="[(5, 0, 0),
-        (0, 0, {'view_mode': 'tree', 'view_id': ref('website_pages_tree_view')}),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('website_pages_tree_view')}),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('website_pages_kanban_view')}),
     ]"/>
 </record>
@@ -210,9 +210,9 @@
     <field name="model">ir.ui.view</field>
     <field name="inherit_id" ref="base.view_view_tree"/>
     <field name="arch" type="xml">
-        <tree position="attributes">
+        <list position="attributes">
             <attribute name="decoration-muted">not active</attribute>
-        </tree>
+        </list>
         <field name="name" position="after">
             <field name="active" column_invisible="True"/>
             <field name="website_id" groups="website.group_multi_website"/>

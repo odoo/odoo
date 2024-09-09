@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="purchase_bill_line_match_tree" model="ir.ui.view">
-        <field name="name">purchase.bill.line.match.tree</field>
+        <field name="name">purchase.bill.line.match.list</field>
         <field name="model">purchase.bill.line.match</field>
         <field name="arch" type="xml">
-            <tree string="Purchase Bill Lines"
+            <list string="Purchase Bill Lines"
                   decoration-info="pol_id != False"
                   decoration-muted="state == 'draft'"
                   action="action_open_line" type="object">
@@ -21,7 +21,7 @@
                 <field name="billed_amount_untaxed" widget="monetary" string="Billed"/>
                 <field name="purchase_amount_untaxed" widget="monetary" string="Purchased"/>
                 <field name="currency_id" column_invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>

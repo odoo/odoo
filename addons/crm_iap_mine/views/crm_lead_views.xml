@@ -2,7 +2,7 @@
 
 <odoo>
     <record id="crm_lead_view_tree_opportunity" model="ir.ui.view">
-        <field name="name">crm.lead.view.tree.opportunity.inherit.iap.mine</field>
+        <field name="name">crm.lead.view.list.opportunity.inherit.iap.mine</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
         <field name="arch" type="xml">
@@ -15,11 +15,11 @@
     </record>
 
     <record id="crm_lead_view_tree_lead" model="ir.ui.view">
-        <field name="name">crm.lead.view.tree.lead.inherit.iap.mine</field>
+        <field name="name">crm.lead.view.list.lead.inherit.iap.mine</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_tree_view_leads" />
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="inside">
+            <xpath expr="//list" position="inside">
                 <header>
                     <button name="action_generate_leads" type="object" class="o_button_generate_leads"
                             string="Generate Leads" groups="sales_team.group_sale_manager" display="always"

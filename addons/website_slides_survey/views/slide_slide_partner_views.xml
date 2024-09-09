@@ -13,7 +13,7 @@
     </record>
 
     <record id="slide_slide_partner_view_tree" model="ir.ui.view">
-        <field name="name">slide.slide.partner.view.tree.inherit.survey</field>
+        <field name="name">slide.slide.partner.view.list.inherit.survey</field>
         <field name="model">slide.slide.partner</field>
         <field name="inherit_id" ref="website_slides.slide_slide_partner_view_tree"/>
         <field name="arch" type="xml">
@@ -34,7 +34,7 @@
                     invisible="slide_category != 'certification'"/>
             </xpath>
             <xpath expr="//group[@name='main_content']" position="after">
-                <field name="user_input_ids" mode="tree"
+                <field name="user_input_ids" mode="list"
                     readonly="1"
                     invisible="slide_category != 'certification'"/>
             </xpath>

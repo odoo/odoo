@@ -284,9 +284,9 @@ test.tags("desktop")("date field in editable list view", async () => {
         type: "list",
         resModel: "res.partner",
         arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="date"/>
-                </tree>`,
+                </list>`,
     });
 
     const cell = queryOne("tr.o_data_row td:not(.o_list_record_selector)");
@@ -322,9 +322,9 @@ test.tags("desktop")("multi edition of date field in list view: clear date in in
         type: "list",
         resModel: "res.partner",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="date"/>
-            </tree>`,
+            </list>`,
     });
 
     const rows = queryAll(".o_data_row");

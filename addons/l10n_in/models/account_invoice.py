@@ -111,7 +111,7 @@ class AccountMove(models.Model):
                         message=msg,
                         action_name=_("Journal Items(s)"),
                         record=lines,
-                        views=[(self.env.ref("l10n_in.view_move_line_tree_hsn_l10n_in").id, "tree")],
+                        views=[(self.env.ref("l10n_in.view_move_line_tree_hsn_l10n_in").id, "list")],
                         domain=[('id', 'in', lines.ids)]
                     )
                 } if lines else {}

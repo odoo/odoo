@@ -224,7 +224,7 @@ class MailTemplate(models.Model):
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
                 'context': repr(context),
-                'view_mode': 'form,tree',
+                'view_mode': 'form,list',
                 'view_id': view.id,
                 'target': 'new',
                 'binding_model_id': template.model_id.id,

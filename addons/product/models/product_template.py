@@ -579,8 +579,8 @@ class ProductTemplate(models.Model):
         ]
         return {
             'name': _('Price Rules'),
-            'view_mode': 'tree,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree'), (False, 'form')],
+            'view_mode': 'list,form',
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'list'), (False, 'form')],
             'res_model': 'product.pricelist.item',
             'type': 'ir.actions.act_window',
             'target': 'current',
@@ -599,7 +599,7 @@ class ProductTemplate(models.Model):
             'name': _('Documents'),
             'type': 'ir.actions.act_window',
             'res_model': 'product.document',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': 'kanban,list,form',
             'context': {
                 'default_res_model': self._name,
                 'default_res_id': self.id,

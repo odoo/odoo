@@ -4,7 +4,7 @@
         <field name="name">mail.group.message.view.list</field>
         <field name="model">mail.group.message</field>
         <field name="arch" type="xml">
-            <tree sample="1">
+            <list sample="1">
                 <field name="create_date"/>
                 <field name="author_id"/>
                 <field name="email_from"/>
@@ -32,7 +32,7 @@
                 <button name="action_moderate_accept" string="Send" title="Send"
                     type="object" class="btn btn-primary"
                     invisible="moderation_status != 'pending_moderation' or is_group_moderated"/>
-            </tree>
+            </list>
         </field>
     </record>
     <record id="mail_group_message_view_form" model="ir.ui.view">
@@ -108,7 +108,7 @@
     <record id="mail_group_message_action" model="ir.actions.act_window">
         <field name="name">Messages</field>
         <field name="res_model">mail.group.message</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">No Messages in this list yet!</p>
             <p>When people send an email to the alias of the list, they will appear here.</p>

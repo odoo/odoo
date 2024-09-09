@@ -35,7 +35,7 @@ export class SMLX2ManyField extends X2ManyField {
         context = {
             ...context,
             single_product: true,
-            tree_view_ref: "stock.view_stock_quant_tree_simple",
+            list_view_ref: "stock.view_stock_quant_tree_simple",
             search_default_on_hand: true,
             search_default_in_stock: true,
         };

@@ -6,7 +6,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']//tree" position="inside">
+            <xpath expr="//field[@name='order_line']//list" position="inside">
                 <!-- TODO VCR test mobile view ? -->
                 <field name="product_document_ids" column_invisible="1"/>
             </xpath>

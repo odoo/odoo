@@ -2,10 +2,10 @@
 <odoo>
     <data>
         <record id="res_lang_tree" model="ir.ui.view">
-            <field name="name">res.lang.tree</field>
+            <field name="name">res.lang.list</field>
             <field name="model">res.lang</field>
             <field name="arch" type="xml">
-                <tree string="Languages" limit="200">
+                <list string="Languages" limit="200">
                     <header>
                         <button name="action_activate_langs" type="object" string="Activate"/>
                     </header>
@@ -29,7 +29,7 @@
                         type="object"
                         icon="fa-times"
                         invisible="not active"/>
-                </tree>
+                </list>
             </field>
         </record>
 

@@ -32,7 +32,7 @@
                     required="service_tracking == 'event' and event_id"
                     options="{'no_open': True, 'no_create': True}"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']//tree//field[@name='product_template_id']" position="after">
+            <xpath expr="//field[@name='order_line']//list//field[@name='product_template_id']" position="after">
                 <field name="event_id"
                     column_invisible="True"
                     domain="[

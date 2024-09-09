@@ -145,7 +145,7 @@ class Department(models.Model):
         return {
             "type": "ir.actions.act_window",
             "res_model": "hr.department",
-            "views": [[False, "kanban"], [False, "tree"], [False, "form"]],
+            "views": [[False, "kanban"], [False, "list"], [False, "form"]],
             "domain": [['id', 'in', self.get_children_department_ids().ids]],
             "name": "Child departments",
         }

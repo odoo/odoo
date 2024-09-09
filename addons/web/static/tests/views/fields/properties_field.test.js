@@ -1121,15 +1121,15 @@ test.tags("desktop")("properties: many2one 'Search more...'", async () => {
         },
     ];
     Partner._views[["list", false]] = /* xml */ `
-        <tree>
+        <list>
             <field name="id"/>
             <field name="display_name"/>
-        </tree>`;
+        </list>`;
     User._views[["list", false]] = /* xml */ `
-        <tree>
+        <list>
             <field name="id"/>
             <field name="display_name"/>
-        </tree>`;
+        </list>`;
     User._views[["search", false]] = /* xml */ `<search/>`;
 
     // Patch the Many2XAutocomplete default search limit options

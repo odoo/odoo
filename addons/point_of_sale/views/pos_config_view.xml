@@ -116,16 +116,16 @@
     </record>
 
     <record id="view_pos_config_tree" model="ir.ui.view">
-        <field name="name">pos.config.tree.view</field>
+        <field name="name">pos.config.list.view</field>
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
-            <tree string="Point of Sale Configuration">
+            <list string="Point of Sale Configuration">
                 <field name="name" />
                 <field name="company_id"  options="{'no_create': True}" groups="base.group_multi_company"/>
                 <field name="last_session_closing_date" string="Closing"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="last_session_closing_cash" widget="monetary" string="Balance"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -145,7 +145,7 @@
         <field name="name">Point of Sale</field>
         <field name="path">point-of-sale</field>
         <field name="res_model">pos.config</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain"></field>
         <field name="search_view_id" ref="view_pos_config_search" />
         <field name="help" type="html">
@@ -160,7 +160,7 @@
     <record id="action_pos_config_tree" model="ir.actions.act_window">
         <field name="name">Point of Sale List</field>
         <field name="res_model">pos.config</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain"></field>
         <field name="search_view_id" ref="view_pos_config_search" />
         <field name="help" type="html">

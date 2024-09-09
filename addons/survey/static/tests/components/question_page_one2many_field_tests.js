@@ -71,11 +71,11 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             arch: `
                 <form>
                     <field name="question_and_page_ids" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" />
                             <field name="random_questions_count" />
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -100,11 +100,11 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             arch: `
                 <form>
                     <field name="question_and_page_ids" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" />
                             <field name="random_questions_count" />
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -125,11 +125,11 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             arch: `
                 <form>
                     <field name="question_and_page_ids" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" />
                             <field name="random_questions_count" />
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
         });
@@ -148,11 +148,11 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                 <form>
                     <field name="favorite_color"/>
                     <field name="question_and_page_ids" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" />
                             <field name="random_questions_count" />
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -181,11 +181,11 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             arch: `
                 <form>
                     <field name="question_and_page_ids" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" />
                             <field name="random_questions_count" />
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -220,7 +220,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             arch: `
                 <form>
                     <field name="question_and_page_ids" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" />
                             <field name="random_questions_count" />
@@ -228,7 +228,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                                 <create string="add line" />
                                 <create string="add section" context="{'default_is_page': true}" />
                             </control>
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -250,7 +250,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             arch: `
                 <form>
                     <field name="question_and_page_ids" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" />
                             <field name="random_questions_count" />
@@ -258,7 +258,7 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                                 <create string="add line" />
                                 <create string="add section" context="{'default_is_page': true}" />
                             </control>
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -280,11 +280,11 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
                 arch: `
                 <form>
                     <field name="question_and_page_ids" widget="question_page_one2many">
-                        <tree>
+                        <list>
                             <field name="is_page" invisible="1" />
                             <field name="title" />
                             <field name="random_questions_count" />
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,

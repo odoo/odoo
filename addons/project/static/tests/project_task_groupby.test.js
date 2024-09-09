@@ -20,7 +20,7 @@ test("project.task (tree): check group label for no project", async () => {
     await mountView({
         resModel: "project.task",
         type: "list",
-        arch: `<tree js_class="project_task_list"/>`,
+        arch: `<list js_class="project_task_list"/>`,
         groupBy: ["project_id"],
     });
     expect(".o_group_name").toHaveText("🔒 Private (1)");
@@ -30,7 +30,7 @@ test("project.task (tree): check group label for no assignees", async () => {
     await mountView({
         resModel: "project.task",
         type: "list",
-        arch: `<tree js_class="project_task_list"/>`,
+        arch: `<list js_class="project_task_list"/>`,
         groupBy: ["user_ids"],
     });
     expect(".o_group_name").toHaveText("👤 Unassigned (1)");
@@ -40,7 +40,7 @@ test("project.task (tree): check group label for no deadline", async () => {
     await mountView({
         resModel: "project.task",
         type: "list",
-        arch: `<tree js_class="project_task_list"/>`,
+        arch: `<list js_class="project_task_list"/>`,
         groupBy: ["date_deadline"],
     });
     expect(".o_group_name").toHaveText("None (1)");

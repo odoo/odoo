@@ -10,9 +10,9 @@ describe.current.tags("desktop");
 defineTodoModels();
 
 const listViewArch = `
-    <tree js_class="todo_list">
+    <list js_class="todo_list">
         <field name="name"></field>
-    </tree>`;
+    </list>`;
 
 test("Check that todo_list view is restricted to archive, unarchive, duplicate and delete menu actions", async () => {
     await mountView({

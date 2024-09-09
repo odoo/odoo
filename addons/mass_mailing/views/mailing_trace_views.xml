@@ -32,10 +32,10 @@
     </record>
 
     <record id="mailing_trace_view_tree" model="ir.ui.view">
-        <field name="name">mailing.trace.view.tree</field>
+        <field name="name">mailing.trace.view.list</field>
         <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
-            <tree string="Mailing Traces" create="0">
+            <list string="Mailing Traces" create="0">
                 <field name="mass_mailing_id"/>
                 <field name="email"/>
                 <field name="message_id"/>
@@ -47,16 +47,16 @@
                 <field name="reply_datetime" optional="hide"/>
                 <button name="action_view_contact" type="object"
                         string="Open Recipient" icon="fa-user"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="mailing_trace_view_tree_mail" model="ir.ui.view">
-        <field name="name">mailing.trace.view.tree.mail</field>
+        <field name="name">mailing.trace.view.list.mail</field>
         <field name="model">mailing.trace</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <tree string="Mail Traces" create="0">
+            <list string="Mail Traces" create="0">
                 <field name="mass_mailing_id"/>
                 <field name="email"/>
                 <field name="message_id" optional="hide"/>
@@ -68,7 +68,7 @@
                 <field name="reply_datetime" optional="hide"/>
                 <button name="action_view_contact" type="object"
                         string="Open Recipient" icon="fa-user"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -132,14 +132,14 @@
     <record id="mailing_trace_action" model="ir.actions.act_window">
         <field name="name">Mailing Traces</field>
         <field name="res_model">mailing.trace</field>
-        <field name="view_mode">tree,form,graph,pivot</field>
+        <field name="view_mode">list,form,graph,pivot</field>
         <field name="domain">[]</field>
     </record>
 
     <record id="action_view_mail_mail_statistics_mailing" model="ir.actions.act_window">
         <field name="name">Mail Statistics</field>
         <field name="res_model">mailing.trace</field>
-        <field name="view_mode">graph,tree,form,pivot</field>
+        <field name="view_mode">graph,list,form,pivot</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_mass_mailing_id': active_id}</field>
         <field name="help" type="html">

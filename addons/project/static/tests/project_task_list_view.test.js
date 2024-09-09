@@ -27,10 +27,10 @@ test("project.task (list): cannot edit stage_id with different projects", async 
         resModel: "project.task",
         type: "list",
         arch: `
-            <tree multi_edit="1" js_class="project_task_list">
+            <list multi_edit="1" js_class="project_task_list">
                 <field name="project_id"/>
                 <field name="stage_id"/>
-            </tree>
+            </list>
         `,
     });
 

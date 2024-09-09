@@ -34,7 +34,7 @@
                 <div invisible="not search_criteria_completed or valid">
                     <div class="text-danger"><i class="fa fa-exclamation-triangle me-1" title="Warning"/>You are not allowed to regenerate validated work entries</div>
                     <field name="validated_work_entry_ids" widget="many2many" nolabel="1">
-                        <tree string="Work Entries"
+                        <list string="Work Entries"
                               default_order = "date_start"
 
                               editable="bottom"
@@ -44,7 +44,7 @@
                             <field name="date_stop"/>
                             <field name="work_entry_type_id"/>
                             <field name="state"/>
-                        </tree>
+                        </list>
                     </field>
                 </div>
                 <footer>

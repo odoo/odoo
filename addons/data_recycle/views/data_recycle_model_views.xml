@@ -5,13 +5,13 @@
             <field name="name">Field Recyle Model List</field>
             <field name="model">data_recycle.model</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="not active">
+                <list decoration-muted="not active">
                     <field name="name" />
                     <field name="res_model_id" />
                     <field name="recycle_mode" groups="base.group_no_one" />
                     <field name="recycle_action" groups="base.group_no_one" />
                     <field name="active" widget="boolean_toggle" />
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -79,7 +79,7 @@
         <record model="ir.actions.act_window" id="action_data_recycle_config">
             <field name="name">Recyle Records Rules</field>
             <field name="res_model">data_recycle.model</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="domain">['|', ('active', '=', False), ('active', '=', True)]</field>
         </record>
     </data>

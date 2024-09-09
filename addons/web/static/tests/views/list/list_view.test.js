@@ -196,7 +196,7 @@ test(`simple readonly list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="foo"/><field name="int_field"/></list>`,
     });
 
     // 3 th (1 for checkbox, 2 for columns)
@@ -220,7 +220,7 @@ test(`select record range with shift click`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="foo"/><field name="int_field"/></list>`,
     });
     await contains(`.o_data_row .o_list_record_selector input`).click();
     expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(1);
@@ -247,7 +247,7 @@ test(`select record range with shift+space`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="foo"/><field name="int_field"/></list>`,
     });
 
     // Go to the first checkbox and check it
@@ -283,7 +283,7 @@ test(`expand range of checkbox with shift+arrow`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="foo"/><field name="int_field"/></list>`,
     });
 
     // Go to the first checkbox and check it
@@ -318,7 +318,7 @@ test(`multiple interactions to change the range of checked boxes`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="foo"/><field name="int_field"/></list>`,
     });
 
     press("down");
@@ -360,9 +360,9 @@ test(`list with class and style attributes`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree class="myClass" style="border: 1px solid red;">
+            <list class="myClass" style="border: 1px solid red;">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     expect(
@@ -395,7 +395,7 @@ test(`list with create="0"`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree create="0"><field name="foo"/></tree>`,
+        arch: `<list create="0"><field name="foo"/></list>`,
     });
     expect(`.o_list_button_add`).toHaveCount(0, { message: "should not have the 'Create' button" });
 });
@@ -404,7 +404,7 @@ test(`searchbar in listview doesn't take focus after unselected all items`, asyn
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
     });
     expect(`.o_searchview_input`).toBeFocused({
         message: "The search input should be have the focus",
@@ -421,7 +421,7 @@ test(`basic list view and command palette`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
     });
 
     press(["control", "k"]);
@@ -438,7 +438,7 @@ test(`list with delete="0"`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree delete="0"><field name="foo"/></tree>`,
+        arch: `<list delete="0"><field name="foo"/></list>`,
         actionMenus: {},
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
@@ -452,7 +452,7 @@ test(`editable list with edit="0"`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" edit="0"><field name="foo"/></tree>`,
+        arch: `<list editable="top" edit="0"><field name="foo"/></list>`,
         selectRecord(resId, options) {
             expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
         },
@@ -468,7 +468,7 @@ test(`non-editable list with open_form_view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree open_form_view="1"><field name="foo"/></tree>`,
+        arch: `<list open_form_view="1"><field name="foo"/></list>`,
     });
     expect(".o_optional_columns_dropdown").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(0, {
@@ -480,7 +480,7 @@ test(`editable list with open_form_view not set`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
     });
     expect(`td.o_list_record_open_form_view`).toHaveCount(0, {
         message: "button to open form view should not be present",
@@ -491,7 +491,7 @@ test(`editable list with open_form_view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" open_form_view="1"><field name="foo"/></tree>`,
+        arch: `<list editable="top" open_form_view="1"><field name="foo"/></list>`,
         selectRecord(resId, options) {
             expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
         },
@@ -510,7 +510,7 @@ test(`editable list with open_form_view in debug`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" open_form_view="1"><field name="foo"/></tree>`,
+        arch: `<list editable="top" open_form_view="1"><field name="foo"/></list>`,
     });
     expect(".o_optional_columns_dropdown").toHaveCount(0);
     expect(`td.o_list_record_open_form_view`).toHaveCount(4, {
@@ -538,7 +538,7 @@ test(`editable list without open_form_view in debug`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
         selectRecord(resId, options) {
             expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
         },
@@ -578,7 +578,7 @@ test(`non-editable list in debug`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
     });
     expect(".o_optional_columns_dropdown").toHaveCount(0);
 });
@@ -596,10 +596,10 @@ test(`editable readonly list with open_form_view`, async () => {
             <form>
                 <sheet>
                     <field name="foo_o2m" readonly="1">
-                        <tree editable="top" open_form_view="1">
+                        <list editable="top" open_form_view="1">
                             <field name="foo"/>
                             <field name="bar"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -615,7 +615,7 @@ test(`export feature in list for users not in base.group_allow_export`, async ()
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         actionMenus: {},
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(0);
@@ -636,7 +636,7 @@ test(`list with export button`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         actionMenus: {},
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
@@ -657,7 +657,7 @@ test(`Direct export button invisible`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree export_xlsx="0"><field name="foo"/></tree>`,
+        arch: `<list export_xlsx="0"><field name="foo"/></list>`,
     });
     expect(`.o_list_export_xlsx`).toHaveCount(0);
 });
@@ -667,13 +667,13 @@ test(`list view with adjacent buttons`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <button name="a" type="object" icon="fa-car"/>
                 <field name="foo"/>
                 <button name="x" type="object" icon="fa-star"/>
                 <button name="y" type="object" icon="fa-refresh"/>
                 <button name="z" type="object" icon="fa-exclamation"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(4, {
@@ -687,7 +687,7 @@ test(`list view with adjacent buttons and invisible field and button`, async () 
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <button name="a" type="object" icon="fa-car"/>
                 <field name="foo" column_invisible="1"/>
                 <!--Here the column_invisible=1 is used to simulate a group on the case that the user
@@ -696,7 +696,7 @@ test(`list view with adjacent buttons and invisible field and button`, async () 
                 <button name="x" type="object" icon="fa-star"/>
                 <button name="y" type="object" icon="fa-refresh"/>
                 <button name="z" type="object" icon="fa-exclamation"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(3, {
@@ -711,13 +711,13 @@ test(`list view with adjacent buttons and invisible field (modifier)`, async () 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <button name="a" type="object" icon="fa-car"/>
                 <field name="foo" invisible="foo == 'blip'"/>
                 <button name="x" type="object" icon="fa-star"/>
                 <button name="y" type="object" icon="fa-refresh"/>
                 <button name="z" type="object" icon="fa-exclamation"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(4, {
@@ -731,13 +731,13 @@ test(`list view with adjacent buttons and optional field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <button name="a" type="object" icon="fa-car"/>
                 <field name="foo" optional="hide"/>
                 <button name="x" type="object" icon="fa-star"/>
                 <button name="y" type="object" icon="fa-refresh"/>
                 <button name="z" type="object" icon="fa-exclamation"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(4, {
@@ -751,12 +751,12 @@ test(`list view with adjacent buttons with invisible modifier`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <button name="x" type="object" icon="fa-star" invisible="foo == 'blip'"/>
                 <button name="y" type="object" icon="fa-refresh" invisible="foo == 'yop'"/>
                 <button name="z" type="object" icon="fa-exclamation" invisible="foo == 'gnap'"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(3, {
@@ -777,12 +777,12 @@ test(`list view with icon buttons`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <button name="x" type="object" icon="fa-asterisk"/>
                 <button name="x" type="object" icon="fa-star" class="o_yeah"/>
                 <button name="x" type="object" icon="fa-refresh" string="Refresh" class="o_yeah"/>
                 <button name="x" type="object" icon="fa-exclamation" string="Danger" class="o_yeah btn-danger"/>
-            </tree>
+            </list>
         `,
     });
     expect(`button.btn.btn-link i.fa.fa-asterisk`).toHaveCount(1);
@@ -797,10 +797,10 @@ test(`list view with disabled button`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <button name="a" icon="fa-coffee"/>
                 <button name="b" icon="fa-car" disabled="disabled"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAll(`button[name='a']`).every((btn) => !btn.disabled)).toBe(true);
@@ -812,13 +812,13 @@ test(`list view: action button in controlPanel basic rendering`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <header>
                     <button name="x" type="object" class="plaf" string="plaf"/>
                     <button name="y" type="object" class="plouf" string="plouf" invisible="not context.get('bim')"/>
                 </header>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_control_panel_actions button[name=x]`).toHaveCount(0);
@@ -845,7 +845,7 @@ test(`list view: action button in controlPanel with display='always'`, async () 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <header>
                     <button name="display" type="object" class="display" string="display" display="always"/>
                     <button name="display" type="object" class="display_invisible" string="invisible 1" display="always" invisible="1"/>
@@ -853,7 +853,7 @@ test(`list view: action button in controlPanel with display='always'`, async () 
                     <button name="default-selection" type="object" class="default-selection" string="default-selection"/>
                 </header>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
         context: {
             a: true,
@@ -903,12 +903,12 @@ test(`list view: give a context dependent on the current context to a header but
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <header>
                     <button name="toDo" type="object" string="toDo" display="always" context="{'b': context.get('a')}"/>
                 </header>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
         context: {
             a: "yop",
@@ -930,12 +930,12 @@ test(`list view: action button executes action on click: buttons are disabled an
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <header>
                     <button name="x" type="object" class="plaf" string="plaf"/>
                 </header>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
@@ -963,10 +963,10 @@ test(`list view: buttons handler is called once on double click`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <button name="x" type="object" class="do_something" string="Do Something"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`tbody .o_list_button > button:eq(0)`).click();
@@ -986,10 +986,10 @@ test(`list view: click on an action button saves the record before executing the
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <button name="toDo" type="object" class="do_something" string="Do Something"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_cell`).click();
@@ -1045,12 +1045,12 @@ test(`list view: action button executes action on click: correct parameters`, as
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <header>
                         <button name="x" type="object" class="plaf" string="plaf" context="{'plouf': 'plif'}"/>
                 </header>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
         context: {
             paf: "pif",
@@ -1101,12 +1101,12 @@ test(`list view: action button executes action on click with domain selected: co
         resModel: "foo",
         type: "list",
         arch: `
-            <tree limit="1">
+            <list limit="1">
                 <header>
                         <button name="x" type="object" class="plaf" string="plaf"/>
                 </header>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
@@ -1129,12 +1129,12 @@ test(`list view: press "hotkey" to execute header button action`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <header>
                     <button name="toDo" type="object" string="toDo" display="always" data-hotkey="a"/>
                 </header>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     press(["alt", "a"]);
@@ -1163,12 +1163,12 @@ test(`column names (noLabel, label, string and default)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="display_name" widget="nolabel_char" optional="show"/>
                 <field name="foo" widget="label_char" optional="show"/>
                 <field name="int_field" string="My custom label" optional="show"/>
                 <field name="text" optional="show"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`thead th`)).toEqual([
@@ -1193,7 +1193,7 @@ test(`simple editable rendering`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`th`).toHaveCount(3);
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
@@ -1220,10 +1220,10 @@ test(`invisible columns are not displayed`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="bar" column_invisible="1"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -1236,11 +1236,11 @@ test(`invisible column based on the context are correctly displayed`, async () =
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="date" column_invisible="True"/>
                 <field name="foo" column_invisible="context.get('notInvisible')"/>
                 <field name="bar" column_invisible="context.get('invisible')"/>
-            </tree>
+            </list>
         `,
         context: {
             invisible: true,
@@ -1263,10 +1263,10 @@ test(`invisible column based on the context are correctly displayed in o2m`, asy
             <form>
                 <sheet>
                     <field name="foo_o2m">
-                        <tree>
+                        <list>
                             <field name="foo" column_invisible="context.get('notInvisible')"/>
                             <field name="bar" column_invisible="context.get('invisible')"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -1296,13 +1296,13 @@ test(`invisible column based on the parent are correctly displayed in o2m`, asyn
                     <field name="m2m" invisible="True"/>
                     <field name="properties" invisible="True"/>
                     <field name="foo_o2m">
-                        <tree>
+                        <list>
                             <field name="date" column_invisible="True"/>
                             <field name="foo" column_invisible="parent.int_field == 3"/>
                             <field name="bar" column_invisible="parent.int_field == 10"/>
                             <field name="qux" column_invisible="parent.m2m"/>
                             <field name="amount" column_invisible="parent.properties"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -1328,10 +1328,10 @@ test(`save a record with an invisible required field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" column_invisible="1"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row`).toHaveCount(4);
@@ -1361,10 +1361,10 @@ test.todo(
             resModel: "foo",
             type: "list",
             arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         });
         expect(`.o_data_row`).toHaveCount(4);
@@ -1399,10 +1399,10 @@ test.todo(
             resModel: "foo",
             type: "list",
             arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         });
         expect(`.o_data_row`).toHaveCount(4);
@@ -1431,10 +1431,10 @@ test(`multi_edit: clicking on a readonly field switches the focus to the next ed
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="int_field" readonly="1"/>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_list_record_selector input`).click();
@@ -1458,11 +1458,11 @@ test(`save a record with an required field computed by another`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="int_field"/>
                 <field name="text" required="1"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row`).toHaveCount(4);
@@ -1488,7 +1488,7 @@ test(`field with nolabel has no title`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo" nolabel="1"/></tree>`,
+        arch: `<list><field name="foo" nolabel="1"/></list>`,
     });
     expect(`thead tr:eq(0) th:eq(1)`).toHaveText("");
 });
@@ -1499,7 +1499,7 @@ test(`field titles are not escaped`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
     });
     expect(`tbody tr:eq(0) .o_data_cell`).toHaveText("<div>Hello</div>");
     expect(`tbody tr:eq(0) .o_data_cell`).toHaveAttribute("data-tooltip", "<div>Hello</div>");
@@ -1510,11 +1510,11 @@ test(`record-depending invisible lines are correctly aligned`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="bar" invisible="id == 1"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row`).toHaveCount(4);
@@ -1526,7 +1526,7 @@ test(`invisble fields must not have a tooltip`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo" invisible="id == 1"/></tree>`,
+        arch: `<list><field name="foo" invisible="id == 1"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_data_row td[data-tooltip]`).toHaveCount(3);
@@ -1540,10 +1540,10 @@ test(`do not perform extra RPC to read invisible many2one fields`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="m2o" column_invisible="1"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -1563,7 +1563,7 @@ test(`editable list datepicker destroy widget (edition)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="date"/></tree>`,
+        arch: `<list editable="top"><field name="date"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4);
 
@@ -1583,7 +1583,7 @@ test(`editable list datepicker destroy widget (new line)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="date"/></tree>`,
+        arch: `<list editable="top"><field name="date"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4, { message: "There should be 4 rows" });
 
@@ -1603,7 +1603,7 @@ test(`at least 4 rows are rendered, even if less data`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="bar"/></tree>`,
+        arch: `<list><field name="bar"/></list>`,
         domain: [["bar", "=", true]],
     });
     expect(`tbody tr`).toHaveCount(4, { message: "should have 4 rows" });
@@ -1613,7 +1613,7 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="bar"/></tree>`,
+        arch: `<list editable="top"><field name="bar"/></list>`,
         domain: [["bar", "=", true]],
     });
     expect(`.o_data_row`).toHaveCount(3);
@@ -1633,7 +1633,7 @@ test(`basic grouped list rendering`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
     });
     expect(`th:contains(Foo)`).toHaveCount(1, { message: "should contain Foo" });
@@ -1647,11 +1647,11 @@ test(`basic grouped list rendering with widget="handle" col`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="int_field" widget="handle"/>
                 <field name="foo"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -1671,11 +1671,11 @@ test(`basic grouped list rendering with a date field between two fields with a a
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="int_field"/>
                 <field name="date"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -1691,7 +1691,7 @@ test(`basic grouped list rendering 1 col without selector`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         groupBy: ["bar"],
         allowSelectors: false,
     });
@@ -1703,7 +1703,7 @@ test(`basic grouped list rendering 1 col with selector`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
     expect(`.o_group_header:eq(0) th`).toHaveCount(1);
@@ -1714,7 +1714,7 @@ test(`basic grouped list rendering 2 cols without selector`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
         allowSelectors: false,
     });
@@ -1726,7 +1726,7 @@ test(`basic grouped list rendering 3 cols without selector`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/><field name="text"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/><field name="text"/></list>`,
         groupBy: ["bar"],
         allowSelectors: false,
     });
@@ -1738,7 +1738,7 @@ test(`basic grouped list rendering 2 col with selector`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
         allowSelectors: true,
     });
@@ -1750,7 +1750,7 @@ test(`basic grouped list rendering 3 cols with selector`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/><field name="text"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/><field name="text"/></list>`,
         groupBy: ["bar"],
         allowSelectors: true,
     });
@@ -1764,7 +1764,7 @@ test(`basic grouped list rendering 7 cols with aggregates and selector`, async (
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="datetime"/>
                 <field name="foo"/>
                 <field name="int_field" sum="Sum1"/>
@@ -1772,7 +1772,7 @@ test(`basic grouped list rendering 7 cols with aggregates and selector`, async (
                 <field name="qux" sum="Sum2"/>
                 <field name="date"/>
                 <field name="text"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -1792,7 +1792,7 @@ test(`basic grouped list rendering 7 cols with aggregates, selector and optional
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="datetime"/>
                 <field name="foo"/>
                 <field name="int_field" sum="Sum1"/>
@@ -1800,7 +1800,7 @@ test(`basic grouped list rendering 7 cols with aggregates, selector and optional
                 <field name="qux" sum="Sum2"/>
                 <field name="date"/>
                 <field name="text" optional="show"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -1820,12 +1820,12 @@ test(`basic grouped list rendering 4 cols with aggregates, selector and openForm
         resModel: "foo",
         type: "list",
         arch: `
-            <tree open_form_view="True">
+            <list open_form_view="True">
                 <field name="datetime"/>
                 <field name="int_field" sum="Sum1"/>
                 <field name="bar"/>
                 <field name="qux" sum="Sum2" optional="hide"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -1838,12 +1838,12 @@ test(`basic grouped list rendering 4 cols with aggregates, selector, optional an
         resModel: "foo",
         type: "list",
         arch: `
-            <tree open_form_view="True">
+            <list open_form_view="True">
                 <field name="datetime"/>
                 <field name="int_field" sum="Sum1"/>
                 <field name="bar"/>
                 <field name="qux" sum="Sum2" optional="show"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -1861,10 +1861,10 @@ test(`group a list view with the aggregable field 'value'`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="bar"/>
                 <field name="value" sum="Sum1"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -1877,10 +1877,10 @@ test(`basic grouped list rendering with groupby m2m field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2m"],
     });
@@ -1919,11 +1919,11 @@ test(`grouped list rendering with groupby m2o and m2m field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2o"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2o", "m2m"],
     });
@@ -1959,9 +1959,9 @@ test(`grouped list with (disabled) pager inside group`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree limit="2">
+            <list limit="2">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2o"],
     });
@@ -1985,7 +1985,7 @@ test(`list view with multiple groupbys`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar", "foo"],
         noContentHelp: "<p>should not be displayed</p>",
     });
@@ -2003,10 +2003,10 @@ test(`enabling archive in list when groupby m2m field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         actionMenus: {},
         groupBy: ["m2m"],
@@ -2040,10 +2040,10 @@ test(`enabling duplicate in list when groupby m2m field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         actionMenus: {},
         groupBy: ["m2m"],
@@ -2076,10 +2076,10 @@ test(`enabling delete in list when groupby m2m field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         actionMenus: {},
         groupBy: ["m2m"],
@@ -2118,10 +2118,10 @@ test(`enabling unarchive in list when groupby m2m field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         actionMenus: {},
         groupBy: ["m2m"],
@@ -2158,10 +2158,10 @@ test(`add record in list grouped by m2m`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2m"],
     });
@@ -2189,10 +2189,10 @@ test(`editing a record should change same record in other groups when grouped by
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2m"],
     });
@@ -2228,11 +2228,11 @@ test(`change a record field in readonly should change same record in other group
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="priority" widget="priority"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2m"],
         domain: [["m2o", "=", 1]],
@@ -2261,7 +2261,7 @@ test(`ordered target, sort attribute in context`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="date"/></tree>`,
+        arch: `<list><field name="foo"/><field name="date"/></list>`,
     });
 
     // Descending order on Foo
@@ -2304,10 +2304,10 @@ test(`Loading a filter with a sort attribute`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="date"/>
-            </tree>
+            </list>
         `,
         loadIrFilters: true,
     });
@@ -2320,7 +2320,7 @@ test(`many2one field rendering`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="m2o"/></tree>`,
+        arch: `<list><field name="m2o"/></list>`,
     });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["Value 1", "Value 2", "Value 1", "Value 1"]);
 });
@@ -2330,7 +2330,7 @@ test(`many2one field rendering with many2one widget`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="m2o" widget="many2one"/></tree>`,
+        arch: `<list><field name="m2o" widget="many2one"/></list>`,
     });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["Unnamed", "Value 2", "Unnamed", "Unnamed"]);
 });
@@ -2342,7 +2342,7 @@ test(`many2one field rendering when display_name is falsy`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="m2o"/></tree>`,
+        arch: `<list><field name="m2o"/></list>`,
     });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["Unnamed", "Value 2", "Unnamed", "Unnamed"]);
     expect.verifySteps([
@@ -2358,7 +2358,7 @@ test(`grouped list view, with 1 open group`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="foo"/><field name="int_field"/></list>`,
         groupBy: ["foo"],
     });
     expect(`tr.o_group_header`).toHaveCount(3);
@@ -2391,7 +2391,7 @@ test(`opening records when clicking on record`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree js_class="custom_list"><field name="foo"/></tree>`,
+        arch: `<list js_class="custom_list"><field name="foo"/></list>`,
     });
     await contains(`tr:nth-child(2) td:not(.o_list_record_selector)`).click();
     await selectGroup("foo");
@@ -2429,10 +2429,10 @@ test(`open invalid but unchanged record`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree js_class="custom_list">
+            <list js_class="custom_list">
                 <field name="foo"/>
                 <field name="date" required="1"/>
-            </tree>`,
+            </list>`,
     });
 
     // second record is invalid as date is not set
@@ -2465,7 +2465,7 @@ test(`execute an action before and after each valid save in a list view`, async 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree js_class="custom_list" editable="top"><field name="foo" required="1"/></tree>`,
+        arch: `<list js_class="custom_list" editable="top"><field name="foo" required="1"/></list>`,
     });
     await contains(`.o_data_cell`).click();
     await contains(`[name=foo] input`).edit("");
@@ -2497,7 +2497,7 @@ test(`execute an action before and after each valid save in a grouped list view`
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree js_class="custom_list" editable="top" expand="1"><field name="foo" required="1"/></tree>`,
+        arch: `<list js_class="custom_list" editable="top" expand="1"><field name="foo" required="1"/></list>`,
         groupBy: ["bar"],
     });
     await contains(`.o_data_cell[name='foo']`).click();
@@ -2537,7 +2537,7 @@ test(`don't exec a valid save with onWillSaveRecord in a list view`, async () =>
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="top"><field name="foo" required="1"/></list>`,
     });
     await contains(`.o_data_cell`).click();
     await contains(`[name=foo] input`).edit("");
@@ -2562,7 +2562,7 @@ test(`action/type attributes on tree arch, type='object'`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree action="a1" type="object"><field name="foo"/></tree>`,
+        arch: `<list action="a1" type="object"><field name="foo"/></list>`,
     });
     expect.verifySteps([
         "/web/webclient/translations",
@@ -2588,7 +2588,7 @@ test(`action/type attributes on tree arch, type='action'`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree action="a1" type="action"><field name="foo"/></tree>`,
+        arch: `<list action="a1" type="action"><field name="foo"/></list>`,
     });
     expect.verifySteps([
         "/web/webclient/translations",
@@ -2609,11 +2609,11 @@ test(`editable list view: readonly fields cannot be edited`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field" readonly="1"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_field_cell`).click();
@@ -2649,10 +2649,10 @@ test(`editable list view: line with no active element`, async () => {
         arch: `
             <form>
                 <field name="o2m">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="titi" readonly="1"/>
                         <field name="grosminet" widget="boolean_toggle"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -2684,10 +2684,10 @@ test(`editable list view: click on last element after creation empty new line`, 
         arch: `
             <form>
                 <field name="o2m">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="int_field" widget="handle"/>
                         <field name="titi"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -2708,10 +2708,10 @@ test(`edit field in editable field without editing the row`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="bar" widget="boolean_toggle"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -2738,7 +2738,7 @@ test(`basic operations for editable list renderer`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_data_row .o_selected_row`).toHaveCount(0);
@@ -2751,7 +2751,7 @@ test(`editable list: add a line and discard`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="bar"/></list>`,
         domain: [["foo", "=", "yop"]],
     });
     expect(`tbody tr`).toHaveCount(4, { message: "list should contain 4 rows" });
@@ -2779,7 +2779,7 @@ test(`grouped editable list: edit a record and click on "Add a line"`, async () 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo" required="1"/><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo" required="1"/><field name="bar"/></list>`,
         groupBy: ["foo"],
     });
 
@@ -2812,7 +2812,7 @@ test(`field changes are triggered correctly`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="bar"/></list>`,
     });
     await contains(`.o_data_cell`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
@@ -2829,7 +2829,7 @@ test(`editable list view: basic char field edition`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="bar"/></list>`,
     });
     await contains(`.o_field_cell`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
@@ -2863,7 +2863,7 @@ test(`editable list view: save data when list sorting in edit mode`, async () =>
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/></list>`,
     });
     await contains(`.o_data_cell`).click();
     await contains(`.o_field_widget[name=foo] input`).edit("xyz");
@@ -2875,7 +2875,7 @@ test(`editable list view: save data when list sorting in edit mode`, async () =>
 test(`editable list view: check that controlpanel buttons are updating when groupby applied`, async () => {
     Foo._fields.foo = fields.Char({ required: true });
     Foo._views = {
-        "list,3": `<tree editable="top"><field name="display_name"/><field name="foo"/></tree>`,
+        "list,3": `<list editable="top"><field name="display_name"/><field name="foo"/></list>`,
         "search,9": `
             <search>
                 <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
@@ -2915,7 +2915,7 @@ test(`editable list view: check that controlpanel buttons are updating when grou
 test(`editable list view: check that add button is present when groupby applied`, async () => {
     Foo._fields.foo = fields.Char({ required: true });
     Foo._views = {
-        "list,3": `<tree editable="top"><field name="display_name"/><field name="foo"/></tree>`,
+        "list,3": `<list editable="top"><field name="display_name"/><field name="foo"/></list>`,
         "form,4": `<form><field name="display_name"/><field name="foo"/></form>`,
         "search,9": `
             <search>
@@ -2967,10 +2967,10 @@ test(`list view not groupable`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="display_name"/>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
         searchMenuTypes: ["filter", "favorite"],
         context: { search_default_foo: 1 },
@@ -2997,10 +2997,10 @@ test("group order by count", async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree>
+        arch: `<list>
                     <field name="foo"/>
                     <field name="bar"/>
-                </tree>`,
+                </list>`,
     });
     await toggleSearchBarMenu();
     await selectGroup("foo");
@@ -3038,10 +3038,10 @@ test("order by count reset", async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree>
+        arch: `<list>
                     <field name="foo"/>
                     <field name="bar"/>
-                </tree>`,
+                </list>`,
         searchViewArch: `
             <search>
                 <filter name="my_filter" string="My Filter" domain="[('id', '=', 0)]"/>
@@ -3079,7 +3079,7 @@ test(`selection changes are triggered correctly`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected",
@@ -3117,7 +3117,7 @@ test(`Row selection checkbox can be toggled by clicking on the cell`, async () =
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
         message: "no record should be selected",
@@ -3152,7 +3152,7 @@ test(`head selector is toggled by the other selectors`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
     });
     expect(`thead .o_list_record_selector input`).not.toBeChecked({
@@ -3190,7 +3190,7 @@ test(`selection box is properly displayed (single page)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
@@ -3226,7 +3226,7 @@ test(`selection box is properly displayed (multi pages)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="3"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="3"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(3);
     expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
@@ -3258,7 +3258,7 @@ test(`selection box is properly displayed (group list)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["foo"],
     });
     expect(`.o_group_header`).toHaveCount(3);
@@ -3294,7 +3294,7 @@ test(`selection box: grouped list, all groups folded`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["foo"],
     });
     expect(`.o_group_header`).toHaveCount(3);
@@ -3327,7 +3327,7 @@ test(`selection box in grouped list, multi pages`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: '<tree groups_limit="2"><field name="foo"/><field name="bar"/></tree>',
+        arch: '<list groups_limit="2"><field name="foo"/><field name="bar"/></list>',
         groupBy: ["int_field"],
     });
 
@@ -3356,7 +3356,7 @@ test(`selection box: grouped list, select domain, open group`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: '<tree><field name="foo"/><field name="bar"/></tree>',
+        arch: '<list><field name="foo"/><field name="bar"/></list>',
         groupBy: ["foo"],
     });
 
@@ -3382,7 +3382,7 @@ test(`selection box: grouped list, select domain, use pager`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+        arch: '<list limit="2"><field name="foo"/><field name="bar"/></list>',
         groupBy: ["bar"],
     });
 
@@ -3412,14 +3412,14 @@ test(`selection box is displayed as first action button`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <header>
                     <button name="x" type="object" class="plaf" string="plaf"/>
                     <button name="y" type="object" class="plouf" string="plouf"/>
                 </header>
                 <field name="foo"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row`).toHaveCount(4);
@@ -3439,7 +3439,7 @@ test(`selection box is not removed after multi record edition`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree multi_edit="1"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list multi_edit="1"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4, { message: "there should be 4 records" });
     expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0, {
@@ -3472,10 +3472,10 @@ test(`selection is reset on reload`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="int_field" sum="Sum"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_control_panel_actions .o_list_selection_box`).toHaveCount(0);
@@ -3509,10 +3509,10 @@ test(`selection is kept on render without reload`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="int_field" sum="Sum"/>
-            </tree>
+            </list>
         `,
         groupBy: ["foo"],
         actionMenus: {},
@@ -3548,7 +3548,7 @@ test(`select a record in list grouped by date with granularity`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["date:year"],
         // keep the actionMenus, it is relevant as it computes isM2MGrouped which crashes if we
         // don't correctly extract the fieldName/granularity from the groupBy
@@ -3577,11 +3577,11 @@ test(`aggregates are computed correctly`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="int_field" sum="Sum"/>
                 <field name="qux" avg="Average"/>
-            </tree>
+            </list>
         `,
         searchViewArch: `
             <search>
@@ -3610,7 +3610,7 @@ test(`aggregates are computed correctly in grouped lists`, async () => {
         resModel: "foo",
         type: "list",
         groupBy: ["m2o"],
-        arch: `<tree editable="bottom"><field name="foo"/><field name="int_field" sum="Sum"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="int_field" sum="Sum"/></list>`,
     });
     expect(`.o_group_header:eq(0) td:eq(-1)`).toHaveText("23", {
         message: "first group total should be 23",
@@ -3636,10 +3636,10 @@ test(`aggregates are formatted correctly in grouped lists`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="qux" widget="my_float" sum="Sum"/>
-            </tree>
+            </list>
         `,
         groupBy: ["int_field"],
     });
@@ -3657,12 +3657,12 @@ test(`aggregates in grouped lists with buttons`, async () => {
         type: "list",
         groupBy: ["m2o"],
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="int_field" sum="Sum"/>
                 <button name="a" type="object"/>
                 <field name="qux" sum="Sum"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_list_number`)).toEqual(["23", "6.40", "9", "13.00", "32", "19.40"]);
@@ -3683,10 +3683,10 @@ test(`date field aggregates in grouped lists`, async () => {
         type: "list",
         groupBy: ["m2o"],
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="date"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_group_header`).toHaveCount(2);
@@ -3706,10 +3706,10 @@ test(`hide aggregated value in grouped lists when no data provided by RPC call`,
         type: "list",
         groupBy: ["bar"],
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="qux" widget="float_time" sum="Sum"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tfoot td:eq(2)`).toHaveText("", { message: "There isn't any aggregated value" });
@@ -3719,7 +3719,7 @@ test(`aggregates are updated when a line is edited`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="int_field" sum="Sum"/></tree>`,
+        arch: `<list editable="bottom"><field name="int_field" sum="Sum"/></list>`,
     });
     expect(`span[data-tooltip="Sum"]`).toHaveText("32", { message: "current total should be 32" });
 
@@ -3733,10 +3733,10 @@ test(`aggregates are formatted according to field widget`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="qux" widget="float_time" sum="Sum"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tfoot td:eq(2)`).toHaveText("19:24", {
@@ -3748,7 +3748,7 @@ test(`aggregates of monetary field with no currency field`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="amount" widget="monetary" sum="Sum"/></tree>`,
+        arch: `<list><field name="amount" widget="monetary" sum="Sum"/></list>`,
     });
     expect(`.o_data_row td:eq(1)`).toHaveText("1,200.00", {
         message: "field should still be formatted based on currency",
@@ -3765,10 +3765,10 @@ test(`aggregates monetary (same currency)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="amount" widget="monetary" sum="Sum"/>
                 <field name="currency_id"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
@@ -3785,10 +3785,10 @@ test(`aggregates monetary (different currencies)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="amount" widget="monetary" sum="Sum"/>
                 <field name="currency_id"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
@@ -3807,10 +3807,10 @@ test(`aggregates monetary (currency field not in view)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="amount" widget="monetary" sum="Sum" options="{'currency_field': 'currency_test'}"/>
                 <field name="currency_id"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
@@ -3830,10 +3830,10 @@ test(`aggregates monetary (currency field in view)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="amount" widget="monetary" sum="Sum"/>
                 <field name="currency_test"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
@@ -3857,10 +3857,10 @@ test(`aggregates monetary with custom digits (same currency)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="amount" sum="Sum"/>
                 <field name="currency_id"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody [name='amount']`)).toEqual([
@@ -3884,10 +3884,10 @@ test(`aggregates float with monetary widget and custom digits (same currency)`, 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="qux" widget="monetary" sum="Sum"/>
                 <field name="currency_id"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
@@ -3909,12 +3909,12 @@ test(`currency_field is taken into account when formatting monetary values`, asy
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="company_currency_id" column_invisible="1"/>
                 <field name="currency_id" column_invisible="1"/>
                 <field name="amount"/>
                 <field name="amount_currency"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row:eq(0) td[name=amount]`).toHaveText("1,200.00 €", {
@@ -3936,7 +3936,7 @@ test(`groups can not be sorted on a different field than the first field of the 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list default_order="foo"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
     });
     expect.verifySteps(["web_read_group"]);
@@ -3952,10 +3952,10 @@ test(`groups can not be sorted on a different field than the first field of the 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree default_order="foo">
+            <list default_order="foo">
                 <field name="foo"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar", "foo"],
     });
@@ -3971,7 +3971,7 @@ test(`groups can be sorted on the first field of the groupBy`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree default_order="bar desc"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list default_order="bar desc"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
     });
     expect(`.o_group_header:eq(0)`).toHaveText("Yes (3)");
@@ -3990,10 +3990,10 @@ test(`groups can't be sorted on aggregates if there is no record`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field" sum="Sum"/>
-            </tree>
+            </list>
         `,
         groupBy: ["foo"],
     });
@@ -4011,10 +4011,10 @@ test(`groups can be sorted on aggregates`, async () => {
         type: "list",
         groupBy: ["foo"],
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field" sum="Sum"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody .o_list_number`)).toEqual(["5", "17", "10"], {
@@ -4051,11 +4051,11 @@ test(`groups cannot be sorted on non-aggregable fields if every group is folded`
         type: "list",
         groupBy: ["foo"],
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field"/>
                 <field name="sort_field"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps(["default order"]);
@@ -4088,7 +4088,7 @@ test(`groups can be sorted on non-aggregable fields if a group isn't folded`, as
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
     await contains(`.o_group_header:eq(1)`).click();
@@ -4114,7 +4114,7 @@ test(`groups can be sorted on non-aggregable fields if a group isn't folded with
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom" expand="1"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom" expand="1"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
     expect(queryAllTexts(`.o_data_cell[name='foo']`)).toEqual(["blip", "yop", "blip", "gnap"]);
@@ -4143,7 +4143,7 @@ test(`properly apply onchange in simple case`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/><field name="int_field"/></list>`,
     });
     await contains(`.o_field_cell`).click();
     expect(`.o_field_widget[name=int_field] input`).toHaveValue("10", {
@@ -4166,9 +4166,9 @@ test(`colspan of empty lines is correct in readonly`, async () => {
             <form edit="0">
                 <sheet>
                     <field name="foo_o2m">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="int_field"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -4189,9 +4189,9 @@ test(`colspan of empty lines is correct in edit`, async () => {
             <form>
                 <sheet>
                     <field name="foo_o2m">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="int_field"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -4212,10 +4212,10 @@ test(`colspan of empty lines is correct in readonly with optional fields`, async
             <form edit="0">
                 <sheet>
                     <field name="foo_o2m">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="int_field"/>
                             <field name="foo" optional="hidden"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -4236,10 +4236,10 @@ test(`colspan of empty lines is correct in edit with optional fields`, async () 
             <form>
                 <sheet>
                     <field name="foo_o2m">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="int_field"/>
                             <field name="foo" optional="hidden"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -4268,9 +4268,9 @@ test(`editable list: updating list state while invisible`, async () => {
                         <page string="Page 1"></page>
                         <page string="Page 2">
                             <field name="o2m">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="display_name"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -4293,7 +4293,7 @@ test(`editable list view, click on m2o dropdown does not close editable row`, as
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="m2o"/></tree>`,
+        arch: `<list editable="top"><field name="m2o"/></list>`,
     });
     await contains(`.o_list_button_add`).click();
     expect(`.o_selected_row .o_field_many2one input`).toHaveValue("");
@@ -4328,7 +4328,7 @@ test(`fields are translatable in list view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="top"><field name="foo" required="1"/></list>`,
     });
     await contains(`.o_data_row .o_data_cell`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
@@ -4347,7 +4347,7 @@ test(`long words in text cells should break into smaller lines`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="text"/></tree>`,
+        arch: `<list><field name="text"/></list>`,
     });
 
     // Intentionally set the table width to a small size
@@ -4374,7 +4374,7 @@ test(`deleting one record and verify context key`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         actionMenus: {},
         context: {
             ctx_key: "ctx_val",
@@ -4416,7 +4416,7 @@ test(`custom delete confirmation dialog`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree js_class="caution"><field name="foo"/></tree>`,
+        arch: `<list js_class="caution"><field name="foo"/></list>`,
         actionMenus: {},
     });
     await contains(`tbody td.o_list_record_selector:eq(0) input`).click();
@@ -4445,7 +4445,7 @@ test(`deleting record which throws UserError should close confirmation dialog`, 
         resModel: "foo",
         type: "list",
         actionMenus: {},
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
     });
     await contains(`tbody td.o_list_record_selector:eq(0) input`).click();
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
@@ -4476,7 +4476,7 @@ test(`delete all records matching the domain`, async () => {
     await mountView({
         type: "list",
         resModel: "foo",
-        arch: `<tree limit="2"><field name="foo"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/></list>`,
         domain: [["bar", "=", true]],
         actionMenus: {},
     });
@@ -4518,7 +4518,7 @@ test(`delete all records matching the domain (limit reached)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/></list>`,
         domain: [["bar", "=", true]],
         actionMenus: {},
     });
@@ -4542,7 +4542,7 @@ test(`duplicate one record`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
         actionMenus: {},
     });
 
@@ -4562,7 +4562,7 @@ test(`duplicate all records`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
         actionMenus: {},
     });
 
@@ -4588,7 +4588,7 @@ test(`archiving one record`, async () => {
         resModel: "foo",
         type: "list",
         actionMenus: {},
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
     expect(`tbody td.o_list_record_selector`).toHaveCount(4, { message: "should have 4 records" });
@@ -4640,7 +4640,7 @@ test(`archive all records matching the domain`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/></list>`,
         domain: [["bar", "=", true]],
         actionMenus: {},
     });
@@ -4684,7 +4684,7 @@ test(`archive all records matching the domain (limit reached)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/></list>`,
         domain: [["bar", "=", true]],
         actionMenus: {},
     });
@@ -4709,7 +4709,7 @@ test(`archive/unarchive handles returned action`, async () => {
     Foo._fields.active = fields.Boolean({ default: true });
 
     Foo._views = {
-        "list,3": `<tree><field name="foo"/></tree>`,
+        "list,3": `<list><field name="foo"/></list>`,
         "search,9": `
             <search>
                 <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
@@ -4781,7 +4781,7 @@ test(`apply custom static action menu (archive)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree js_class="custom_list"><field name="foo"/></tree>`,
+        arch: `<list js_class="custom_list"><field name="foo"/></list>`,
         actionMenus: {},
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
@@ -4831,7 +4831,7 @@ test(`add custom static action menu`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree js_class="custom_list"><field name="foo"/></tree>`,
+        arch: `<list js_class="custom_list"><field name="foo"/></list>`,
         actionMenus: {},
     });
     expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
@@ -4868,7 +4868,7 @@ test(`grouped, update the count of the group (and ancestors) when a record is de
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree expand="1"><field name="foo"/></tree>`,
+        arch: `<list expand="1"><field name="foo"/></list>`,
         groupBy: ["foo", "bar"],
         actionMenus: {},
     });
@@ -4897,10 +4897,10 @@ test(`grouped list, reload aggregates when a record is deleted`, async () => {
         type: "list",
         resModel: "foo",
         arch: /*xml*/ `
-            <tree expand="1">
+            <list expand="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>`,
+            </list>`,
         groupBy: ["foo"],
         actionMenus: {},
     });
@@ -4924,7 +4924,7 @@ test(`pager (ungrouped and grouped mode), default limit`, async () => {
     await mountView({
         type: "list",
         resModel: "foo",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -4952,7 +4952,7 @@ test(`pager, ungrouped, with count limit reached`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -4988,7 +4988,7 @@ test(`pager, ungrouped, with count limit reached, click next`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -5022,7 +5022,7 @@ test(`pager, ungrouped, with count limit reached, click next (2)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -5063,7 +5063,7 @@ test(`pager, ungrouped, with count limit reached, click previous`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -5097,7 +5097,7 @@ test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -5134,7 +5134,7 @@ test(`pager, ungrouped, with count equals count limit`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -5158,7 +5158,7 @@ test(`pager, ungrouped, reload while fetching count`, async () => {
     await mountView({
         type: "list",
         resModel: "foo",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -5201,7 +5201,7 @@ test(`pager, ungrouped, next and fetch count simultaneously`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -5234,7 +5234,7 @@ test(`pager, grouped, with groups count limit reached`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree groups_limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list groups_limit="2"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["foo"],
     });
     expect(`.o_group_header`).toHaveCount(2);
@@ -5246,7 +5246,7 @@ test(`pager, grouped, with count limit reached`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="1"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="1"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["foo"],
     });
     expect(`.o_group_header`).toHaveCount(3, { message: "should have 3 groups" });
@@ -5275,7 +5275,7 @@ test(`multi-level grouped list, pager inside a group`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2" groups_limit="3"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2" groups_limit="3"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar", "foo"],
     });
     expect(`.o_group_header`).toHaveCount(1);
@@ -5294,11 +5294,11 @@ test(`multi-level grouped list, pager inside a group, reload`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree groups_limit="2">
+            <list groups_limit="2">
                 <field name="foo"/>
                 <field name="int_field"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar", "foo"],
     });
@@ -5327,7 +5327,7 @@ test(`count_limit attrs set in arch`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2" count_limit="3"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2" count_limit="3"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(2);
     expect(`.o_pager_value`).toHaveText("1-2");
@@ -5365,7 +5365,7 @@ test(`pager, grouped, pager limit should be based on the group's count`, async (
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["foo"],
     });
 
@@ -5388,7 +5388,7 @@ test(`pager, grouped, group pager should update after removing a filter`, async 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/><field name="bar"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="foo" domain="[('foo','=','aaa')]"/>
@@ -5424,7 +5424,7 @@ test(`grouped, show only limited records when the list view is initially expande
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree expand="1"><field name="foo"/></tree>`,
+        arch: `<list expand="1"><field name="foo"/></list>`,
         groupBy: ["foo"],
     });
     expect(`.o_data_row`).toHaveCount(forcedDefaultLimit);
@@ -5554,7 +5554,7 @@ test(`can sort records when clicking on header`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
     });
     expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["yop", "blip", "gnap", "blip"]);
@@ -5573,7 +5573,7 @@ test(`do not sort records when clicking on header with nolabel`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo" nolabel="1"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="foo" nolabel="1"/><field name="int_field"/></list>`,
     });
     expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([
@@ -5625,7 +5625,7 @@ test(`use default_order`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list default_order="foo"><field name="foo"/><field name="bar"/></list>`,
     });
     expect.verifySteps(["web_search_read"]);
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["blip", "blip", "gnap", "yop"]);
@@ -5643,9 +5643,9 @@ test(`use more complex default_order`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree default_order="foo, bar desc, int_field">
+            <list default_order="foo, bar desc, int_field">
                 <field name="foo"/><field name="bar"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps(["web_search_read"]);
@@ -5662,9 +5662,9 @@ test(`use default_order on editable tree: sort on save`, async () => {
             <form>
                 <sheet>
                     <field name="o2m">
-                        <tree editable="bottom" default_order="name">
+                        <list editable="bottom" default_order="name">
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -5703,9 +5703,9 @@ test(`use default_order on editable tree: sort on demand`, async () => {
             <form>
                 <sheet>
                     <field name="o2m">
-                        <tree editable="bottom" default_order="name">
+                        <list editable="bottom" default_order="name">
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -5759,9 +5759,9 @@ test(`use default_order on editable tree: sort on demand in page`, async () => {
             <form>
                 <sheet>
                     <field name="o2m">
-                        <tree editable="bottom" default_order="name">
+                        <list editable="bottom" default_order="name">
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -5792,10 +5792,10 @@ test(`can display button in edit mode`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody button[name=notafield]`).toHaveCount(4);
@@ -5812,7 +5812,7 @@ test(`can display a list with a many2many field`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="m2m"/></tree>`,
+        arch: `<list><field name="m2m"/></list>`,
     });
     expect.verifySteps([
         "/web/webclient/translations",
@@ -5836,10 +5836,10 @@ test(`display a tooltip on a field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="bar" widget="boolean_favorite"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -5870,7 +5870,7 @@ test("field (with help) tooltip in non debug mode", async function () {
     await mountView({
         type: "list",
         resModel: "foo",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
     });
     hover(`th[data-name="foo"]`);
     await runAllTimers();
@@ -5883,10 +5883,10 @@ test(`support row decoration`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree decoration-info="int_field > 5">
+            <list decoration-info="int_field > 5">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr.text-info`).toHaveCount(3, {
@@ -5902,9 +5902,9 @@ test(`support row decoration (with unset numeric values)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom" decoration-danger="int_field &lt; 0">
+            <list editable="bottom" decoration-danger="int_field &lt; 0">
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -5926,10 +5926,10 @@ test(`support row decoration with date`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree decoration-info="datetime == '2017-02-27 12:51:35'" decoration-danger="datetime &gt; '2017-02-27 12:51:35' and datetime &lt; '2017-02-27 10:51:35'">
+            <list decoration-info="datetime == '2017-02-27 12:51:35'" decoration-danger="datetime &gt; '2017-02-27 12:51:35' and datetime &lt; '2017-02-27 10:51:35'">
                 <field name="datetime"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr.text-info`).toHaveCount(1, {
@@ -5946,10 +5946,10 @@ test(`support row decoration (decoration-bf)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree decoration-bf="int_field > 5">
+            <list decoration-bf="int_field > 5">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr.fw-bold`).toHaveCount(3, {
@@ -5963,10 +5963,10 @@ test(`support row decoration (decoration-it)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree decoration-it="int_field > 5">
+            <list decoration-it="int_field > 5">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr.fst-italic`).toHaveCount(3, {
@@ -5980,10 +5980,10 @@ test(`support field decoration`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo" decoration-danger="int_field > 5"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr`).toHaveCount(4);
@@ -5998,10 +5998,10 @@ test(`support field decoration (decoration-bf)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo" decoration-bf="int_field > 5"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr`).toHaveCount(4);
@@ -6016,10 +6016,10 @@ test(`support field decoration (decoration-it)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo" decoration-it="int_field > 5"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr`).toHaveCount(4);
@@ -6033,7 +6033,7 @@ test(`bounce create button when no data and click on empty area`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         noContentHelp: "click to add a record",
         searchViewArch: `
             <search>
@@ -6061,7 +6061,7 @@ test(`no content helper when no data`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         noContentHelp: "click to add a partner",
     });
     expect(`.o_view_nocontent`).toHaveCount(1, { message: "should display the no content helper" });
@@ -6081,7 +6081,7 @@ test(`no nocontent helper when no data and no help`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
     });
     expect(`.o_view_nocontent`).toHaveCount(0, {
         message: "should not display the no content helper",
@@ -6095,7 +6095,7 @@ test(`empty list with sample data`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
@@ -6103,7 +6103,7 @@ test(`empty list with sample data`, async () => {
                 <field name="m2m" widget="many2many_tags"/>
                 <field name="date"/>
                 <field name="datetime"/>
-            </tree>
+            </list>
         `,
         context: { search_default_empty: true },
         noContentHelp: "click to add a partner",
@@ -6164,7 +6164,7 @@ test(`refresh empty list with sample data`, async () => {
             </search>
         `,
         list: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
@@ -6172,7 +6172,7 @@ test(`refresh empty list with sample data`, async () => {
                 <field name="m2m" widget="many2many_tags"/>
                 <field name="date"/>
                 <field name="datetime"/>
-            </tree>
+            </list>
         `,
         kanban: `<kanban/>`,
     };
@@ -6207,10 +6207,10 @@ test(`empty list with sample data: toggle optional field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="foo"/>
                 <field name="m2o" optional="hide"/>
-            </tree>
+            </list>
         `,
         domain: Domain.FALSE.toList(),
     });
@@ -6233,11 +6233,11 @@ test(`empty list with sample data: keyboard navigation`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
-            </tree>`,
+            </list>`,
         domain: Domain.FALSE.toList(),
     });
 
@@ -6270,9 +6270,9 @@ test(`empty list with sample data: group by date`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="date"/>
-            </tree>`,
+            </list>`,
         domain: Domain.FALSE.toList(),
         groupBy: ["date:day"],
     });
@@ -6288,11 +6288,11 @@ test(`non empty list with sample data`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         domain: Domain.TRUE.toList(),
         context: { search_default_true_domain: true },
@@ -6320,11 +6320,11 @@ test(`click on header in empty list with sample data`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         domain: Domain.FALSE.toList(),
     });
@@ -6344,11 +6344,11 @@ test(`non empty editable list with sample data: delete all records`, async () =>
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" sample="1">
+            <list editable="top" sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         domain: Domain.TRUE.toList(),
         noContentHelp: "click to add a partner",
@@ -6378,11 +6378,11 @@ test(`empty editable list with sample data: start create record and cancel`, asy
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" sample="1">
+            <list editable="top" sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         domain: Domain.FALSE.toList(),
         noContentHelp: "click to add a partner",
@@ -6413,11 +6413,11 @@ test(`empty editable list with sample data: create and delete record`, async () 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" sample="1">
+            <list editable="top" sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         domain: Domain.FALSE.toList(),
         noContentHelp: "click to add a partner",
@@ -6459,11 +6459,11 @@ test(`empty editable list with sample data: create and duplicate record`, async 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" sample="1">
+            <list editable="top" sample="1">
                 <field name="foo"/>
                 <field name="bar"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         domain: [["int_field", "=", 0]],
         noContentHelp: "click to add a partner",
@@ -6520,12 +6520,12 @@ test(`groupby node with a button`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <groupby name="currency_id">
                     <button string="Button 1" type="object" name="button_method"/>
                 </groupby>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps([
@@ -6563,13 +6563,13 @@ test(`groupby node with a button when many2one is None`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree default_group_by="currency_id">
+            <list default_group_by="currency_id">
                 <field name="foo"/>
                 <groupby name="currency_id">
                     <field name="display_name"/>
                     <button string="Button 1" type="object" name="button_method"/>
                 </groupby>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_list_table_grouped`).toHaveCount(1);
@@ -6585,12 +6585,12 @@ test(`groupby node with a button in inner groupbys`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <groupby name="currency_id">
                     <button string="Button 1" type="object" name="button_method"/>
                 </groupby>
-            </tree>
+            </list>
         `,
         groupBy: ["bar", "currency_id"],
     });
@@ -6617,13 +6617,13 @@ test(`groupby node with a button with modifiers`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <groupby name="currency_id">
                     <field name="position"/>
                     <button string="Button 1" type="object" name="button_method" invisible="position == 'after'"/>
                 </groupby>
-            </tree>`,
+            </list>`,
         groupBy: ["currency_id"],
     });
 
@@ -6660,13 +6660,13 @@ test(`groupby node with a button with modifiers using a many2one`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree expand="1">
+            <list expand="1">
                 <field name="foo"/>
                 <groupby name="currency_id">
                     <field name="m2o"/>
                     <button string="Button 1" type="object" name="button_method" invisible="not m2o"/>
                 </groupby>
-            </tree>
+            </list>
         `,
         groupBy: ["currency_id"],
     });
@@ -6689,13 +6689,13 @@ test(`reload list view with groupby node`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree expand="1">
+            <list expand="1">
                 <field name="foo"/>
                 <groupby name="currency_id">
                     <field name="position"/>
                     <button string="Button 1" type="object" name="button_method" invisible="position == 'after'"/>
                 </groupby>
-            </tree>
+            </list>
         `,
         groupBy: ["currency_id"],
     });
@@ -6710,13 +6710,13 @@ test(`editable list view with groupby node and modifiers`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree expand="1" editable="bottom">
+            <list expand="1" editable="bottom">
                 <field name="foo"/>
                 <groupby name="currency_id">
                     <field name="position"/>
                     <button string="Button 1" type="object" name="button_method" invisible="position == 'after'"/>
                 </groupby>
-            </tree>
+            </list>
         `,
         groupBy: ["currency_id"],
     });
@@ -6754,12 +6754,12 @@ test(`groupby node with edit button`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree expand="1">
+            <list expand="1">
                 <field name="foo"/>
                 <groupby name="currency_id">
                     <button string="Button 1" type="edit" name="edit"/>
                 </groupby>
-            </tree>
+            </list>
         `,
         groupBy: ["currency_id"],
     });
@@ -6792,13 +6792,13 @@ test(`groupby node with subfields, and onchange`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom" expand="1">
+            <list editable="bottom" expand="1">
                 <field name="foo"/>
                 <field name="currency_id"/>
                 <groupby name="currency_id">
                     <field name="position" column_invisible="1"/>
                 </groupby>
-            </tree>
+            </list>
         `,
         groupBy: ["currency_id"],
     });
@@ -6819,12 +6819,12 @@ test(`list view, editable, without data`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="date"/>
                 <field name="m2o"/>
                 <field name="foo"/>
                 <button type="object" icon="fa-plus-square" name="method"/>
-            </tree>
+            </list>
         `,
         noContentHelp: "click to add a partner",
     });
@@ -6879,10 +6879,10 @@ test(`list view, editable, with a button`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <button string="abc" icon="fa-phone" type="object" name="schedule_another_phonecall"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_list_button_add`).click();
@@ -6903,10 +6903,10 @@ test(`list view with a button without icon`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <button string="abc" type="object" name="schedule_another_phonecall"/>
-            </tree>
+            </list>
         `,
     });
     expect(`table button:eq(0)`).toHaveText("abc", {
@@ -6918,7 +6918,7 @@ test(`list view, editable, can discard`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
     });
     expect(`td:not(.o_list_record_selector) input`).toHaveCount(0, {
         message: "no input should be in the table",
@@ -6947,10 +6947,10 @@ test(`editable list view, click on the list to save`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="int_field" sum="Sum"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_list_button_add`).click();
@@ -6978,10 +6978,10 @@ test(`editable list view, should refocus date field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="date"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_list_button_add`).click();
@@ -7004,9 +7004,9 @@ test(`text field should keep it's selection when clicking on it`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom" limit="1">
+            <list editable="bottom" limit="1">
                 <field name="text"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`td[name=text]`).click();
@@ -7039,10 +7039,10 @@ test(`click on a button cell in a list view`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom" limit="1">
+            <list editable="bottom" limit="1">
                 <field name="foo"/>
                 <button name="action_do_something" type="object" string="Action"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_cell.o_list_button`).click();
@@ -7073,10 +7073,10 @@ test(`click on a button in a list view`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <button string="a button" name="button_action" icon="fa-car" type="object"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps([
@@ -7101,12 +7101,12 @@ test(`invisible attrs in readonly and editable list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <button string="a button" name="button_action" icon="fa-car" type="object" invisible="id == 1"/>
                 <field name="int_field"/>
                 <field name="qux"/>
                 <field name="foo" invisible="id == 1"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_field_cell:eq(2)`).toHaveInnerHTML("");
@@ -7128,11 +7128,11 @@ test(`monetary fields are properly rendered`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="id"/>
                 <field name="amount"/>
                 <field name="currency_id" column_invisible="1"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr:eq(0) td`).toHaveCount(3, {
@@ -7152,7 +7152,7 @@ test(`simple list with date and datetime`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="date"/><field name="datetime"/></tree>`,
+        arch: `<list><field name="date"/><field name="datetime"/></list>`,
     });
     expect(`.o_data_row .o_data_cell:eq(0)`).toHaveText("01/25/2017", {
         message: "should have formatted the date",
@@ -7167,7 +7167,7 @@ test(`edit a row by clicking on a readonly field`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="int_field"/></list>`,
     });
 
     // edit the first row
@@ -7222,7 +7222,7 @@ test(`list view with nested groups`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="id"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="id"/><field name="int_field"/></list>`,
         groupBy: ["m2o", "foo"],
         selectRecord(resId, options) {
             expect.step(`switch to form - resId: ${resId}`);
@@ -7315,7 +7315,7 @@ test(`grouped list on selection field at level 2`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="id"/><field name="int_field"/></tree>`,
+        arch: `<list><field name="id"/><field name="int_field"/></list>`,
         groupBy: ["m2o", "priority"],
     });
     expect(`.o_group_header`).toHaveCount(2, { message: "should contain 2 groups at first level" });
@@ -7340,7 +7340,7 @@ test(`grouped list with a pager in a group`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
         limit: 3,
     });
@@ -7366,7 +7366,7 @@ test(`edition: create new line, then discard`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="bar"/></list>`,
     });
     expect(`tr.o_data_row`).toHaveCount(4, { message: "should have 4 records" });
     expect(`.o_list_button_add`).toHaveCount(1);
@@ -7390,10 +7390,10 @@ test(`invisible attrs on fields are re-evaluated on field change`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" invisible="bar"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_data_cell.o_list_char`)).toEqual(["", "", "", "blip"]);
@@ -7422,10 +7422,10 @@ test(`readonly attrs on fields are re-evaluated on field change`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" readonly="bar"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -7462,10 +7462,10 @@ test(`required attrs on fields are re-evaluated on field change`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" required="bar"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -7516,10 +7516,10 @@ test(`modifiers of other x2many rows a re-evaluated when a subrecord is updated`
         arch: `
             <form>
                 <field name="o2m">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="display_name" invisible="stage == 'open'"/>
                         <field name="stage"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -7554,10 +7554,10 @@ test(`leaving unvalid rows in edition`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo" required="1"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -7585,7 +7585,7 @@ test(`pressing enter on last line of editable list view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/></list>`,
     });
     expect.verifySteps([
         "/web/webclient/translations",
@@ -7621,7 +7621,7 @@ test(`pressing tab on last cell of editable list view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="int_field"/></list>`,
     });
     await contains(`.o_data_row:eq(3) .o_data_cell`).click();
     expect(`[name=foo] input`).toBeFocused();
@@ -7658,7 +7658,7 @@ test(`navigation with tab and read completes after default_get`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="int_field"/></list>`,
     });
     await contains(`.o_data_row:eq(3) .o_data_cell`).click();
     await contains(`.o_selected_row [name='int_field'] input`).edit("1234");
@@ -7695,7 +7695,7 @@ test(`display toolbar`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         info: {
             actionMenus: {
                 action: [
@@ -7732,7 +7732,7 @@ test(`execute ActionMenus actions`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         info: {
             actionMenus: {
                 action: [
@@ -7792,7 +7792,7 @@ test(`execute ActionMenus actions with correct params (single page)`, async () =
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         info: {
             actionMenus: {
                 action: [
@@ -7897,7 +7897,7 @@ test(`execute ActionMenus actions with correct params (multi pages)`, async () =
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/></list>`,
         info: {
             actionMenus: {
                 action: [
@@ -7997,7 +7997,7 @@ test(`edit list line after line deletion`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/><field name="int_field"/></list>`,
     });
     await contains(`.o_data_row:eq(2) .o_data_cell`).click();
     expect(`.o_data_row:eq(2)`).toHaveClass("o_selected_row");
@@ -8019,10 +8019,10 @@ test(`pressing TAB in editable list with several fields`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_cell`).click();
@@ -8047,10 +8047,10 @@ test(`pressing SHIFT-TAB in editable list with several fields`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
@@ -8077,10 +8077,10 @@ test(`navigation with tab and readonly field (no modification)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field" readonly="1"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -8114,10 +8114,10 @@ test(`navigation with tab and readonly field (with modification)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field" readonly="1"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -8146,9 +8146,9 @@ test(`navigation with tab on a list with create="0"`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom" create="0">
+            <list editable="bottom" create="0">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row`).toHaveCount(4, { message: "the list should contain 4 rows" });
@@ -8183,9 +8183,9 @@ test(`navigation with tab on a one2many list with create="0"`, async () => {
             <form>
                 <sheet>
                     <field name="o2m">
-                        <tree editable="bottom" create="0">
+                        <list editable="bottom" create="0">
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                     <field name="int_field"/>
                 </sheet>
@@ -8226,10 +8226,10 @@ test(`edition, then navigation with tab (with a readonly field)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field" readonly="1"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -8276,11 +8276,11 @@ test(`edition, then navigation with tab (with a readonly field and onchange)`, a
                 <group>
                     <field name="display_name"/>
                     <field name="o2m">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="foo"/>
                             <field name="date" readonly="1"/>
                             <field name="int_field"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>
@@ -8300,11 +8300,11 @@ test(`pressing SHIFT-TAB in editable list with a readonly field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field" readonly="1"/>
                 <field name="qux"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row:eq(1) [name=qux]`).click();
@@ -8322,11 +8322,11 @@ test(`pressing SHIFT-TAB in editable list with a readonly field in first column`
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="int_field" readonly="1"/>
                 <field name="foo"/>
                 <field name="qux"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
@@ -8344,11 +8344,11 @@ test(`pressing SHIFT-TAB in editable list with a readonly field in last column`,
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="int_field"/>
                 <field name="foo"/>
                 <field name="qux" readonly="1"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
@@ -8366,11 +8366,11 @@ test(`skip invisible fields when navigating list view with TAB`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="bar" column_invisible="1"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         resId: 1,
     });
@@ -8387,10 +8387,10 @@ test(`skip buttons when navigating list view with TAB (end)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <button name="kikou" string="Kikou" type="object"/>
-            </tree>
+            </list>
         `,
         resId: 1,
     });
@@ -8407,12 +8407,12 @@ test(`skip buttons when navigating list view with TAB (middle)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <button name="kikou" string="Kikou" type="object"/>
                 <field name="foo"/>
                 <button name="kikou" string="Kikou" type="object"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         resId: 1,
     });
@@ -8428,7 +8428,7 @@ test(`navigation: not moving down with keydown`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/></list>`,
     });
     await contains(`.o_field_cell[name=foo]`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
@@ -8445,10 +8445,10 @@ test(`navigation: moving right with keydown from text field does not move the fo
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_field_cell[name=foo]`).click();
@@ -8474,7 +8474,7 @@ test(`discarding changes in a row properly updates the rendering`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
     });
     expect(`.o_field_cell:eq(0)`).toHaveText("yop", { message: "first cell should contain 'yop'" });
 
@@ -8492,12 +8492,12 @@ test(`numbers in list are right-aligned`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="qux"/>
                 <field name="amount" widget="monetary"/>
                 <field name="currency_id" column_invisible="1"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -8523,7 +8523,7 @@ test(`grouped list with another grouped list parent, click unfold`, async () => 
     }
     Bar._records = newRecs;
     Bar._views = {
-        list: `<tree><field name="cornichon"/></tree>`,
+        list: `<list><field name="cornichon"/></list>`,
         search: `
             <search>
                 <filter context="{'group_by': 'cornichon'}" string="cornichon"/>
@@ -8534,7 +8534,7 @@ test(`grouped list with another grouped list parent, click unfold`, async () => 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/><field name="m2o"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/><field name="m2o"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -8565,7 +8565,7 @@ test(`field values are escaped`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
     });
     expect(`.o_data_cell:eq(0)`).toHaveText(value, {
         message: "value should have been escaped",
@@ -8576,7 +8576,7 @@ test(`pressing ESC discard the current line changes`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
     });
     await contains(`.o_list_button_add`).click();
     expect(`tr.o_data_row`).toHaveCount(5, { message: "should currently adding a 5th data row" });
@@ -8594,7 +8594,7 @@ test(`pressing ESC discard the current line changes (with required)`, async () =
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="top"><field name="foo" required="1"/></list>`,
     });
     await contains(`.o_list_button_add`).click();
     expect(`tr.o_data_row`).toHaveCount(5, { message: "should currently adding a 5th data row" });
@@ -8612,7 +8612,7 @@ test(`field with password attribute`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo" password="True"/></tree>`,
+        arch: `<list><field name="foo" password="True"/></list>`,
     });
     expect(queryAllTexts(`.o_data_row .o_data_cell`)).toEqual(["***", "****", "****", "****"]);
 });
@@ -8640,10 +8640,10 @@ test(`list with handle widget`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="int_field" widget="handle"/>
                 <field name="amount" widget="float" digits="[5,0]"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps(["web_search_read: order: int_field ASC, id ASC"]);
@@ -8744,10 +8744,10 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
         resModel: "my.foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="int_field" widget="handle"/>
                 <field name="id"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody tr td[name=id]`)).toEqual(["1", "2", "3", "4"], {
@@ -8812,10 +8812,10 @@ test(`editable list with handle widget`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" default_order="int_field">
+            <list editable="top" default_order="int_field">
                 <field name="int_field" widget="handle"/>
                 <field name="amount" widget="float" digits="[5,0]"/>
-            </tree>
+            </list>
         `,
     });
     expect(`tbody tr:eq(0) td:last`).toHaveText("1,200", {
@@ -8864,10 +8864,10 @@ test(`editable target, handle widget locks and unlocks on sort`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" default_order="int_field">
+            <list editable="top" default_order="int_field">
                 <field name="int_field" widget="handle"/>
                 <field name="amount" widget="float"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`tbody div[name=amount]`)).toEqual(
@@ -8951,10 +8951,10 @@ test(`editable list with handle widget with slow network`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="int_field" widget="handle"/>
                 <field name="amount" widget="float" digits="[5,0]"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_data_cell[name=amount]`)).toEqual(["1,200", "500", "300", "0"]);
@@ -9001,7 +9001,7 @@ test(`multiple clicks on Add do not create invalid rows`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="m2o" required="1"/></tree>`,
+        arch: `<list editable="top"><field name="m2o" required="1"/></list>`,
     });
     expect(`.o_data_row`).toHaveCount(4, { message: "should contain 4 records" });
 
@@ -9023,7 +9023,7 @@ test(`reference field rendering`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="reference"/></tree>`,
+        arch: `<list><field name="reference"/></list>`,
     });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["Value 1", "USD", "EUR", "", "EUR"]);
 });
@@ -9045,10 +9045,10 @@ test(`reference field batched in grouped list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree expand="1">
+            <list expand="1">
                 <field name="foo" column_invisible="1"/>
                 <field name="reference"/>
-            </tree>
+            </list>
         `,
         groupBy: ["foo"],
     });
@@ -9086,7 +9086,7 @@ test(`multi edit in view grouped by field not in view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree expand="1" multi_edit="1"><field name="foo"/></tree>`,
+        arch: `<list expand="1" multi_edit="1"><field name="foo"/></list>`,
         groupBy: ["m2o"],
     });
 
@@ -9123,11 +9123,11 @@ test(`multi edit reference field batched in grouped list`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree expand="1" multi_edit="1">
+            <list expand="1" multi_edit="1">
                 <field name="foo" column_invisible="1"/>
                 <field name="bar" widget="boolean_toggle"/>
                 <field name="reference"/>
-            </tree>
+            </list>
         `,
         groupBy: ["foo"],
     });
@@ -9190,9 +9190,9 @@ test(`multi edit field with daterange widget`, async () => {
         resModel: "daterange",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="date_start" widget="daterange" options="{'end_date_field': 'date_end'}"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_list_record_selector input`).click();
@@ -9257,9 +9257,9 @@ test(`multi edit field with daterange widget (edition without using the picker)`
         resModel: "daterange",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="date_start" widget="daterange" options="{'end_date_field': 'date_end'}"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -9294,9 +9294,9 @@ test(`list daterange with start date and empty end date`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_data_row:eq(0) .o_field_widget[name=date] span`)).toEqual([
@@ -9314,9 +9314,9 @@ test(`list daterange with empty start date and end date`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_data_row:eq(0) .o_field_widget[name=date] span`)).toEqual([
@@ -9342,7 +9342,7 @@ test(`editable list view: contexts are correctly sent`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
         context: { active_field: 2 },
     });
     expect.verifySteps(["web_search_read"]);
@@ -9370,7 +9370,7 @@ test(`editable list view: contexts with multiple edit`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree multi_edit="1"><field name="foo"/></tree>`,
+        arch: `<list multi_edit="1"><field name="foo"/></list>`,
         context: { active_field: 2 },
     });
     // Uses the main selector to select all lines.
@@ -9387,7 +9387,7 @@ test(`editable list view: single edition with selected records`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" multi_edit="1"><field name="foo"/></tree>`,
+        arch: `<list editable="top" multi_edit="1"><field name="foo"/></list>`,
     });
 
     // Select first record
@@ -9405,10 +9405,10 @@ test(`editable list view: non dirty record with required fields`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" required="1"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row`).toHaveCount(4);
@@ -9479,10 +9479,10 @@ test(`editable list view: multi edition`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom" multi_edit="1">
+            <list editable="bottom" multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps([
@@ -9556,10 +9556,10 @@ test(`editable list view: multi edit a field with string attr`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo" string="Custom Label"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -9584,10 +9584,10 @@ test(`create in multi editable list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         createRecord() {
             expect.step("createRecord");
@@ -9618,10 +9618,10 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps([
@@ -9663,10 +9663,10 @@ test.todo(`editable list view: multi edition error and cancellation handling`, a
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo" required="1"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
@@ -9718,14 +9718,14 @@ test(`multi edition: many2many_tags in many2many field`, async () => {
         Bar._records.push({ id: i, name: "Value" + i });
     }
     Bar._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         search: `<search/>`,
     };
 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree multi_edit="1"><field name="m2m" widget="many2many_tags"/></tree>`,
+        arch: `<list multi_edit="1"><field name="m2m" widget="many2many_tags"/></list>`,
     });
 
     expect(`.o_list_record_selector input:enabled`).toHaveCount(5);
@@ -9753,10 +9753,10 @@ test(`multi edition: many2many field in grouped list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2m"],
     });
@@ -9785,10 +9785,10 @@ test(`editable list view: multi edition of many2one: set same value`, async () =
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="m2o"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_list_many2one`)).toEqual(["Value 1", "Value 2", "Value 1", "Value 1"]);
@@ -9813,9 +9813,9 @@ test(`editable list view: clicking on "Discard changes" in multi edition`, async
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" multi_edit="1">
+            <list editable="top" multi_edit="1">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -9875,9 +9875,9 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" multi_edit="1">
+            <list editable="top" multi_edit="1">
                 <field name="foo" widget="custom"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -9903,9 +9903,9 @@ test(`editable list view: mousedown on "Discard", mouseup somewhere else (no mul
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -9934,9 +9934,9 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("10");
@@ -9982,7 +9982,7 @@ test(`editable list view (multi edition): mousedown on 'Discard', but mouseup so
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree multi_edit="1"><field name="foo"/></tree>`,
+        arch: `<list multi_edit="1"><field name="foo"/></list>`,
     });
 
     // select two records
@@ -10010,9 +10010,9 @@ test(`editable list view (multi edition): writable fields in readonly (force sav
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="bar" widget="boolean_toggle"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps([
@@ -10044,11 +10044,11 @@ test(`editable list view: multi edition with readonly modifiers`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="id"/>
                 <field name="foo"/>
                 <field name="int_field" readonly="id > 2"/>
-            </tree>
+            </list>
         `,
     });
     // select all records
@@ -10081,10 +10081,10 @@ test(`editable list view: multi edition when the domain is selected`, async () =
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1" limit="2">
+            <list multi_edit="1" limit="2">
                 <field name="id"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -10105,10 +10105,10 @@ test(`editable list view: many2one with readonly modifier`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="m2o" readonly="1"/>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -10130,7 +10130,7 @@ test(`editable list view: multi edition server error handling`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree multi_edit="1"><field name="foo" required="1"/></tree>`,
+        arch: `<list multi_edit="1"><field name="foo" required="1"/></list>`,
     });
 
     // select two records
@@ -10159,10 +10159,10 @@ test(`editable readonly list view: navigation`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         selectRecord(resId) {
             expect.step(`resId: ${resId}`);
@@ -10261,10 +10261,10 @@ test(`editable list view: multi edition: edit and validate last row`, async () =
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row`).toHaveCount(4);
@@ -10282,7 +10282,7 @@ test(`editable readonly list view: navigation in grouped list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree multi_edit="1"><field name="foo"/></tree>`,
+        arch: `<list multi_edit="1"><field name="foo"/></list>`,
         groupBy: ["bar"],
         selectRecord(resId) {
             expect.step(`resId: ${resId}`);
@@ -10339,7 +10339,7 @@ test.todo(
         await mountView({
             resModel: "foo",
             type: "list",
-            arch: `<tree multi_edit="1"><field name="foo" required="1"/></tree>`,
+            arch: `<list multi_edit="1"><field name="foo" required="1"/></list>`,
         });
 
         // select a record
@@ -10380,10 +10380,10 @@ test(`non editable list view: multi edition`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps([
@@ -10434,10 +10434,10 @@ test(`editable list view: m2m tags in grouped list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" multi_edit="1">
+            <list editable="top" multi_edit="1">
                 <field name="bar"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -10467,7 +10467,7 @@ test(`editable list: edit many2one from external link`, async () => {
     await mountViewInDialog({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" multi_edit="1"><field name="m2o"/></tree>`,
+        arch: `<list editable="top" multi_edit="1"><field name="m2o"/></list>`,
     });
     expect(`.o_dialog .o_list_view`).toHaveCount(1);
     expect(`.o_selected_row`).toHaveCount(0);
@@ -10505,12 +10505,12 @@ test(`editable list with fields with readonly modifier`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="bar"/>
                 <field name="foo" readonly="bar"/>
                 <field name="m2o" readonly="not bar"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -10539,9 +10539,9 @@ test(`editable form alongside html field: click out to unselect the row`, async 
             <form>
                 <field name="text" widget="html"/>
                 <field name="o2m">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -10565,7 +10565,7 @@ test(`list grouped by date:month`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="date"/></tree>`,
+        arch: `<list><field name="date"/></list>`,
         groupBy: ["date:month"],
     });
     expect(queryAllTexts(`.o_group_header`)).toEqual(["January 2017 (1)", "None (3)"], {
@@ -10581,7 +10581,7 @@ test(`grouped list edition with boolean_favorite widget`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="bar" widget="boolean_favorite"/></tree>`,
+        arch: `<list><field name="bar" widget="boolean_favorite"/></list>`,
         groupBy: ["m2o"],
     });
 
@@ -10646,7 +10646,7 @@ test(`grouped list view, indentation for empty group`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="id"/></tree>`,
+        arch: `<list><field name="id"/></list>`,
         groupBy: ["priority", "m2o"],
     });
 
@@ -10675,7 +10675,7 @@ test(`use the limit attribute in arch`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/></list>`,
     });
     expect.verifySteps(["web_search_read"]);
     expect(getPagerValue()).toEqual([1, 2]);
@@ -10695,7 +10695,7 @@ test(`concurrent reloads finishing in inverse order`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="yop" domain="[('foo', '=', 'yop')]"/>
@@ -10742,7 +10742,7 @@ test(`list view move to previous page when all records from last page deleted`, 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="3"><field name="display_name"/></tree>`,
+        arch: `<list limit="3"><field name="display_name"/></list>`,
         actionMenus: {},
     });
     expect(getPagerValue()).toEqual([1, 3]);
@@ -10778,7 +10778,7 @@ test(`grouped list view move to previous page of group when all records from las
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="display_name"/></tree>`,
+        arch: `<list limit="2"><field name="display_name"/></list>`,
         actionMenus: {},
         groupBy: ["m2o"],
     });
@@ -10821,7 +10821,7 @@ test(`grouped list view move to next page when all records from the current page
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/></list>`,
         actionMenus: {},
         groupBy: ["m2o"],
     });
@@ -10854,7 +10854,7 @@ test(`list view move to previous page when all records from last page archive/un
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="3"><field name="display_name"/></tree>`,
+        arch: `<list limit="3"><field name="display_name"/></list>`,
         actionMenus: {},
     });
     expect(`.o_pager_counter`).toHaveText("1-3 / 4", {
@@ -10906,7 +10906,7 @@ test(`list should ask to scroll to top on page changes`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="3"><field name="display_name"/></tree>`,
+        arch: `<list limit="3"><field name="display_name"/></list>`,
     });
     // switch pages (should ask to scroll)
     await pagerNext();
@@ -10935,10 +10935,10 @@ test(`list with handle field, override default_get, bottom when inline`, async (
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom" default_order="int_field">
+            <list editable="bottom" default_order="int_field">
                 <field name="int_field" widget="handle"/>
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     // starting condition
@@ -10966,11 +10966,11 @@ test(`create record on list with modifiers depending on id`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="id" column_invisible="1"/>
                 <field name="foo" readonly="id"/>
                 <field name="int_field" invisible="id"/>
-            </tree>
+            </list>
         `,
     });
     // add a new record
@@ -10999,10 +10999,10 @@ test(`readonly boolean in editable list is readonly`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="bar" readonly="foo != 'yop'"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
@@ -11029,7 +11029,7 @@ test(`grouped list with groups_limit attribute`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree groups_limit="3"><field name="foo"/></tree>`,
+        arch: `<list groups_limit="3"><field name="foo"/></list>`,
         groupBy: ["int_field"],
     });
     expect(`.o_group_header`).toHaveCount(3); // page 1
@@ -11053,7 +11053,7 @@ test(`ungrouped list with groups_limit attribute, then group`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree groups_limit="3"><field name="foo"/></tree>`,
+        arch: `<list groups_limit="3"><field name="foo"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="int_field" string="GroupBy IntField" context="{'group_by': 'int_field'}"/>
@@ -11076,7 +11076,7 @@ test(`grouped list with groups_limit attribute, then ungroup`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree groups_limit="3"><field name="foo"/></tree>`,
+        arch: `<list groups_limit="3"><field name="foo"/></list>`,
         irFilters: [
             {
                 context: "{'group_by': ['int_field']}",
@@ -11107,7 +11107,7 @@ test(`multi level grouped list with groups_limit attribute`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree groups_limit="3"><field name="foo"/></tree>`,
+        arch: `<list groups_limit="3"><field name="foo"/></list>`,
         groupBy: ["foo", "int_field"],
     });
     expect(`.o_group_header`).toHaveCount(3);
@@ -11136,7 +11136,7 @@ test(`grouped list with expand attribute`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree expand="1"><field name="foo"/></tree>`,
+        arch: `<list expand="1"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
     expect(`.o_group_header`).toHaveCount(2);
@@ -11157,7 +11157,7 @@ test(`grouped list with dynamic expand attribute (eval true)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree expand="context.get('expand', False)"><field name="foo"/></tree>`,
+        arch: `<list expand="context.get('expand', False)"><field name="foo"/></list>`,
         groupBy: ["bar"],
         context: {
             expand: true,
@@ -11171,7 +11171,7 @@ test(`grouped list with dynamic expand attribute (eval false)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree expand="context.get('expand', False)"><field name="foo"/></tree>`,
+        arch: `<list expand="context.get('expand', False)"><field name="foo"/></list>`,
         groupBy: ["bar"],
         context: {
             expand: false,
@@ -11188,7 +11188,7 @@ test(`grouped list (two levels) with expand attribute`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree expand="1"><field name="foo"/></tree>`,
+        arch: `<list expand="1"><field name="foo"/></list>`,
         groupBy: ["bar", "int_field"],
     });
     expect(`.o_group_header`).toHaveCount(6);
@@ -11214,7 +11214,7 @@ test(`grouped lists with expand attribute and a lot of groups`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree expand="1"><field name="foo"/></tree>`,
+        arch: `<list expand="1"><field name="foo"/></list>`,
         groupBy: ["int_field"],
     });
     expect(`.o_group_header`).toHaveCount(10); // page 1
@@ -11265,7 +11265,7 @@ test(`add filter in a grouped list with a pager`, async () => {
     ]);
 
     Foo._views = {
-        "list,3": `<tree groups_limit="3"><field name="foo"/></tree>`,
+        "list,3": `<list groups_limit="3"><field name="foo"/></list>`,
         "search,9": `
             <search>
                 <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
@@ -11303,7 +11303,7 @@ test(`grouped list: have a group with pager, then apply filter`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="2"><field name="foo"/></tree>`,
+        arch: `<list limit="2"><field name="foo"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="Some Filter" domain="[('foo', '=', 'gnap')]"/>
@@ -11333,7 +11333,7 @@ test(`editable grouped lists`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/><field name="bar"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -11368,7 +11368,7 @@ test(`grouped lists are editable (ungrouped first)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/><field name="bar"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -11395,7 +11395,7 @@ test(`char field edition in editable grouped list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
     });
     await contains(`.o_group_header`).click();
@@ -11412,7 +11412,7 @@ test(`control panel buttons in editable grouped list views`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/><field name="bar"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
@@ -11437,10 +11437,10 @@ test(`control panel buttons in multi editable grouped list views`, async () => {
         type: "list",
         groupBy: ["foo"],
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row`).toHaveCount(0, { message: "all groups should be closed" });
@@ -11473,7 +11473,7 @@ test(`edit a line and discard it in grouped editable`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/><field name="int_field"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/><field name="int_field"/></list>`,
         groupBy: ["bar"],
     });
     await contains(`.o_group_header:nth-child(2)`).click();
@@ -11498,7 +11498,7 @@ test(`add and discard a record in a multi-level grouped list view`, async () => 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="top"><field name="foo" required="1"/></list>`,
         groupBy: ["foo", "bar"],
     });
     // unfold first subgroup
@@ -11524,7 +11524,7 @@ test(`pressing ESC in editable grouped list should discard the current line chan
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
     });
     await contains(`.o_group_header:eq(1)`).click();
@@ -11549,7 +11549,7 @@ test(`pressing TAB in editable="bottom" grouped list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
     // open two groups
@@ -11588,9 +11588,9 @@ test(`pressing TAB in editable="top" grouped list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -11622,7 +11622,7 @@ test(`pressing TAB in editable grouped list with create=0`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom" create="0"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom" create="0"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
 
@@ -11664,9 +11664,9 @@ test(`pressing SHIFT-TAB in editable="bottom" grouped list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo" required="1"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -11701,9 +11701,9 @@ test(`pressing SHIFT-TAB in editable="top" grouped list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" required="1"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -11738,9 +11738,9 @@ test(`pressing SHIFT-TAB in editable grouped list with create="0"`, async () => 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" create="0">
+            <list editable="top" create="0">
                 <field name="foo" required="1"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -11774,7 +11774,7 @@ test.todo(`editing then pressing TAB in editable grouped list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
 
@@ -11833,10 +11833,10 @@ test(`editing then pressing TAB (with a readonly field) in grouped list`, async 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field" readonly="1"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -11862,7 +11862,7 @@ test(`pressing ENTER in editable="bottom" grouped list view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
     await contains(`.o_group_header:eq(0)`).click(); // open first group
@@ -11903,7 +11903,7 @@ test(`pressing ENTER in editable="top" grouped list view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
     await contains(`.o_group_header`).click();
@@ -11937,7 +11937,7 @@ test(`pressing ENTER in editable grouped list view with create=0`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom" create="0"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom" create="0"><field name="foo"/></list>`,
         groupBy: ["bar"],
     });
     expect(`.o_group_header`).toHaveCount(2);
@@ -11997,7 +11997,7 @@ test(`cell-level keyboard navigation in non-editable list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo" required="1"/></tree>`,
+        arch: `<list><field name="foo" required="1"/></list>`,
         selectRecord(resId) {
             expect.step(`resId: ${resId}`);
         },
@@ -12075,10 +12075,10 @@ test(`keyboard navigation from last cell in editable list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     // Click on last cell
@@ -12134,10 +12134,10 @@ test(`keyboard navigation from last cell in editable grouped list`, async () => 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -12237,10 +12237,10 @@ test(`keyboard navigation from last cell in multi-edit list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -12344,11 +12344,11 @@ test(`keyboard navigation with date range`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row:eq(0) [name=foo]`).click();
@@ -12373,11 +12373,11 @@ test(`keyboard navigation with Many2One field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="m2o"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row:eq(0) [name=foo]`).click();
@@ -12400,10 +12400,10 @@ test(`multi-edit records with ENTER does not crash`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -12428,9 +12428,9 @@ test(`editable grouped list: adding a second record pass the first in readonly`,
         type: "list",
         resModel: "foo",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
-            </tree>`,
+            </list>`,
         groupBy: ["bar"],
     });
 
@@ -12465,10 +12465,10 @@ test(`removing a groupby while adding a line from list`, async () => {
         type: "list",
         resModel: "foo",
         arch: `
-            <tree multi_edit="1" editable="bottom">
+            <list multi_edit="1" editable="bottom">
                 <field name="display_name"/>
                 <field name="foo"/>
-            </tree>`,
+            </list>`,
         searchViewArch: `
             <search>
                 <field name="foo"/>
@@ -12500,9 +12500,9 @@ test.todo(`cell-level keyboard navigation in editable grouped list`, async () =>
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo" required="1"/>
-            </tree>
+            </list>
         `,
         groupBy: ["bar"],
     });
@@ -12681,12 +12681,12 @@ test(`execute group header button with keyboard navigation`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <groupby name="m2o">
                     <button type="object" name="some_method" string="Do this"/>
                 </groupby>
-            </tree>
+            </list>
         `,
         groupBy: ["m2o"],
     });
@@ -12751,7 +12751,7 @@ test(`add a new row in grouped editable="top" list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="top"><field name="foo" required="1"/></list>`,
         groupBy: ["bar"],
     });
 
@@ -12783,7 +12783,7 @@ test(`add a new row in grouped editable="bottom" list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo" required="1"/></list>`,
         groupBy: ["bar"],
     });
     await contains(`.o_group_header`).click(); // open group "No"
@@ -12807,7 +12807,7 @@ test(`add and discard a line through keyboard navigation without crashing`, asyn
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo" required="1"/></list>`,
         groupBy: ["bar"],
     });
 
@@ -12833,7 +12833,7 @@ test(`discard an invalid row in a list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="top"><field name="foo" required="1"/></list>`,
     });
 
     await contains(`.o_data_cell`).click();
@@ -12856,7 +12856,7 @@ test(`editable grouped list with create="0"`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" create="0"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="top" create="0"><field name="foo" required="1"/></list>`,
         groupBy: ["bar"],
     });
 
@@ -12895,11 +12895,11 @@ test(`add a new row in (selection) grouped editable list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="priority"/>
                 <field name="m2o"/>
-            </tree>
+            </list>
         `,
         groupBy: ["priority"],
     });
@@ -12930,10 +12930,10 @@ test(`add a new row in (m2o) grouped editable list`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="m2o"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2o"],
     });
@@ -12961,12 +12961,12 @@ test(`list view with optional fields rendering`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2o" optional="hide"/>
                 <field name="amount"/>
                 <field name="reference" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(4, {
@@ -13016,12 +13016,12 @@ test(`list view with optional fields rendering in RTL mode`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2o" optional="hide"/>
                 <field name="amount"/>
                 <field name="reference" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
     expect(`table .o_optional_columns_dropdown`).toHaveCount(1, {
@@ -13037,12 +13037,12 @@ test(`optional fields do not disappear even after listview reload`, async () => 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2o" optional="hide"/>
                 <field name="amount"/>
                 <field name="reference" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(4, {
@@ -13088,10 +13088,10 @@ test(`optional fields is shown only if enabled`, async () => {
 
     Foo._views = {
         "list,1": `
-            <tree>
+            <list>
                 <field name="currency_id" optional="show"/>
                 <field name="display_name" optional="show"/>
-            </tree>
+            </list>
         `,
         search: `<search/>`,
     };
@@ -13121,10 +13121,10 @@ test(`selection is kept when optional fields are toggled`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2o" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(3);
@@ -13168,10 +13168,10 @@ test(`list view with optional fields and async rendering`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="m2o"/>
                 <field name="foo" widget="asyncwidget" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
     expect(`th`).toHaveCount(3);
@@ -13228,11 +13228,11 @@ test(`change the viewType of the current action`, async () => {
             </kanban>
         `,
         list: `
-            <tree limit="3">
+            <list limit="3">
                 <field name="foo"/>
                 <field name="m2o" optional="hide"/>
                 <field name="o2m" optional="show"/>
-            </tree>
+            </list>
         `,
         search: `<search><field name="foo" string="Foo"/></search>`,
     };
@@ -13318,11 +13318,11 @@ test(`list view with optional fields rendering and local storage mock`, async ()
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2o" optional="hide"/>
                 <field name="reference" optional="show"/>
-            </tree>
+            </list>
         `,
         viewId: 42,
     });
@@ -13400,11 +13400,11 @@ test(`list view with optional fields from local storage being the empty array`, 
     Foo._views = {
         "search,1": `<search/>`,
         "list,42": `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="m2o" optional="hide"/>
                 <field name="reference" optional="show"/>
-            </tree>
+            </list>
         `,
     };
 
@@ -13437,7 +13437,7 @@ test(`quickcreate in a many2one in a list`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="m2o"/></tree>`,
+        arch: `<list editable="top"><field name="m2o"/></list>`,
     });
     await contains(`.o_data_row .o_data_cell`).click();
     await contains(`.o_data_row .o_data_cell input`).edit("aaa", { confirm: false });
@@ -13451,7 +13451,7 @@ test(`float field render with digits attribute on listview`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="qux" digits="[12,6]"/></tree>`,
+        arch: `<list><field name="foo"/><field name="qux" digits="[12,6]"/></list>`,
     });
     expect(`td.o_list_number:eq(0)`).toHaveText("0.400000", {
         message: "should contain 6 digits decimal precision",
@@ -13462,7 +13462,7 @@ test(`enter edition in editable list with multi_edit = 0`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" multi_edit="0"><field name="int_field"/></tree>`,
+        arch: `<list editable="top" multi_edit="0"><field name="int_field"/></list>`,
     });
 
     // click on int_field cell of first row
@@ -13475,9 +13475,9 @@ test(`enter edition in editable list with multi_edit = 1`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" multi_edit="1">
+            <list editable="top" multi_edit="1">
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
 
@@ -13490,7 +13490,7 @@ test.todo(`continue creating new lines in editable=top on keyboard nav`, async (
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="int_field"/></tree>`,
+        arch: `<list editable="top"><field name="int_field"/></list>`,
     });
 
     const initialRowCount = queryAll(`.o_data_cell[name=int_field]`).length;
@@ -13516,9 +13516,9 @@ test(`Date in evaluation context works with date field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="birthday" decoration-danger="birthday > today"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row .text-danger`).toHaveCount(1);
@@ -13547,9 +13547,9 @@ test(`Datetime in evaluation context works with datetime field`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <field name="birthday" decoration-danger="birthday > now"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row .text-danger`).toHaveCount(1);
@@ -13576,8 +13576,8 @@ test(`Auto save: add a record and leave action`, async () => {
     ]);
     Foo._views = {
         "search,1": `<search/>`,
-        "list,2": `<tree editable="top"><field name="foo"/></tree>`,
-        "list,3": `<tree editable="top"><field name="foo"/></tree>`,
+        "list,2": `<list editable="top"><field name="foo"/></list>`,
+        "list,3": `<list editable="top"><field name="foo"/></list>`,
     };
 
     await mountWithCleanup(WebClient);
@@ -13617,8 +13617,8 @@ test(`Auto save: create a new record without modifying it and leave action`, asy
     ]);
     Foo._views = {
         "search,1": `<search/>`,
-        "list,2": `<tree editable="top"><field name="foo"/></tree>`,
-        "list,3": `<tree editable="top"><field name="foo"/></tree>`,
+        "list,2": `<list editable="top"><field name="foo"/></list>`,
+        "list,3": `<list editable="top"><field name="foo"/></list>`,
     };
 
     await mountWithCleanup(WebClient);
@@ -13657,8 +13657,8 @@ test(`Auto save: modify a record and leave action`, async () => {
     ]);
     Foo._views = {
         "search,1": `<search/>`,
-        "list,2": `<tree editable="top"><field name="foo"/></tree>`,
-        "list,3": `<tree editable="top"><field name="foo"/></tree>`,
+        "list,2": `<list editable="top"><field name="foo"/></list>`,
+        "list,3": `<list editable="top"><field name="foo"/></list>`,
     };
 
     await mountWithCleanup(WebClient);
@@ -13694,8 +13694,8 @@ test(`Auto save: modify a record and leave action (reject)`, async () => {
     ]);
     Foo._views = {
         "search,1": `<search/>`,
-        "list,2": `<tree editable="top"><field name="foo" required="1"/></tree>`,
-        "list,3": `<tree editable="top"><field name="foo"/></tree>`,
+        "list,2": `<list editable="top"><field name="foo" required="1"/></list>`,
+        "list,3": `<list editable="top"><field name="foo"/></list>`,
     };
 
     mockService("notification", {
@@ -13724,9 +13724,9 @@ test(`Auto save: add a record and change page`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" limit="3">
+            <list editable="top" limit="3">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap"]);
@@ -13745,9 +13745,9 @@ test(`Auto save: modify a record and change page`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" limit="3">
+            <list editable="top" limit="3">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap"]);
@@ -13766,9 +13766,9 @@ test(`Auto save: modify a record and change page (reject)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top" limit="3">
+            <list editable="top" limit="3">
                 <field name="foo" required="1"/>
-            </tree>
+            </list>
         `,
     });
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "blip", "gnap"]);
@@ -13789,7 +13789,7 @@ test(`Auto save: save on closing tab/browser`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
     });
     await contains(`.o_data_cell`).click();
     await contains(`.o_data_cell [name=foo] input`).edit("test");
@@ -13809,7 +13809,7 @@ test(`Auto save: save on closing tab/browser (pending changes)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
     });
     await contains(`.o_data_cell`).click();
     await contains(`.o_data_cell [name=foo] input`).edit("test", { confirm: false });
@@ -13827,7 +13827,7 @@ test(`Auto save: save on closing tab/browser (invalid field)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo" required="1"/></tree>`,
+        arch: `<list editable="top"><field name="foo" required="1"/></list>`,
     });
     await contains(`.o_data_cell`).click();
     await contains(`.o_data_cell [name=foo] input`).edit("");
@@ -13857,10 +13857,10 @@ test(`Auto save: save on closing tab/browser (onchanges + pending changes)`, asy
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_cell`).click();
@@ -13889,10 +13889,10 @@ test(`Auto save: save on closing tab/browser (onchanges)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_cell`).click();
@@ -13928,11 +13928,11 @@ test(`edition, then navigation with tab (with a readonly re-evaluated field and 
                 <group>
                     <field name="display_name"/>
                     <field name="o2m">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="foo"/>
                             <field name="date" readonly="foo != 'yop'"/>
                             <field name="int_field"/>
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </form>
@@ -13967,7 +13967,7 @@ test(`selecting a row after another one containing a table within an html field 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" multi_edit="1"><field name="html"/></tree>`,
+        arch: `<list editable="top" multi_edit="1"><field name="html"/></list>`,
     });
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
     expect(`.o_list_table > tbody > tr:eq(1)`).toHaveClass("o_selected_row");
@@ -13979,7 +13979,7 @@ test(`archive/unarchive not available on active readonly models`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="3"><field name="display_name"/></tree>`,
+        arch: `<list limit="3"><field name="display_name"/></list>`,
         actionMenus: {},
     });
     await contains(`tbody .o_data_row td.o_list_record_selector input`).click();
@@ -13993,7 +13993,7 @@ test(`archive/unarchive not available on active readonly models`, async () => {
 
 test(`open groups are kept when leaving and coming back`, async () => {
     Foo._views = {
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         search: `<search/>`,
         form: `<form/>`,
     };
@@ -14033,7 +14033,7 @@ test(`open groups are kept when leaving and coming back`, async () => {
 test(`open groups are kept when leaving and coming back (grouped by date)`, async () => {
     Foo._fields.date = fields.Date({ default: "2022-10-10" });
     Foo._views = {
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         search: `<search/>`,
         form: `<form/>`,
     };
@@ -14072,7 +14072,7 @@ test(`open groups are kept when leaving and coming back (grouped by date)`, asyn
 
 test(`go to the next page after leaving and coming back to a grouped list view`, async () => {
     Foo._views = {
-        list: `<tree groups_limit="1"><field name="foo"/></tree>`,
+        list: `<list groups_limit="1"><field name="foo"/></list>`,
         form: `<form/>`,
         search: `<search/>`,
     };
@@ -14116,7 +14116,7 @@ test(`keep order after grouping`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/></tree>`,
+        arch: `<list><field name="foo"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="group_by_foo" string="Foo" context="{'group_by':'foo'}"/>
@@ -14246,7 +14246,7 @@ test(`edit a field with a slow onchange in a new row`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="int_field"/></tree>`,
+        arch: `<list editable="bottom"><field name="int_field"/></list>`,
     });
     expect.verifySteps([
         "/web/webclient/translations",
@@ -14358,10 +14358,10 @@ test(`classNames given to a field are set on the right field directly`, async ()
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field class="d-flex align-items-center" name="int_field" widget="progressbar" options="{'editable': true}"/>
                 <field class="d-none" name="bar"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_field_cell:eq(2)`).not.toHaveClass("d-flex align-items-center", {
@@ -14379,7 +14379,7 @@ test(`use a filter_domain in a list view`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="m2o"/></tree>`,
+        arch: `<list><field name="foo"/><field name="m2o"/></list>`,
         searchViewArch: `
             <search>
                 <field name="m2o" filter_domain="[('m2o', 'child_of', raw_value)]"/>
@@ -14400,7 +14400,7 @@ test(`Formatted group operator`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="qux" widget="percentage"/></tree>`,
+        arch: `<list><field name="qux" widget="percentage"/></list>`,
         groupBy: ["bar"],
     });
     expect(`td.o_list_number:eq(0)`).toHaveText("48%");
@@ -14412,7 +14412,7 @@ test(`Formatted group operator with digit precision on the field definition`, as
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="qux"/></tree>`,
+        arch: `<list><field name="qux"/></list>`,
         groupBy: ["bar"],
     });
     expect(`td.o_list_number:eq(0)`).toHaveText("9.000");
@@ -14423,7 +14423,7 @@ test(`list view does not crash when clicked button cell`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><button name="a" type="object" icon="fa-car"/></tree>`,
+        arch: `<list><button name="a" type="object" icon="fa-car"/></list>`,
     });
     expect(`.o_data_row:eq(0) td.o_list_button`).toHaveCount(1);
     await contains(`.o_data_row:eq(0) td.o_list_button`).click();
@@ -14433,7 +14433,7 @@ test(`group by going to next page then back to first`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree groups_limit="1"><field name="foo"/><field name="bar"/></tree>`,
+        arch: `<list groups_limit="1"><field name="foo"/><field name="bar"/></list>`,
         groupBy: ["bar"],
     });
     expect([...getPagerValue(), getPagerLimit()]).toEqual([1, 2]);
@@ -14524,11 +14524,11 @@ test(`optional field selection do not unselect current row`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="text" optional="hide"/>
                 <field name="foo" optional="show"/>
                 <field name="bar" optional="hide"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_list_button_add`).click();
@@ -14585,7 +14585,7 @@ test(`edit a record then select another record with a throw error when saving`, 
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="foo"/></tree>`,
+        arch: `<list editable="bottom"><field name="foo"/></list>`,
     });
     await contains(`.o_data_cell:eq(1)`).click();
     await contains(`[name=foo] input`).edit("plop", { confirm: false });
@@ -14605,10 +14605,10 @@ test(`no highlight of a (sortable) column without label`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree default_order="foo">
+            <list default_order="foo">
                 <field name="foo" nolabel="1"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
     expect(`thead th[data-name=foo]`).toHaveCount(1);
@@ -14620,9 +14620,9 @@ test(`highlight of a (sortable) column with label`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree default_order="foo">
+            <list default_order="foo">
                 <field name="foo"/>
-            </tree>
+            </list>
         `,
     });
     expect(`thead th[data-name=foo]`).toHaveCount(1);
@@ -14645,7 +14645,7 @@ test(`Search more in a many2one`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="bottom"><field name="m2o"/></tree>`,
+        arch: `<list editable="bottom"><field name="m2o"/></list>`,
     });
     expect(queryAllTexts`.o_data_row td[name=m2o]`).toEqual([
         "Value 1",
@@ -14681,9 +14681,9 @@ test(`view's context is passed down as evalContext`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o" domain="[['someField', '=', context.get('default_global_key', 'nope')]]"/>
-            </tree>
+            </list>
         `,
         context: {
             default_global_key: "some_value",
@@ -14713,9 +14713,9 @@ test(`list view with default_group_by`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree default_group_by="bar">
+            <list default_group_by="bar">
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_list_renderer table`).toHaveClass("o_list_table_grouped");
@@ -14735,7 +14735,7 @@ test(`ungrouped list, apply filter, decrease limit`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree limit="4"><field name="foo"/></tree>`,
+        arch: `<list limit="4"><field name="foo"/></list>`,
         searchViewArch: `
             <search>
                 <filter name="my_filter" string="My Filter" domain="[('id', '>', 1)]"/>
@@ -14777,10 +14777,10 @@ test(`Properties: char`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -14824,10 +14824,10 @@ test(`Properties: boolean`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -14867,10 +14867,10 @@ test(`Properties: integer`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -14914,10 +14914,10 @@ test(`Properties: float`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -14961,10 +14961,10 @@ test(`Properties: date`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -15008,10 +15008,10 @@ test(`Properties: datetime`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -15057,10 +15057,10 @@ test(`Properties: selection`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -15106,10 +15106,10 @@ test(`Properties: tags`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -15157,10 +15157,10 @@ test(`Properties: many2one`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -15197,10 +15197,10 @@ test(`Properties: many2many`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -15237,10 +15237,10 @@ test(`multiple sources of properties definitions`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -15282,10 +15282,10 @@ test(`toggle properties`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_optional_columns_dropdown_toggle`).click();
@@ -15325,10 +15325,10 @@ test(`properties: optional show/hide (no config in local storage)`, async () => 
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_list_table thead th`).toHaveCount(3);
@@ -15359,10 +15359,10 @@ test(`properties: optional show/hide (config from local storage)`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_list_table thead th`).toHaveCount(4);
@@ -15394,10 +15394,10 @@ test(`properties: optional show/hide (at reload, config from local storage)`, as
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2o"],
     });
@@ -15436,10 +15436,10 @@ test(`reload properties definitions when domain change`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
         irFilters: [
             {
@@ -15483,10 +15483,10 @@ test(`do not reload properties definitions when page change`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom" limit="2">
+            <list editable="bottom" limit="2">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
     });
     expect.verifySteps([
@@ -15519,10 +15519,10 @@ test(`load properties definitions only once when grouped`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties"/>
-            </tree>
+            </list>
         `,
         groupBy: ["m2o"],
     });
@@ -15556,10 +15556,10 @@ test(`Invisible Properties`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2o"/>
                 <field name="properties" column_invisible="1"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_optional_columns_dropdown_toggle`).toHaveCount(0);
@@ -15582,13 +15582,13 @@ test(`header buttons in list view`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree>
+            <list>
                 <header>
                     <button name="a" type="object" string="Confirm" confirm="Are you sure?"/>
                 </header>
                 <field name="foo"/>
                 <field name="bar"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_row .o_list_record_selector input`).click();
@@ -15616,10 +15616,10 @@ test(`restore orderBy from state when using default order`, async () => {
 
     Foo._views = {
         list: `
-            <tree default_order="foo">
+            <list default_order="foo">
                 <field name="foo"/>
                 <field name="amount"/>
-            </tree>
+            </list>
         `,
         form: `
             <form>
@@ -15658,10 +15658,10 @@ test(`x2many onchange, check result`, async () => {
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="m2m" widget="many2many_tags"/>
                 <field name="m2o"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_cell.o_many2many_tags_cell:eq(0)`).toHaveText("Value 1\nValue 2");
@@ -15684,7 +15684,7 @@ test(`list view: prevent record selection when editable list in edit mode`, asyn
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top"><field name="foo"/></tree>`,
+        arch: `<list editable="top"><field name="foo"/></list>`,
     });
 
     //  When we try to select new record in edit mode
@@ -15706,7 +15706,7 @@ test(`context keys not passed down the stack and not to fields`, async () => {
             type: "ir.actions.act_window",
             views: [[false, "list"]],
             context: {
-                tree_view_ref: "foo_view_ref",
+                list_view_ref: "foo_view_ref",
                 search_default_bar: true,
             },
         },
@@ -15714,14 +15714,14 @@ test(`context keys not passed down the stack and not to fields`, async () => {
 
     Foo._views = {
         "list,foo_view_ref": `
-            <tree default_order="foo" editable="top">
+            <list default_order="foo" editable="top">
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>
+            </list>
         `,
         search: `<search/>`,
     };
     Bar._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         search: `<search/>`,
     };
 
@@ -15747,7 +15747,7 @@ test(`context keys not passed down the stack and not to fields`, async () => {
                 tz: "taht",
                 uid: 7,
                 allowed_company_ids: [1],
-                tree_view_ref: "foo_view_ref",
+                list_view_ref: "foo_view_ref",
             },
         },
         {
@@ -15759,7 +15759,7 @@ test(`context keys not passed down the stack and not to fields`, async () => {
                 uid: 7,
                 allowed_company_ids: [1],
                 bin_size: true,
-                tree_view_ref: "foo_view_ref",
+                list_view_ref: "foo_view_ref",
                 current_company_id: 1,
             },
         },
@@ -15817,9 +15817,9 @@ test(`search nested many2one field with early option selection`, async () => {
         arch: `
             <form>
                 <field name="foo">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="m2o"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -15845,7 +15845,7 @@ test(`monetary field display for rtl languages`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree><field name="foo"/><field name="amount"/></tree>`,
+        arch: `<list><field name="foo"/><field name="amount"/></list>`,
     });
     expect(`thead th:eq(2) .o_list_number_th`).toHaveCount(1, {
         message: "header cells of monetary fields should have o_list_number_th class",
@@ -15879,7 +15879,7 @@ test(`add record in editable list view with sample data`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree sample="1" editable="top"><field name="int_field"/></tree>`,
+        arch: `<list sample="1" editable="top"><field name="int_field"/></list>`,
         noContentHelp: "click to add a record",
     });
     expect(`.o_view_sample_data`).toHaveCount(1);
@@ -15904,7 +15904,7 @@ test(`Adding new record in list view with open form view button`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
-        arch: `<tree editable="top" open_form_view="1"><field name="foo"/></tree>`,
+        arch: `<list editable="top" open_form_view="1"><field name="foo"/></list>`,
         selectRecord(resId, options) {
             expect.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
         },
@@ -15932,10 +15932,10 @@ test(`onchange should only be called once after pressing enter on a field`, asyn
         resModel: "foo",
         type: "list",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     });
     await contains(`.o_data_cell`).click();
@@ -15964,10 +15964,10 @@ test(`list: remove a record from sorted recordlist`, async () => {
             <form>
                 <sheet>
                     <field name="o2m">
-                        <tree limit="2">
+                        <list limit="2">
                             <field name="name" required="not city"/>
                             <field name="city"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -16002,9 +16002,9 @@ test("Pass context when duplicating data in list view", async () => {
         resModel: "res.partner",
         actionMenus: {},
         arch: `
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>`,
+            </list>`,
         context: { ctx_key: "ctx_val" },
     });
     await contains(`.o_data_row .o_list_record_selector input`).click();

@@ -7,7 +7,7 @@
     <record model="ir.actions.act_window" id="action_purchase_requisition_to_so">
         <field name="name">Request for Quotation</field>
         <field name="res_model">purchase.order</field>
-        <field name="view_mode">form,tree</field>
+        <field name="view_mode">form,list</field>
         <field name="domain">[('requisition_id','=',active_id)]</field>
         <field name="context">{
             "default_requisition_id":active_id,
@@ -17,7 +17,7 @@
     <record model="ir.actions.act_window" id="action_purchase_requisition_list">
         <field name="name">Request for Quotations</field>
         <field name="res_model">purchase.order</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('requisition_id','=',active_id)]</field>
         <field name="context">{
             "default_requisition_id":active_id,
@@ -80,7 +80,7 @@
                 <notebook>
                     <page string="Products" name="products">
                         <field name="line_ids" readonly="state == 'done'">
-                            <tree string="Products" editable="bottom">
+                            <list string="Products" editable="bottom">
                                 <field name="product_id"
                                        domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                 <field name="product_description_variants" invisible="product_description_variants == ''"/>
@@ -93,7 +93,7 @@
                                        groups="analytic.group_analytic_accounting"
                                        options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                                 <field name="price_unit"/>
-                            </tree>
+                            </list>
                             <form string="Products">
                                 <group>
                                     <field name="product_id"
@@ -119,10 +119,10 @@
         </field>
     </record>
     <record model="ir.ui.view" id="view_purchase_requisition_tree">
-        <field name="name">purchase.requisition.tree</field>
+        <field name="name">purchase.requisition.list</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree string="Purchase Agreements" sample="1">
+            <list string="Purchase Agreements" sample="1">
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="vendor_id" optional="show"/>
@@ -134,7 +134,7 @@
                 <field name="reference" optional="show"/>
                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
-            </tree>
+            </list>
       </field>
     </record>
 
@@ -197,7 +197,7 @@
     <record model="ir.actions.act_window" id="action_purchase_requisition">
         <field name="name">Purchase Agreements</field>
         <field name="res_model">purchase.requisition</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
         <field name="help" type="html">

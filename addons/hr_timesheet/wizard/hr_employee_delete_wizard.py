@@ -57,8 +57,8 @@ class HrEmployeDeleteWizard(models.TransientModel):
            'name': _('Employees\' Timesheets'),
            'type': 'ir.actions.act_window',
            'res_model': 'account.analytic.line',
-           'view_mode': 'tree,form',
-           'views': [(False, 'tree'), (False, 'form')],
+           'view_mode': 'list,form',
+           'views': [(False, 'list'), (False, 'form')],
            'domain': [('employee_id', 'in', employees.ids), ('project_id', '!=', False)],
         }
         if len(employees) == 1:

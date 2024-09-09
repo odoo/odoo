@@ -5,14 +5,14 @@
             <field name="context">{'search_default_confirmed': 1}</field>
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="domain">[('bom_id', '!=', False), ('bom_id.operation_ids.workcenter_id', '=', active_id)]</field>
         </record>
 
         <record id="action_work_orders" model="ir.actions.act_window">
             <field name="name">Work Orders</field>
             <field name="res_model">mrp.workorder</field>
-            <field name="view_mode">tree,form,pivot,graph,calendar</field>
+            <field name="view_mode">list,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
             <field name="domain">[('state', 'not in', ('done', 'cancel'))]</field>
             <field name="context">{'search_default_workcenter_id': active_id}</field>
@@ -28,10 +28,10 @@
 
         <!-- Work Centers -->
         <record id="mrp_workcenter_tree_view" model="ir.ui.view">
-            <field name="name">mrp.workcenter.tree</field>
+            <field name="name">mrp.workcenter.list</field>
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
-                <tree string="Work Center" multi_edit="1">
+                <list string="Work Center" multi_edit="1">
                     <field name="company_id" column_invisible="True"/>
                     <field name="sequence" widget="handle"/>
                     <field name="name" optional="show"/>
@@ -47,7 +47,7 @@
                     <field name="time_stop" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="active" column_invisible="True"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -89,7 +89,7 @@
             <field name="name">Overall Equipment Effectiveness</field>
             <field name="res_model">mrp.workcenter.productivity</field>
             <field name="view_id" eval="oee_pie_view"/>
-            <field name="view_mode">graph,pivot,tree,form</field>
+            <field name="view_mode">graph,pivot,list,form</field>
             <field name="domain">[('workcenter_id','=',active_id)]</field>
             <field name="context">{'search_default_thismonth':True}</field>
             <field name="help" type="html">
@@ -101,7 +101,7 @@
         <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report_blocked">
             <field name="name">Productivity Losses</field>
             <field name="res_model">mrp.workcenter.productivity</field>
-            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="view_mode">list,form,graph,pivot</field>
             <field name="context">{'search_default_availability': '1',
                                    'search_default_performance': '1',
                                    'search_default_quality': '1',
@@ -118,7 +118,7 @@
             <field name="name">Work Orders Performance</field>
             <field name="res_model">mrp.workorder</field>
             <field name="domain">[('workcenter_id','=', active_id),('state','=','done')]</field>
-            <field name="view_mode">graph,pivot,tree,form</field>
+            <field name="view_mode">graph,pivot,list,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new work orders performance
@@ -135,7 +135,7 @@
                                    'search_default_waiting': True,
                                    'search_default_pending': True,
                                    'search_default_progress': True,}</field>
-            <field name="view_mode">graph,pivot,tree,form</field>
+            <field name="view_mode">graph,pivot,list,form</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -390,13 +390,13 @@
                             </page>
                             <page string="Specific Capacities" name="capacity">
                                 <field name="capacity_ids" context="{'default_workcenter_id': id}">
-                                    <tree editable="bottom">
+                                    <list editable="bottom">
                                         <field name="product_id"/>
                                         <field name="product_uom_id" groups="uom.group_uom"/>
                                         <field name="capacity"/>
                                         <field name="time_start" widget="float_time"/>
                                         <field name="time_stop" widget="float_time"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -422,10 +422,10 @@
         <record id="mrp_workcenter_action" model="ir.actions.act_window">
             <field name="name">Work Centers</field>
             <field name="res_model">mrp.workcenter</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('mrp_workcenter_tree_view')}),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('mrp_workcenter_tree_view')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('mrp_workcenter_view_kanban')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('mrp_workcenter_view')})]"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
@@ -479,14 +479,14 @@
     </record>
 
     <record id="oee_loss_tree_view" model="ir.ui.view">
-        <field name="name">mrp.workcenter.productivity.loss.tree</field>
+        <field name="name">mrp.workcenter.productivity.loss.list</field>
         <field name="model">mrp.workcenter.productivity.loss</field>
         <field name="arch" type="xml">
-            <tree string="Workcenter Productivity Loss" editable='bottom'>
+            <list string="Workcenter Productivity Loss" editable='bottom'>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="loss_type" string="Category"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -578,10 +578,10 @@
     </record>
 
     <record id="oee_tree_view" model="ir.ui.view">
-        <field name="name">mrp.workcenter.productivity.tree</field>
+        <field name="name">mrp.workcenter.productivity.list</field>
         <field name="model">mrp.workcenter.productivity</field>
         <field name="arch" type="xml">
-            <tree string="Workcenter Productivity">
+            <list string="Workcenter Productivity">
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="workcenter_id"/>
@@ -589,7 +589,7 @@
                 <field name="loss_id"/>
                 <field name="duration" string="Duration (minutes)" sum="Duration"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -620,7 +620,7 @@
     <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report">
         <field name="name">Overall Equipment Effectiveness</field>
         <field name="res_model">mrp.workcenter.productivity</field>
-        <field name="view_mode">graph,pivot,tree,form</field>
+        <field name="view_mode">graph,pivot,list,form</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_workcenter_group': 1, 'search_default_loss_group': 2, 'create':False,'edit':False}</field>
         <field name="help" type="html">

@@ -102,10 +102,10 @@
         </record>
 
         <record id="hr_employee_public_view_tree" model="ir.ui.view">
-            <field name="name">hr.employee.tree</field>
+            <field name="name">hr.employee.list</field>
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
-                <tree string="Employees" sample="1">
+                <list string="Employees" sample="1">
                     <field name="name"/>
                     <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
@@ -114,7 +114,7 @@
                     <field name="job_title"/>
                     <field name="parent_id" widget="many2one_avatar_user"/>
                     <field name="coach_id" widget="many2one_avatar_user" optional="show"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -188,7 +188,7 @@
 
         <record id="act_hr_employee_public_tree_view" model="ir.actions.act_window.view">
             <field name="sequence" eval="15"/>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">list</field>
             <field name="act_window_id" ref="hr.hr_employee_public_action"/>
         </record>
 

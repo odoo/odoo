@@ -59,11 +59,11 @@
         </record>
 
         <record id="view_product_margin_tree" model="ir.ui.view">
-            <field name="name">product.margin.tree</field>
+            <field name="name">product.margin.list</field>
             <field name="model">product.product</field>
             <field name="priority" eval="50"/>
             <field name="arch" type="xml">
-                <tree string="Product Margins">
+                <list string="Product Margins">
                     <field name="name"/>
                     <field name="default_code"/>
                     <field name="sale_avg_price"/>
@@ -80,7 +80,7 @@
                     <field name="uom_id" column_invisible="True"/>
                     <field name="type" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
-            </tree>
+            </list>
             </field>
         </record>
 

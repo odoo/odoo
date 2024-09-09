@@ -262,7 +262,7 @@ class HrEmployeePrivate(models.Model):
             'view_mode': 'form',
         }
         if len(related_partners) > 1:
-            action['view_mode'] = 'kanban,tree,form'
+            action['view_mode'] = 'kanban,list,form'
             action['domain'] = [('id', 'in', related_partners.ids)]
             return action
         else:

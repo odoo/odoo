@@ -445,9 +445,9 @@ test("settings views does not read existing id when coming back in breadcrumbs",
         </form>
     `;
     Task._views.list = /* xml */ `
-        <tree>
+        <list>
             <field name="display_name"/>
-        </tree>
+        </list>
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
@@ -748,9 +748,9 @@ test("settings views does not write the id on the url", async () => {
         </form>
     `;
     Task._views.list = /* xml */ `
-        <tree>
+        <list>
             <field name="display_name"/>
-        </tree>
+        </list>
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
@@ -802,9 +802,9 @@ test("settings views can search when coming back in breadcrumbs", async () => {
         </form>
     `;
     Task._views.list = /* xml */ `
-        <tree>
+        <list>
             <field name="display_name"/>
-        </tree>
+        </list>
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
@@ -851,9 +851,9 @@ test("search for default label when label has empty string", async () => {
         </form>
     `;
     Task._views.list = /* xml */ `
-        <tree>
+        <list>
             <field name="display_name"/>
-        </tree>
+        </list>
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
@@ -903,9 +903,9 @@ test("clicking on any button in setting should show discard warning if setting f
         </form>
     `;
     Task._views.list = /* xml */ `
-        <tree>
+        <list>
             <field name="display_name"/>
-        </tree>
+        </list>
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
@@ -992,7 +992,7 @@ test("header field don't dirty settings", async () => {
             </app>
         </form>
     `;
-    Task._views.list = /* xml */ `<tree><field name="display_name"/></tree>`;
+    Task._views.list = /* xml */ `<list><field name="display_name"/></list>`;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
 
@@ -1235,7 +1235,7 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
             </app>
         </form>
     `;
-    Task._views.list = /* xml */ `<tree><field name="display_name"/></tree>`;
+    Task._views.list = /* xml */ `<list><field name="display_name"/></list>`;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
 
@@ -1377,7 +1377,7 @@ test("execute action from settings view with several actions in the breadcrumb",
         },
     ]);
 
-    Task._views[["list", 1]] = /* xml */ `<tree><field name="display_name"/></tree>`;
+    Task._views[["list", 1]] = /* xml */ `<list><field name="display_name"/></list>`;
     ResConfigSettings._views[["form", 2]] = /* xml */ `
         <form string="Settings" js_class="base_settings">
             <app string="CRM" name="crm">
@@ -1389,7 +1389,7 @@ test("execute action from settings view with several actions in the breadcrumb",
             </app>
         </form>
     `;
-    Task._views[["list", 3]] = /* xml */ `<tree><field name="display_name"/></tree>`;
+    Task._views[["list", 3]] = /* xml */ `<list><field name="display_name"/></list>`;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.search = /* xml */ `<search/>`;
 
@@ -1425,7 +1425,7 @@ test("settings can contain one2many fields", async () => {
                 <app string="Base Setting" name="base-setting">
                     <setting>
                         <field name="tasks">
-                            <tree><field name="name"/></tree>
+                            <list><field name="name"/></list>
                             <form><field name="name"/></form>
                         </field>
                     </setting>
@@ -1480,7 +1480,7 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
         </form>
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.list = /* xml */ `<tree/>`;
+    Task._views.list = /* xml */ `<list/>`;
     Task._views.search = /* xml */ `<search/>`;
 
     onRpc("/web/dataset/call_button", async (request) => {
@@ -1541,7 +1541,7 @@ test("Discard button clean the settings view", async () => {
         </form>
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.list = /* xml */ `<tree/>`;
+    Task._views.list = /* xml */ `<list/>`;
     Task._views.search = /* xml */ `<search/>`;
 
     stepAllNetworkCalls();

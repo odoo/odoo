@@ -31,9 +31,9 @@ class Color extends models.Model {
                 </group>
             </form>`,
         list: /* xml */ `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="hex_color" widget="color" />
-            </tree>`,
+            </list>`,
     };
 }
 class User extends models.Model {
@@ -87,9 +87,9 @@ test("read-only color field in editable list view", async () => {
         type: "list",
         resModel: "color",
         arch: `
-        <tree editable="bottom">
+        <list editable="bottom">
             <field name="hex_color" readonly="1" widget="color" />
-        </tree>`,
+        </list>`,
     });
 
     expect(".o_field_color input:disabled").toHaveCount(2);

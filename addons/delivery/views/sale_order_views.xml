@@ -35,11 +35,11 @@
                 <field name="recompute_delivery_price" invisible="1"/>
                 <field name="is_delivery" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
+            <xpath expr="//field[@name='order_line']/list/field[@name='price_unit']" position="before">
                 <field name="recompute_delivery_price" column_invisible="True"/>
                 <field name="is_delivery" column_invisible="True"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+            <xpath expr="//field[@name='order_line']/list" position="attributes">
                 <attribute name="decoration-warning" add="(recompute_delivery_price and is_delivery)" separator="or"/>
             </xpath>
             <label for="commitment_date" position="before">

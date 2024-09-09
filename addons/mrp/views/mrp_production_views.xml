@@ -38,10 +38,10 @@
         </record>
 
         <record id="mrp_production_tree_view" model="ir.ui.view">
-            <field name="name">mrp.production.tree</field>
+            <field name="name">mrp.production.list</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <tree string="Manufacturing Orders" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                <list string="Manufacturing Orders" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
                         <button name="action_assign"  type="object" string="Check availability"/>
@@ -87,7 +87,7 @@
                     <field name="delay_alert_date" column_invisible="True"/>
                     <field name="is_delayed" column_invisible="True"/>
                     <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -354,7 +354,7 @@
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
                             <field name="move_finished_ids" invisible="1" readonly="state == 'cancel' or (state == 'done' and is_locked)">
-                                <tree editable="bottom">
+                                <list editable="bottom">
                                     <field name="product_id" readonly="state == 'done'"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
                                     <field name="product_uom"/>
@@ -396,7 +396,7 @@
                                     <field name="picked"/>
                                     <!-- Required for test_fifo_byproduct -->
                                     <field name="cost_share"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </group>
@@ -407,7 +407,7 @@
                                 context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations', 'active_mo_id': id}"
 
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)">
-                                <tree default_order="is_done, manual_consumption desc, sequence" editable="bottom">
+                                <list default_order="is_done, manual_consumption desc, sequence" editable="bottom">
                                     <control>
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_raw" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
@@ -470,21 +470,21 @@
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
                                     <field name="group_id" column_invisible="True"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
                             <field name="workorder_ids"
                                 widget="mrp_workorder_one2many"
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)"
-                                context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view_mo_form', 'default_product_uom_id': product_uom_id, 'from_manufacturing_order': True}"/>
+                                context="{'list_view_ref': 'mrp.mrp_production_workorder_tree_editable_view_mo_form', 'default_product_uom_id': product_uom_id, 'from_manufacturing_order': True}"/>
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids"
                                 widget="stock_move_one2many"
                                 context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)" options="{'delete': [('state', '=', 'draft')]}">
-                                <tree default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
+                                <list default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
                                     <control>
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
@@ -528,7 +528,7 @@
                                         options="{'create': [('parent.use_create_components_lots', '!=', False)]}"
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Miscellaneous" name="miscellaneous">
@@ -699,7 +699,7 @@
             <field name="name">Manufacturing Orders</field>
             <field name="path">manufacturing</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_todo': True, 'default_company_id': allowed_company_ids[0]}</field>
@@ -716,7 +716,7 @@
         <record id="mrp_production_action_picking_deshboard" model="ir.actions.act_window">
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="domain">[('picking_type_id', '=', active_id)]</field>

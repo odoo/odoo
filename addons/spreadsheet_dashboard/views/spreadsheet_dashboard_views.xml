@@ -5,14 +5,14 @@
         <field name="name">spreadsheet.dashboard.view.list</field>
         <field name="model">spreadsheet.dashboard</field>
         <field name="arch" type="xml">
-            <tree create="false" editable="bottom">
+            <list create="false" editable="bottom">
                 <field name="sequence" widget="handle" groups="base.group_system"/>
                 <field name="name"/>
                 <field name="group_ids" widget="many2many_tags" required="1"/>
                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 <field name="is_published" widget="boolean_toggle"/>
                 <field name="dashboard_group_id" optional="hidden"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -20,10 +20,10 @@
         <field name="name">spreadsheet.dashboard.group.view.list</field>
         <field name="model">spreadsheet.dashboard.group</field>
         <field name="arch" type="xml">
-            <tree string="Dashboards">
+            <list string="Dashboards">
                 <field name="sequence" widget="handle" groups="base.group_system"/>
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -40,7 +40,7 @@
                     </div>
                     <notebook>
                         <page string="Spreadsheets" name="spreadsheets">
-                            <field name="dashboard_ids" context="{'tree_view_ref': 'spreadsheet_dashboard.spreadsheet_dashboard_view_list'}"/>
+                            <field name="dashboard_ids" context="{'list_view_ref': 'spreadsheet_dashboard.spreadsheet_dashboard_view_list'}"/>
                         </page>
                     </notebook>
                 </sheet>

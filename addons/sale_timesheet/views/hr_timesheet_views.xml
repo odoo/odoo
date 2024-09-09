@@ -34,11 +34,11 @@
     </record>
 
     <record id="hr_timesheet_line_tree_inherit" model="ir.ui.view">
-        <field name="name">account.analytic.line.tree.inherit</field>
+        <field name="name">account.analytic.line.list.inherit</field>
         <field name="model">account.analytic.line</field>
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='name']" position="after">
+            <xpath expr="//list/field[@name='name']" position="after">
                 <field name="commercial_partner_id" column_invisible="True" groups="sales_team.group_sale_salesman"/>
                 <field name="is_so_line_edited" column_invisible="True" groups="sales_team.group_sale_salesman"/>
                 <field name="allow_billable" column_invisible="True" groups="sales_team.group_sale_salesman"/>
@@ -153,7 +153,7 @@
 
     <record id="timesheet_action_from_sales_order_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="4"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="hr_timesheet.timesheet_view_tree_user"/>
         <field name="act_window_id" ref="timesheet_action_from_sales_order"/>
     </record>
@@ -190,7 +190,7 @@
 
     <record id="timesheet_action_from_sales_order_item_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="hr_timesheet.timesheet_view_tree_user"/>
         <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
     </record>
@@ -229,7 +229,7 @@
     <record id="timesheet_action_plan_pivot" model="ir.actions.act_window">
         <field name="name">Timesheet</field>
         <field name="res_model">account.analytic.line</field>
-        <field name="view_mode">pivot,tree,form</field>
+        <field name="view_mode">pivot,list,form</field>
         <field name="domain">[('project_id', '!=', False)]</field>
         <field name="context">{
             "is_timesheet": 1,
@@ -240,7 +240,7 @@
     <record id="timesheet_action_from_plan" model="ir.actions.act_window">
         <field name="name">Timesheet</field>
         <field name="res_model">account.analytic.line</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('project_id', '!=', False)]</field>
         <field name="context">{
             "is_timesheet": 1,

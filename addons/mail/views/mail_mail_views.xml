@@ -88,10 +88,10 @@
         </record>
 
         <record model="ir.ui.view" id="view_mail_tree">
-            <field name="name">mail.mail.tree</field>
+            <field name="name">mail.mail.list</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
-                <tree string="Emails">
+                <list string="Emails">
                     <header>
                         <button name="action_retry" string="Retry" type="object"/>
                     </header>
@@ -109,7 +109,7 @@
                     <button name="send" string="Send Now" type="object" icon="fa-paper-plane" invisible="state != 'outgoing' or message_type == 'user_notification'"/>
                     <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat" invisible="state not in ('exception', 'cancel')"/>
                     <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle" invisible="state != 'outgoing'"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -152,7 +152,7 @@
         <record id="action_view_mail_mail" model="ir.actions.act_window">
             <field name="name">Emails</field>
             <field name="res_model">mail.mail</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_mail_search"/>
         </record>

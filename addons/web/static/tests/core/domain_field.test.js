@@ -302,7 +302,7 @@ test("domain field: handle false domain as []", async function () {
 test.tags("desktop")("basic domain field: show the selection", async function () {
     Partner._records[0].foo = "[]";
     PartnerType._views = {
-        list: `<tree><field name="name" /></tree>`,
+        list: `<list><field name="name" /></list>`,
         search: `<search><field name="name" string="Name" /></search>`,
     };
     onRpc("has_group", () => true);
@@ -339,9 +339,9 @@ test.tags("desktop")("basic domain field: show the selection", async function ()
 test.tags("desktop")("field context is propagated when opening selection", async function () {
     Partner._records[0].foo = "[]";
     PartnerType._views = {
-        list: `<tree><field name="name" /></tree>`,
+        list: `<list><field name="name" /></list>`,
         search: `<search><field name="name" string="Name" /></search>`,
-        [["list", 3]]: `<tree><field name="id" /></tree>`,
+        [["list", 3]]: `<list><field name="id" /></list>`,
     };
     onRpc("has_group", () => true);
 
@@ -351,7 +351,7 @@ test.tags("desktop")("field context is propagated when opening selection", async
         resId: 1,
         arch: `
             <form>
-                <field name="foo" widget="domain" options="{'model': 'partner.type'}" context="{'tree_view_ref': 3}"/>
+                <field name="foo" widget="domain" options="{'model': 'partner.type'}" context="{'list_view_ref': 3}"/>
             </form>`,
     });
 
@@ -689,7 +689,7 @@ test("domain field without model", async function () {
 test.tags("desktop")("domain field in kanban view", async function () {
     Partner._records[0].foo = "[]";
     PartnerType._views = {
-        list: `<tree><field name="name" /></tree>`,
+        list: `<list><field name="name" /></list>`,
         search: `<search><field name="name" string="Name" /></search>`,
     };
     onRpc("has_group", () => true);

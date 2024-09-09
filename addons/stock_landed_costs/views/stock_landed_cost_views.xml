@@ -67,7 +67,7 @@
                                         <label for="name"/>
                                         <field name="name"/>
                                     </form>
-                                    <tree string="Cost Lines" editable="bottom">
+                                    <list string="Cost Lines" editable="bottom">
                                         <field name="product_id"
                                             domain="[('landed_cost_ok', '=', True)]"
                                             context="{'default_landed_cost_ok': True, 'default_type': 'service'}"/>
@@ -76,7 +76,7 @@
                                         <field name="split_method"/>
                                         <field name="price_unit"/>
                                         <field name="currency_id" column_invisible="True"/>
-                                    </tree>
+                                    </list>
                                 </field>
                                 <group class="oe_subtotal_footer">
                                     <field name="currency_id" invisible="1"/>
@@ -99,7 +99,7 @@
                                             </group>
                                         </group>
                                     </form>
-                                    <tree string="Valuation Adjustments" editable="bottom" create="0">
+                                    <list string="Valuation Adjustments" editable="bottom" create="0">
                                         <field name="cost_line_id" readonly="1"/>
                                         <field name="product_id" readonly="1"/>
                                         <field name="weight" readonly="1" optional="hide"/>
@@ -109,7 +109,7 @@
                                         <field name="former_cost" readonly="1"/>
                                         <field name="final_cost" readonly="1"/>
                                         <field name="additional_landed_cost"/>
-                                    </tree>
+                                    </list>
                                 </field>
                             </page>
                         </notebook>
@@ -120,32 +120,32 @@
         </record>
 
         <record id='view_stock_landed_cost_tree' model='ir.ui.view'>
-            <field name="name">stock.landed.cost.tree</field>
+            <field name="name">stock.landed.cost.list</field>
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
-                <tree string="Landed Costs" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <list string="Landed Costs" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
                     <field name="name" decoration-bf="1"/>
                     <field name="date" readonly="state == 'done'"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id='view_stock_landed_cost_tree2' model='ir.ui.view'>
-            <field name="name">stock.landed.cost.tree</field>
+            <field name="name">stock.landed.cost.list</field>
             <field name="model">stock.landed.cost</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree string="Landed Costs">
+                <list string="Landed Costs">
                     <field name="name"/>
                     <field name="date" readonly="state == 'done'"/>
                     <field name="currency_id" column_invisible="True"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -215,7 +215,7 @@
         <record id='action_stock_landed_cost' model='ir.actions.act_window'>
             <field name="name">Landed Costs</field>
             <field name="res_model">stock.landed.cost</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">list,form,kanban</field>
             <field name="context">{}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

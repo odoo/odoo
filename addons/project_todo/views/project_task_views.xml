@@ -72,12 +72,12 @@
         </field>
     </record>
 
-    <!-- To-do Tree View -->
+    <!-- To-do List View -->
     <record id="project_task_view_todo_tree" model="ir.ui.view">
-        <field name="name">project.task.todo.tree</field>
+        <field name="name">project.task.todo.list</field>
         <field name="model">project.task</field>
         <field name="arch" type="xml">
-            <tree string="To-dos"
+            <list string="To-dos"
                   default_group_by="personal_stage_type_id"
                   editable="bottom"
                   multi_edit="1"
@@ -90,7 +90,7 @@
                 <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                 <field name="personal_stage_type_id" string="Stage" optional="hide"/>
                 <field name="activity_ids" optional="show" widget="list_activity"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -251,9 +251,9 @@
         <field name="name">To-dos</field>
         <field name="res_model">project.task</field>
         <field name="domain">[('user_ids', 'in', [uid]), ('project_id', '=', False), ('parent_id', '=', False)]</field>
-        <field name="view_mode">kanban,form,tree,activity</field>
+        <field name="view_mode">kanban,form,list,activity</field>
         <field name="search_view_id" ref="project_task_view_todo_search"/>
-        <field name="context">{'search_default_open_tasks': 1, 'tree_view_ref': 'project_todo.project_task_view_todo_tree'}</field>
+        <field name="context">{'search_default_open_tasks': 1, 'list_view_ref': 'project_todo.project_task_view_todo_tree'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No to-do found. Let's create one!
@@ -277,7 +277,7 @@
     </record>
 
     <record model="ir.actions.act_window.view" id="project_task_action_todo_tree_view">
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="project_task_view_todo_tree"/>
         <field name="act_window_id" ref="project_task_action_todo"/>
     </record>

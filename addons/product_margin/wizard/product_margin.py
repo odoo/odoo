@@ -47,7 +47,7 @@ class ProductMargin(models.TransientModel):
         return {
             'name': _('Product Margins'),
             'context': context,
-            "view_mode": 'tree,form,graph',
+            "view_mode": 'list,form,graph',
             'res_model': 'product.product',
             'type': 'ir.actions.act_window',
             'views': views,

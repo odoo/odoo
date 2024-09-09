@@ -101,16 +101,16 @@
     </record>
 
     <record id="project_sharing_project_task_view_tree" model="ir.ui.view">
-        <field name="name">project.sharing.project.task.tree</field>
+        <field name="name">project.sharing.project.task.list</field>
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project_task_view_tree_main_base"/>
         <field name="mode">primary</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <tree position="attributes">
+            <list position="attributes">
                 <attribute name="delete">0</attribute>
                 <attribute name="import">0</attribute>
-            </tree>
+            </list>
             <xpath expr="//field[@widget='res_partner_many2one']" position="attributes">
                 <attribute name="widget">many2one</attribute>
             </xpath>
@@ -236,7 +236,7 @@
                                 'default_milestone_id': allow_milestones and milestone_id, 'default_partner_id': partner_id,
                                 'form_view_ref' : 'project.project_sharing_project_task_view_form',
                             }">
-                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
+                                <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="display_in_project" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
@@ -263,18 +263,18 @@
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
                                             invisible="project_id != context.get('active_id')"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page name="task_dependencies" string="Blocked By" invisible="not allow_task_dependencies">
                             <field name="depend_on_ids" widget="depend_on_ids_one2many" nolabel="1" options="{'link': false}" readonly="1"
                                 context="{
                                     'depend_on_count': depend_on_count,
-                                    'tree_view_ref': 'project.open_view_blocked_by_list_view',
+                                    'list_view_ref': 'project.open_view_blocked_by_list_view',
                                     'search_view_ref': 'project.project_sharing_project_task_view_search',
                                     'search_default_project_id': project_id,
                             }">
-                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
+                                <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1" width="20px" readonly="1"/>
@@ -298,7 +298,7 @@
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
                                             invisible="project_id != context.get('active_id')"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -347,9 +347,9 @@
         <field name="inherit_id" ref="project.open_view_all_tasks_list_view"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <tree position="attributes">
+            <list position="attributes">
                 <attribute name="default_group_by"/>
-            </tree>
+            </list>
             <field name="user_ids" position="attributes">
                 <attribute name="invisible">1</attribute>
             </field>
@@ -363,7 +363,7 @@
     <record id="project_sharing_project_task_action" model="ir.actions.act_window">
         <field name="name">Project Sharing</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
         <field name="domain">[('project_id', '=', active_id), ('display_in_project', '=', True)]</field>
         <field name="context">{
@@ -389,7 +389,7 @@
     </record>
 
     <record id="project_sharing_tree_action_view" model="ir.actions.act_window.view">
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_action"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_tree"/>
     </record>
@@ -403,7 +403,7 @@
     <record id="project_sharing_project_task_action_blocking_tasks" model="ir.actions.act_window">
         <field name="name">Blocking</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
         <field name="domain">[('depend_on_ids', '=', active_id), ('id', '!=', active_id)]</field>
         <field name="context">{'default_dependent_ids': active_id}</field>
@@ -418,7 +418,7 @@
     </record>
 
     <record id="project_sharing_blocking_tree_action_view" model="ir.actions.act_window.view">
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_action_blocking_tasks"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_tree"/>
     </record>
@@ -438,7 +438,7 @@
     <record id="project_sharing_project_task_action_sub_task" model="ir.actions.act_window">
         <field name="name">Sub-tasks</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
         <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
         <field name="context">{'default_parent_id': active_id}</field>
@@ -453,7 +453,7 @@
     </record>
 
     <record id="project_sharing_subtasks_tree_action_view" model="ir.actions.act_window.view">
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_action_sub_task"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_tree"/>
     </record>
@@ -473,7 +473,7 @@
     <record id="project_sharing_project_task_recurring_tasks_action" model="ir.actions.act_window">
         <field name="name">Project Sharing Recurrence</field>
         <field name="res_model">project.task</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -487,7 +487,7 @@
     </record>
 
     <record id="project_sharing_recurring_tasks_tree_action_view" model="ir.actions.act_window.view">
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_recurring_tasks_action"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_tree"/>
     </record>

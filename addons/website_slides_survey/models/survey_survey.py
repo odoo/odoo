@@ -59,7 +59,7 @@ class Survey(models.Model):
             action.update({'views': [(False, 'form')],
                            'res_id': self.slide_channel_ids[0].id})
         else:
-            action.update({'views': [[False, 'tree'], [False, 'form']],
+            action.update({'views': [[False, 'list'], [False, 'form']],
                            'domain': [('id', 'in', self.slide_channel_ids.ids)]})
         action['context'] = dict(
             ast.literal_eval(action.get('context') or '{}'),  # sufficient in most cases

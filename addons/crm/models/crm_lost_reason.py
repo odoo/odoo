@@ -25,7 +25,7 @@ class LostReason(models.Model):
     def action_lost_leads(self):
         return {
             'name': _('Leads'),
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('lost_reason_id', 'in', self.ids)],
             'res_model': 'crm.lead',
             'type': 'ir.actions.act_window',

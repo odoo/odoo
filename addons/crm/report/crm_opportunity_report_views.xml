@@ -2,7 +2,7 @@
 <odoo>
 
         <record id="crm_lead_view_tree_opportunity_reporting" model="ir.ui.view">
-            <field name="name">crm.lead.tree.opportunity.reporting</field>
+            <field name="name">crm.lead.list.opportunity.reporting</field>
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
             <field name="mode">primary</field>
@@ -157,7 +157,7 @@
         </record>
 
         <record id="crm_lead_view_tree_reporting" model="ir.ui.view">
-            <field name="name">crm.lead.tree.lead.reporting</field>
+            <field name="name">crm.lead.list.lead.reporting</field>
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
             <field name="mode">primary</field>
@@ -179,14 +179,14 @@
         <record id="crm_opportunity_report_action" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">graph,pivot,tree,form</field>
+            <field name="view_mode">graph,pivot,list,form</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
             <field name="context">{'search_default_filter_opportunity': True, 'search_default_current': True}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_lead_view_tree_opportunity_reporting')})]"/>
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('crm_lead_view_tree_opportunity_reporting')})]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No data found!
@@ -199,7 +199,7 @@
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
             <field name="name">Leads Analysis</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">graph,pivot,tree</field>
+            <field name="view_mode">graph,pivot,list</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
             <field name="context">{
                 'search_default_filter_active': 1,
@@ -211,7 +211,7 @@
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('crm_lead_view_form')}),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_lead_view_tree_reporting')}),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('crm_lead_view_tree_reporting')}),
                          ]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">

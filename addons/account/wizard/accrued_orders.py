@@ -265,6 +265,6 @@ class AccruedExpenseRevenue(models.TransientModel):
             'name': _('Accrual Moves'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', (move.id, reverse_move.id))],
         }

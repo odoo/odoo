@@ -199,16 +199,16 @@
             </field>
         </record>
 
-        <!-- automation Tree View -->
+        <!-- automation List View -->
         <record id="view_base_automation_tree" model="ir.ui.view">
-            <field name="name">base.automation.tree</field>
+            <field name="name">base.automation.list</field>
             <field name="model">base.automation</field>
             <field name="arch" type="xml">
-                <tree string="Automation Rules">
+                <list string="Automation Rules">
                     <field name="name"/>
                     <field name="trigger"/>
                     <field name="model_id"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -286,7 +286,7 @@
             <field name="name">Automation Rules</field>
             <field name="res_model">base.automation</field>
             <field name="path">automations</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="view_id" ref="view_base_automation_kanban"/>
             <field name="context">{'active_test': False}</field>
             <field name="help" type="html">

@@ -18,11 +18,11 @@
     </record>
 
     <record model="ir.ui.view" id="mailing_list_view_tree">
-        <field name="name">mailing.list.view.tree</field>
+        <field name="name">mailing.list.view.list</field>
         <field name="model">mailing.list</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Mailing Lists" sample="1">
+            <list string="Mailing Lists" sample="1">
                 <field name="name"/>
                 <field name="is_public"/>
                 <field name="mailing_count" string="Mailings"/>
@@ -30,7 +30,7 @@
                 <field name="contact_pct_opt_out" string="Opt-out (%)"/>
                 <field name="contact_pct_blacklisted" string="Blacklist (%s)"/>
                 <field name="contact_count" string="Recipients"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -233,7 +233,7 @@
         <field name="name">Mailing Lists</field>
         <field name="res_model">mailing.list</field>
         <field name="path">mailing-lists</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Create a Mailing List

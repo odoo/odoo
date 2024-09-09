@@ -7,14 +7,14 @@
         <field name="name">Work Entry</field>
         <field name="res_model">hr.work.entry</field>
         <field name="context">{'search_default_work_entries_error': 1}</field>
-        <field name="view_mode">tree,calendar,form,pivot</field>
+        <field name="view_mode">list,calendar,form,pivot</field>
     </record>
 
     <record id="hr_work_entry_action" model="ir.actions.act_window">
         <field name="name">Work Entry</field>
         <field name="res_model">hr.work.entry</field>
         <field name="path">work-entries</field>
-        <field name="view_mode">calendar,tree,form,pivot</field>
+        <field name="view_mode">calendar,list,form,pivot</field>
         <field name="context">{
             'search_default_work_entries_error': True
         }</field>
@@ -85,10 +85,10 @@
     </record>
 
     <record id="hr_work_entry_view_tree" model="ir.ui.view">
-        <field name="name">hr.work.entry.tree</field>
+        <field name="name">hr.work.entry.list</field>
         <field name="model">hr.work.entry</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1" sample="1">
+            <list multi_edit="1" sample="1">
                 <field name="name"/>
                 <field name="work_entry_type_id" options="{'no_create': True, 'no_open': True}"/>
                 <field name="code" optional="hidden"/>
@@ -97,7 +97,7 @@
                 <field name="state"/>
                 <field name="date_start" string="Beginning" readonly="1"/>
                 <field name="date_stop" string="End" readonly="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -158,7 +158,7 @@
     <record id="hr_work_entry_type_action" model="ir.actions.act_window">
         <field name="name">Work Entry Types</field>
         <field name="res_model">hr.work.entry.type</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="hr_work_entry_type_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -168,14 +168,14 @@
     </record>
 
     <record id="hr_work_entry_type_view_tree" model="ir.ui.view">
-        <field name="name">hr.work.entry.type.tree</field>
+        <field name="name">hr.work.entry.type.list</field>
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="code"/>
                 <field name="color" widget="color_picker"/>
-            </tree>
+            </list>
         </field>
     </record>
 

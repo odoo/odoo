@@ -124,7 +124,7 @@ class PosOrder(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Linked Sale Orders'),
             'res_model': 'sale.order',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('id', 'in', linked_orders.ids)],
         }
 

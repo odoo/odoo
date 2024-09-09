@@ -6,7 +6,7 @@
         <record id="action_website_add_features" model="ir.actions.act_window">
             <field name="name">Apps</field>
             <field name="res_model">ir.module.module</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="domain">['!', ('name', '=like', 'theme_%')]</field>
             <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website'), 'searchpanel_default_category_id': ref('base.module_category_website')}"/>
         </record>
@@ -66,24 +66,24 @@
         </record>
 
         <record id="view_website_tree" model="ir.ui.view">
-            <field name="name">website.tree</field>
+            <field name="name">website.list</field>
             <field name="model">website</field>
             <field name="arch" type="xml">
-                <tree string="Websites" duplicate="0">
+                <list string="Websites" duplicate="0">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="domain"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="default_lang_id"/>
                     <field name="theme_id" groups="base.group_no_one"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="action_website_list" model="ir.actions.act_window">
             <field name="name">Websites</field>
             <field name="res_model">website</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="view_id" ref="view_website_tree"/>
             <field name="target">current</field>
         </record>
@@ -119,11 +119,11 @@
                         </group>
                         <label for="child_id" string="Child Menus"/>
                         <field name="child_id">
-                            <tree>
+                            <list>
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>
                                 <field name="url"/>
-                            </tree>
+                            </list>
                         </field>
                     </sheet>
                 </form>
@@ -131,10 +131,10 @@
         </record>
 
         <record id="menu_tree" model="ir.ui.view">
-            <field name="name">website.menu.tree</field>
+            <field name="name">website.menu.list</field>
             <field name="model">website.menu</field>
             <field name="arch" type="xml">
-                <tree string="Website menu">
+                <list string="Website menu">
                     <field name="sequence" widget="handle"/>
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="name"/>
@@ -143,7 +143,7 @@
                     <field name="new_window"/>
                     <field name="parent_id" context="{'display_website': True}"/>
                     <field name="group_ids" widget="many2many_tags"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -167,7 +167,7 @@
         <record id="action_website_menu" model="ir.actions.act_window">
             <field name="name">Website Menu</field>
             <field name="res_model">website.menu</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
             <field name="context">{'search_default_group_by_website_id':1}</field>
             <field name="view_id" ref="menu_tree"/>
             <field name="target">current</field>

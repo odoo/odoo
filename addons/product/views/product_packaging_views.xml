@@ -2,10 +2,10 @@
 <odoo>
 
     <record id="product_packaging_tree_view" model="ir.ui.view">
-        <field name="name">product.packaging.tree.view</field>
+        <field name="name">product.packaging.list.view</field>
         <field name="model">product.packaging</field>
         <field name="arch" type="xml">
-            <tree string="Product Packagings" name="packaging">
+            <list string="Product Packagings" name="packaging">
                 <field name="sequence" widget="handle"/>
                 <field name="product_id"/>
                 <field name="name" string="Packaging"/>
@@ -14,7 +14,7 @@
                 <field name="barcode" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -30,13 +30,13 @@
     </record>
 
     <record id="product_packaging_tree_view2" model="ir.ui.view">
-        <field name="name">product.packaging.tree.view2</field>
+        <field name="name">product.packaging.list.view2</field>
         <field name="model">product.packaging</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="product.product_packaging_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="replace"/>
-            <xpath expr="//tree[@name='packaging']" position="attributes">
+            <xpath expr="//list[@name='packaging']" position="attributes">
                 <attribute name="editable">bottom</attribute>
             </xpath>
         </field>
@@ -89,7 +89,7 @@
         <field name="res_model">product.packaging</field>
         <field name="domain">[]</field>
         <field name="view_ids" eval="[(5, 0, 0),
-            (0, 0, {'view_mode': 'tree', 'view_id': ref('product_packaging_tree_view')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('product_packaging_tree_view')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('product_packaging_form_view')})]"/>
     </record>
 

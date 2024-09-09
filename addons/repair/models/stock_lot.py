@@ -67,6 +67,6 @@ class StockLot(models.Model):
             action.update({
                 'name': _("Repair orders of %s", self.name),
                 'domain': [('id', 'in', self.repair_line_ids.ids)],
-                'view_mode': 'tree,form'
+                'view_mode': 'list,form'
             })
         return action

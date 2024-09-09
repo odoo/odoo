@@ -42,10 +42,10 @@
                     <notebook>
                         <page string="Providers" name="providers">
                             <field name="provider_ids" readonly="1">
-                                <tree decoration-muted="state == 'disabled'" editable="bottom">
+                                <list decoration-muted="state == 'disabled'" editable="bottom">
                                     <field name="name"/>
                                     <field name="state"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Brands" name="brands" invisible="not is_primary">
@@ -86,14 +86,14 @@
     </record>
 
     <record id="payment_method_tree" model="ir.ui.view">
-        <field name="name">payment.method.tree</field>
+        <field name="name">payment.method.list</field>
         <field name="model">payment.method</field>
         <field name="arch" type="xml">
-            <tree multi_edit="True" decoration-muted="not active">
+            <list multi_edit="True" decoration-muted="not active">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="active" widget="boolean_toggle"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -131,7 +131,7 @@
     <record id="action_payment_method" model="ir.actions.act_window">
         <field name="name">Payment Methods</field>
         <field name="res_model">payment.method</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('is_primary', '=', True)]</field>
         <field name="context">{'active_test': False, 'search_default_available_pms': 1}</field>
         <field name="help" type="html">

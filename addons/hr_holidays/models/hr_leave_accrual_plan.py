@@ -132,7 +132,7 @@ class AccrualPlan(models.Model):
         return {
             'name': _("Accrual Plan's Employees"),
             'type': 'ir.actions.act_window',
-            'view_mode': 'kanban,tree,form',
+            'view_mode': 'kanban,list,form',
             'res_model': 'hr.employee',
             'domain': [('id', 'in', self.allocation_ids.employee_id.ids)],
         }

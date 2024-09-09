@@ -11,7 +11,7 @@ class StockQuantityHistory(models.TransientModel):
         active_model = self.env.context.get('active_model')
         if active_model == 'stock.valuation.layer':
             action = self.env["ir.actions.actions"]._for_xml_id("stock_account.stock_valuation_layer_action")
-            action['views'] = [(self.env.ref('stock_account.stock_valuation_layer_valuation_at_date_tree_inherited').id, 'tree'),
+            action['views'] = [(self.env.ref('stock_account.stock_valuation_layer_valuation_at_date_tree_inherited').id, 'list'),
                                (self.env.ref('stock_account.stock_valuation_layer_form').id, 'form'),
                                (self.env.ref('stock_account.stock_valuation_layer_pivot').id, 'pivot'),
                                (self.env.ref('stock_account.stock_valuation_layer_graph').id, 'graph')]

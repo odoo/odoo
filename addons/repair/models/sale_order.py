@@ -42,7 +42,7 @@ class SaleOrder(models.Model):
                 "name": _("Repair Orders"),
                 "type": "ir.actions.act_window",
                 "res_model": "repair.order",
-                "view_mode": "tree,form",
+                "view_mode": "list,form",
                 "domain": [('sale_order_id', '=', self.id)],
             }
 

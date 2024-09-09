@@ -9,7 +9,7 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
     _description = "A-NZ BIS Billing 3.0"
 
     """
-    * Documentation: https://github.com/A-NZ-PEPPOL/A-NZ-PEPPOL-BIS-3.0/tree/master/Specifications
+    * Documentation: https://github.com/A-NZ-PEPPOL/A-NZ-PEPPOL-BIS-3.0/list/master/Specifications
     """
 
     # -------------------------------------------------------------------------

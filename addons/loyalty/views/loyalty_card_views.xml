@@ -25,10 +25,10 @@
     </record>
 
     <record id="loyalty_card_view_tree" model="ir.ui.view">
-        <field name="name">loyalty.card.view.tree</field>
+        <field name="name">loyalty.card.view.list</field>
         <field name="model">loyalty.card</field>
         <field name="arch" type="xml">
-            <tree string="Coupons" edit="false" delete="false" js_class="loyalty_card_list_view">
+            <list string="Coupons" edit="false" delete="false" js_class="loyalty_card_list_view">
                 <field name="code" readonly="1"/>
                 <field name="create_date" optional="hide"/>
                 <field name="points_display" string="Balance"/>
@@ -36,7 +36,7 @@
                 <field name="program_id"/>
                 <field name="partner_id"/>
                 <button name="action_coupon_send" string="Send" type="object" icon="fa-paper-plane-o"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -58,7 +58,7 @@
     <record id="loyalty_card_action" model="ir.actions.act_window">
         <field name="name">Coupons</field>
         <field name="res_model">loyalty.card</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('program_id', '=', active_id)]</field>
         <field name="context">{'create': False}</field>
         <field name="help" type="html">

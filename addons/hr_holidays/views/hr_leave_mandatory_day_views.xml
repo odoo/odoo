@@ -24,7 +24,7 @@
     <record id="hr_leave_mandatory_day_view_list" model="ir.ui.view">
         <field name="model">hr.leave.mandatory.day</field>
         <field name="arch" type="xml">
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="company_id" column_invisible="True"/>
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -32,7 +32,7 @@
                 <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="color" widget="color_picker"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -57,7 +57,7 @@
     <record id="hr_leave_mandatory_day_action" model="ir.actions.act_window">
         <field name="name">Mandatory Days</field>
         <field name="res_model">hr.leave.mandatory.day</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="hr_leave_mandatory_day_view_search"/>
         <field name="context">{'search_default_filter_date': True}</field>
     </record>

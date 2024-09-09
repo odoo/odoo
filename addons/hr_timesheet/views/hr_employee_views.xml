@@ -28,11 +28,11 @@
     </record>
 
     <record id="view_employee_tree_inherit_timesheet" model="ir.ui.view">
-        <field name="name">hr.employee.tree.timesheet</field>
+        <field name="name">hr.employee.list.timesheet</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="/tree" position="attributes">
+            <xpath expr="/list" position="attributes">
                 <attribute name="delete">0</attribute>
             </xpath>
         </field>

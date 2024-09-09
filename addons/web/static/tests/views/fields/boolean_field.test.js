@@ -84,7 +84,7 @@ test("boolean field in editable list view", async () => {
     await mountView({
         resModel: "partner",
         type: "list",
-        arch: `<tree editable="bottom"><field name="bar"/></tree>`,
+        arch: `<list editable="bottom"><field name="bar"/></list>`,
     });
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input`).toHaveCount(5);
     expect(`tbody td:not(.o_list_record_selector) .o-checkbox input:checked`).toHaveCount(4);

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_partner_grade_tree" model="ir.ui.view">
-        <field name="name">res.partner.grade.tree</field>
+        <field name="name">res.partner.grade.list</field>
         <field name="model">res.partner.grade</field>
         <field name="arch" type="xml">
-            <tree string="Partner Level">
+            <list string="Partner Level">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 
