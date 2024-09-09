@@ -59,6 +59,9 @@ class ResPartner(models.Model):
 
     def _compute_opportunity_count(self):
         super()._compute_opportunity_count()
+        if not self.env.user._has_group('sales_team.group_sale_salesman'):
+            return
+
         opportunity_data = self.env['crm.lead'].with_context(active_test=False)._read_group(
             [('partner_assigned_id', 'in', self.ids)],
             ['partner_assigned_id'], ['__count']

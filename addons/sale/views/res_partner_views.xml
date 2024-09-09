@@ -23,7 +23,12 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <xpath expr="//footer/div" position="inside">
-                <a t-if="record.sale_order_count.value>0" type="object" name="action_view_sale_order" class="btn btn-sm btn-link smaller" role="button">
+                <a t-if="record.sale_order_count?.value"
+                    class="btn btn-sm btn-link smaller"
+                    groups="sales_team.group_sale_salesman"
+                    name="action_view_sale_order"
+                    role="button"
+                    type="object">
                     <i class="fa fa-usd me-1" role="img" aria-label="Sale orders" title="Sales orders"/>
                     <field name="sale_order_count"/>
                 </a>
