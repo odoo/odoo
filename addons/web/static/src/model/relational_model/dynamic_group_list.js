@@ -170,13 +170,7 @@ export class DynamicGroupList extends DynamicList {
 
     async selectDomain(value) {
         return this.model.mutex.exec(async () => {
-            if (!this.isRecordCountTrustable) {
-                this._nbRecordsMatchingDomain = await this.model.orm.searchCount(
-                    this.resModel,
-                    this.domain,
-                    { limit: this.model.initialCountLimit }
-                );
-            }
+            await this._ensureCorrectRecordCount();
             this._selectDomain(value);
         });
     }
@@ -296,6 +290,16 @@ export class DynamicGroupList extends DynamicList {
         }
     }
 
+    async _ensureCorrectRecordCount() {
+        if (!this.isRecordCountTrustable) {
+            this._nbRecordsMatchingDomain = await this.model.orm.searchCount(
+                this.resModel,
+                this.domain,
+                { limit: this.model.initialCountLimit }
+            );
+        }
+    }
+
     _getDPresId(group) {
         return group.value;
     }
@@ -331,6 +335,20 @@ export class DynamicGroupList extends DynamicList {
             group.list._selectDomain(value);
         }
         super._selectDomain(value);
+    }
+
+    async _toggleSelection() {
+        if (!this.records.length) {
+            // all groups are folded, so there's no visible records => select all domain
+            if (!this.isDomainSelected) {
+                await this._ensureCorrectRecordCount();
+                this._selectDomain(true);
+            } else {
+                this._selectDomain(false);
+            }
+        } else {
+            super._toggleSelection();
+        }
     }
 
     _unlinkGroups(groups) {

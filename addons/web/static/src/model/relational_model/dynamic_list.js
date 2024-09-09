@@ -188,20 +188,7 @@ export class DynamicList extends DataPoint {
     }
 
     toggleSelection() {
-        return this.model.mutex.exec(() => {
-            if (!this.records.length) {
-                this.isDomainSelected = !this.isDomainSelected;
-            } else if (this.selection.length === this.records.length) {
-                this.records.forEach((record) => {
-                    record._toggleSelection(false);
-                });
-                this.isDomainSelected = false;
-            } else {
-                this.records.forEach((record) => {
-                    record._toggleSelection(true);
-                });
-            }
-        });
+        return this.model.mutex.exec(() => this._toggleSelection());
     }
 
     unarchive(isSelected) {
@@ -378,6 +365,19 @@ export class DynamicList extends DataPoint {
             });
         } else {
             return reload();
+        }
+    }
+
+    async _toggleSelection() {
+        if (this.selection.length === this.records.length) {
+            this.records.forEach((record) => {
+                record._toggleSelection(false);
+            });
+            this._selectDomain(false);
+        } else {
+            this.records.forEach((record) => {
+                record._toggleSelection(true);
+            });
         }
     }
 }
