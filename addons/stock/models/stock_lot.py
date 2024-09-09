@@ -50,7 +50,7 @@ class StockLot(models.Model):
         'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
-    product_qty = fields.Float('On Hand Quantity', compute='_product_qty', search='_search_product_qty')
+    product_qty = fields.Float('On Hand Quantity', compute='_product_qty', search='_search_product_qty', store=True)
     note = fields.Html(string='Description')
     display_complete = fields.Boolean(compute='_compute_display_complete')
     company_id = fields.Many2one('res.company', 'Company', index=True, store=True, readonly=False, compute='_compute_company_id')

@@ -57,6 +57,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                     <filter string="Vendor" name="groupby_vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Product Category" name="groupby_category" domain="[]" context="{'group_by': 'product_category_id'}"/>
                 </group>
             </search>
         </field>
@@ -90,7 +91,7 @@
         <field name="arch" type="xml">
             <tree string="Vendor Information" multi_edit="1">
                 <field name="sequence" widget="handle"/>
-                <field name="partner_id" readonly="1"/>
+                <field name="partner_id" readonly="1"  context="{'res_partner_search_mode': 'supplier','default_company_type':'company'}"/>
                 <field name="product_id" optional="hide"
                     readonly="1"
                     column_invisible="context.get('product_template_invisible_variant', False)"

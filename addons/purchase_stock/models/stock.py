@@ -187,22 +187,27 @@ class Orderpoint(models.Model):
         return values
 
     def _get_replenishment_order_notification(self):
-        self.ensure_one()
         domain = [('orderpoint_id', 'in', self.ids)]
         if self.env.context.get('written_after'):
             domain = AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
-        order = self.env['purchase.order.line'].search(domain, limit=1).order_id
-        if order:
+        orders = self.env['purchase.order.line'].search(domain).order_id
+
+        if orders:
+            action = self.env.ref('purchase.action_rfq_form')
+            links = []
+            for order in orders:
+                links.append({
+                    'label': order.name,
+                    'url': f'/web#action={action.id}&id={order.id}&model=purchase.order'
+                })
+            message = ','.join(['%s'] * len(links))
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
                     'title': _('The following replenishment order has been generated'),
-                    'message': '%s',
-                    'links': [{
-                        'label': order.display_name,
-                        'url': f'/odoo/action-purchase.action_rfq_form/{order.id}',
-                    }],
+                    'message': message,
+                    'links': links,
                     'sticky': False,
                     'next': {'type': 'ir.actions.act_window_close'},
                 }

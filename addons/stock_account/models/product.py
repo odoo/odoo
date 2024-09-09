@@ -918,6 +918,11 @@ class ProductCategory(models.Model):
                 },
             }])
 
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        if self.parent_id and not self.product_count:
+            self.property_cost_method = self.parent_id.property_cost_method
+
     @api.onchange('property_cost_method')
     def onchange_property_cost(self):
         if not self._origin:

@@ -17,22 +17,27 @@ class StockWarehouseOrderpoint(models.Model):
     manufacturing_visibility_days = fields.Float(default=0.0, help="Visibility Days applied on the manufacturing routes.")
 
     def _get_replenishment_order_notification(self):
-        self.ensure_one()
         domain = [('orderpoint_id', 'in', self.ids)]
         if self.env.context.get('written_after'):
             domain = AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
-        production = self.env['mrp.production'].search(domain, limit=1)
-        if production:
+        productions = self.env['mrp.production'].search(domain)
+
+        if productions:
+            action = self.env.ref('mrp.action_mrp_production_form')
+            links = []
+            for production in productions:
+                links.append({
+                    'label': production.name,
+                    'url': f'/web#action={action.id}&id={production.id}&model=mrp.production'
+                })
+            message = ','.join(['%s'] * len(links))
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
                     'title': _('The following replenishment order has been generated'),
-                    'message': '%s',
-                    'links': [{
-                        'label': production.name,
-                        'url': f'/odoo/action-mrp.action_mrp_production_form/{production.id}'
-                    }],
+                    'message': message,
+                    'links': links,
                     'sticky': False,
                     'next': {'type': 'ir.actions.act_window_close'},
                 }

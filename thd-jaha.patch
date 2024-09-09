@@ -1,0 +1,35 @@
+diff --git a/addons/product/views/product_supplierinfo_views.xml b/addons/product/views/product_supplierinfo_views.xml
+index 2f88ca90e15d..23184f8ec525 100644
+--- a/addons/product/views/product_supplierinfo_views.xml
++++ b/addons/product/views/product_supplierinfo_views.xml
+@@ -10,7 +10,7 @@
+                     <group>
+                         <group name="vendor" string="Vendor">
+                             <field name="product_variant_count" invisible="1"/>
+-                            <field name="partner_id" context="{'res_partner_search_mode': 'supplier','default_company_type':'company'}"/>
++                            <field name="partner_id" context="{'res_partner_search_mode': 'supplier'}"/>
+                             <field name="product_name"/>
+                             <field name="product_code"/>
+                             <label for="delay"/>
+@@ -91,7 +91,7 @@
+         <field name="arch" type="xml">
+             <tree string="Vendor Information" multi_edit="1">
+                 <field name="sequence" widget="handle"/>
+-                <field name="partner_id" readonly="1"/>
++                <field name="partner_id" readonly="1"  context="{'res_partner_search_mode': 'supplier','default_company_type':'company'}"/>
+                 <field name="product_id" optional="hide"
+                     readonly="1"
+                     column_invisible="context.get('product_template_invisible_variant', False)"
+diff --git a/addons/purchase/views/product_views.xml b/addons/purchase/views/product_views.xml
+index 604a835c926e..88ea1136dfe3 100644
+--- a/addons/purchase/views/product_views.xml
++++ b/addons/purchase/views/product_views.xml
+@@ -96,7 +96,7 @@
+                     <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'product_template_invisible_variant': True, 'tree_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
+                 </field>
+                 <field name="variant_seller_ids" position="attributes">
+-                    <attribute name="context">{'default_product_id': id, 'model': 'product.product', 'active_id': id, 'tree_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
++                    <attribute name="context">{'default_product_tmpl_id': product_tmpl_id, 'model': 'product.product', 'active_id': id, 'tree_view_ref':'purchase.product_product_supplierinfo_tree_view2'}</attribute>
+                 </field>
+             </field>
+         </record>

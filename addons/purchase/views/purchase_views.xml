@@ -408,7 +408,7 @@
                     <filter name="approved" string="Purchase Orders" domain="[('state', 'in', ('purchase', 'done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
                     <separator/>
-                    <filter name="order_date" string="Order Date" date="date_order"/>
+                    <filter name="order_date" string="Receipt Date" date="date_order"/>
                     <filter name="draft_rfqs" string="Draft RFQs" domain="[('state', '=', 'draft')]"/>
                     <filter name="waiting_rfqs" string="Waiting RFQs" domain="[('state', '=', 'sent'), ('date_order', '&gt;=', datetime.datetime.now())]"/>
                     <filter name="late_rfqs" string="Late RFQs" domain="[('state', 'in', ['draft', 'sent', 'to approve']),('date_order', '&lt;', datetime.datetime.now())]"/>
@@ -426,7 +426,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
-                        <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
+                        <filter string="Receipt Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
                     </group>
                 </search>
             </field>
@@ -448,7 +448,7 @@
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status', '=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status', '=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
                     <separator/>
-                    <filter name="order_date" string="Order Date" date="date_order"/>
+                    <filter name="order_date" string="Receipt Date" date="date_order"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -463,7 +463,8 @@
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                         <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
-                        <filter string="Order Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
+                        <filter string="Receipt Date" name="order_date" domain="[]" context="{'group_by': 'date_order'}"/>
+                        <filter string="Confirmation Date" name="approve_date" domain="[]" context="{'group_by': 'date_approve'}"/>
                     </group>
                 </search>
             </field>
