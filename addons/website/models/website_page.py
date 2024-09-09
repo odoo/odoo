@@ -253,7 +253,7 @@ class Page(models.Model):
         results = most_specific_pages.filtered_domain(domain)  # already sudo
         v_arch_db = self.env['ir.ui.view']._field_to_sql('v', 'arch_db')
 
-        if with_description and search:
+        if with_description and search and most_specific_pages:
             # Perform search in translations
             # TODO Remove when domains will support xml_translate fields
             self.env.cr.execute(SQL(
