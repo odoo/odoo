@@ -28,7 +28,7 @@ class AccountMove(models.Model):
         if any(move.peppol_move_state in {'processing', 'done'} for move in self):
             raise UserError(_("Cannot cancel an entry that has already been sent to PEPPOL"))
         self.peppol_move_state = False
-        self.send_and_print_values = False
+        self.sending_data = False
 
     @api.depends('state')
     def _compute_peppol_move_state(self):

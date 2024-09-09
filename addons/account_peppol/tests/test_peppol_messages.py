@@ -48,6 +48,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'name': 'Wintermute',
             'city': 'Charleroi',
             'country_id': cls.env.ref('base.be').id,
+            'invoice_sending_method': 'peppol',
             'peppol_eas': '0208',
             'peppol_endpoint': '3141592654',
         }, {
@@ -55,6 +56,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'city': 'Namur',
             'email': 'Namur@company.com',
             'country_id': cls.env.ref('base.be').id,
+            'invoice_sending_method': 'peppol',
             'peppol_eas': '0208',
             'peppol_endpoint': '2718281828',
         }])
@@ -177,13 +179,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         move = self.create_move(self.valid_partner)
         move.action_post()
 
-        builder = self.valid_partner._get_edi_builder()
-        filename = builder._export_invoice_filename(move)
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=False,
-        )
+        wizard = self.create_send_and_print(move, sending_methods=['email'])
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
 
         # the ubl xml placeholder should be generated
         self._assert_mail_attachments_widget(wizard, [
@@ -200,47 +197,37 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         ])
 
         # we don't want to email the xml file in addition to sending via peppol
-        wizard.checkbox_send_peppol = True
-        self.assertFalse(bool(
-            [file for file in wizard.mail_attachments_widget if file['name'] == filename]
-        ))
+        wizard.sending_methods = ['peppol']
+        wizard.action_send_and_print()
+        self.assertEqual(self._get_mail_message(move).preview, 'The document has been sent to the Peppol Access Point for processing')
 
-    def test_send_peppol_warnings(self):
+    def test_send_peppol_alerts(self):
         # a warning should appear before sending invoices to an invalid partner
         move = self.create_move(self.invalid_partner)
         move.action_post()
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-            checkbox_send_mail=True,
-        )
-        self.assertTrue('account_peppol_warning_partner' in wizard.warnings)
-        self.assertTrue('account_peppol_multi_send' in wizard.warnings)
+        wizard = self.create_send_and_print(move)
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        self.assertTrue('peppol' in wizard.sending_methods)
+        self.assertTrue('account_peppol_warning_partner' in wizard.alerts)
+        self.assertTrue('account_peppol_demo_test_mode' in wizard.alerts)
 
         # however, if there's already account_edi_ubl_cii_configure_partner, the warning should not appear
         self.invalid_partner.peppol_endpoint = False
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-            checkbox_send_mail=False,
-        )
-        self.assertTrue('account_edi_ubl_cii_configure_partner' in wizard.warnings)
-        self.assertFalse('account_peppol_warning_partner' in wizard.warnings)
-        self.assertFalse('account_peppol_multi_send' in wizard.warnings)
+        wizard = self.create_send_and_print(move)
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        self.assertTrue('peppol' in wizard.sending_methods)
+        self.assertTrue('account_edi_ubl_cii_configure_partner' in wizard.alerts)
+        self.assertFalse('account_peppol_warning_partner' in wizard.alerts)
 
     def test_resend_error_peppol_message(self):
         # should be able to resend error invoices
         move = self.create_move(self.valid_partner)
         move.action_post()
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-        )
+        wizard = self.create_send_and_print(move)
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        self.assertTrue('peppol' in wizard.sending_methods)
         with self._set_context({'error': True}):
             wizard.action_send_and_print()
 
@@ -253,11 +240,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
 
         # we can't send the ubl document again unless we regenerate the pdf
         move.invoice_pdf_report_id.unlink()
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-        )
+        wizard = self.create_send_and_print(move)
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        self.assertTrue('peppol' in wizard.sending_methods)
 
         wizard.action_send_and_print()
 
@@ -271,11 +256,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         move = self.create_move(self.valid_partner)
         move.action_post()
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-            checkbox_send_peppol=True,
-        )
+        wizard = self.create_send_and_print(move)
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        self.assertTrue('peppol' in wizard.sending_methods)
 
         wizard.action_send_and_print()
 
@@ -287,19 +270,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         )
         self.assertTrue(bool(move.ubl_cii_xml_id))
 
-    def test_send_peppol_and_email_default_values(self):
-        # If both "Send by Email" and "Send by Peppol" are set, we deactivate the "Send by Email" option
-        move = self.create_move(self.valid_partner)
-        move.action_post()
-
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_send_peppol=True,
-        )
-
-        self.assertTrue(wizard.checkbox_send_peppol)
-        self.assertFalse(wizard.checkbox_send_mail)
-
     def test_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via peppol
         self.env.company.account_peppol_proxy_state = 'rejected'
@@ -307,11 +277,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         move = self.create_move(self.valid_partner)
         move.action_post()
 
-        wizard = self.create_send_and_print(
-            move,
-            checkbox_ubl_cii_xml=True,
-        )
-        self.assertRecordValues(wizard, [{'enable_peppol': False}])
+        wizard = self.create_send_and_print(move)
+        self.assertTrue('peppol' not in wizard.sending_method_checkboxes)
 
     def test_receive_error_peppol(self):
         # an error peppol message should be created
@@ -365,12 +332,12 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_endpoint': '3141592654',
             }])
 
-        new_partner.ubl_cii_format = False
+        new_partner.invoice_edi_format = False
         self.assertFalse(new_partner.peppol_verification_state)
 
         # the participant exists on the network but cannot receive XRechnung
         new_partner.write({
-            'ubl_cii_format': 'xrechnung',
+            'invoice_edi_format': 'xrechnung',
             'peppol_endpoint': '0477472701',
         })
         self.assertRecordValues(

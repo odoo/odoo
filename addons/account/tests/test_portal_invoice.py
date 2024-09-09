@@ -31,8 +31,7 @@ class TestPortalInvoice(BaseUsersCommon, AccountTestInvoicingHttpCommon):
             'invoice_line_ids': [Command.create({'price_unit': 100})]
         })
         invoice_with_pdf.action_post()
-        template = self.env.ref(invoice_with_pdf._get_mail_template())
-        invoice_with_pdf._generate_pdf_and_send_invoice(template, force_synchronous=True)
+        invoice_with_pdf._generate_and_send()
         self.assertTrue(invoice_with_pdf.invoice_pdf_report_id)
 
         url = f'/my/invoices/{invoice_with_pdf.id}?report_type=pdf&download=True'

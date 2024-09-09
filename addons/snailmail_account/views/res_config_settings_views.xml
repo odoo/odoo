@@ -6,14 +6,6 @@
         <field name="priority" eval="100"/>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='send_default']" position="inside">
-                <div invisible="not module_snailmail_account">
-                    <field name="invoice_is_snailmail"/>
-                    <label for="invoice_is_snailmail"/>
-                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
-                </div>
-            </xpath>
-
             <setting id="send_invoices_followups" position="inside">
                 <div class="mt16" invisible="not module_snailmail_account">
                     <div>

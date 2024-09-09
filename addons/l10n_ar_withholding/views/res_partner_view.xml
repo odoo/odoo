@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
-            <group name="electronic_invoicing" position="after">
+            <group id="invoice_send_settings" position="after">
                 <group string="Purchase Withholding" invisible="'AR' not in fiscal_country_codes or not is_company">
                     <field name="l10n_ar_partner_tax_ids" nolabel="1" colspan="2" widget="auto_save_res_partner">
                         <list editable="top">

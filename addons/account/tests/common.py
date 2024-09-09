@@ -123,6 +123,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         # ==== Partners ====
         cls.partner_a = cls.env['res.partner'].create({
             'name': 'partner_a',
+            'invoice_sending_method': 'manual',
+            'invoice_edi_format': False,
             'property_payment_term_id': cls.pay_terms_a.id,
             'property_supplier_payment_term_id': cls.pay_terms_a.id,
             'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
@@ -131,6 +133,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
         cls.partner_b = cls.env['res.partner'].create({
             'name': 'partner_b',
+            'invoice_sending_method': 'manual',
+            'invoice_edi_format': False,
             'property_payment_term_id': cls.pay_terms_b.id,
             'property_supplier_payment_term_id': cls.pay_terms_b.id,
             'property_account_position_id': cls.fiscal_pos_a.id,

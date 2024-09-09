@@ -24,8 +24,7 @@ class TestDownloadDocs(AccountTestInvoicingHttpCommon):
         })
         cls.invoices = invoice_1 + invoice_2
         cls.invoices.action_post()
-        template = cls.env.ref(invoice_1._get_mail_template())
-        cls.invoices._generate_pdf_and_send_invoice(template, force_synchronous=True)
+        cls.invoices._generate_and_send()
         assert invoice_1.invoice_pdf_report_id and invoice_2.invoice_pdf_report_id
 
     def test_download_invoice_attachments_not_auth(self):

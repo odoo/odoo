@@ -4043,8 +4043,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ])
 
         invoice.action_post()
-        wizard = self.env['account.move.send'].create({'move_ids': [Command.set(invoice.ids)]})
-        wizard.action_send_and_print()
+        invoice._generate_and_send(allow_fallback_pdf=False)
         move_form.save()
 
         # The integrity check should work

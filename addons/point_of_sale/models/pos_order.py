@@ -985,9 +985,7 @@ class PosOrder(models.Model):
 
             # Send and Print
             if self.env.context.get('generate_pdf', True):
-                template = self.env.ref(new_move._get_mail_template())
-                new_move.with_context(skip_invoice_sync=True)._generate_pdf_and_send_invoice(template)
-
+                new_move.with_context(skip_invoice_sync=True)._generate_and_send()
 
             if order.session_id.state == 'closed':  # If the session isn't closed this isn't needed.
                 # If a client requires the invoice later, we need to revers the amount from the closing entry, by making a new entry for that.

@@ -34,7 +34,8 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         invoice = self.create_invoice_simple()
         with self.set_invoice_name(invoice, 'INV/2024/'):
             invoice.action_post()
-            send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+            send_and_print = self.create_send_and_print(invoice)
+            self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
             self.assertFalse(invoice._l10n_hu_edi_check_invoices())
             send_and_print.action_send_and_print()
             self.assertRecordValues(invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
@@ -42,7 +43,8 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         credit_note = self.create_reversal(invoice)
         with self.set_invoice_name(credit_note, 'RINV/2024/'):
             credit_note.action_post()
-            send_and_print = self.create_send_and_print(credit_note, l10n_hu_edi_enable_nav_30=True)
+            send_and_print = self.create_send_and_print(credit_note)
+            self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
             self.assertFalse(credit_note._l10n_hu_edi_check_invoices())
             send_and_print.action_send_and_print()
             self.assertRecordValues(credit_note, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': 1}])
@@ -62,7 +64,8 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         sale_order, advance_invoice = self.create_advance_invoice()
         with self.set_invoice_name(advance_invoice, 'INV/2024/'):
             advance_invoice.action_post()
-            send_and_print = self.create_send_and_print(advance_invoice, l10n_hu_edi_enable_nav_30=True)
+            send_and_print = self.create_send_and_print(advance_invoice)
+            self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
             self.assertFalse(advance_invoice._l10n_hu_edi_check_invoices())
             send_and_print.action_send_and_print()
             self.assertRecordValues(advance_invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
@@ -72,7 +75,8 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         final_invoice = self.create_final_invoice(sale_order)
         with self.set_invoice_name(final_invoice, 'INV/2024/'):
             final_invoice.action_post()
-            send_and_print = self.create_send_and_print(final_invoice, l10n_hu_edi_enable_nav_30=True)
+            send_and_print = self.create_send_and_print(final_invoice)
+            self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
             self.assertFalse(final_invoice._l10n_hu_edi_check_invoices())
             send_and_print.action_send_and_print()
             self.assertRecordValues(final_invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
@@ -81,7 +85,8 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         invoice = self.create_invoice_complex_huf()
         with self.set_invoice_name(invoice, 'INV/2024/'):
             invoice.action_post()
-            send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+            send_and_print = self.create_send_and_print(invoice)
+            self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
             self.assertFalse(invoice._l10n_hu_edi_check_invoices())
             send_and_print.action_send_and_print()
             self.assertRecordValues(invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
@@ -90,7 +95,8 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         invoice = self.create_invoice_complex_eur()
         with self.set_invoice_name(invoice, 'INV/2024/'):
             invoice.action_post()
-            send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+            send_and_print = self.create_send_and_print(invoice)
+            self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
             self.assertFalse(invoice._l10n_hu_edi_check_invoices())
             send_and_print.action_send_and_print()
             self.assertRecordValues(invoice, [{'l10n_hu_edi_state': 'confirmed', 'l10n_hu_invoice_chain_index': -1}])
@@ -99,7 +105,8 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         invoice = self.create_invoice_simple()
         invoice.action_post()
 
-        send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+        send_and_print = self.create_send_and_print(invoice)
+        self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
         self.assertFalse(invoice._l10n_hu_edi_check_invoices())
         with self.patch_call_nav_endpoint('manageInvoice', make_request=False), contextlib.suppress(UserError):
             send_and_print.action_send_and_print()
@@ -116,7 +123,8 @@ class L10nHuEdiTestFlowsLive(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
         invoice = self.create_invoice_simple()
         with self.set_invoice_name(invoice, 'INV/2024/'):
             invoice.action_post()
-            send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+            send_and_print = self.create_send_and_print(invoice)
+            self.assertTrue(send_and_print.extra_edi_checkboxes and send_and_print.extra_edi_checkboxes.get('hu_nav_30', {}).get('checked'))
             self.assertFalse(invoice._l10n_hu_edi_check_invoices())
             with self.patch_call_nav_endpoint('manageInvoice'), contextlib.suppress(UserError):
                 send_and_print.action_send_and_print()

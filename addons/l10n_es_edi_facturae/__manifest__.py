@@ -31,7 +31,6 @@ for more informations, see https://www.facturae.gob.es/face/Paginas/FACE.aspx
         'views/uom_uom_views.xml',
         'views/account_menuitem.xml',
 
-        'wizard/account_move_send_views.xml',
         'wizard/account_move_reversal_view.xml',
     ],
     'demo': [

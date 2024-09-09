@@ -61,6 +61,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'city': "Namur",
             'street': "Rue de Bruxelles, 15000",
             'zip': "5000",
+            'invoice_edi_format': 'es_facturae',
         })
 
         cls.partner_b.write({
@@ -146,14 +147,10 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         })
 
     def create_send_and_print(self, invoices, **kwargs):
-        template = self.env.ref(invoices._get_mail_template())
-        return self.env['account.move.send'].with_context(
-            active_model='account.move',
-            active_ids=invoices.ids,
-        ).create({
-            'mail_template_id': template.id,
-            **kwargs,
-        })
+        wizard_model = 'account.move.send.wizard' if len(invoices) == 1 else 'account.move.send.batch.wizard'
+        return self.env[wizard_model]\
+            .with_context(active_model='account.move', active_ids=invoices.ids)\
+            .create(kwargs)
 
     def test_generate_signed_xml(self, date=None):
         random.seed(42)

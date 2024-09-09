@@ -1,7 +1,7 @@
 from odoo import api, models
 
 
-class AccountMoveSend(models.TransientModel):
+class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
     @api.model
@@ -11,9 +11,8 @@ class AccountMoveSend(models.TransientModel):
             return attachment_sudo
         return self.env['ir.attachment']
 
-    @api.model
     def _get_invoice_extra_attachments(self, move):
-        """ Returns extra edi attachments. """
+        # EXTENDS 'account'
         result = super()._get_invoice_extra_attachments(move)
         for doc in move.edi_document_ids:
             result += self._get_mail_attachment_from_doc(doc)

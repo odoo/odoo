@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_send_wizard_form" model="ir.ui.view">
+        <field name="name">account.move.send.wizard.form</field>
+        <field name="model">account.move.send.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="move_id" invisible="1"/>
+
+                <!-- Warnings -->
+                <div class="m-0" id="alerts" invisible="not alerts">
+                    <field name="alerts" class="o_field_html" widget="actionable_errors"/>
+                </div>
+
+                <!-- EDIs and Sending method -->
+                <div class="m-0" id="extra_edis">
+                    <field name="extra_edi_checkboxes" widget="account_json_checkboxes" invisible="not extra_edi_checkboxes"/>
+                    <field name="sending_method_checkboxes" widget="account_json_checkboxes"/>
+                </div>
+
+
+                <!-- PDF template -->
+                <field name="pdf_report_id" invisible="1"/>
+                <group id="pdf_report" invisible="not display_pdf_report_id">
+                    <field name="pdf_report_id"
+                           class="w-50"
+                           options="{'no_create': True, 'no_edit': True}"/>
+                </group>
+
+                <!-- Mail composer -->
+                <div invisible="'email' not in sending_methods">
+                    <group>
+                        <label for="mail_partner_ids" string="Recipients"/>
+                        <div>
+                            <span>Followers of the document and</span>
+                            <field name="mail_partner_ids"
+                                   widget="many2many_tags"
+                                   placeholder="Add contacts to notify..."
+                                   options="{'no_quick_create': True}"
+                                   context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                        </div>
+                        <field name="mail_subject"
+                               placeholder="Subject..."
+                               required="'email' in sending_methods"/>
+                    </group>
+                    <field name="mail_body"
+                           class="oe-bordered-editor"
+                           widget="html_mail"/>
+                    <group>
+                        <group>
+                            <field name="mail_attachments_widget"
+                                   widget="mail_attachments"
+                                   string="Attach a file"
+                                   nolabel="1"
+                                   colspan="2"/>
+                        </group>
+                        <group>
+                            <field name="mail_template_id"
+                                   options="{'no_create': True, 'no_edit': True}"
+                                   context="{'default_model': 'account.move'}"/>
+                        </group>
+                    </group>
+                </div>
+
+                <footer>
+                    <button string="Print &amp; Send"
+                            data-hotkey="q"
+                            name="action_send_and_print"
+                            type="object"
+                            invisible="is_download_only"
+                            class="print btn-primary o_mail_send">
+                    </button>
+                    <button string="Print"
+                            data-hotkey="w"
+                            name="action_send_and_print"
+                            type="object"
+                            invisible="not is_download_only"
+                            class="print btn-primary o_mail_send">
+                    </button>
+                    <button string="Cancel"
+                            data-hotkey="x"
+                            special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+
+            </form>
+        </field>
+    </record>
+
+</odoo>

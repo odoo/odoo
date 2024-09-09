@@ -21,7 +21,6 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'vat': 'DK12345674',
             'phone': '+45 32 12 34 56',
             'street': 'Paradisæblevej, 10',
-            'invoice_is_ubl_cii': True,
         })
         cls.env['res.partner.bank'].create({
             'acc_type': 'iban',
@@ -37,7 +36,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'phone': '+45 32 12 35 56',
             'street': 'Paradisæblevej, 11',
             'country_id': cls.env.ref('base.dk').id,
-            'ubl_cii_format': 'oioubl_201',
+            'invoice_edi_format': 'oioubl_201',
         })
         cls.partner_b.write({
             'name': 'SUPER BELGIAN PARTNER',
@@ -47,7 +46,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
             'phone': '061928374',
             'vat': 'BE0897223670',
-            'ubl_cii_format': 'oioubl_201',
+            'invoice_edi_format': 'oioubl_201',
         })
         cls.partner_c = cls.env["res.partner"].create({
             'name': 'SUPER FRENCH PARTNER',
@@ -58,7 +57,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
             'company_registry': '123 568 941 00056',
-            'ubl_cii_format': 'oioubl_201',
+            'invoice_edi_format': 'oioubl_201',
         })
         cls.dk_local_sale_tax_1 = cls.env["account.chart.template"].ref('tax_s1y')
         cls.dk_local_sale_tax_2 = cls.env["account.chart.template"].ref('tax_s1')
@@ -102,10 +101,10 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send'] \
+        wizard = self.env['account.move.send.wizard'] \
             .with_context(active_model=invoice._name, active_ids=invoice.ids) \
-            .create({}) \
-            .action_send_and_print()
+            .create({})
+        wizard.action_send_and_print()
         return invoice
 
     #########
@@ -172,7 +171,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
     @freeze_time('2017-01-01')
     def test_export_partner_fr_without_siret_should_raise_an_error(self):
         self.partner_c.company_registry = False
-        self.partner_c.ubl_cii_format = 'oioubl_201' # default format for French partners is facturx
+        self.partner_c.invoice_edi_format = 'oioubl_201'  # default format for French partners is facturx
         with self.assertRaisesRegex(UserError, "The company registry is required for french partner:"):
             self.create_post_and_send_invoice(partner=self.partner_c)
 
@@ -183,7 +182,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             telling to the user that this field is missing.
         """
         self.partner_b.vat = None
-        self.partner_b.ubl_cii_format = 'oioubl_201' # default format recomputes when vat is changed
+        self.partner_b.invoice_edi_format = 'oioubl_201'  # default format recomputes when vat is changed
         with self.assertRaises(UserError) as exception:
             self.create_post_and_send_invoice(partner=self.partner_b)
         self.assertIn(f"The field '{self.partner_b._fields['vat'].string}' is required", exception.exception.args[0])

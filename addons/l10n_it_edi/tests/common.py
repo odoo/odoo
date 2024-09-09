@@ -52,6 +52,7 @@ class TestItEdi(AccountTestInvoicingCommon):
             'city': 'Milan',
             'company_id': False,
             'is_company': True,
+            'invoice_edi_format': 'it_edi_xml',
         })
 
         cls.italian_partner_b = cls.env['res.partner'].create({
@@ -63,7 +64,8 @@ class TestItEdi(AccountTestInvoicingCommon):
             'street': 'Via Test PA',
             'zip': '32121',
             'city': 'PA Town',
-            'is_company': True
+            'is_company': True,
+            'invoice_edi_format': 'it_edi_xml',
         })
 
         cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
