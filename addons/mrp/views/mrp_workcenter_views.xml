@@ -149,9 +149,7 @@
             <field name="name">mrp.workcenter.kanban</field>
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_dashboard o_workcenter_kanban" create="0" can_open="0" sample="1">
-                    <field name="name"/>
-                    <field name="color"/>
+                <kanban highlight_color="color" class="o_workcenter_kanban" create="0" can_open="0" sample="1">
                     <field name="workorder_count"/>
                     <field name="working_state"/>
                     <field name="oee_target"/>
@@ -159,7 +157,7 @@
                         <t t-name="kanban-menu">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div class="col-6">
                                         <h5 role="menuitem" class="o_kanban_card_manage_title">
                                             <span>Actions</span>
                                         </h5>
@@ -167,7 +165,7 @@
                                             <a name="action_work_order" type="object">Plan Orders</a>
                                         </div>
                                     </div>
-                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div class="col-6">
                                         <h5 role="menuitem" class="o_kanban_card_manage_title">
                                             <span>Reporting</span>
                                         </h5>
@@ -187,103 +185,71 @@
 
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
                                     <div role="menuitem" aria-haspopup="true" class="col-8">
-                                        <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
+                                        <field name="color" widget="kanban_color_picker"/>
                                     </div>
                                     <div role="menuitem" class="col-4">
-                                        <a type="edit">Settings</a>
+                                        <a type="open">Settings</a>
                                     </div>
                                 </div>
                             </div>
                         </t>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
-                                <div t-attf-class="o_kanban_card_header o_kanban_record_top">
-                                    <div class="o_kanban_record_headings o_kanban_card_header_title">
-                                        <span class="o_primary ml8" style="display: inline-block">
-                                            <field name="name"/>
-                                        </span>
+                        <t t-name="kanban-card">
+                            <field name="name" class="fw-bold fs-4 ms-2"/>
+                            <div class="row mt-3 pb-3">
+                                <div class="col-6">
+                                    <div class="btn-group p-1" name="o_wo">
+                                        <button t-if="record.workorder_count.raw_value &gt; 0" class="btn btn-primary" name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1, 'desktop_list_view': 1, 'search_default_workcenter_id': id}">
+                                            <span>WORK ORDERS</span>
+                                        </button>
+                                        <button t-if="record.workorder_count.raw_value &lt;= 0" class="btn btn-warning" name="%(act_product_mrp_production_workcenter)d" type="action">
+                                            <span>PLAN ORDERS</span>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="container o_kanban_card_content">
-                                    <div class="row mb16">
-                                        <div class="col-6 o_kanban_primary_left">
-                                            <div class="btn-group" name="o_wo">
-                                            <t t-if="record.workorder_count.raw_value &gt; 0">
-                                                <button class="btn btn-primary" name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1, 'desktop_list_view': 1, 'search_default_workcenter_id': id}">
-                                                    <span>WORK ORDERS</span>
-                                                </button>
-                                            </t>
-                                            <t  t-if="record.workorder_count.raw_value &lt;= 0">
-                                                <button class="btn btn-warning" name="%(act_product_mrp_production_workcenter)d" type="action">
-                                                    <span>PLAN ORDERS</span>
-                                                </button>
-                                            </t>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 o_kanban_primary_right">
-                                            <div class="row" t-if="record.workorder_ready_count.raw_value &gt; 0">
-                                                <div class="col-8">
-                                                    <a name="action_work_order" type="object" context="{'search_default_ready': 1}">
-                                                        To Launch
-                                                    </a>
-                                                </div>
-                                                <div class="col-4 text-end">
-                                                    <field name="workorder_ready_count"/>
-                                                </div>
-                                            </div>
-                                            <div class="row" t-if="record.workorder_progress_count.raw_value &gt; 0">
-                                                <div class="col-8">
-                                                    <a name="action_work_order" type="object" context="{'search_default_progress': 1}">
-                                                        In Progress
-                                                    </a>
-                                                </div>
-                                                <div class="col-4 text-end">
-                                                    <field name="workorder_progress_count"/>
-                                                </div>
-                                            </div>
-                                            <div class="row" t-if="record.workorder_late_count.raw_value &gt; 0">
-                                                <div class="col-8">
-                                                    <a name="action_work_order" type="object" context="{'search_default_late': 1}">
-                                                        Late
-                                                    </a>
-                                                </div>
-                                                <div class="col-4 text-end">
-                                                    <field name="workorder_late_count"/>
-                                                </div>
-                                            </div>
-                                            <div class="row" t-if="record.oee.raw_value &gt; 0">
-                                                <div class="col-6">
-                                                    <a name="%(mrp_workcenter_productivity_report_oee)d" type="action">
-                                                        OEE
-                                                    </a>
-                                                </div>
-                                                <div class="col-6 text-end">
-                                                    <span t-att-class="record.oee_target.raw_value and (record.oee.raw_value &lt; record.oee_target.raw_value) and 'text-danger' or (record.oee.raw_value &gt; record.oee_target.raw_value) and 'text-success' or 'text-warning'">
-                                                        <strong>
-                                                            <field name="oee" widget="integer"/>%
-                                                        </strong>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="col-6">
+                                    <div class="row" t-if="record.workorder_ready_count.raw_value &gt; 0">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_ready': 1}">
+                                            To Launch
+                                        </a>
+                                        <field name="workorder_ready_count" class="col-4 text-end"/>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-12 o_kanban_primary_left" style="position:absolute; bottom:10px;" name="wc_stages">
-                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
-                                                title="No workorder currently in progress. Click to mark work center as blocked."
-                                                aria-label="No workorder currently in progress. Click to mark work center as blocked."
-                                                invisible="working_state in ('blocked', 'done')"/>
-                                            <a name="unblock" type="object" class=" o_status o_status_red float-end"
-                                                title="Workcenter blocked, click to unblock."
-                                                aria-label="Workcenter blocked, click to unblock."
-                                                invisible="working_state in ('normal', 'done')"/>
-                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
-                                                title="Work orders in progress. Click to block work center."
-                                                aria-label="Work orders in progress. Click to block work center."
-                                                invisible="working_state in ('normal', 'blocked')"/>
+                                    <div class="row" t-if="record.workorder_progress_count.raw_value &gt; 0">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_progress': 1}">
+                                            In Progress
+                                        </a>
+                                        <field name="workorder_progress_count" class="col-4 text-end"/>
+                                    </div>
+                                    <div class="row" t-if="record.workorder_late_count.raw_value &gt; 0">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_late': 1}">
+                                            Late
+                                        </a>
+                                        <field name="workorder_late_count" class="col-4 text-end"/>
+                                    </div>
+                                    <div class="row" t-if="record.oee.raw_value &gt; 0">
+                                        <a name="%(mrp_workcenter_productivity_report_oee)d" class="col-6" type="action">
+                                            OEE
+                                        </a>
+                                        <div class="col-6">
+                                            <span t-att-class="record.oee_target.raw_value and (record.oee.raw_value &lt; record.oee_target.raw_value) and 'text-danger d-flex float-end fw-bolder' or (record.oee.raw_value &gt; record.oee_target.raw_value) and 'text-success d-flex float-end fw-bolder' or 'text-warning d-flex float-end fw-bolder'">
+                                                <field name="oee" widget="integer"/>%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="ms-auto" name="wc_stages">
+                                <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
+                                    title="No workorder currently in progress. Click to mark work center as blocked."
+                                    aria-label="No workorder currently in progress. Click to mark work center as blocked."
+                                    invisible="working_state in ('blocked', 'done')"/>
+                                <a name="unblock" type="object" class=" o_status o_status_red float-end"
+                                    title="Workcenter blocked, click to unblock."
+                                    aria-label="Workcenter blocked, click to unblock."
+                                    invisible="working_state in ('normal', 'done')"/>
+                                <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
+                                    title="Work orders in progress. Click to block work center."
+                                    aria-label="Work orders in progress. Click to block work center."
+                                    invisible="working_state in ('normal', 'blocked')"/>
                             </div>
                         </t>
                     </templates>
