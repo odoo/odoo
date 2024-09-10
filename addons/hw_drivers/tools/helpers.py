@@ -499,21 +499,16 @@ def unlink_file(filename):
 
 
 def write_file(filename, text, mode='w'):
-    """
-    This function writes 'text' to 'filename' file for classic files.
-    :param filename: The name of the file to write to.
-    :param text: The text to write to the file, OR the ConfigParser object to write to the file.
-    :param mode: The mode to open the file in (Default: 'w').
+    """This function writes 'text' to 'filename' file
+
+    :param filename: The name of the file to write to
+    :param text: The text to write to the file
+    :param mode: The mode to open the file in (Default: 'w')
     """
     with writable():
         path = path_file(filename)
         with open(path, mode) as f:
-            if path.suffix == '.conf' and isinstance(text, configparser.ConfigParser):
-                # As we are dealing with conf files, :filename: is a Path object, as it was created by path_file for
-                # configparser. More, :text: is assumed to be a ConfigParser object.
-                text.write(f)
-            else:
-                f.write(text)
+            f.write(text)
 
 
 def download_from_url(download_url, path_to_filename):
@@ -557,14 +552,13 @@ def get_hostname():
 
 
 def update_conf(values, section='iot.box'):
-    """
-    Update odoo.conf with the given key and value.
-    :param values: The dictionary of key-value pairs to update the config with.
-    :param section: The section to update the key-value pairs in (Default: iot.box).
+    """Update odoo.conf with the given key and value.
+
+    :param dict values: key-value pairs to update the config with.
+    :param str section: The section to update the key-value pairs in (Default: iot.box).
     """
     _logger.debug("Updating odoo.conf with values: %s", values)
     conf = get_conf()
-    get_conf.cache_clear()  # Clear the cache to get the updated config
 
     if not conf.has_section(section):
         _logger.debug("Creating new section '%s' in odoo.conf", section)
@@ -573,18 +567,19 @@ def update_conf(values, section='iot.box'):
     for key, value in values.items():
         conf.set(section, key, value) if value else conf.remove_option(section, key)
 
-    write_file("odoo.conf", conf)
+    with writable():
+        with open(path_file("odoo.conf"), "w", encoding='utf-8') as f:
+            conf.write(f)
 
 
-@cache
 def get_conf(key=None, section='iot.box'):
-    """
-    Get the value of the given key from odoo.conf, or the full config if no key is provided.
+    """Get the value of the given key from odoo.conf, or the full config if no key is provided.
+
     :param key: The key to get the value of.
     :param section: The section to get the key from (Default: iot.box).
     :return: The value of the key provided or None if it doesn't exist, or full conf object if no key is provided.
     """
-    conf = configparser.ConfigParser()
+    conf = configparser.RawConfigParser()
     conf.read(path_file("odoo.conf"))
 
     return conf.get(section, key, fallback=None) if key else conf  # Return the key's value or the configparser object
@@ -602,32 +597,33 @@ def disconnect_from_server():
 
 
 def save_browser_state(url=None, orientation=None):
-    """
-    Save the browser state to the file
+    """Save the browser state to the file
+
     :param url: The URL the browser is on (if None, the URL is not saved)
     :param orientation: The orientation of the screen (if None, the orientation is not saved)
     """
     update_conf({
-        'browser-url': url,
-        'screen-orientation': orientation.value if orientation else None,
+        'browser_url': url,
+        'screen_orientation': orientation.value if orientation else None,
     })
 
 
 def load_browser_state():
-    """
-    Load the browser state from the file
+    """Load the browser state from the file
+
     :return: The URL the browser is on and the orientation of the screen (default to NORMAL)
     """
-    url = get_conf('browser-url')
-    orientation = get_conf('screen-orientation') or Orientation.NORMAL
+    url = get_conf('browser_url')
+    orientation = get_conf('screen_orientation') or Orientation.NORMAL
     return url, Orientation(orientation)
 
 
 def url_is_valid(url):
-    """
-    Checks whether the provided url is a valid one or not
+    """Checks whether the provided url is a valid one or not
+
     :param url: the URL to check
-    :return: boolean indicating if the URL is valid.
+    :return: True if the URL is valid and False otherwise
+    :rtype: bool
     """
     try:
         result = urllib3.util.parse_url(url.strip())
@@ -637,12 +633,12 @@ def url_is_valid(url):
 
 
 def parse_url(url):
-    """
-    Parses URL params and returns them as a dictionary starting by the url.
-
+    """Parses URL params and returns them as a dictionary starting by the url.
     Does not allow multiple params with the same name (e.g. <url>?a=1&a=2 will return the same as <url>?a=1)
+
     :param url: the URL to parse
     :return: the dictionary containing the URL and params
+    :rtype: dict
     """
     if not url_is_valid(url):
         raise ValueError("Invalid URL provided.")
