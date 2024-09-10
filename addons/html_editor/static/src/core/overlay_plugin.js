@@ -2,6 +2,7 @@ import { markRaw, EventBus } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { EditorOverlay } from "./overlay";
 import { throttleForAnimation } from "@web/core/utils/timing";
+import { findUpTo } from "@html_editor/utils/dom_traversal";
 
 /**
  * Provide the following feature:
@@ -11,24 +12,28 @@ export class OverlayPlugin extends Plugin {
     static name = "overlay";
     static shared = ["createOverlay"];
 
+    handleCommand(command) {
+        switch (command) {
+            case "STEP_ADDED":
+                this.container = this.getScrollContainer();
+                break;
+        }
+    }
+
     overlays = [];
 
     setup() {
-        this.container = this.document.documentElement;
-        const onScroll = (ev) => {
-            // Update container to the scrolled element if it is an ancestor of
-            // the editable
-            const scrolledElement =
-                ev.target.nodeType === Node.DOCUMENT_NODE ? ev.target.documentElement : ev.target;
-            if (scrolledElement.contains(this.editable)) {
-                this.container = scrolledElement;
-            }
-        };
-        this.throttledOnScroll = throttleForAnimation(onScroll);
-        this.addDomListener(this.document, "scroll", this.throttledOnScroll, true);
+        this.iframe = this.document.defaultView.frameElement;
+        this.topDocument = this.iframe?.ownerDocument || this.document;
+        this.container = this.getScrollContainer();
+        this.throttledUpdateContainer = throttleForAnimation(() => {
+            this.container = this.getScrollContainer();
+        });
+        this.addDomListener(this.topDocument.defaultView, "resize", this.throttledUpdateContainer);
     }
+
     destroy() {
-        this.throttledOnScroll.cancel();
+        this.throttledUpdateContainer.cancel();
         super.destroy();
         for (const overlay of this.overlays) {
             overlay.close();
@@ -39,6 +44,17 @@ export class OverlayPlugin extends Plugin {
         const overlay = new Overlay(this, Component, () => this.container, config);
         this.overlays.push(overlay);
         return overlay;
+    }
+
+    getScrollContainer() {
+        const isScrollable = (element) =>
+            element.scrollHeight > element.clientHeight &&
+            ["auto", "scroll"].includes(getComputedStyle(element).overflowY);
+
+        return (
+            findUpTo(this.iframe || this.editable, null, isScrollable) ||
+            this.topDocument.documentElement
+        );
     }
 }
 
