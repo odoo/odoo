@@ -27,7 +27,7 @@ import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
+import { queryAllAttributes, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -1288,6 +1288,14 @@ describe(`new urls`, () => {
             "Second record",
             "Partners Action 28",
             "First record",
+        ]);
+        expect(`.o-overlay-container .dropdown-menu a`).toHaveAttribute(
+            "data-tooltip",
+            'Back to "Partners Action 27"'
+        );
+        expect(queryAllAttributes(".o_breadcrumb li.breadcrumb-item a", "data-tooltip")).toEqual([
+            'Back to "Second record" form',
+            'Back to "Partners Action 28"',
         ]);
     });
 
