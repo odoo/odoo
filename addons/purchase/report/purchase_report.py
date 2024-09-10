@@ -31,7 +31,7 @@ class PurchaseReport(models.Model):
     product_uom = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
-    user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
+    user_id = fields.Many2one('res.users', 'Buyer', readonly=True)
     delay = fields.Float('Days to Confirm', digits=(16, 2), readonly=True, aggregator='avg', help="Amount of time between purchase approval and order by date.")
     delay_pass = fields.Float('Days to Receive', digits=(16, 2), readonly=True, aggregator='avg',
                               help="Amount of time between date planned and order by date for each purchase order line.")
@@ -88,7 +88,7 @@ class PurchaseReport(models.Model):
                     sum(l.product_qty / line_uom.factor * product_uom.factor) as qty_ordered,
                     sum(l.qty_received / line_uom.factor * product_uom.factor) as qty_received,
                     sum(l.qty_invoiced / line_uom.factor * product_uom.factor) as qty_billed,
-                    case when t.purchase_method = 'purchase' 
+                    case when t.purchase_method = 'purchase'
                          then sum(l.product_qty / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                          else sum(l.qty_received / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                     end as qty_to_be_billed
