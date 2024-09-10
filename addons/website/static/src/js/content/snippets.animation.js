@@ -22,7 +22,7 @@ import {
 } from "@website/js/text_processing";
 import { touching } from "@web/core/utils/ui";
 import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
-import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
+import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -989,8 +989,8 @@ registry.anchorSlide = publicWidget.Widget.extend({
      */
     async _scrollTo($el, scrollValue = 'true') {
         return scrollTo($el[0], {
-            behavior: scrollValue === 'true' ? "smooth" : "instant",
-            offset: this._computeExtraOffset(),
+            duration: scrollValue === "true" ? 500 : 0,
+            extraOffset: this._computeExtraOffset(),
         });
     },
     /**
@@ -1065,8 +1065,8 @@ registry.anchorSlide = publicWidget.Widget.extend({
             // or to the bottom of the document even if the header or the
             // footer is removed from the DOM.
             scrollTo(hash, {
-                behavior: "smooth",
-                offset: this._computeExtraOffset(),
+                duration: 500,
+                extraOffset: this._computeExtraOffset(),
             });
         } else {
             this._scrollTo($anchor, scrollValue);
@@ -1130,13 +1130,13 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
         const firstContentEl = $('#wrapwrap > main > :first-child')[0]; // first child to consider the padding-top of main
         // When a modal is open, we remove the "modal-open" class from the body.
         // This is because this class sets "#wrapwrap" and "<body>" to
-        // "overflow: hidden," preventing the "closestScrollableY" (?) function from
+        // "overflow: hidden," preventing the "closestScrollable" function from
         // correctly recognizing the scrollable element closest to the element
         // for which the height needs to be calculated. Without this, the
         // "mainTopPos" variable would be incorrect.
         const modalOpen = document.body.classList.contains("modal-open");
         document.body.classList.remove("modal-open");
-        const mainTopPos = firstContentEl.getBoundingClientRect().top + closestScrollableY(firstContentEl.parentNode).scrollTop;
+        const mainTopPos = firstContentEl.getBoundingClientRect().top + closestScrollable(firstContentEl.parentNode).scrollTop;
         document.body.classList.toggle("modal-open", modalOpen);
         return (windowHeight - mainTopPos);
     },

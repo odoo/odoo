@@ -5,7 +5,7 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo } from "@web_editor/js/common/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
@@ -5929,7 +5929,6 @@ registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
                 scrollTo(this.$target[0], {
                     extraOffset: 50,
                     forcedOffset: bottomHidden ? heightDiff - 50 : undefined,
-                    easing: 'linear',
                     duration: 500,
                 });
             }
@@ -8894,7 +8893,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
                 ? Math.min(viewportBottom, rect.bottom) - rect.top // Starts inside
                 : 0; // Starts after
         if (visibleHeight < 200) {
-            await scrollTo(this.$target[0], { behavior: "smooth", offset: 50 });
+            await scrollTo(this.$target[0], { extraOffset: 50 });
         }
         this._toggleBgOverlay(true);
     },

@@ -19,7 +19,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { addLoadingEffect } from "@web/core/utils/ui";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo } from "@web_editor/js/common/scrolling";
 const DEBOUNCE = 400;
 const { DateTime } = luxon;
 import wUtils from '@website/js/utils';
@@ -427,8 +427,8 @@ import wUtils from '@website/js/utils';
                                         window.location.href = successPage;
                                     } else {
                                         await scrollTo(successAnchorEl, {
-                                            behavior: "smooth",
-                                            offset: 0,
+                                            duration: 500,
+                                            extraOffset: 0,
                                         });
                                     }
                                 }

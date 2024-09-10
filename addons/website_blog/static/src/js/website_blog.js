@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { scrollTo } from "@web/core/utils/scrolling";
+import { scrollTo } from "@web_editor/js/common/scrolling";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { share } from "./contentshare";
 
@@ -98,7 +98,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      * @param {Integer} duration - scroll animation duration
      * @param {Function} callback - to be executed after the scroll is performed
      */
-    _forumScrollAction: function (el, callback) {
-        scrollTo(el, { behavior: "smooth" }).then(() => callback());
+    _forumScrollAction: function (el, duration, callback) {
+        scrollTo(el, { duration: duration }).then(() => callback());
     },
 });

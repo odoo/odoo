@@ -11,7 +11,7 @@ import { rpc } from "@web/core/network/rpc";
 import { escape } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
+import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
@@ -173,10 +173,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
             const replyEl = document.querySelector('#post_reply');
-            const scrollingElement = closestScrollableY(replyEl.parentNode);
+            const scrollingElement = closestScrollable(replyEl.parentNode);
             scrollTo(replyEl, {
-                behavior: "smooth",
-                offset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
+                forcedOffset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
             });
         });
         document.querySelectorAll('.o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity')

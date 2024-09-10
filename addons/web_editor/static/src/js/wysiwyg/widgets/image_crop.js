@@ -12,7 +12,8 @@ import {
     markup,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
+import { closestScrollableY } from "@web/core/utils/scrolling";
+import { scrollTo } from "@web_editor/js/common/scrolling";
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
@@ -275,7 +276,7 @@ export class ImageCrop extends Component {
         // to allow editing.
         if (rect.top < viewportTop || viewportBottom - rect.bottom < 100) {
             await scrollTo(this.media, {
-                behavior: "smooth",
+                duration: 500,
                 ...(scrollable && { scrollable }),
             });
         }
