@@ -75,15 +75,8 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
             trigger: "div:contains(Choose a delivery method)",
             run: () => null,
         },
-        {
-            content: `Check if we have been redirected to /shop/payment`,
-            trigger: `button[name=o_payment_submit_button]`,
-            run: () => {
-                if (!window.location.pathname.startsWith("/shop/payment")) {
-                    console.error(`We should be on /shop/payment.`);
-                }
-            },
-        },
+        wTourUtils.assertPathName('/shop/payment', 'button[name=o_payment_submit_button]'),
+
         wsTourUtils.goToCart({quantity: 4, backend: false}),
         wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens'}),
         wsTourUtils.assertCartContains({productName: 'Conference Chair (Steel)'}),
