@@ -296,7 +296,7 @@ class EventRegistration(models.Model):
             not rewrite partner values from registration values.
 
         Tracked values are therefore the union of those two field sets. """
-        tracked_fields = list(set(self._get_lead_contact_fields()) or set(self._get_lead_description_fields()))
+        tracked_fields = list(set(self._get_lead_contact_fields()) | set(self._get_lead_description_fields()))
         return dict(
             (registration.id,
              dict((field, self._convert_value(registration[field], field)) for field in tracked_fields)
