@@ -189,8 +189,8 @@ class IoTboxHomepage(Home):
     @http.route('/save_credential', type='http', auth='none', cors='*', csrf=False)
     def save_credential(self, db_uuid, enterprise_code):
         helpers.update_conf({
-            'db-uuid': db_uuid,
-            'enterprise-code': enterprise_code,
+            'db_uuid': db_uuid,
+            'enterprise_code': enterprise_code,
         })
         helpers.odoo_restart(0)
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
@@ -198,8 +198,8 @@ class IoTboxHomepage(Home):
     @http.route('/clear_credential', type='http', auth='none', cors='*', csrf=False)
     def clear_credential(self):
         helpers.update_conf({
-            'db-uuid': '',
-            'enterprise-code': '',
+            'db_uuid': '',
+            'enterprise_code': '',
         })
         helpers.odoo_restart(0)
         return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069'>"
