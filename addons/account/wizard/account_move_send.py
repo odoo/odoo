@@ -414,12 +414,13 @@ class AccountMoveSend(models.TransientModel):
             ids = [inv.id for inv in group_invoices_data]
 
             pdf_report = self.env['ir.actions.report'].browse(pdf_report_id)
-            content, _report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
+            content, report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
+            content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
 
             for invoice, invoice_data in group_invoices_data.items():
                 invoice_data['pdf_attachment_values'] = {
                     'name': invoice._get_invoice_report_filename(),
-                    'raw': content[invoice.id],
+                    'raw': content_by_id[invoice.id],
                     'mimetype': 'application/pdf',
                     'res_model': invoice._name,
                     'res_id': invoice.id,
@@ -433,10 +434,11 @@ class AccountMoveSend(models.TransientModel):
         :param invoice_data:    The collected data for the invoice so far.
         """
         pdf_report = self.env['ir.actions.report'].browse(invoice_data['pdf_report_id'])
-        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._pre_render_qweb_pdf(pdf_report.report_name, invoice.ids, data={'proforma': True})
+        content, report_type = self.env['ir.actions.report'].with_company(invoice.company_id)._pre_render_qweb_pdf(pdf_report.report_name, invoice.ids, data={'proforma': True})
+        content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
 
         invoice_data['proforma_pdf_attachment_values'] = {
-            'raw': content[invoice.id],
+            'raw': content_by_id[invoice.id],
             'name': invoice._get_invoice_proforma_pdf_report_filename(),
             'mimetype': 'application/pdf',
             'res_model': invoice._name,

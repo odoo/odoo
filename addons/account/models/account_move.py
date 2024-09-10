@@ -4993,9 +4993,10 @@ class AccountMove(models.Model):
         if self.invoice_pdf_report_id:
             attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
         else:
-            content, _ = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', self.ids, data={'proforma': True})
+            content, report_type = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', self.ids, data={'proforma': True})
+            content_by_id = self.env['ir.actions.report']._get_splitted_report('account.account_invoices', content, report_type)
             attachments = self.env['ir.attachment'].new({
-                'raw': content[self.id],
+                'raw': content_by_id[self.id],
                 'name': self._get_invoice_proforma_pdf_report_filename(),
                 'mimetype': 'application/pdf',
                 'res_model': self._name,
