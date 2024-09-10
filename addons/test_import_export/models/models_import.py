@@ -114,6 +114,7 @@ class Complex(models.Model):
 
 class PropertyDefinition(models.Model):
     _name = _description = 'import.properties.definition'
+    _rec_name = 'id'
 
     properties_definition = fields.PropertiesDefinition()
     record_properties_ids = fields.One2many('import.properties', 'record_definition_id')
