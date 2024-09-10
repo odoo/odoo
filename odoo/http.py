@@ -433,22 +433,6 @@ def serialize_exception(exception):
 # File Streaming
 # =========================================================
 
-def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None, mtime=None,
-              add_etags=True, cache_timeout=STATIC_CACHE, conditional=True):
-    warnings.warn('odoo.http.send_file is deprecated, please use odoo.http.Stream instead.', DeprecationWarning, stacklevel=2)
-    return _send_file(
-        filepath_or_fp,
-        request.httprequest.environ,
-        mimetype=mimetype,
-        as_attachment=as_attachment,
-        download_name=filename,
-        last_modified=mtime,
-        etag=add_etags,
-        max_age=cache_timeout,
-        response_class=Response,
-        conditional=conditional
-    )
-
 
 class Stream:
     """
@@ -995,9 +979,6 @@ class Session(collections.abc.MutableMapping):
     # MutableMapping implementation with DocDict-like extension
     #
     def __getitem__(self, item):
-        if item == 'geoip':
-            warnings.warn('request.session.geoip have been moved to request.geoip', DeprecationWarning)
-            return request.geoip if request else {}
         return self.__data[item]
 
     def __setitem__(self, item, value):
