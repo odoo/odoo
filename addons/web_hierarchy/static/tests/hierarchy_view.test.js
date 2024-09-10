@@ -1427,3 +1427,54 @@ test("Keep the same hierarchy state when we go back to the view with the breadcr
         "Louis\nJosephine",
     ]);
 });
+
+test("Keep the state of the branch when we open another branch in the same level", async () => {
+    Employee._records.push(
+        { id: 5, name: "Jean", parent_id: 2, child_ids: [6] },
+        { id: 6, name: "Claude", parent_id: 5, child_ids: [] }
+    );
+    // check we keep in cache the previous branch to avoid fetching again the same data
+    await mountView({
+        resModel: "hr.employee",
+        type: "hierarchy",
+    });
+    expect(".o_hierarchy_view").toHaveCount(1);
+    expect(".o_hierarchy_row").toHaveCount(2);
+    expect(queryAllTexts(".o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+    ]);
+    await contains(".o_hierarchy_node_button.btn-primary:eq(0)").click();
+    expect(queryAllTexts(".o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+        "Jean\nGeorges",
+    ]);
+    await contains(".o_hierarchy_node_button.btn-primary:eq(1)").click();
+    expect(queryAllTexts(".o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+        "Jean\nGeorges",
+        "Claude\nJean",
+    ]);
+    expect(".o_hierarchy_node_button.btn-primary").toHaveCount(1);
+    await contains(".o_hierarchy_node_button.btn-primary").click();
+    expect(queryAllTexts(".o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+        "Louis\nJosephine",
+    ]);
+    expect(".o_hierarchy_node_button.btn-primary").toHaveCount(1);
+    await contains(".o_hierarchy_node_button.btn-primary").click();
+    expect(queryAllTexts(".o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+        "Jean\nGeorges",
+        "Claude\nJean",
+    ]);
+});
