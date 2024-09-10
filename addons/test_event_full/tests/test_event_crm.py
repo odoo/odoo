@@ -151,3 +151,27 @@ class TestEventCrm(TestEventFullCommon):
         # SO has a customer set -> main contact of lead is updated accordingly
         customer_so.write({'partner_id': self.event_customer.id})
         self.assertLeadConvertion(self.test_rule_order, t1_registrations, partner=self.event_customer)
+
+    def test_event_update_lead(self):
+        """Make sure that we update leads without issues when question's answer is added to an event attendee."""
+        self.env['event.lead.rule'].search([]).write({'active': False})
+        self.env['event.lead.rule'].create({
+            'name': 'test_event_lead_rule',
+            'lead_creation_basis': 'attendee',
+            'lead_creation_trigger': 'create',
+            'event_registration_filter': [['partner_id', '!=', False]],
+            'lead_type': 'lead',
+        })
+        event_registration = self.env['event.registration'].create({
+                    'name': 'Event Registration without answers added at first',
+                    'event_id': self.test_event.id,
+                    'partner_id': self.event_customer.id,
+        })
+        event_registration.write({
+            'registration_answer_ids': [(0, 0, {
+                'question_id': self.test_event.question_ids[1].id,
+                'value_answer_id': self.test_event.question_ids[1].answer_ids[0].id,
+            })]
+        })
+        self.assertIn(self.test_event.question_ids[1].answer_ids[0].name, event_registration.lead_ids[0].description,
+            "lead description not updated with the answer to the question")
