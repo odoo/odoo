@@ -31,7 +31,11 @@ export class HierarchyController extends Component {
         this.rootRef = useRef("root");
         const { parentFieldName, childFieldName } = this.props.archInfo;
         const { activeFields, fields } = extractFieldsFromArchInfo(this.props.archInfo, this.props.fields);
-        addFieldDependencies(activeFields, fields, [{ name: parentFieldName }]);
+        const additionalFields = [{ name: parentFieldName }];
+        if (childFieldName) {
+            additionalFields.push({ name: childFieldName });
+        }
+        addFieldDependencies(activeFields, fields, additionalFields);
         this.model = useModel(this.props.Model, {
             resModel: this.props.resModel,
             activeFields,
