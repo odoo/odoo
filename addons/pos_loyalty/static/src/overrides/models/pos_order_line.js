@@ -42,6 +42,13 @@ patch(PosOrderline, {
 });
 
 patch(PosOrderline.prototype, {
+    setup(vals) {
+        super.setup(...arguments);
+        this.uiState = {
+            ...this.uiState,
+            isRewardProductLine: vals.isRewardProductLine || false,
+        };
+    },
     serialize(options = {}) {
         const json = super.serialize(...arguments);
         if (options.orm && json.coupon_id < 0) {
@@ -92,5 +99,12 @@ patch(PosOrderline.prototype, {
             return;
         }
         return super.getDisplayData();
+    },
+    can_be_merged_with(orderline) {
+        const res = super.can_be_merged_with(...arguments);
+        if (this.uiState.isRewardProductLine === orderline.uiState.isRewardProductLine) {
+            return res;
+        }
+        return false;
     },
 });

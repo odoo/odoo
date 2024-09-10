@@ -17,42 +17,42 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             // At this point, the free_product program is triggered.
             // The reward button should be highlighted.
             PosLoyalty.isRewardButtonHighlighted(true),
-            // Since the reward button is highlighted, clicking the reward product should be added as reward.
             ProductScreen.clickDisplayedProduct("Desk Organizer", "3.00"),
+            // Since the reward button is highlighted, we can add reward.
+            PosLoyalty.claimReward("Free Product - Desk Organizer"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-5.10", "1.00"),
-            // In the succeeding 2 clicks on the product, it is considered as a regular product.
-            // In the third click, the product will be added as reward.
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("Free Product - Desk Organizer"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "6.00"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-10.20", "2.00"),
 
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
-            PosLoyalty.isRewardButtonHighlighted(false),
-            PosLoyalty.orderTotalIs("25.50"),
+            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.orderTotalIs("35.70"),
             // Finalize order that consumed a reward.
-            PosLoyalty.finalizeOrder("Cash", "30"),
+            PosLoyalty.finalizeOrder("Cash", "40"),
 
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.00"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.00"),
-            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            PosLoyalty.claimReward("Free Product - Desk Organizer"),
             PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-5.10", "1.00"),
             ProductScreen.clickNumpad("⌫"),
             ProductScreen.selectedOrderlineHas("Desk Organizer", "0.00"),
-            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.00"),
-            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.00"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "3.00"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "4.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
             // Finalize order but without the reward.
             // This step is important. When syncing the order, no reward should be synced.
-            PosLoyalty.orderTotalIs("10.20"),
-            PosLoyalty.finalizeOrder("Cash", "20"),
+            PosLoyalty.orderTotalIs("20.40"),
+            PosLoyalty.finalizeOrder("Cash", "25"),
 
             ProductScreen.addOrderline("Magnetic Board", "2"),
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
             PosLoyalty.isRewardButtonHighlighted(true),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
             ProductScreen.clickOrderline("Magnetic Board", "3.00"),
@@ -68,9 +68,9 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             PosLoyalty.finalizeOrder("Cash", "20"),
 
             ProductScreen.addOrderline("Magnetic Board", "6"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
-            PosLoyalty.isRewardButtonHighlighted(true),
+            PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-6.40", "2.00"),
+            PosLoyalty.isRewardButtonHighlighted(false),
 
             ProductScreen.clickOrderline("Magnetic Board", "6.00"),
             ProductScreen.clickNumpad("⌫"),
@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
 
-            PosLoyalty.orderTotalIs("5.94"),
+            PosLoyalty.orderTotalIs("9.14"),
             PosLoyalty.finalizeOrder("Cash", "10"),
 
             // Promotion: 2 items of shelves, get desk_pad/monitor_stand free
@@ -98,7 +98,10 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             ProductScreen.selectedOrderlineHas("Small Shelf", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
             // Click reward product. Should be automatically added as reward.
-            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            PosLoyalty.claimReward("Free Product - [Desk Pad, Monitor Stand]"),
+            SelectionPopup.has("Monitor Stand"),
+            SelectionPopup.has("Desk Pad"),
+            SelectionPopup.has("Desk Pad", { run: "click" }),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.hasRewardLine("Free Product", "-1.98", "1.00"),
             // Remove the reward line. The next steps will check if cashier
@@ -109,9 +112,9 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             PosLoyalty.claimReward("Free Product - [Desk Pad, Monitor Stand]"),
             SelectionPopup.has("Monitor Stand"),
             SelectionPopup.has("Desk Pad"),
-            SelectionPopup.has("Desk Pad", { run: "click" }),
+            SelectionPopup.has("Monitor Stand", { run: "click" }),
             PosLoyalty.isRewardButtonHighlighted(false),
-            PosLoyalty.hasRewardLine("Free Product", "-1.98", "1.00"),
+            PosLoyalty.hasRewardLine("Free Product", "-3.19", "1.00"),
             ProductScreen.clickNumpad("⌫"),
             ProductScreen.clickNumpad("⌫"),
             PosLoyalty.isRewardButtonHighlighted(true),
@@ -136,6 +139,7 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
 
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
+            PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.addOrderline("Test Product A", "1"),
             PosLoyalty.isRewardButtonHighlighted(true, true),
             ProductScreen.clickControlButton("Reward"),

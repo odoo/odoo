@@ -47,6 +47,22 @@ patch(OrderSummary.prototype, {
                 return;
             }
         }
+
+        const numpadMode = this.pos.numpadMode;
+        if (
+            selectedLine?.uiState?.isRewardProductLine &&
+            ["price", "discount"].includes(numpadMode) &&
+            key !== "Backspace"
+        ) {
+            let notificationString = _t("The price of the Reward product can't be changed.");
+            if (numpadMode === "discount") {
+                notificationString = _t("No discounts can be applied to the Reward product.");
+            }
+            if (notificationString) {
+                this.notification.add(notificationString, 4000);
+                return;
+            }
+        }
         return super.updateSelectedOrderline({ buffer, key });
     },
     /**
@@ -74,6 +90,50 @@ patch(OrderSummary.prototype, {
                 this.currentOrder._code_activated_coupon_ids.find((c) => c.code === coupon.code)
             ) {
                 coupon.delete();
+            }
+        }
+        // We are implementing user limitations to ensure that the quantity of reward products does
+        // not exceed the maximum allowable limit. This will make reward computation easier to calculate.
+        if (selectedLine.uiState.isRewardProductLine) {
+            const relatedLine = this.currentOrder.lines.find(
+                (line) => line._reward_product_id?.id === selectedLine.product_id.id
+            );
+            let maximumRewardQty = 0;
+            let relatedLoyaltyProgram = null;
+            let coupenChange = null;
+            if (relatedLine?.reward_id.program_id.program_type === "loyalty") {
+                relatedLoyaltyProgram = this.currentOrder
+                    .getLoyaltyPoints()
+                    .find((lp) => lp.program.id === relatedLine?.reward_id.program_id.id);
+                maximumRewardQty = parseInt(
+                    relatedLine?.qty +
+                        (relatedLoyaltyProgram?.points.total / relatedLine?.points_cost) *
+                            relatedLine?.qty
+                );
+            } else {
+                relatedLoyaltyProgram = relatedLine?.reward_id?.program_id;
+                const relatedRuleIds = relatedLoyaltyProgram?.rule_ids.filter((rule) => {
+                    if (
+                        Object.keys(rule.valid_product_ids).length === 0 ||
+                        rule.valid_product_ids.find((p) => p.id === selectedLine.product_id.id)
+                    ) {
+                        return true;
+                    }
+                });
+                const totalPointsGainedFromSelectedLine = relatedRuleIds?.reduce(
+                    (acc, rule) => (acc += rule.reward_point_amount),
+                    0
+                );
+                coupenChange =
+                    this.currentOrder.uiState.couponPointChanges[relatedLine?.coupon_id?.id];
+                maximumRewardQty = parseInt(
+                    ((coupenChange?.points - totalPointsGainedFromSelectedLine) /
+                        relatedLine?.points_cost) *
+                        relatedLine?.qty
+                );
+            }
+            if (parseInt(val) > maximumRewardQty) {
+                val = maximumRewardQty;
             }
         }
         if (

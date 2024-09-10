@@ -332,13 +332,13 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         aaa_loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_aaa.id)
 
-        self.assertEqual(loyalty_program.pos_order_count, 1)
+        self.assertEqual(loyalty_program.pos_order_count, 2)
         self.assertAlmostEqual(aaa_loyalty_card.points, 4)
 
         # Part 2
         self.start_pos_tour("PosLoyaltyLoyaltyProgram2")
 
-        self.assertEqual(loyalty_program.pos_order_count, 2, msg='Only 2 orders should have reward lines.')
+        self.assertEqual(loyalty_program.pos_order_count, 3, msg='Only 3 orders should have reward lines.')
         self.assertAlmostEqual(aaa_loyalty_card.points, 1)
 
         bbb_loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_bbb.id)

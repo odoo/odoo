@@ -26,4 +26,11 @@ patch(ProductScreen.prototype, {
         await super._barcodeGS1Action(code);
         this.pos.updateRewards();
     },
+    isValidToPay() {
+        let res = super.isValidToPay();
+        res = this.currentOrder
+            ?.getLoyaltyPoints()
+            ?.reduce((acc, loyalty) => (loyalty.points.total < 0 ? (acc = false) : true), res);
+        return res;
+    },
 });

@@ -89,8 +89,7 @@ patch(PosStore.prototype, {
                 for (const { coupon_id, reward } of claimableRewards) {
                     if (
                         reward.program_id.reward_ids.length === 1 &&
-                        !reward.program_id.is_nominative &&
-                        (reward.reward_type !== "product" ||
+                        ((!reward.program_id.is_nominative && reward.reward_type !== "product") ||
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
                         order._applyReward(reward, coupon_id);
@@ -102,6 +101,19 @@ patch(PosStore.prototype, {
                     await this.orderUpdateLoyaltyPrograms();
                 }
                 order._updateRewardLines();
+                const res = order
+                    ?.getLoyaltyPoints()
+                    ?.reduce(
+                        (acc, loyalty) => (loyalty.points.total < 0 ? (acc = false) : true),
+                        true
+                    );
+                if (!res) {
+                    this.notification.add(
+                        _t("Loyalty points cannot be negative"),
+                        { type: "danger" },
+                        4000
+                    );
+                }
             });
         });
     },
@@ -410,10 +422,10 @@ patch(PosStore.prototype, {
             delete opt.price_unit;
         }
 
+        vals.isRewardProductLine = opt?.isRewardProductLine;
         const result = await super.addLineToCurrentOrder(vals, opt, configure);
-
         await this.updatePrograms();
-        if (rewardsToApply.length == 1) {
+        if (rewardsToApply.length == 1 && opt?.isRewardProductLine) {
             const reward = rewardsToApply[0];
             for (const id of productIds) {
                 const product = this.models["product.product"].get(id);
@@ -495,17 +507,15 @@ patch(PosStore.prototype, {
             }
 
             const points = order._getRealCouponPoints(couponProgram.coupon_id);
-            const hasLine = order.lines.filter((line) => !line.is_reward_line).length > 0;
             for (const reward of program.reward_ids.filter(
-                (reward) => reward.reward_type == "product"
+                (reward) =>
+                    reward.reward_type == "product" &&
+                    (reward.reward_product_id || reward.reward_product_ids)
             )) {
                 if (points < reward.required_points) {
                     continue;
                 }
-                // Loyalty program (applies_on == 'both') should needs an orderline before it can apply a reward.
-                const considerTheReward =
-                    program.applies_on !== "both" || (program.applies_on == "both" && hasLine);
-                if (reward.reward_type === "product" && considerTheReward) {
+                if (reward.reward_type === "product") {
                     let hasPotentialQty = true;
                     let potentialQty;
                     for (const { id } of reward.reward_product_ids) {

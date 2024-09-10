@@ -172,7 +172,7 @@ patch(ControlButtons.prototype, {
                     product_tmpl_id: product.product_tmpl_id,
                     qty: potentialQty || 1,
                 },
-                {}
+                { isRewardProductLine: true }
             );
             return true;
         } else {
