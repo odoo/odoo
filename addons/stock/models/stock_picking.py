@@ -449,7 +449,7 @@ class Picking(models.Model):
         help="Is late or will be late depending on the deadline and scheduled date")
     date = fields.Datetime(
         'Creation Date',
-        default=fields.Datetime.now, tracking=True,
+        default=fields.Datetime.now, tracking=True, copy=False,
         help="Creation Date, usually the time of the order")
     date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
     delay_alert_date = fields.Datetime('Delay Alert Date', compute='_compute_delay_alert_date', search='_search_delay_alert_date')
