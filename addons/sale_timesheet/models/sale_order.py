@@ -153,13 +153,10 @@ class SaleOrderLine(models.Model):
                     remaining_time = ''
                     if encoding_uom == uom_hour:
                         hours, minutes = divmod(abs(line.remaining_hours) * 60, 60)
-                        round_minutes = minutes / 30
-                        minutes = math.ceil(round_minutes) if line.remaining_hours >= 0 else math.floor(round_minutes)
-                        if minutes > 1:
+                        minutes = 30 * round(minutes / 30)
+                        if minutes == 60:
                             minutes = 0
                             hours += 1
-                        else:
-                            minutes = minutes * 30
                         remaining_time = ' ({sign}{hours:02.0f}:{minutes:02.0f})'.format(
                             sign='-' if line.remaining_hours < 0 else '',
                             hours=hours,
