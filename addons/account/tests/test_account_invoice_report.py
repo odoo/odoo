@@ -120,7 +120,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             [             6,              6,        1,            0,            -800], # price_unit = 12,   currency.rate = 2.0
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
-            [           600,           -600,       -1,            0,             800], # price_unit = 1200, currency.rate = 2.0
+            [           600,           -600,       -1,          200,             800],  # price_unit = 1200, currency.rate = 2.0
         ])
 
     def test_invoice_report_multicompany_product_cost(self):
@@ -141,5 +141,5 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             [             6,              6,        1,            0,            -800], # price_unit = 12,   currency.rate = 2.0
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
             [            20,            -20,       -1,            0,             800], # price_unit = 60,   currency.rate = 3.0
-            [           600,           -600,       -1,            0,             800], # price_unit = 1200, currency.rate = 2.0
+            [           600,           -600,       -1,          200,             800],  # price_unit = 1200, currency.rate = 2.0
         ])
