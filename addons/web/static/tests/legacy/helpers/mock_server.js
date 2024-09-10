@@ -788,13 +788,15 @@ export class MockServer {
             if (action_id) {
                 const act = this.mockLoadAction({ action_id });
                 if (resId) {
-                    return this.mockRead(act.res_model, [[resId], ["display_name"]])[0]
-                        .display_name;
+                    return {
+                        display_name: this.mockRead(act.res_model, [[resId], ["display_name"]])[0]
+                            .display_name,
+                    };
                 }
-                return act.name;
+                return { display_name: act.name };
             } else if (model) {
                 if (resId) {
-                    return this.models[model].records[resId].display_name;
+                    return { display_name: this.models[model].records[resId].display_name };
                 }
                 throw new Error("Actions with a model should also have a resId");
             }
