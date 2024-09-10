@@ -14,7 +14,7 @@
                       t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave"
                 >
                     <span class="text-truncate" t-esc="groupName"/>
-                    <span t-if="!progressBar" t-esc="'(' + group.count + ')'"/>
+                    <span t-if="!progressBar and !props.list.model.useSampleModel" t-esc="'(' + group.count + ')'"/>
                 </div>
                 <t t-if="env.isSmall or !group.isFolded">
                     <div class="o_kanban_config d-print-none">
