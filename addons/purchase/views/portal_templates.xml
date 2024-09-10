@@ -160,7 +160,7 @@
                               <ul class="nav flex-column bs-sidenav"></ul>
                           </div>
                           <div t-if="order.user_id">
-                              <h6 class="small text-muted">Purchase Representative</h6>
+                              <h6 class="small text-muted">Buyer</h6>
                                 <t t-call="portal.portal_my_contact">
                                     <t t-set="_contactAvatar" t-value="image_data_uri(order.user_id.avatar_128)"/>
                                     <t t-set="_contactName" t-value="order.user_id.name"/>
