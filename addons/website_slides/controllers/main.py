@@ -339,7 +339,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides', type='http', auth="public", website=True, sitemap=True, readonly=True)
     def slides_channel_home(self, **post):
         """ Home page for eLearning platform. Is mainly a container page, does not allow search / filter. """
-        channels_all = tools.lazy(lambda: request.env['slide.channel'].search(request.website.website_domain()))
+        channels_all = tools.lazy(lambda: request.env['slide.channel'].search(expression.AND([request.website.website_domain(), [('is_visible', '=', True)]])))
         if not request.env.user._is_public():
             #If a course is completed, we don't want to see it in first position but in last
             channels_my = tools.lazy(lambda: channels_all.filtered(lambda channel: channel.is_member).sorted(lambda channel: 0 if channel.completed else channel.completion, reverse=True)[:3])
