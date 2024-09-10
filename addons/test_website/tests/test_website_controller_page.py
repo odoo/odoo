@@ -72,7 +72,7 @@ class TestWebsiteControllerPage(HttpCase):
 
         with self.assertRaises(AccessError) as cm:
             self.env["website.controller.page"].with_user(2).create({
-                "name": "Exposed Model",
+                "name": "Exposed Model Read",
                 "website_id": False,
                 "view_id": self.single_view.id,
                 "record_domain": "[('name', '=ilike', 'test_partner_%')]",

@@ -55,7 +55,6 @@ class ResPartnerBank(models.Model):
             if len(bank.journal_id) > 1:
                 raise ValidationError(_('A bank account can belong to only one journal.'))
 
-    @api.constrains('allow_out_payment')
     def _check_allow_out_payment(self):
         """ Block enabling the setting, but it can be set to false without the group. (For example, at creation) """
         for bank in self:
@@ -254,6 +253,7 @@ class ResPartnerBank(models.Model):
                 vals['allow_out_payment'] = False
 
         res = super().create(vals_list)
+        res._check_allow_out_payment()
         for account in res:
             msg = _("Bank Account %s created", account._get_html_link(title=f"#{account.id}"))
             account.partner_id._message_log(body=msg)
@@ -295,6 +295,10 @@ class ResPartnerBank(models.Model):
             raise UserError(_("You do not have the rights to trust or un-trust accounts."))
 
         res = super().write(vals)
+
+        # Check
+        if "allow_out_payment" in vals:
+            self._check_allow_out_payment()
 
         # Log changes to move lines on each move
         for account, initial_values in account_initial_values.items():

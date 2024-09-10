@@ -298,10 +298,9 @@ class ResCompany(models.Model):
 
     @api.constrains('check_account_audit_trail')
     def _check_audit_trail_records(self):
-        if not self.check_account_audit_trail:
-            move_count = self.env['account.move'].search_count([('company_id', '=', self.id)], limit=1)
-            if move_count:
-                raise UserError(_("Can't disable audit trail when there are existing records."))
+        companies = self.filtered(lambda c: not c.check_account_audit_trail)
+        if self.env['account.move'].search_count([('company_id', 'in', companies.ids)], limit=1):
+            raise UserError(_("Can't disable audit trail when there are existing records."))
 
     @api.depends('fiscal_position_ids.foreign_vat')
     def _compute_multi_vat_foreign_country(self):

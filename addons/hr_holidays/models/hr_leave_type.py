@@ -159,10 +159,11 @@ class HolidaysType(models.Model):
 
     @api.constrains('include_public_holidays_in_duration')
     def _check_overlapping_public_holidays(self):
+        # checking for the current user's company too
+        companies = self.company_id | self.env.company
         public_holidays = self.env['resource.calendar.leaves'].search([
             ('resource_id', '=', False),
-            '|', ('company_id', 'in', self.company_id.ids),
-                 ('company_id', '=', self.env.company.id),
+            ('company_id', 'in', companies.ids),
         ])
 
         # Define the date range for the current year
