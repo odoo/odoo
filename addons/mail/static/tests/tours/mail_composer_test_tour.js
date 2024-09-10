@@ -92,16 +92,13 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             },
         },
         {
-            content: "Open templates",
-            trigger: '.o_field_widget[name="template_id"] input',
-            run(helpers) {
-                this.anchor.value = "test";
-                this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
-            },
+            content: "Click on the mail template selector",
+            trigger: ".mail-composer-template-dropdown-btn",
+            run: "click"
         },
         {
             content: "Check a template is listed",
-            trigger: '.ui-autocomplete .ui-menu-item a:contains("Test template")',
+            trigger: '.mail-composer-template-dropdown.popover .o-dropdown-item:contains("Test template")',
         },
         {
             content: "Send message",
