@@ -84,7 +84,7 @@ export function getCellFormula(model, xc, sheetId = model.getters.getActiveSheet
  */
 export function getCellContent(model, xc, sheetId = model.getters.getActiveSheetId()) {
     const { col, row } = toCartesian(xc);
-    return model.getters.getCellText({ sheetId, col, row }, true);
+    return model.getters.getCellText({ sheetId, col, row }, { showFormula: true });
 }
 
 export function getCorrespondingCellFormula(model, xc, sheetId = model.getters.getActiveSheetId()) {
