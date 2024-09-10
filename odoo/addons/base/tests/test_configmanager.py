@@ -45,7 +45,6 @@ class TestConfigManager(TransactionCase):
             'http_interface': '',
             'http_port': 8069,
             'gevent_port': 8072,
-            'longpolling_port': 0,
             'http_enable': True,
             'proxy_mode': False,
             'x_sendfile': False,
@@ -165,7 +164,6 @@ class TestConfigManager(TransactionCase):
             'http_interface': '10.0.0.254',
             'http_port': 6942,
             'gevent_port': 8012,
-            'longpolling_port': 0,
             'http_enable': False,
             'proxy_mode': True,
             'x_sendfile': True,
@@ -277,10 +275,10 @@ class TestConfigManager(TransactionCase):
                 )
                 self.assertEqual(config_content.splitlines(), save_content.splitlines())
 
-    def test_04_odoo14_config_file(self):
-        # test that loading the Odoo 14.0 generated default config works
+    def test_04_odoo16_config_file(self):
+        # test that loading the Odoo 16.0 generated default config works
         # with a modern version
-        config = configmanager(fname=file_path('base/tests/config/14.0.conf'))
+        config = configmanager(fname=file_path('base/tests/config/16.0.conf'))
 
         assert_options = {
             # options taken from the configuration file
@@ -310,7 +308,7 @@ class TestConfigManager(TransactionCase):
             'log_level': 'info',
             'logfile': '',
             'max_cron_threads': 2,
-            'osv_memory_count_limit': False,
+            'osv_memory_count_limit': 0,
             'overwrite_existing_translations': False,
             'pg_path': '',
             'pidfile': '',
@@ -359,9 +357,9 @@ class TestConfigManager(TransactionCase):
             'gevent_port': 8072,
             'smtp_ssl_certificate_filename': False,
             'smtp_ssl_private_key_filename': False,
-            'websocket_keep_alive_timeout': 3600,
-            'websocket_rate_limit_burst': 10,
-            'websocket_rate_limit_delay': 0.2,
+            'websocket_keep_alive_timeout': '3600',
+            'websocket_rate_limit_burst': '10',
+            'websocket_rate_limit_delay': '0.2',
             'x_sendfile': False,
         }
         if IS_POSIX:
@@ -370,23 +368,20 @@ class TestConfigManager(TransactionCase):
                 {
                     'workers': 0,
                     'limit_memory_soft': 2048 * 1024 * 1024,
-                    'limit_memory_soft_gevent': 2048 * 1024 * 1024,
+                    'limit_memory_soft_gevent': False,
                     'limit_memory_hard': 2560 * 1024 * 1024,
-                    'limit_memory_hard_gevent': 2560 * 1024 * 1024,
+                    'limit_memory_hard_gevent': False,
                     'limit_time_cpu': 60,
                     'limit_time_real': 120,
                     'limit_time_real_cron': -1,
-                    'limit_request': 1 << 13,
+                    'limit_request': 1 << 16,
                 }
             )
 
         config._parse_config()
-        with self.assertLogs('py.warnings') as capture:
+        with self.assertNoLogs('py.warnings'):
             config._warn_deprecated_options()
         self.assertEqual(config.options, assert_options, "Options don't match")
-        self.assertEqual(len(capture.output), 1)
-        full_output = "\n".join(capture.output)
-        self.assertIn("longpolling-port is a deprecated alias", full_output)
 
     def test_05_repeat_parse_config(self):
         """Emulate multiple calls to parse_config()"""

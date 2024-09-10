@@ -12,8 +12,6 @@ treated as a 'Server error'.
     check out the :mod:`odoo.addons.test_exceptions` module.
 """
 
-import warnings
-
 
 class UserError(Exception):
     """Generic error managed by the client.
@@ -42,14 +40,6 @@ class RedirectWarning(Exception):
     """
     def __init__(self, message, action, button_text, additional_context=None):
         super().__init__(message, action, button_text, additional_context)
-
-    # using this RedirectWarning won't crash if used as an UserError
-    @property
-    def name(self):
-        warnings.warn(
-            "RedirectWarning attribute 'name' is a deprecated alias to args[0]",
-            DeprecationWarning)
-        return self.args[0]
 
 
 class AccessDenied(UserError):

@@ -350,11 +350,6 @@ def get_manifest(module, mod_path=None):
 def _get_manifest_cached(module, mod_path=None):
     return load_manifest(module, mod_path)
 
-def load_information_from_description_file(module, mod_path=None):
-    warnings.warn(
-        'load_information_from_description_file() is a deprecated '
-        'alias to get_manifest()', DeprecationWarning, stacklevel=2)
-    return get_manifest(module, mod_path)
 
 def load_openerp_module(module_name):
     """ Load an OpenERP module, if not already loaded.
