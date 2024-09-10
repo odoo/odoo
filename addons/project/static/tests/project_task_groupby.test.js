@@ -58,7 +58,7 @@ test("project.task (kanban): check group label for no project", async () => {
             </kanban>
         `,
     });
-    expect(".o_column_title").toHaveText("🔒 Private (1)");
+    expect(".o_column_title").toHaveText("🔒 Private\n(1)");
 });
 
 test("project.task (kanban): check group label for no assignees", async () => {
@@ -73,7 +73,7 @@ test("project.task (kanban): check group label for no assignees", async () => {
             </kanban>
         `,
     });
-    expect(".o_column_title").toHaveText("👤 Unassigned (1)");
+    expect(".o_column_title").toHaveText("👤 Unassigned\n(1)");
 });
 
 test("project.task (kanban): check group label for no deadline", async () => {

@@ -2492,7 +2492,7 @@ test.tags("desktop")("sample server: populate groups", async () => {
     });
 
     expect(".o_kanban_view .o_view_sample_data").toHaveCount(1);
-    expect(".o_column_title").toHaveText("December 2022\n(16)");
+    expect(".o_column_title").toHaveText("December 2022");
 
     await switchView("pivot");
     expect(".o_pivot_view .o_view_sample_data").toHaveCount(1);
