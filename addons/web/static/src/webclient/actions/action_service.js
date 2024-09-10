@@ -429,6 +429,9 @@ export function makeActionManager(env, router = _router) {
                     get name() {
                         return controller.displayName;
                     },
+                    get isFormView() {
+                        return controller.props?.type === "form";
+                    },
                     get url() {
                         return stateToUrl(controller.state);
                     },
