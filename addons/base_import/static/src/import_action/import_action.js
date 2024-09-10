@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import { Component, onWillStart, onMounted, useState } from "@odoo/owl";
+import { Component, onWillStart, onMounted, useRef, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { useFileUploader } from "@web/core/utils/files";
 import { useService } from "@web/core/utils/hooks";
 import { FileInput } from "@web/core/file_input/file_input";
+import { useDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useImportModel } from "../import_model";
 import { ImportDataContent } from "../import_data_content/import_data_content";
 import { ImportDataProgress } from "../import_data_progress/import_data_progress";
@@ -50,6 +52,38 @@ export class ImportAction extends Component {
             previewError: "",
         });
 
+        this.uploadFiles = useFileUploader();
+        useDropzone(useRef("root"), async event => {
+            const { files } = event.dataTransfer;
+            if (files.length === 0) {
+                this.notification.add(_t("Please upload an Excel (.xls or .xlsx) or .csv file to import."), {
+                    type: "danger",
+                });
+            } else if (files.length > 1) {
+                this.notification.add(_t("Please upload a single file."), {
+                    type: "danger",
+                });
+            } else {
+                const file = files[0];
+                const isValidFile = file.name.endsWith(".csv")
+                                 || file.name.endsWith(".xls")
+                                 || file.name.endsWith(".xlsx");
+                if (!isValidFile) {
+                    this.notification.add(_t("Please upload an Excel (.xls or .xlsx) or .csv file to import."), {
+                        type: "danger",
+                    });
+                } else {
+                    await this.uploadFiles(this.uploadFilesRoute, {
+                        csrf_token: odoo.csrf_token,
+                        ufile: [file],
+                        model: this.resModel,
+                        id: this.model.id,
+                    });
+                    this.handleFilesUpload([file]);
+                }
+            }
+        });
+
         onWillStart(() => this.model.init());
         onMounted(() => this.enter());
     }
@@ -71,6 +105,10 @@ export class ImportAction extends Component {
 
     get importTemplates() {
         return this.model.importTemplates;
+    }
+
+    get uploadFilesRoute () {
+        return "/base_import/set_file";
     }
 
     //--------------------------------------------------------------------------

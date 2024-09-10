@@ -1,7 +1,5 @@
-import { useService } from "@web/core/utils/hooks";
-
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
-import { checkFileSize } from "@web/core/utils/files";
+import { useFileUploader } from "@web/core/utils/files";
 
 /**
  * Custom file input
@@ -45,8 +43,7 @@ export class FileInput extends Component {
     };
 
     setup() {
-        this.http = useService("http");
-        this.notification = useService("notification");
+        this.uploadFiles = useFileUploader();
         this.fileInputRef = useRef("file-input");
         this.state = useState({
             // Disables upload button if currently uploading.
@@ -75,21 +72,6 @@ export class FileInput extends Component {
         return params;
     }
 
-    async uploadFiles(params) {
-        if ((params.ufile && params.ufile.length) || params.file) {
-            const fileSize = (params.ufile && params.ufile[0].size) || params.file.size;
-            if (!checkFileSize(fileSize, this.notification)) {
-                return null;
-            }
-        }
-        const fileData = await this.http.post(this.props.route, params, "text");
-        const parsedFileData = JSON.parse(fileData);
-        if (parsedFileData.error) {
-            throw new Error(parsedFileData.error);
-        }
-        return parsedFileData;
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -103,7 +85,7 @@ export class FileInput extends Component {
      */
     async onFileInputChange() {
         this.state.isDisable = true;
-        const parsedFileData = await this.uploadFiles(this.httpParams);
+        const parsedFileData = await this.uploadFiles(this.props.route, this.httpParams);
         if (parsedFileData) {
             // When calling onUpload, also pass the files to allow to get data like their names
             this.props.onUpload(
