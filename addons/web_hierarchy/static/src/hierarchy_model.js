@@ -1,3 +1,4 @@
+import { toRaw } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
@@ -478,6 +479,7 @@ export class HierarchyModel extends Model {
         this.notification = notification;
         this.config = {
             domain: [],
+            ...params.config,
             isRoot: true,
         };
     }
@@ -549,6 +551,15 @@ export class HierarchyModel extends Model {
         };
     }
 
+    exportState() {
+        return {
+            config: toRaw({
+                ...this.config,
+                resIds: this.resIds,
+            }),
+        };
+    }
+
     /**
      * Load the config and data for hierarchy view
      *
@@ -556,8 +567,8 @@ export class HierarchyModel extends Model {
      */
     async load(params = {}) {
         nodeId = forestId = treeId = 0;
-        const config = this._getNextConfig(this.config, params);
-        const data = await this.keepLast.add(this._loadData(config));
+        const { resIds, ...config } = this._getNextConfig(this.config, params);
+        const data = await this.keepLast.add(this._loadData({ ...config, resIds }));
         this.root = this._createRoot(config, data);
         this.config = config;
         this.notify();
@@ -775,8 +786,8 @@ export class HierarchyModel extends Model {
     async _loadData(config, reload = false) {
         let onlyRoots = false;
         let domain = config.domain;
-        const resIds = this.resIds;
-        if (reload && resIds.length > 0) {
+        const resIds = reload ? this.resIds : config.resIds;
+        if (resIds?.length > 0) {
             domain = [["id", "in", resIds]];
         } else if (this.isSearchDefaultOrEmpty()) {
             // If the current SearchModel query is the default one

@@ -5,16 +5,19 @@ import {
     contains,
     defineModels,
     fields,
+    getService,
     makeServerError,
     mockService,
     models,
     mountView,
+    mountWithCleanup,
     onRpc,
     patchWithCleanup,
     removeFacet,
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
+import { WebClient } from "@web/webclient/webclient";
 import { HierarchyModel } from "@web_hierarchy/hierarchy_model";
 
 async function enableFilters(filterNames = []) {
@@ -82,6 +85,7 @@ class Employee extends models.Model {
                 </sheet>
             </form>
         `,
+        search: `<search/>`,
     };
 }
 
@@ -1383,4 +1387,43 @@ test("The view displays the No Content help", async () => {
         resModel: "hr.employee",
     });
     expect("div.o_view_nocontent").toHaveCount(1);
+});
+
+test("Keep the same hierarchy state when we go back to the view with the breadcrumb", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "hr.employee",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "hierarchy"],
+            [false, "form"],
+        ],
+    });
+
+    expect(".o_hierarchy_row").toHaveCount(2);
+    expect(".o_hierarchy_node_button").toHaveCount(2);
+    expect(".o_hierarchy_node_button.btn-secondary").toHaveCount(1);
+    expect(".o_hierarchy_node_button.btn-primary").toHaveCount(1);
+    await contains(".o_hierarchy_node_button.btn-primary").click();
+    expect(".o_hierarchy_row").toHaveCount(3);
+    expect(".o_hierarchy_separator").toHaveCount(2);
+    expect(".o_hierarchy_node_container").toHaveCount(4);
+    expect(".o_hierarchy_node").toHaveCount(4);
+    expect(".o_hierarchy_node_button").toHaveCount(2);
+    expect(queryAllTexts(".o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+        "Louis\nJosephine",
+    ]);
+    await contains(".o_hierarchy_node_container:eq(1) .o_hierarchy_node").click();
+    expect(".o_hierarchy_view").toHaveCount(0);
+    expect(".o_form_view").toHaveCount(1);
+    await contains(".o_back_button").click();
+    expect(queryAllTexts(".o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+        "Louis\nJosephine",
+    ]);
 });
