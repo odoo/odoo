@@ -50,11 +50,34 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
             trigger: 'body',
             isCheck: true,  // wait for the page to load, as the next check was sometimes too fast
         },
+<<<<<<< 17.0
         wTourUtils.assertPathName('/shop/payment', 'iframe a[href="/shop/cart"]'),
 
         wsTourUtils.goToCart({quantity: 3, backend: true}),
         wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens', backend: true}),
         wsTourUtils.assertCartContains({productName: 'Conference Chair (Steel)', backend: true}),
         // wsTourUtils.assertCartContains({productName: 'Conference Chair (Aluminium)', backend: true}),
+||||||| c226098a20e9d70090bc9ae6b4c2b82483ae0f4b
+        {
+            content: `Check if we have been redirected to /shop/payment`,
+            trigger: `button[name=o_payment_submit_button]`,
+            run: () => {
+                if (!window.location.pathname.startsWith("/shop/payment")) {
+                    console.error(`We should be on /shop/payment.`);
+                }
+            },
+        },
+        wsTourUtils.goToCart({quantity: 4, backend: false}),
+        wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens'}),
+        wsTourUtils.assertCartContains({productName: 'Conference Chair (Steel)'}),
+        wsTourUtils.assertCartContains({productName: 'Conference Chair (Aluminium)'}),
+=======
+        wTourUtils.assertPathName('/shop/payment', 'button[name=o_payment_submit_button]'),
+
+        wsTourUtils.goToCart({quantity: 4, backend: false}),
+        wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens'}),
+        wsTourUtils.assertCartContains({productName: 'Conference Chair (Steel)'}),
+        wsTourUtils.assertCartContains({productName: 'Conference Chair (Aluminium)'}),
+>>>>>>> a16f18081d2f74fcc38c1ebc72c1614001ed25de
     ],
 );

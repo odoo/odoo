@@ -441,8 +441,48 @@ function selectElementInWeSelectWidget(widgetName, elementName, searchNeeded = f
         });
     }
     steps.push(clickOnElement(`${elementName} in the ${widgetName} widget`,
+<<<<<<< 17.0
         `we-select[data-name="${widgetName}"] we-button:contains("${elementName}"), ` +
         `we-select[data-name="${widgetName}"] we-button[data-select-label="${elementName}"]`));
+||||||| c226098a20e9d70090bc9ae6b4c2b82483ae0f4b
+    steps.push({
+        content: `Clicking on the ${elementName} in the ${widgetName} widget`,
+        trigger: `${we_select} we-button:contains("${elementName}")`,
+        run: "click",
+    });
+    steps.push({
+        content:
+            "Check we-select is set and wait a delay before continue the tour",
+        trigger: `${we_select}:contains(${elementName})`,
+        async run() {
+            // fix underterministic error.
+            // When we-select is used twice a row too fast, the second we-select may not open.
+            // The first toggle is open, we click on it and almost at the same time, we click on the second one.
+            // There may be confusion with the active class.
+            // Add a delay before continue the tour solves this problem.
+            await new Promise((resolve) => setTimeout(resolve, 300));
+        },
+    });
+=======
+        `we-select[data-name=${widgetName}] we-button:contains(${elementName})`));
+    steps.push({
+        content: "Check we-select is set",
+        trigger: `we-select[data-name=${widgetName}]:contains(${elementName})`,
+        async run() {
+            // TODO: remove this delay when macro.js has been fixed.
+            // This additionnal line fix an underterministic error.
+            // When we-select is used twice a row too fast,
+            // the second we-select may not open.
+            // The first toggle is open, we click on it and almost
+            // at the same time, we click on the second one.
+            // The problem comes from macro.js which does not give
+            // the DOM time to be stable before looking for the trigger.
+            // We add a delay to let the mutations take place and
+            // therefore wait for the DOM to stabilize.
+            await new Promise((resolve) => setTimeout(resolve, 300));
+        }
+    });
+>>>>>>> a16f18081d2f74fcc38c1ebc72c1614001ed25de
     return steps;
 }
 
