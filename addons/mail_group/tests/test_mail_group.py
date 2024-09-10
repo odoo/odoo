@@ -165,34 +165,32 @@ class TestMailGroup(TestMailListCommon):
         })
 
         with self.assertRaises(AccessError):
-            mail_group.with_user(self.user_portal).check_access_rule('read')
+            mail_group.with_user(self.user_portal).check_access('read')
 
         public_user = self.env.ref('base.public_user')
         with self.assertRaises(AccessError):
-            mail_group.with_user(public_user).check_access_rule('read')
+            mail_group.with_user(public_user).check_access('read')
 
         with self.assertRaises(AccessError):
-            mail_group.with_user(self.user_employee_2).check_access_rule('read')
+            mail_group.with_user(self.user_employee_2).check_access('read')
 
         # Add the group to the user
         self.user_employee_2.groups_id |= test_group
-        mail_group.with_user(self.user_employee_2).check_access_rule('read')
+        mail_group.with_user(self.user_employee_2).check_access('read')
         with self.assertRaises(AccessError, msg='Only moderator / responsible and admin can write on the group'):
-            mail_group.with_user(self.user_employee_2).check_access_rule('write')
+            mail_group.with_user(self.user_employee_2).check_access('write')
 
         # Remove the group of the user BUT add it in the moderators list
         self.user_employee_2.groups_id -= test_group
         mail_group.moderator_ids |= self.user_employee_2
-        mail_group.with_user(self.user_employee_2).check_access_rule('read')
-        mail_group.with_user(self.user_employee_2).check_access_rule('write')
+        mail_group.with_user(self.user_employee_2).check_access('read')
+        mail_group.with_user(self.user_employee_2).check_access('write')
 
         # Test with public user
         mail_group.access_group_id = self.env.ref('base.group_public')
-        mail_group.with_user(public_user).check_access_rule('read')
-        mail_group.with_user(public_user).check_access_rights('read')
+        mail_group.with_user(public_user).check_access('read')
         with self.assertRaises(AccessError):
-            mail_group.with_user(public_user).check_access_rule('write')
-            mail_group.with_user(public_user).check_access_rights('write')
+            mail_group.with_user(public_user).check_access('write')
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
     @users('employee')
@@ -201,16 +199,16 @@ class TestMailGroup(TestMailListCommon):
         mail_group.access_mode = 'public'
 
         public_user = self.env.ref('base.public_user')
-        mail_group.with_user(public_user).check_access_rule('read')
+        mail_group.with_user(public_user).check_access('read')
         with self.assertRaises(AccessError):
-            mail_group.with_user(public_user).check_access_rights('write')
+            mail_group.with_user(public_user).check_access('write')
 
-        mail_group.with_user(self.user_employee_2).check_access_rule('read')
+        mail_group.with_user(self.user_employee_2).check_access('read')
         with self.assertRaises(AccessError, msg='Only moderator / responsible and admin can write on the group'):
-            mail_group.with_user(self.user_employee_2).check_access_rule('write')
+            mail_group.with_user(self.user_employee_2).check_access('write')
 
         mail_group.moderator_ids |= self.user_employee_2
-        mail_group.with_user(self.user_employee_2).check_access_rule('write')
+        mail_group.with_user(self.user_employee_2).check_access('write')
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
     @users('employee')
@@ -221,11 +219,11 @@ class TestMailGroup(TestMailListCommon):
         self.assertNotIn(partner, mail_group.member_partner_ids)
 
         with self.assertRaises(AccessError, msg='Non-member should not have access to the group'):
-            mail_group.with_user(self.user_employee_2).check_access_rule('read')
+            mail_group.with_user(self.user_employee_2).check_access('read')
 
         public_user = self.env.ref('base.public_user')
         with self.assertRaises(AccessError, msg='Non-member should not have access to the group'):
-            mail_group.with_user(public_user).check_access_rule('read')
+            mail_group.with_user(public_user).check_access('read')
 
         mail_group.write({'member_ids': [(0, 0, {
             'partner_id': partner.id,
@@ -233,12 +231,12 @@ class TestMailGroup(TestMailListCommon):
         self.assertIn(partner, mail_group.member_partner_ids)
 
         # Now that portal is in the member list they should have access
-        mail_group.with_user(self.user_employee_2).check_access_rule('read')
+        mail_group.with_user(self.user_employee_2).check_access('read')
         with self.assertRaises(AccessError, msg='Only moderator / responsible and admin can write on the group'):
-            mail_group.with_user(self.user_employee_2).check_access_rule('write')
+            mail_group.with_user(self.user_employee_2).check_access('write')
 
         mail_group.moderator_ids |= self.user_employee_2
-        mail_group.with_user(self.user_employee_2).check_access_rule('write')
+        mail_group.with_user(self.user_employee_2).check_access('write')
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model')
     @users('employee')
@@ -247,9 +245,7 @@ class TestMailGroup(TestMailListCommon):
         self.assertEqual(member.email, '"Member 1" <member_1@test.com>', msg='Moderators should have access to members')
 
         with self.assertRaises(AccessError, msg='Portal should not have access to members'):
-            member.with_user(self.user_portal).check_access_rule('read')
-            member.with_user(self.user_portal).check_access_rights('read')
+            member.with_user(self.user_portal).check_access('read')
 
         with self.assertRaises(AccessError, msg='Non moderators should not have access to member'):
-            member.with_user(self.user_portal).check_access_rule('read')
-            member.with_user(self.user_portal).check_access_rights('read')
+            member.with_user(self.user_portal).check_access('read')

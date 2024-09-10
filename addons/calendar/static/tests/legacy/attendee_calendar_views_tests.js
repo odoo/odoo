@@ -137,7 +137,7 @@ QUnit.module("CalendarView", ({ beforeEach }) => {
                         },
                     ],
                     methods: {
-                        check_access_rights() {
+                        has_access() {
                             return Promise.resolve(true);
                         },
                     },

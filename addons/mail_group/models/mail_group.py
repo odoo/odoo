@@ -528,16 +528,14 @@ class MailGroup(models.Model):
     # ------------------------------------------------------------
 
     def action_join(self):
-        self.check_access_rights('read')
-        self.check_access_rule('read')
+        self.check_access('read')
         partner = self.env.user.partner_id
         self.sudo()._join_group(partner.email, partner.id)
 
         _logger.info('"%s" (#%s) joined mail.group "%s" (#%s)', partner.name, partner.id, self.name, self.id)
 
     def action_leave(self):
-        self.check_access_rights('read')
-        self.check_access_rule('read')
+        self.check_access('read')
         partner = self.env.user.partner_id
         self.sudo()._leave_group(partner.email, partner.id)
 

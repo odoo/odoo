@@ -82,12 +82,8 @@ class Channel(models.Model):
         result = super(Channel, self)._filter_add_members(target_partners, raise_on_access=raise_on_access)
         on_payment = self.filtered(lambda channel: channel.enroll == 'payment')
         if on_payment:
-            try:
-                on_payment.check_access_rights('write')
-                on_payment.check_access_rule('write')
-            except AccessError:
-                if raise_on_access:
-                    raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
-            else:
+            if on_payment.has_access('write'):
                 result |= on_payment
+            elif raise_on_access:
+                raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
         return result

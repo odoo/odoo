@@ -51,7 +51,7 @@ class WebsiteBackend(http.Controller):
             raise werkzeug.exceptions.Forbidden()
 
         return {
-            model: request.env[model].check_access_rights('create', raise_exception=False)
+            model: request.env[model].has_access('create')
             for model in models
         }
 

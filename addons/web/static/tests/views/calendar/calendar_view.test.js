@@ -79,7 +79,7 @@ class Event extends models.Model {
     is_hatched = fields.Boolean();
     is_striked = fields.Boolean();
 
-    check_access_rights() {
+    has_access() {
         return true;
     }
 
@@ -197,7 +197,7 @@ class EventType extends models.Model {
     name = fields.Char();
     color = fields.Integer();
 
-    check_access_rights() {
+    has_access() {
         return true;
     }
 
@@ -835,7 +835,7 @@ test(`quickcreate with custom create_name_field`, async () => {
         x_name = fields.Char();
         x_start_date = fields.Date();
 
-        check_access_rights() {
+        has_access() {
             return true;
         }
 
@@ -2054,7 +2054,7 @@ test(`Add filters and specific color`, async () => {
     });
     expect.verifySteps([
         "get_views (event)",
-        "check_access_rights (event)",
+        "has_access (event)",
         "search_read (filter.partner) [partner_id]",
         "search_read (event) [display_name, start, stop, is_all_day, color, attendee_ids, type_id]",
     ]);

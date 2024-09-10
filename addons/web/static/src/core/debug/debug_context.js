@@ -11,10 +11,7 @@ const getAccessRights = memoize(async function getAccessRights(orm) {
         "ir.model.access": "read",
     };
     const proms = Object.entries(rightsToCheck).map(([model, operation]) => {
-        return orm.call(model, "check_access_rights", [], {
-            operation,
-            raise_exception: false,
-        });
+        return orm.call(model, "has_access", [[], operation]);
     });
     const [canEditView, canSeeRecordRules, canSeeModelAccess] = await Promise.all(proms);
     const accessRights = { canEditView, canSeeRecordRules, canSeeModelAccess };

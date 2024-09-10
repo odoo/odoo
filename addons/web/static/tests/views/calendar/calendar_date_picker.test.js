@@ -21,7 +21,7 @@ class Event extends models.Model {
     name = fields.Char();
     start = fields.Date();
 
-    check_access_rights() {
+    has_access() {
         return true;
     }
 }

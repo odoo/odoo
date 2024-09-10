@@ -40,7 +40,7 @@ class ModelPageController(Controller):
 
         target_model_name = page.sudo().model_id.model
         Model = request.env[target_model_name]
-        if not Model.check_access_rights("read", raise_exception=False):
+        if not Model.has_access("read"):
             raise werkzeug.exceptions.Forbidden()
 
         rec_domain = ast.literal_eval(page.record_domain or "[]")

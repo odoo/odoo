@@ -21,10 +21,10 @@ class ProjectCustomerPortal(CustomerPortal):
         values = super()._prepare_home_portal_values(counters)
         if 'project_count' in counters:
             values['project_count'] = request.env['project.project'].search_count([]) \
-                if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
+                if request.env['project.project'].has_access('read') else 0
         if 'task_count' in counters:
             values['task_count'] = request.env['project.task'].sudo().search_count([('project_id', '!=', False), ('message_partner_ids', 'in', request.env.user.partner_id.ids), ('project_privacy_visibility', '=', 'portal')]) \
-                if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
+                if request.env['project.task'].has_access('read') else 0
         return values
 
     # ------------------------------------------------------------
@@ -389,7 +389,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
         if not domain:
             domain = []
-        if not su and Task.check_access_rights('read'):
+        if not su and Task.has_access('read'):
             domain = AND([domain, request.env['ir.rule']._compute_domain(Task._name, 'read')])
         Task_sudo = Task.sudo()
         milestone_domain = AND([domain, [('allow_milestones', '=', True)], [('milestone_id', '!=', False)]])

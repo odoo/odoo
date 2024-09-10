@@ -102,7 +102,7 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
         moves = request.env['account.move']
         invoice_ids = task.sale_order_id.invoice_ids
-        if invoice_ids and request.env['account.move'].check_access_rights('read', raise_exception=False):
+        if invoice_ids and request.env['account.move'].has_access('read'):
             moves = request.env['account.move'].search([('id', 'in', invoice_ids.ids)])
             values['invoices_accessible'] = moves.ids
             if moves:

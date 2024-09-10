@@ -117,7 +117,7 @@ class SaleOrder(models.Model):
             projects |= order.order_line.mapped('project_id')
             projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:
-                projects = projects._filter_access_rules('read')
+                projects = projects._filtered_access('read')
             order.project_ids = projects
             order.project_count = len(projects)
 

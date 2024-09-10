@@ -21,15 +21,9 @@ class HrOrgChartController(http.Controller):
             cids = [request.env.company.id]
 
         Employee = request.env['hr.employee.public'].with_context(allowed_company_ids=cids)
+        employee = Employee.browse(employee_id)
         # check and raise
-        if not Employee.check_access_rights('read', raise_exception=False):
-            return None
-        try:
-            Employee.browse(employee_id).check_access_rule('read')
-        except AccessError:
-            return None
-        else:
-            return Employee.browse(employee_id)
+        return employee if employee.has_access('read') else None
 
     def _prepare_employee_data(self, employee):
         job = employee.sudo().job_id
@@ -46,7 +40,7 @@ class HrOrgChartController(http.Controller):
 
     @http.route('/hr/get_redirect_model', type='json', auth='user')
     def get_redirect_model(self):
-        if request.env['hr.employee'].check_access_rights('read', raise_exception=False):
+        if request.env['hr.employee'].has_access('read'):
             return 'hr.employee'
         return 'hr.employee.public'
 

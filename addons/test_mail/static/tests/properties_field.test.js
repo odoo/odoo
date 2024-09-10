@@ -29,7 +29,7 @@ async function testPropertyFieldAvatarOpenChat(propertyType) {
             </form>
         `,
     });
-    onRpc("mail.test.properties", "check_access_rights", () => true);
+    onRpc("mail.test.properties", "has_access", () => true);
     onRpc("res.users", "read", () => {
         step("read res.users");
         return [{ id: userId, partner_id: [partnerId, "Partner Test"] }];

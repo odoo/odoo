@@ -116,11 +116,11 @@ class SaleOrder(models.Model):
             'default_so_line': default_sale_line.id,
         }  # erase default filters
 
-        tasks = self.order_line.task_id._filter_access_rules_python('write')
+        tasks = self.order_line.task_id._filtered_access('write')
         if tasks:
             context['default_task_id'] = tasks[0].id
         else:
-            projects = self.order_line.project_id._filter_access_rules_python('write')
+            projects = self.order_line.project_id._filtered_access('write')
             if projects:
                 context['default_project_id'] = projects[0].id
             elif self.project_ids:

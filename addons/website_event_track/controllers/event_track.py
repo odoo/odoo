@@ -501,10 +501,7 @@ class EventTrackController(http.Controller):
         track = request.env['event.track'].browse(track_id).exists()
         if not track:
             raise NotFound()
-        try:
-            track.check_access_rights('read')
-            track.check_access_rule('read')
-        except exceptions.AccessError:
+        if not track.has_access('read'):
             if not allow_sudo:
                 raise Forbidden()
             track = track.sudo()
@@ -513,10 +510,7 @@ class EventTrackController(http.Controller):
         # JSON RPC have no website in requests
         if hasattr(request, 'website_id') and not event.can_access_from_current_website():
             raise NotFound()
-        try:
-            event.check_access_rights('read')
-            event.check_access_rule('read')
-        except exceptions.AccessError:
+        if not event.has_access('read'):
             raise Forbidden()
 
         return track

@@ -292,13 +292,13 @@ class HrEmployeePrivate(models.Model):
         }
 
     def _compute_display_name(self):
-        if self.check_access_rights('read', raise_exception=False):
+        if self.browse().has_access('read'):
             return super()._compute_display_name()
         for employee_private, employee_public in zip(self, self.env['hr.employee.public'].browse(self.ids)):
             employee_private.display_name = employee_public.display_name
 
     def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
-        if self.check_access_rights('read', raise_exception=False):
+        if self.browse().has_access('read'):
             return super().search_fetch(domain, field_names, offset, limit, order)
 
         # HACK: retrieve publicly available values from hr.employee.public and
@@ -312,7 +312,7 @@ class HrEmployeePrivate(models.Model):
         return employees
 
     def fetch(self, field_names):
-        if self.check_access_rights('read', raise_exception=False):
+        if self.browse().has_access('read'):
             return super().fetch(field_names)
 
         # HACK: retrieve publicly available values from hr.employee.public and
@@ -364,13 +364,13 @@ class HrEmployeePrivate(models.Model):
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
-        if self.check_access_rights('read', raise_exception=False):
+        if self.browse().has_access('read'):
             return super().get_view(view_id, view_type, **options)
         return self.env['hr.employee.public'].get_view(view_id, view_type, **options)
 
     @api.model
     def get_views(self, views, options=None):
-        if self.check_access_rights('read', raise_exception=False):
+        if self.browse().has_access('read'):
             return super().get_views(views, options)
         res = self.env['hr.employee.public'].get_views(views, options)
         res['models'].update({'hr.employee': res['models']['hr.employee.public']})
@@ -386,7 +386,7 @@ class HrEmployeePrivate(models.Model):
             browsed on the hr.employee model. This can be trusted as the ids of the public
             employees exactly match the ids of the related hr.employee.
         """
-        if self.check_access_rights('read', raise_exception=False):
+        if self.browse().has_access('read'):
             return super()._search(domain, offset, limit, order)
         try:
             ids = self.env['hr.employee.public']._search(domain, offset, limit, order)
@@ -402,7 +402,7 @@ class HrEmployeePrivate(models.Model):
         else:
             self_sudo = self
 
-        if self_sudo.check_access_rights('read', raise_exception=False):
+        if self_sudo.browse().has_access('read'):
             return super(HrEmployeePrivate, self).get_formview_id(access_uid=access_uid)
         # Hardcode the form view for public employee
         return self.env.ref('hr.hr_employee_public_view_form').id
@@ -415,7 +415,7 @@ class HrEmployeePrivate(models.Model):
         else:
             self_sudo = self
 
-        if not self_sudo.check_access_rights('read', raise_exception=False):
+        if not self_sudo.browse().has_access('read'):
             res['res_model'] = 'hr.employee.public'
 
         return res

@@ -124,21 +124,11 @@ export const companyService = {
                 const state = {};
                 const options = { reload: true };
                 if (controller?.props.resId && controller?.props.resModel) {
-                    let hasReadRights = true;
-                    try {
-                        await orm.call(
-                            controller.props.resModel,
-                            "check_access_rule",
-                            [controller.props.resId],
-                            { operation: "read" }
-                        );
-                    } catch (e) {
-                        if (e.exceptionName === "odoo.exceptions.AccessError") {
-                            hasReadRights = false;
-                        } else {
-                            throw e;
-                        }
-                    }
+                    let hasReadRights = await orm.call(
+                        controller.props.resModel,
+                        "has_access",
+                        [[controller.props.resId], "read"]
+                    );
 
                     if (!hasReadRights) {
                         options.replace = true;

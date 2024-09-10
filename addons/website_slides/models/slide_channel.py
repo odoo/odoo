@@ -975,14 +975,10 @@ class Channel(models.Model):
         allowed = self.filtered(lambda channel: channel.enroll == 'public')
         on_invite = self.filtered(lambda channel: channel.enroll == 'invite')
         if on_invite:
-            try:
-                on_invite.check_access_rights('write')
-                on_invite.check_access_rule('write')
-            except AccessError:
-                if raise_on_access:
-                    raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
-            else:
+            if on_invite.has_access('write'):
                 allowed |= on_invite
+            elif raise_on_access:
+                raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
         return allowed
 
     def _add_groups_members(self):

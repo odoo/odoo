@@ -102,7 +102,7 @@ class AlarmManager(models.AbstractModel):
         events = self.env['calendar.event'].browse(result)
         result = {
             key: result[key]
-            for key in set(events._filter_access_rules('read').ids)
+            for key in events._filtered_access('read').ids
         }
         return result
 

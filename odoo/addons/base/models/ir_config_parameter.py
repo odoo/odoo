@@ -65,7 +65,7 @@ class IrConfigParameter(models.Model):
         :return: The value of the parameter, or ``default`` if it does not exist.
         :rtype: string
         """
-        self.check_access_rights('read')
+        self.browse().check_access('read')
         return self._get_param(key) or default
 
     @api.model

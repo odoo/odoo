@@ -334,16 +334,16 @@ class Users(models.Model):
         for model_name, activities_by_record in activities_by_record_by_model_name.items():
             res_ids = [r.id for r in activities_by_record]
             Model = self.env[model_name].with_context(**self.env.context)
-            has_model_access_right = self.env[model_name].check_access_rights('read', raise_exception=False)
+            has_model_access_right = self.env[model_name].has_access('read')
             if has_model_access_right:
-                allowed_records = Model.browse(res_ids)._filter_access_rules('read')
+                allowed_records = Model.browse(res_ids)._filtered_access('read')
             else:
                 allowed_records = self.env[model_name]
             unallowed_records = Model.browse(res_ids) - allowed_records
             # We remove from not allowed records, records that the user has access to through others of his companies
             if has_model_access_right and unallowed_records and not is_all_user_companies_allowed:
                 unallowed_records -= unallowed_records.with_context(
-                    allowed_company_ids=user_company_ids)._filter_access_rules('read')
+                    allowed_company_ids=user_company_ids)._filtered_access('read')
             for record, activities in activities_by_record.items():
                 if record in unallowed_records:
                     activities_by_model_name['mail.activity'] += activities

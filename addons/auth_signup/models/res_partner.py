@@ -30,9 +30,9 @@ class ResPartner(models.Model):
         self.ensure_one()
         result = self.sudo()._get_signup_url_for_action()
         if any(u._is_internal() for u in self.user_ids if u != self.env.user):
-            self.env['res.users'].check_access_rights('write')
+            self.env['res.users'].check_access('write')
         if any(u._is_portal() for u in self.user_ids if u != self.env.user):
-            self.env['res.partner'].check_access_rights('write')
+            self.env['res.partner'].check_access('write')
         return result.get(self.id, False)
 
     def _get_signup_url_for_action(self, url=None, action=None, view_type=None, menu_id=None, res_id=None, model=None):

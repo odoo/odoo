@@ -1093,7 +1093,7 @@ class Website(models.Model):
         ]
         for model, _table, column, _translate in html_fields_attributes:
             Model = self.env[model]
-            if not Model.check_access_rights('read', raise_exception=False):
+            if not Model.has_access('read'):
                 continue
 
             # Generate the exact domain to search for the URL in this field
@@ -1622,8 +1622,7 @@ class Website(models.Model):
         :param record: record on which to perform the check
         :raise AccessError: if the operation is forbidden
         """
-        record.check_access_rights('write')
-        record.check_access_rule('write')
+        record.check_access('write')
 
     def _disable_unused_snippets_assets(self):
         snippet_assets = self.env['ir.asset'].with_context(active_test=False).search_fetch(

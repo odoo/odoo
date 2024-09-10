@@ -567,7 +567,7 @@ class Users(models.Model):
     def _fetch_query(self, query, fields):
         records = super()._fetch_query(query, fields)
         if not set(USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
-            if self.check_access_rights('write', raise_exception=False):
+            if self.browse().has_access('write'):
                 return records
             for fname in USER_PRIVATE_FIELDS:
                 self.env.cache.update(records, self._fields[fname], repeat('********'))

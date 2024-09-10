@@ -2276,7 +2276,7 @@ class Lead(models.Model):
     def _rebuild_pls_frequency_table(self):
         # Clear the frequencies table (in sql to speed up the cron)
         try:
-            self.check_access_rights('unlink')
+            self.browse().check_access('unlink')
         except AccessError:
             raise UserError(_("You don't have the access needed to run this cron."))
         else:

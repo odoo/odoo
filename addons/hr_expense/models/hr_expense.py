@@ -593,7 +593,7 @@ class HrExpense(models.Model):
         expense_to_previous_sheet = {}
         if 'sheet_id' in vals:
             # Check access rights on the sheet
-            self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
+            self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access('write')
 
             # Store the previous sheet of the expenses to unlink the attachments later if needed
             for expense in self:

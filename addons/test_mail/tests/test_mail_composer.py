@@ -1218,7 +1218,7 @@ class TestComposerInternals(TestMailComposer):
         self.test_record.message_subscribe(partner_ids=portal_user.partner_id.ids)
 
         # patch check access rights for write access, required to post a message by default
-        with patch.object(MailTestTicket, 'check_access_rights', return_value=True):
+        with patch.object(MailTestTicket, '_check_access', return_value=None):
             with self.assertRaises(AccessError):
                 # ensure portal can not send messages
                 self.env['mail.compose.message'].with_user(portal_user).with_context(

@@ -77,8 +77,7 @@ class MailNotification(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         messages = self.env['mail.message'].browse(vals['mail_message_id'] for vals in vals_list)
-        messages.check_access_rights('read')
-        messages.check_access_rule('read')
+        messages.check_access('read')
         for vals in vals_list:
             if vals.get('is_read'):
                 vals['read_date'] = fields.Datetime.now()

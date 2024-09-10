@@ -2329,7 +2329,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         """
         self.ensure_one()
         source = self.picking_id
-        if source and source.check_access_rights('read', raise_exception=False):
+        if source and source.browse().has_access('read'):
             return {
                 'res_model': source._name,
                 'type': 'ir.actions.act_window',

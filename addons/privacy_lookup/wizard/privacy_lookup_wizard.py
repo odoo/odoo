@@ -253,7 +253,7 @@ class PrivacyLookupWizardLine(models.TransientModel):
             if line.res_model and line.res_model in self.env and not line.is_unlinked:
                 # Exclude records that can't be read (eg: multi-company ir.rule)
                 try:
-                    self.env[line.res_model].browse(line.res_id).check_access_rule('read')
+                    self.env[line.res_model].browse(line.res_id).check_access('read')
                     line.resource_ref = '%s,%s' % (line.res_model, line.res_id or 0)
                 except Exception:
                     line.resource_ref = None

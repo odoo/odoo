@@ -326,8 +326,7 @@ class PortalMailGroup(http.Controller):
         elif not token:
             try:
                 # Check that the current user has access to the group
-                group.check_access_rights('read')
-                group.check_access_rule('read')
+                group.check_access('read')
             except AccessError:
                 raise werkzeug.exceptions.NotFound()
 

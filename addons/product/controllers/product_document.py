@@ -18,7 +18,7 @@ class ProductDocumentController(Controller):
 
         record = request.env[res_model].browse(int(res_id)).exists()
 
-        if not record or not record.check_access_rights('write'):
+        if not record or not record.browse().has_access('write'):
             return
 
         files = request.httprequest.files.getlist('ufile')

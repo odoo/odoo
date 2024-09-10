@@ -266,7 +266,7 @@ class IrSequence(models.Model):
 
     def next_by_id(self, sequence_date=None):
         """ Draw an interpolated string using the specified sequence."""
-        self.check_access_rights('read')
+        self.browse().check_access('read')
         return self._next(sequence_date=sequence_date)
 
     @api.model
@@ -276,7 +276,7 @@ class IrSequence(models.Model):
             (multi-company cases), the one from the user's current company will
             be used.
         """
-        self.check_access_rights('read')
+        self.browse().check_access('read')
         company_id = self.env.company.id
         seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [company_id, False])], order='company_id')
         if not seq_ids:

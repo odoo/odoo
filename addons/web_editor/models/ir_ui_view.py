@@ -145,8 +145,7 @@ class IrUiView(models.Model):
 
         The method takes care of read and write access of both records/fields.
         """
-        record_to.check_access_rights('write')
-        record_to.check_access_rule('write')
+        record_to.check_access('write')
         record_to.check_field_access_rights('write', [name_field_to])
 
         field_from = records_from._fields[name_field_from]

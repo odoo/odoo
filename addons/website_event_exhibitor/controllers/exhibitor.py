@@ -4,9 +4,9 @@
 from ast import literal_eval
 from collections import OrderedDict
 from random import randint, sample
-from werkzeug.exceptions import NotFound, Forbidden
+from werkzeug.exceptions import Forbidden
 
-from odoo import exceptions, http
+from odoo import http
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.http import request
 from odoo.osv import expression
@@ -128,9 +128,7 @@ class ExhibitorController(WebsiteEventController):
     @http.route(['''/event/<model("event.event", "[('exhibitor_menu', '=', True)]"):event>/exhibitor/<model("event.sponsor", "[('event_id', '=', event.id)]"):sponsor>'''],
                 type='http', auth="public", website=True, sitemap=True)
     def event_exhibitor(self, event, sponsor, **options):
-        try:
-            sponsor.check_access_rule('read')
-        except exceptions.AccessError:
+        if not sponsor.has_access('read'):
             raise Forbidden()
         sponsor = sponsor.sudo()
 

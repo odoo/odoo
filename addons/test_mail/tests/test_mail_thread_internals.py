@@ -283,16 +283,13 @@ class TestDiscuss(MailCommon, TestRecipients):
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_mark_all_as_read(self):
-        def _employee_crash(*args, **kwargs):
+        def _employee_crash(recordset, operation):
             """ If employee is test employee, consider they have no access on document """
-            recordset = args[0]
             if recordset.env.uid == self.user_employee.id and not recordset.env.su:
-                if kwargs.get('raise_exception', True):
-                    raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
-                return False
+                return recordset, lambda: exceptions.AccessError('Hop hop hop Ernest, please step back.')
             return DEFAULT
 
-        with patch.object(MailTestSimple, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+        with patch.object(MailTestSimple, '_check_access', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
                 self.env['mail.test.simple'].with_user(self.user_employee).browse(self.test_record.ids).read(['name'])
 

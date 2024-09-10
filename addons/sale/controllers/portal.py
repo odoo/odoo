@@ -21,10 +21,10 @@ class CustomerPortal(payment_portal.PaymentPortal):
         SaleOrder = request.env['sale.order']
         if 'quotation_count' in counters:
             values['quotation_count'] = SaleOrder.search_count(self._prepare_quotations_domain(partner)) \
-                if SaleOrder.check_access_rights('read', raise_exception=False) else 0
+                if SaleOrder.has_access('read') else 0
         if 'order_count' in counters:
             values['order_count'] = SaleOrder.search_count(self._prepare_orders_domain(partner), limit=1) \
-                if SaleOrder.check_access_rights('read', raise_exception=False) else 0
+                if SaleOrder.has_access('read') else 0
 
         return values
 

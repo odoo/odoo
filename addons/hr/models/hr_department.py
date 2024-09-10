@@ -46,7 +46,7 @@ class Department(models.Model):
             raise NotImplementedError()
         if not value:
             return [(1, "=", 0)]
-        if self.env['hr.employee'].check_access_rights('read', raise_exception=False):
+        if self.env['hr.employee'].has_access('read'):
             return [(1, "=", 1)]
         departments_ids = self.env['hr.department'].sudo().search([('manager_id', 'in', self.env.user.employee_ids.ids)]).ids
         return [('id', 'child_of', departments_ids)]
@@ -151,7 +151,7 @@ class Department(models.Model):
         return action
 
     def action_employee_from_department(self):
-        if self.env['hr.employee'].check_access_rights('read', raise_exception=False):
+        if self.env['hr.employee'].has_access('read'):
             res_model = "hr.employee"
             search_view_id = self.env.ref('hr.view_employee_filter').id
         else:

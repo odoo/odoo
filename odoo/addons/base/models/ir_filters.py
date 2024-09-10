@@ -43,7 +43,7 @@ class IrFilters(models.Model):
 
     def write(self, vals):
         new_filter = super().write(vals)
-        self.check_access_rule('write')
+        self.check_access('write')
         return new_filter
 
     def _get_eval_domain(self):

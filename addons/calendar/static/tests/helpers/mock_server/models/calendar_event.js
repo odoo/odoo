@@ -9,7 +9,7 @@ patch(MockServer.prototype, {
      */
     async _performRPC(route, args) {
         // calendar.event methods
-        if (args.model === 'calendar.event' && args.method === 'check_access_rights') {
+        if (args.model === 'calendar.event' && args.method === 'has_access') {
             return true;
         }
         return super._performRPC(...arguments);

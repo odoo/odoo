@@ -61,15 +61,14 @@ class SMSResend(models.TransientModel):
     def _compute_can_resend(self):
         self.can_resend = any([recipient.resend for recipient in self.recipient_ids])
 
-    def _check_access(self):
+    def _check_special_access(self):
         if not self.mail_message_id or not self.mail_message_id.model or not self.mail_message_id.res_id:
             raise exceptions.UserError(_('You do not have access to the message and/or related document.'))
         record = self.env[self.mail_message_id.model].browse(self.mail_message_id.res_id)
-        record.check_access_rights('read')
-        record.check_access_rule('read')
+        record.check_access('read')
 
     def action_resend(self):
-        self._check_access()
+        self._check_special_access()
 
         all_notifications = self.env['mail.notification'].sudo().search([
             ('mail_message_id', '=', self.mail_message_id.id),
@@ -106,7 +105,7 @@ class SMSResend(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
     def action_cancel(self):
-        self._check_access()
+        self._check_special_access()
 
         sudo_self = self.sudo()
         sudo_self.mapped('recipient_ids.notification_id').write({'notification_status': 'canceled'})

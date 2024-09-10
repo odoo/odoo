@@ -100,7 +100,7 @@ class MailTemplate(models.Model):
 
     @api.depends_context('uid')
     def _compute_can_write(self):
-        writable_templates = self._filter_access_rules('write')
+        writable_templates = self._filtered_access('write')
         for template in self:
             template.can_write = template in writable_templates
 
@@ -571,8 +571,7 @@ class MailTemplate(models.Model):
 
     def _send_check_access(self, res_ids):
         records = self.env[self.model].browse(res_ids)
-        records.check_access_rights('read')
-        records.check_access_rule('read')
+        records.check_access('read')
 
     def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None,
                   email_layout_xmlid=False):

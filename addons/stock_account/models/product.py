@@ -62,7 +62,7 @@ class ProductTemplate(models.Model):
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
 
         # Check access right
-        if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+        if move_vals_list and not self.env['stock.valuation.layer'].has_access('read'):
             raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
         # Create the account moves.
         if move_vals_list:
@@ -232,7 +232,7 @@ class ProductProduct(models.Model):
         """
         # Handle stock valuation layers.
 
-        if self.filtered(lambda p: p.valuation == 'real_time') and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+        if self.filtered(lambda p: p.valuation == 'real_time') and not self.env['stock.valuation.layer'].has_access('read'):
             raise UserError(_("You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."))
 
         svl_vals_list = []
@@ -978,7 +978,7 @@ class ProductCategory(models.Model):
                 move_vals_list += Product._svl_replenish_stock_am(in_stock_valuation_layers)
 
         # Check access right
-        if move_vals_list and not self.env['stock.valuation.layer'].check_access_rights('read', raise_exception=False):
+        if move_vals_list and not self.env['stock.valuation.layer'].has_access('read'):
             raise UserError(_("The action leads to the creation of a journal entry, for which you don't have the access rights."))
         # Create the account moves.
         if move_vals_list:

@@ -319,9 +319,8 @@ export class CalendarModel extends Model {
      */
     async updateData(data) {
         if (data.hasCreateRight === null) {
-            data.hasCreateRight = await this.orm.call(this.meta.resModel, "check_access_rights", [
-                "create",
-                false,
+            data.hasCreateRight = await this.orm.call(this.meta.resModel, "has_access", [
+                [], "create",
             ]);
         }
         data.range = this.computeRange();

@@ -645,17 +645,11 @@ export class PropertiesField extends Component {
             return false;
         }
 
-        try {
-            await this.orm.call(
-                this.definitionRecordModel,
-                "check_access_rule",
-                [this.definitionRecordId],
-                { operation: "write" }
-            );
-        } catch {
-            return false;
-        }
-        return true;
+        return await this.orm.call(
+            this.definitionRecordModel,
+            "has_access",
+            [[this.definitionRecordId], "write"]
+        );
     }
 
     /**

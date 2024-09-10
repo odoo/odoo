@@ -815,7 +815,7 @@ class IrActionsServer(models.Model):
 
     def unlink_action(self):
         """ Remove the contextual actions created for the server actions. """
-        self.check_access_rights('write', raise_exception=True)
+        self.check_access('write')
         self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 
@@ -963,7 +963,7 @@ class IrActionsServer(models.Model):
             else:
                 model_name = action.model_id.model
                 try:
-                    self.env[model_name].check_access_rights("write")
+                    self.env[model_name].check_access("write")
                 except AccessError:
                     _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
                         action.name, self.env.user.login, model_name,
@@ -977,7 +977,7 @@ class IrActionsServer(models.Model):
                 # check access rules on real records only; base automations of
                 # type 'onchange' can run server actions on new records
                 try:
-                    records.check_access_rule('write')
+                    records.check_access('write')
                 except AccessError:
                     _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
                         action.name, self.env.user.login, records,

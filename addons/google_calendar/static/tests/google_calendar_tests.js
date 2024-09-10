@@ -31,7 +31,7 @@ QUnit.module('Google Calendar', {
                         {id: 5, user_id: uid, partner_id: 4, name: "event 1", start: "2016-12-13 15:55:05", stop: "2016-12-15 18:55:05", allday: false, partner_ids: [4], type: 2},
                         {id: 6, user_id: uid, partner_id: 5, name: "event 2", start: "2016-12-18 08:00:00", stop: "2016-12-18 09:00:00", allday: false, partner_ids: [4], type: 3}
                     ],
-                    check_access_rights: function () {
+                    has_access: function () {
                         return Promise.resolve(true);
                     }
                 },

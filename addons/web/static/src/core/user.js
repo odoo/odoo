@@ -47,7 +47,7 @@ export function _makeUser(session) {
     delete session.user_settings;
     delete session.partner_write_date;
 
-    // Generate caches for has_group and check_access_rights calls
+    // Generate caches for has_group and has_access calls
     const getGroupCacheValue = (group, context) => {
         if (!userId) {
             return Promise.resolve(false);
@@ -64,11 +64,11 @@ export function _makeUser(session) {
     groupCache.cache["base.group_user"] = Promise.resolve(isInternalUser);
     groupCache.cache["base.group_system"] = Promise.resolve(isSystem);
     const getAccessRightCacheValue = (model, operation, context) => {
-        const url = `/web/dataset/call_kw/${model}/check_access_rights`;
+        const url = `/web/dataset/call_kw/${model}/has_access`;
         return rpc(url, {
             model,
-            method: "check_access_rights",
-            args: [operation, false],
+            method: "has_access",
+            args: [[], operation],
             kwargs: { context },
         });
     };

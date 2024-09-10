@@ -813,11 +813,11 @@ class UnfollowUnreadableRecordTest(MailCommon):
         cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test'})
         cls.user_portal = cls._create_portal_user()
 
-    def _message_unsubscribe_unreadable_record(self, user, override_check='check_access_rule'):
+    def _message_unsubscribe_unreadable_record(self, user):
         def raise_access_error(*args, **kwargs):
             raise AccessError('Unreadable')
 
-        with patch.object(self.test_record.__class__, override_check, side_effect=raise_access_error):
+        with patch.object(self.test_record.__class__, 'check_access', side_effect=raise_access_error):
             self.test_record.with_user(user).message_unsubscribe(user.partner_id.ids)
 
     def test_initial_data(self):
@@ -825,12 +825,10 @@ class UnfollowUnreadableRecordTest(MailCommon):
         self.assertTrue(self.user_employee._is_internal())
         self.assertFalse(self.user_portal._is_internal())
         record_employee = self.test_record.with_user(self.user_employee)
-        record_employee.check_access_rights('read')
-        record_employee.check_access_rule('read')
+        record_employee.check_access('read')
         record_portal = self.test_record.with_user(self.user_portal)
         with self.assertRaises(AccessError):
-            record_portal.check_access_rights('write')
-            record_portal.check_access_rule('write')
+            record_portal.check_access('write')
 
     def test_internal_user_can_unsubscribe_from_unreadable_record(self):
         self.test_record._message_subscribe(partner_ids=self.partner_employee.ids)
@@ -845,8 +843,6 @@ class UnfollowUnreadableRecordTest(MailCommon):
         self.assertIn(self.partner_portal, self.test_record.message_follower_ids.mapped('partner_id'))
         with self.assertRaises(AccessError):
             self._message_unsubscribe_unreadable_record(self.user_portal)
-        with self.assertRaises(AccessError):
-            self._message_unsubscribe_unreadable_record(self.user_portal, override_check='check_access_rights')
 
 
 @tagged('mail_followers', 'post_install', '-at_install')
@@ -1074,12 +1070,10 @@ class UnfollowFromEmailTest(MailCommon, HttpCase):
         self.assertTrue(self.user_employee._is_internal())
         self.assertFalse(self.user_portal._is_internal())
         record_employee = self.test_record.with_user(self.user_employee)
-        record_employee.check_access_rights('read')
-        record_employee.check_access_rule('read')
+        record_employee.check_access('read')
         record_portal = self.test_record.with_user(self.user_portal)
         with self.assertRaises(AccessError):
-            record_portal.check_access_rights('write')
-            record_portal.check_access_rule('write')
+            record_portal.check_access('write')
         for template_ref in ('mail.mail_notification_layout', 'mail.mail_notification_light'):
             with self.subTest(f'Unfollow link in {template_ref}'):
                 mail_template_arch = self.env.ref(template_ref).arch

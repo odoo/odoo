@@ -826,7 +826,7 @@ class PurchaseOrder(models.Model):
         """ This function returns the values to populate the custom dashboard in
             the purchase order views.
         """
-        self.check_access_rights('read')
+        self.browse().check_access('read')
 
         result = {
             'all_to_send': 0,

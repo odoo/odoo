@@ -415,10 +415,8 @@ class ProductProduct(models.Model):
         # fail as well for the same reason since the field has been set to
         # recompute.
         if check_access:
-            self.check_access_rights('unlink')
-            self.check_access_rule('unlink')
-            self.check_access_rights('write')
-            self.check_access_rule('write')
+            self.check_access('unlink')
+            self.check_access('write')
             self = self.sudo()
             to_unlink = self._filter_to_unlink()
             to_archive = self - to_unlink
@@ -488,8 +486,7 @@ class ProductProduct(models.Model):
 
         # all user don't have access to seller and partner
         # check access and use superuser
-        self.check_access_rights("read")
-        self.check_access_rule("read")
+        self.check_access("read")
 
         product_template_ids = self.sudo().product_tmpl_id.ids
 

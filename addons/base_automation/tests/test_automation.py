@@ -70,8 +70,8 @@ class TestAutomation(TransactionCaseWithUserDemo):
 
         self_portal = self.env["ir.filters"].with_user(self.user_demo.id)
         # verify the portal user can create ir.filters but can not read base.automation
-        self.assertTrue(self_portal.env["ir.filters"].check_access_rights("create", raise_exception=False))
-        self.assertFalse(self_portal.env["base.automation"].check_access_rights("read", raise_exception=False))
+        self.assertTrue(self_portal.env["ir.filters"].has_access("create"))
+        self.assertFalse(self_portal.env["base.automation"].has_access("read"))
 
         # verify the filter can be created and the action still runs
         filters = self_portal.create({

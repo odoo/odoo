@@ -130,7 +130,7 @@ class AliasMixinOptional(models.AbstractModel):
             for record, alias_domain_id in alias_domain_values.items():
                 record.sudo().alias_domain_id = alias_domain_id.id
 
-        if alias_vals and (record_vals or self.check_access_rights('write', raise_exception=False)):
+        if alias_vals and (record_vals or self.browse().has_access('write')):
             self.mapped('alias_id').sudo().write(alias_vals)
 
         return True

@@ -14,8 +14,7 @@ class SaleStockPortal(CustomerPortal):
         picking = request.env['stock.picking'].browse([picking_id])
         picking_sudo = picking.sudo()
         try:
-            picking.check_access_rights('read')
-            picking.check_access_rule('read')
+            picking.check_access('read')
         except exceptions.AccessError:
             if not access_token or not consteq(picking_sudo.sale_id.access_token, access_token):
                 raise

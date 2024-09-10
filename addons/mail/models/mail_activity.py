@@ -9,6 +9,7 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo.exceptions import AccessError
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
 from odoo.addons.mail.tools.discuss import Store
@@ -170,7 +171,7 @@ class MailActivity(models.Model):
 
     @api.depends('res_model', 'res_id', 'user_id')
     def _compute_can_write(self):
-        valid_records = self._filter_access_rules('write')
+        valid_records = self._filtered_access('write')
         for record in self:
             record.can_write = record in valid_records
 
@@ -189,71 +190,78 @@ class MailActivity(models.Model):
         if self.recommended_activity_type_id:
             self.activity_type_id = self.recommended_activity_type_id
 
-    def _filter_access_rules(self, operation):
-        # write / unlink: valid for creator / assigned
-        if operation in ('write', 'unlink'):
-            valid = super(MailActivity, self)._filter_access_rules(operation)
-            if valid and valid == self:
-                return self
-        elif operation == 'read':
-            # Not in the ACL otherwise it would break the custom _search method
-            valid = self.sudo().filtered_domain([('user_id', '=', self.env.uid)])
-        else:
-            valid = self.env[self._name]
-        return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules')
-
-    def _filter_access_rules_python(self, operation):
-        # write / unlink: valid for creator / assigned
-        if operation in ('write', 'unlink'):
-            valid = super(MailActivity, self)._filter_access_rules_python(operation)
-            if valid and valid == self:
-                return self
-        elif operation == 'read':
-            valid = self.sudo().filtered_domain([('user_id', '=', self.env.uid)])
-        else:
-            valid = self.env[self._name]
-        return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules_python')
-
-    def _filter_access_rules_remaining(self, valid, operation, filter_access_rules_method):
-        """ Return the subset of ``self`` for which ``operation`` is allowed.
+    def _check_access(self, operation: str) -> tuple | None:
+        """ Determine the subset of ``self`` for which ``operation`` is allowed.
         A custom implementation is done on activities as this document has some
         access rules and is based on related document for activities that are
         not covered by those rules.
 
         Access on activities are the following :
 
-          * create: (``mail_post_access`` or write) right on related documents;
-          * read: read rights on related documents;
-          * write: access rule OR
-                   (``mail_post_access`` or write) rights on related documents);
-          * unlink: access rule OR
-                    (``mail_post_access`` or write) rights on related documents);
+          * read: access rule AND (assigned to user OR read rights on related documents);
+          * write: access rule OR (``mail_post_access`` or write) rights on related documents);
+          * create: access rule AND (``mail_post_access`` or write) right on related documents;
+          * unlink: access rule OR (``mail_post_access`` or write) rights on related documents);
         """
-        # compute remaining for hand-tailored rules
-        remaining = self - valid
-        remaining_sudo = remaining.sudo()
+        result = super()._check_access(operation)
+        if not self:
+            return result
 
-        # fall back on related document access right checks. Use the same as defined for mail.thread
-        # if available; otherwise fall back on read for read, write for other operations.
-        activity_to_documents = dict()
-        for activity in remaining_sudo:
-            # write / unlink: As unlinking a document bypasses access rights checks on related activities
-            # this will not prevent people from deleting documents with activities
-            # create / read: just check rights on related document
-            activity_to_documents.setdefault(activity.res_model, list()).append(activity.res_id)
-        for doc_model, doc_ids in activity_to_documents.items():
-            if hasattr(self.env[doc_model], '_mail_post_access'):
-                doc_operation = self.env[doc_model]._mail_post_access
-            elif operation == 'read':
-                doc_operation = 'read'
+        # determine activities on which to check the related document
+        if operation == 'read':
+            # check activities allowed by access rules
+            activities = self - result[0] if result else self
+            activities -= activities.sudo().filtered_domain([('user_id', '=', self.env.uid)])
+        elif operation == 'create':
+            # check activities allowed by access rules
+            activities = self - result[0] if result else self
+        else:
+            assert operation in ('write', 'unlink'), f"Unexpected operation {operation!r}"
+            # check access to the model, and check the forbidden records only
+            if self.browse()._check_access(operation):
+                return result
+            activities = result[0] if result else self.browse()
+            result = None
+
+        if not activities:
+            return result
+
+        # now check access on related document of 'activities', and collect the
+        # ids of forbidden activities
+        model_docid_actids = defaultdict(lambda: defaultdict(list))
+        for activity in activities.sudo():
+            model_docid_actids[activity.res_model][activity.res_id].append(activity.id)
+
+        forbidden_ids = []
+        for doc_model, docid_actids in model_docid_actids.items():
+            documents = self.env[doc_model].browse(docid_actids)
+            doc_operation = getattr(
+                documents, '_mail_post_access', 'read' if operation == 'read' else 'write'
+            )
+            if doc_result := documents._check_access(doc_operation):
+                for document in doc_result[0]:
+                    forbidden_ids.extend(docid_actids[document.id])
+
+        if forbidden_ids:
+            forbidden = self.browse(forbidden_ids)
+            if result:
+                result = (result[0] + forbidden, result[1])
             else:
-                doc_operation = 'write'
-            right = self.env[doc_model].check_access_rights(doc_operation, raise_exception=False)
-            if right:
-                valid_doc_ids = getattr(self.env[doc_model].browse(doc_ids), filter_access_rules_method)(doc_operation)
-                valid += remaining.filtered(lambda activity: activity.res_model == doc_model and activity.res_id in valid_doc_ids.ids)
+                result = (forbidden, lambda: forbidden._make_access_error(operation))
 
-        return valid
+        return result
+
+    def _make_access_error(self, operation: str) -> AccessError:
+        return AccessError(_(
+            "The requested operation cannot be completed due to security restrictions. "
+            "Please contact your system administrator.\n\n"
+            "(Document type: %(type)s, Operation: %(operation)s)\n\n"
+            "Records: %(records)s, User: %(user)s",
+            type=self._description,
+            operation=operation,
+            records=self.ids[:6],
+            user=self.env.uid,
+        ))
 
     # ------------------------------------------------------
     # ORM overrides
@@ -266,7 +274,7 @@ class MailActivity(models.Model):
         # find partners related to responsible users, separate readable from unreadable
         if any(user != self.env.user for user in activities.user_id):
             user_partners = activities.user_id.partner_id
-            readable_user_partners = user_partners._filter_access_rules_python('read')
+            readable_user_partners = user_partners._filtered_access('read')
         else:
             readable_user_partners = self.env.user.partner_id
 
@@ -331,7 +339,7 @@ class MailActivity(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None):
         """ Override that adds specific access rights of mail.activity, to remove
         ids uid could not see according to our custom rules. Please refer to
-        _filter_access_rules_remaining for more details about those rules.
+        :meth:`_check_access` for more details about those rules.
 
         The method is inspired by what has been done on mail.message. """
 
@@ -360,8 +368,7 @@ class MailActivity(models.Model):
             # fall back on related document access right checks. Use the same as defined for mail.thread
             # if available; otherwise fall back on read
             operation = getattr(records, '_mail_post_access', 'read')
-            if records.check_access_rights(operation, raise_exception=False):
-                allowed_ids[res_model] = set(records._filter_access_rules(operation)._ids)
+            allowed_ids[res_model] = set(records._filtered_access(operation)._ids)
 
         activities = self.browse(
             id_

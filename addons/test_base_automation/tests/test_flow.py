@@ -530,7 +530,7 @@ if env.context.get('old_values', None):  # on write
 
         # sanity check: user demo has no access to the comodel of 'linked_id'
         with self.assertRaises(AccessError):
-            Comodel.with_user(self.user_demo).check_access_rights('read')
+            Comodel.with_user(self.user_demo).check_access('read')
 
         # check base automation with filter that performs Comodel.search()
         create_automation(

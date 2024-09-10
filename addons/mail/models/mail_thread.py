@@ -3094,7 +3094,7 @@ class MailThread(models.AbstractModel):
         """
         if not self.env.user._is_internal():
             raise exceptions.AccessError(_("Access Denied"))
-        self.check_access_rights('read')
+        self.browse().check_access('read')
 
         if notification_type == 'email':
             self._notify_cancel_by_type_generic('email')
@@ -4198,13 +4198,11 @@ class MailThread(models.AbstractModel):
 
         if partner_ids and adding_current:
             try:
-                self.check_access_rights('read')
-                self.check_access_rule('read')
+                self.check_access('read')
             except exceptions.AccessError:
                 return False
         else:
-            self.check_access_rights('write')
-            self.check_access_rule('write')
+            self.check_access('write')
 
         # filter inactive and private addresses
         if partner_ids and not adding_current:
@@ -4250,11 +4248,9 @@ class MailThread(models.AbstractModel):
         # company, we allow internal users to unsubscribe themselves without
         # checking any rights.
         if set(partner_ids) != {self.env.user.partner_id.id}:
-            self.check_access_rights('write')
-            self.check_access_rule('write')
+            self.check_access('write')
         elif not self.env.user._is_internal():
-            self.check_access_rights('read')
-            self.check_access_rule('read')
+            self.check_access('read')
         self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
@@ -4584,8 +4580,7 @@ class MailThread(models.AbstractModel):
                 res["hasWriteAccess"] = False
                 res["canPostOnReadonly"] = self._mail_post_access == "read"
             try:
-                thread.check_access_rights("write")
-                thread.check_access_rule("write")
+                thread.check_access("write")
                 if request_list:
                     res["hasWriteAccess"] = True
             except AccessError:
@@ -4641,10 +4636,7 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
-        try:
-            thread = self.with_context(active_test=False).search([("id", "=", thread_id)])
-            thread.sudo(False).check_access_rights(mode)
-            thread.sudo(False).check_access_rule(mode)
-            return thread.with_context(active_test=True)
-        except AccessError:
-            return self.browse()
+        thread = self.browse(thread_id)
+        if thread.exists() and thread.sudo(False).has_access(mode):
+            return thread
+        return self.browse()

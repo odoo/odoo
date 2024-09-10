@@ -434,7 +434,7 @@ class ProjectProject(models.Model):
                 all_sols |= sols
 
         # filter to only get the action for the SOLs that the user can read
-        action_per_sol = all_sols.sudo(False)._filter_access_rules_python('read')._get_action_per_item() if with_action else {}
+        action_per_sol = all_sols.sudo(False)._filtered_access('read')._get_action_per_item() if with_action else {}
 
         def get_action(sol_id):
             """ Return the action vals to call it in frontend if the user can access to the SO related """
@@ -604,7 +604,7 @@ class ProjectProject(models.Model):
                 materials = revenues_dict.get(section_name, {})
                 sale_order_items = self.env['sale.order.line'] \
                     .browse(materials.pop('record_ids', [])) \
-                    ._filter_access_rules_python('read')
+                    ._filtered_access('read')
                 if sale_order_items:
                     args = [section_name, [('id', 'in', sale_order_items.ids)]]
                     if len(sale_order_items) == 1:

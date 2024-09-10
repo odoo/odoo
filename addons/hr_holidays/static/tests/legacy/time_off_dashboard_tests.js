@@ -106,7 +106,7 @@ QUnit.module("leave dashboard", {
 QUnit.test("test employee is passed to has_accrual_allocation", async (assert) => {
 
     const webClient = await createWebClient({ serverData, async mockRPC(route, args) {
-        if (route == '/web/dataset/call_kw/hr.leave/check_access_rights'){
+        if (route == '/web/dataset/call_kw/hr.leave/has_access'){
             return true;
         }
         if (route == '/web/dataset/call_kw/hr.leave/get_unusual_days'){

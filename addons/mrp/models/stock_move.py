@@ -712,7 +712,7 @@ class StockMove(models.Model):
     def action_open_reference(self):
         res = super().action_open_reference()
         source = self.production_id or self.raw_material_production_id
-        if source and source.check_access_rights('read', raise_exception=False):
+        if source and source.browse().has_access('read'):
             return {
                 'res_model': source._name,
                 'type': 'ir.actions.act_window',
