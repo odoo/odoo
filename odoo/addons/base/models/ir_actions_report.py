@@ -986,7 +986,6 @@ class IrActionsReport(models.Model):
         if report_type != 'pdf':
             return collected_streams, report_type
 
-        collected_streams = self._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
         has_duplicated_ids = res_ids and len(res_ids) != len(set(res_ids))
 
         # access the report details with sudo() but keep evaluation context as current user
