@@ -629,18 +629,21 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.users = cls.env['res.users'].create({
-            'name': f'user{n}',
-            'login': f'user{n}',
-            'email': f'user{n}@odoo.com',
-            'microsoft_calendar_rtoken': f'abc{n}',
-            'microsoft_calendar_token': f'abc{n}',
-            'microsoft_calendar_token_validity': datetime(9999, 12, 31),
-            'res_users_settings_ids': [(0, 0, {
+        cls.users = []
+        for n in range(1, 3):
+            user = cls.env['res.users'].create({
+                'name': f'user{n}',
+                'login': f'user{n}',
+                'email': f'user{n}@odoo.com',
+                'microsoft_calendar_rtoken': f'abc{n}',
+                'microsoft_calendar_token': f'abc{n}',
+                'microsoft_calendar_token_validity': datetime(9999, 12, 31),
+            })
+            user.res_users_settings_id.write({
                 'microsoft_synchronization_stopped': False,
                 'microsoft_calendar_sync_token': f'{n}_sync_token',
-            })]
-        } for n in range(1, 3)).user_ids
+            })
+            cls.users += [user]
 
     @freeze_time("2020-01-01")
     @patch.object(User, '_get_microsoft_calendar_token', lambda user: user.microsoft_calendar_token)
