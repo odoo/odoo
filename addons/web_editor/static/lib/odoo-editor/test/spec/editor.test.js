@@ -2985,11 +2985,13 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc[]</p>',
                         stepFunction: insertParagraphBreak,
+                        contentAfterEdit: '<p>abc</p><p placeholder="Type &quot;/&quot; for commands" class="oe-hint oe-command-temporary-hint">[]<br></p>',
                         contentAfter: '<p>abc</p><p>[]<br></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc[] </p>',
                         stepFunction: insertParagraphBreak,
+                        contentAfterEdit: '<p>abc</p><p placeholder="Type &quot;/&quot; for commands" class="oe-hint oe-command-temporary-hint">[]<br></p>',
                         contentAfter: '<p>abc</p><p>[]<br></p>',
                     });
                 });
@@ -3123,6 +3125,7 @@ X[]
                         // That selection is equivalent to </b>[]
                         contentBefore: '<p><b>abc[]</b>def</p>',
                         stepFunction: insertParagraphBreak,
+                        contentAfterEdit: '<p><b>abc</b></p><p><b oe-zws-empty-inline="">[]\u200B</b>def</p>',
                         contentAfter: '<p><b>abc</b></p><p>[]def</p>',
                     });
                     await testEditor(BasicEditor, {
@@ -3130,6 +3133,7 @@ X[]
                         stepFunction: insertParagraphBreak,
                         // The space is converted to a non-breaking
                         // space so it is visible.
+                        contentAfterEdit: '<p><b>abc</b></p><p><b oe-zws-empty-inline="">[]\u200B</b>&nbsp;def</p>',
                         contentAfter: '<p><b>abc</b></p><p>[]&nbsp;def</p>',
                     });
                     await testEditor(BasicEditor, {
@@ -3138,6 +3142,7 @@ X[]
                         // The space is converted to a non-breaking
                         // space so it is visible (because it's before a
                         // <br>).
+                        contentAfterEdit: '<p><b>abc&nbsp;</b></p><p><b oe-zws-empty-inline="">[]\u200B</b>def</p>',
                         contentAfter: '<p><b>abc&nbsp;</b></p><p>[]def</p>',
                     });
                 });
@@ -3151,6 +3156,7 @@ X[]
                         // That selection is equivalent to []<b>
                         contentBefore: '<p><b>[]abc</b></p>',
                         stepFunction: insertParagraphBreak,
+                        contentAfterEdit: '<p><b oe-zws-empty-inline="">\u200B</b></p><p><b>[]abc</b></p>',
                         contentAfter: '<p><br></p><p><b>[]abc</b></p>',
                     });
                     await testEditor(BasicEditor, {
@@ -3158,6 +3164,7 @@ X[]
                         stepFunction: insertParagraphBreak,
                         // The space should have been parsed away.
                         // JW cAfter: '<p><br></p><p><b>[]abc</b></p>',
+                        contentAfterEdit: '<p><b oe-zws-empty-inline="">\u200B</b></p><p><b>[] abc</b></p>',
                         contentAfter: '<p><br></p><p><b>[] abc</b></p>',
                     });
                 });
@@ -3192,12 +3199,14 @@ X[]
                         // That selection is equivalent to </b>[]
                         contentBefore: '<p><b>abc[]</b></p>',
                         stepFunction: insertParagraphBreak,
+                        contentAfterEdit: '<p><b>abc</b></p><p><b oe-zws-empty-inline="">[]\u200B</b></p>',
                         contentAfter: '<p><b>abc</b></p><p>[]<br></p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>abc[] </b></p>',
                         stepFunction: insertParagraphBreak,
                         // The space should have been parsed away.
+                        contentAfterEdit: '<p><b>abc</b></p><p><b oe-zws-empty-inline="">[]\u200B</b></p>',
                         contentAfter: '<p><b>abc</b></p><p>[]<br></p>',
                     });
                 });
@@ -3270,7 +3279,7 @@ X[]
                             '<p><span class="a">ab</span></p><p><span class="b">[]cd</span></p>',
                         stepFunction: insertParagraphBreak,
                         contentAfter:
-                            '<p><span class="a">ab</span></p><p><br></p><p><span class="b">[]cd</span></p>',
+                            '<p><span class="a">ab</span></p><p><span class="b">\u200B</span></p><p><span class="b">[]cd</span></p>',
                     });
                 });
                 it('should split a paragraph with a span with a bold in two', async () => {
@@ -3573,6 +3582,7 @@ X[]
                         // That selection is equivalent to </b>[]
                         contentBefore: '<p><b>abc[]</b>def</p>',
                         stepFunction: insertLineBreak,
+                        contentAfterEdit: '<p><b oe-inline-line-break="">abc<br>[]\u200B</b>def</p>',
                         // JW cAfter: '<p><b>abc[]<br></b>def</p>',
                         contentAfter: '<p><b>abc<br>[]</b>def</p>',
                     });
@@ -3583,15 +3593,23 @@ X[]
                         // it is visible (because it's after a <br>).
                         // Visually, the caret does show _after_ the line
                         // break.
+                        contentAfterEdit: '<p><b oe-inline-line-break="">abc<br>[]\u200B</b> def</p>',
                         // JW cAfter: '<p><b>abc[]<br></b>&nbsp;def</p>',
-                        contentAfter: '<p><b>abc<br>[]</b>&nbsp;def</p>',
+                        contentAfter: '<p><b>abc<br>[]</b> def</p>',
                     });
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><b>abc []</b>def</p>',
                         stepFunction: insertLineBreak,
                         // The space is converted to a non-breaking space so it
                         // is visible (because it's before a <br>).
+                        contentAfterEdit: '<p><b oe-inline-line-break="">abc&nbsp;<br>[]\u200B</b>def</p>',
                         contentAfter: '<p><b>abc&nbsp;<br>[]</b>def</p>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><b>abc[]</b><br><br></p>',
+                        stepFunction: insertLineBreak,
+                        contentAfterEdit: '<p><b oe-inline-line-break="">abc<br>[]\u200B</b><br><br></p>',
+                        contentAfter: '<p><b>abc<br>[]</b><br><br></p>',
                     });
                 });
                 it('should insert a <br> at the beginning of a format node', async () => {
