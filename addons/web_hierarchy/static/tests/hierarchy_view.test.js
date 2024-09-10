@@ -120,7 +120,7 @@ test("load hierarchy view", async () => {
 });
 
 test("display child nodes", async () => {
-    onRpc("search_read", () => {
+    onRpc("web_search_read", () => {
         expect.step("get child data");
     });
     onRpc("read_group", () => {
@@ -164,7 +164,7 @@ test("display child nodes", async () => {
 });
 
 test("display child nodes with child_field set on the view", async () => {
-    onRpc("search_read", () => {
+    onRpc("web_search_read", () => {
         expect.step("get child data with descendants");
     });
     await mountView({

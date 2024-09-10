@@ -7,19 +7,17 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def hierarchy_read(self, domain, fields, parent_field, child_field=None, order=None):
-        if parent_field not in fields:
-            fields.append(parent_field)
+    def hierarchy_read(self, domain, specification, parent_field, child_field=None, order=None):
+        if parent_field not in specification:
+            specification[parent_field] = {"fields": {"display_name": {}}}
         records = self.search(domain, order=order)
-        focus_record = self.env[self._name]
         fetch_child_ids_for_all_records = False
         if not records:
             return []
         elif len(records) == 1:
             domain = [(parent_field, '=', records.id), ('id', '!=', records.id)]
             if records[parent_field]:
-                focus_record = records
-                records += focus_record[parent_field]
+                records += records[parent_field]
                 domain = [('id', 'not in', records.ids), (parent_field, 'in', records.ids)]
             records += self.search(domain, order=order)
         else:
@@ -35,7 +33,7 @@ class Base(models.AbstractModel):
                     order=order
                 )
             }
-        result = records.read(fields)
+        result = records.web_read(specification)
         if children_ids_per_record_id:
             for record_data in result:
                 if record_data['id'] in children_ids_per_record_id:
