@@ -410,6 +410,7 @@ class TestWebsiteSaleCoupon(HttpCase):
             1. Raise an error
             2. Not delete the coupon
         """
+        self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
         website = self.env['website'].browse(1)
 
         # Create product

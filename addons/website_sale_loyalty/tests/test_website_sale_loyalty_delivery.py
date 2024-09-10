@@ -11,6 +11,8 @@ class TestWebsiteSaleDelivery(HttpCase):
     def setUp(self):
         super().setUp()
 
+        self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
+
         self.env.ref('base.user_admin').write({
             'name': 'Mitchell Admin',
             'street': '215 Vine St',

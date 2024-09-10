@@ -42,4 +42,6 @@ class TestSaleTimesheetUi(HttpCase):
         if not loaded_demo_data(self.env):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
+
+        self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
         self.start_tour('/odoo', 'sale_timesheet_tour', login='admin', timeout=100)
