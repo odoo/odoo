@@ -45,6 +45,7 @@ class DisplayDriver(Driver):
         self._actions.update({
             'update_url': self._action_update_url,
             'display_refresh': self._action_display_refresh,
+            'open_kiosk': self._action_open_kiosk,
         })
 
         self.set_orientation(self.orientation)
@@ -100,6 +101,12 @@ class DisplayDriver(Driver):
         if self.device_identifier != 'distant_display':
             self.browser.refresh()
 
+    def _action_open_kiosk(self, data):
+        if self.device_identifier != 'distant_display':
+            origin = helpers.get_odoo_server_url()
+            self.update_url(f"{origin}/pos-self/{data.get('pos_id')}?access_token={data.get('access_token')}")
+            self.set_orientation(Orientation.RIGHT)
+
     def set_orientation(self, orientation=Orientation.NORMAL):
         if self.device_identifier == 'distant_display':
             # Avoid calling xrandr if no display is connected
@@ -125,14 +132,9 @@ class DisplayController(http.Controller):
     @http.route('/hw_proxy/customer_facing_display', type='jsonrpc', auth='none', cors='*')
     def customer_facing_display(self, action, pos_id=None, access_token=None, data=None):
         display = self.ensure_display()
-        if action in ['open', 'open_kiosk']:
+        if action == 'open':
             origin = helpers.get_odoo_server_url()
-            if action == 'open_kiosk':
-                url = f"{origin}/pos-self/{pos_id}?access_token={access_token}"
-                display.set_orientation(Orientation.RIGHT)
-            else:
-                url = f"{origin}/pos_customer_display/{pos_id}/{access_token}"
-            display.update_url(url)
+            display.update_url(f"{origin}/pos_customer_display/{pos_id}/{access_token}")
             return {'status': 'opened'}
         if action == 'close':
             helpers.unlink_file('browser-url.conf')
