@@ -142,7 +142,7 @@ class HrEmployeeBase(models.AbstractModel):
         context = dict(self.env.context)
         context.update(default_res_model='hr.employee', default_res_ids=self.ids, default_composition_mode='mass', default_number_field_name='mobile_phone', default_mass_keep_log=True)
 
-        template = self.env.ref('hr_presence.sms_template_presence', False)
+        template = self.env.ref('hr_presence.sms_template_presence', raise_if_not_found=False)
         if not template:
             context['default_body'] = _("""We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.
 Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.

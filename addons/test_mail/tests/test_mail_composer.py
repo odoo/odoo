@@ -1516,7 +1516,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertFalse(message.email_layout_xmlid)
         self.assertEqual(message.message_type, 'comment', 'Mail: default message type with composer is user comment')
         self.assertEqual(message.record_name, self.test_record.name)
-        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment', 'Mail: default subtype is comment'))
+        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: default subtype is comment')
 
         # tweaks
         composer = self.env['mail.compose.message'].with_context(

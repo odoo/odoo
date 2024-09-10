@@ -156,7 +156,7 @@ class PaymentProvider(models.Model):
             if not menu_id:
                 # Fall back on `account_payment`'s menu if it is installed. If not, the user is
                 # redirected to the provider's form view but without any menu in the breadcrumb.
-                menu = self.env.ref('account_payment.payment_provider_menu', False)
+                menu = self.env.ref('account_payment.payment_provider_menu', raise_if_not_found=False)
                 menu_id = menu and menu.id  # Only set if `account_payment` is installed.
 
             account_link_url = self._stripe_create_account_link(connected_account['id'], menu_id)

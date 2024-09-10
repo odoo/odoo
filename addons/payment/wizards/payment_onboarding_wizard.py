@@ -138,6 +138,6 @@ class PaymentProviderOnboardingWizard(models.TransientModel):
 
     def _start_stripe_onboarding(self):
         """ Start Stripe Connect onboarding. """
-        menu = self.env.ref('account_payment.payment_provider_menu', False)
+        menu = self.env.ref('account_payment.payment_provider_menu', raise_if_not_found=False)
         menu_id = menu and menu.id  # Only set if `account_payment` is installed.
         return self.env.company._run_payment_onboarding_step(menu_id)

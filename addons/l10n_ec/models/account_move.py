@@ -141,7 +141,7 @@ class AccountMove(models.Model):
     def _get_l10n_ec_documents_allowed(self, identification_code):
         documents_allowed = self.env['l10n_latam.document.type']
         for document_ref in _DOCUMENTS_MAPPING.get(identification_code.value, []):
-            document_allowed = self.env.ref('l10n_ec.%s' % document_ref, False)
+            document_allowed = self.env.ref('l10n_ec.%s' % document_ref, raise_if_not_found=False)
             if document_allowed:
                 documents_allowed |= document_allowed
         return documents_allowed

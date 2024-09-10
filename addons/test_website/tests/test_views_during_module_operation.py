@@ -183,7 +183,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
     # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
     # present in XML files)
-    view = env.ref('theme_default.theme_child_view', False)
+    view = env.ref('theme_default.theme_child_view', raise_if_not_found=False)
     assert not view, "Theme view should have been removed during module update."
     assert not theme_child_view.exists(),\
         "Theme view should have been removed during module update. (2)"
@@ -206,7 +206,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
     # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
     # present in XML files)
-    view = env.ref('theme_default.theme_child_view', False)
+    view = env.ref('theme_default.theme_child_view', raise_if_not_found=False)
     assert not view, "Theme view should have been removed during module update."
     assert not theme_child_view.exists(),\
         "Theme view should have been removed during module update. (2)"
