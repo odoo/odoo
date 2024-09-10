@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -14,6 +13,13 @@ from odoo.tools.float_utils import float_compare
 
 @tagged('-at_install', 'post_install')
 class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurchaseToInvoiceCommon, AccountTestInvoicingCommon):
+
+    def _create_invoice_for_po(self, purchase_order):
+        purchase_order.action_create_invoice()
+        purchase_bill = purchase_order.invoice_ids  # get the bill from the purchase
+        purchase_bill.invoice_date = datetime.today()
+        purchase_bill.action_post()
+        return purchase_bill
 
     def test_bills_without_purchase_order_are_accounted_in_profitability_project_purchase(self):
         """
@@ -531,12 +537,6 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
         self.assertEqual(0.0, items['total']['to_bill'])
         self.assertEqual(float_compare(-self.product_a.standard_price * analytic_contribution * 3.6 - self.product_order.standard_price * analytic_contribution * 3.6, items['total']['billed'], 2), 0)
 
-    def _create_invoice_for_po(self, purchase_order):
-        purchase_order.action_create_invoice()
-        purchase_bill = purchase_order.invoice_ids  # get the bill from the purchase
-        purchase_bill.invoice_date = datetime.today()
-        purchase_bill.action_post()
-
     def test_project_purchase_order_smart_button(self):
         project = self.env['project.project'].create({
             'name': 'Test Project'
@@ -690,3 +690,37 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             items['data'][0]['to_bill'],
             -(self.product_order.standard_price * cross_distribution / 100)
         )
+
+    def test_vendor_credit_note_profitability(self):
+        """Reversing a vendor bill should cancel out the profitability costs."""
+        purchase_order = self.env['purchase.order'].create({
+            'name': "A Purchase",
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'analytic_distribution': {self.analytic_account.id: 100},
+                'product_id': self.product_order.id,
+            })],
+        })
+        purchase_order.button_confirm()
+        vendor_bill = self._create_invoice_for_po(purchase_order)
+
+        items = self.project._get_profitability_items(with_action=False)['costs']
+        self.assertDictEqual(items['total'], {
+            'billed': -purchase_order.amount_untaxed,
+            'to_bill': 0.0,
+        })
+
+        credit_note = vendor_bill._reverse_moves()
+        items = self.project._get_profitability_items(with_action=False)['costs']
+        self.assertDictEqual(items['total'], {
+            'billed': -purchase_order.amount_untaxed,
+            'to_bill': purchase_order.amount_untaxed,
+        })
+
+        credit_note.invoice_date = vendor_bill.invoice_date
+        credit_note.action_post()
+        items = self.project._get_profitability_items(with_action=False)['costs']
+        self.assertDictEqual(items['total'], {
+            'billed': 0.0,
+            'to_bill': 0.0,
+        })
