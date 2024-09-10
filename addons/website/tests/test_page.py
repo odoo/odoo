@@ -469,8 +469,8 @@ class WithContext(HttpCase):
         # -------------------------------------------
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertNotIn(b'<title> My Portal', r.content)
-        self.assertIn(b'<title> Contact Us', r.content)
+        self.assertNotIn(b'<title>My Portal', r.content)
+        self.assertIn(b'<title>Contact Us', r.content)
         self.assertURLEqual(r.url, contactus_url_full)
         self.assertEqual(r.history[0].status_code, 303)
         # Now with /contactus which is a public content
@@ -483,8 +483,8 @@ class WithContext(HttpCase):
         })
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
-        self.assertNotIn(b'<title> My Portal', r.content)
-        self.assertIn(b'<title> Login', r.content)
+        self.assertNotIn(b'<title>My Portal', r.content)
+        self.assertIn(b'<title>Login', r.content)
         self.assertIn('/web/login?redirect', r.url)
         self.assertEqual(r.history[0].status_code, 303)
 
