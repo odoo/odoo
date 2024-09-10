@@ -352,61 +352,39 @@
         <field name="name">mrp.production.work.order.kanban</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard o_mrp_workorder_kanban" create="0" sample="1">
-                <field name="name"/>
-                <field name="production_id"/>
-                <field name="state" readonly="1"/>
-                <field name="is_user_working"/>
+            <kanban class="o_mrp_workorder_kanban" create="0" sample="1">
                 <field name="working_user_ids"/>
-                <field name="last_working_user_id"/>
                 <field name="working_state"/>
-                <field name="workcenter_id"/>
-                <field name="product_id"/>
-                <field name="qty_remaining"/>
-                <field name="qty_production"/>
                 <field name="date_start"/>
                 <field name="production_date"/>
-                <field name="product_uom_id" force_save="1"/>
-                <field name="finished_lot_id"/>
-                <field name="operation_id"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="o_kanban_card_header o_kanban_record_top">
-                                <div class="o_kanban_workorder_title">
-                                    <h4 class="o_primary">
-                                        <span><t t-out="record.production_id.value"/></span> - <span><t t-out="record.name.value"/></span>
-                                    </h4>
-                                </div>
-                                <div class="o_kanban_workorder_date">
-                                    <h5><span class="d-flex" t-esc="record.date_start.value or record.production_date.value"/></h5>
-                                </div>
-                                <div>
-                                    <h2 class="ml8">
-                                        <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
-                                            <t t-out="record.state.value"/>
-                                        </span>
-                                    </h2>
-                                </div>
+                    <t t-name="kanban-card">
+                        <div class="d-flex o_kanban_record_top">
+                            <div class="o_kanban_workorder_title h4">
+                                <field name="production_id"/> - <field name="name"/>
                             </div>
-                            <div class="o_kanban_record_bottom">
-                                <h5 class="oe_kanban_bottom_left">
-                                    <span><t t-out="record.product_id.value"/>, </span> <span><t t-out="record.qty_production.value"/> <t t-out="record.product_uom_id.value"/><t t-if="record.finished_lot_id.value">, </t></span><span t-if="record.finished_lot_id.value" t-out="record.finished_lot_id.value"/>
-                                </h5>
-                                <div class="o_kanban_workorder_status">
-                                    <div class="o_kanban_record_bottom">
-                                        <div class="oe_kanban_bottom_right" t-if="record.state.raw_value == 'progress'">
-                                            <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play" role="img" aria-label="Run" title="Run"/></span>
-                                            <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause" role="img" aria-label="Pause" title="Pause"/></span>
-                                            <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop" role="img" aria-label="Stop" title="Stop"/></span>
-                                            <t name="user_avatar" t-if="record.last_working_user_id.raw_value">
-                                                <img t-att-src="kanban_image('res.users', 'avatar_128', record.last_working_user_id.raw_value)" class="oe_kanban_avatar o_avatar rounded" alt="Avatar"/>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="o_kanban_workorder_date h5">
+                                <span class="d-flex" t-esc="record.date_start.value or record.production_date.value"/>
+                            </div>
+                            <div class="h2 ms-2">
+                                <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
+                                    <field name="state"/>
+                                </span>
                             </div>
                         </div>
+                        <footer>
+                            <h5>
+                                <field name="product_id"/>, <field name="qty_production" class="ms-1"/> <field name="product_uom_id"/><t t-if="record.finished_lot_id.value">, </t> <field t-if="record.finished_lot_id.value" name="finished_lot_id" class="ms-1"/>
+                            </h5>
+                            <div class="o_kanban_workorder_status d-flex ms-auto" t-if="record.state.raw_value == 'progress'">
+                                <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play fs-6" role="img" aria-label="Run" title="Run"/></span>
+                                <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause" role="img" aria-label="Pause" title="Pause"/></span>
+                                <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop" role="img" aria-label="Stop" title="Stop"/></span>
+                                <t name="user_avatar" t-if="record.last_working_user_id.raw_value">
+                                    <field name="last_working_user_id" widget="image" options="{'preview_image': 'avatar_128'}" class="ms-1" alt="Avatar"/>
+                                </t>
+                            </div>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
