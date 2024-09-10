@@ -60,7 +60,10 @@ const GalleryWidget = publicWidget.Widget.extend({
         };
 
         const milliseconds = this.el.dataset.interval || false;
-        this.$modal = $(renderToElement('website.gallery.slideshow.lightbox', {
+        const lightboxTemplate = this.$target[0].dataset.vcss === "002" ?
+            "website.gallery.s_image_gallery_mirror.lightbox" :
+            "website.gallery.slideshow.lightbox";
+        this.$modal = $(renderToElement(lightboxTemplate, {
             images: imageEls,
             index: currentImageIndex,
             dim: dimensions,
