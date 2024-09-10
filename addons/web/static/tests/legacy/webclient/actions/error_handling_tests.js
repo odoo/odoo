@@ -127,4 +127,39 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.verifySteps([]); // doesn't indefinitely try to reload the list
     });
+
+    QUnit.test("connection lost when coming back to list from form", async function (assert) {
+        assert.expectErrors();
+        registry.category("services").add("error", errorService);
+
+        let offline = false;
+        const mockRPC = async (route, { method }) => {
+            assert.step(method || route);
+            if (offline) {
+                throw new Error("Session Expired");
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+        assert.containsOnce(target, ".o_list_view");
+
+        await click(target.querySelector(".o_data_cell"));
+        assert.containsOnce(target, ".o_form_view");
+
+        offline = true;
+        await click(target.querySelector(".o_breadcrumb .o_back_button a"));
+        await nextTick();
+        assert.containsOnce(target, ".o_dialog");
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "get_views",
+            "web_search_read",
+            "web_read",
+            "web_search_read",
+        ]);
+        await nextTick();
+        assert.verifySteps([]); // doesn't indefinitely try to reload the list
+        assert.verifyErrors(["Session Expired"]);
+    });
 });

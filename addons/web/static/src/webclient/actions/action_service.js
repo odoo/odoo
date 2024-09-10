@@ -869,6 +869,10 @@ export function makeActionManager(env, router = _router) {
                     // This occurs when clicking on a breadcrumbs.
                     return restore(controllerStack[index - 1].jsId);
                 }
+                if (index === 0) {
+                    // No previous controller to restore, so do nothing but display the error
+                    return;
+                }
                 const lastController = controllerStack.at(-1);
                 if (lastController) {
                     if (lastController.jsId !== controller.jsId) {
