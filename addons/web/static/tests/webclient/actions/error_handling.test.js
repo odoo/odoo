@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame, mockFetch } from "@odoo/hoot-mock";
+import { animationFrame, mockFetch, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
@@ -134,6 +134,11 @@ test("connection lost when opening form view from kanban", async () => {
 
     mockFetch((input) => {
         expect.step(input);
+        if (input === "/web/webclient/version_info") {
+            // simulate a connection restore at the end of the test, to have no
+            // impact on other tests (see connectionLostNotifRemove)
+            return true;
+        }
         throw Error(); // simulate a ConnectionLost error
     });
     await contains(".o_kanban_record").click();
@@ -151,4 +156,53 @@ test("connection lost when opening form view from kanban", async () => {
     ]);
     await animationFrame();
     expect.verifySteps([]); // doesn't indefinitely try to reload the list
+
+    // cleanup
+    await runAllTimers();
+    await animationFrame();
+    expect.verifySteps(["/web/webclient/version_info"]);
+});
+
+test.tags("desktop")("connection lost when coming back to kanban from form", async () => {
+    expect.errors(1);
+
+    stepAllNetworkCalls();
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    await contains(".o_kanban_record").click();
+    expect(".o_form_view").toHaveCount(1);
+
+    mockFetch((input) => {
+        expect.step(input);
+        if (input === "/web/webclient/version_info") {
+            // simulate a connection restore at the end of the test, to have no
+            // impact on other tests (see connectionLostNotifRemove)
+            return true;
+        }
+        throw Error(); // simulate a ConnectionLost error
+    });
+    await contains(".o_breadcrumb .o_back_button a").click();
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+    expect(".o_notification").toHaveCount(1);
+    expect(".o_notification").toHaveText("Connection lost. Trying to reconnect...");
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+        "web_read",
+        "/web/dataset/call_kw/partner/web_search_read", // from mockFetch
+    ]);
+    await animationFrame();
+    expect.verifySteps([]); // doesn't indefinitely try to reload the list
+
+    // cleanup
+    await runAllTimers();
+    await animationFrame();
+    expect.verifySteps(["/web/webclient/version_info"]);
 });
