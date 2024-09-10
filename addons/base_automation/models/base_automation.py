@@ -13,6 +13,7 @@ from odoo import _, api, exceptions, fields, models
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import safe_eval
 from odoo.http import request
+from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups
 
 _logger = logging.getLogger(__name__)
 
@@ -741,10 +742,18 @@ class BaseAutomation(models.Model):
                 # check preconditions on records
                 pre = {a: a._filter_pre(records) for a in automations}
                 # read old values before the update
-                old_values = {
-                    record.id: {field_name: record[field_name] for field_name in vals}
-                    for record in records
-                }
+                old_values = {}
+                for record in records:
+                    for fname in vals:
+                        fname_val = False
+                        if is_selection_groups(fname):
+                            old_group_id = (record.groups_id.filtered(lambda g: g.id in get_selection_groups(fname)) - record.groups_id.implied_ids).ids
+                            if len(old_group_id) == 1:
+                                fname_val = old_group_id.pop()
+                        else:        
+                            fname_val = record[fname]
+                        old_values[record.id] = {fname: fname_val}
+
                 # call original method
                 write.origin(self.with_env(automations.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
