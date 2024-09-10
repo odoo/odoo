@@ -379,7 +379,7 @@ export class Thread extends Record {
 
     get displayName() {
         if (this.channel_type === "chat" && this.correspondent) {
-            return this.custom_channel_name || this.correspondent.persona.nameOrDisplayName;
+            return this.custom_channel_name || this.correspondent.persona.name;
         }
         if (this.channel_type === "group" && !this.name) {
             return formatList(

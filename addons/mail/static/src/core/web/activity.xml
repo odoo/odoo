@@ -26,7 +26,7 @@
                 <span class="fw-bolder text-danger" t-elif="delay lt 0"><t t-esc="-delay"/> days overdue:</span>
                 <span class="fw-bolder text-warning" t-else="">Today:</span>
                 <span class="fw-bolder px-2 text-break"><t t-esc="displayName"/></span>
-                <span class="o-mail-Activity-user px-1">for <t t-esc="props.activity.persona.nameOrDisplayName"/></span>
+                <span class="o-mail-Activity-user px-1">for <t t-esc="props.activity.persona.name"/></span>
                 <button class="btn btn-link btn-primary p-0 lh-1 border-0">
                     <i class="fa fa-info-circle" role="img" title="Info" aria-label="Info" t-on-click="toggleDetails"/>
                 </button>
@@ -36,7 +36,7 @@
                     <tbody>
                         <tr><td class="text-end fw-bolder">Activity type</td><td><t t-esc="props.activity.activity_type_id[1]"/></td></tr>
                         <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="props.activity.dateCreateFormatted"/> by <t t-esc="props.activity.create_uid[1]"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Assigned to</td><td><t t-esc="props.activity.persona.nameOrDisplayName"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Assigned to</td><td><t t-esc="props.activity.persona.name"/></td></tr>
                         <tr><td class="text-end fw-bolder">Due on</td><td><t t-esc="props.activity.dateDeadlineFormatted"/></td></tr>
                     </tbody>
                 </table>

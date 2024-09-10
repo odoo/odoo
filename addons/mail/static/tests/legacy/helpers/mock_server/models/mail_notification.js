@@ -51,7 +51,7 @@ patch(MockServer.prototype, {
                 notification_status: notification.notification_status,
                 failure_type: notification.failure_type,
                 persona: partner
-                    ? { id: partner.id, displayName: partner.display_name, type: "partner" }
+                    ? { id: partner.id, name: partner.name, type: "partner" }
                     : undefined,
             };
         });
