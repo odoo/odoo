@@ -549,3 +549,101 @@ describe("Selection not collapsed", () => {
         });
     });
 });
+
+describe("Table", () => {
+    test("should remove all contents of an anchor td and split paragraph on forward selection", async () => {
+        // Forward selection
+        await testEditor({
+            contentBefore: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>[abc</p><p>def</p></td>
+                            <td><p>abcd</p></td>
+                            <td><p>ab]</p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+            stepFunction: splitBlock,
+            contentAfter: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p><br></p><p>[]<br></p></td>
+                            <td><p>abcd</p></td>
+                            <td><p>ab</p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+        });
+    });
+    test("should remove all contents of an anchor td and split paragraph on backward selection", async () => {
+        // Backward selection
+        await testEditor({
+            contentBefore: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>]ab</p></td>
+                            <td><p>abcd</p></td>
+                            <td><p>abc</p><p>def[</p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+            stepFunction: splitBlock,
+            contentAfter: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>ab</p></td>
+                            <td><p>abcd</p></td>
+                            <td><p><br></p><p>[]<br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+        });
+    });
+    test("remove selected text and insert paragraph tag within a table cell and enter key is pressed", async () => {
+        await testEditor({
+            contentBefore: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>[Test</p><p>Test</p><p>Test]</p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+            stepFunction: splitBlock,
+            contentAfter: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p><br></p><p>[]<br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+        });
+    });
+});
