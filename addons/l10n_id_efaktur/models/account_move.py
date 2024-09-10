@@ -136,7 +136,7 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Could not download E-faktur in draft state'))
 
             if not record.l10n_id_tax_number:
-                if not self.l10n_id_need_kode_transaksi:
+                if not record.l10n_id_need_kode_transaksi:
                     raise ValidationError(_('E-faktur is not available for invoices without any taxes.'))
                 raise ValidationError(_('Connect %(move_number)s with E-faktur to download this report', move_number=record.name))
 
