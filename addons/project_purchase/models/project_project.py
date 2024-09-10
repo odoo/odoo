@@ -133,7 +133,7 @@ class Project(models.Model):
                         percentage for ids, percentage in line.analytic_distribution.items()
                         if str(self.analytic_account_id.id) in ids.split(',')
                     ) / 100.
-                    cost = price_subtotal * analytic_contribution
+                    cost = price_subtotal * analytic_contribution * (-1 if line.is_refund else 1)
                     if line.parent_state == 'posted':
                         amount_invoiced -= cost
                     else:
