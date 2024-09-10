@@ -250,7 +250,7 @@ export function makeActionManager(env, router = _router) {
             const key = JSON.stringify(actionInfo);
             keys.push(key);
             if (displayName) {
-                breadcrumbCache[key] = displayName;
+                breadcrumbCache[key] = { display_name: displayName };
             }
             if (key in breadcrumbCache) {
                 continue;
@@ -267,19 +267,19 @@ export function makeActionManager(env, router = _router) {
                 });
             }
         }
-        const displayNames = await Promise.all(keys.map((k) => breadcrumbCache[k]));
+        const results = await Promise.all(keys.map((k) => breadcrumbCache[k]));
         const controllersToRemove = [];
-        for (const [controller, displayName] of zip(controllers, displayNames)) {
-            if (typeof displayName === "string") {
-                controller.displayName = displayName;
+        for (const [controller, res] of zip(controllers, results)) {
+            if ("display_name" in res) {
+                controller.displayName = res.display_name;
             } else {
                 controllersToRemove.push(controller);
-                if (displayName?.error) {
+                if ("error" in res) {
                     console.warn(
                         "The following element was removed from the breadcrumb and from the url.\n",
                         controller.state,
                         "\nThis could be because the action wasn't found or because the user doesn't have the right to access to the record, the original error is :\n",
-                        displayName.error
+                        res.error
                     );
                 }
             }
