@@ -49,10 +49,6 @@
                             placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"
                             options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'render_model'}"/>
                         <field name="attachment_ids" widget="mail_composer_attachment_list"/>
-                        <group>
-                            <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
-                                context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
-                        </group>
                     </div>
                     <notebook invisible="composition_mode != 'mass_mail'">
                         <page string="Content" name="page_content">
@@ -61,10 +57,6 @@
                                     placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"
                                     options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'render_model'}"/>
                                 <field name="attachment_ids" widget="mail_composer_attachment_list"/>
-                                <group>
-                                    <field name="template_id" string="Load template" options="{'no_create': True}" class="w-50"
-                                        context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
-                                </group>
                             </div>
                         </page>
                         <page string="Settings" name="page_settings">
@@ -86,11 +78,8 @@
                                 type="object" class="btn-primary" data-hotkey="q"
                                 invisible="not subtype_is_log"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
-                        <button icon="fa-cloud-upload" type="object"
-                                name="open_template_creation_wizard" string="Save Template"
-                                invisible="not can_edit_body"
-                                class="float-end btn-secondary" data-hotkey="w" help="Save as a new template"/>
                         <field name="attachment_ids" widget="mail_composer_attachment_selector"/>
+                        <field name="template_id" widget="mail_composer_template_selector"/>
                         <field name="body" widget="mail_composer_chatgpt"/>
                     </footer>
                 </form>
