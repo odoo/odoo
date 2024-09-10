@@ -255,7 +255,12 @@ class StockRule(models.Model):
                 if float_compare(qty_needed, 0, precision_rounding=procurement.product_id.uom_id.rounding) <= 0:
                     procure_method = 'make_to_order'
                     for move in procurement.values.get('group_id', self.env['procurement.group']).stock_move_ids:
-                        if move.rule_id == rule and float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0:
+                        is_sale_line_or_product_match = move.sale_line_id.id == procurement.values['sale_line_id'] if procurement.values.get('sale_line_id') else move.product_id == procurement.product_id
+                        if (
+                            move.rule_id == rule
+                            and float_compare(move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) > 0
+                            and is_sale_line_or_product_match
+                        ):
                             procure_method = move.procure_method
                             break
                     forecasted_qties_by_loc[rule.location_src_id][procurement.product_id.id] -= qty_needed
