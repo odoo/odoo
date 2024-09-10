@@ -79,10 +79,6 @@ registerWebsitePreviewTour('slides_tour', {
     tooltipPosition: 'bottom',
     run: "click",
 }, {
-    trigger: ':iframe a[name="o_wslides_list_slide_add_quizz"]',
-    content: markup(_t("If you want to be sure that attendees have understood and memorized the content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>.")),
-    run: "click",
-}, {
     trigger: ':iframe input[name="question-name"]',
     content: markup(_t("Enter your <b>Question</b>. Be clear and concise.")),
     tooltipPosition: 'left',

@@ -139,7 +139,7 @@
 
 <!-- Python equivalent of the JS template "website.slides.sidebar.done.button" -->
 <template id="slide_sidebar_done_button" name="Sidebar Done Button">
-    <t t-set="uncompleted_icon" t-value="use_slide_icon and slide.slide_icon_class or 'fa-circle-thin'"/>
+    <t t-set="uncompleted_icon" t-value="'fa-circle-thin'"/>
     <div t-if="is_member"
         class="o_wslides_sidebar_done_button align-self-start"
         t-att-data-id="slide.id"

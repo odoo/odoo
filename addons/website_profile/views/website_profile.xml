@@ -675,8 +675,8 @@
     </template>
 
     <template id="email_validation_banner">
-        <t t-set="send_alert_classes" t-value="send_alert_classes if send_alert_classes else 'alert alert-danger alert-dismissable'"/>
-        <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissable'"/>
+        <t t-set="send_alert_classes" t-value="send_alert_classes if send_alert_classes else 'alert alert-danger alert-dismissible'"/>
+        <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissible'"/>
         <t t-set="my_account_redirect" t-value="'/my/account?redirect='+redirect_url"/>
 
         <div t-if="not is_public_user and not user.email" t-att-class="send_alert_classes" role="alert">

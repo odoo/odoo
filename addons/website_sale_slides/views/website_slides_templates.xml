@@ -13,7 +13,7 @@
     </xpath>
 </template>
 
-<template name="Buy Course To Download Resource" id="slide_aside_training_category_buy_course" inherit_id="website_slides.slide_aside_training_category">
+<template name="Buy Course To Download Resource" id="slide_aside_training_category_buy_course" inherit_id="website_slides.slide_aside_category">
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
             <i class="fa fa-download me-1"/>
@@ -44,13 +44,8 @@
 <template id="course_slides_list_slide"
     name="Slide template for a training channel (Sale)"
     inherit_id="website_slides.course_slides_list_slide">
-    <xpath expr="//a[@t-if='channel.can_upload']/span/span" position="replace">
-        <span t-if="channel.enroll == 'payment'">Free Preview</span>
-        <span t-else="">Preview</span>
-    </xpath>
-    <xpath expr="//t[@t-elif='slide.is_preview and not channel.is_member']/span/span" position="replace">
-        <span t-if="channel.enroll == 'payment'">Free Preview</span>
-        <span t-else="">Preview</span>
+    <xpath expr="//t[@t-if='slide.is_preview and not channel.is_member']/span/span" position="replace">
+        <span>Free Preview</span>
     </xpath>
 </template>
 
