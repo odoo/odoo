@@ -706,7 +706,7 @@ test.tags("desktop")("m2m grouped rendering with active field (archivable true)"
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(2) })).toHaveCount(2);
 
     expect(queryAllTexts(".o_kanban_group")).toEqual([
-        "None (1)",
+        "None\n(1)",
         "gold\n(2)\nyop\nblip",
         "silver\n(2)\nyop\ngnap",
     ]);
@@ -1802,7 +1802,7 @@ test.tags("desktop")("kanban grouped by many2one: false column is folded by defa
 
     expect(".o_kanban_group").toHaveCount(3);
     expect(".o_column_folded").toHaveCount(1);
-    expect(queryAllTexts(".o_kanban_header")).toEqual(["None (1)", "hello\n(1)", "xmo\n(2)"]);
+    expect(queryAllTexts(".o_kanban_header")).toEqual(["None\n(1)", "hello\n(1)", "xmo\n(2)"]);
 
     await contains(".o_kanban_header").click();
 
@@ -5774,7 +5774,7 @@ test.tags("desktop")("delete a column in grouped on m2o", async () => {
 
     expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("hello\n(2)");
     expect(".o_kanban_group").toHaveCount(2, { message: "should still have two columns" });
-    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("None (2)", {
+    expect(getKanbanColumn(0).querySelector(".o_column_title").innerText).toBe("None\n(2)", {
         message: "first column should have no id (Undefined column)",
     });
 
@@ -6368,7 +6368,7 @@ test.tags("desktop")("quick create column and examples: with folded columns", as
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:not(.o_column_folded)").toHaveCount(1);
     expect(".o_kanban_group.o_column_folded").toHaveCount(1);
-    expect(queryAllTexts(".o_kanban_group")).toEqual(["not folded\n(0)", "folded (0)"]);
+    expect(queryAllTexts(".o_kanban_group")).toEqual(["not folded\n(0)", "folded\n(0)"]);
 });
 
 test.tags("desktop")("quick create column's apply button's display text", async () => {
@@ -7090,12 +7090,14 @@ test("empty grouped kanban with sample data and click quick create", async () =>
     expect(".o_kanban_record").toHaveCount(16, {
         message: "there should be 8 sample records by column",
     });
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
 
     await quickCreateKanbanRecord();
     expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(0);
     expect(queryAll(".o_kanban_quick_create", { root: getKanbanColumn(0) })).toHaveCount(1);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(0)", "xmo\n(0)"]);
 
     await editKanbanRecordQuickCreateInput("display_name", "twilight sparkle");
     await validateKanbanRecord();
@@ -7103,6 +7105,7 @@ test("empty grouped kanban with sample data and click quick create", async () =>
     expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(".o_view_nocontent").toHaveCount(0);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(1)", "xmo\n(0)"]);
 });
 
 test.tags("desktop")("quick create record in grouped kanban with sample data", async () => {
@@ -7660,7 +7663,7 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
 
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(".o_kanban_group:first .o_column_title").toHaveText("hello\n(16)");
+    expect(".o_kanban_group:first .o_column_title").toHaveText("hello");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(16);
     expect(".o_kanban_record").toHaveText("hello");
 });
@@ -12719,7 +12722,7 @@ test.tags("desktop")("fold a column and drag record on it should not unfold it",
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(1).innerText).toBe("xmo (2)");
+    expect(getKanbanColumn(1).innerText).toBe("xmo\n(2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         queryFirst(".o_column_folded")
@@ -12727,7 +12730,7 @@ test.tags("desktop")("fold a column and drag record on it should not unfold it",
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(getKanbanColumn(1).innerText).toBe("xmo (3)");
+    expect(getKanbanColumn(1).innerText).toBe("xmo\n(3)");
 });
 
 test.tags("desktop")("drag record on initially folded column should not unfold it", async () => {
@@ -12753,7 +12756,7 @@ test.tags("desktop")("drag record on initially folded column should not unfold i
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("xmo (2)");
+    expect(queryText(getKanbanColumn(1))).toBe("xmo\n(2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         queryFirst(".o_column_folded")
@@ -12761,7 +12764,7 @@ test.tags("desktop")("drag record on initially folded column should not unfold i
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("xmo (3)");
+    expect(queryText(getKanbanColumn(1))).toBe("xmo\n(3)");
 });
 
 test.tags("desktop")("drag record to folded column, with progressbars", async () => {
@@ -12797,14 +12800,14 @@ test.tags("desktop")("drag record to folded column, with progressbars", async ()
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("Yes (2)");
+    expect(queryText(getKanbanColumn(1))).toBe("Yes\n(2)");
 
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
-    expect(queryText(getKanbanColumn(1))).toBe("Yes (3)");
+    expect(queryText(getKanbanColumn(1))).toBe("Yes\n(3)");
     expect(getKanbanProgressBars(0).map((pb) => pb.style.width)).toEqual(["100%"]);
     expect(getKanbanCounters()).toEqual(["-4"]);
     expect.verifySteps([
@@ -12944,7 +12947,7 @@ test.tags("desktop")("no content helper, all groups folded with (unloaded) recor
     });
 
     expect(".o_column_folded").toHaveCount(2);
-    expect(queryAllTexts(".o_column_title")).toEqual(["hello (2)", "xmo (2)"]);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(2)", "xmo\n(2)"]);
     expect(".o_nocontent_help").toHaveCount(0);
 });
 
@@ -13287,8 +13290,7 @@ test("sample server: _mockWebReadGroup API", async () => {
 
     expect(".o_kanban_view .o_view_sample_data").toHaveCount(1);
     expect(".o_kanban_group").toHaveCount(1);
-    expect(".o_kanban_group .o_column_title").toHaveText("December 2022\n(16)");
-    expect(".o_kanban_group .o_column_title").toHaveText("December 2022\n(16)");
+    expect(".o_kanban_group .o_column_title").toHaveText("December 2022");
     expect(".o_kanban_group .o_kanban_record").toHaveCount(16);
 });
 
@@ -13482,7 +13484,7 @@ test("Kanban: no reset of the groupby when a non-empty column is deleted", async
 
     expect(".o_kanban_group").toHaveCount(2, { message: "should now have two columns" });
     expect(queryText(".o_column_title", { root: getKanbanColumn(1) })).toBe("silver\n(1)");
-    expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("None (3)");
+    expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("None\n(3)");
 });
 
 test.tags("desktop")("searchbar filters are displayed directly", async () => {
