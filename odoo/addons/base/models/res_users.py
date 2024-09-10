@@ -1463,6 +1463,10 @@ class GroupsImplied(models.Model):
         return groups
 
     def write(self, values):
+        internal = self.env.ref('base.group_users', raise_if_not_found=False)
+        pl = self.env.ref('product.group_product_pricelist', raise_if_not_found=False)
+        to_check = internal and pl and internal in self and pl not in internal.implied_ids
+
         res = super(GroupsImplied, self).write(values)
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
@@ -1489,6 +1493,10 @@ class GroupsImplied(models.Model):
                 """, dict(gid=group.id))
             self._check_one_user_type()
         if 'implied_ids' in values:
+            import traceback
+            if not any(f.name == 'run_suite' for f in traceback.extract_stack()):
+                if to_check and pl in internal.implied_ids:
+                    _logger.runbot("enabled pricelists", stack_info=True)
             self.env.registry.clear_cache('groups')
         return res
 
