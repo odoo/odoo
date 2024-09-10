@@ -7,8 +7,8 @@
                 <div class="o_embedded_actions overflow-hidden d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className">
                     <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
                         <t t-if="_checkValueLocalStorage(action)">
-                            <button class="btn btn-secondary"
-                                    t-att-class="{ 'active': state.embeddedInfos.currentEmbeddedAction?.id === action.id, 'o_draggable': !!action.id}"
+                            <button class="btn btn-secondary o_draggable"
+                                    t-att-class="{ 'active': state.embeddedInfos.currentEmbeddedAction?.id === action.id}"
                                     t-on-click="() => this.onEmbeddedActionClick(action)"
                                     t-att-data-id="action.id"
                             >
@@ -135,7 +135,7 @@
                 <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
                     <DropdownItem 
                         class="this.getDropdownClass(action)"
-                        onSelected="() => this.env.isSmall ? this.onEmbeddedActionClick(action) : action.id ? this._setVisibility(action.id) : {}"
+                        onSelected="() => this.env.isSmall ? this.onEmbeddedActionClick(action) : this._setVisibility(action.id)"
                         closingMode="'none'"
                     >
                         <div class="d-flex p-0 pe-1 align-items-center justify-content-between">
