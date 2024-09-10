@@ -82,7 +82,7 @@ export class ChannelMember extends Record {
     typingTimeoutId;
 
     get name() {
-        return this.persona.nameOrDisplayName;
+        return this.persona.name;
     }
 
     /**

@@ -26,7 +26,7 @@ test("Message model properties", async () => {
     });
     const message = store.Message.insert({
         attachment_ids: 750,
-        author: { id: 5, displayName: "Demo" },
+        author: { id: 5, name: "Demo" },
         body: "<p>Test</p>",
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
@@ -42,5 +42,5 @@ test("Message model properties", async () => {
     expect(message.thread.id).toBe(serverState.partnerId);
     expect(message.thread.name).toBe("general");
     expect(message.author.id).toBe(5);
-    expect(message.author.displayName).toBe("Demo");
+    expect(message.author.name).toBe("Demo");
 });
