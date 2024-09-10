@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_leave_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.inherit</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='leave_type_request_unit']" position="after">
+                <field name="l10n_in_contains_sandwich_leaves" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='duration_display']" position="after">
+                <div name="l10n_in_contains_sandwich_leaves" invisible="not l10n_in_contains_sandwich_leaves" class="w-md-75 float-end ps-3 alert alert-warning" role="alert">
+                    The requested time considers the sandwich leave policy.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

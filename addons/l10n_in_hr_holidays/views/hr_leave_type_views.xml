@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_leave_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.type.form.inherit</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <field name="show_on_dashboard" position="after">
+                <field name="l10n_in_is_sandwich_leave" string="Sandwich Leaves" invisible="country_code != 'IN'" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
