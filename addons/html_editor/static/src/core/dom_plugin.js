@@ -127,11 +127,18 @@ export class DomPlugin extends Plugin {
 
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
+        const isList = (node) => ["UL", "OL"].includes(node.nodeName);
+        const hasSingleChild = container.childNodes.length === 1;
+        if (closestElement(selection.anchorNode, "UL, OL") && isList(container.firstChild)) {
+            unwrapContents(container.firstChild);
+        }
+        // Similarly if the html inserted ends with a list.
         if (
-            closestElement(selection.anchorNode, "UL, OL") &&
-            (container.firstChild.nodeName === "UL" || container.firstChild.nodeName === "OL")
+            closestElement(selection.focusNode, "UL, OL") &&
+            isList(container.lastChild) &&
+            !hasSingleChild
         ) {
-            container.replaceChildren(...container.firstChild.childNodes);
+            unwrapContents(container.lastChild);
         }
 
         startNode = startNode || this.shared.getEditableSelection().anchorNode;
@@ -334,7 +341,9 @@ export class DomPlugin extends Plugin {
             currentNode = previousNode;
         }
         currentNode = lastChildNode || currentNode;
-        let lastPosition = [...paragraphRelatedElements, "LI"].includes(currentNode.nodeName)
+        let lastPosition = [...paragraphRelatedElements, "LI", "OL", "UL"].includes(
+            currentNode.nodeName
+        )
             ? rightPos(lastLeaf(currentNode))
             : rightPos(currentNode);
 
