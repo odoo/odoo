@@ -159,7 +159,7 @@ def get_action(env, path_part):
         if someid.isdigit():  # record id
             action = Actions.sudo().browse(int(someid)).exists()
         elif '.' in someid:   # xml id
-            action = env.ref(someid, False)
+            action = env.ref(someid, raise_if_not_found=False)
             if not action or not action._name.startswith('ir.actions'):
                 action = Actions
         else:

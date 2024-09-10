@@ -75,15 +75,15 @@ class TestPostInstallProjectSharingWithSms(TestProjectSharingWithSms):
 
             The sms template should be sent and the stage should be changed on the task.
         """
-        project_user_group = self.env.ref('project.group_project_user')
-        sale_manager_group = self.env.ref('sales_team.group_sale_manager', False)
+        project_user_group, sale_manager_group = self.env.ref(
+            'project.group_project_user',
+            'sales_team.group_sale_manager',
+            raise_if_not_found=False
+        )
         if not sale_manager_group:
             self.skipTest('`sale_sms` not installed')
         self.user_projectuser.write({
-            'groups_id': [
-                Command.link(project_user_group.id),
-                Command.link(sale_manager_group.id),
-            ]
+            'groups_id': [Command.set((project_user_group + sale_manager_group).ids)]
         })
         self.assertTrue(self.task_cow.with_user(self.user_projectuser).has_access('write'))
         with self.mockSMSGateway():

@@ -1925,7 +1925,7 @@ class ProjectTask(models.Model):
                 'type': 'ir.actions.act_window',
                 'res_model': 'project.task',
                 'res_id': self.id,
-                'views': [(self.env.ref('project.project_task_convert_to_subtask_view_form', False).id, 'form')],
+                'views': [(self.env.ref('project.project_task_convert_to_subtask_view_form').id, 'form')],
                 'target': 'new',
             }
         return {

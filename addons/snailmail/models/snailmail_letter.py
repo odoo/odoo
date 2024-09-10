@@ -286,7 +286,7 @@ class SnailmailLetter(models.Model):
                         'error_code': 'ATTACHMENT_ERROR'
                     })
                     continue
-                if letter.company_id.external_report_layout_id == self.env.ref('l10n_de.external_layout_din5008', False):
+                if letter.company_id.external_report_layout_id == self.env.ref('l10n_de.external_layout_din5008', raise_if_not_found=False):
                     document.update({
                         'rightaddress': 0,
                     })

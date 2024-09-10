@@ -17,13 +17,13 @@ class ProjectProject(models.Model):
         """ Pre-fill timesheet product as "Time" data product when creating new project allowing billable tasks by default. """
         result = super().default_get(fields)
         if 'timesheet_product_id' in fields and result.get('allow_billable') and result.get('allow_timesheets') and not result.get('timesheet_product_id'):
-            default_product = self.env.ref('sale_timesheet.time_product', False)
+            default_product = self.env.ref('sale_timesheet.time_product', raise_if_not_found=False)
             if default_product:
                 result['timesheet_product_id'] = default_product.id
         return result
 
     def _default_timesheet_product_id(self):
-        return self.env.ref('sale_timesheet.time_product', False)
+        return self.env.ref('sale_timesheet.time_product', raise_if_not_found=False)
 
     pricing_type = fields.Selection([
         ('task_rate', 'Task rate'),
@@ -134,7 +134,7 @@ class ProjectProject(models.Model):
 
     @api.depends('allow_timesheets', 'allow_billable')
     def _compute_timesheet_product_id(self):
-        default_product = self.env.ref('sale_timesheet.time_product', False)
+        default_product = self.env.ref('sale_timesheet.time_product', raise_if_not_found=False)
         for project in self:
             if not project.allow_timesheets or not project.allow_billable:
                 project.timesheet_product_id = False

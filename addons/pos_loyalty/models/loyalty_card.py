@@ -28,7 +28,7 @@ class LoyaltyCard(models.Model):
     def _get_default_template(self):
         self.ensure_one()
         if self.source_pos_order_id:
-            return self.env.ref('pos_loyalty.mail_coupon_template', False)
+            return self.env.ref('pos_loyalty.mail_coupon_template', raise_if_not_found=False)
         return super()._get_default_template()
 
     def _mail_get_partner_fields(self, introspect_fields=False):

@@ -21,7 +21,6 @@ class TestProjectStagesMulticompany(TestMultiCompanyProject):
                     'base.group_user',
                     'project.group_project_stages',
                     'project.group_project_manager',
-                    raise_if_not_found=False
                 ).ids)]
         })
         cls.stage_company_a, cls.stage_company_b, cls.stage_company_none = cls.env['project.project.stage'].create([{

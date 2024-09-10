@@ -843,8 +843,8 @@ class ResUsers(models.Model):
 
     @api.ondelete(at_uninstall=True)
     def _unlink_except_master_data(self):
-        portal_user_template = self.env.ref('base.template_portal_user_id', False)
-        default_user_template = self.env.ref('base.default_user', False)
+        portal_user_template = self.env.ref('base.template_portal_user_id', raise_if_not_found=False)
+        default_user_template = self.env.ref('base.default_user', raise_if_not_found=False)
         if SUPERUSER_ID in self.ids:
             raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
         user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
@@ -1926,7 +1926,7 @@ class UsersView(models.Model):
         res = super().write(values)
         if 'company_ids' not in values:
             return res
-        group_multi_company = self.env.ref('base.group_multi_company', False)
+        group_multi_company = self.env.ref('base.group_multi_company', raise_if_not_found=False)
         if group_multi_company:
             for user in self:
                 if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
@@ -1941,7 +1941,7 @@ class UsersView(models.Model):
             values = {}
         values = self._remove_reified_groups(values)
         user = super().new(values=values, origin=origin, ref=ref)
-        group_multi_company = self.env.ref('base.group_multi_company', False)
+        group_multi_company = self.env.ref('base.group_multi_company', raise_if_not_found=False)
         if group_multi_company and 'company_ids' in values:
             if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
                 user.update({'groups_id': [Command.unlink(group_multi_company.id)]})

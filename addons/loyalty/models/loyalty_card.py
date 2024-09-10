@@ -92,7 +92,7 @@ class LoyaltyCard(models.Model):
         """
         self.ensure_one()
         default_template = self._get_default_template()
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', raise_if_not_found=False)
         ctx = dict(
             default_model='loyalty.card',
             default_res_ids=self.ids,

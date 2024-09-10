@@ -316,8 +316,8 @@ class Website(Home):
     def sitemap_website_info(env, rule, qs):
         website = env['website'].get_current_website()
         if not (
-            website.viewref('website.website_info', False).active
-            and website.viewref('website.show_website_info', False).active
+            website.viewref('website.website_info', raise_if_not_found=False).active
+            and website.viewref('website.show_website_info', raise_if_not_found=False).active
         ):
             # avoid 404 or blank page in sitemap
             return False
@@ -381,7 +381,7 @@ class Website(Home):
         suggested_controllers = []
         for name, url, mod in current_website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
-                module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
+                module_sudo = mod and request.env.ref('base.module_%s' % mod, raise_if_not_found=False).sudo()
                 icon = mod and '%s' % (module_sudo and module_sudo.icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
@@ -648,7 +648,7 @@ class Website(Home):
 
         if not template and ext_special_case:
             default_templ = 'website.default_%s' % ext.lstrip('.')
-            if request.env.ref(default_templ, False):
+            if request.env.ref(default_templ, raise_if_not_found=False):
                 template = default_templ
 
         template = template and dict(template=template) or {}
