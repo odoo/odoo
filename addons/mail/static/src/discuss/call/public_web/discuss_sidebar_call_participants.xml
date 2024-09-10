@@ -15,7 +15,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.main">
-        <div class="o-mail-DiscussSidebarCallParticipants d-flex flex-column gap-1 py-1" t-att-class="{ 'position-relative mx-2': compact, 'ps-4 pe-2 mx-2': props.compact === undefined and !compact, 'px-2': props.compact === false, 'border border-dark border-top-0 rounded-3 rounded-top-0': props.compact === undefined }" t-ref="root">
+        <div class="o-mail-DiscussSidebarCallParticipants d-flex flex-column gap-1 py-1" t-att-class="{ 'position-relative': compact, 'ps-4 pe-2 mx-2': props.compact === undefined and !compact, 'px-2': props.compact === false, 'rounded-3': props.compact === undefined }" t-ref="root">
             <t t-if="store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCallParticipants.participant">
                 <t t-set="session" t-value="lastActiveSession"/>
             </t>
@@ -29,8 +29,8 @@
 
     <t t-name="mail.DiscussSidebarCallParticipants.participant">
         <t t-set="channelMember" t-value="session.channelMember"/>
-        <div class="d-flex text-reset overflow-hidden align-items-center" t-att-class="{ 'justify-content-center bg-inherit': compact, 'ms-3 me-2': !compact and props.compact === undefined }">
-            <div class="bg-inherit position-relative d-flex flex-shrink-0" t-att-class="{ 'ms-3': !compact and props.compact === undefined }" style="width:28px;height:28px">
+        <div class="d-flex text-reset overflow-hidden align-items-center" t-att-class="{ 'justify-content-center bg-inherit': compact, 'me-2': !compact and props.compact === undefined }">
+            <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:28px;height:28px">
                 <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle" t-att-src="channelMember.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar"/>
             </div>
             <span t-if="!compact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bolder small user-select-none" t-att-title="channelMember.persona.nameOrDisplayName" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">

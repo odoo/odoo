@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussSidebarMailboxes">
-        <div class="d-flex flex-column flex-grow-0">
+        <div class="d-flex flex-column flex-grow-0 gap-1">
             <Mailbox mailbox="store.inbox"/>
             <Mailbox mailbox="store.starred"/>
             <Mailbox mailbox="store.history"/>
@@ -33,7 +33,7 @@
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
         >
-            <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'ms-3 me-2')" thread="mailbox"/>
+            <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'mx-2')" thread="mailbox"/>
             <t t-if="!store.discuss.isSidebarCompact">
                 <div class="me-2 text-truncate" t-esc="mailbox.name"/>
                 <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>

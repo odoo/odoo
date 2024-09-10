@@ -5,6 +5,31 @@
     }
 }
 
+$o-mail-DiscussSidebarChannel-borderOpacity: .1;
+$o-mail-DiscussSidebarChannel-borderOpacityActive: .15;
+$o-mail-DiscussSidebarChannel-borderOpacityCompact: .125;
+$o-mail-DiscussSidebarChannel-borderOpacityCompactActive: .2;
+
+.o-mail-DiscussSidebarChannel-container {
+    --border-opacity: var(--mail-DiscussSidebarChannel-borderOpacity, #{$o-mail-DiscussSidebarChannel-borderOpacity});
+    gap: 1px;
+
+    margin-left: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
+    margin-right: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
+
+    &.o-active {
+        --border-opacity: var(--mail-DiscussSidebarChannel-borderOpacityActive, #{$o-mail-DiscussSidebarChannel-borderOpacityActive});
+    }
+
+    &.o-compact {
+        --border-opacity: var(--mail-DiscussSidebarChannel-borderOpacityCompact, #{$o-mail-DiscussSidebarChannel-borderOpacityCompact});
+
+        &.o-active {
+            --border-opacity: var(--mail-DiscussSidebarChannel-borderOpacityCompactActive, #{$o-mail-DiscussSidebarChannel-borderOpacityCompactActive});
+        }
+    }
+}
+
 .o-mail-DiscussSidebarChannel-country {
     bottom: -2px;
     left: -4px;
@@ -51,6 +76,10 @@
 .o-mail-DiscussSidebarChannel-indicatorCompact {
     top: 3px;
     left: 3px;
+}
+
+.o-mail-DiscussSidebarChannel-subChannel.o-nonCompact {
+    margin-left: map-get($spacers, 4) + map-get($spacers, 2) + map-get($spacers, 1);
 }
 
 .o-mail-DiscussSidebarChannel-unreadIndicator {

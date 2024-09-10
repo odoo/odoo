@@ -10,8 +10,10 @@ patch(DiscussSidebarChannel.prototype, {
     get attClass() {
         return {
             ...super.attClass,
-            "rounded-bottom-0 border-bottom-0 o-ongoingCall border border-dark":
-                this.thread.rtcSessions.length > 0,
+            "o-ongoingCall": this.thread.rtcSessions.length > 0,
         };
+    },
+    get hasChildren() {
+        return super.hasChildren || this.thread.rtcSessions.length > 0;
     },
 });

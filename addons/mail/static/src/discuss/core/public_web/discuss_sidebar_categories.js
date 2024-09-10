@@ -40,11 +40,16 @@ export class DiscussSidebarChannel extends Component {
             "bg-inherit": this.thread.notEq(this.store.discuss.thread),
             "o-active": this.thread.eq(this.store.discuss.thread),
             "o-unread": this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
+            "border-bottom-0 rounded-bottom-0":
+                this.hasChildren && this.store.discuss.isSidebarCompact,
             "opacity-50": this.thread.mute_until_dt,
-            "position-relative justify-content-center mx-2 o-compact":
+            "position-relative justify-content-center o-compact mt-0":
                 this.store.discuss.isSidebarCompact,
-            "mx-2": !this.store.discuss.isSidebarCompact,
         };
+    }
+
+    get hasChildren() {
+        return Boolean(this.env.filteredThreads?.(this.thread.sub_channel_ids)?.length);
     }
 
     get indicators() {

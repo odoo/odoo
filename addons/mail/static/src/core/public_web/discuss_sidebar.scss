@@ -30,11 +30,13 @@
 }
 
 .o-mail-DiscussSidebar-item {
-    margin: 1px 0;
+    outline: 1px solid transparent !important;
     &:hover {
         background-color: mix($o-gray-100, $o-gray-200);
+        outline-color: rgba($border-color-dark, .25) !important;
     }
     &.o-active {
         background-color: mix($o-gray-100, $o-gray-200);
+        outline-color: rgba($border-color-dark, .25) !important;
     }
 }
