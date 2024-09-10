@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import traceback
+import logging
+_logger = logging.getLogger(__name__)
 
 from odoo import _, api, models
 
@@ -22,7 +24,7 @@ class ResCompany(models.Model):
             if self.env.user.has_group('product.group_product_pricelist'):
                 _logger.runbot("auto-creating pricelist (%s: %d)", self.env.user.display_name, self.env.user.id, stack_info=True)
             else:
-                _logger.runbot("ignorng pricelist (%s: %d)", self.env.user.display_name, self.env.user.id, stack_info=True)
+                _logger.runbot("ignoring pricelist (%s: %d)", self.env.user.display_name, self.env.user.id, stack_info=True)
 
         if self.env.user.has_group('product.group_product_pricelist'):
             companies = self or self.env['res.company'].search([])
