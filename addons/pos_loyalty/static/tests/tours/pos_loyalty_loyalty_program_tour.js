@@ -77,9 +77,9 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Test Partner"),
             // No item in the order, so reward button is off.
-            PosLoyalty.isRewardButtonHighlighted(false),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.isRewardButtonHighlighted(true),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
@@ -109,7 +109,7 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             // - But set CCC Test Partner first as the customer.
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("CCC Test Partner"),
-            PosLoyalty.isRewardButtonHighlighted(false),
+            PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.addOrderline("Whiteboard Pen", "3"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("BBB Test Partner"),

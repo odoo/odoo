@@ -138,10 +138,9 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
 
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
-            ProductScreen.addOrderline("Test Product A", "1"),
             PosLoyalty.isRewardButtonHighlighted(true),
-            ProductScreen.clickControlButton("Reward"),
-            SelectionPopup.has("Free Product - Test Product A", { run: "click" }),
+            ProductScreen.addOrderline("Test Product A", "1"),
+            PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.hasRewardLine("Free Product - Test Product A", "-11.50", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
         ].flat(),
