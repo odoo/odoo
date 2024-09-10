@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
@@ -6,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import float_compare
+from odoo.tools import float_compare, format_duration
 
 
 class SaleOrder(models.Model):
@@ -152,18 +151,7 @@ class SaleOrderLine(models.Model):
                     encoding_uom = company.timesheet_encode_uom_id
                     remaining_time = ''
                     if encoding_uom == uom_hour:
-                        hours, minutes = divmod(abs(line.remaining_hours) * 60, 60)
-                        round_minutes = minutes / 30
-                        minutes = math.ceil(round_minutes) if line.remaining_hours >= 0 else math.floor(round_minutes)
-                        if minutes > 1:
-                            minutes = 0
-                            hours += 1
-                        else:
-                            minutes = minutes * 30
-                        remaining_time = ' ({sign}{hours:02.0f}:{minutes:02.0f})'.format(
-                            sign='-' if line.remaining_hours < 0 else '',
-                            hours=hours,
-                            minutes=minutes)
+                        remaining_time = f' ({format_duration(line.remaining_hours)})'
                     elif encoding_uom == uom_day:
                         remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = ' ({qty:.02f} {unit})'.format(
