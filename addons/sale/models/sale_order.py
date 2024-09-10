@@ -73,7 +73,11 @@ class SaleOrder(models.Model):
         readonly=True, copy=False, index=True,
         tracking=3,
         default='draft')
-    locked = fields.Boolean(default=False, copy=False, help="Locked orders cannot be modified.")
+    locked = fields.Boolean(
+        help="Locked orders cannot be modified.",
+        default=False,
+        copy=False,
+        tracking=True)
     has_archived_products = fields.Boolean(compute="_compute_has_archived_products")
 
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
