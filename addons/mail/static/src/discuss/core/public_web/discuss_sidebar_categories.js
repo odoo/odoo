@@ -41,7 +41,7 @@ export class DiscussSidebarChannel extends Component {
             "o-active": this.thread.eq(this.store.discuss.thread),
             "o-unread":
                 this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
-            "opacity-50": this.thread.mute_until_dt,
+            "opacity-50": this.thread.isMuted,
             "position-relative justify-content-center mx-2 o-compact":
                 this.store.discuss.isSidebarCompact,
             "mx-2": !this.store.discuss.isSidebarCompact,
