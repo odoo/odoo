@@ -4,7 +4,7 @@ import { removeClass } from "@html_editor/utils/dom";
 import { getDeepestPosition, isProtected, isProtecting } from "@html_editor/utils/dom_info";
 import { ancestors, closestElement, descendants, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
-import { DIRECTIONS, leftPos, rightPos } from "@html_editor/utils/position";
+import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 
@@ -69,6 +69,9 @@ export class TablePlugin extends Plugin {
                 break;
             case "DELETE_TABLE":
                 this.deleteTable(payload);
+                break;
+            case "RESET_TABLE_SELECTION":
+                this.resetTableSelection();
                 break;
             case "CLEAN":
             case "CLEAN_FOR_SAVE":
@@ -546,5 +549,20 @@ export class TablePlugin extends Plugin {
             }
         }
         return modifiedTraversedNodes;
+    }
+
+    resetTableSelection() {
+        const selection = this.shared.getEditableSelection({ deep: true });
+        const anchorTD = closestElement(selection.anchorNode, ".o_selected_td");
+        if (!anchorTD) {
+            return;
+        }
+        this.deselectTable();
+        this.shared.setSelection({
+            anchorNode: anchorTD.firstChild,
+            anchorOffset: 0,
+            focusNode: anchorTD.lastChild,
+            focusOffset: nodeSize(anchorTD.lastChild),
+        });
     }
 }

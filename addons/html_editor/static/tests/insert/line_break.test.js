@@ -363,3 +363,78 @@ describe("Selection not collapsed", () => {
         });
     });
 });
+
+describe("table", () => {
+    test("should remove all contents of an anchor td and insert a line break on forward selection", async () => {
+        // Forward selection
+        await testEditor({
+            contentBefore: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>[abc</p><p>def</p></td>
+                            <td><p>abcd</p></td>
+                            <td><p>ab]</p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+            stepFunction: insertLineBreak,
+            contentAfter: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p><br>[]<br></p></td>
+                            <td><p>abcd</p></td>
+                            <td><p>ab</p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+        });
+    });
+    test("should remove all contents of an anchor td and insert a line break on backward selection", async () => {
+        // Backward selection
+        await testEditor({
+            contentBefore: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>]ab</p></td>
+                            <td><p>abcd</p></td>
+                            <td><p>abc</p><p>def[</p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+            stepFunction: insertLineBreak,
+            contentAfter: `
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>ab</p></td>
+                            <td><p>abcd</p></td>
+                            <td><p><br>[]<br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`,
+        });
+    });
+});
