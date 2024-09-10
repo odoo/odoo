@@ -1216,6 +1216,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'cap_accrued_time_yearly': True,
             'maximum_leave_yearly': 1,
         })
+        accrual_plan.level_ids[0].write({
+            'cap_accrued_time_yearly': False,
+            'maximum_leave_yearly': 0,
+        })
+        self.env.cr.precommit.run()
+        self.env.flush_all()
 
     def test_yearly_cap(self):
         leave_type = self.env['hr.leave.type'].create({
