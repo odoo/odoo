@@ -1590,12 +1590,18 @@ class BaseModel(metaclass=MetaModel):
         """ Invoke the constraint methods for which at least one field name is
         in ``field_names`` and none is in ``excluded_names``.
         """
+        methods = self._constraint_methods
+        if not methods:
+            return
+        # run constrains just as sudoed computed-stored fields
+        # see Field.compute_value()
+        records = self.sudo()
         field_names = set(field_names)
         excluded_names = set(excluded_names)
-        for check in self._constraint_methods:
+        for check in methods:
             if (not field_names.isdisjoint(check._constrains)
                     and excluded_names.isdisjoint(check._constrains)):
-                check(self)
+                check(records)
 
     @api.model
     def default_get(self, fields_list):

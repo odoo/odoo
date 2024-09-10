@@ -635,6 +635,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     continue
                 if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
                     raise ValidationError(_("There is no valid allocation to cover that request."))
+        is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        if not is_leave_user and any(leave.has_mandatory_day for leave in self):
+            raise ValidationError(_('You are not allowed to request time off on a Mandatory Day'))
 
     ####################################################
     # ORM Overrides methods
@@ -695,12 +698,6 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         employee = self.env['hr.employee'].browse(employee_id)
         if employee.user_id:
             self.message_subscribe(partner_ids=employee.user_id.partner_id.ids)
-
-    @api.constrains('date_from', 'date_to')
-    def _check_mandatory_day(self):
-        is_leave_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        if not is_leave_user and any(leave.has_mandatory_day for leave in self):
-            raise ValidationError(_('You are not allowed to request time off on a Mandatory Day'))
 
     def _check_double_validation_rules(self, employees, state):
         if self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
