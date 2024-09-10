@@ -23,7 +23,8 @@
                             </button>
                             <t t-set-slot="content">
                                 <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                                    <DropdownItem onSelected="breadcrumb.onSelected" attrs="{ href: breadcrumb.url}">
+                                    <DropdownItem onSelected="breadcrumb.onSelected"
+                                                  attrs="{ href: breadcrumb.url, 'data-tooltip': 'Back to &quot;' + breadcrumb.name + '&quot;' + (breadcrumb.isFormView ? ' form' : '')}">
                                         <t t-call="web.Breadcrumb.Name"/>
                                     </DropdownItem>
                                 </t>
@@ -32,7 +33,7 @@
                     </li>
                     <t t-foreach="visiblePathBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
                         <li class="breadcrumb-item d-inline-flex min-w-0" t-att-class="{ o_back_button: breadcrumb_last }" t-att-data-hotkey="breadcrumb_last and 'b'" t-on-click.prevent="breadcrumb.onSelected">
-                            <a t-att-href="breadcrumb.url" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + breadcrumb.name + '&quot;'"><t t-call="web.Breadcrumb.Name"/></a>
+                            <a t-att-href="breadcrumb.url" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + breadcrumb.name + '&quot;' + (breadcrumb.isFormView ? ' form' : '')"><t t-call="web.Breadcrumb.Name"/></a>
                         </li>
                     </t>
                 </ol>
