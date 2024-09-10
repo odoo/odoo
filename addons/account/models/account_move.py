@@ -5215,11 +5215,12 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         filename = self._get_invoice_proforma_pdf_report_filename()
-        content, _ = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', self.ids, data={'proforma': True})
+        content, report_type = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', self.ids, data={'proforma': True})
+        content_by_id = self.env['ir.actions.report']._get_splitted_report('account.account_invoices', content, report_type)
         return {
             'filename': filename,
             'filetype': 'pdf',
-            'content': content[self.id],
+            'content': content_by_id[self.id],
         }
 
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
