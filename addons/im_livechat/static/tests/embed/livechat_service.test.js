@@ -139,14 +139,5 @@ test("Only necessary requests are made when creating a new chat", async () => {
             thread_id: threadId,
             thread_model: "discuss.channel",
         })}`,
-        `/mail/data - ${JSON.stringify({
-            channels_as_member: true, // called because mail/core/web is loaded in test bundle
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-            },
-        })}`,
     ]);
 });
