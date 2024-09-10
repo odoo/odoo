@@ -25,6 +25,7 @@ class Bank(models.Model):
     city = fields.Char()
     state = fields.Many2one('res.country.state', 'Fed. State', domain="[('country_id', '=?', country)]")
     country = fields.Many2one('res.country')
+    country_code = fields.Char(related='country.code', string='Country Code')
     email = fields.Char()
     phone = fields.Char()
     active = fields.Boolean(default=True)
