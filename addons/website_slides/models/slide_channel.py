@@ -388,7 +388,8 @@ class Channel(models.Model):
     visibility = fields.Selection([
         ('public', 'Everyone'),
         ('connected', 'Signed In'),
-        ('members', 'Course Attendees')
+        ('members', 'Course Attendees'),
+        ('link', 'Anyone with the link'),
     ], default='public', string='Show Course To', required=True,
         help='Defines who can access your courses and their content.')
     upload_group_ids = fields.Many2many(
@@ -425,6 +426,7 @@ class Channel(models.Model):
     is_member_invited = fields.Boolean(
         string='Is Invited Attendee', help='Is the invitation for this attendee pending.',
         compute='_compute_membership_values', search="_search_is_member_invited")
+    is_visible_on_website = fields.Boolean(string="Visible On Website", compute='_compute_is_visible_on_website', search='_search_is_visible_on_website')
     partner_has_new_content = fields.Boolean(compute='_compute_partner_has_new_content', compute_sudo=False)
     # karma generation
     karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
@@ -458,6 +460,29 @@ class Channel(models.Model):
     @api.depends('visibility')
     def _compute_enroll(self):
         self.filtered(lambda channel: channel.visibility == 'members').enroll = 'invite'
+
+    @api.depends('visibility', 'is_member')
+    @api.depends_context('uid')
+    def _compute_is_visible_on_website(self):
+        for channel in self:
+            if channel.visibility == 'public' or channel.is_member or (not self.env.user._is_public() and channel.visibility == 'connected'):
+                channel.is_visible_on_website = True
+            else:
+                channel.is_visible_on_website = False
+
+    @api.model
+    def _search_is_visible_on_website(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise NotImplementedError(_('Operation not supported'))
+        check_is_visible_on_website = operator == '=' and value or operator == '!=' and not value
+        user = self.env.user
+        domain = [('is_member', '=', True)]
+        if not user._is_public():
+            domain = expression.OR([domain, [('visibility', 'in', ['public', 'connected'])]])
+        else:
+            domain = expression.OR([domain, [('visibility', '=', 'public')]])
+        channel_ids = self.env['slide.channel']._search(domain)
+        return [('id', 'in' if check_is_visible_on_website else 'not in', channel_ids)]
 
     @api.depends('channel_partner_all_ids', 'channel_partner_all_ids.member_status', 'channel_partner_all_ids.active')
     def _compute_partners(self):
@@ -1234,7 +1259,7 @@ class Channel(models.Model):
         my = options.get('my')
         search_tags = options.get('tag')
         slide_category = options.get('slide_category')
-        domain = [website.website_domain()]
+        domain = [website.website_domain(), [('is_visible_on_website', '=', True)]]
         if my:
             domain.append([('is_member', '=', True)])
         if search_tags:
