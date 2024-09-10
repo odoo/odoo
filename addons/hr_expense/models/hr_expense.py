@@ -865,7 +865,6 @@ class HrExpense(models.Model):
 
     def _prepare_payments_vals(self):
         self.ensure_one()
-        self_ctx = self.with_context(caba_no_transition_account=self.payment_mode == 'company_account')
 
         journal = self.sheet_id.journal_id
         payment_method_line = self.sheet_id.payment_method_line_id
@@ -873,8 +872,9 @@ class HrExpense(models.Model):
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
         move_lines = []
         tax_data = self.env['account.tax']._compute_taxes(
-            [self_ctx._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id, account=self._get_base_account())],
+            [self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id, account=self._get_base_account())],
             self.company_id,
+            include_caba_tags=(self.payment_mode == 'company_account')
         )
         rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 1.0
         base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base line
