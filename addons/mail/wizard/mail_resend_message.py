@@ -25,7 +25,7 @@ class MailResendMessage(models.TransientModel):
         self.can_resend = any([partner.resend for partner in self.partner_ids])
 
     def _compute_partner_readonly(self):
-        self.partner_readonly = not self.env['res.partner'].check_access_rights('write', raise_exception=False)
+        self.partner_readonly = not self.env['res.partner'].has_access('write')
 
     @api.model
     def default_get(self, fields):
@@ -46,9 +46,9 @@ class MailResendMessage(models.TransientModel):
 
             has_user = any(notif.res_partner_id.user_ids for notif in notification_ids)
             if has_user:
-                partner_readonly = not self.env['res.users'].check_access_rights('write', raise_exception=False)
+                partner_readonly = not self.env['res.users'].has_access('write')
             else:
-                partner_readonly = not self.env['res.partner'].check_access_rights('write', raise_exception=False)
+                partner_readonly = not self.env['res.partner'].has_access('write')
             rec['partner_readonly'] = partner_readonly
             rec['notification_ids'] = [Command.set(notification_ids.ids)]
             rec['mail_message_id'] = mail_message_id.id

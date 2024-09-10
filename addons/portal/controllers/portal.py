@@ -444,8 +444,7 @@ class CustomerPortal(Controller):
         if not document_sudo:
             raise MissingError(_("This document does not exist."))
         try:
-            document.check_access_rights('read')
-            document.check_access_rule('read')
+            document.check_access('read')
         except AccessError:
             if not access_token or not document_sudo.access_token or not consteq(document_sudo.access_token, access_token):
                 raise

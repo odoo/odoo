@@ -219,7 +219,7 @@ class CrmLead(models.Model):
         self.sudo().write(values)
 
     def update_lead_portal(self, values):
-        self.check_access_rights('write')
+        self.browse().check_access('write')
         for lead in self:
             lead_values = {
                 'expected_revenue': values['expected_revenue'],
@@ -251,7 +251,7 @@ class CrmLead(models.Model):
             lead.write(lead_values)
 
     def update_contact_details_from_portal(self, values):
-        self.check_access_rights('write')
+        self.browse().check_access('write')
         fields = ['partner_name', 'phone', 'mobile', 'email_from', 'street', 'street2',
             'city', 'zip', 'state_id', 'country_id']
         if any([key not in fields for key in values]):
@@ -298,16 +298,14 @@ class CrmLead(models.Model):
         user, record = self.env.user, self
         if access_uid:
             try:
-                record.check_access_rights('read')
-                record.check_access_rule("read")
+                record.check_access("read")
             except AccessError:
                 return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)
             user = self.env['res.users'].sudo().browse(access_uid)
             record = self.with_user(user)
         if user.share or force_website:
             try:
-                record.check_access_rights('read')
-                record.check_access_rule('read')
+                record.check_access('read')
             except AccessError:
                 pass
             else:

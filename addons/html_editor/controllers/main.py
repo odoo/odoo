@@ -545,12 +545,10 @@ class HTML_Editor(http.Controller):
     def bus_broadcast(self, model_name, field_name, res_id, bus_data):
         document = request.env[model_name].browse([res_id])
 
-        document.check_access_rights('read')
+        document.check_access('read')
+        document.check_access('write')
         document.check_field_access_rights('read', [field_name])
-        document.check_access_rule('read')
-        document.check_access_rights('write')
         document.check_field_access_rights('write', [field_name])
-        document.check_access_rule('write')
 
         channel = (request.db, 'editor_collaboration', model_name, field_name, int(res_id))
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})

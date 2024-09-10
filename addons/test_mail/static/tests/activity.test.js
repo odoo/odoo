@@ -844,7 +844,7 @@ test("activity view: 'onReloadData' does not add activity_ids condition as selec
 
 test("Activity view: discard an activity creation dialog", async () => {
     registerArchs(archs);
-    onRpc("check_access_rights", () => true);
+    onRpc("has_access", () => true);
     await start();
     await openView({
         res_model: "mail.test.activity",

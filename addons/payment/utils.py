@@ -207,8 +207,7 @@ def check_rights_on_recordset(recordset):
     :param recordset: The recordset for which the rights should be checked.
     :return: None
     """
-    recordset.check_access_rights('write')
-    recordset.check_access_rule('write')
+    recordset.check_access('write')
 
 
 # Idempotency

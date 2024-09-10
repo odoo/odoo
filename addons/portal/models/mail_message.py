@@ -23,7 +23,7 @@ class MailMessage(models.Model):
         :return list: list of dict, one per message in self. Each dict contains
           values for either fields, either properties derived from fields.
         """
-        self.check_access_rule('read')
+        self.check_access('read')
         return self._portal_message_format(
             self._portal_get_default_format_properties_names(options=options),
             options=options,

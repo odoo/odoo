@@ -740,7 +740,7 @@ class HolidaysAllocation(models.Model):
 
             if is_officer or self.env.user == allocation.employee_id.leave_manager_id:
                 # use ir.rule based first access check: department, members, ... (see security.xml)
-                allocation.check_access_rule('write')
+                allocation.check_access('write')
 
             if allocation.employee_id == current_employee and not is_manager and not val_type == 'no_validation':
                 raise UserError(_('Only a time off Manager can approve its own requests.'))
@@ -885,7 +885,6 @@ class HolidaysAllocation(models.Model):
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo
         if any(state in ['validate'] for state in self.mapped('state')):
-            self.check_access_rights('read')
-            self.check_access_rule('read')
+            self.check_access('read')
             return super(HolidaysAllocation, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         return super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)

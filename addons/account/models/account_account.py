@@ -1192,8 +1192,7 @@ class AccountAccount(models.Model):
 
         # Step 2: Check that we have write access to all the accounts and access to all the companies
         # of these accounts.
-        self.check_access_rights('write')
-        self.check_access_rule('write')
+        self.check_access('write')
         if forbidden_companies := (self.sudo().company_ids - self.env.user.company_ids):
             raise UserError(_(
                 "You do not have the right to perform this operation as you do not have access to the following companies: %s.",

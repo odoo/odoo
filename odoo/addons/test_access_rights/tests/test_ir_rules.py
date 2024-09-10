@@ -100,7 +100,7 @@ class TestRules(TransactionCase):
         # cache warmup for check() in 'ir.model.access'
         Model.check_access('read')
         with self.assertQueryCount(0):
-            Model._filter_access_rules('read')
+            Model._filtered_access('read')
 
     def test_no_context_in_ir_rules(self):
         """ The context should not impact the ir rules. """
@@ -125,7 +125,7 @@ class TestRules(TransactionCase):
 
     def test_check_access_rule_with_inherits(self):
         """
-        For models in `_inherits`, verify that both methods `check_access_rule`
+        For models in `_inherits`, verify that both methods `check_access`
         and `_apply_ir_rules` check the rules from parent models.
         """
         ChildModel = self.env['test_access_right.inherits']
@@ -135,7 +135,7 @@ class TestRules(TransactionCase):
 
         user = self.env.ref('base.public_user')
         search_result = children.with_user(user).search([('id', 'in', children.ids)], order='id')
-        filter_result = children.with_user(user)._filter_access_rules_python('read')
+        filter_result = children.with_user(user)._filtered_access('read')
 
         self.assertEqual(search_result, allowed_child)
         self.assertEqual(filter_result, allowed_child)

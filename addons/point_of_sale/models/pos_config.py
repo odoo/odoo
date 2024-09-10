@@ -858,8 +858,7 @@ class PosConfig(models.Model):
         cash_pm_from_ref = cash_ref and self.env.ref(cash_ref, raise_if_not_found=False)
         if cash_pm_from_ref:
             try:
-                cash_pm_from_ref.check_access_rights('read')
-                cash_pm_from_ref.check_access_rule('read')
+                cash_pm_from_ref.check_access('read')
                 cash_pm = cash_pm_from_ref
             except AccessError:
                 cash_pm = self._create_cash_payment_method()

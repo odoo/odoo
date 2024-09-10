@@ -39,7 +39,7 @@ class IrModel(models.Model):
         return (
             self.env.user._is_internal()
             and model is not None
-            and model.check_access_rights("read", raise_exception=False)
+            and model.has_access("read")
             and not model._transient
             and not model._abstract
         )

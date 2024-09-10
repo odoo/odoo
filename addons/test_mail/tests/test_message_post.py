@@ -1333,7 +1333,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     {'partner': self.partner_employee, 'type': 'inbox'},
                     {'partner': self.partner_1, 'type': 'email'}]}
                 ]
-            ), patch.object(MailTestSimple, 'check_access_rights', return_value=True):
+            ), patch.object(MailTestSimple, '_check_access', return_value=None):
             new_msg = self.test_record.with_user(self.user_portal).message_post(
                 body=Markup('<p>Test</p>'),
                 message_type='comment',

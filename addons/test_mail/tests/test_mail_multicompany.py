@@ -140,8 +140,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         # Other company (no access)
         # ------------------------------------------------------------
 
-        _original_car = Message.check_access_rule
-        with patch.object(Message, 'check_access_rule',
+        _original_car = Message._check_access
+        with patch.object(Message, '_check_access',
                           autospec=True, side_effect=_original_car) as mock_msg_car:
             with self.assertRaises(AccessError):
                 test_records_mc_c1.message_post(
@@ -151,8 +151,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                     reply_to='custom.reply.to@test.example.com',  # avoid ACL in notify_get_reply_to
                     subtype_xmlid='mail.mt_comment',
                 )
-            self.assertEqual(mock_msg_car.call_count, 1,
-                             'Purpose is to raise at msg check access level')
+            self.assertEqual(mock_msg_car.call_count, 2,
+                             'Check at model level succeeds and check at record level fails')
         with self.assertRaises(AccessError):
             _name = test_records_mc_c1.name
 
@@ -258,7 +258,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
     @freeze_time('2023-11-22 08:00:00')
     @users("admin")
     def test_systray_get_activities(self):
-        original_filter_access_rules = MailTestMultiCompanyWithActivity._filter_access_rules
+        original_check_access = MailTestMultiCompanyWithActivity._check_access
         user_admin = self.user_admin.with_user(self.user_admin)
         user_employee = self.user_employee.with_user(self.user_employee)
         company_1_all = user_admin.company_id
@@ -266,12 +266,16 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         test_model_name = 'mail.test.multi.company.with.activity'
         activity_type_todo = 'test_mail.mail_act_test_todo'
 
-        def _mock_filter_access_rules(*args, **kwargs):
+        def _mock_check_access(records, operation):
             """ To avoid creating a new test model not accessible by employee user, we modify the access rules. """
-            filtered_records = original_filter_access_rules(*args, **kwargs)
-            if filtered_records.env.uid == self.user_admin.id:
-                return filtered_records
-            return filtered_records.filtered(lambda r: r.create_uid == user_employee)
+            result = original_check_access(records, operation)
+            if records.env.uid == self.user_admin.id:
+                return result
+            forbidden = result[0] if result else records.browse()
+            forbidden += (records - forbidden).filtered(lambda record: record.create_uid != user_employee)
+            if forbidden:
+                return (forbidden, lambda: AccessError("Nope"))
+            return None
 
         user_records = self.env[test_model_name].with_user(user_employee).sudo().create([
             {"name": "Test1", "company_id": company_1_all.id},
@@ -327,8 +331,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
         ):
             with self.subTest(user=user, allowed_company_ids=allowed_company_ids):
                 self.authenticate(user.login, user.login)
-                with patch.object(MailTestMultiCompanyWithActivity, '_filter_access_rules', autospec=True,
-                                  side_effect=_mock_filter_access_rules):
+                with patch.object(MailTestMultiCompanyWithActivity, '_check_access', autospec=True,
+                                  side_effect=_mock_check_access):
                     activity_groups = self.make_jsonrpc_request("/mail/data", {
                         "systray_get_activities": True,
                         "context": {"allowed_company_ids": allowed_company_ids}
@@ -377,8 +381,8 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                     activity_groups_by_model[test_model_name])
         # Activities related to not accessible records are in other activities regardless of the allowed companies
         self.authenticate(user_admin.login, user_admin.login)
-        with patch.object(MailTestMultiCompanyWithActivity, 'check_access_rights', autospec=True,
-                          side_effect=lambda *args, **kwargs: False):
+        with patch.object(MailTestMultiCompanyWithActivity, '_check_access', autospec=True,
+                          side_effect=lambda self, operation: (self, lambda: AccessError("Nope"))):
             for companies in (company_1_all, company_2_admin_only, company_1_all | company_2_admin_only):
                 with self.subTest(companies=companies):
                     activity_groups = self.make_jsonrpc_request("/mail/data", {

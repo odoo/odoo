@@ -28,8 +28,7 @@ class AccountDocumentDownloadController(http.Controller):
 
     @http.route('/account/download_invoice_attachments/<models("ir.attachment"):attachments>', type='http', auth='user')
     def download_invoice_attachments(self, attachments):
-        attachments.check_access_rights('read')
-        attachments.check_access_rule('read')
+        attachments.check_access('read')
         assert all(attachment.res_id and attachment.res_model == 'account.move' for attachment in attachments)
         if len(attachments) == 1:
             headers = _get_headers(attachments.name, attachments.mimetype, attachments.raw)
@@ -47,8 +46,7 @@ class AccountDocumentDownloadController(http.Controller):
 
     @http.route('/account/download_invoice_documents/<models("account.move"):invoices>/<string:filetype>', type='http', auth='user')
     def download_invoice_documents_filetype(self, invoices, filetype, allow_fallback=True):
-        invoices.check_access_rights('read')
-        invoices.check_access_rule('read')
+        invoices.check_access('read')
         docs_data = []
         for invoice in invoices:
             doc_data = invoice._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)

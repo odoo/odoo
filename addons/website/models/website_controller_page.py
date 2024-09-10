@@ -46,7 +46,7 @@ class WebsiteControllerPage(models.Model):
     @api.constrains('view_id', 'model_id', "model")
     def _check_user_has_model_access(self):
         for record in self:
-            self.env[record.model_id.model].check_access_rights('read')
+            self.env[record.model_id.model].check_access('read')
 
     @api.depends("view_id")
     def _compute_name(self):

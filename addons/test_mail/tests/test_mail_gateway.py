@@ -751,16 +751,13 @@ class TestMailgateway(MailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_create_uid_crash(self):
-        def _employee_crash(*args, **kwargs):
+        def _employee_crash(records, operation):
             """ If employee is test employee, consider they have no access on document """
-            recordset = args[0]
-            if recordset.env.uid == self.user_employee.id and not recordset.env.su:
-                if kwargs.get('raise_exception', True):
-                    raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
-                return False
+            if records.env.uid == self.user_employee.id and not records.env.su:
+                return lambda: exceptions.AccessError('Hop hop hop Ernest, please step back.'), records
             return DEFAULT
 
-        with patch.object(MailTestGateway, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+        with patch.object(MailTestGateway, 'check_access', autospec=True, side_effect=_employee_crash):
             record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, f'groups@{self.alias_domain}', subject='NoEmployeeAllowed')
         self.assertEqual(record.create_uid, self.user_employee)
         self.assertEqual(record.message_ids[0].subject, 'NoEmployeeAllowed')

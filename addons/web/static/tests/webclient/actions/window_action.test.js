@@ -2305,7 +2305,7 @@ test("do not restore after action button clicked", async () => {
 
 test("debugManager is active for views", async () => {
     serverState.debug = "1";
-    onRpc("check_access_rights", () => true);
+    onRpc("has_access", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     expect(".o-dropdown--menu .o-dropdown-item:contains('Edit View: Kanban')").toHaveCount(0);

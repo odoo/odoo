@@ -441,7 +441,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         sitemap=False,
     )
     def product_document(self, product_template, document_id):
-        product_template.check_access_rights('read')
+        product_template.check_access('read')
 
         document = request.env['product.document'].browse(document_id).sudo().exists()
         if not document or not document.active:

@@ -50,7 +50,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
             'livechat_username': 'edit me'
         })
         with self.assertRaises(AccessError):
-            self.env['res.users'].with_user(user).check_access_rights('write')
+            self.env['res.users'].with_user(user).check_access('write')
         user.with_user(user).livechat_username = 'New username'
         self.assertEqual(user.livechat_username, 'New username')
 

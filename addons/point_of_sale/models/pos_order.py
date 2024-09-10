@@ -1411,8 +1411,7 @@ class PosOrderLine(models.Model):
 
     @api.model
     def get_existing_lots(self, company_id, product_id):
-        self.check_access_rights('read')
-        self.check_access_rule('read')
+        self.check_access('read')
         existing_lots_sudo = self.sudo().env['stock.lot'].search([
             '|',
             ('company_id', '=', False),
