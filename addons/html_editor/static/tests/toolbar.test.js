@@ -8,15 +8,15 @@ import {
     waitForNone,
     waitUntil,
 } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { contains, patchTranslations } from "@web/../tests/web_test_helpers";
+import { fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
+import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, moveSelectionOutsideEditor, setContent } from "./_helpers/selection";
-import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
-import { fontSizeItems } from "../src/main/font/font_plugin";
 
 test("toolbar is only visible when selection is not collapsed", async () => {
     const { el } = await setupEditor("<p>test</p>");
@@ -504,4 +504,36 @@ test("toolbar buttons should have title attribute with translated text", async (
     for (const button of queryAll(".o-we-toolbar button")) {
         expect(button).toHaveAttribute("title", "Translated");
     }
+});
+
+test("close the toolbar if the selection contains any nodes (traverseNode = [])", async () => {
+    const { el } = await setupEditor("<p>a</p><p>b</p>");
+    expect(".o-we-toolbar").toHaveCount(0);
+
+    setContent(el, "<p>[a</p><p>]b</p>");
+    await tick(); // selectionChange
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(1);
+
+    // This selection is possible when you double-click at the end of a line.
+    setContent(el, "<p>a[</p><p>]b</p>");
+    await tick(); // selectionChange
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore whitespace)", async () => {
+    const { el } = await setupEditor("<p>a</p>\n<p>b</p>");
+    expect(".o-we-toolbar").toHaveCount(0);
+
+    setContent(el, "<p>[a</p>\n<p>]b</p>");
+    await tick(); // selectionChange
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(1);
+
+    // This selection is possible when you double-click at the end of a line.
+    setContent(el, "<p>a[</p>\n<p>]b</p>");
+    await tick(); // selectionChange
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(0);
 });
