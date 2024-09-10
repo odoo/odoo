@@ -60,14 +60,16 @@ const GalleryWidget = publicWidget.Widget.extend({
         };
 
         const milliseconds = this.el.dataset.interval || false;
-        this.$modal = $(renderToElement('website.gallery.slideshow.lightbox', {
+        const lightboxTemplate = this.$target[0].dataset.vcss === '002' ? 'website.gallery.s_image_gallery_mirror.lightbox' : 'website.gallery.slideshow.lightbox';
+        let params = {
             images: imageEls,
             index: currentImageIndex,
             dim: dimensions,
             interval: milliseconds || 0,
             ride: !milliseconds ? "false" : "carousel",
             id: uniqueId("slideshow_"),
-        }));
+        }
+        this.$modal = $(renderToElement(lightboxTemplate, params));
         this.__onModalKeydown = this._onModalKeydown.bind(this);
         this.$modal.on('hidden.bs.modal', function () {
             $(this).hide();
