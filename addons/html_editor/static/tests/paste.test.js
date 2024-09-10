@@ -1787,6 +1787,19 @@ describe("Special cases", () => {
             });
         });
     });
+
+    describe("paragraphs", () => {
+        test("should paste multiple paragraphs into a list", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>[]<br></li></ul>",
+                stepFunction: async (editor) => {
+                    pasteHtml(editor, "<p>abc</p><p>def</p><p>ghi</p><p>jkl</p><p>mno</p>");
+                },
+                contentAfter:
+                    "<ul><li>abc</li><li>def</li><li>ghi</li><li>jkl</li><li>mno[]</li></ul>",
+            });
+        });
+    });
 });
 
 const url = "https://www.odoo.com";
