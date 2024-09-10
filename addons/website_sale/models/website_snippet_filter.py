@@ -167,7 +167,9 @@ class WebsiteSnippetFilter(models.Model):
         self, website, limit, domain, product_template_id, **kwargs,
     ):
         products = self.env['product.product']
-        current_template = self.env['product.template'].browse(int(product_template_id)).exists()
+        current_template = self.env['product.template'].browse(
+            product_template_id and int(product_template_id)
+        ).exists()
         if current_template:
             sale_orders = self.env['sale.order'].sudo().search([
                 ('website_id', '=', website.id),
@@ -193,7 +195,9 @@ class WebsiteSnippetFilter(models.Model):
 
     def _get_products_accessories(self, website, limit, domain, product_template_id=None, **kwargs):
         products = self.env['product.product']
-        current_template = self.env['product.template'].browse(int(product_template_id)).exists()
+        current_template = self.env['product.template'].browse(
+            product_template_id and int(product_template_id)
+        ).exists()
         if current_template:
             excluded_products = website.sale_get_order().order_line.product_id.ids
             excluded_products.extend(current_template.product_variant_ids.ids)
@@ -213,7 +217,9 @@ class WebsiteSnippetFilter(models.Model):
         self, website, limit, domain, product_template_id=None, **kwargs,
     ):
         products = self.env['product.product']
-        current_template = self.env['product.template'].browse(int(product_template_id)).exists()
+        current_template = self.env['product.template'].browse(
+            product_template_id and int(product_template_id)
+        ).exists()
         if current_template:
             excluded_products = website.sale_get_order().order_line.product_id
             excluded_products |= current_template.product_variant_ids
