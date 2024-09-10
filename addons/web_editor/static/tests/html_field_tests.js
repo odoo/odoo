@@ -1494,5 +1494,108 @@ export const uploadTestModule = QUnit.module(
             await click(fixture.querySelector(".o_form_button_save"));
             await webSaveTriggered;
         });
+
+        QUnit.test("media dialog: upload file having no file name", async function (assert) {
+            assert.expect(2);
+            const defFileSelector = makeDeferred();
+            patchWithCleanup(FileSelectorControlPanel.prototype, {
+                setup() {
+                    super.setup();
+                    useEffect(
+                        () => {
+                            defFileSelector.resolve(true);
+                        },
+                        () => [],
+                    );
+                },
+            });
+            const serviceRegistry = registry.category("services");
+            for (const [serviceName, serviceDefinition] of Object.entries(mediaDialogServices)) {
+                serviceRegistry.add(serviceName, serviceDefinition);
+            }
+            const serverData = {
+                models: this.data,
+            };
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "mail.compose.message",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+            serverData.views = {
+                "mail.compose.message,false,search": "<search></search>",
+                "mail.compose.message,false,form": `
+                    <form>
+                        <field name="body" type="html"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                    </form>`,
+            };
+            const mockRPC = (route, args) => {
+                if (route === "/web_editor/attachment/add_data") {
+                    if (args) {
+                        assert.equal(args.name, "");
+                    }
+                    const attachment = {
+                        id: 5,
+                        name: "test.jpeg",
+                        description: false,
+                        mimetype: "image/jpeg",
+                        checksum: "7951a43bbfb08fd742224ada280913d1897b89ab",
+                        type: "binary",
+                        res_id: 0,
+                        res_model: "mail.compose.message",
+                        access_token: false,
+                        image_src: "/web/image/1-a0e63e61/test.jpg",
+                    };
+                    serverData.models["ir.attachment"].records.push({ ...attachment });
+                    return Promise.resolve(attachment);
+                } else if (route === "/web/dataset/call_kw/ir.attachment/generate_access_token") {
+                    return Promise.resolve(["129a52e1-6bf2-470a-830e-8e368b022e13"]);
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+            //trigger wysiwyg mediadialog
+            const fixture = getFixture();
+            const formField = fixture.querySelector('.o_field_html[name="body"]');
+            const textInput = formField.querySelector(".note-editable p");
+            textInput.innerText = "test";
+            const pText = $(textInput).contents()[0];
+            Wysiwyg.setRange(pText, 1, pText, 2);
+            await new Promise((resolve) => setTimeout(resolve)); //ensure fully set up
+            const wysiwyg = $(textInput.parentElement).data("wysiwyg");
+            wysiwyg.openMediaDialog();
+            assert.ok(
+                await Promise.race([
+                    defFileSelector,
+                    new Promise((res, _) => setTimeout(() => res(false), 400)),
+                ]),
+                "File Selector did not mount",
+            );
+            // upload test
+            const fileInputs = document.querySelectorAll(
+                ".o_select_media_dialog input.d-none.o_file_input",
+            );
+            const fileB64 =
+                "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigD//2Q==";
+            const fileBytes = new Uint8Array(
+                atob(fileB64)
+                    .split("")
+                    .map((char) => char.charCodeAt(0)),
+            );
+            // redefine 'files' so we can put mock data in through js
+            fileInputs.forEach((input) =>
+                Object.defineProperty(input, "files", {
+                    value: [new File(fileBytes, "",{ type: "image/jpeg" })],
+                }),
+            );
+            fileInputs.forEach((input) => {
+                input.dispatchEvent(new Event("change", {}));
+            });
+            await nextTick();
+        });
     },
 );
