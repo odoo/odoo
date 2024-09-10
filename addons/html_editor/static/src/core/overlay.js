@@ -1,4 +1,4 @@
-import { Component, useEffect, useExternalListener, useRef, xml } from "@odoo/owl";
+import { Component, onWillDestroy, useEffect, useExternalListener, useRef, xml } from "@odoo/owl";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
 import { omit } from "@web/core/utils/objects";
@@ -28,6 +28,12 @@ export class EditorOverlay extends Component {
         } else {
             useExternalListener(this.props.bus, "updatePosition", () => {
                 position.unlock();
+            });
+            const editable = this.props.editable;
+            this.rangeElement = editable.ownerDocument.createElement("range-el");
+            editable.after(this.rangeElement);
+            onWillDestroy(() => {
+                this.rangeElement.remove();
             });
             getTarget = this.getSelectionTarget.bind(this);
         }
@@ -88,12 +94,11 @@ export class EditorOverlay extends Component {
             shadowCaret.remove();
             clonedRange.detach();
         }
-        // Disconnected html element with a patched getBoundingClientRect
-        // method. It represents the range as a (HTMLElement) target for the
-        // usePosition hook.
-        const rangeElement = doc.createElement("range-el");
-        rangeElement.getBoundingClientRect = () => rect;
-        return rangeElement;
+        // Html element with a patched getBoundingClientRect method. It
+        // represents the range as a (HTMLElement) target for the usePosition
+        // hook.
+        this.rangeElement.getBoundingClientRect = () => rect;
+        return this.rangeElement;
     }
 
     updateVisibility(overlayElement, solution) {
