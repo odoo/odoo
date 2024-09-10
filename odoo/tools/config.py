@@ -70,10 +70,24 @@ class configmanager(object):
                       from Python code without resorting to environment
                       variable
         """
+        # Check for bind-mounted secret files
+        try:
+            admin_passwd = open(os.environ.get('ODOO_ADMINPASSWORD_FILE', "/run/secrets/adminpasswd"),"r").read().splitlines()[0]
+        except:
+            admin_passwd = 'admin'
+        try:
+            pg_user = open(os.environ.get('PGUSER_FILE', "/run/secrets/pguser"),"r").read().splitlines()[0]
+        except:
+            pg_user = False
+        try:
+            pg_password= open(os.environ.get('PGPASSWORD_FILE', "/run/secrets/pgpassword"),"r").read().splitlines()[0]
+        except:
+            pg_password = False
+
         # Options not exposed on the command line. Command line options will be added
         # from optparse's parser.
         self.options = {
-            'admin_passwd': 'admin',
+            'admin_passwd': admin_passwd,
             'csv_internal_sep': ',',
             'publisher_warranty_url': 'http://services.odoo.com/publisher-warranty/',
             'reportgz': False,
@@ -246,9 +260,9 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Database related options")
         group.add_option("-d", "--database", dest="db_name", my_default=False,
                          help="specify the database name")
-        group.add_option("-r", "--db_user", dest="db_user", my_default=False,
+        group.add_option("-r", "--db_user", dest="db_user", my_default=pg_user,
                          help="specify the database user name")
-        group.add_option("-w", "--db_password", dest="db_password", my_default=False,
+        group.add_option("-w", "--db_password", dest="db_password", my_default=pg_password,
                          help="specify the database password")
         group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path")
         group.add_option("--db_host", dest="db_host", my_default=False,
