@@ -370,3 +370,17 @@ class Meeting(models.Model):
         if self.user_id and self.user_id.sudo().google_calendar_token:
             return self.user_id
         return self.env.user
+
+    def is_synchronization_active(self):
+        """
+        Check if synchronization is active for Google Calendar.
+        This function retrieves the synchronization status from the user's environment
+        and checks if the Google Calendar synchronization is active.
+
+        Returns:
+            bool: True if synchronization is active for Google Calendar, False otherwise.
+        """
+        sync_status = self.env.user.check_synchronization_status()
+        if 'google_calendar' in sync_status and sync_status['google_calendar'] == 'sync_active' and self.env.user.check_calendar_credentials():
+            return True
+        return super().is_synchronization_active()

@@ -7,12 +7,13 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import fields
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
-from odoo.addons.mail.tests.common import MailCase
+from odoo.addons.mail.tests.common import MailCase, MockEmail
 
 
-class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
+class TestEventNotifications(TransactionCase, MailCase, MockEmail, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -417,3 +418,40 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         with freeze_time('2023-11-15 19:00:00'):    # 14:00 the day before event
             self.assertEqual(len(search_event()), 0)
         event.unlink()
+
+    def test_calendar_recurring_event_delete_notification(self):
+        """
+            Check that we can delete recurring event notification and decline events.
+        """
+        user_admin = self.env.ref('base.user_admin')
+        start = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
+        stop = datetime.combine(date.today(), datetime.min.time()).replace(hour=12)
+        event = self.env['calendar.event'].create({
+            'name': 'Test Event Delete Notification',
+            'description': 'Test Description',
+            'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+            'stop': stop.strftime("%Y-%m-%d %H:%M:%S"),
+            'duration': 3,
+            'recurrency': True,
+            'rrule_type': 'daily',
+            'count': 3,
+            'location': 'Odoo S.A.',
+            'privacy': 'public',
+            'show_as': 'busy',
+        })
+
+        wizard = self.env['calendar.popover.delete.wizard'].with_context(form_view_ref='calendar.calendar_popover_delete_view').create({'record': event.id})
+        form = Form(wizard)
+        form.delete = 'next'
+        form.save()
+        wizard.close()
+        event.unlink_event()
+        wizard = self.env['calendar.popover.delete.wizard'].create({
+            'record': event.id,
+            'subject': 'Event Cancellation',
+            'body': 'The event has been cancelled.',
+            'recipient_ids': [(6, 0, [user_admin.partner_id.id])],
+        })
+        with self.mock_mail_gateway():
+            wizard.action_send_mail_and_delete()
+        self.assertEqual(len(self._new_mails), 1)

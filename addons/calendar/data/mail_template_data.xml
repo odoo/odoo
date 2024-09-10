@@ -453,5 +453,76 @@
 </div>
             </field>
         </record>
+
+        <record id="calendar_template_delete_event" model="mail.template">
+            <field name="name">Calendar: Event Deleted</field>
+            <field name="model_id" ref="calendar.model_calendar_event"/>
+            <field name="subject">Deleted event: {{ object.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ object._get_attendee_emails() }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">Used to manually notify attendees</field>
+            <field name="body_html" type="html">
+                <div>
+                    <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
+                    <t t-set="event_name" t-value="object.name or ''"/>
+                    <t t-set="start_date" t-value="object.start or ''"/>
+                    <t t-set="end_date" t-value="object.stop or ''"/>
+                    <t t-set="event_organizer" t-value="object.user_id.name or ''"/>
+                    <div>
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="130px;" style="min-width: 130px;">
+                                    <div style="border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;">
+                                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) ">Tuesday</t>
+                                    </div>
+                                    <div style="font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;">
+                                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)">4</t>
+                                    </div>
+                                    <div style='font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;'>
+                                        <t t-out="format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)">May 2021</t>
+                                    </div>
+                                    <div style="border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;">
+                                        <t t-if="not object.allday">
+                                            <div>
+                                                <t t-out="format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)">11:00 AM</t>
+                                            </div>
+                                            <t t-if="mail_tz">
+                                                <div style="font-size: 10px; font-weight: normal">
+                                                    (<t t-out="mail_tz"> Europe/Brussels</t>)
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td width="20px;"/>
+                                <td style="padding-top: 5px;">
+                                    Dear <t t-out="object.partner_id.name or ''">user</t>
+                                    <p>
+                                        <strong>This event has been canceled and removed from your calendar.</strong>
+                                    </p>
+                                    <p>
+                                        This is to inform you that the event <strong><t t-out="event_name"/></strong>
+                                        scheduled from <strong><t t-out="start_date or ''"/></strong>
+                                        to <strong><t t-out="end_date or ''"/></strong>
+                                        has been deleted.
+                                    </p>
+                                    <p>
+                                        Organizer: <strong><t t-out="event_organizer"/></strong>
+                                    </p>
+                                    <p>
+                                        If you have any questions or concerns, please feel free to contact us.
+                                    </p>
+                                    <p>
+                                        Best regards,<br/>
+                                        <strong>The Calendar Team</strong>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </field>
+        </record>
     </data>
 </odoo>

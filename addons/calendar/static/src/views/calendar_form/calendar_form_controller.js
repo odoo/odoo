@@ -8,6 +8,7 @@ export class CalendarFormController extends FormController {
     setup() {
         super.setup();
         const ormService = useService("orm");
+        this.actionService = useService("action");
 
         onWillStart(async () => {
             this.discussVideocallLocation = await ormService.call(
@@ -39,5 +40,14 @@ export class CalendarFormController extends FormController {
             return false; // no continue
         }
         return super.beforeExecuteActionButton(...arguments);
+    }
+
+    async deleteRecord() {
+        const action = await this.orm.call("calendar.event", "unlink_event", [
+            this.model.root.resId,
+            this.model.root.data.partner_ids.resIds,
+            this.model.root.data.recurrence_update,
+        ]);
+        this.actionService.doAction(action);
     }
 }

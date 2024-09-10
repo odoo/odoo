@@ -679,3 +679,17 @@ class Meeting(models.Model):
             if user_id and self.with_user(user_id).sudo()._check_microsoft_sync_status():
                 return user_id
         return self.env.user
+
+    def is_synchronization_active(self):
+        """
+        Check if synchronization is active for Microsoft Calendar.
+        This function retrieves the synchronization status from the user's environment
+        and checks if the Microsoft Calendar synchronization is active.
+
+        Returns:
+            bool: True if synchronization is active for Microsoft Calendar, False otherwise.
+        """
+        sync_status = self.env.user.check_synchronization_status()
+        if 'microsoft_calendar' in sync_status and sync_status['microsoft_calendar'] == 'sync_active' and self.env.user.check_calendar_credentials():
+            return True
+        return super().is_synchronization_active()

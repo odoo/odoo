@@ -814,6 +814,52 @@ class Meeting(models.Model):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
 
+    def is_synchronization_active(self):
+        """
+        Check if synchronization is active for Google Calendar.
+        Returns:
+            bool: True if synchronization is active for Google Calendar, False otherwise.
+        """
+        return False
+
+    def unlink_event(self, attendee_id=None, recurrence=False):
+        """
+        Delete the event after displaying the delete wizard if necessary.
+
+        :param attendee_id: The ID of the attendee for the event
+        :param recurrence: Boolean indicating if the event is recurring
+
+        :return: Action to delete the event
+        """
+        if self.is_synchronization_active() or len(self.ids) > 1:
+            self.unlink()
+            return {'type': 'ir.actions.act_url', 'target': 'self', 'url': '/odoo/calendar'}
+        template_id = self.env['ir.model.data']._xmlid_to_res_id(
+            'calendar.calendar_template_delete_event', raise_if_not_found=False
+        )
+        lang = self.env.context.get('lang')
+        template = self.env['mail.template'].browse(template_id)
+        if template.lang:
+            lang = template._render_lang(self.ids)[self.id]
+        context = {
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_attendee_id': attendee_id,
+            'default_record': self.id,
+            'default_recurrence': recurrence,
+            'model_description': self.with_context(lang=lang)
+        }
+        action = {
+            'name': _('Delete Event'),
+            'res_model': 'calendar.popover.delete.wizard',
+            'view_id': self.env.ref('calendar.view_event_delete_wizard_form').id,
+            'type': 'ir.actions.act_window',
+            'context': context,
+            'target': 'new',
+            'views': [(False, 'form')],
+        }
+        return action
+
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
         if operation == 'read' and (not model_name or model_name == 'event.event'):

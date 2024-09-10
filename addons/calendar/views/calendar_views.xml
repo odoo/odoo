@@ -72,7 +72,7 @@
         <field name="name">calendar.event.tree</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
-            <tree string="Meetings" sample="1" multi_edit="1" js_class="calendar_list_view">
+            <tree string="Meetings" sample="1" multi_edit="1" js_class="calendar_list_view" delete="0">
                 <header>
                     <button name="action_open_composer" type="object" context="{'default_composition_mode':'mass_mail'}"
                             string="Send Mail"/>
@@ -462,6 +462,15 @@
         <field name="view_mode">form</field>
         <field name="target">inline</field>
         <field name="context">{'module' : 'calendar', 'bin_size': False}</field>
+    </record>
+
+    <record id="unlink_event_action" model="ir.actions.server">
+        <field name="name">Delete</field>
+        <field name="model_id" ref="calendar.model_calendar_event"/>
+        <field name="binding_model_id" ref="calendar.model_calendar_event"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.unlink_event()</field>
     </record>
 
     <!-- Menus -->
