@@ -134,6 +134,7 @@ Help your customers with this chat, and analyse their feedback.
             ('remove', 'im_livechat/static/**'),
             ('include', 'im_livechat.assets_embed_external'),
             ('remove', 'im_livechat/static/src/embed/external/boot.js'),
+            ('remove', 'mail/static/src/discuss/core/web/discuss_core_common_service_patch.js'),
             'web/static/src/core/browser/title_service.js',
             'web/static/tests/web_test_helpers.js',
             'bus/static/tests/bus_test_helpers.js',
