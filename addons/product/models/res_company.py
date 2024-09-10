@@ -17,6 +17,12 @@ class ResCompany(models.Model):
         if self.env.context.get('disable_company_pricelist_creation'):
             return
 
+        if not any(f.name == 'run_suite' for f in traceback.extract_stack()):
+            if self.env.user.has_group('product.group_product_pricelist'):
+                _logger.runbot("auto-creating pricelist (%s: %d)", self.env.user.display_name, self.env.user.id, stack_info=True)
+            else:
+                _logger.runbot("ignorng pricelist (%s: %d)", self.env.user.display_name, self.env.user.id, stack_info=True)
+
         if self.env.user.has_group('product.group_product_pricelist'):
             companies = self or self.env['res.company'].search([])
             ProductPricelist = self.env['product.pricelist'].sudo()
