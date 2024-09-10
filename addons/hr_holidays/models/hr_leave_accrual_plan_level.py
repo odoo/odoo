@@ -141,7 +141,7 @@ class AccrualPlanLevel(models.Model):
         ('added_value_greater_than_zero', 'CHECK(added_value > 0)', "You must give a rate greater than 0 in accrual plan levels."),
         (
             'valid_yearly_cap_value',
-            'CHECK(cap_accrued_time_yearly IS NULL OR COALESCE(maximum_leave_yearly, 0) > 0)',
+            'CHECK(cap_accrued_time_yearly IS NOT TRUE OR COALESCE(maximum_leave_yearly, 0) > 0)',
             "You cannot have a cap on yearly accrued time without setting a maximum amount."
         ),
     ]
