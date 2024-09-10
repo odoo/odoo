@@ -3,22 +3,22 @@
     <data noupdate="1">
 
         <function model="product.product" name="write">
-            <value eval="[ref('hr_expense.expense_product_meal', False)]"/>
+            <value eval="[ref('hr_expense.expense_product_meal', raise_if_not_found=False)]"/>
             <value eval="{'expense_policy': 'sales_price'}"/>
         </function>
 
         <function model="product.product" name="write">
-            <value eval="[ref('hr_expense.expense_product_mileage', False)]"/>
+            <value eval="[ref('hr_expense.expense_product_mileage', raise_if_not_found=False)]"/>
             <value eval="{'expense_policy': 'sales_price', 'invoice_policy': 'delivery'}"/>
         </function>
 
         <function model="product.product" name="write">
-            <value eval="[ref('hr_expense.expense_product_travel_accommodation', False)]"/>
+            <value eval="[ref('hr_expense.expense_product_travel_accommodation', raise_if_not_found=False)]"/>
             <value eval="{'expense_policy': 'cost', 'invoice_policy': 'delivery'}"/>
         </function>
 
         <function model="product.product" name="write">
-            <value eval="[ref('hr_expense.expense_product_communication', False)]"/>
+            <value eval="[ref('hr_expense.expense_product_communication', raise_if_not_found=False)]"/>
             <value eval="{'expense_policy': 'cost'}"/>
         </function>
     </data>

@@ -33,12 +33,13 @@ class FleetVehicle(models.Model):
     def action_view_bills(self):
         self.ensure_one()
 
-        form_view_ref = self.env.ref('account.view_move_form', False)
-        list_view_ref = self.env.ref('account_fleet.account_move_view_tree', False)
-
+        form_view_ref, tree_view_ref = self.env.ref(
+            'account.view_move_form',
+            'account_fleet.account_move_view_tree'
+        )
         result = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
         result.update({
             'domain': [('id', 'in', self.account_move_ids.ids)],
-            'views': [(list_view_ref.id, 'list'), (form_view_ref.id, 'form')],
+            'views': [(tree_view_ref.id, 'list'), (form_view_ref.id, 'form')],
         })
         return result

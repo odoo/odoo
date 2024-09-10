@@ -911,7 +911,7 @@ class Module(models.Model):
 
             excluded_category_ids = []
             for excluded_xmlid in excluded_xmlids:
-                categ = self.env.ref(excluded_xmlid, False)
+                categ = self.env.ref(excluded_xmlid, raise_if_not_found=False)
                 if not categ:
                     continue
                 excluded_category_ids.append(categ.id)

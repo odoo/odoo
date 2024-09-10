@@ -190,7 +190,7 @@ class PurchaseOrder(models.Model):
         if not pickings or len(pickings) > 1:
             result['domain'] = [('id', 'in', pickings.ids)]
         elif len(pickings) == 1:
-            res = self.env.ref('stock.view_picking_form', False)
+            res = self.env.ref('stock.view_picking_form', raise_if_not_found=False)
             form_view = [(res and res.id or False, 'form')]
             result['views'] = form_view + [(state, view) for state, view in result.get('views', []) if view != 'form']
             result['res_id'] = pickings.id

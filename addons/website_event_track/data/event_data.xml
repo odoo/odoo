@@ -3,7 +3,7 @@
     <data noupdate="1">
         <!-- Update the event type if exists -->
         <function model="event.type" name="write">
-            <value eval="[ref('event.event_type_data_conference', False)]"/>
+            <value eval="[ref('event.event_type_data_conference', raise_if_not_found=False)]"/>
             <value eval="{'website_menu': True, 'website_track': True, 'website_track_proposal': True}"/>
         </function>
     </data>

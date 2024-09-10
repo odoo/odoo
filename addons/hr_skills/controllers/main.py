@@ -23,7 +23,7 @@ class HrEmployeeCV(Controller):
         resume_type_education = request.env.ref('hr_skills.resume_type_education', raise_if_not_found=False)
         skill_type_language = request.env.ref('hr_skills.hr_skill_type_lang', raise_if_not_found=False)
 
-        report = request.env.ref('hr_skills.action_report_employee_cv', False)
+        report = request.env.ref('hr_skills.action_report_employee_cv', raise_if_not_found=False)
 
         pdf_content, dummy = request.env['ir.actions.report'].sudo()._render_qweb_pdf(
             report, employees.ids, data={

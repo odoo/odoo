@@ -301,7 +301,7 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'res.company',
-            'view_id': self.env.ref("account.res_company_view_form_terms", False).id,
+            'view_id': self.env.ref("account.res_company_view_form_terms").id,
             'target': 'new',
             'res_id': self.company_id.id,
         }

@@ -3,7 +3,7 @@
     <data noupdate="1">
         <!-- Update the event type if exists -->
         <function model="event.type" name="write">
-            <value eval="[ref('event.event_type_data_ticket', False)]"/>
+            <value eval="[ref('event.event_type_data_ticket', raise_if_not_found=False)]"/>
             <value eval="{'name': 'Sell Online', 'website_menu': True}"/>
         </function>
     </data>

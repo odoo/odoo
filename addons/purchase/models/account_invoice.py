@@ -155,7 +155,7 @@ class AccountMove(models.Model):
         if len(source_orders) > 1:
             result['domain'] = [('id', 'in', source_orders.ids)]
         elif len(source_orders) == 1:
-            result['views'] = [(self.env.ref('purchase.purchase_order_form', False).id, 'form')]
+            result['views'] = [(self.env.ref('purchase.purchase_order_form').id, 'form')]
             result['res_id'] = source_orders.id
         else:
             result = {'type': 'ir.actions.act_window_close'}
