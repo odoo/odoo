@@ -106,6 +106,7 @@
                                                readonly="1"
                                                invisible="not prerequisite_of_channel_ids"/>
                                         <field name="visibility" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="website_url" widget="CopyClipboardChar" nolabel="1" colspan="2" invisible="visibility != 'link'"/>
                                         <field name="enroll" widget="radio" options="{'horizontal': true}" invisible="visibility == 'members'"/>
                                         <field name="upload_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
                                         <field name="enroll_group_ids" widget="many2many_tags" groups="base.group_no_one"/>
