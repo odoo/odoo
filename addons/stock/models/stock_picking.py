@@ -688,7 +688,7 @@ class Picking(models.Model):
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
     shipping_weight = fields.Float(
-        "Weight for Shipping", compute='_compute_shipping_weight', readonly=False,
+        "Weight for Shipping", compute='_compute_shipping_weight', readonly=False, store=True,
         help="Total weight of packages and products not in a package. "
         "Packages with no shipping weight specified will default to their products' total weight. "
         "This is the weight used to compute the cost of the shipping.")
@@ -717,6 +717,7 @@ class Picking(models.Model):
         definition='picking_type_id.picking_properties_definition',
         copy=True)
     show_next_pickings = fields.Boolean(compute='_compute_show_next_pickings')
+    partner_country_id = fields.Many2one('res.country', related='partner_id.country_id')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),

@@ -140,6 +140,7 @@ class StockPicking(models.Model):
         assignable_pickings = self.env['stock.picking'].browse(to_assign_ids)
         for picking in assignable_pickings:
             picking._find_auto_batch()
+            picking.action_assign()
 
         return res
 

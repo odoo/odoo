@@ -232,6 +232,10 @@ class StockPickingBatch(models.Model):
         pickings._sanity_check(separate_pickings=False)
         # Skip sanity_check in pickings button_validate() & remove 'waiting' pickings from the batch
         context = {'skip_sanity_check': True, 'pickings_to_detach': empty_waiting_pickings.ids}
+        self.message_post(body=_(
+            "%s was removed from the batch, no quantity processed",
+            Markup(', ').join([picking._get_html_link() for picking in empty_waiting_pickings])
+        ))
         if len(empty_pickings) == len(pickings):
             return pickings.with_context(**context).button_validate()
         else:
