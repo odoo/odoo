@@ -38,7 +38,7 @@ class ProjectProject(models.Model):
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman', export_string_translation=False)
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice', export_string_translation=False)
     invoice_count = fields.Integer(compute='_compute_invoice_count', groups='account.group_account_readonly', export_string_translation=False)
-    vendor_bill_count = fields.Integer(related='account_id.vendor_bill_count', groups='account.group_account_readonly', export_string_translation=False)
+    vendor_bill_count = fields.Integer(related='account_id.vendor_bill_count', groups='account.group_account_readonly', compute_sudo=False, export_string_translation=False)
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons', export_string_translation=False)
     sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False)
@@ -752,17 +752,16 @@ class ProjectProject(models.Model):
     def _get_stat_buttons(self):
         buttons = super()._get_stat_buttons()
         if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
-            self_sudo = self.sudo()
             buttons.append({
                 'icon': 'dollar',
                 'text': self.env._('Sales Orders'),
-                'number': self_sudo.sale_order_count,
+                'number': self.sale_order_count,
                 'action_type': 'object',
                 'action': 'action_view_sos',
                 'additional_context': json.dumps({
                     'create_for_project_id': self.id,
                 }),
-                'show': self_sudo.display_sales_stat_buttons and self_sudo.sale_order_count > 0,
+                'show': self.display_sales_stat_buttons and self.sale_order_count > 0,
                 'sequence': 27,
             })
         if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
@@ -776,25 +775,23 @@ class ProjectProject(models.Model):
                 'sequence': 28,
             })
         if self.env.user.has_group('account.group_account_readonly'):
-            self_sudo = self.sudo()
             buttons.append({
                 'icon': 'pencil-square-o',
                 'text': self.env._('Invoices'),
-                'number': self_sudo.invoice_count,
+                'number': self.invoice_count,
                 'action_type': 'object',
                 'action': 'action_open_project_invoices',
-                'show': bool(self.account_id) and self_sudo.invoice_count > 0,
+                'show': bool(self.account_id) and self.invoice_count > 0,
                 'sequence': 30,
             })
         if self.env.user.has_group('account.group_account_readonly'):
-            self_sudo = self.sudo()
             buttons.append({
                 'icon': 'pencil-square-o',
                 'text': self.env._('Vendor Bills'),
-                'number': self_sudo.vendor_bill_count,
+                'number': self.vendor_bill_count,
                 'action_type': 'object',
                 'action': 'action_open_project_vendor_bills',
-                'show': self_sudo.vendor_bill_count > 0,
+                'show': self.vendor_bill_count > 0,
                 'sequence': 38,
             })
         return buttons
