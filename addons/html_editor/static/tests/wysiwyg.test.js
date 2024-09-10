@@ -4,7 +4,12 @@ import { click, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor, setupWysiwyg } from "./_helpers/editor";
-import { getContent, moveSelectionOutsideEditor, setContent } from "./_helpers/selection";
+import {
+    getContent,
+    moveSelectionOutsideEditor,
+    setContent,
+    setSelection,
+} from "./_helpers/selection";
 
 describe("Wysiwyg Component", () => {
     test("Wysiwyg component can be instantiated", async () => {
@@ -102,5 +107,33 @@ describe("Wysiwyg Component", () => {
             contentClass: "test ",
         });
         expect(":iframe .test.odoo-editor-editable").toHaveCount(1);
+    });
+
+    test("wysiwyg in iframe: toolbar should be well positioned", async () => {
+        const CLOSE_ENOUGH = 10;
+        const { el } = await setupWysiwyg({
+            iframe: true,
+            config: { content: "<p>editable text inside the iframe</p>".repeat(30) },
+        });
+
+        // Add some content before the iframe to make sure it's top does not
+        // match the top window's top (i.e. create a vertical offset).
+        const iframe = document.querySelector("iframe");
+        for (let i = 0; i < 10; i++) {
+            const p = document.createElement("p");
+            p.textContent = "content outside the iframe";
+            iframe.before(p);
+        }
+        const iframeOffset = iframe.getBoundingClientRect().top;
+
+        // Select a paragraph's content to display the toolbar.
+        const p = el.childNodes[5];
+        setSelection({ anchorNode: p, anchorOffset: 0, focusNode: p, focusOffset: 1 });
+        const toolbar = await waitFor(".o-we-toolbar");
+
+        // Check that toolbar is on top of and close to the selected paragraph.
+        const pTop = p.getBoundingClientRect().top + iframeOffset;
+        const toolbarBottom = toolbar.getBoundingClientRect().bottom;
+        expect(pTop - toolbarBottom).toBeWithin(0, CLOSE_ENOUGH);
     });
 });
