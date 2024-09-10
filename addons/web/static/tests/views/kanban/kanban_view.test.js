@@ -6219,7 +6219,7 @@ test.tags("desktop")("count of folded groups in empty kanban with sample data", 
         message: "should contain sample records",
     });
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryAllTexts(".o_kanban_group")).toEqual(["New\n(8)", "In Progress"]);
+    expect(queryAllTexts(".o_kanban_group")).toEqual(["New", "In Progress"]);
 });
 
 test.tags("desktop")("quick create column and examples: with folded columns", async () => {
@@ -6985,12 +6985,14 @@ test("empty grouped kanban with sample data and click quick create", async () =>
     expect(".o_kanban_record").toHaveCount(16, {
         message: "there should be 8 sample records by column",
     });
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello", "xmo"]);
 
     await quickCreateKanbanRecord();
     expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
     expect(".o_kanban_record").toHaveCount(0);
     expect(".o_view_nocontent").toHaveCount(0);
     expect(queryAll(".o_kanban_quick_create", { root: getKanbanColumn(0) })).toHaveCount(1);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(0)", "xmo\n(0)"]);
 
     await editKanbanRecordQuickCreateInput("display_name", "twilight sparkle");
     await validateKanbanRecord();
@@ -6998,6 +7000,7 @@ test("empty grouped kanban with sample data and click quick create", async () =>
     expect(queryFirst(".o_content")).not.toHaveClass("o_view_sample_data");
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(".o_view_nocontent").toHaveCount(0);
+    expect(queryAllTexts(".o_column_title")).toEqual(["hello\n(1)", "xmo\n(0)"]);
 });
 
 test.tags("desktop")("quick create record in grouped kanban with sample data", async () => {
@@ -7542,7 +7545,7 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
 
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_view_nocontent").toHaveCount(1);
-    expect(".o_kanban_group:first .o_column_title").toHaveText("hello\n(16)");
+    expect(".o_kanban_group:first .o_column_title").toHaveText("hello");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(16);
     expect(".o_kanban_record").toHaveText("hello");
 });
@@ -12818,8 +12821,7 @@ test("sample server: _mockWebReadGroup API", async () => {
 
     expect(".o_kanban_view .o_view_sample_data").toHaveCount(1);
     expect(".o_kanban_group").toHaveCount(1);
-    expect(".o_kanban_group .o_column_title").toHaveText("December 2022\n(16)");
-    expect(".o_kanban_group .o_column_title").toHaveText("December 2022\n(16)");
+    expect(".o_kanban_group .o_column_title").toHaveText("December 2022");
     expect(".o_kanban_group .o_kanban_record").toHaveCount(16);
 });
 
