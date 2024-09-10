@@ -48,43 +48,30 @@
             <field name="arch" type="xml">
                 <kanban create="false" default_order="is_current desc, last_activity desc">
                     <field name="id"/>
-                    <field name="display_name" string="Name"/>
                     <field name="device_type"/>
-                    <field name="country"/>
-                    <field name="city"/>
                     <field name="last_activity"/>
                     <field name="is_current"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_card oe_kanban_global_click">
-                                <div class="o_kanban_card_content d-flex">
-                                    <div>
-                                        <t t-if="record.device_type.raw_value === 'computer'">
-                                            <span class="fa fa-laptop fs-1" title="Computer" role="img" aria-label="Computer"/>
-                                        </t>
-                                        <t t-else="">
-                                            <span class="fa fa-mobile fs-1" title="Mobile" role="img" aria-label="Mobile"/>
-                                        </t>
-                                    </div>
-                                    <div class="oe_kanban_details d-flex flex-column ms-3">
-                                        <div class="d-flex align-items-center">
-                                            <strong class="o_kanban_title">
-                                                <field name="display_name" string="Name"/>
-                                            </strong>
-                                            <t t-if="record.is_current.raw_value">
-                                                <span class="ms-2 text-success o_status o_status_green"></span>
-                                            </t>
-                                        </div>
-                                        <field name="ip_address"/>
-                                        <field name="country"/>
-                                        <field name="city"/>
-                                        <t t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"/>
-                                    </div>
-                                    <div class="o_kanban_button">
-                                        <button name="revoke" type="object" string="Revoke" class="btn btn-secondary"/>
-                                    </div>
+                        <t t-name="kanban-card" class="flex-row">
+                            <t t-if="record.device_type.raw_value === 'computer'">
+                                <span class="fa fa-laptop fs-1" title="Computer" role="img" aria-label="Computer"/>
+                            </t>
+                            <t t-else="">
+                                <span class="fa fa-mobile fs-1" title="Mobile" role="img" aria-label="Mobile"/>
+                            </t>
+                            <div class="d-flex flex-column ms-3">
+                                <div class="d-flex align-items-center">
+                                    <field name="display_name" string="Name" class="fw-bolder"/>
+                                    <t t-if="record.is_current.raw_value">
+                                        <span class="ms-2 text-success o_status o_status_green"></span>
+                                    </t>
                                 </div>
+                                <field name="ip_address"/>
+                                <field name="country"/>
+                                <field name="city"/>
+                                <t t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"/>
                             </div>
+                            <button name="revoke" type="object" string="Revoke" class="btn btn-secondary ms-auto mt-auto"/>
                         </t>
                     </templates>
                 </kanban>
@@ -95,7 +82,7 @@
             <field name="name">User Devices</field>
             <field name="res_model">res.device</field>
             <field name="path">user-device</field>
-            <field name="view_id" ref="res_device_view_tree"/>
+            <field name="view_mode">list,kanban,form</field>
         </record>
         <menuitem action="action_user_device" id="menu_action_user_device" parent="base.menu_security" sequence="10"/>
 

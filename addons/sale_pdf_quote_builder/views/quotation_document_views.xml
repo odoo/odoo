@@ -81,46 +81,22 @@
                             class="dropdown-item"
                         >Download</a>
                     </t>
-                    <t t-name="kanban-box">
-                        <div class="oe_kanban_global_area o_kanban_attachment">
-                            <div class="ribbon ribbon-top-right" invisible="active">
-                                <span class="text-bg-danger">Archived</span>
+                    <t t-name="kanban-card" class="o_kanban_attachment flex-row">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <aside>
+                            <div class="o_image ms-3" t-att-data-mimetype="record.mimetype.value"/>
+                        </aside>
+                        <main class="ms-2">
+                            <field name="name" class="fw-bolder text-truncate"/>
+                            <div class="d-flex mt-2">
+                                <span>Document type:</span>
+                                <field name="document_type" class="ms-2" widget="selection"/>
                             </div>
-                            <div class="o_kanban_image">
-                                <div class="o_kanban_image_wrapper o_kanban_previewer">
-                                    <div
-                                        class="o_image o_image_thumbnail"
-                                        t-att-data-mimetype="record.mimetype.value"
-                                    />
-                                </div>
+                            <div t-if="!!record.quotation_template_ids.raw_value.length" class="mt-2">
+                                <span class="pe-2">Templates:</span>
+                                <field name="quotation_template_ids" class="d-inline-block" widget="many2many_tags"/>
                             </div>
-                            <div class="o_kanban_details h-100">
-                                <div class="o_kanban_details_wrapper h-100 justify-content-between">
-                                    <div class="o_kanban_record_title">
-                                        <field name="name" class="o_text_overflow"/>
-                                    </div>
-                                    <div class="o_kanban_record_bottom flex-column" name="bottom">
-                                        <div class="mt-2">
-                                            <span class="pe-2">Document type:</span>
-                                            <field
-                                                name="document_type" widget="selection"
-                                            />
-                                        </div>
-                                        <div
-                                            t-if="!!record.quotation_template_ids.raw_value.length"
-                                            class="mt-2"
-                                        >
-                                            <span class="pe-2">Templates:</span>
-                                            <field
-                                                name="quotation_template_ids"
-                                                class="d-inline-block"
-                                                widget="many2many_tags"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </main>
                     </t>
                 </templates>
             </kanban>

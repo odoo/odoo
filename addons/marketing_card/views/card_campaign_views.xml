@@ -155,37 +155,26 @@
         <field name="arch" type="xml">
             <kanban sample="1">
                 <templates>
-                    <t t-name='kanban-box'>
-                        <div class='oe_kanban_content oe_kanban_global_click o_marketing_card_campaign_kanban'>
-                            <div class="oe_kanban_details">
-                                <div class="o_kanban_record_top">
-                                    <strong class="o_kanban_record_title">
-                                        <field name="name"/>
-                                    </strong>
-                                </div>
-
-                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left">
-                                        <a data-type="object" data-name="action_view_cards_shared" href="#" class="oe_kanban_action oe_kanban_action_a me-1">
-                                             <span class="badge rounded-pill">
-                                                 <i class="fa fa-fw fa-share" aria-label="Shares" role="img" title="Shares"/>
-                                                 <field name="card_share_count"/>
-                                             </span>
-                                         </a>
-                                         <a data-type="object" data-name="action_view_cards_clicked" href="#" class="oe_kanban_action oe_kanban_action_a me-1">
-                                            <span class="badge rounded-pill">
-                                                <i class="fa fa-fw fa-mouse-pointer" aria-label="Clicks" role="img" title="Clicks"/>
-                                                <field name="target_url_click_count"/>
-                                            </span>
-                                        </a>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar_user"/>
-                                    </div>
-                                </div>
+                    <t t-name="kanban-card" class="o_marketing_card_campaign_kanban">
+                        <field name="name" class="fw-bolder fs-5"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="mt-2"/>
+                        <footer class="fs-6 pt-0">
+                            <div>
+                                <a data-type="object" data-name="action_view_cards_shared" href="#" class="me-1">
+                                    <span class="badge rounded-pill">
+                                        <i class="fa fa-fw fa-share" aria-label="Shares" role="img" title="Shares"/>
+                                        <field name="card_share_count"/>
+                                    </span>
+                                </a>
+                                <a data-type="object" data-name="action_view_cards_clicked" href="#" class="me-1">
+                                    <span class="badge rounded-pill">
+                                        <i class="fa fa-fw fa-mouse-pointer" aria-label="Clicks" role="img" title="Clicks"/>
+                                        <field name="target_url_click_count"/>
+                                    </span>
+                                </a>
                             </div>
-                        </div>
+                            <field name="user_id" class="ms-auto" widget="many2one_avatar_user"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
