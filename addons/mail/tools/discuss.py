@@ -37,6 +37,7 @@ def get_sfu_key(env) -> str | None:
 ids_by_model = defaultdict(lambda: ("id",))
 ids_by_model.update(
     {
+        "DiscussApp": (),
         "mail.thread": ("model", "id"),
         "MessageReactions": ("message", "content"),
         "Rtc": (),

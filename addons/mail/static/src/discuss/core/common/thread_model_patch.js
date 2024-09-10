@@ -83,6 +83,11 @@ const threadPatch = {
             this.isLoadingAttachments = false;
         }
     },
+    get notifyOnLeave() {
+        // Skip notification if display name is unknown (might depend on
+        // knowledge of members for groups).
+        return Boolean(this.displayName);
+    },
     /** @param {string} body */
     async post(body) {
         if (this.model === "discuss.channel" && body.startsWith("/")) {

@@ -11,11 +11,14 @@
     </t>
 
     <t t-name="mail.ActionPanel.content">
-        <div class="o-mail-ActionPanel-header position-sticky top-0 py-3 d-flex align-items-baseline" t-att-class="{ 'bg-view': !env.inChatter }">
-            <button t-if="env.closeActionPanel" class="o-mail-ActionPanel-backButton btn opacity-75 opacity-100-hover ps-0 py-0 fs-5" title="Close panel" t-on-click.stop="env.closeActionPanel">
-                <i class="oi oi-arrow-left"/>
-            </button>
-            <p t-if="props.title" class="fs-6 fw-bold text-uppercase m-0 text-700 flex-grow-1" t-esc="props.title"/>
+        <div class="o-mail-ActionPanel-header position-sticky top-0 py-3" t-att-class="{ 'bg-view': !env.inChatter }">
+            <div class="d-flex align-items-baseline">
+                <button t-if="env.closeActionPanel" class="o-mail-ActionPanel-backButton btn opacity-75 opacity-100-hover ps-0 py-0 fs-5" title="Close panel" t-on-click.stop="env.closeActionPanel">
+                    <i class="oi oi-arrow-left"/>
+                </button>
+                <p t-if="props.title" class="fs-6 fw-bold text-uppercase m-0 text-700 flex-grow-1" t-esc="props.title"/>
+            </div>
+            <t t-slot="header"/>
         </div>
         <t t-slot="default"/>
     </t>

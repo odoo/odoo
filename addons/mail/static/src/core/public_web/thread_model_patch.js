@@ -12,12 +12,14 @@ patch(Thread.prototype, {
             },
         });
     },
-
+    get allowCalls() {
+        return super.allowCalls && !this.parent_channel_id;
+    },
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.channel_type)) {
             return this.store.discuss.chats;
         }
-        if (this.channel_type === "channel") {
+        if (this.channel_type === "channel" && !this.parent_channel_id) {
             return this.store.discuss.channels;
         }
     },

@@ -86,7 +86,7 @@ patch(busService, {
         if (type === "mail.record/insert") {
             const recordsByModelName = Object.entries(payload);
             for (const [modelName, records] of recordsByModelName) {
-                for (const record of records) {
+                for (const record of Array.isArray(records) ? records : [records]) {
                     logger.logDebug(modelName, record);
                 }
             }
