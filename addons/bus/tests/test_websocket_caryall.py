@@ -279,8 +279,8 @@ class TestWebsocketCaryall(WebsocketCase):
 
     def test_disconnect_when_version_outdated(self):
         # Outdated version, connection should be closed immediately
-        with patch.object(WebsocketConnectionHandler, "_VERSION", "1.0.1"), patch.object(
-            self, "_WEBSOCKET_URL", f"{self._BASE_WEBSOCKET_URL}?version=1.0.0"
+        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
+            self, "_WEBSOCKET_URL", f"{self._BASE_WEBSOCKET_URL}?version=17.0-0"
         ):
             websocket = self.websocket_connect(
                 ping_after_connect=False, header={"User-Agent": "Chrome/126.0.0.0"}
@@ -288,7 +288,7 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
 
         # Version not passed, User-Agent present, should be considered as outdated
-        with patch.object(WebsocketConnectionHandler, "_VERSION", "1.0.1"), patch.object(
+        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
             self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL
         ):
             websocket = self.websocket_connect(
@@ -297,7 +297,7 @@ class TestWebsocketCaryall(WebsocketCase):
             self.assert_close_with_code(websocket, CloseCode.CLEAN, "OUTDATED_VERSION")
         # Version not passed, User-Agent not present, should not be considered
         # as outdated
-        with patch.object(WebsocketConnectionHandler, "_VERSION", None), patch.object(
+        with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
             self, "_WEBSOCKET_URL", self._BASE_WEBSOCKET_URL
         ):
             websocket = self.websocket_connect()
