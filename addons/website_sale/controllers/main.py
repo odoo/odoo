@@ -1143,6 +1143,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         partner_sudo == order_sudo.partner_id
                         and (can_edit_vat or partner_sudo.vat)
                     )  # On the main partner only, if the VAT was set.
+                    or order_sudo.website_id._display_partner_b2b_fields()
                 )
             ),
             'vat_label': _lt("VAT"),
