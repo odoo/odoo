@@ -10,6 +10,30 @@ from odoo.addons.test_event_full.tests.common import TestWEventCommon
 @tests.common.tagged('event_online', 'post_install', '-at_install')
 class TestWEventRegister(TestWEventCommon):
 
+    def test_event_update_lead(self):
+        """Make sure that we update leads without issues when question's answer is added to an event attendee."""
+        self.env['event.lead.rule'].create({
+            'name': 'test_event_lead_rule',
+            'lead_creation_basis': 'attendee',
+            'lead_creation_trigger': 'create',
+            'event_registration_filter': [['partner_id', '!=', False]],
+            'lead_type': 'lead',
+        })
+        event_registration = self.env['event.registration'].create({
+                    'name': 'Event Registration without answers added at first',
+                    'event_id': self.event.id,
+                    'partner_id': self.event_customer.id,
+        })
+        answer_string = 'Attendee Answer'
+        event_registration.write({
+            'registration_answer_ids': [(0, 0, {
+                'question_id': self.event_question_2.id,
+                'value_text_box': answer_string,
+            })]
+        })
+        self.assertIn(answer_string, event_registration.lead_ids.description,
+            "lead description not updated with the answer to the question")
+
     def test_register(self):
         with freeze_time(self.reference_now, tick=True):
             self.browser_js(
