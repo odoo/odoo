@@ -12,6 +12,7 @@ from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
 from odoo.addons.base_import.models.base_import import ImportValidationError
 
+
 def get_id_field(model_name):
     return {
         'id': 'id',
