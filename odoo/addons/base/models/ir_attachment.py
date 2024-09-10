@@ -428,20 +428,6 @@ class IrAttachment(models.Model):
                            self._table, ['res_model', 'res_id'])
         return res
 
-    @api.constrains('type', 'url')
-    def _check_serving_attachments(self):
-        if self.env.is_admin():
-            return
-        for attachment in self:
-            # restrict writing on attachments that could be served by the
-            # ir.http's dispatch exception handling
-            # XDO note: this should be done in check(write), constraints for access rights?
-            # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
-            if attachment.type == 'binary' and attachment.url:
-                has_group = self.env.user.has_group
-                if not any(has_group(g) for g in attachment.get_serving_groups()):
-                    raise ValidationError(_("Sorry, you are not allowed to write on this document"))
-
     @api.model
     def check(self, mode, values=None):
         """ Restricts the access to an ir.attachment, according to referred mode """
@@ -489,6 +475,16 @@ class IrAttachment(models.Model):
             # and creating attachments can be seen as an update to the model
             access_mode = 'write' if mode in ('create', 'unlink') else mode
             records.check_access(access_mode)
+
+        if not self.env.is_admin() and mode in ('write', 'create') and not {'type', 'url'}.isdisjoint(values or {}):
+            for attachment in self:
+                # restrict writing on attachments that could be served by the
+                # ir.http's dispatch exception handling
+                # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
+                if attachment.type == 'binary' and attachment.url:
+                    has_group = self.env.user.has_group
+                    if not any(has_group(g) for g in attachment.get_serving_groups()):
+                        raise ValidationError(_("Sorry, you are not allowed to write on this document"))
 
     @api.model
     def _filter_attachment_access(self, attachment_ids):

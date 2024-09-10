@@ -427,11 +427,10 @@ class Survey(models.Model):
                 - and there is a survey responsible,
                 - and this responsible is not survey manager (just survey officer),
             check the responsible is part of the list."""
-        surveys_to_check = self.filtered(lambda s: bool(s.user_id - s.restrict_user_ids))
-        if surveys_to_check:
-            valid_surveys = surveys_to_check._filtered_access("write")
-            failing_surveys_sudo = (self - valid_surveys).sudo()
-            if failing_surveys_sudo:
+        for user_id, surveys in self.filtered(lambda s: bool(s.user_id - s.restrict_user_ids)).grouped('user_id').items():
+            accessible = surveys.with_user(user_id)._filtered_access("write")
+            if len(accessible) < len(surveys):
+                failing_surveys_sudo = (self - accessible).sudo()
                 raise ValidationError(
                     _('The access of the following surveys is restricted. Make sure their responsible still has access to it: \n%(survey_names)s\n',
                         survey_names='\n'.join(f'- {survey.title}: {survey.user_id.name}' for survey in failing_surveys_sudo)))
