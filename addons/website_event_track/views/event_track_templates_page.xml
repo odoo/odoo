@@ -6,6 +6,9 @@
         <t t-set="navbar__back_url" t-value="'/event/%s/track' % (slug(event))"/>
         <t t-set="navbar__back_title">Back to All Talks</t>
         <t t-set="navbar__back_text">All Talks</t>
+        <!-- Set aside block only if there are filtered tracks -->
+        <t t-set="has_ongoing_or_upcoming" t-value="any(track.is_track_live or track.track_start_remaining for track in tracks_other)"/>
+        <t t-set="filtered_tracks_other" t-value="tracks_other.filtered(lambda track: not (has_ongoing_or_upcoming and track.is_track_done))"/>
 
         <div class="o_wevent_online o_wesession_index">
             <!-- Options -->
@@ -15,15 +18,16 @@
             <div id="oe_structure_wesession_track_index_1" class="oe_structure"/>
             <!-- Content -->
             <div t-att-class="'o_wevent_online_page_container py-3 %s' % ('container' if not option_widescreen else 'container-fluid')">
-                <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not tracks_other else '')">
-                    <t t-if="tracks_other">
-                        <t t-call="website_event_track.event_track_aside"/>
-                    </t>
+                <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not filtered_tracks_other else '')">
+                        <t t-call="website_event_track.event_track_aside">
+                            <t t-set="tracks_other" t-value="filtered_tracks_other"/>
+                        </t>
+                    <!-- Main content -->
                     <t t-call="website_event_track.event_track_content"/>
                 </div>
+                <!-- Drag/Drop Area -->
+                <div id="oe_structure_wesession_track_index_2" class="oe_structure"/>
             </div>
-            <!-- Drag/Drop Area -->
-            <div id="oe_structure_wesession_track_index_2" class="oe_structure"/>
         </div>
     </t>
 </template>

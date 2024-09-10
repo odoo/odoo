@@ -80,41 +80,29 @@
             </div>
             <div class="offcanvas-body p-0">
                 <div class="accordion accordion-flush">
-                    <div t-if="option_track_wishlist" class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target=".o_wevent_offcanvas_fav"
-                                aria-expanded="false"
-                                aria-controls="o_wevent_offcanvas_fav">
-                                Favorites
-                            </button>
-                        </h2>
-                        <div class="o_wevent_offcanvas_fav accordion-collapse collapse">
-                            <div class="accordion-body pt-0">
-                                <ul class="list-group list-group-flush">
-                                    <!-- Optional wishlist filter -->
-                                    <li class="list-group-item border-0 px-0">
-                                        <a t-att-href="'/event/%s/track?%s' % (
-                                                slug(event),
-                                                keep_query('*', search_wishlist='')
-                                            )"
-                                            class="d-flex align-items-center justify-content-between text-reset">
-                                            All Talks
-                                        </a>
-                                    </li>
-                                    <li class="list-group-item border-0 px-0">
-                                        <a t-att-href="'/event/%s/track?%s' % (
-                                                slug(event),
-                                                keep_query('*', search_wishlist='1')
-                                            )"
-                                            t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if search_wishlist else ''}">
-                                            Favorites
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                    <div class="o_wevent_offcanvas_fav accordion">
+                        <div class="accordion-body pt-0">
+                            <ul class="list-group list-group-flush">
+                                <!-- Optional wishlist filter -->
+                                <li class="list-group-item border-0 px-0">
+                                    <a t-att-href="'/event/%s/track?%s' % (
+                                            slug(event),
+                                            keep_query('*', search_wishlist='')
+                                        )"
+                                        class="d-flex align-items-center justify-content-between text-reset">
+                                        All Talks
+                                    </a>
+                                </li>
+                                <li class="list-group-item border-0 px-0">
+                                    <a t-att-href="'/event/%s/track?%s' % (
+                                            slug(event),
+                                            keep_query('*', search_wishlist='1')
+                                        )"
+                                        t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if search_wishlist else ''}">
+                                        Favorites
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                     <t t-foreach="tag_categories" t-as="tag_category">
@@ -273,79 +261,16 @@
                 <!-- DAY TRACKS LIST -->
                 <div t-attf-class="collapse {{ '' if tracks_info['default_collapsed'] else 'show' }}"
                     t-attf-id="collapse_session_list_{{ tracks_info_index }}">
-                    <div t-foreach="tracks" t-as="track"
-                        t-att-class="'o_wesession_list_item p-3 o_color_%d' % (track.color)">
-                        <div class="row g-0">
-                            <div class="col-12 d-flex justify-content-between">
-                                <!-- Hour: Live > Remaining > Hour: desktop only -->
-                                <div class="d-flex align-items-center gap-1 flex-wrap">
-                                    <div t-if="tracks_date and today_tz &lt;= tracks_date"
-                                        >
-                                        <span t-if="track.is_track_live and not track.is_track_done"
-                                            class="alert alert-danger px-2 py-1">Live</span>
-                                        <span class="fw-bold" t-elif="not track.is_track_done and track.is_track_soon">
-                                            <span t-out="track.track_start_remaining"
-                                                t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
-                                                            'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
-                                        </span>
-                                        <span class="fw-bold" t-elif="not track.is_track_done and not track.is_track_soon"
-                                            t-out="track.date"
-                                            t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
-                                        <span t-else="" class="alert alert-dark px-2 py-1 small">Finished</span>
-                                    </div>
-                                    <span t-if="tracks_date and today_tz &lt;= tracks_date and track.location_id">-</span>
-                                    <div t-if="track.location_id">
-                                        <i class="fa fa-map-marker" role="img"/> <span t-field="track.location_id"/>
-                                    </div>
-                                </div>
-                                <!-- reminder -->
-                                <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
-                                    class="d-none d-md-block py-1">
-                                    <t t-call="website_event_track.track_widget_reminder">
-                                        <t t-set="reminder_small" t-value="False"/>
-                                        <t t-set="reminder_light" t-value="False"/>
-                                    </t>
-                                </div>
-                            </div>
-                            <!-- Main column: name, speaker -->
-                            <div class="col-12">
-                                <span class="fw-bold mb0">
-                                    <a t-if="track.website_published or is_event_user"
-                                        class="text-reset me-2"
-                                        t-att-href="track.website_url">
-                                        <span t-field="track.name"/>
-                                    </a>
-                                    <t t-else="">
-                                        <span class="text-reset me-2" t-field="track.name"/>
-                                    </t>
-                                </span>
-                                <span t-if="not track.website_published and is_event_user" class="alert alert-danger px-2 py-1 align-top small">
-                                    Unpublished
-                                </span>
-                            </div>
-
-                            <div class="col-12 d-flex justify-content-between align-items-end">
-                                <div class="d-flex align-items-center w-100 gap-2 text-muted">
-                                    <span class="text-muted" t-out="track.partner_tag_line"/>
-                                    <t t-if="tracks_date and today_tz &lt;= tracks_date">
-                                        <t t-if="track.duration and not track.is_track_done and not track.is_track_done">
-                                            <span class="d-none d-md-block">&amp;bull;</span>
-                                            <span class="d-none d-md-block"
-                                                t-out="track.duration"
-                                                t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'hour', 'round': 'minute'}"/>
-                                        </t>
-                                    </t>
-                                </div>
-                                <!-- Aside column: tags -->
-                                <div class="d-none d-md-flex justify-content-end align-items-center w-auto gap-2">
-                                    <!-- Tags: desktop only -->
-                                    <t t-foreach="track.tag_ids" t-as="tag">
-                                        <t t-if="tag.color" t-call="website_event_track.track_tag_badge_link"/>
-                                    </t>
-                                </div>
-                            </div>
+                    <t t-foreach="tracks" t-as="track">
+                        <a t-if="track.website_published or is_event_user"
+                            t-att-href="track.website_url"
+                            t-att-class="'o_wesession_list_item o_color_%d d-block text-decoration-none' % (track.color)">
+                            <t t-call="website_event_track.track_list_item"/>
+                        </a>
+                        <div t-else="" t-att-class="'o_wesession_list_item o_color_%d' % (track.color)">
+                            <t t-call="website_event_track.track_list_item"/>
                         </div>
-                    </div>
+                    </t>
                 </div>
             </li>
         </ul>
@@ -433,6 +358,69 @@
             </footer>
         </div>
     </article>
+</template>
+
+<template id="track_list_item" name="Track List Item">
+    <div class="row p-3 g-0">
+        <div class="col-12 d-flex justify-content-between">
+            <!-- Hour: Live > Remaining > Hour: desktop only -->
+            <div class="d-flex align-items-center gap-1 flex-wrap">
+                <div t-if="tracks_date and today_tz &lt;= tracks_date">
+                    <span t-if="track.is_track_live and not track.is_track_done"
+                        class="alert alert-danger px-2 py-1">Live</span>
+                    <span class="fw-bold" t-elif="not track.is_track_done and track.is_track_soon">
+                        <span t-out="track.track_start_remaining"
+                            t-options="{'widget': 'duration', 'digital': False, 'format': 'narrow',
+                                        'add_direction': True, 'unit': 'second', 'round': 'minute'}"/>
+                    </span>
+                    <span class="fw-bold" t-elif="not track.is_track_done and not track.is_track_soon"
+                        t-out="track.date"
+                        t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
+                    <span t-else="" class="alert alert-dark px-2 py-1 small">Finished</span>
+                </div>
+                <span t-if="tracks_date and today_tz &lt;= tracks_date and track.location_id">-</span>
+                <div t-if="track.location_id">
+                    <i class="fa fa-map-marker" role="img"/> <span t-field="track.location_id"/>
+                </div>
+            </div>
+            <!-- reminder -->
+            <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
+                class="d-none d-md-block py-1">
+                <t t-call="website_event_track.track_widget_reminder">
+                    <t t-set="reminder_small" t-value="False"/>
+                    <t t-set="reminder_light" t-value="False"/>
+                </t>
+            </div>
+        </div>
+        <!-- Main column: name, speaker -->
+        <div class="col-12">
+            <span class="o_wesession_list_item_title fw-bold" t-field="track.name"/>
+            <span t-if="not track.website_published and is_event_user" class="alert alert-danger px-2 py-1 align-top small">
+                Unpublished
+            </span>
+        </div>
+
+        <div class="col-12 d-flex justify-content-between align-items-end">
+            <div class="d-flex align-items-center w-100 gap-2 text-muted">
+                <span class="text-muted" t-out="track.partner_tag_line"/>
+                <t t-if="tracks_date and today_tz &lt;= tracks_date">
+                    <t t-if="track.duration and not track.is_track_done and not track.is_track_done">
+                        <span class="d-none d-md-block">&amp;bull;</span>
+                        <span class="d-none d-md-block"
+                            t-out="track.duration"
+                            t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'hour', 'round': 'minute'}"/>
+                    </t>
+                </t>
+            </div>
+            <!-- Aside column: tags -->
+            <div class="d-none d-md-flex justify-content-end align-items-center w-auto gap-2">
+                <!-- Tags: desktop only -->
+                <t t-foreach="track.tag_ids" t-as="tag">
+                    <t t-if="tag.color" t-call="website_event_track.track_tag_badge_link"/>
+                </t>
+            </div>
+        </div>
+    </div>
 </template>
 
 <!-- Searched tags -->
