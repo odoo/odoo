@@ -90,7 +90,7 @@ class TestIrWebsocket(WebsocketCase):
             [f"odoo-presence-res.partner_{bob.partner_id.id}"],
             self.env["bus.bus"]._bus_last_id(),
         )
-        self.trigger_notification_dispatching([bob.partner_id])
+        self.trigger_notification_dispatching([(bob.partner_id, "presence")])
         notification = json.loads(websocket.recv())[0]
         self._close_websockets()
         bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])

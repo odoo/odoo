@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-import datetime
+from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.osv import expression
 from odoo.service.model import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 
 UPDATE_PRESENCE_DELAY = 60
@@ -84,7 +83,7 @@ class BusPresence(models.Model):
         presence = self.search([(identity_field, "=", identity_value)])
         values = {
             "last_poll": fields.Datetime.now(),
-            "last_presence": fields.Datetime.now() - datetime.timedelta(milliseconds=inactivity_period),
+            "last_presence": fields.Datetime.now() - timedelta(milliseconds=inactivity_period),
             "status": "away" if inactivity_period > AWAY_TIMER * 1000 else "online",
         }
         if not presence:
@@ -115,17 +114,6 @@ class BusPresence(models.Model):
 
     @api.autovacuum
     def _gc_bus_presence(self):
-        domain = expression.OR(
-            [
-                [("user_id.active", "=", False)],
-                [("status", "=", "offline")],
-                [
-                    (
-                        "last_poll",
-                        "<",
-                        fields.Datetime.now() - datetime.timedelta(seconds=PRESENCE_OUTDATED_TIMER),
-                    )
-                ],
-            ]
-        )
-        self.search(domain).unlink()
+        self.search(
+            [("last_poll", "<", fields.Datetime.now() - timedelta(seconds=PRESENCE_OUTDATED_TIMER))]
+        ).unlink()

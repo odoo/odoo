@@ -10,8 +10,13 @@ export const FIRST_UPDATE_DELAY = 500;
 export const UPDATE_BUS_PRESENCE_DELAY = 60000;
 
 /**
- * This service updates periodically the user presence in order for the
- * im_status to be up to date.
+ * This service keeps the user's presence up to date with the server. When the
+ * connection to the server is established, the user's presence is updated. If
+ * another device or browser updates the user's presence, the presence is sent to
+ * the server if relevant (e.g., another device is away or offline, but this one
+ * is online). To receive updates through the bus, subscribe to presence channels
+ * (e.g., subscribe to `odoo-presence-res.partner_3` to receive updates about
+ * this partner).
  */
 export const imStatusService = {
     dependencies: ["bus_service", "presence"],
