@@ -1439,6 +1439,51 @@ export function makeActionManager(env, router = _router) {
             }
             throw new InvalidButtonParamsError("Missing type for doActionButton request");
         }
+        if (action.embedded_action_ids && !this.currentController?.config.currentEmbeddedActionId) {
+            const embeddedActionsOrder = JSON.parse(
+                browser.localStorage.getItem(
+                    `orderEmbedded${action.id}+${params.resId || ""}+${user.userId}`
+                )
+            );
+            const embeddedActionId = embeddedActionsOrder?.[0];
+            const embeddedAction = action.embedded_action_ids?.find(
+                (embeddedAction) => embeddedAction.id === embeddedActionId
+            );
+            if (embeddedAction) {
+                const embeddedActions = [
+                    ...action.embedded_action_ids,
+                    {
+                        id: false,
+                        name: action.name,
+                        parent_action_id: action.id,
+                        parent_res_model: action.res_model,
+                        action_id: action.id,
+                        user_id: false,
+                        context: {},
+                    },
+                ];
+                const context = {
+                    ...action.context,
+                    active_id: params.resId,
+                    active_model: params.resModel,
+                    current_embedded_action_id: embeddedActionId,
+                    parent_action_embedded_actions: embeddedActions,
+                    parent_action_id: action.id,
+                };
+                await this.doActionButton({
+                    name:
+                        embeddedAction.python_method ||
+                        embeddedAction.action_id[0] ||
+                        embeddedAction.action_id,
+                    resId: params.resId,
+                    context,
+                    type: embeddedAction.python_method ? "object" : "action",
+                    resModel: embeddedAction.parent_res_model,
+                    viewType: embeddedAction.default_view_mode,
+                });
+                return;
+            }
+        }
         // filter out context keys that are specific to the current action, because:
         //  - wrong default_* and search_default_* values won't give the expected result
         //  - wrong group_by values will fail and forbid rendering of the destination view

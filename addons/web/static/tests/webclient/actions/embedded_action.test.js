@@ -18,7 +18,8 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
 import { router } from "@web/core/browser/router";
-import { runAllTimers } from "@odoo/hoot-mock";
+import { user } from "@web/core/user";
+import { runAllTimers, mockTouch } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 
@@ -355,5 +356,60 @@ test("the embedded actions should not be displayed when switching view", async (
     await contains("button.o_switch_view.o_kanban").click();
     expect(".o_embedded_actions").toHaveCount(0, {
         message: "The embedded actions menu should not be displayed",
+    });
+});
+
+test("User can move the main (first) embedded action", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    browser.localStorage.clear();
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_embedded_actions .dropdown").click();
+    await contains(
+        ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
+    ).click();
+    mockTouch(true);
+    await contains(".o_embedded_actions > button:first-child").dragAndDrop(
+        ".o_embedded_actions > button:nth-child(2)"
+    );
+    expect(".o_embedded_actions > button:nth-child(2) > span").toHaveText("Partners Action 1", {
+        message: "Main embedded action should've been moved to 2nd position",
+    });
+});
+
+test("User can unselect the main (first) embedded action", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    browser.localStorage.clear();
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_embedded_actions .dropdown").click();
+    const dropdownItem =
+        ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Partners Action 1')";
+    expect(dropdownItem).not.toHaveClass("text-muted", {
+        message: "Main embedded action should not be displayed in muted",
+    });
+    await contains(dropdownItem).click();
+    expect(dropdownItem).not.toHaveClass("selected", {
+        message: "Main embedded action should be unselected",
+    });
+});
+
+test("User should be redirected to the first embedded action set in localStorage", async () => {
+    await mountWithCleanup(WebClient);
+    browser.localStorage.clear();
+    browser.localStorage.setItem(`orderEmbedded1++${user.userId}`, JSON.stringify([2, false, 3])); // set embedded action 2 in first
+    await getService("action").doActionButton({
+        name: 1,
+        type: "action",
+    });
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    expect(".o_embedded_actions > button:first-child").toHaveClass("active", {
+        message: "First embedded action in order should have the 'active' class",
+    });
+    expect(".o_embedded_actions > button:first-child > span").toHaveText("Embedded Action 2", {
+        message: "First embedded action in order should be 'Embedded Action 2'",
+    });
+    expect(".o_last_breadcrumb_item > span").toHaveText("Favorite Ponies", {
+        message: "'Favorite Ponies' view should be loaded",
     });
 });
