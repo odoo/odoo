@@ -931,7 +931,6 @@ class UnfollowFromInboxTest(MailCommon, HttpCase):
             ),
             "res.partner": self._filter_partners_fields(
                 {
-                    "displayName": "Ernest Employee",
                     "id": self.env.user.partner_id.id,
                     "name": "Ernest Employee",
                     "write_date": fields.Datetime.to_string(self.env.user.write_date),

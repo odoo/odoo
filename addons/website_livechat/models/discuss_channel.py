@@ -37,7 +37,7 @@ class DiscussChannel(models.Model):
             try:
                 country_id = visitor.partner_id.country_id or visitor.country_id
                 channel_info['visitor'] = {
-                    'name': visitor.partner_id.name or visitor.partner_id.display_name or visitor.display_name,
+                    'name': visitor.partner_id.name or visitor.partner_id.display_name or visitor.display_name or _("Visitor #%(id)d.", id=visitor.id),
                     'country': {'id': country_id.id, 'code': country_id.code.lower()} if country_id else False,
                     'id': visitor.id,
                     'is_connected': visitor.is_connected,

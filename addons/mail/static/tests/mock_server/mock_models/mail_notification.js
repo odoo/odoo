@@ -47,7 +47,7 @@ export class MailNotification extends models.ServerModel {
             );
             data.persona = mailDataHelpers.Store.one(
                 ResPartner.browse(notification.res_partner_id),
-                makeKwArgs({ fields: ["display_name"] })
+                makeKwArgs({ fields: ["name"] })
             );
             store.add(this.browse(notification.id), data);
         }

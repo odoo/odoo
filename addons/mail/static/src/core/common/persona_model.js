@@ -65,8 +65,6 @@ export class Persona extends Record {
     type;
     /** @type {string} */
     name;
-    /** @type {string} */
-    displayName;
     country = Record.one("Country");
     /** @type {string} */
     email;
@@ -86,10 +84,6 @@ export class Persona extends Record {
      */
     get hasPhoneNumber() {
         return Boolean(this.mobileNumber || this.landlineNumber);
-    }
-
-    get nameOrDisplayName() {
-        return this.name || this.displayName;
     }
 
     get emailWithoutDomain() {
