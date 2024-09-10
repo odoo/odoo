@@ -102,10 +102,15 @@ export class TablePlugin extends Plugin {
         }
     }
 
-    insertTable({ rows = 2, cols = 2 } = {}) {
+    createTable({ rows = 2, cols = 2 } = {}) {
         const tdsHtml = new Array(cols).fill("<td><p><br></p></td>").join("");
         const trsHtml = new Array(rows).fill(`<tr>${tdsHtml}</tr>`).join("");
         const tableHtml = `<table class="table table-bordered o_table"><tbody>${trsHtml}</tbody></table>`;
+        return parseHTML(this.document, tableHtml);
+    }
+
+    _insertTable({ rows = 2, cols = 2 } = {}) {
+        const newTable = this.createTable({ rows, cols });
         let sel = this.shared.getEditableSelection();
         if (!sel.isCollapsed) {
             this.dispatch("DELETE_SELECTION", sel);
@@ -123,7 +128,11 @@ export class TablePlugin extends Plugin {
                 { normalize: false }
             );
         }
-        const [table] = this.shared.domInsert(parseHTML(this.document, tableHtml));
+        const [table] = this.shared.domInsert(newTable);
+        return table;
+    }
+    insertTable({ rows = 2, cols = 2 } = {}) {
+        const table = this._insertTable({ rows, cols });
         this.dispatch("ADD_STEP");
         this.shared.setCursorStart(table.querySelector("p"));
     }
