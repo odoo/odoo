@@ -29,7 +29,7 @@ test("Manage Messages", async (assert) => {
     });
     registry.category("debug").category("form").add("manageMessages", manageMessages);
     async function mockRPC(route, { method, model, kwargs }) {
-        if (method === "check_access_rights") {
+        if (method === "has_access") {
             return true;
         }
         if (method === "web_search_read" && model === "mail.message") {

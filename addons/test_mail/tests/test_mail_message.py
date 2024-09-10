@@ -527,11 +527,11 @@ class TestMessageAccess(MailCommon):
             message_type='comment', subtype_xmlid='mail.mt_note')
         # portal user have no rights to read the message
         with self.assertRaises(AccessError):
-            message.with_user(self.user_portal).read(['subject, body'])
+            message.with_user(self.user_portal).read(['subject', 'body'])
 
-        with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
+        with patch.object(MailTestSimple, '_check_access', return_value=None):
             with self.assertRaises(AccessError):
-                message.with_user(self.user_portal).read(['subject, body'])
+                message.with_user(self.user_portal).read(['subject', 'body'])
 
             # parent message is accessible to references notification mail values
             # for _notify method and portal user have no rights to send the message for this model

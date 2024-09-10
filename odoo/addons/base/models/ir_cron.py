@@ -113,7 +113,7 @@ class ir_cron(models.Model):
 
     def method_direct_trigger(self):
         self.ensure_one()
-        self.check_access_rights('write')
+        self.browse().check_access('write')
         self._try_lock()
         _logger.info('Job %r (%s) started manually', self.name, self.id)
         self, _ = self.with_user(self.user_id).with_context({'lastcall': self.lastcall})._add_progress()  # noqa: PLW0642

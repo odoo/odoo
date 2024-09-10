@@ -35,13 +35,13 @@ class WebsiteAccount(CustomerPortal):
         if 'lead_count' in counters:
             values['lead_count'] = (
                 CrmLead.search_count(self.get_domain_my_lead(request.env.user))
-                if CrmLead.check_access_rights('read', raise_exception=False)
+                if CrmLead.has_access('read')
                 else 0
             )
         if 'opp_count' in counters:
             values['opp_count'] = (
                 CrmLead.search_count(self.get_domain_my_opp(request.env.user))
-                if CrmLead.check_access_rights('read', raise_exception=False)
+                if CrmLead.has_access('read')
                 else 0
             )
         return values

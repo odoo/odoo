@@ -121,9 +121,7 @@ class WebsiteEventMeetController(EventCommunityController):
         if meeting_room not in event.sudo().meeting_room_ids:
             raise NotFound()
 
-        try:
-            meeting_room.check_access_rule('read')
-        except exceptions.AccessError:
+        if not meeting_room.has_access('read'):
             raise Forbidden()
 
         meeting_room = meeting_room.sudo()

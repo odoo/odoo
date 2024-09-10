@@ -55,7 +55,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
     @http.route(['/my/invoices/overdue'], type='http', auth='public', methods=['GET'], website=True, sitemap=False)
     def portal_my_overdue_invoices(self, access_token=None, **kw):
         try:
-            request.env['account.move'].check_access_rights('read')
+            request.env['account.move'].check_access('read')
         except (AccessError, MissingError):
             return request.redirect('/my')
 

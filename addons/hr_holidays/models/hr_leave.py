@@ -244,8 +244,7 @@ class HolidaysRequest(models.Model):
 
     @api.depends_context('uid')
     def _compute_description(self):
-        self.check_access_rights('read')
-        self.check_access_rule('read')
+        self.check_access('read')
 
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
@@ -1210,7 +1209,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     if val_type == 'no_validation' and current_employee == holiday.employee_id and (is_officer or is_manager):
                         continue
                     # use ir.rule based first access check: department, members, ... (see security.xml)
-                    holiday.check_access_rule('write')
+                    holiday.check_access('write')
 
                     # This handles states validate1 validate and refuse
                     if holiday.employee_id == current_employee\
@@ -1386,8 +1385,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         # due to record rule can not allow to add follower and mention on validated leave so subscribe through sudo
         if any(holiday.state in ['validate', 'validate1'] for holiday in self):
-            self.check_access_rights('read')
-            self.check_access_rule('read')
+            self.check_access('read')
             return super(HolidaysRequest, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         return super(HolidaysRequest, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
 

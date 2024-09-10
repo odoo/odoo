@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
-from odoo.exceptions import AccessError
 from odoo.http import request
 
 
@@ -22,10 +21,7 @@ class WebsiteMailGroup(http.Controller):
         if token:
             group = group.sudo()
 
-        try:
-            group.check_access_rights('read')
-            group.check_access_rule('read')
-        except AccessError:
+        if not group.has_access('read'):
             return
 
         if not request.env.user._is_public():

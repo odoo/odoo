@@ -40,6 +40,6 @@ class SpreadsheetDashboardShare(models.Model):
         self.ensure_one()
         token_access = self._check_token(access_token)
         dashboard = self.dashboard_id.with_user(self.create_uid)
-        user_access = dashboard.check_access_rights("read", raise_exception=False) and dashboard._filter_access_rules("read")
+        user_access = dashboard.has_access("read")
         if not (token_access and user_access):
             raise Forbidden(_("You don't have access to this dashboard. "))

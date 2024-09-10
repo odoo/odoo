@@ -79,8 +79,7 @@ async function makePropertiesGroupView(properties) {
         },
     });
 
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     Partner._records[1].properties = properties.map((isSeparator, index) => {
         return {
@@ -320,7 +319,7 @@ defineModels([Partner, ResCompany, User]);
  * change the properties value).
  */
 test("properties: no access to parent", async () => {
-    onRpc("check_access_rights", () => false);
+    onRpc("has_access", () => false);
 
     const formView = await mountView({
         type: "form",
@@ -367,8 +366,7 @@ test("properties: no access to parent", async () => {
  * be able to change the properties definition.
  */
 test("properties: access to parent", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     await mountView({
         type: "form",
@@ -461,8 +459,7 @@ test("properties: access to parent", async () => {
  * Test the creation of a new property.
  */
 test("properties: add a new property", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     await mountView({
         type: "form",
@@ -519,8 +516,7 @@ test("properties: add a new property", async () => {
  * Test the selection property.
  */
 test.tags("desktop")("properties: selection", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     await mountView({
         type: "form",
@@ -653,8 +649,7 @@ test.tags("desktop")("properties: selection", async () => {
  * Test the float and the integer property.
  */
 test("properties: float and integer", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     await mountView({
         type: "form",
@@ -714,8 +709,7 @@ test("properties: float and integer", async () => {
  * Test the properties re-arrangement
  */
 test.tags("desktop")("properties: move properties", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     await mountView({
         type: "form",
@@ -788,8 +782,7 @@ test.tags("desktop")("properties: move properties", async () => {
  * Test the properties tags
  */
 test("properties: tags", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     await mountView({
         type: "form",
@@ -896,7 +889,7 @@ test("properties: tags", async () => {
  */
 test.tags("desktop")("properties: many2one", async () => {
     onRpc(({ method, model, args }) => {
-        if (["check_access_rights", "check_access_rule"].includes(method)) {
+        if (method === "has_access") {
             return true;
         } else if (method === "get_available_models" && model === "ir.model") {
             return [
@@ -986,7 +979,7 @@ test.tags("desktop")("properties: many2one", async () => {
  */
 test.tags("desktop")("properties: many2many", async () => {
     onRpc(({ method, model, args }) => {
-        if (["check_access_rights", "check_access_rule"].includes(method)) {
+        if (method === "has_access") {
             return true;
         } else if (method === "get_available_models" && model === "ir.model") {
             return [
@@ -1089,7 +1082,7 @@ test.tags("desktop")("properties: many2many", async () => {
  */
 test.tags("desktop")("properties: many2one 'Search more...'", async () => {
     onRpc(({ method, model }) => {
-        if (["check_access_rights", "check_access_rule", "has_group"].includes(method)) {
+        if (["has_access", "has_group"].includes(method)) {
             return true;
         } else if (method === "display_name_for" && model === "ir.model") {
             return [
@@ -1219,7 +1212,7 @@ test("properties: date(time) property manipulations", async () => {
     });
     onRpc(({ method, args }) => {
         expect.step(method);
-        if (method === "check_access_rights") {
+        if (method === "has_access") {
             return true;
         }
         if (method === "web_save") {
@@ -1245,7 +1238,7 @@ test("properties: date(time) property manipulations", async () => {
         resId: 5000,
         arch: /* xml */ `<form><field name="company_id"/><field name="properties"/></form>`,
     });
-    expect.verifySteps(["get_views", "web_read", "check_access_rights"]);
+    expect.verifySteps(["get_views", "web_read", "has_access"]);
 
     // check initial properties
     expect("[property-name=property_1] .o_property_field_value input").toHaveValue("01/01/2019");
@@ -1285,7 +1278,7 @@ test("properties: date(time) property manipulations", async () => {
  */
 test.tags("desktop")("properties: name reset", async () => {
     onRpc(({ method, model }) => {
-        if (["check_access_rights", "check_access_rule"].includes(method)) {
+        if (method === "has_access") {
             return true;
         } else if (method === "get_available_models" && model === "ir.model") {
             return [
@@ -1691,8 +1684,7 @@ test.tags("mobile")("properties: switch view on mobile", async () => {
  * change the default value, it should never update the property value.
  */
 test("properties: default value", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     await mountView({
         type: "form",
@@ -1758,8 +1750,7 @@ test("properties: default value", async () => {
 
 test("properties: default value date", async () => {
     mockDate("2022-01-03T08:00:00");
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1810,8 +1801,7 @@ test("properties: default value date", async () => {
  * check if property field popover closes when clicking on delete property icon.
  */
 test("properties: close property popover once clicked on delete icon", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1845,8 +1835,7 @@ test("properties: close property popover once clicked on delete icon", async () 
  * In that case, some properties start without the flag "definition_deleted".
  */
 test("properties: form view and falsy domain, properties are not empty", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1901,8 +1890,7 @@ test("properties: form view and falsy domain, properties are not empty", async (
  * In that case, all properties start with the flag "definition_deleted".
  */
 test("properties: form view and falsy domain, properties are empty", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -2406,8 +2394,7 @@ test.tags("desktop")("properties: separators drag and drop", async () => {
 });
 
 test("properties: showAddButton option", async () => {
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -2464,8 +2451,7 @@ test.tags("desktop")("properties: onChange return new properties", async () => {
             ];
         }
     };
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
 
     await mountView({
         type: "form",
@@ -2495,8 +2481,7 @@ test("new property, change record, change property type", async () => {
     const records = Partner._records;
     records[0].properties = [];
     records[1].properties = [];
-    onRpc("check_access_rights", () => true);
-    onRpc("check_access_rule", () => true);
+    onRpc("has_access", () => true);
     onRpc("web_save", ({ args }) => {
         if (args[0][0] === 1) {
             // On property creation in first record, add a copy with empty value in

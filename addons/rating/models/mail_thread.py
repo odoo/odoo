@@ -57,8 +57,7 @@ class MailThread(models.AbstractModel):
         that will create the asked token. An explicit call to access rights is
         performed as sudo is used afterwards as this method could be used from
         different sources, notably templates. """
-        self.check_access_rights('read')
-        self.check_access_rule('read')
+        self.check_access('read')
         if not partner:
             partner = self._rating_get_partner()
         rated_partner = self._rating_get_operator()

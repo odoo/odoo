@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.exceptions import AccessError
 
 
 class CalendarEvent(models.Model):
@@ -52,9 +51,7 @@ class CalendarEvent(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         events = super().create(vals_list)
-        try:
-            self.env['hr.applicant'].check_access_rights('read')
-        except AccessError:
+        if not self.env['hr.applicant'].has_access('read'):
             return events
 
         attachments = False

@@ -42,8 +42,7 @@ class RecruitmentSource(models.Model):
             }
 
             # check that you can create source before to call mail.alias in sudo with known/controlled vals
-            source.check_access_rights('create')
-            source.check_access_rule('create')
+            source.check_access('create')
             source.alias_id = self.env['mail.alias'].sudo().create(vals)
 
     def unlink(self):

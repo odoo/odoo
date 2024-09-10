@@ -38,7 +38,7 @@ class DebugMenuParent extends Component {
 const debugRegistry = registry.category("debug");
 
 onRpc(async (args) => {
-    if (args.method === "check_access_rights") {
+    if (args.method === "has_access") {
         return Promise.resolve(true);
     }
     if (args.route === "/web/dataset/call_kw/ir.attachment/regenerate_assets_bundles") {

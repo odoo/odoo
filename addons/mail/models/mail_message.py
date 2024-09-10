@@ -267,7 +267,7 @@ class Message(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None):
         """ Override that adds specific access rights of mail.message, to remove
         ids uid could not see according to our custom rules. Please refer to
-        check_access_rule for more details about those rules.
+        _check_access() for more details about those rules.
 
         Non employees users see only message with subtype (aka do not see
         internal logs).
@@ -356,7 +356,7 @@ class Message(models.Model):
             allowed_ids |= self._find_allowed_model_wise(doc_model, doc_dict)
         return allowed_ids
 
-    def check_access_rule(self, operation):
+    def _check_access(self, operation: str) -> tuple | None:
         """ Access rules of mail.message:
             - read: if
                 - author_id == pid, uid is the author OR
@@ -383,11 +383,14 @@ class Message(models.Model):
         Specific case: non employee users see only messages with subtype (aka do
         not see internal logs).
         """
-        if self.env.is_superuser():
-            return
+        result = super()._check_access(operation)
+        if not self:
+            return result
 
-        # just in case there are ir.rules
-        super().check_access_rule(operation)
+        # discard forbidden records, and check remaining ones
+        messages = self - result[0] if result else self
+        if not messages:
+            return result
 
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env.user._is_internal():
@@ -399,16 +402,23 @@ class Message(models.Model):
                         AND message.message_type = 'comment'
                         AND (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE)
                 ''',
-                self.ids,
+                messages.ids,
             ))
             if rows:
-                raise self.browse(id_ for [id_] in rows)._make_access_error(operation)
+                internal = self.browse(id_ for [id_] in rows)
+                if result:
+                    result = (result[0] + internal, result[1])
+                else:
+                    result = (internal, lambda: internal._make_access_error(operation))
+                messages -= internal
+            if not messages:
+                return result
 
         # Read the value of messages in order to determine their accessibility.
         # The values are put in 'messages_to_check', and entries are popped
         # once we know they are accessible. At the end, the remaining entries
         # are the invalid ones.
-        self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
+        messages.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
 
         if operation in ('read', 'write'):
@@ -424,19 +434,19 @@ class Message(models.Model):
                     WHERE m.id = ANY(%(ids)s)
                     GROUP BY m.id
                 """,
-                pid=self.env.user.partner_id.id, ids=self.ids,
+                pid=self.env.user.partner_id.id, ids=messages.ids,
             )
         elif operation in ('create', 'unlink'):
             query = SQL(
                 """ SELECT id, model, res_id, author_id, parent_id, message_type
                     FROM "mail_message"
                     WHERE id = ANY(%s)
-                """, self.ids,
+                """, messages.ids,
             )
         else:
             raise ValueError(_('Wrong operation name (%s)', operation))
 
-        # trick: messages_to_check doesn't contain missing records
+        # trick: messages_to_check doesn't contain missing records from messages
         messages_to_check = {
             values['id']: values
             for values in self.env.execute_query_dict(query)
@@ -459,7 +469,7 @@ class Message(models.Model):
                     messages_to_check.pop(mid)
 
         if not messages_to_check:
-            return
+            return result
 
         # Recipients condition, for read and write (partner_ids)
         # keep on top, usefull for systray notifications
@@ -468,7 +478,7 @@ class Message(models.Model):
                 if message.get('notified'):
                     messages_to_check.pop(mid)
             if not messages_to_check:
-                return
+                return result
 
         # CRUD: Access rights related to the document
         # {document_model_name: {document_id: message_ids}}
@@ -484,13 +494,15 @@ class Message(models.Model):
                 doc_operation = documents._get_mail_message_access(docid_msgids, operation)  # why not giving model here?
             else:
                 doc_operation = self.env['mail.thread']._get_mail_message_access(docid_msgids, operation, model_name=model)
-            documents.check_access_rights(doc_operation)
-            for document in documents._filter_access_rules(doc_operation):
-                for mid in docid_msgids.pop(document.id):
-                    messages_to_check.pop(mid)
+            doc_result = documents._check_access(doc_operation)
+            forbidden_doc_ids = set(doc_result[0]._ids) if doc_result else set()
+            for doc_id, msg_ids in docid_msgids.items():
+                if doc_id not in forbidden_doc_ids:
+                    for mid in msg_ids:
+                        messages_to_check.pop(mid)
 
         if not messages_to_check:
-            return
+            return result
 
         # Parent condition, for create (check for received notifications for the created message parent)
         if operation == 'create':
@@ -512,7 +524,7 @@ class Message(models.Model):
                         messages_to_check.pop(mid)
 
             if not messages_to_check:
-                return
+                return result
 
             # Recipients condition for create (message_follower_ids)
             for model, docid_msgids in model_docid_msgids.items():
@@ -527,9 +539,13 @@ class Message(models.Model):
                         messages_to_check.pop(mid)
 
             if not messages_to_check:
-                return
+                return result
 
-        raise self.browse(messages_to_check)._make_access_error(operation)
+        forbidden = self.browse(messages_to_check)
+        if result:
+            return (result[0] + forbidden, result[1])
+        else:
+            return (forbidden, lambda: forbidden._make_access_error(operation))
 
     def _make_access_error(self, operation: str) -> AccessError:
         return AccessError(_(
@@ -539,7 +555,7 @@ class Message(models.Model):
             "Records: %(records)s, User: %(user)s",
             type=self._description,
             operation=operation,
-            records=format_list(self.env, list(map(str, self.ids[:6]))),
+            records=self.ids[:6],
             user=self.env.uid,
         ))
 
@@ -549,22 +565,25 @@ class Message(models.Model):
         user can access it for the given operation."""
         message = self.browse(message_id).exists()
         if not message:
-            return self.env["mail.message"]
-        try:
-            if not self.env.user._is_public() or not self.env["mail.guest"]._get_guest_from_context():
-                # Don't check_access_rights for public user with a guest, as the rules are
-                # incorrect due to historically having no reason to allow operations on messages to
-                # public user before the introduction of guests. Even with ignoring the rights,
-                # check_access_rule and its sub methods are already covering all the cases properly.
-                message.sudo(False).check_access_rights(operation)
-            message.sudo(False).check_access_rule(operation)
             return message
-        except AccessError:
-            if message.model and message.res_id:
-                mode = self.env[message.model]._get_mail_message_access([message.res_id], operation)
-                if self.env[message.model]._get_thread_with_access(message.res_id, mode, **kwargs):
-                    return message
-            return self.env["mail.message"]
+
+        if self.env.user._is_public() and self.env["mail.guest"]._get_guest_from_context():
+            # Don't check_access_rights for public user with a guest, as the rules are
+            # incorrect due to historically having no reason to allow operations on messages to
+            # public user before the introduction of guests. Even with ignoring the rights,
+            # check_access_rule and its sub methods are already covering all the cases properly.
+            if message.sudo(False).has_access(operation):
+                return message
+        else:
+            if message.sudo(False).has_access(operation):
+                return message
+
+        if message.model and message.res_id:
+            mode = self.env[message.model]._get_mail_message_access([message.res_id], operation)
+            if self.env[message.model]._get_thread_with_access(message.res_id, mode, **kwargs):
+                return message
+
+        return self.browse()
 
     @api.model_create_multi
     def create(self, values_list):
@@ -665,9 +684,9 @@ class Message(models.Model):
         return messages
 
     def read(self, fields=None, load='_classic_read'):
-        """ Override to explicitely call check_access_rule, that is not called
+        """ Override to explicitely call check_access(), that is not called
             by the ORM. It instead directly fetches ir.rules and apply them. """
-        self.check_access_rule('read')
+        self.check_access('read')
         return super(Message, self).read(fields=fields, load=load)
 
     def fetch(self, field_names):
@@ -700,7 +719,7 @@ class Message(models.Model):
         # because the unlink method invalidates the whole cache anyway
         if not self:
             return True
-        self.check_access_rule('unlink')
+        self.check_access('unlink')
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
@@ -798,7 +817,7 @@ class Message(models.Model):
             to uid are set to (un)starred.
         """
         # a user should always be able to star a message they can read
-        self.check_access_rule('read')
+        self.check_access('read')
         starred = not self.starred
         partner = self.env.user.partner_id
         if starred:
@@ -1119,12 +1138,7 @@ class Message(models.Model):
             # have access to the record related to the notification. In this case, we skip it.
             # YTI FIXME: check allowed_company_ids if necessary
             if record := record_by_message.get(message):
-                try:
-                    record.check_access_rights('read')
-                    record.check_access_rule('read')
-                except AccessError:
-                    continue
-                else:
+                if record.has_access('read'):
                     messages += message
         messages_per_partner = defaultdict(lambda: self.env['mail.message'])
         for message in messages:

@@ -62,10 +62,7 @@ class WebsiteSlides(WebsiteProfile):
         slide = request.env['slide.slide'].browse(int(slide_id)).exists()
         if not slide:
             return {'error': 'slide_wrong'}
-        try:
-            slide.check_access_rights('read')
-            slide.check_access_rule('read')
-        except AccessError:
+        if not slide.has_access('read'):
             return {'error': 'slide_access'}
         return {'slide': slide}
 
@@ -488,10 +485,8 @@ class WebsiteSlides(WebsiteProfile):
         """
         status = 'authorized'
         try:
-            slide_model = request.env['slide.slide']
-            slide_model.check_access_rights('read')
-            slide = slide_model.browse(slide_id)
-            slide.check_access_rule('read')
+            slide = request.env['slide.slide'].browse(slide_id)
+            slide.check_access('read')
         except (AccessError, MissingError):
             try:
                 slide = request.env['slide.slide'].sudo().browse([slide_id])
@@ -560,10 +555,7 @@ class WebsiteSlides(WebsiteProfile):
             channel = request.env['slide.channel'].browse(channel_id).exists()
             if not channel:
                 return self._redirect_to_slides_main('no_channel')
-        try:
-            channel.check_access_rights('read')
-            channel.check_access_rule('read')
-        except AccessError:
+        if not channel.has_access('read'):
             return self._redirect_to_slides_main('no_rights')
 
         if category_id and not category:
@@ -806,13 +798,7 @@ class WebsiteSlides(WebsiteProfile):
             return self._redirect_to_slides_main('no_channel')
 
         # --- Compute rights of current user
-        try:
-            channel.check_access_rights('read')
-            channel.check_access_rule('read')
-        except AccessError:
-            has_rights = False
-        else:
-            has_rights = True
+        has_rights = channel.has_access('read')
 
         invite_values = self._get_channel_values_from_invite(channel_id, invite_hash, int(invite_partner_id))
         if invite_values.get('invite_error'):
@@ -882,7 +868,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_search_read(self, fields, domain):
-        can_create = request.env['slide.channel.tag'].check_access_rights('create', raise_exception=False)
+        can_create = request.env['slide.channel.tag'].has_access('create')
         return {
             'read_results': request.env['slide.channel.tag'].search_read(domain, fields),
             'can_create': can_create,
@@ -890,7 +876,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/tag/group/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_group_search_read(self, fields, domain):
-        can_create = request.env['slide.channel.tag.group'].check_access_rights('create', raise_exception=False)
+        can_create = request.env['slide.channel.tag.group'].has_access('create')
         return {
             'read_results': request.env['slide.channel.tag.group'].search_read(domain, fields),
             'can_create': can_create,
@@ -1328,7 +1314,7 @@ class WebsiteSlides(WebsiteProfile):
     def slide_category_search_read(self, fields, domain):
         category_slide_domain = domain if domain else []
         category_slide_domain = expression.AND([category_slide_domain, [('is_category', '=', True)]])
-        can_create = request.env['slide.slide'].check_access_rights('create', raise_exception=False)
+        can_create = request.env['slide.slide'].has_access('create')
         return {
             'read_results': request.env['slide.slide'].search_read(category_slide_domain, fields),
             'can_create': can_create,
@@ -1491,7 +1477,7 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):
-        can_create = request.env['slide.tag'].check_access_rights('create', raise_exception=False)
+        can_create = request.env['slide.tag'].has_access('create')
         return {
             'read_results': request.env['slide.tag'].search_read(domain, fields),
             'can_create': can_create,

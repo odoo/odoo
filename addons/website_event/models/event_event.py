@@ -411,7 +411,7 @@ class Event(models.Model):
         :param menu_type: type of menu. Mainly used for inheritance purpose
           allowing more fine-grain tuning of menus.
         """
-        self.check_access_rights('write')
+        self.browse().check_access('write')
         view_id = False
         if not url:
             # add_menu=False, ispage=False -> simply create a new ir.ui.view with name

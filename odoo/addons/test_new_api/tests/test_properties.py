@@ -1626,12 +1626,10 @@ class PropertiesCase(TestPropertiesMixin):
     @users('test')
     def test_properties_field_security(self):
         """Check the access right related to the Properties fields."""
-        def _mocked_check_access_rights(records, operation, raise_exception=True):
-            if records.env.su:  # called with SUDO
-                return True
-            if raise_exception:
-                raise AccessError('')
-            return False
+        def _mocked_check_access(records, operation):
+            if records.env.su:
+                return
+            raise AccessError('')
 
         message = self.message_1.with_user(self.test_user)
 
@@ -1648,14 +1646,14 @@ class PropertiesCase(TestPropertiesMixin):
         values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
         self.env.invalidate_all()
-        with patch('odoo.addons.test_new_api.models.test_new_api.MultiTag.check_access_rights', _mocked_check_access_rights):
+        with patch('odoo.addons.test_new_api.models.test_new_api.MultiTag.check_access', _mocked_check_access):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, None))
 
         # a user read a properties with a many2one to a record
         # but doesn't have access to its parent
         self.env.invalidate_all()
-        with patch('odoo.addons.test_new_api.models.test_new_api.Discussion.check_access_rights', _mocked_check_access_rights):
+        with patch('odoo.addons.test_new_api.models.test_new_api.Discussion.check_access', _mocked_check_access):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
 
@@ -1669,15 +1667,13 @@ class PropertiesCase(TestPropertiesMixin):
         should have the right schema and should be populated with the default
         values stored on the property definition.
         """
-        def _mocked_check_access_rights(records, operation, raise_exception=True):
+        def _mocked_check_access(records, operation):
             if records.env.su:
-                return True
-            if raise_exception:
-                raise AccessError('')
-            return False
+                return
+            raise AccessError('')
 
         self.env.invalidate_all()
-        with patch('odoo.addons.test_new_api.models.test_new_api.Discussion.check_access_rights', _mocked_check_access_rights):
+        with patch('odoo.addons.test_new_api.models.test_new_api.Discussion.check_access', _mocked_check_access):
             message = self.env['test_new_api.message'].create({
                 'name': 'Test Message',
                 'discussion': self.discussion_1.id,

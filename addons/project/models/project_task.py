@@ -687,7 +687,7 @@ class Task(models.Model):
         return [('id', 'in', sql)]
 
     def _compute_display_parent_task_button(self):
-        accessible_parent_tasks = self.parent_id.with_user(self.env.user)._filter_access_rules('read')
+        accessible_parent_tasks = self.parent_id.with_user(self.env.user)._filtered_access('read')
         for task in self:
             task.display_parent_task_button = task.parent_id in accessible_parent_tasks
 
@@ -1062,7 +1062,7 @@ class Task(models.Model):
 
         is_portal_user = self.env.user._is_portal()
         if is_portal_user:
-            self.check_access_rights('create')
+            self.browse().check_access('create')
         default_stage = dict()
         for vals in vals_list:
             project_id = vals.get('project_id') or default_project_id
@@ -1125,7 +1125,7 @@ class Task(models.Model):
         if is_portal_user and not was_in_sudo:
             # since we use sudo to create tasks, we need to check
             # if the portal user could really create the tasks based on the ir rule.
-            tasks.with_user(self.env.user).check_access_rule('create')
+            tasks.browse().with_user(self.env.user).check_access('create')
         current_partner = self.env.user.partner_id
 
         all_partner_emails = []
@@ -1167,8 +1167,7 @@ class Task(models.Model):
         if self.env.user._is_portal() and not self.env.su:
             # Check if all fields in vals are in SELF_WRITABLE_FIELDS
             self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
-            self.check_access_rights('write')
-            self.check_access_rule('write')
+            self.check_access('write')
             portal_can_write = True
 
         if 'milestone_id' in vals:
@@ -1761,7 +1760,7 @@ class Task(models.Model):
 
     def action_project_sharing_view_parent_task(self):
         if self.parent_id.project_id != self.project_id and self.env.user._is_portal():
-            project = self.parent_id.project_id._filter_access_rules_python('read')
+            project = self.parent_id.project_id._filtered_access('read')
             if project:
                 url = f"/my/projects/{self.parent_id.project_id.id}/task/{self.parent_id.id}"
                 if project._check_project_sharing_access():
@@ -1989,8 +1988,7 @@ class Task(models.Model):
 
     def project_sharing_toggle_is_follower(self):
         self.ensure_one()
-        self.check_access_rights('write')
-        self.check_access_rule('write')
+        self.check_access('write')
         is_follower = self.message_is_follower
         if is_follower:
             self.sudo().message_unsubscribe(self.env.user.partner_id.ids)

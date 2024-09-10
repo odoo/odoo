@@ -838,13 +838,11 @@ class Slide(models.Model):
         return mail_ids
 
     def action_like(self):
-        self.check_access_rights('read')
-        self.check_access_rule('read')
+        self.check_access('read')
         return self._action_vote(upvote=True)
 
     def action_dislike(self):
-        self.check_access_rights('read')
-        self.check_access_rule('read')
+        self.check_access('read')
         return self._action_vote(upvote=False)
 
     def _action_vote(self, upvote=True):

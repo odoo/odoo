@@ -62,7 +62,7 @@ QUnit.module("Views", ({ beforeEach }) => {
                         },
                     ],
                     methods: {
-                        check_access_rights() {
+                        has_access() {
                             return Promise.resolve(true);
                         },
                     },

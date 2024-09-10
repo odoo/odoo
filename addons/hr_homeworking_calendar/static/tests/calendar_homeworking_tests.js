@@ -198,7 +198,7 @@ QUnit.module("Homeworking Calendar", ({ beforeEach }) => {
                         },
                     ],
                     methods: {
-                        check_access_rights() {
+                        has_access() {
                             return Promise.resolve(true);
                         },
                     },

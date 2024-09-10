@@ -30,12 +30,10 @@ class IrWebsocket(models.AbstractModel):
                         if not document.exists():
                             continue
 
-                        document.check_access_rights('read')
+                        document.check_access('read')
                         document.check_field_access_rights('read', [field_name])
-                        document.check_access_rule('read')
-                        document.check_access_rights('write')
+                        document.check_access('write')
                         document.check_field_access_rights('write', [field_name])
-                        document.check_access_rule('write')
 
                         channels.append((self.env.registry.db_name, 'editor_collaboration', model_name, field_name, res_id))
         return super()._build_bus_channel_list(channels)

@@ -230,7 +230,7 @@ class PhoneMixin(models.AbstractModel):
     def phone_action_blacklist_remove(self):
         # wizard access rights currently not working as expected and allows users without access to
         # open this wizard, therefore we check to make sure they have access before the wizard opens.
-        can_access = self.env['phone.blacklist'].check_access_rights('write', raise_exception=False)
+        can_access = self.env['phone.blacklist'].has_access('write')
         if can_access:
             return {
                 'name': 'Are you sure you want to unblacklist this Phone Number?',

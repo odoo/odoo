@@ -22,11 +22,11 @@ class CustomerPortal(portal.CustomerPortal):
         if 'rfq_count' in counters:
             values['rfq_count'] = PurchaseOrder.search_count([
                 ('state', 'in', ['sent'])
-            ]) if PurchaseOrder.check_access_rights('read', raise_exception=False) else 0
+            ]) if PurchaseOrder.has_access('read') else 0
         if 'purchase_count' in counters:
             values['purchase_count'] = PurchaseOrder.search_count([
                 ('state', 'in', ['purchase', 'done', 'cancel'])
-            ]) if PurchaseOrder.check_access_rights('read', raise_exception=False) else 0
+            ]) if PurchaseOrder.has_access('read') else 0
         return values
 
     def _get_purchase_searchbar_sortings(self):

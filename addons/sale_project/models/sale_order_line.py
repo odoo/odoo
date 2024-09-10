@@ -27,7 +27,7 @@ class SaleOrderLine(models.Model):
             # If we can't add order lines to the default order, discard it
             if 'order_id' in res:
                 try:
-                    self.env['sale.order'].browse(res['order_id']).check_access_rule('write')
+                    self.env['sale.order'].browse(res['order_id']).check_access('write')
                 except AccessError:
                     del res['order_id']
 
@@ -42,7 +42,7 @@ class SaleOrderLine(models.Model):
                 if project_id:
                     try:
                         project_so = self.env['project.project'].browse(project_id).sale_order_id
-                        project_so.check_access_rule('write')
+                        project_so.check_access('write')
                         sale_order = project_so
                     except AccessError:
                         pass

@@ -105,15 +105,8 @@ class Channel(models.Model):
     @api.depends("channel_type", "is_member", "group_public_id")
     @api.depends_context("uid")
     def _compute_is_editable(self):
-        if not self.check_access_rights("write", raise_exception=False):
-            self.is_editable = False
-            return
         for channel in self:
-            try:
-                channel.check_access_rule("write")
-                channel.is_editable = True
-            except AccessError:
-                channel.is_editable = False
+            channel.is_editable = channel.has_access("write")
 
     @api.depends('channel_type', 'image_128', 'uuid')
     def _compute_avatar_128(self):

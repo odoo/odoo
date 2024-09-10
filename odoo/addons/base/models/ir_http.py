@@ -277,8 +277,7 @@ class IrHttp(models.AbstractModel):
 
             try:
                 # explicitly crash now, instead of crashing later
-                args[key].check_access_rights('read')
-                args[key].check_access_rule('read')
+                args[key].check_access('read')
             except (odoo.exceptions.AccessError, odoo.exceptions.MissingError) as e:
                 # custom behavior in case a record is not accessible / has been removed
                 if handle_error := rule.endpoint.routing.get('handle_params_access_error'):
