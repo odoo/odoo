@@ -522,10 +522,6 @@ class ResPartner(models.Model):
                 """, (partner.id,))
             partner.has_unreconciled_entries = self.env.cr.rowcount == 1
 
-    def mark_as_reconciled(self):
-        self.env['account.partial.reconcile'].check_access_rights('write')
-        return self.sudo().write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-
     def _get_company_currency(self):
         for partner in self:
             if partner.company_id:
