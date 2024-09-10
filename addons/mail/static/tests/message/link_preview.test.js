@@ -13,6 +13,7 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 
 import { rpc } from "@web/core/network/rpc";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -79,6 +80,10 @@ test("simplest card layout", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: true,
+    });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
@@ -102,6 +107,10 @@ test("simplest card layout with image", async () => {
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -127,6 +136,10 @@ test("Link preview video layout", async () => {
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -198,6 +211,10 @@ test("Remove link preview card", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: true,
+    });
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
@@ -222,6 +239,10 @@ test("Remove link preview video", async () => {
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -341,6 +362,10 @@ test("Link preview and message should not be squashed when there is more than th
 test("Sending message with link preview URL should show a link preview card", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: true,
+    });
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
@@ -370,6 +395,10 @@ test("Delete all link previews at once", async () => {
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: true,
     });
     await start();
     await openDiscuss(channelId);
@@ -432,6 +461,10 @@ test("youtube and gdrive videos URL are embed", async () => {
             res_id: channelId,
         },
     ]);
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: true,
+    });
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo[data-provider=google-drive] .fa-play");
@@ -443,4 +476,83 @@ test("youtube and gdrive videos URL are embed", async () => {
     await contains("iframe[data-src='https://www.youtube.com/embed/9bZkp7q19f0?autoplay=1']", {
         parent: [".o-mail-LinkPreviewVideo[data-provider=youtube]"],
     });
+});
+
+test("Do not display link preview card if the user turned them off", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        og_description: "Description",
+        og_title: "Article title",
+        og_type: "article",
+        source_url: "https://www.odoo.com",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        link_preview_ids: [linkPreviewId],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_html: false,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await contains(".o-mail-LinkPreviewCard", { count: 0 });
+});
+
+test("Do not display image link preview if the user turned them off", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        image_mimetype: "image/jpg",
+        source_url:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        link_preview_ids: [linkPreviewId],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_image: false,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await contains(".o-mail-LinkPreviewImage", { count: 0 });
+});
+
+test("Do not display gif link preview if the user turned them off", async () => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        og_description: "test description",
+        og_image: "https://c.tenor.com/B_zYdea4l-4AAAAC/yay-minions.gif",
+        og_mimetype: "image/gif",
+        og_title: "Yay Minions GIF - Yay Minions Happiness - Discover & Share GIFs",
+        og_type: "video.other",
+        source_url: "https://tenor.com/view/yay-minions-happiness-happy-excited-gif-15324023",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    pyEnv["mail.message"].create({
+        body: "not empty",
+        link_preview_ids: [linkPreviewId],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        link_preview_image: false,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await contains(".o-mail-LinkPreviewImage", { count: 0 });
 });

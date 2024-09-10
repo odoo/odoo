@@ -409,6 +409,28 @@ async function discuss_settings_mute(request) {
     return "dummy";
 }
 
+registerRoute("/mail/settings/link_preview_html", mail_settings_link_preview_html);
+/** @type {RouteCallback} */
+async function mail_settings_link_preview_html(request) {
+    /** @type {import("mock_models").ResUsersSettings} */
+    const ResUsersSettings = this.env["res.users.settings"];
+
+    const { link_preview_html } = await parseRequestParams(request);
+    const settings = ResUsersSettings._find_or_create_for_user(this.env.user.id);
+    ResUsersSettings.set_res_users_settings(settings.id, { link_preview_html });
+}
+
+registerRoute("/mail/settings/link_preview_image", mail_settings_link_preview_image);
+/** @type {RouteCallback} */
+async function mail_settings_link_preview_image(request) {
+    /** @type {import("mock_models").ResUsersSettings} */
+    const ResUsersSettings = this.env["res.users.settings"];
+
+    const { link_preview_image } = await parseRequestParams(request);
+    const settings = ResUsersSettings._find_or_create_for_user(this.env.user.id);
+    ResUsersSettings.set_res_users_settings(settings.id, { link_preview_image });
+}
+
 registerRoute("/discuss/channel/notify_typing", discuss_channel_notify_typing);
 /** @type {RouteCallback} */
 async function discuss_channel_notify_typing(request) {

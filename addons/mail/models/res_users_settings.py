@@ -22,6 +22,8 @@ class ResUsersSettings(models.Model):
         help="This setting will only be applied to channels. Mentions only if not specified.",
     )
     mute_until_dt = fields.Datetime(string="Mute notifications until", index=True, help="If set, the user will not receive notifications from all the channels until this date.")
+    link_preview_image = fields.Boolean(string="Generate link preview for link to an image", default=True)
+    link_preview_html = fields.Boolean(string="Generate link preview for non-image links", default=False)
 
     @api.model
     def _cleanup_expired_mutes(self):

@@ -31,3 +31,15 @@ class LinkPreviewController(http.Controller):
         if not link_preview_sudo.message_id.is_current_user_or_guest_author and not guest.env.user._is_admin():
             return
         link_preview_sudo._hide_and_notify()
+
+    @http.route("/mail/settings/link_preview_html", methods=["POST"], type="json", auth="user")
+    def setting_link_preview_html(self, link_preview_html: bool):
+        record = request.env['res.users.settings']._find_or_create_for_user(request.env.user)
+        record.link_preview_html = link_preview_html
+        record._bus_send("res.users.settings", {"link_preview_html": link_preview_html})
+
+    @http.route("/mail/settings/link_preview_image", methods=["POST"], type="json", auth="user")
+    def setting_link_preview_image(self, link_preview_image: bool):
+        record = request.env['res.users.settings']._find_or_create_for_user(request.env.user)
+        record.link_preview_image = link_preview_image
+        record._bus_send("res.users.settings", {"link_preview_image": link_preview_image})

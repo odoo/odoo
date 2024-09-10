@@ -403,6 +403,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
                     "is_discuss_sidebar_category_channel_open": True,
                     "is_discuss_sidebar_category_chat_open": True,
+                    "link_preview_html": False,
+                    "link_preview_image": True,
                     "livechat_lang_ids": [],
                     "livechat_username": False,
                     "push_to_talk_key": False,
