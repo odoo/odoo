@@ -85,8 +85,9 @@
                             <t t-esc="dashboard.displayName" />
                         </div>
                         <button
+                            t-if="isDashboardAdmin"
                             type="button"
-                            class="btn btn-link o_edit_dashboard oi oi-arrow-right"
+                            class="btn btn-link o_edit_dashboard fa fa-pencil"
                             tabindex="-1"
                             draggable="false"
                             aria-label="Edit"

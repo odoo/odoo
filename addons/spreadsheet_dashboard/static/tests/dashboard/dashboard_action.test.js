@@ -7,7 +7,7 @@ import {
     defineSpreadsheetDashboardModels,
     getDashboardServerData,
 } from "@spreadsheet_dashboard/../tests/helpers/data";
-import { contains, getMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, getMockEnv, patchWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -330,6 +330,7 @@ test("Changing filter values will create a new share", async function () {
 });
 
 test("Clicking 'Edit' icon navigates to dashboard edit view", async function () {
+    patchWithCleanup(odoo, { debug: true });
     const action = {
         type: "ir.actions.client",
         tag: "action_edit_dashboard",
@@ -356,4 +357,33 @@ test("Clicking 'Edit' icon navigates to dashboard edit view", async function () 
     click(".o_edit_dashboard");
     await animationFrame();
     expect.verifySteps(["action_edit_dashboard", "doAction"]);
+});
+
+test("User without edit permissions does not see the 'Edit' option on the dashboard (Debug mode ON)", async function () {
+    patchWithCleanup(odoo, { debug: true });
+    onRpc("has_group", async (route, args) => {
+        return false;
+    });
+    await createSpreadsheetDashboard();
+    expect(".o_edit_dashboard").toHaveCount(0);
+});
+
+test("User with edit permissions sees the 'Edit' option on the dashboard (Debug mode ON)", async function () {
+    patchWithCleanup(odoo, { debug: true });
+    onRpc("has_group", async (route, args) => {
+        return true;
+    });
+    await createSpreadsheetDashboard();
+    expect(
+        getFixture().querySelector(".o_search_panel_category_value .o_edit_dashboard")
+    ).toHaveCount(1);
+});
+
+test("User with edit permissions does not see the 'Edit' option on the dashboard (Debug mode OFF)", async function () {
+    patchWithCleanup(odoo, { debug: false });
+    onRpc("has_group", async (route, args) => {
+        return true;
+    });
+    await createSpreadsheetDashboard();
+    expect(".o_edit_dashboard").toHaveCount(0);
 });
