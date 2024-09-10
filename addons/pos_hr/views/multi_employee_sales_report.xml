@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="multi_employee_sales_report_action" model="ir.actions.report">
-        <field name="name">Sales Details</field>
+        <field name="name">Employee Sales Details</field>
         <field name="model">pos.session</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">pos_hr.multi_employee_sales_report</field>
-        <field name="binding_model_id" ref="pos_hr.model_pos_session"/>
-        <field name="binding_view_types">form</field>
     </record>
 
     <template id="multi_employee_sales_report">
