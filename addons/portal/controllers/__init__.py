@@ -3,4 +3,5 @@
 from . import web
 from . import portal
 from . import mail
+from . import message_reaction
 from . import thread

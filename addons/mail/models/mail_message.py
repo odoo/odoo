@@ -598,7 +598,7 @@ class Message(models.Model):
         )
 
     @api.model
-    def _get_with_access(self, message_id, operation):
+    def _get_with_access(self, message_id, operation, **kwargs):
         """Return the message with the given id if it exists and if the current
         user can access it for the given operation."""
         message = self.browse(message_id).exists()
@@ -614,6 +614,10 @@ class Message(models.Model):
             message.sudo(False).check_access_rule(operation)
             return message
         except AccessError:
+            if message.model and message.res_id:
+                mode = self.env[message.model]._get_mail_message_access([message.res_id], operation)
+                if self.env[message.model]._get_thread_with_access(message.res_id, mode, **kwargs):
+                    return message
             return self.env["mail.message"]
 
     @api.model_create_multi

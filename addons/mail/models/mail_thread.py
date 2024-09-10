@@ -4635,8 +4635,8 @@ class MailThread(models.AbstractModel):
     def _get_thread_with_access(self, thread_id, mode="read", **kwargs):
         try:
             thread = self.with_context(active_test=False).search([("id", "=", thread_id)])
-            thread.check_access_rights(mode)
-            thread.check_access_rule(mode)
+            thread.sudo(False).check_access_rights(mode)
+            thread.sudo(False).check_access_rule(mode)
             return thread.with_context(active_test=True)
         except AccessError:
             return self.browse()
