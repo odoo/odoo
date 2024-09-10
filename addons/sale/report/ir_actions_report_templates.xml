@@ -36,8 +36,9 @@
         <div class="page">
             <div class="oe_structure"/>
 
+            <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
             <t t-set="layout_document_title">
-                <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice # </span>
+                <span t-if="is_proforma">Pro-Forma Invoice # </span>
                 <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
                 <span t-else="">Order # </span>
                 <span t-field="doc.name">SO0000</span>
@@ -49,7 +50,8 @@
                     <div t-field="doc.client_order_ref">SO0000</div>
                 </div>
                 <div t-if="doc.date_order" class="col" name="informations_date">
-                    <strong t-if="doc.state in ['draft', 'sent']">Quotation Date</strong>
+                    <strong t-if="is_proforma">Issued Date</strong>
+                    <strong t-elif="doc.state in ['draft', 'sent']">Quotation Date</strong>
                     <strong t-else="">Order Date</strong>
                     <div t-field="doc.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
                 </div>
