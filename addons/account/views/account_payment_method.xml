@@ -17,10 +17,8 @@
         <field name="model">account.payment.method.line</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
-                <t t-name="kanban-box">
-                    <div t-attf-class="oe_kanban_card">
-                        <field name="display_name"/>
-                    </div>
+                <t t-name="kanban-card">
+                    <field name="display_name"/>
                 </t>
             </kanban>
         </field>
