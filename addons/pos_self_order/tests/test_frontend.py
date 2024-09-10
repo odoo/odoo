@@ -62,6 +62,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
                         "lines": [],
                         "tracking_number": None,
                         "takeaway": True,
+                        "uuid": str(uuid4()),
                     },
                     "table_identifier": None,
                 }

@@ -1045,8 +1045,8 @@ class PosOrder(models.Model):
             if existing_draft_order:
                 order_ids.append(self._process_order(order, existing_draft_order))
             else:
-                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order.get('name', False))])
-                if all(not self._is_the_same_order(order, existing_order) for existing_order in existing_orders):
+                existing_paid_orders = self.env['pos.order'].search([('uuid', '=', order['uuid'])])
+                if not existing_paid_orders:
                     order_ids.append(self._process_order(order, False))
 
         # Sometime pos_orders_ids can be empty.
@@ -1066,28 +1066,6 @@ class PosOrder(models.Model):
             'pos.pack.operation.lot': pos_order_ids.lines.pack_lot_ids.read(pos_order_ids.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             "product.attribute.custom.value": pos_order_ids.lines.custom_attribute_value_ids.read(pos_order_ids.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
-
-    def _is_the_same_order(self, data, existing_order):
-        received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['payment_ids']]
-        existing_payments = [(p.amount, p.payment_method_id.id) for p in existing_order.payment_ids]
-
-        for amount, payment_method in received_payments:
-            if not any(
-                float_is_zero(amount - ex_amount, precision_rounding=existing_order.currency_id.rounding) and payment_method == ex_payment_method
-                for ex_amount, ex_payment_method in existing_payments
-            ):
-                return False
-
-        if len(data['lines']) != len(existing_order.lines):
-            return False
-
-        received_lines = sorted([(l[2]['product_id'], l[2]['price_unit']) for l in data['lines']])
-        existing_lines = sorted([(l.product_id.id, l.price_unit) for l in existing_order.lines])
-
-        if received_lines != existing_lines:
-            return False
-
-        return True
 
     @api.model
     def _get_refunded_orders(self, order):
