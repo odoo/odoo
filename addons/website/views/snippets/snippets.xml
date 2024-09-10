@@ -474,13 +474,15 @@
         <t t-set="label">Border</t>
         <t t-set="with_bs_class" t-value="True"/>
     </t>
-    <we-input string="Round Corners"
+    <we-select-input string="Round Corners"
               t-if="not no_border_radius"
               t-att-data-apply-to="apply_to"
               t-att-data-dependencies="not so_rounded_no_dependencies and 'border_width_opt,bg_color_opt'"
               data-select-style="0" data-css-property="border-radius"
               data-unit="px" data-extra-class="rounded"
-              t-att-data-variable="radius_variable"/>
+              t-att-data-variable="radius_variable">
+
+    </we-select-input>
 </template>
 
 <template id="snippet_options_shadow_widgets">
