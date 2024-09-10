@@ -132,7 +132,7 @@ export class ToolbarPlugin extends Plugin {
         const isCollapsed = selectionData.editableSelection.isCollapsed;
 
         if (this.overlay.isOpen) {
-            if (!inEditable || isCollapsed) {
+            if (!inEditable || isCollapsed || !this.shared.getTraversedNodes().length) {
                 const preventClosing = selectionData.documentSelection?.anchorNode?.closest?.(
                     "[data-prevent-closing-overlay]"
                 );
