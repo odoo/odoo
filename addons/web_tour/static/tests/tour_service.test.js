@@ -18,12 +18,13 @@ import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { session } from "@web/session";
 import { MacroEngine } from "@web/core/macro";
+import { useService } from "@web/core/utils/hooks";
 
 describe.current.tags("desktop");
 
 class Counter extends Component {
     static props = ["*"];
-    static template = xml/*html*/ `
+    static template = xml`
         <div class="counter">
             <div class="interval">
                 <input type="number" t-model.number="state.interval" />
@@ -40,6 +41,19 @@ class Counter extends Component {
     onIncrement() {
         this.state.value += this.state.interval;
     }
+}
+
+class MyDialog extends Component {
+    static components = { Dialog };
+    static props = ["close"];
+    static template = xml`
+        <Dialog size="'md'">
+            <div>coucou</div>
+            <t t-set-slot="footer">
+                <button class="close btn btn-primary" t-on-click.stop="props.close">Close</button>
+            </t>
+        </Dialog>
+    `;
 }
 
 const tourRegistry = registry.category("web_tour.tours");
@@ -351,10 +365,11 @@ test("a failing tour with disabled element", async () => {
         [
             `error: FAILED: [2/3] Tour tour3 → Step .button1.`,
             `Element has been found. The error seems to be with step.run.`,
-            `Element can't be disabled when you want to click on it.`,
+            `TourHelpers: Element can't be disabled when you want to run **click** on it.`,
             `Tip: You can add the ":enabled" pseudo selector to your selector to wait for the element is enabled.`,
         ].join("\n"),
-        `error: FAILED: [3/3] Tour tour3 → Step .button2.\nThe cause is that trigger (.button2) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`,
+        `error: FAILED: [3/3] Tour tour3 → Step .button2.\nThe cause is that trigger (.button2) element cannot be found in DOM. 
+TIP: You can use :not(:visible) to force the search for an invisible element.`,
         `error: tour not succeeded`,
     ];
     await advanceTime(10000);
@@ -451,7 +466,8 @@ test("a failing tour logs the step that failed", async () => {
     expect.verifySteps(["log: [5/9] Tour tour1 → Step content (trigger: .wrong_selector)"]);
     await advanceTime(10000);
     expect.verifySteps([
-        "error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).\nThe cause is that trigger (.wrong_selector) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+        `error: FAILED: [5/9] Tour tour1 → Step content (trigger: .wrong_selector).\nThe cause is that trigger (.wrong_selector) element cannot be found in DOM. 
+TIP: You can use :not(:visible) to force the search for an invisible element.`,
         `runbot: {"content":"content","trigger":".button1","run":"click"},{"content":"content","trigger":".button2","run":"click"},{"content":"content","trigger":".button3","run":"click"},FAILED:[5/9]Tourtour1→Stepcontent(trigger:.wrong_selector){"content":"content","trigger":".wrong_selector","run":"click"},{"content":"content","trigger":".button4","run":"click"},{"content":"content","trigger":".button5","run":"click"},{"content":"content","trigger":".button6","run":"click"},`,
     ]);
 });
@@ -927,7 +943,8 @@ test("automatic tour with invisible element", async () => {
     await advanceTime(750);
     await advanceTime(10000);
     expect.verifySteps([
-        "error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1.\nThe cause is that trigger (.button1) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.",
+        `error: FAILED: [2/3] Tour tour_de_wallonie → Step .button1.\nThe cause is that trigger (.button1) element cannot be found in DOM. 
+TIP: You can use :not(:visible) to force the search for an invisible element.`,
     ]);
 });
 
@@ -1480,4 +1497,72 @@ test("check alternative trigger that appear after the initial trigger", async ()
     queryFirst(".add_button").appendChild(otherButton);
     await contains(".button1").click();
     expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("check we can't click on an element that's below a .modal", async () => {
+    patchWithCleanup(console, {
+        error: (msg) => expect.step(msg),
+    });
+    registry.category("web_tour.tours").add("modal_tour", {
+        sequence: 187,
+        test: true,
+        steps: () => [
+            {
+                trigger: ".button0",
+                run: "click",
+            },
+            {
+                trigger: ".button1",
+                run: "click",
+            },
+            {
+                trigger: ".modal .close",
+                run: "click",
+            },
+            {
+                trigger: ".button2",
+                run: "click",
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = { MyDialog };
+        static template = xml`
+            <t>
+                <div class="container">
+                    <div class="p-3"><button class="button0" t-on-click="openDialog">Button 0</button></div>
+                    <div class="p-3"><button class="button1">Button 1</button></div>
+                    <div class="p-3"><button class="button2">Button 2</button></div>
+                </div>
+            </t>
+        `;
+        static props = ["*"];
+        setup() {
+            this.dialog = useService("dialog");
+        }
+        openDialog() {
+            this.dialog.add(MyDialog);
+        }
+    }
+    await mountWithCleanup(Root);
+    getService("tour_service").startTour("modal_tour");
+    //Step1
+    await animationFrame();
+    await advanceTime(750);
+    //Step2
+    await animationFrame();
+    await advanceTime(750);
+    //Step3
+    await animationFrame();
+    await advanceTime(750);
+    //Step4
+    await animationFrame();
+    await advanceTime(750);
+    expect.verifySteps([
+        `FAILED: [2/4] Tour modal_tour → Step .button1.
+Element has been found. The error seems to be with step.run.
+TourHelpers: It is forbidden to run **click** on an element that is not in the active modal.
+Tip: To only check if an element is in DOM without doing an action on it, create a step without run key.`,
+        `tour not succeeded`,
+    ]);
 });

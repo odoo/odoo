@@ -140,7 +140,8 @@ export class TourStepAutomatic extends TourStep {
 
     get describeWhyIFailed() {
         if (!this.triggerFound) {
-            return `The cause is that trigger (${this.trigger}) element cannot be found in DOM. TIP: You can use :not(:visible) to force the search for an invisible element.`;
+            return `The cause is that trigger (${this.trigger}) element cannot be found in DOM. 
+TIP: You can use :not(:visible) to force the search for an invisible element.`;
         } else if (this.isBlocked) {
             return "Element has been found but DOM is blocked by UI.";
         } else if (!this.hasRun) {
