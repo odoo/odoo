@@ -75,6 +75,7 @@ class Repair(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    repair_properties = fields.Properties('Properties', definition='picking_type_id.repair_properties_definition', copy=True)
 
     # Product To Repair
     move_id = fields.Many2one(  # Generated in 'action_repair_done', needed for traceability
