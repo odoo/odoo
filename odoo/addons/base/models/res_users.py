@@ -1931,8 +1931,8 @@ class CheckIdentity(models.TransientModel):
             self.create_uid._check_credentials(self.password, {'interactive': True})
         except AccessDenied:
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
-
-        self.password = False
+        finally:
+            self.password = False
 
         request.session['identity-check-last'] = time.time()
         ctx, model, ids, method = json.loads(self.sudo().request)
