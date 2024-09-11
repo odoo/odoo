@@ -1,9 +1,20 @@
 from odoo import _, api, fields, models, Command
 from odoo.tools import create_index
-from odoo.tools.misc import format_datetime
+from odoo.tools.misc import format_date, format_datetime
 from odoo.exceptions import UserError
 
 from odoo.addons.account.models.company import SOFT_LOCK_DATE_FIELDS
+
+from datetime import date
+
+
+# Instead of removing a lock date we set it to a date that should be before any accounting entries
+# Note:
+# When using a year < 1000, the year is currently not necessarily padded to 4 digits.
+# This causes a traceback when the date is converted to a string and then back to a date
+# (with fields.Date.to_string and fields.Date.to_datetime).
+# https://github.com/python/cpython/issues/120713
+FALSE_LOCK_DATE = date(1000, 1, 1)
 
 
 class AccountLockException(models.Model):
@@ -46,20 +57,41 @@ class AccountLockException(models.Model):
     # An unset lock date field means the exception does not change this field.
     # (It is not possible to remove a lock date completely).
     fiscalyear_lock_date = fields.Date(
-        string="Global Lock Date",
+        string="Exceptional Global Lock Date",
         help="The date the Global Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
     tax_lock_date = fields.Date(
-        string="Tax Return Lock Date",
+        string="Exceptional Tax Return Lock Date",
         help="The date the Tax Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
     sale_lock_date = fields.Date(
-        string='Lock Sales',
+        string='Exceptional Sale Lock Date',
         help="The date the Sale Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
     purchase_lock_date = fields.Date(
-        string='Lock Purchases',
+        string='Exceptional Purchase Lock Date',
         help="The date the Purchase Lock Date is set to by this exception. If no date is set the lock date is not changed.",
+    )
+
+    display_fiscalyear_lock_date = fields.Date(
+        string="Global Lock Date",
+        compute="_compute_display_lock_dates",
+        help="The date the Global Lock Date is set to by this exception.",
+    )
+    display_tax_lock_date = fields.Date(
+        string="Tax Return Lock Date",
+        compute="_compute_display_lock_dates",
+        help="The date the Tax Lock Date is set to by this exception.",
+    )
+    display_sale_lock_date = fields.Date(
+        string='Lock Sales',
+        compute="_compute_display_lock_dates",
+        help="The date the Sale Lock Date is set to by this exception.",
+    )
+    display_purchase_lock_date = fields.Date(
+        string='Lock Purchases',
+        compute="_compute_display_lock_dates",
+        help="The date the Purchase Lock Date is set to by this exception.",
     )
 
     def init(self):
@@ -75,6 +107,13 @@ class AccountLockException(models.Model):
     def _compute_display_name(self):
         for record in self:
             record.display_name = _("Lock Date Exception %s", record.id)
+
+    @api.depends(*SOFT_LOCK_DATE_FIELDS)
+    def _compute_display_lock_dates(self):
+        for exception in self:
+            for field in SOFT_LOCK_DATE_FIELDS:
+                display_value = exception[field] if exception[field] != FALSE_LOCK_DATE else False
+                exception[f"display_{field}"] = display_value
 
     @api.depends('active', 'end_datetime')
     def _compute_state(self):
@@ -116,13 +155,23 @@ class AccountLockException(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            for field in SOFT_LOCK_DATE_FIELDS:
+                if field in vals:
+                    value = vals[field]
+                    if value and value <= FALSE_LOCK_DATE:
+                        raise UserError(_('Exceptions only support lock dates after (not equal to) %s.',
+                                          format_datetime(self.env, FALSE_LOCK_DATE)))
+                    if not value:
+                        vals[field] = FALSE_LOCK_DATE
         exceptions = super().create(vals_list)
         for exception in exceptions:
             company = exception.company_id
             changed_fields = [field for field in SOFT_LOCK_DATE_FIELDS if exception[field]]
             tracking_value_ids = []
+
             for field in changed_fields:
-                value = exception[field]
+                value = exception[f'display_{field}']
                 field_info = exception.fields_get([field])[field]
                 tracking_values = self.env['mail.tracking.value']._create_tracking_values(
                     company[field], value, field, field_info, exception
