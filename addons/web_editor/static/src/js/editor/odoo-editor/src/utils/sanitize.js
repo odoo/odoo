@@ -97,6 +97,10 @@ export function areSimilarElements(node, node2) {
  * @returns {String|null}
  */
 function deduceURLfromLabel(link) {
+    // Skip modifying the href for Bootstrap tabs.
+    if (link && link.getAttribute("role") === "tab") {
+        return;
+    }
     const label = link.innerText.trim().replace(ZERO_WIDTH_CHARS_REGEX, '');
     // Check first for e-mail.
     let match = label.match(EMAIL_REGEX);
