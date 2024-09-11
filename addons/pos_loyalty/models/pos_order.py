@@ -166,8 +166,8 @@ class PosOrder(models.Model):
         fields.extend(['is_reward_line', 'reward_id', 'coupon_id', 'reward_identifier_code', 'points_cost'])
         return fields
 
-    def _add_mail_attachment(self, name, ticket):
-        attachment = super()._add_mail_attachment(name, ticket)
+    def _add_mail_attachment(self, name, ticket, basic_receipt):
+        attachment = super()._add_mail_attachment(name, ticket, basic_receipt)
         gift_card_programs = self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'gift_card' and
                                                                                   p.pos_report_print_id)
         if gift_card_programs:
