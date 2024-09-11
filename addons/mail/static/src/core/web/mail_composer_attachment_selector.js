@@ -36,9 +36,6 @@ export class MailComposerAttachmentSelector extends Component {
 
 export const mailComposerAttachmentSelector = {
     component: MailComposerAttachmentSelector,
-    fieldDependencies: [
-        { name: "can_edit_body", type: "boolean" },
-    ]
 };
 
 registry.category("fields").add("mail_composer_attachment_selector", mailComposerAttachmentSelector);

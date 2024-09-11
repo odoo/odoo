@@ -42,10 +42,7 @@ export class MailComposerChatGPT extends Component {
 
 export const mailComposerChatGPT = {
     component: MailComposerChatGPT,
-    fieldDependencies: [
-        { name: "can_edit_body", type: "boolean" },
-        { name: "body", type: "text" },
-    ]
+    fieldDependencies: [{ name: "body", type: "text" }],
 };
 
 registry.category("fields").add("mail_composer_chatgpt", mailComposerChatGPT);

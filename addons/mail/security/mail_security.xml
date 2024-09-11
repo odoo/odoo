@@ -325,5 +325,12 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_read" eval="False"/>
         </record>
-
+        <record id="ir_rule_mail_scheduled_message_user" model="ir.rule">
+            <field name="model_id" ref="model_mail_scheduled_message"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
 </odoo>

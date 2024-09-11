@@ -118,6 +118,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_blacklist_views.xml',
         'views/mail_menus.xml',
         'views/res_company_views.xml',
+        "views/mail_scheduled_message_views.xml",
         "data/mail_canned_response_data.xml",
         'data/mail_templates_invite.xml',
     ],

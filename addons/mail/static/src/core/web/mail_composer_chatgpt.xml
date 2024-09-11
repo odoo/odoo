@@ -2,7 +2,6 @@
 <templates>
     <t t-name="mail.MailComposerChatGPT">
         <button class="btn btn-light" data-hotkey="c"
-            t-if="props.record.data.can_edit_body"
             t-on-click="onOpenChatGPTPromptDialogBtnClick"
             t-out="btnLabel"/>
     </t>

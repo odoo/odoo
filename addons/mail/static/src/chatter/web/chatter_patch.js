@@ -1,3 +1,4 @@
+import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { BaseRecipientsList } from "@mail/core/web/base_recipients_list";
@@ -29,6 +30,7 @@ Object.assign(Chatter.components, {
     Dropdown,
     FileUploader,
     FollowerList,
+    ScheduledMessage,
     SearchMessagesPanel,
     SuggestedRecipientsList,
 });
@@ -78,6 +80,7 @@ patch(Chatter.prototype, {
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
+            showScheduledMessages: true,
         });
         this.attachmentUploader = useAttachmentUploader(
             this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
@@ -160,7 +163,12 @@ patch(Chatter.prototype, {
     },
 
     get afterPostRequestList() {
-        return [...super.afterPostRequestList, "followers", "suggestedRecipients"];
+        return [
+            ...super.afterPostRequestList,
+            "followers",
+            "scheduledMessages",
+            "suggestedRecipients",
+        ];
     },
 
     get attachments() {
@@ -188,14 +196,23 @@ patch(Chatter.prototype, {
         return !this.state.thread.id || !this.state.thread?.hasReadAccess;
     },
 
+    get onCloseFullComposerRequestList() {
+        return [...super.onCloseFullComposerRequestList, "scheduledMessages"];
+    },
+
     get requestList() {
         return [
             ...super.requestList,
             "activities",
-            "followers",
             "attachments",
+            "followers",
+            "scheduledMessages",
             "suggestedRecipients",
         ];
+    },
+
+    get scheduledMessages() {
+        return this.state.thread?.scheduledMessages ?? [];
     },
 
     get unfollowText() {
@@ -277,6 +294,11 @@ patch(Chatter.prototype, {
         this.onFollowerChanged(thread);
     },
 
+    onCloseFullComposerCallback() {
+        this.toggleComposer();
+        super.onCloseFullComposerCallback();
+    },
+
     onFollowerChanged(thread) {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
@@ -296,6 +318,11 @@ patch(Chatter.prototype, {
         }
         this.toggleComposer();
         super.onPostCallback();
+    },
+
+    onScheduledMessageChanged(thread) {
+        // reload messages as well as a scheduled message could have been sent
+        this.load(thread, ["scheduledMessages", "messages"]);
     },
 
     onSuggestedRecipientAdded(thread) {
@@ -354,6 +381,10 @@ patch(Chatter.prototype, {
             this.onThreadCreated = toggle;
             this.props.saveRecord?.();
         }
+    },
+
+    toggleScheduledMessages() {
+        this.state.showScheduledMessages = !this.state.showScheduledMessages;
     },
 
     async unlinkAttachment(attachment) {

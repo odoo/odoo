@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add('shop_mail', {
     },
     {
         content: "click Send email",
-        trigger: '.modal .btn[name="action_send_mail"]',
+        trigger: '.modal .btn.o_mail_send',
         run: "click",
     },
     {

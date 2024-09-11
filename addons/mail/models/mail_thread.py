@@ -2296,7 +2296,7 @@ class MailThread(models.AbstractModel):
         if attachment_ids:
             # taking advantage of cache looks better in this case, to check
             filtered_attachment_ids = self.env['ir.attachment'].sudo().browse(attachment_ids).filtered(
-                lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
+                lambda a: a.res_model in ('mail.compose.message', 'mail.scheduled.message') and a.create_uid.id == self._uid)
             # update filtered (pending) attachments to link them to the proper record
             if filtered_attachment_ids:
                 filtered_attachment_ids.write({'res_model': model, 'res_id': res_id})
@@ -4628,6 +4628,10 @@ class MailThread(models.AbstractModel):
                 thread._message_followers_to_store(store, filter_recipients=True, reset=True)
             if "modelName" in fields:
                 res["modelName"] = self.env["ir.model"]._get(self._name).display_name
+            if request_list and "scheduledMessages" in request_list:
+                res["scheduledMessages"] = Store.many(self.env['mail.scheduled.message'].search([
+                    ['model', '=', self._name], ['res_id', '=', thread.id]
+                ]))
             if request_list and "suggestedRecipients" in request_list:
                 res["suggestedRecipients"] = thread._message_get_suggested_recipients()
             store.add(thread, res, as_thread=True)

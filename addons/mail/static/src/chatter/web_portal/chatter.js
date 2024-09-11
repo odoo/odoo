@@ -61,6 +61,10 @@ export class Chatter extends Component {
         return { inChatter: this.state };
     }
 
+    get onCloseFullComposerRequestList() {
+        return ["messages"];
+    }
+
     get requestList() {
         return [];
     }
@@ -93,6 +97,10 @@ export class Chatter extends Component {
             return;
         }
         thread.fetchData(requestList);
+    }
+
+    onCloseFullComposerCallback() {
+        this.load(this.state.thread, this.onCloseFullComposerRequestList);
     }
 
     _onMounted() {

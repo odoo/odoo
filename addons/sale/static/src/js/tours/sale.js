@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            trigger: ".modal-footer button[name='action_send_mail']",
+            trigger: ".modal-footer button.o_mail_send",
             content: _t("Go ahead and send the quotation."),
             tooltipPosition: "bottom",
             run: "click",

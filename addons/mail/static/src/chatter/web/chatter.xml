@@ -93,7 +93,7 @@
                     styleString="'margin-left:48px;'"
                     thread="state.thread"
                     onSuggestedRecipientAdded.bind="onSuggestedRecipientAdded"/>
-                <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
+                <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" onCloseFullComposerCallback.bind="onCloseFullComposerCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
             </t>
         </div>
         <div class="o-mail-Chatter-content">
@@ -107,6 +107,9 @@
             <t t-else="">
                 <t t-if="props.has_activities and activities.length and !state.isSearchOpen">
                     <t t-call="mail.ActivityList"/>
+                </t>
+                <t t-if="scheduledMessages.length and !state.isSearchOpen">
+                    <t t-call="mail.ScheduledMessagesList"/>
                 </t>
                 <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
                     <div class="d-flex align-items-center">
@@ -154,6 +157,25 @@
                 <Activity activity="activity" onActivityChanged.bind="onActivityChanged" reloadParentView.bind="reloadParentView"/>
             </t>
         </t>
+    </div>
+</t>
+
+<t t-name="mail.ScheduledMessagesList">
+    <div class="o-mail-ScheduledMessagesList">
+        <div class="d-flex pt-2 cursor-pointer fw-bolder" t-on-click="toggleScheduledMessages">
+            <hr class="flex-grow-1 fs-3"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="fa fa-fw" t-att-class="state.showScheduledMessages ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Scheduled Messages
+                <span t-if="!state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="scheduledMessages.length"/>
+            </div>
+            <hr class="flex-grow-1 fe-3"/>
+        </div>
+        <div t-if="state.showScheduledMessages">
+            <t t-foreach="scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
+                <ScheduledMessage scheduledMessage="scheduledMessage" onScheduledMessageChanged.bind="onScheduledMessageChanged"/>
+            </t>
+        </div>
     </div>
 </t>
 
