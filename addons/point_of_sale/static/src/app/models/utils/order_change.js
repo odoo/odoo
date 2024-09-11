@@ -11,6 +11,9 @@ export const changesToOrder = (
         : Object.values(order.last_order_preparation_change);
 
     for (const lineChange of changes) {
+        if ("splitted" in lineChange) {
+            continue;
+        }
         if (lineChange["quantity"] > 0 && !cancelled) {
             toAdd.push(lineChange);
         } else {
@@ -78,7 +81,10 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     // Checks whether an orderline has been deleted from the order since it
     // was last sent to the preparation tools. If so we add this to the changes.
     for (const [lineKey, lineResume] of Object.entries(order.last_order_preparation_change)) {
-        if (!order.models["pos.order.line"].getBy("uuid", lineResume["uuid"])) {
+        if (
+            lineKey !== "splitted" &&
+            !order.models["pos.order.line"].getBy("uuid", lineResume["uuid"])
+        ) {
             if (!changes[lineKey]) {
                 changes[lineKey] = {
                     uuid: lineResume["uuid"],

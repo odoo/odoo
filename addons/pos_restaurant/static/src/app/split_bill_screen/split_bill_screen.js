@@ -52,7 +52,7 @@ export class SplitBillScreen extends Component {
         }
     }
 
-    createSplittedOrder() {
+    async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         this.pos.selectedTable = null;
@@ -61,6 +61,16 @@ export class SplitBillScreen extends Component {
         newOrder.note = `${newOrder.tracking_number} Split from ${originalOrderName}`;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         newOrder.originalSplittedOrder = originalOrder;
+        const isOrdered = Object.keys(originalOrder.last_order_preparation_change).length > 0;
+        if (isOrdered) {
+            originalOrder.last_order_preparation_change["splitted"] = {
+                splitted: true,
+            };
+            newOrder.last_order_preparation_change["splitted"] = {
+                splitted: true,
+                original_order: originalOrder.tracking_number,
+            };
+        }
 
         // Create lines for the new order
         const lineToDel = [];
@@ -80,14 +90,15 @@ export class SplitBillScreen extends Component {
 
                 if (line.get_quantity() === this.qtyTracker[line.uuid]) {
                     lineToDel.push(line);
-                } else {
-                    line.update({ qty: line.get_quantity() - this.qtyTracker[line.uuid] });
+                }
+                line.update({ qty: line.get_quantity() - this.qtyTracker[line.uuid] });
+                if (isOrdered) {
+                    originalOrder.last_order_preparation_change["splitted"][line.uuid] = {
+                        uuid: line.uuid,
+                        splitted_qty: this.qtyTracker[line.uuid],
+                    };
                 }
             }
-        }
-
-        for (const line of lineToDel) {
-            line.delete();
         }
 
         // for the kitchen printer we assume that everything
@@ -96,9 +107,15 @@ export class SplitBillScreen extends Component {
         // order and for the new one. This is not entirely correct
         // but avoids flooding the kitchen with unnecessary orders.
         // Not sure what to do in this case.
-        if (this.pos.orderPreparationCategories.size) {
+        if (this.pos.orderPreparationCategories.size && isOrdered) {
             originalOrder.updateLastOrderChange();
             newOrder.updateLastOrderChange();
+            await this.pos.sendOrderInPreparationUpdateLastChange(originalOrder);
+            await this.pos.sendOrderInPreparationUpdateLastChange(newOrder);
+        } else {
+            for (const line of lineToDel) {
+                line.delete();
+            }
         }
 
         originalOrder.customerCount -= 1;

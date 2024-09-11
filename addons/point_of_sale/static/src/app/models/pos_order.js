@@ -254,7 +254,7 @@ export class PosOrder extends Base {
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools. If so we delete it to the changes.
         for (const [key, change] of Object.entries(this.last_order_preparation_change)) {
-            if (!this.models["pos.order.line"].getBy("uuid", change.uuid)) {
+            if (key !== "splitted" && !this.models["pos.order.line"].getBy("uuid", change.uuid)) {
                 delete this.last_order_preparation_change[key];
             }
         }
