@@ -577,6 +577,7 @@ class HrExpense(models.Model):
             'type': 'ir.actions.act_window',
             'views': [[False, view_type], [False, "form"]],
             'domain': [('id', 'in', expenses.ids)],
+            'context': self.env.context,
         }
 
     # ----------------------------------------
