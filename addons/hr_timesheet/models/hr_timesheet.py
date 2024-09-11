@@ -48,7 +48,7 @@ class AccountAnalyticLine(models.Model):
     def _domain_employee_id(self):
         domain = [('company_id', 'in', self._context.get('allowed_company_ids'))]
         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_approver'):
-            domain = expression.AND([domain, ('user_id', '=', self.env.user.id)])
+            domain = expression.AND([domain, [('user_id', '=', self.env.user.id)]])
         return domain
 
     task_id = fields.Many2one(
