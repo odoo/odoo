@@ -75,6 +75,16 @@ class AccountReport(models.Model):
         readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
+    currency_translation = fields.Selection(
+        string="Currency Translation",
+        selection=[
+            ('current', "Use the most recent rate at the date of the report"),
+            ('cta', "Use CTA"),
+        ],
+        compute=lambda x: x._compute_report_option_filter('currency_translation', 'cta'),
+        readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
+
     #  FILTERS =======================================================================================================================================
     # Those fields control the display of menus on the report
 
