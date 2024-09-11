@@ -71,7 +71,10 @@ import {
 
 /**
  * @template [T=EventInit]
- * @typedef {T & { target: EventTarget }} FullEventInit
+ * @typedef {T & {
+ *  target: EventTarget;
+ *  type: EventType;
+ * }} FullEventInit
  */
 
 /**
@@ -929,7 +932,10 @@ const _hover = async (target, options) => {
             // Regular case: pointer events are triggered
             await dispatchEventSequence(
                 previous,
-                ["pointermove", hasTouch() ? "touchmove" : "mousemove"],
+                [
+                    "pointermove",
+                    hasTouch() ? runTime.currentPointerDownTarget && "touchmove" : "mousemove",
+                ],
                 leaveEventInit
             );
             await dispatchEventSequence(
@@ -978,7 +984,10 @@ const _hover = async (target, options) => {
             }
             await dispatchEventSequence(
                 target,
-                ["pointermove", hasTouch() ? "touchmove" : "mousemove"],
+                [
+                    "pointermove",
+                    hasTouch() ? runTime.currentPointerDownTarget && "touchmove" : "mousemove",
+                ],
                 enterEventInit
             );
         }
@@ -1344,7 +1353,7 @@ const _pointerUp = async (target, options) => {
 
     await dispatchEventSequence(
         target,
-        ["pointerup", hasTouch() ? "touchend" : "mouseup"],
+        ["pointerup", hasTouch() ? runTime.currentPointerDownTarget && "touchend" : "mouseup"],
         eventInit
     );
 
@@ -1478,7 +1487,7 @@ const runTime = getDefaultRunTimeValue();
 /**
  * - bubbles
  * - can be canceled
- * @param {FullEventInit} [eventInit]
+ * @param {FullEventInit} eventInit
  */
 const mapBubblingCancelableEvent = (eventInit) => ({
     ...mapBubblingEvent(eventInit),
@@ -1488,7 +1497,7 @@ const mapBubblingCancelableEvent = (eventInit) => ({
 /**
  * - bubbles
  * - cannot be canceled
- * @param {FullEventInit} [eventInit]
+ * @param {FullEventInit} eventInit
  */
 const mapBubblingEvent = (eventInit) => ({
     composed: true,
@@ -1499,7 +1508,7 @@ const mapBubblingEvent = (eventInit) => ({
 /**
  * - does not bubble
  * - can be canceled
- * @param {FullEventInit} [eventInit]
+ * @param {FullEventInit} eventInit
  */
 const mapNonBubblingCancelableEvent = (eventInit) => ({
     ...mapNonBubblingEvent(eventInit),
@@ -1509,7 +1518,7 @@ const mapNonBubblingCancelableEvent = (eventInit) => ({
 /**
  * - does not bubble
  * - cannot be canceled
- * @param {FullEventInit} [eventInit]
+ * @param {FullEventInit} eventInit
  */
 const mapNonBubblingEvent = (eventInit) => ({
     composed: true,
@@ -1520,18 +1529,18 @@ const mapNonBubblingEvent = (eventInit) => ({
 // ------------------------------------
 
 /**
- * @param {FullEventInit<MouseEventInit>} [eventInit]
+ * @param {FullEventInit<MouseEventInit>} eventInit
  */
 const mapBubblingMouseEvent = (eventInit) => ({
-    clientX: eventInit?.clientX ?? eventInit?.pageX ?? 0,
-    clientY: eventInit?.clientY ?? eventInit?.pageY ?? 0,
+    clientX: eventInit.clientX ?? eventInit.pageX ?? eventInit.screenX ?? 0,
+    clientY: eventInit.clientY ?? eventInit.pageY ?? eventInit.screenY ?? 0,
     view: getWindow(),
     ...specialKeys,
     ...mapBubblingCancelableEvent(eventInit),
 });
 
 /**
- * @param {FullEventInit<MouseEventInit>} [eventInit]
+ * @param {FullEventInit<MouseEventInit>} eventInit
  */
 const mapNonBubblingMouseEvent = (eventInit) => ({
     ...mapBubblingMouseEvent(eventInit),
@@ -1540,7 +1549,7 @@ const mapNonBubblingMouseEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<PointerEventInit>} [eventInit]
+ * @param {FullEventInit<PointerEventInit>} eventInit
  */
 const mapBubblingPointerEvent = (eventInit) => ({
     pointerId: 1,
@@ -1549,7 +1558,7 @@ const mapBubblingPointerEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<PointerEventInit>} [eventInit]
+ * @param {FullEventInit<PointerEventInit>} eventInit
  */
 const mapNonBubblingPointerEvent = (eventInit) => ({
     pointerId: 1,
@@ -1558,7 +1567,7 @@ const mapNonBubblingPointerEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<WheelEventInit>} [eventInit]
+ * @param {FullEventInit<WheelEventInit>} eventInit
  */
 const mapWheelEvent = (eventInit) => ({
     ...specialKeys,
@@ -1569,21 +1578,25 @@ const mapWheelEvent = (eventInit) => ({
 // -------------------
 
 /**
- * @param {FullEventInit<TouchEventInit>} [eventInit]
+ * @param {FullEventInit<TouchEventInit>} eventInit
  */
 const mapCancelableTouchEvent = (eventInit) => {
-    const touches = eventInit?.touches ||
-        eventInit?.changedTouches || [new Touch({ identifier: 0, ...eventInit })];
+    const touches = eventInit.targetTouches ||
+        eventInit.touches || [new Touch({ identifier: 0, ...eventInit })];
     return {
         view: getWindow(),
         ...mapBubblingCancelableEvent(eventInit),
-        changedTouches: eventInit?.changedTouches || touches,
-        touches: eventInit?.touches || touches,
+        changedTouches: eventInit.changedTouches || touches,
+        // "touch" events all trigger on the same target as "touchstart"
+        // (i.e. `currentPointerDownTarget`)
+        target: runTime.currentPointerDownTarget || eventInit.target,
+        targetTouches: eventInit.targetTouches || touches,
+        touches: eventInit.touches || (eventInit.type === "touchend" ? [] : touches),
     };
 };
 
 /**
- * @param {FullEventInit<TouchEventInit>} [eventInit]
+ * @param {FullEventInit<TouchEventInit>} eventInit
  */
 const mapNonCancelableTouchEvent = (eventInit) => ({
     ...mapCancelableTouchEvent(eventInit),
@@ -1594,7 +1607,7 @@ const mapNonCancelableTouchEvent = (eventInit) => ({
 // ------------------------------
 
 /**
- * @param {FullEventInit<InputEventInit>} [eventInit]
+ * @param {FullEventInit<InputEventInit>} eventInit
  */
 const mapCancelableInputEvent = (eventInit) => ({
     ...mapInputEvent(eventInit),
@@ -1602,7 +1615,7 @@ const mapCancelableInputEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<InputEventInit>} [eventInit]
+ * @param {FullEventInit<InputEventInit>} eventInit
  */
 const mapInputEvent = (eventInit) => ({
     data: null,
@@ -1612,7 +1625,7 @@ const mapInputEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<KeyboardEventInit>} [eventInit]
+ * @param {FullEventInit<KeyboardEventInit>} eventInit
  */
 const mapKeyboardEvent = (eventInit) => ({
     ...specialKeys,
@@ -1795,10 +1808,10 @@ export async function dispatch(target, type, eventInit) {
     }
 
     const [Constructor, processParams] = getEventConstructor(type);
-    const params = processParams({ ...eventInit, target });
+    const params = processParams({ ...eventInit, target, type });
     const event = new Constructor(type, params);
 
-    await Promise.resolve(target.dispatchEvent(event));
+    await Promise.resolve(params.target.dispatchEvent(event));
 
     getCurrentEvents().push(event);
 
