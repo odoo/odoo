@@ -1873,8 +1873,17 @@ export class OdooEditor extends EventTarget {
             focusOffset = 0;
         }
 
-        [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
-        [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
+        if (anchorNode.isConnected && focusNode.isConnected) {
+            [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
+            [focusNode, focusOffset] = getDeepestPosition(focusNode, focusOffset);
+        } else {
+            // TODO: This is a stable fix for drawing an incorrect selection in
+            // a niche case. The root cause will be fixed in master.
+            anchorNode = this.editable.children[0];
+            focusNode = this.editable.children[0];
+            anchorOffset = 0;
+            focusOffset = 0;
+        }
 
         const direction = getCursorDirection(
             anchorNode,
