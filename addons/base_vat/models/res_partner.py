@@ -700,14 +700,24 @@ class ResPartner(models.Model):
     def write(self, values):
         print(self.ids, values)
         if self and (values.get('vat') or values.get('country_id')):
-            only_vat_problem = values.get('vat') and not values.get('country_id') and len(self.mapped('country_id')) > 1
-            only_country_problem = values.get('country_id') and not values.get('vat') and len(self.mapped('vat')) > 1
-            if not (only_vat_problem or only_country_problem):
+            multi_country_case = values.get('vat') and not values.get('country_id') and len(self.mapped('country_id')) > 1
+            multi_vat_case = values.get('country_id') and not values.get('vat') and len(self.mapped('vat')) > 1
+            if not (multi_vat_case or multi_country_case):
                 country_id = values.get('country_id', self[0].country_id.id)
                 vat = values.get('vat', self[0].vat)
                 values['vat'] = self._fix_vat_number(vat, country_id)
+                res = super().write(values)
+            else:
+                split_self = self.grouped('country_id' if multi_country_case else 'vat')
+                res = True
+                for ss in split_self:
+                    country_id = ss.id if multi_country_case else values['country_id']
+                    vat = ss if multi_vat_case else values['vat']
+                    values['vat'] = split_self._fix_vat_number(vat, country_id)
+                    res = res and super(ResPartner, split_self[ss]).write(values)
+        else:
+            res = super().write(values)
 
-        res = super().write(values)
         if self.env.context.get('import_file'):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
