@@ -905,6 +905,54 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["action: 2"], "pushState was not called");
     });
 
+    QUnit.test("server action returning act_window", async (assert) => {
+        serverData.actions[2].path = "my-path";
+        const mockRPC = async (route, args) => {
+            if (route === "/web/action/run") {
+                assert.step(`action: ${args.action_id}`);
+                return {
+                    name: "Partners",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [
+                        [false, "list"],
+                        [false, "form"],
+                    ],
+                };
+            }
+        };
+        redirect("/odoo/my-path/2");
+        logHistoryInteractions(assert);
+        await createWebClient({ serverData, mockRPC });
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/my-path/2",
+            "url did not change"
+        );
+        assert.deepEqual(router.current, {
+            action: "my-path",
+            actionStack: [
+                {
+                    action: "my-path",
+                    displayName: "Partners",
+                    view_type: "list",
+                },
+                {
+                    action: "my-path",
+                    displayName: "Second record",
+                    resId: 2,
+                    view_type: "form",
+                },
+            ],
+            resId: 2,
+        });
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
+        assert.verifySteps([
+            "action: 2",
+            "Update the state without updating URL, nextState: actionStack,resId,action", // "pushState was not called"
+        ]);
+    });
+
     QUnit.test("state with integer active_ids should not crash", async function (assert) {
         const mockRPC = async (route, args) => {
             if (route === "/web/action/run") {
