@@ -17,7 +17,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         content: "Put your question here.",
         extra_trigger: "#wrap:not(:has(input[name=post_name]:propValue('')))",
         trigger: '.note-editable p',
-        run: 'text First Question',
+        run: 'text First Question <p>code here</p>',
     }, {
         content: "Insert tags related to your question.",
         extra_trigger: '.note-editable:not(:has(br))',
@@ -35,8 +35,23 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.btn-close",
-    },
-    {
+    }, {
+        content: "Check that the code still exists as it was written.",
+        trigger: 'div[data-oe-field="content"]:contains("First Question <p>code here</p>")',
+    }, {
+        content: "Open dropdown to edit the post",
+        trigger: 'div.dropdown a#dropdownMenuLink',
+    }, {
+        content: "Click on edit",
+        trigger: 'form button:contains("Edit")',
+    }, {
+        content: "Check that the content is the same",
+        trigger: 'div.odoo-editor-editable p:contains("First Question <p>code here</p>")',
+        run: function () {}, //it's a check
+    }, {
+        content: "Save changes",
+        trigger: 'button:contains("Save Changes")',
+    }, {
         trigger: "a:contains(\"Answer\").collapsed",
         content: "Click to answer.",
         position: "bottom",
