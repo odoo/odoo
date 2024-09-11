@@ -22,6 +22,7 @@ import { closestElement, descendants, firstLeaf, lastLeaf } from "../utils/dom_t
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { convertList, getListMode } from "@html_editor/utils/list";
 
 export class DomPlugin extends Plugin {
     static name = "dom";
@@ -181,11 +182,25 @@ export class DomPlugin extends Plugin {
                 selection.focusOffset === nodeSize(selection.focusNode);
             // Grab the content of the first child block and isolate it.
             if (shouldUnwrap(container.firstChild) && !isSelectionAtStart) {
+                // Unwrap the deepest nested first <li> element in the
+                // container to extract and paste the text content of the list.
+                if (container.firstChild.nodeName === "LI") {
+                    const deepestBlock = closestBlock(firstLeaf(container.firstChild));
+                    this.shared.splitAroundUntil(deepestBlock, container.firstChild);
+                    container.firstElementChild.replaceChildren(...deepestBlock.childNodes);
+                }
                 containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
                 container.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
             if (shouldUnwrap(container.lastChild) && !isSelectionAtEnd) {
+                // Unwrap the deepest nested last <li> element in the container
+                // to extract and paste the text content of the list.
+                if (container.lastChild.nodeName === "LI") {
+                    const deepestBlock = closestBlock(lastLeaf(container.lastChild));
+                    this.shared.splitAroundUntil(deepestBlock, container.lastChild);
+                    container.lastElementChild.replaceChildren(...deepestBlock.childNodes);
+                }
                 containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
                 container.lastElementChild.remove();
             }
@@ -209,6 +224,9 @@ export class DomPlugin extends Plugin {
         // element if it's a block then we insert the content in the right places.
         let currentNode = startNode;
         let lastChildNode = false;
+        const currentList = currentNode && closestElement(currentNode, "UL, OL");
+        const mode = currentList && getListMode(currentList);
+
         const _insertAt = (reference, nodes, insertBefore) => {
             for (const child of insertBefore ? nodes.reverse() : nodes) {
                 reference[insertBefore ? "before" : "after"](child);
@@ -243,7 +261,7 @@ export class DomPlugin extends Plugin {
                 const parent = currentNode.nextSibling.parentElement;
                 const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
                 this.dispatch("SPLIT_BLOCK_NODE", {
-                    targetNode: currentNode.nextSibling.parentElement,
+                    targetNode: parent,
                     targetOffset: index,
                 });
             }
@@ -322,6 +340,14 @@ export class DomPlugin extends Plugin {
             } else {
                 currentNode.after(nodeToInsert);
             }
+            let convertedList;
+            if (
+                currentList &&
+                ((nodeToInsert.nodeName === "LI" && nodeToInsert.classList.contains("oe-nested")) ||
+                    isList(nodeToInsert))
+            ) {
+                convertedList = convertList(nodeToInsert, mode);
+            }
             if (
                 nodeToInsert.nodeType !== Node.ELEMENT_NODE ||
                 nodeToInsert.tagName !== "BR" ||
@@ -333,7 +359,7 @@ export class DomPlugin extends Plugin {
             if (currentNode.tagName !== "BR" && isShrunkBlock(currentNode)) {
                 currentNode.remove();
             }
-            currentNode = nodeToInsert;
+            currentNode = convertedList || nodeToInsert;
         }
         const previousNode = currentNode.previousSibling;
         if (cleanTrailingBR(currentNode.parentElement)) {
