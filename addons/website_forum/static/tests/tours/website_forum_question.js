@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('forum_question', {
     {
         content: "Put your question here.",
         trigger: '.note-editable p',
-        run: "editor First Question",
+        run: "editor First Question <p>code here</p>",
     },
     {
         trigger: ".note-editable:not(:has(br))",
@@ -45,6 +45,29 @@ registry.category("web_tour.tours").add('forum_question', {
     {
         content: "Close modal once modal animation is done.",
         trigger: ".modal .modal-header button.btn-close",
+        run: "click",
+    },
+    {
+        content: "Check that the code still exists as it was written.",
+        trigger: 'div[data-oe-field="content"]:contains("First Question <p>code here</p>")',
+    },
+    {
+        content: "Open dropdown to edit the post",
+        trigger: '.o_wforum_question a#dropdownMenuLink',
+        run: "click",
+    },
+    {
+        content: "Click on edit",
+        trigger: '.o_wforum_question button:contains("Edit")',
+        run: "click",
+    },
+    {
+        content: "Check that the content is the same",
+        trigger: 'div.odoo-editor-editable p:contains("First Question <p>code here</p>")',
+    },
+    {
+        content: "Save changes",
+        trigger: 'button:contains("Save Changes")',
         run: "click",
     },
     {
