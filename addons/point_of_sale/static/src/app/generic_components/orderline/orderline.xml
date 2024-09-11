@@ -13,7 +13,7 @@
                         <span class="text-wrap" t-esc="line.productName"/>
                         <t t-slot="product-name"/>
                     </div>
-                    <div class="product-price price fw-bolder">
+                    <div t-if="!props.basic_receipt" class="product-price price fw-bolder">
                         <t t-if="line.price === 'free'">Free</t>
                         <t t-else="" t-esc="line.price"/>
                     </div>
@@ -22,15 +22,17 @@
                 <ul class="info-list d-flex flex-column">
                     <li class="price-per-unit">
                         <span class="qty px-1 border rounded text-bg-view fw-bolder me-1" t-esc="line.qty"/>
-                        x
-                        <t t-if="line.price !== 0">
-                            <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" />
-                            <t t-esc="line.unitPrice" />
+                        <t t-if="!props.basic_receipt">
+                            x
+                            <t t-if="line.price !== 0">
+                                <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" />
+                                <t t-esc="line.unitPrice" />
+                            </t>
+                            /
                         </t>
-                        /
                         <t t-if="line.unit" t-esc="line.unit" />
                     </li>
-                    <li t-if="line.price !== 0 and line.discount and line.discount !== '0'">
+                    <li t-if="line.price !== 0 and line.discount and line.discount !== '0' and !props.basic_receipt">
                         With a <em><t t-esc="line.discount" />% </em> discount
                     </li>
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25">

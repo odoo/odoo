@@ -120,6 +120,7 @@ class PosConfig(models.Model):
     set_maximum_difference = fields.Boolean('Set Maximum Difference', help="Set a maximum difference allowed between the expected and counted money during the closing of the session.")
     receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
+    basic_receipt = fields.Boolean(string='Basic Receipt', help="Print basic ticket without prices. Can be used for gifts.")
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)

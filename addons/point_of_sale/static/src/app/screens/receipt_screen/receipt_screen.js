@@ -27,7 +27,8 @@ export class ReceiptScreen extends Component {
             mode: "email",
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
-        this.doPrint = useTrackedAsync(() => this.pos.printReceipt());
+        this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt());
+        this.doBasicPrint = useTrackedAsync(() => this.pos.printReceipt({ basic: true }));
         onMounted(() => {
             const order = this.pos.get_order();
             this.currentOrder.uiState.locked = true;
@@ -83,6 +84,17 @@ export class ReceiptScreen extends Component {
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
+
+    generateTicketImage = async (isBasicReceipt = false) =>
+        await this.renderer.toJpeg(
+            OrderReceipt,
+            {
+                data: this.pos.orderExportForPrinting(this.pos.get_order()),
+                formatCurrency: this.env.utils.formatCurrency,
+                basic_receipt: isBasicReceipt,
+            },
+            { addClass: "pos-receipt-print p-3" }
+        );
     async _sendReceiptToCustomer({ action }) {
         const order = this.currentOrder;
         if (typeof order.id !== "number") {
@@ -94,15 +106,14 @@ export class ReceiptScreen extends Component {
             });
             return Promise.reject();
         }
-        const ticketImage = await this.renderer.toJpeg(
-            OrderReceipt,
-            {
-                data: this.pos.orderExportForPrinting(this.pos.get_order()),
-                formatCurrency: this.env.utils.formatCurrency,
-            },
-            { addClass: "pos-receipt-print p-3" }
-        );
-        await this.pos.data.call("pos.order", action, [[order.id], this.state.input, ticketImage]);
+        const fullTicketImage = await this.generateTicketImage();
+        const basicTicketImage = await this.generateTicketImage(true);
+        await this.pos.data.call("pos.order", action, [
+            [order.id],
+            this.state.input,
+            fullTicketImage,
+            this.pos.basic_receipt ? basicTicketImage : null,
+        ]);
     }
     isValidEmail(email) {
         return email && /^.+@.+$/.test(email);

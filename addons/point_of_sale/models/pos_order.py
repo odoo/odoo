@@ -1111,7 +1111,7 @@ class PosOrder(models.Model):
             'is_total_cost_computed': False
         }
 
-    def _prepare_mail_values(self, email, ticket):
+    def _prepare_mail_values(self, email, ticket, basic_ticket):
         message = Markup(
             _("<p>Dear %(client_name)s,<br/>Here is your Receipt %(is_invoiced)sfor \
             %(pos_name)s amounting in %(amount)s from %(company_name)s. </p>")
@@ -1129,7 +1129,7 @@ class PosOrder(models.Model):
             'author_id': self.env.user.partner_id.id,
             'email_from': self.env.company.email or self.env.user.email_formatted,
             'email_to': email,
-            'attachment_ids': self._add_mail_attachment(self.name, ticket),
+            'attachment_ids': self._add_mail_attachment(self.name, ticket, basic_ticket),
         }
 
     def _refund(self):
@@ -1178,7 +1178,8 @@ class PosOrder(models.Model):
             'target': 'new'
         }
 
-    def _add_mail_attachment(self, name, ticket):
+    def _add_mail_attachment(self, name, ticket, basic_ticket):
+        attachment = []
         filename = 'Receipt-' + name + '.jpg'
         receipt = self.env['ir.attachment'].create({
             'name': filename,
@@ -1188,7 +1189,19 @@ class PosOrder(models.Model):
             'res_id': self.ids[0],
             'mimetype': 'image/jpeg',
         })
-        attachment = [(4, receipt.id)]
+        attachment += [(4, receipt.id)]
+        if basic_ticket:
+            filename = 'Receipt-' + name + '-1' + '.jpg'
+            basic_receipt = self.env['ir.attachment'].create({
+                'name': filename,
+                'type': 'binary',
+                'datas': basic_ticket,
+                'res_model': 'pos.order',
+                'res_id': self.ids[0],
+                'mimetype': 'image/jpeg',
+            })
+            attachment += [(4, basic_receipt.id)]
+
 
         if self.mapped('account_move'):
             report = self.env['ir.actions.report']._render_qweb_pdf("account.account_invoices", self.account_move.ids[0])
@@ -1205,8 +1218,8 @@ class PosOrder(models.Model):
 
         return attachment
 
-    def action_send_receipt(self, email, ticket_image):
-        self.env['mail.mail'].sudo().create(self._prepare_mail_values(email, ticket_image)).send()
+    def action_send_receipt(self, email, ticket_image, basic_image):
+        self.env['mail.mail'].sudo().create(self._prepare_mail_values(email, ticket_image, basic_image)).send()
         self.email = email
 
     @api.model

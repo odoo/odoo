@@ -61,7 +61,7 @@ export class TicketScreen extends Component {
         this.dialog = useService("dialog");
         this.numberBuffer = useService("number_buffer");
         this.doPrint = useTrackedAsync((_selectedSyncedOrder) =>
-            this.pos.printReceipt(_selectedSyncedOrder)
+            this.pos.printReceipt({ order: _selectedSyncedOrder })
         );
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),

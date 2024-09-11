@@ -30,7 +30,7 @@
         </xpath>
         <xpath expr="//span[@t-esc='props.formatCurrency(props.data.amount_total)']/.." position="after">
             <div t-if="props.data.is_gcc_country" class="pos-receipt-amount pos-receipt-amount-arabic" t-translation="off">
-                TOTAL / الإجمالي
+                TOTAL / اﻹجمالي
                 <span t-esc="props.formatCurrency(props.data.amount_total)" class="pos-receipt-right-align"/>
             </div>
         </xpath>

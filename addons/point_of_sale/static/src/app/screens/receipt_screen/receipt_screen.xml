@@ -17,9 +17,14 @@
                             </div>
                             <hr />
                             <div class="receipt-options d-flex flex-column gap-2">
-                                <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doPrint.call()">
-                                    <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
-                                </button>
+                                <div class="d-flex gap-1">
+                                    <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doFullPrint.call()">
+                                        <i t-attf-class="fa {{doFullPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Full Receipt
+                                    </button>
+                                    <button t-if="pos.config.basic_receipt" class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doBasicPrint.call()">
+                                        <i t-attf-class="fa {{doBasicPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Basic Receipt
+                                    </button>
+                                </div>
                                 <div class="d-flex gap-1" t-att-class="{'flex-column': this.ui.isSmall}">
                                     <div class="flex-grow-1 p-0 border-0 position-relative send-receipt-input">
                                         <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="{{ state.mode === 'email' ? 'e.g. john.doe@mail.com' : 'e.g. 0123456789' }}" t-model="state.input" />
