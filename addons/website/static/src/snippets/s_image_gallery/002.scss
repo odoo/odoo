@@ -238,6 +238,60 @@
             }
         }
 
+        // Indicators - Numbers
+        &.s_image_gallery_indicators_numbers {
+            .carousel-indicators {
+                flex-wrap: wrap;
+                height: auto;
+                counter-reset: numberList;
+
+                button {
+                    display: flex;
+                    align-items: center;
+                    gap: map-get($spacers, 1);
+                    width: auto;
+                    height: auto;
+                    margin: 0;
+                    border: 0;
+                    padding: 0 map-get($spacers, 2) 0;
+                    background: none !important;
+                    color: $carousel-indicator-active-bg;
+                    text-indent: 0;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+
+                    &:before {
+                        content: counter(numberList);
+                        counter-increment: numberList;
+                    }
+
+                    &:after {
+                        display: block;
+                        width: 0;
+                        border-top: $border-width * 2 solid $carousel-indicator-active-bg;
+                        transition: $transition-base;
+                        content: '';
+                    }
+
+                    &.active:after {
+                        width: map-get($spacers, 4);
+                    }
+                }
+            }
+
+            .carousel-dark {
+                button {
+                    color: $carousel-dark-indicator-active-bg;
+
+                    &:after {
+                        border-color: $carousel-dark-indicator-active-bg;
+                    }
+                }
+            }
+        }
+
         // Indicators - Hidden
         &.s_image_gallery_indicators_hidden .carousel-indicators {
             display: none;
@@ -250,8 +304,13 @@
             .carousel-inner {
                 padding-bottom: $-o-carousel-controllers-size + map-get($spacers, 2);
             }
+
             .o_carousel_controllers {
                 height: $-o-carousel-controllers-size;
+            }
+
+            &.s_image_gallery_indicators_numbers .o_carousel_controllers {
+                height: auto;
             }
         }
 
@@ -271,6 +330,10 @@
                 bottom: 0;
                 height: $-o-carousel-controllers-size;
                 margin-bottom: 0;
+            }
+
+            &.s_image_gallery_indicators_numbers .carousel-indicators {
+                height: auto;
             }
         }
 

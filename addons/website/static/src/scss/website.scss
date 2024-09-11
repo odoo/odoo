@@ -1004,7 +1004,8 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
         &:not(.s_carousel_arrows_hidden) .carousel-indicators {
             $-margin-x: map-get($spacers, 3) * 2 + $-o-carousel-controllers-size;
 
-            margin: 0 $-margin-x 1em;
+            min-height: $-o-carousel-controllers-size;
+            margin: 0 $-margin-x map-get($spacers, 3);
         }
     }
 
@@ -1112,8 +1113,60 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
             }
         }
 
+        &.s_carousel_indicators_numbers {
+            flex-wrap: wrap;
+            height: auto;
+            counter-reset: numberList;
+
+            button {
+                display: flex;
+                align-items: center;
+                gap: map-get($spacers, 1);
+                width: auto;
+                height: auto;
+                margin: 0;
+                padding: 0 map-get($spacers, 2) 0;
+                background: none;
+                color: $carousel-indicator-active-bg;
+                text-indent: 0;
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                &:before {
+                    content: counter(numberList);
+                    counter-increment: numberList;
+                }
+
+                @include media-breakpoint-up(md) {
+                    &:after {
+                        display: block;
+                        width: 0;
+                        border-top: $border-width * 2 solid $carousel-indicator-active-bg;
+                        transition: width .2s ease-in-out; // $transition-base duration & bezier
+                        content: '';
+                    }
+
+                    &.active:after {
+                        width: map-get($spacers, 4);
+                    }
+                }
+            }
+        }
+
         &.s_carousel_indicators_hidden {
             display: none;
+        }
+    }
+
+    &.carousel-dark .s_carousel_indicators_numbers {
+        button {
+            color: $carousel-dark-indicator-active-bg;
+
+            &:after {
+                border-color: $carousel-dark-indicator-active-bg;
+            }
         }
     }
 
