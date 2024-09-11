@@ -328,6 +328,41 @@ async function discuss_channel_messages(request) {
     };
 }
 
+registerRoute("/discuss/channel/sub_channel/create", discuss_channel_sub_channel_create);
+async function discuss_channel_sub_channel_create(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    const { from_message_id, parent_channel_id, name } = await parseRequestParams(request);
+    return DiscussChannel._create_sub_channel(
+        [parent_channel_id],
+        makeKwArgs({ from_message_id, name })
+    );
+}
+
+registerRoute("/discuss/channel/sub_channel/fetch", discuss_channel_sub_channel_fetch);
+async function discuss_channel_sub_channel_fetch(request) {
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").MailMessage} */
+    const MailMessage = this.env["mail.message"];
+    const { parent_channel_id, before, limit } = await parseRequestParams(request);
+    const domain = [["parent_channel_id", "=", parent_channel_id]];
+    if (before) {
+        domain.push(["id", "<", before]);
+    }
+    const subChannels = DiscussChannel.search(domain, makeKwArgs({ limit, order: "id DESC" }));
+    const store = new mailDataHelpers.Store(subChannels);
+    const lastMessageIds = [];
+    for (const channel of subChannels) {
+        const lastMessageId = Math.max(channel.message_ids);
+        if (lastMessageId) {
+            lastMessageIds.push(lastMessageId);
+        }
+    }
+    store.add(MailMessage.browse(lastMessageIds));
+    return store.get_result();
+}
+
 registerRoute("/discuss/settings/mute", discuss_settings_mute);
 /** @type {RouteCallback} */
 async function discuss_settings_mute(request) {

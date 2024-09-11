@@ -17,6 +17,7 @@
             </button>
             <p t-if="props.title" class="fs-6 fw-bold text-uppercase m-0 text-muted flex-grow-1" t-esc="props.title"/>
         </div>
+        <t t-slot="header"/>
         <div class="px-1 d-flex flex-column flex-grow-1 bg-inherit">
             <t t-slot="default"/>
         </div>

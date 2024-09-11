@@ -1,5 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
 import { Deferred } from "@web/core/utils/concurrency";
+import { Record } from "@mail/model/record";
+import { rpc } from "@web/core/network/rpc";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -40,13 +42,97 @@ patch(Thread, {
 });
 
 patch(Thread.prototype, {
+    setup() {
+        super.setup(...arguments);
+        this.from_message_id = Record.one("Message");
+        this.parent_channel_id = Record.one("Thread", {
+            onDelete() {
+                this.delete();
+            },
+        });
+        this.sub_channel_ids = Record.many("Thread", {
+            inverse: "parent_channel_id",
+            sort: (a, b) => b.id - a.id,
+        });
+        this.displayInSidebar = Record.attr(false, {
+            compute() {
+                return (
+                    this.displayToSelf ||
+                    this.isLocallyPinned ||
+                    this.sub_channel_ids.some((t) => t.displayInSidebar)
+                );
+            },
+        });
+        this.forceOpen = Record.attr(false, {
+            onUpdate() {
+                if (this.forceOpen) {
+                    this.open();
+                    this.forceOpen = false;
+                }
+            },
+        });
+        this.loadSubChannelsDone = false;
+        this.lastSubChannelLoaded = null;
+    },
+    get allowCalls() {
+        return super.allowCalls && !this.parent_channel_id;
+    },
     delete() {
         if (this.model === "discuss.channel") {
             this.store.env.services.bus_service.deleteChannel(this.busChannel);
         }
         super.delete(...arguments);
     },
-
+    get hasSubChannelFeature() {
+        return this.channel_type === "channel" && !this.parent_channel_id;
+    },
+    get isEmpty() {
+        return !this.from_message_id && super.isEmpty;
+    },
+    get notifyOnLeave() {
+        return super.notifyOnLeave && !this.parent_channel_id;
+    },
+    /**
+     * @param {*} param0
+     * @param {import("models").Message} [param0.initialMessage]
+     * @param {string} [param0.searchTerm]
+     */
+    async createSubChannel({ initialMessage, name } = {}) {
+        const data = await rpc("/discuss/channel/sub_channel/create", {
+            parent_channel_id: this.id,
+            from_message_id: initialMessage?.id,
+            name,
+        });
+        this.store.insert(data);
+    },
+    /**
+     * @param {*} param0
+     * @param {string} [param0.searchTerm]
+     * @returns {import("models").Thread[]}
+     */
+    async loadMoreSubChannels({ searchTerm } = {}) {
+        if (this.loadSubChannelsDone) {
+            return;
+        }
+        const limit = 30;
+        const data = await rpc("/discuss/channel/sub_channel/fetch", {
+            before: this.lastSubChannelLoaded,
+            limit,
+            parent_channel_id: this.id,
+            search_term: searchTerm,
+        });
+        const { Thread: subChannels = [] } = this.store.insert(data, { html: true });
+        if (searchTerm) {
+            // Ignore holes in the sub-channel list that may arise when
+            // searching for a specific term.
+            return;
+        }
+        this.lastSubChannelLoaded = subChannels.at(-1)?.id;
+        if (subChannels.length < limit) {
+            this.loadSubChannelsDone = true;
+        }
+        return subChannels;
+    },
     onPinStateUpdated() {
         super.onPinStateUpdated();
         if (this.is_pinned) {
@@ -56,6 +142,9 @@ patch(Thread.prototype, {
             this.store.env.services["bus_service"].addChannel(this.busChannel);
         } else {
             this.store.env.services["bus_service"].deleteChannel(this.busChannel);
+        }
+        if (!this.is_pinned && !this.isLocallyPinned) {
+            this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
     },
     setAsDiscussThread() {
