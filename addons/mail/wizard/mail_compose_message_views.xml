@@ -103,9 +103,7 @@
             <field name="arch" type="xml">
                 <form string="Templates">
                     <group>
-                        <field name="subject"
-                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'model'}"
-                            placeholder="e.g. &quot;Welcome to MyCompany&quot; or &quot;Nice to meet you, {{ object.name }}&quot;"/>
+                        <field name="template_name" placeholder="e.g: Send order confirmation"/>
                         <field name="model" invisible="1"/>
                     </group>
                     <footer>
