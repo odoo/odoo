@@ -40,5 +40,6 @@ This module allows to generate a project/task from sales orders.
         ],
     },
     'post_init_hook': '_set_allow_billable_in_project',
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }
