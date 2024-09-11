@@ -69,7 +69,8 @@ class TestHrCalendarCommon(common.TransactionCase):
                     (0, 0, {'name': 'Tuesday Evening', 'dayofweek': '1', 'hour_from': 15, 'hour_to': 22, 'day_period': 'afternoon'}),
                     (0, 0, {'name': 'Wednesday Evening', 'dayofweek': '2', 'hour_from': 15, 'hour_to': 22, 'day_period': 'afternoon'}),
                     (0, 0, {'name': 'Thursday Evening', 'dayofweek': '3', 'hour_from': 15, 'hour_to': 22, 'day_period': 'afternoon'}),
-                    (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 15, 'hour_to': 22, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Friday Evening', 'dayofweek': '4', 'hour_from': 15, 'hour_to': 21, 'day_period': 'afternoon'}),
+                    (0, 0, {'name': 'Sunday Evening', 'dayofweek': '6', 'hour_from': 15, 'hour_to': 16, 'day_period': 'afternoon'}),
                 ],
             },
         ])

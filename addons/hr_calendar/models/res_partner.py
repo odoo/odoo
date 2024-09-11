@@ -101,7 +101,7 @@ class Partner(models.Model):
     def _interval_to_business_hours(self, working_intervals):
         # This is the format expected by the fullcalendar library to do the overlay
         return [{
-            "daysOfWeek": [interval[0].weekday() + 1],
+            "daysOfWeek": [(interval[0].weekday() + 1) % 7],
             "startTime":  interval[0].astimezone(timezone(self.env.user.tz or 'UTC')).strftime("%H:%M"),
             "endTime": interval[1].astimezone(timezone(self.env.user.tz or 'UTC')).strftime("%H:%M"),
         } for interval in working_intervals] if working_intervals else [{
