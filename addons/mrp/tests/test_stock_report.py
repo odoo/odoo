@@ -387,3 +387,36 @@ class TestMrpStockReports(TestReportsCommon):
         mo.action_confirm()
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(overview_values['data']['id'], mo.id, "Unexpected disparity between overview and MO data")
+
+    def test_multi_step_component_forecast_availability(self):
+        """
+        Test that the component availability is correcly forecasted
+        in multi step manufacturing
+        """
+        # Configures the warehouse.
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm_sam'
+        final_product, component = self.product, self.product1
+        bom = self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_uom_id': final_product.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': component.id, 'product_qty': 10}),
+            ],
+        })
+        # Creates a MO without any component in stock
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.components_availability, 'Not Available')
+        self.assertEqual(mo.move_raw_ids.forecast_availability, -20.0)
+        self.env['stock.quant']._update_available_quantity(component, warehouse.lot_stock_id, 100)
+        # change the qty_producing to force a recompute of the availability
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 2.0
+        self.assertEqual(mo.components_availability, 'Available')
