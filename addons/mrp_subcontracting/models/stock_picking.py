@@ -163,6 +163,9 @@ class StockPicking(models.Model):
         }
         return vals
 
+    def _get_subcontract_mo_confirmation_ctx(self):
+        return {}  # To override in mrp_subcontracting_purchase
+
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
         group_move = defaultdict(list)
@@ -188,7 +191,7 @@ class StockPicking(models.Model):
             all_mo.update(grouped_mo.ids)
 
         all_mo = self.env['mrp.production'].browse(sorted(all_mo))
-        all_mo.action_confirm()
+        all_mo.with_context(self._get_subcontract_mo_confirmation_ctx()).action_confirm()
 
         for mo in all_mo:
             move = group_move[mo.procurement_group_id.id][0]
