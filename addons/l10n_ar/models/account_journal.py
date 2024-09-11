@@ -27,6 +27,7 @@ class AccountJournal(models.Model):
             ('FEERCELP', _('Export Voucher - Billing Plus')),
             ('FEERCEL', _('Export Voucher - Online Invoice')),
             ('CPERCEL', _('Product Coding - Online Voucher')),
+            ('CF', _('External Fiscal Controller')),
         ]
 
     def _get_journal_letter(self, counterpart_partner=False):
@@ -87,15 +88,13 @@ class AccountJournal(models.Model):
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
-        zeta_codes = ['80', '83']
+        tique_codes = ['81', '82', '83', '110', '112', '113', '115', '116', '118', '119', '120']
         if afip_pos_system == 'II_IM':
             # pre-printed invoice
             return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
-        elif afip_pos_system == 'RAW_MAW':
+        elif afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
             # electronic/online invoice
             return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
-        elif afip_pos_system == 'RLI_RLM':
-            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes + zeta_codes
         elif afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
             return usual_codes + invoice_m_code
@@ -104,6 +103,8 @@ class AccountJournal(models.Model):
             return usual_codes + mipyme_codes
         elif afip_pos_system in ['FEERCEL', 'FEEWS', 'FEERCELP']:
             return expo_codes
+        elif afip_pos_system == 'CFE':
+            return tique_codes
 
     @api.constrains('type', 'l10n_ar_afip_pos_system', 'l10n_ar_afip_pos_number', 'l10n_latam_use_documents')
     def _check_afip_configurations(self):
