@@ -37,14 +37,15 @@
                                 <field name="target_model" widget="radio" invisible="1" readonly="state == 'done'"/>
                                 <field name="picking_ids" widget="many2many_tags" 
                                     options="{'no_create_edit': True}" invisible="target_model != 'picking'" readonly="state == 'done'"
-                                    domain="[('company_id', '=', company_id), ('move_ids.stock_valuation_layer_ids', '!=', False)]"/>
+                                    domain="[('company_id', '=', company_id), ('move_ids.stock_valuation_layer_ids', '!=', False)]"
+                                    context="{'landed_cost_form': True}"/>
                             </group>
                             <group>
                                 <label for="account_journal_id" string="Journal"/>
                                 <field name="account_journal_id" nolabel="1" readonly="state == 'done'"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="account_move_id" invisible="not account_move_id"/>
-                                <field name="vendor_bill_id"/>
+                                <field name="vendor_bill_id" context="{'landed_cost_form': True}"/>
                             </group>
                         </group>
                         <notebook>

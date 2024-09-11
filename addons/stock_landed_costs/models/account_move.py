@@ -18,6 +18,14 @@ class AccountMove(models.Model):
             else:
                 account_move.landed_costs_visible = any(line.is_landed_costs_line for line in account_move.line_ids)
 
+    @api.depends('partner_id.name')
+    @api.depends_context('landed_cost_form')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for move in self:
+            if self.env.context.get('landed_cost_form', False) and move.partner_id:
+                move.display_name += f" {move.partner_id.name}"
+
     def button_create_landed_costs(self):
         """Create a `stock.landed.cost` record associated to the account move of `self`, each
         `stock.landed.costs` lines mirroring the current `account.move.line` of self.
