@@ -397,7 +397,11 @@ export class ListPlugin extends Plugin {
             return;
         }
 
-        if ([...element.children].some(isBlock)) {
+        if (
+            [...element.children].some(
+                (child) => isBlock(child) && !this.shared.isUnsplittable(child)
+            )
+        ) {
             const cursors = this.shared.preserveSelection();
             wrapInlinesInBlocks(element, cursors);
             cursors.restore();
