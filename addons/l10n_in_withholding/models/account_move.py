@@ -1,6 +1,9 @@
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 from odoo.tools import SQL
 from odoo.tools.date_utils import get_month
+
+from odoo.exceptions import ValidationError
+from odoo.fields import Command
 
 
 class AccountMove(models.Model):
@@ -172,3 +175,25 @@ class AccountMove(models.Model):
                     move.l10n_in_tcs_tds_warning = False
             else:
                 move.l10n_in_tcs_tds_warning = False
+
+    def button_l10n_in_apply_tcs_tax(self):
+        self.ensure_one()
+        warning_sections = self._l10n_in_get_warning_sections()
+        if warning_sections:
+            error_sections = []
+            group_by_section = self._l10n_in_group_by_section_alert()
+            pan_entity = self.commercial_partner_id.l10n_in_pan_entity_id
+            invoice_date = self.invoice_date
+            for section in warning_sections:
+                if group_by_section.get(section):
+                    tax_id = section._get_applicable_tax_for_section(pan_entity, invoice_date)
+                    if tax_id:
+                        for line in group_by_section[section]:
+                            line.tax_ids = [Command.link(tax_id.id)]
+                    else:
+                        error_sections.append(section)
+            if error_sections:
+                raise ValidationError(_(
+                    "The tax lines is not defined in the given section %(sections)s",
+                    sections = ", ".join(warning_sections.mapped('name'))
+                ))
