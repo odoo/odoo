@@ -2141,11 +2141,12 @@ class CheckIdentity(models.TransientModel):
             self.create_uid._check_credentials(credential, {'interactive': True})
         except AccessDenied:
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))
+        finally:
+            self.password = False
 
     def run_check(self):
         assert request, "This method can only be accessed over HTTP"
         self._check_identity()
-        self.password = False
 
         request.session['identity-check-last'] = time.time()
         ctx, model, ids, method, args, kwargs = json.loads(self.sudo().request)
