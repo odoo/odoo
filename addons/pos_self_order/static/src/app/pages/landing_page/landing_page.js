@@ -81,7 +81,7 @@ export class LandingPage extends Component {
     }
 
     clickMyOrder() {
-        this.router.navigate(this.draftOrder.length > 0 ? "cart" : "orderHistory");
+        this.router.navigate(this.draftOrder.length > 0 ? "product_list" : "orderHistory");
     }
 
     clickCustomLink(link) {
