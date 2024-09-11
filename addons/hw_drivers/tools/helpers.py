@@ -599,6 +599,7 @@ def disconnect_from_server():
     })
 
 
+<<<<<<< master
 def save_browser_state(url=None, orientation=None):
     """
     Save the browser state to the file
@@ -609,6 +610,29 @@ def save_browser_state(url=None, orientation=None):
         'browser-url': url,
         'screen-orientation': orientation.value if orientation else None,
     })
+||||||| 49061347c181b1a451435bc363bb9508db8b6fab
+def migrate_old_config_files_to_new_config_file():
+    """Migrate old config files to the new odoo.conf"""
+    if not get_conf().has_section('iot.box'):
+        _logger.info('Migrating old config files to the new odoo.conf')
+        iotbox_version = read_file_first_line('/var/odoo/iotbox_version')
+        db_uuid = read_file_first_line('odoo-db-uuid.conf')
+        enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
+        remote_server = read_file_first_line('odoo-remote-server.conf')
+        token = read_file_first_line('token')
+        subject = read_file_first_line('subject')
+=======
+def migrate_old_config_files_to_new_config_file():
+    """Migrate old config files to the new odoo.conf"""
+    if not get_conf().has_section('iot.box'):
+        _logger.info('Migrating old config files to the new odoo.conf')
+        iotbox_version = read_file_first_line('/var/odoo/iotbox_version')
+        db_uuid = read_file_first_line('odoo-db-uuid.conf')
+        enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
+        remote_server = read_file_first_line('odoo-remote-server.conf')
+        token = read_file_first_line('token')
+        subject = read_file_first_line('odoo-subject.conf')
+>>>>>>> f01999a0daad86a4514b0b296c06d76db207f4f1
 
 
 def load_browser_state():
@@ -621,6 +645,7 @@ def load_browser_state():
     return url, Orientation(orientation)
 
 
+<<<<<<< master
 def url_is_valid(url):
     """
     Checks whether the provided url is a valid one or not
@@ -654,3 +679,22 @@ def parse_url(url):
         "url": f"{url.scheme}://{url.netloc}",
         **search_params,
     }
+||||||| 49061347c181b1a451435bc363bb9508db8b6fab
+        _logger.info('Removing old config files')
+        unlink_file('iotbox_version')
+        unlink_file('wifi_network.txt')
+        unlink_file('odoo-db-uuid.conf')
+        unlink_file('odoo-enterprise-code.conf')
+        unlink_file('odoo-remote-server.conf')
+        unlink_file('token')
+        unlink_file('subject')
+=======
+        _logger.info('Removing old config files')
+        unlink_file('iotbox_version')
+        unlink_file('wifi_network.txt')
+        unlink_file('odoo-db-uuid.conf')
+        unlink_file('odoo-enterprise-code.conf')
+        unlink_file('odoo-remote-server.conf')
+        unlink_file('token')
+        unlink_file('odoo-subject.conf')
+>>>>>>> f01999a0daad86a4514b0b296c06d76db207f4f1
