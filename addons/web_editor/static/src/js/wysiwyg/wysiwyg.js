@@ -210,8 +210,11 @@ export class Wysiwyg extends Component {
                 this.odooEditor._computeHistorySelection();
             },
             onInputEnter: (ev) => {
-                const pickergroup = ev.target.closest('.colorpicker-group');
-                $(pickergroup.querySelector('.dropdown-toggle')).dropdown('hide');
+                const pickergroup = ev.target.closest(".colorpicker-group");
+                const dropdown = Dropdown.getOrCreateInstance(
+                    pickergroup.querySelector(".dropdown-toggle")
+                );
+                dropdown.hide();
             },
 
             getTemplate: this.getColorpickerTemplate.bind(this),
