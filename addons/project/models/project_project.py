@@ -878,7 +878,7 @@ class Project(models.Model):
             )
         buttons = [{
             'icon': 'check',
-            'text': _lt('Tasks'),
+            'text': self.label_tasks,
             'number': number,
             'action_type': 'object',
             'action': 'action_view_tasks',
