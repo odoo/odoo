@@ -9,6 +9,7 @@ var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 const { Markup } = require('web.utils');
 var session = require('web.session');
+const rpc = require('web.rpc');
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -118,23 +119,40 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
         });
 
-        _.each($('textarea.o_wysiwyg_loader'), function (textarea) {
+        _.each($('textarea.o_wysiwyg_loader'), async function (textarea) {
             var $textarea = $(textarea);
             var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
             var $form = $textarea.closest('form');
             var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
-
+            let recordContent = '';
+            let resId = 0;
+            if (window.location.pathname.includes('edit')) {
+                // Id is retrieved from URL, which is either:
+                // - /forum/name-1/post/something-5
+                // - /forum/name-1/post/something-5/edit
+                // TODO: Make this more robust.
+                resId = +window.location.pathname.split('-').slice(-1)[0].split('/')[0];
+                const args = [
+                    [['id', '=', resId]],
+                    ['content'],
+                ];
+                const data = await rpc.query({
+                    model: 'forum.post',
+                    method: 'search_read',
+                    args: args,
+                });
+                if (data && data.length) {
+                    recordContent = data[0]['content'];
+                }
+            }
             var options = {
                 toolbarTemplate: 'website_forum.web_editor_toolbar',
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
-                    // Id is retrieved from URL, which is either:
-                    // - /forum/name-1/post/something-5
-                    // - /forum/name-1/post/something-5/edit
-                    // TODO: Make this more robust.
-                    res_id: +window.location.pathname.split('-').slice(-1)[0].split('/')[0],
+                    res_id: resId,
                 },
+                value: recordContent,
                 resizable: true,
                 userGeneratedContent: true,
                 height: 350,

@@ -3,6 +3,7 @@ odoo.define('website_profile.website_profile', function (require) {
 
 var publicWidget = require('web.public.widget');
 var wysiwygLoader = require('web_editor.loader');
+const rpc = require('web.rpc');
 
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
@@ -60,12 +61,21 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
 
         var $textarea = this.$('textarea.o_wysiwyg_loader');
 
+        const resId = parseInt(this.$('input[name=user_id]').val());
+        const recordContent = await rpc.query({
+            model: 'res.users',
+            method: 'get_website_description',
+            args: [[resId]],
+        }) || '';
+
         this._wysiwyg = await wysiwygLoader.loadFromTextarea(this, $textarea[0], {
             recordInfo: {
                 context: this._getContext(),
                 res_model: 'res.users',
-                res_id: parseInt(this.$('input[name=user_id]').val()),
+                res_id: resId,
+
             },
+            value: recordContent,
             resizable: true,
             userGeneratedContent: true,
         });

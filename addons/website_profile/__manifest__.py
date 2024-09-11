@@ -22,6 +22,9 @@
             'website_profile/static/src/scss/website_profile.scss',
             'website_profile/static/src/js/website_profile.js',
         ],
+        'web.assets_tests': [
+            'website_profile/static/tests/tours/tour_website_profile_description.js',
+        ],
     },
     'license': 'LGPL-3',
 }
