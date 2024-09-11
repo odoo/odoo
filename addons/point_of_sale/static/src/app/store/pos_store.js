@@ -583,7 +583,7 @@ export class PosStore extends Reactive {
             } else {
                 return;
             }
-        } else if (values.product_id.product_template_variant_value_ids.length > 0) {
+        } else if (values.product_id.product_template_variant_value_ids.length > 0 && configure) {
             // Verify price extra of variant products
             const priceExtra = values.product_id.product_template_variant_value_ids.reduce(
                 (acc, attr) => acc + attr.price_extra,

@@ -328,3 +328,15 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             PartnerList.searchCustomerValue("john@doe.com"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("VariantBarcodePrice", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.scan_barcode("123"),
+            ProductScreen.selectedOrderlineHas("Rock (red)", "1.0", "6.0"),
+            ProductScreen.scan_barcode("456"),
+            ProductScreen.selectedOrderlineHas("Rock (blue)", "1.0", "11.0"),
+        ].flat(),
+});

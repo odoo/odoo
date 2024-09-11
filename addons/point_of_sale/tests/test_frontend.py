@@ -1475,6 +1475,32 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
 
+    def test_variant_price_barcode(self):
+        attribute = self.env['product.attribute'].create({
+            'name': 'color',
+            'display_type': 'color',
+            'create_variant': 'always',
+            'value_ids': [
+                Command.create({'name': 'red', 'default_extra_price': 5}),
+                Command.create({'name': 'blue', 'default_extra_price': 10}),
+            ]
+        })
+        tmpl_id = self.env['product.template'].create({
+            'name': 'Rock',
+            'available_in_pos': True,
+            'taxes_id': False,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': attribute.id,
+                    'value_ids': [Command.set(attribute.value_ids.ids)],
+                }),
+            ],
+        })
+        tmpl_id.product_variant_ids[0].barcode = "123"
+        tmpl_id.product_variant_ids[1].barcode = "456"
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'VariantBarcodePrice', login="accountman")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
