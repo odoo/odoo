@@ -36,7 +36,14 @@ class PosOrderReport(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
     margin = fields.Float(string='Margin', readonly=True)
-    payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', readonly=True)
+    payment_method_ids = fields.One2many('pos.payment.method', string="Payment Methods", compute='_compute_payments', search='_search_payment_method_ids')
+
+    def _compute_payments(self):
+        for pos_line in self:
+            pos_line.payment_method_ids = pos_line.order_id.payment_ids.payment_method_id
+
+    def _search_payment_method_ids(self, operator, value):
+        return [('order_id.payment_ids.payment_method_id', operator, value)]
 
     def _select(self):
         return """
@@ -66,8 +73,7 @@ class PosOrderReport(models.Model):
                 s.pricelist_id,
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
-                SUM(l.price_subtotal - COALESCE(l.total_cost,0) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS margin,
-                pm.payment_method_id AS payment_method_id
+                SUM(l.price_subtotal - COALESCE(l.total_cost,0) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS margin
         """
 
     def _from(self):
@@ -80,8 +86,6 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
                 LEFT JOIN res_company co ON (s.company_id=co.id)
                 LEFT JOIN res_currency cu ON (co.currency_id=cu.id)
-                LEFT JOIN pos_payment pm ON (pm.pos_order_id=s.id)
-                LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
         """
 
     def _group_by(self):
@@ -93,9 +97,7 @@ class PosOrderReport(models.Model):
                 l.product_id,
                 pt.categ_id,
                 p.product_tmpl_id,
-                ps.config_id,
-                pm.payment_method_id,
-                ppm.id
+                ps.config_id
         """
 
     def init(self):
