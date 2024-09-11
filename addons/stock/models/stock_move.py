@@ -1432,7 +1432,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 origin, move.company_id, values))
         self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
-        move_to_confirm, move_waiting = self.browse(move_to_confirm), self.browse(move_waiting)
+        move_to_confirm, move_waiting = self.browse(move_to_confirm).filtered(lambda m: m.state != 'cancel'), self.browse(move_waiting).filtered(lambda m: m.state != 'cancel')
         move_to_confirm.write({'state': 'confirmed'})
         move_waiting.write({'state': 'waiting'})
         # procure_method sometimes changes with certain workflows so just in case, apply to all moves
