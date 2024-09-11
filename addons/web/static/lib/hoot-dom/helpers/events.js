@@ -194,10 +194,10 @@ const getDefaultRunTimeValue = () => ({
     // Pointer
     currentClickCount: 0,
     currentKey: null,
-    currentPointerDownTarget: null,
-    currentPointerDownTimeout: 0,
-    currentPointerTarget: null,
-    currentPosition: {},
+    pointerDownTarget: null,
+    pointerDownTimeout: 0,
+    pointerTarget: null,
+    position: {},
     previousPointerDownTarget: null,
     previousPointerTarget: null,
 
@@ -471,7 +471,7 @@ const hasTouch = () =>
  * @param {PointerOptions} [options]
  */
 const isDifferentPosition = (target, options) => {
-    const previous = runTime.currentPosition;
+    const previous = runTime.position;
     const next = getPosition(target, options);
     for (const key in next) {
         if (previous[key] !== next[key]) {
@@ -602,10 +602,10 @@ const removeChangeTargetListeners = () => {
  * @param {HTMLElement | null} target
  */
 const setPointerDownTarget = (target) => {
-    if (runTime.currentPointerDownTarget) {
-        runTime.previousPointerDownTarget = runTime.currentPointerDownTarget;
+    if (runTime.pointerDownTarget) {
+        runTime.previousPointerDownTarget = runTime.pointerDownTarget;
     }
-    runTime.currentPointerDownTarget = target;
+    runTime.pointerDownTarget = target;
     runTime.canStartDrag = false;
 };
 
@@ -614,10 +614,10 @@ const setPointerDownTarget = (target) => {
  * @param {PointerOptions} [options]
  */
 const setPointerTarget = async (target, options) => {
-    runTime.previousPointerTarget = runTime.currentPointerTarget;
-    runTime.currentPointerTarget = target;
+    runTime.previousPointerTarget = runTime.pointerTarget;
+    runTime.pointerTarget = target;
 
-    if (runTime.currentPointerTarget !== runTime.previousPointerTarget && runTime.canStartDrag) {
+    if (runTime.pointerTarget !== runTime.previousPointerTarget && runTime.canStartDrag) {
         /**
          * Special action: drag start
          *  On: unprevented 'pointerdown' on a draggable element (DESKTOP ONLY)
@@ -629,7 +629,7 @@ const setPointerTarget = async (target, options) => {
         runTime.canStartDrag = false;
     }
 
-    runTime.currentPosition = target && getPosition(target, options);
+    runTime.position = target && getPosition(target, options);
 };
 
 /**
@@ -716,6 +716,9 @@ const toEventPosition = (clientX, clientY, position) => {
  * @param {PointerEventInit} eventInit
  */
 const triggerClick = async (target, pointerInit) => {
+    if (target.disabled) {
+        return;
+    }
     const clickEvent = await dispatch(target, "click", pointerInit);
     if (isPrevented(clickEvent)) {
         return;
@@ -924,12 +927,12 @@ const _fill = async (target, value, options) => {
  * @param {PointerOptions} options
  */
 const _hover = async (target, options) => {
-    const isDifferentTarget = target !== runTime.currentPointerTarget;
-    const previousPosition = runTime.currentPosition;
+    const isDifferentTarget = target !== runTime.pointerTarget;
+    const previousPosition = runTime.position;
 
     await setPointerTarget(target, options);
 
-    const { previousPointerTarget: previous, currentPointerTarget: current } = runTime;
+    const { previousPointerTarget: previous, pointerTarget: current, pointerDownTarget } = runTime;
     if (isDifferentTarget && previous && (!current || !previous.contains(current))) {
         // Leaves previous target
         const leaveEventInit = {
@@ -945,10 +948,7 @@ const _hover = async (target, options) => {
             // Regular case: pointer events are triggered
             await dispatchEventSequence(
                 previous,
-                [
-                    "pointermove",
-                    hasTouch() ? runTime.currentPointerDownTarget && "touchmove" : "mousemove",
-                ],
+                ["pointermove", hasTouch() ? pointerDownTarget && "touchmove" : "mousemove"],
                 leaveEventInit
             );
             await dispatchEventSequence(
@@ -969,7 +969,7 @@ const _hover = async (target, options) => {
 
     if (current) {
         const enterEventInit = {
-            ...runTime.currentPosition,
+            ...runTime.position,
             relatedTarget: previous,
         };
         if (runTime.isDragging) {
@@ -997,10 +997,7 @@ const _hover = async (target, options) => {
             }
             await dispatchEventSequence(
                 target,
-                [
-                    "pointermove",
-                    hasTouch() ? runTime.currentPointerDownTarget && "touchmove" : "mousemove",
-                ],
+                ["pointermove", hasTouch() ? pointerDownTarget && "touchmove" : "mousemove"],
                 enterEventInit
             );
         }
@@ -1012,7 +1009,7 @@ const _hover = async (target, options) => {
  * @param {PointerOptions} [options]
  */
 const _implicitHover = async (target, options) => {
-    if (runTime.currentPointerTarget !== target || isDifferentPosition(target, options)) {
+    if (runTime.pointerTarget !== target || isDifferentPosition(target, options)) {
         await _hover(target, options);
     }
 };
@@ -1301,18 +1298,19 @@ const _keyUp = async (target, eventInit) => {
 const _pointerDown = async (target, options) => {
     setPointerDownTarget(target);
 
+    const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
-        ...runTime.currentPosition,
+        ...runTime.position,
         button: options?.button || 0,
     };
 
-    if (runTime.currentPointerDownTarget !== runTime.previousPointerDownTarget) {
+    if (pointerDownTarget !== runTime.previousPointerDownTarget) {
         runTime.currentClickCount = 0;
     }
 
     const prevented = await dispatchEventSequence(
-        target,
-        ["pointerdown", hasTouch() ? "touchstart" : "mousedown"],
+        pointerDownTarget,
+        ["pointerdown", hasTouch() ? "touchstart" : !pointerDownTarget.disabled && "mousedown"],
         eventInit
     );
     if (prevented) {
@@ -1322,7 +1320,7 @@ const _pointerDown = async (target, options) => {
     // Focus the element (if focusable)
     await triggerFocus(target);
 
-    if (eventInit.button === 0 && !hasTouch() && runTime.currentPointerDownTarget.draggable) {
+    if (eventInit.button === 0 && !hasTouch() && pointerDownTarget.draggable) {
         runTime.canStartDrag = true;
     } else if (eventInit.button === 2) {
         /**
@@ -1340,8 +1338,9 @@ const _pointerDown = async (target, options) => {
  * @param {PointerOptions} options
  */
 const _pointerUp = async (target, options) => {
+    const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
-        ...runTime.currentPosition,
+        ...runTime.position,
         button: options?.button || 0,
         detail: runTime.currentClickCount,
     };
@@ -1364,17 +1363,16 @@ const _pointerUp = async (target, options) => {
 
     await dispatchEventSequence(
         target,
-        ["pointerup", hasTouch() ? runTime.currentPointerDownTarget && "touchend" : "mouseup"],
+        ["pointerup", hasTouch() ? pointerDownTarget && "touchend" : !target.disabled && "mouseup"],
         eventInit
     );
 
     const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
-    const currentTarget = runTime.currentPointerDownTarget;
     let actualTarget;
     if (hasTouch()) {
-        actualTarget = currentTarget === target && target;
+        actualTarget = pointerDownTarget === target && target;
     } else {
-        actualTarget = getFirstCommonParent(target, currentTarget);
+        actualTarget = getFirstCommonParent(target, pointerDownTarget);
     }
     if (actualTarget) {
         await triggerClick(actualTarget, clickEventInit);
@@ -1385,14 +1383,14 @@ const _pointerUp = async (target, options) => {
     }
 
     setPointerDownTarget(null);
-    if (runTime.currentPointerDownTimeout) {
-        globalThis.clearTimeout(runTime.currentPointerDownTimeout);
+    if (runTime.pointerDownTimeout) {
+        globalThis.clearTimeout(runTime.pointerDownTimeout);
     }
-    runTime.currentPointerDownTimeout = globalThis.setTimeout(() => {
+    runTime.pointerDownTimeout = globalThis.setTimeout(() => {
         // Use `globalThis.setTimeout` to potentially make use of the mock timeouts
         // since the events run in the same temporal context as the tests
         runTime.currentClickCount = 0;
-        runTime.currentPointerDownTimeout = 0;
+        runTime.pointerDownTimeout = 0;
     }, DOUBLE_CLICK_DELAY);
 };
 
@@ -1599,8 +1597,8 @@ const mapCancelableTouchEvent = (eventInit) => {
         ...mapBubblingCancelableEvent(eventInit),
         changedTouches: eventInit.changedTouches || touches,
         // "touch" events all trigger on the same target as "touchstart"
-        // (i.e. `currentPointerDownTarget`)
-        target: runTime.currentPointerDownTarget || eventInit.target,
+        // (i.e. `pointerDownTarget`)
+        target: runTime.pointerDownTarget || eventInit.target,
         targetTouches: eventInit.targetTouches || touches,
         touches: eventInit.touches || (eventInit.type === "touchend" ? [] : touches),
     };
@@ -1902,7 +1900,7 @@ export async function drag(target, options) {
 
             const finalizeEvents = setupEvents("drag & drop: drop");
 
-            await _pointerUp(runTime.currentPointerTarget, options);
+            await _pointerUp(runTime.pointerTarget, options);
 
             dragEvents.push(...(await finalizeEvents(options)));
 
@@ -2385,8 +2383,8 @@ export async function setInputRange(target, value, options) {
  * @param {HTMLElement} fixture
  */
 export function setupEventActions(fixture) {
-    if (runTime.currentPointerDownTimeout) {
-        globalThis.clearTimeout(runTime.currentPointerDownTimeout);
+    if (runTime.pointerDownTimeout) {
+        globalThis.clearTimeout(runTime.pointerDownTimeout);
     }
 
     removeChangeTargetListeners();
