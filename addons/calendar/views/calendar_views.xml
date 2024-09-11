@@ -81,6 +81,7 @@
                 <field name="start" string="Start Date" readonly="1"/>
                 <field name="stop" string="End Date" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" readonly="recurrency" optional="hide"/>
+                <field name="partner_id" string="Calendar" readonly="recurrency" optional="hide"/>
                 <field name="partner_ids" widget="many2many_tags" readonly="recurrency" optional="show"/>
                 <field name="alarm_ids" widget="many2many_tags" optional="hide" readonly="recurrency"/>
                 <field name="categ_ids" widget="many2many_tags" optional="hide" readonly="recurrency" options="{'color_field': 'color'}"/>
@@ -211,6 +212,7 @@
                                         <field name="privacy" readonly="not user_can_edit" nolabel="1" placeholder="Default"/>
                                     </div>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
+                                    <field name="partner_id" readonly="not user_can_edit"/>
                                     <field name="description" options="{'height': 100}" placeholder="Add description" readonly="not user_can_edit"/>
                         </group>
                         <group>
@@ -246,9 +248,9 @@
                     <notebook>
                         <page name="page_invitations" string="Invitations" groups="base.group_no_one" invisible="not user_can_edit">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
-                            <field name="attendee_ids" widget="one2many" mode="list,kanban" readonly="1">
+                            <field name="attendee_ids" widget="one2many" mode="tree,kanban" readonly="1">
                                 <list string="Invitation details" editable="top" create="false" delete="false">
-                                    <field name="partner_id" />
+                                    <field name="partner_id" string="Scheduled by"/>
                                     <field name="email" widget="email"/>
                                     <field name="phone" widget="phone"/>
                                     <field name="state" />
@@ -257,7 +259,6 @@
                                     <button name="do_decline" string="Decline" invisible="state not in ('needsAction', 'tentative', 'accepted')" type="object" icon="fa-times-circle text-danger"/>
                                 </list>
                                 <kanban class="o_kanban_mobile" create="false" delete="false">
-
                                     <templates>
                                         <t t-name="kanban-card">
                                             <field name="partner_id"/>
@@ -302,6 +303,7 @@
                         <field name="stop_date" invisible="1" />
                         <field name="stop" invisible="1" />
                         <field name="allday"/>
+                        <field name="partner_id"/>
                         <field name="partner_ids" widget="many2manyattendee"
                             placeholder="Add attendees..."
                             options="{'no_quick_create': True}"
@@ -349,6 +351,7 @@
                 <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
                        filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
                        write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
+                       group_by="filter_group"
                 />
                 <field name="videocall_location" widget="url" text="Join Video Call" options="{'icon': 'fa fa-lg fa-video-camera'}" invisible="not videocall_location"/>
                 <field name="is_highlighted" invisible="1"/>
@@ -363,7 +366,7 @@
                 <!-- For recurrence update Dialog -->
                 <field name="recurrency" invisible="1"/>
                 <field name="recurrence_update" invisible="1"/>
-                <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
+                <field name="partner_id" string="Calendar" options="{'icon': 'fa fa-user-o'}"/>
             </calendar>
         </field>
     </record>
@@ -376,6 +379,7 @@
                 <field name="name" string="Meeting" filter_domain="[('name', 'ilike', self)]"/>
                 <field name="partner_ids"/>
                 <field name="user_id"/>
+                <field name="partner_id"/>
                 <field name="location"/>
                 <field name="show_as"/>
                 <field name="categ_ids"/>

@@ -169,16 +169,16 @@ export class CalendarFilterPanel extends Component {
 
     toggleSection(section) {
         if (section.canCollapse) {
-            this.state.collapsed[section.fieldName] = !this.state.collapsed[section.fieldName];
+            this.state.collapsed[section.id] = !this.state.collapsed[section.id];
         }
     }
 
     isSectionCollapsed(section) {
-        return this.state.collapsed[section.fieldName] || false;
+        return this.state.collapsed[section.id] || false;
     }
 
     onFilterInputChange(section, filter, ev) {
-        this.props.model.updateFilters(section.fieldName, {
+        this.props.model.updateFilters(section.id, {
             [filter.value]: ev.target.checked,
         });
     }
@@ -190,11 +190,11 @@ export class CalendarFilterPanel extends Component {
                 filters[filter.value] = ev.target.checked;
             }
         }
-        this.props.model.updateFilters(section.fieldName, filters);
+        this.props.model.updateFilters(section.id, filters);
     }
 
     onFilterRemoveBtnClick(section, filter) {
-        this.props.model.unlinkFilter(section.fieldName, filter.recordId);
+        this.props.model.unlinkFilter(section.id, filter.recordId);
     }
 
     onFieldChanged(fieldName, filterValue) {

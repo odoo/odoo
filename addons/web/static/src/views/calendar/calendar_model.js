@@ -161,10 +161,10 @@ export class CalendarModel extends Model {
         }
 
         const normalizedFilterValue = Array.isArray(filterValue) ? filterValue : [filterValue];
-        const dataArray = normalizedFilterValue.map(value => {
+        const dataArray = normalizedFilterValue.map((value) => {
             const data = {
                 user_id: user.userId,
-                [info.writeFieldName]: value
+                [info.writeFieldName]: value,
             };
             if (info.filterFieldName) {
                 data[info.filterFieldName] = true;
@@ -192,15 +192,15 @@ export class CalendarModel extends Model {
         await this.orm.unlink(this.meta.resModel, [recordId]);
         await this.load();
     }
-    async updateFilters(fieldName, filters) {
-        const section = this.data.filterSections[fieldName];
+    async updateFilters(id, filters) {
+        const section = this.data.filterSections[id];
         if (section) {
             for (const value in filters) {
                 const active = filters[value];
                 const filter = section.filters.find((filter) => `${filter.value}` === value);
                 if (filter) {
                     filter.active = active;
-                    const info = this.meta.filtersInfo[fieldName];
+                    const info = this.meta.filtersInfo[section.fieldName];
                     if (
                         filter.recordId &&
                         info &&
@@ -403,8 +403,9 @@ export class CalendarModel extends Model {
         const authorizedValues = {};
         const avoidValues = {};
 
-        for (const [fieldName, filterSection] of Object.entries(data.filterSections)) {
+        for (const filterSection of Object.values(data.filterSections)) {
             // Skip "all" filters because they do not affect the domain
+            const fieldName = filterSection.fieldName;
             const filterAll = filterSection.filters.find((f) => f.type === "all");
             if (!(filterAll && filterAll.active)) {
                 const filterSectionInfo = this.meta.filtersInfo[fieldName];
@@ -597,7 +598,19 @@ export class CalendarModel extends Model {
         const dynamicFiltersInfo = {};
         for (const [fieldName, filterInfo] of Object.entries(this.meta.filtersInfo)) {
             const previousSection = previousSections[fieldName];
-            if (filterInfo.writeResModel) {
+            if (filterInfo.writeResModel && filterInfo.groupBy) {
+                const previousGroupSections = Object.values(previousSections).filter((section) => {
+                    return section.fieldName == fieldName;
+                });
+                const groupSections = await this.loadFilterSectionGroup(
+                    fieldName,
+                    filterInfo,
+                    previousGroupSections
+                );
+                groupSections.forEach((group) => {
+                    sections[group.id] = group;
+                });
+            } else if (filterInfo.writeResModel) {
                 sections[fieldName] = await this.loadFilterSection(
                     fieldName,
                     filterInfo,
@@ -639,6 +652,7 @@ export class CalendarModel extends Model {
 
         return {
             label: filterInfo.label,
+            id: fieldName,
             fieldName,
             filters,
             avatar: {
@@ -653,6 +667,74 @@ export class CalendarModel extends Model {
             canCollapse: filters.length > 2,
             canAddFilter: !!filterInfo.writeResModel,
         };
+    }
+    /**
+     * @protected
+     */
+    async loadFilterSectionGroup(fieldName, filterInfo, previousSection) {
+        const { filterFieldName, writeFieldName, writeResModel, groupBy } = filterInfo;
+        const fields = [writeFieldName, filterFieldName, groupBy].filter(Boolean);
+        const rawFilters = await this.fetchFilters(writeResModel, fields);
+        const previousFilters = previousSection
+            ? previousSection
+                  .map((section) => {
+                      return section.filters;
+                  })
+                  .flat()
+            : [];
+
+        const filters = rawFilters.map((rawFilter) => {
+            const previousRecordFilter = previousFilters.find(
+                (f) => f.type === "record" && f.recordId === rawFilter.id
+            );
+            return this.makeFilterRecord(filterInfo, previousRecordFilter, rawFilter);
+        });
+
+        let filterGroups;
+        if (filters.length) {
+            filterGroups = Object.values(Object.groupBy(filters, (f) => f.group));
+        } else {
+            filterGroups = [[]];
+        }
+
+        const field = this.meta.fields[fieldName];
+        const isUserOrPartner = ["res.users", "res.partner"].includes(field.relation);
+        if (isUserOrPartner) {
+            const previousUserFilter = previousFilters.find((f) => f.type === "user");
+            filterGroups[0].push(
+                this.makeFilterUser(filterInfo, previousUserFilter, fieldName, rawFilters)
+            );
+        }
+
+        const previousAllFilter = previousFilters.find((f) => f.type === "all");
+        filterGroups[filterGroups.length - 1].push(
+            this.makeFilterAll(previousAllFilter, isUserOrPartner, filterInfo.label)
+        );
+
+        const multiple_groups = filterGroups.length > 1;
+
+        return filterGroups.map((filters) => {
+            return {
+                group: filters[0].group,
+                label: multiple_groups
+                    ? filterInfo.label + " " + filters[0].group
+                    : filterInfo.label,
+                id: multiple_groups ? fieldName + filters[0].group : fieldName,
+                fieldName,
+                filters,
+                avatar: {
+                    field: filterInfo.avatarFieldName,
+                    model: filterInfo.resModel,
+                },
+                hasAvatar: !!filterInfo.avatarFieldName,
+                write: {
+                    field: writeFieldName,
+                    model: writeResModel,
+                },
+                canCollapse: filters.length > 2,
+                canAddFilter: !!filterInfo.writeResModel,
+            };
+        });
     }
     /**
      * @protected
@@ -789,6 +871,7 @@ export class CalendarModel extends Model {
         const field = fields[writeFieldName];
         const isX2Many = ["many2many", "one2many"].includes(field.type);
         const formatter = registry.category("formatters").get(isX2Many ? "many2one" : field.type);
+        const group = filterInfo.groupBy ? rawRecord[filterInfo.groupBy] : null;
 
         const colorField = fields[fieldMapping.color];
         const colorValue =
@@ -818,6 +901,7 @@ export class CalendarModel extends Model {
             canRemove: true,
             colorIndex,
             hasAvatar: !!value,
+            group: group,
         };
     }
     /**

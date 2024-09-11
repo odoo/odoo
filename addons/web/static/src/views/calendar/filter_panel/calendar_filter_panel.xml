@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarFilterPanel">
-        <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
+        <t t-foreach="props.model.filterSections" t-as="section" t-key="section.label">
             <t t-if="section.filters.length gt 0">
                 <div
                     class="o_calendar_filter d-flex flex-column gap-1 mt-4 mb-2"
@@ -25,7 +25,7 @@
                             />
                              <t t-if="section.canCollapse">
                                 <label
-                                    class="d-flex align-items-center"
+                                    class="align-items-center"
                                     type="button"
                                     t-on-click.stop.prevent="() => this.toggleSection(section, ev)"
                                 >

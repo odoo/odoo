@@ -15,9 +15,6 @@ class ResUsersSettings(models.Model):
     google_calendar_rtoken = fields.Char('Refresh Token', copy=False, groups='base.group_system')
     google_calendar_token = fields.Char('User token', copy=False, groups='base.group_system')
     google_calendar_token_validity = fields.Datetime('Token Validity', copy=False, groups='base.group_system')
-    google_calendar_sync_token = fields.Char('Next Sync Token', copy=False, groups='base.group_system')
-    google_calendar_cal_id = fields.Char('Calendar ID', copy=False, groups='base.group_system',
-        help='Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID')
     google_synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False, groups='base.group_system')
 
     @api.model
@@ -27,8 +24,6 @@ class ResUsersSettings(models.Model):
             'google_calendar_rtoken',
             'google_calendar_token',
             'google_calendar_token_validity',
-            'google_calendar_sync_token',
-            'google_calendar_cal_id',
             'google_synchronization_stopped'
         ]
         return super()._get_fields_blacklist() + google_fields_blacklist

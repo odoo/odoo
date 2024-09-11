@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="calendar.AttendeeCalendarFilterPanel" t-inherit="web.CalendarFilterPanel" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_calendar_filter_items_checkall')]" position="inside">
+            <button t-if="section.canAddCalendar" class="btn fa fa-plus" t-on-click="onClickAddCalendar"/>
+        </xpath>
+    </t>
+</templates>

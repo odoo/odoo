@@ -6,11 +6,14 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
 import { CalendarQuickCreate } from "@calendar/views/calendar_form/calendar_quick_create";
+import { AttendeeCalendarFilterPanel } from "@calendar/views/attendee_calendar/common/calendar_filter_panel";
+
 export class AttendeeCalendarController extends CalendarController {
     static template = "calendar.AttendeeCalendarController";
     static components = {
         ...AttendeeCalendarController.components,
         QuickCreateFormView: CalendarQuickCreate,
+        FilterPanel: AttendeeCalendarFilterPanel,
     };
 
     setup() {
@@ -28,6 +31,20 @@ export class AttendeeCalendarController extends CalendarController {
                 type: "ir.actions.act_window",
                 res_model: "calendar.event",
                 views: [[false, "form"]],
+            },
+            {
+                additionalContext: this.props.context,
+            }
+        );
+    }
+
+    onClickAddCalendar() {
+        this.actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "calendar.add.calendar",
+                views: [[false, "form"]],
+                target: "new",
             },
             {
                 additionalContext: this.props.context,

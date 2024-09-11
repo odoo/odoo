@@ -19,6 +19,9 @@ class TestTokenAccess(TransactionCase):
                 'google_calendar_rtoken': f'{u}_rtoken',
                 'google_calendar_token': f'{u}_token',
                 'google_calendar_token_validity': fields.Datetime.today(),
+            })
+            cls.env['calendar.settings'].create({
+                'partner_id': user.partner_id.id,
                 'google_calendar_sync_token': f'{u}_sync_token',
             })
             cls.users += [user]
