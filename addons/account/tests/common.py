@@ -245,16 +245,18 @@ class AccountTestInvoicingCommon(ProductCommon):
     def collect_company_accounting_data(cls, company):
         # Need to have the right company when searching accounts with limit=1, since the ordering depends on the account code.
         AccountAccount = cls.env['account.account'].with_company(company)
+        account_company_domain = cls.env['account.account']._check_company_domain(company)
+        journal_company_domain = cls.env['account.journal']._check_company_domain(company)
         return {
             'company': company,
             'currency': company.currency_id,
             'default_account_revenue': AccountAccount.search([
-                    ('company_ids', '=', company.id),
+                    *account_company_domain,
                     ('account_type', '=', 'income'),
                     ('id', '!=', company.account_journal_early_pay_discount_gain_account_id.id)
                 ], limit=1),
             'default_account_expense': AccountAccount.search([
-                    ('company_ids', '=', company.id),
+                    *account_company_domain,
                     ('account_type', '=', 'expense'),
                     ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id)
                 ], limit=1),
@@ -262,41 +264,41 @@ class AccountTestInvoicingCommon(ProductCommon):
                 'property_account_receivable_id', 'res.partner'
             ),
             'default_account_payable': AccountAccount.search([
-                    ('company_ids', '=', company.id),
+                    *account_company_domain,
                     ('account_type', '=', 'liability_payable')
                 ], limit=1),
             'default_account_assets': AccountAccount.search([
-                    ('company_ids', '=', company.id),
+                    *account_company_domain,
                     ('account_type', '=', 'asset_fixed')
                 ], limit=1),
             'default_account_deferred_expense': AccountAccount.search([
-                    ('company_ids', '=', company.id),
+                    *account_company_domain,
                     ('account_type', '=', 'asset_current')
                 ], limit=1),
             'default_account_deferred_revenue': AccountAccount.search([
-                    ('company_ids', '=', company.id),
+                    *account_company_domain,
                     ('account_type', '=', 'liability_current')
                 ], limit=1),
             'default_account_tax_sale': company.account_sale_tax_id.mapped('invoice_repartition_line_ids.account_id'),
             'default_account_tax_purchase': company.account_purchase_tax_id.mapped('invoice_repartition_line_ids.account_id'),
             'default_journal_misc': cls.env['account.journal'].search([
-                    ('company_id', '=', company.id),
+                    *journal_company_domain,
                     ('type', '=', 'general')
                 ], limit=1),
             'default_journal_sale': cls.env['account.journal'].search([
-                    ('company_id', '=', company.id),
+                    *journal_company_domain,
                     ('type', '=', 'sale')
                 ], limit=1),
             'default_journal_purchase': cls.env['account.journal'].search([
-                    ('company_id', '=', company.id),
+                    *journal_company_domain,
                     ('type', '=', 'purchase')
                 ], limit=1),
             'default_journal_bank': cls.env['account.journal'].search([
-                    ('company_id', '=', company.id),
+                    *journal_company_domain,
                     ('type', '=', 'bank')
                 ], limit=1),
             'default_journal_cash': cls.env['account.journal'].search([
-                    ('company_id', '=', company.id),
+                    *journal_company_domain,
                     ('type', '=', 'cash')
                 ], limit=1),
             'default_journal_credit': cls.env['account.journal'].create({
