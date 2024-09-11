@@ -137,7 +137,12 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
             return;
         }
 
-        const action = await this.orm.call('hr.expense', 'create_expense_from_attachments', [attachmentIds, this.env.config.viewType]);
+        const action = await this.orm.call(
+            'hr.expense',
+            'create_expense_from_attachments',
+            [attachmentIds, this.env.config.viewType],
+            { context: this.props.context },
+        );
         await this.actionService.doAction(action);
     }
 };
