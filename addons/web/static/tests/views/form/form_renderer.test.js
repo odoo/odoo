@@ -92,7 +92,7 @@ test.tags("mobile")("compile header and buttons on mobile", async () => {
     });
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
     expect(
-        `.o_statusbar_button_dropdown_item button[name=action_button]:contains(ActionButton)`
+        `.o-dropdown-item-unstyled-button button[name=action_button]:contains(ActionButton)`
     ).toHaveCount(1);
 });
 

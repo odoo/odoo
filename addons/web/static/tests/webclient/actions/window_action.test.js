@@ -2321,9 +2321,9 @@ test.tags("mobile")("do not restore after action button clicked on mobile", asyn
     await contains("div[name='display_name'] input").edit("Edited value");
     expect(".o_form_button_save").toBeVisible();
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    expect(".o_statusbar_button_dropdown_item button[name=do_something]").toBeVisible();
+    expect(".o-dropdown-item-unstyled-button button[name=do_something]").toBeVisible();
 
-    await contains(".o_statusbar_button_dropdown_item button[name=do_something]").click();
+    await contains(".o-dropdown-item-unstyled-button button[name=do_something]").click();
     expect(".o_form_buttons_view .o_form_button_save").not.toBeVisible();
 });
 
@@ -2441,7 +2441,7 @@ test.tags("mobile")("window action in target new fails (onchange) on mobile", as
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(".o_statusbar_button_dropdown_item button[name='5']").click();
+    await contains(".o-dropdown-item-unstyled-button button[name='5']").click();
     await waitFor(".modal"); // errors are async
     expect(".modal").toHaveCount(1);
     expect(".modal .o_error_dialog").toHaveCount(1);
@@ -2512,7 +2512,7 @@ test.tags("mobile")("Uncaught error in target new is catch only once on mobile",
     await mountWithCleanup(WebClient);
     await getService("action").doAction(2);
     await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
-    await contains(".o_statusbar_button_dropdown_item button[name='26']").click();
+    await contains(".o-dropdown-item-unstyled-button button[name='26']").click();
     await waitFor(".modal"); // errors are async
     expect(".modal").toHaveCount(1);
     expect(".modal .o_error_dialog").toHaveCount(1);
