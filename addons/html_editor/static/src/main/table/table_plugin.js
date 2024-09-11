@@ -74,6 +74,9 @@ export class TablePlugin extends Plugin {
             case "CLEAN_FOR_SAVE":
                 this.deselectTable(payload.root);
                 break;
+            case "TOGGLE_TABLE_BORDER":
+                this.toggleBorder(payload.table);
+                break;
         }
     }
 
@@ -100,6 +103,22 @@ export class TablePlugin extends Plugin {
             this.shiftCursorToTableCell(-1);
             return true;
         }
+    }
+
+    toggleBorder(table) {
+        const classList = table.classList;
+        if (classList.contains("table-bordered") || classList.contains("table-borderless")) {
+            if (classList.contains("table-bordered")) {
+                classList.remove("table-bordered");
+                classList.add("table-borderless");
+            } else {
+                classList.add("table-bordered");
+                classList.remove("table-borderless");
+            }
+        } else {
+            classList.add("table-bordered");
+        }
+        this.dispatch("ADD_STEP");
     }
 
     insertTable({ rows = 2, cols = 2 } = {}) {
