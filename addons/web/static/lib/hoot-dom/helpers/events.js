@@ -216,7 +216,7 @@ const getDefaultRunTimeValue = () => ({
 
     // Pointer
     clickCount: 0,
-    currentKey: null,
+    key: null,
     pointerDownTarget: null,
     pointerDownTimeout: 0,
     pointerTarget: null,
@@ -228,7 +228,7 @@ const getDefaultRunTimeValue = () => ({
     touchStartPosition: {},
 
     // File
-    currentFileInput: null,
+    fileInput: null,
 });
 
 const getDefaultSpecialKeysValue = () => ({
@@ -536,9 +536,9 @@ const parseKeyStrokes = (keyStrokes, options) =>
  */
 const registerFileInput = ({ target }) => {
     if (getTag(target) === "input" && target.type === "file") {
-        runTime.currentFileInput = target;
+        runTime.fileInput = target;
     } else {
-        runTime.currentFileInput = null;
+        runTime.fileInput = null;
     }
 };
 
@@ -628,10 +628,10 @@ const removeChangeTargetListeners = () => {
  * @param {HTMLElement | null} target
  */
 const setPointerDownTarget = (target) => {
-    if (runTime.currentPointerDownTarget) {
-        runTime.previousPointerDownTarget = runTime.currentPointerDownTarget;
+    if (runTime.pointerDownTarget) {
+        runTime.previousPointerDownTarget = runTime.pointerDownTarget;
     }
-    runTime.currentPointerDownTarget = target;
+    runTime.pointerDownTarget = target;
     runTime.canStartDrag = false;
 };
 
@@ -640,10 +640,10 @@ const setPointerDownTarget = (target) => {
  * @param {PointerOptions} [options]
  */
 const setPointerTarget = async (target, options) => {
-    runTime.previousPointerTarget = runTime.currentPointerTarget;
-    runTime.currentPointerTarget = target;
+    runTime.previousPointerTarget = runTime.pointerTarget;
+    runTime.pointerTarget = target;
 
-    if (runTime.currentPointerTarget !== runTime.previousPointerTarget && runTime.canStartDrag) {
+    if (runTime.pointerTarget !== runTime.previousPointerTarget && runTime.canStartDrag) {
         /**
          * Special action: drag start
          *  On: unprevented 'pointerdown' on a draggable element (DESKTOP ONLY)
@@ -655,7 +655,7 @@ const setPointerTarget = async (target, options) => {
         runTime.canStartDrag = false;
     }
 
-    runTime.currentPosition = target && getPosition(target, options);
+    runTime.position = target && getPosition(target, options);
 };
 
 /**
@@ -743,6 +743,9 @@ const toEventPosition = (clientX, clientY, position) => {
  * @param {PointerEventInit} eventInit
  */
 const triggerClick = async (target, pointerInit) => {
+    if (target.disabled) {
+        return;
+    }
     const clickEvent = await dispatch(target, "click", pointerInit);
     if (isPrevented(clickEvent)) {
         return;
@@ -937,8 +940,8 @@ const _fill = async (target, value, options) => {
  * @param {PointerOptions} options
  */
 const _hover = async (target, options) => {
-    const isDifferentTarget = target !== runTime.currentPointerTarget;
-    const previousPosition = runTime.currentPosition;
+    const isDifferentTarget = target !== runTime.pointerTarget;
+    const previousPosition = runTime.position;
 
     await setPointerTarget(target, options);
 
@@ -980,7 +983,7 @@ const _hover = async (target, options) => {
 
     if (current) {
         const enterEventInit = {
-            ...runTime.currentPosition,
+            ...runTime.position,
             relatedTarget: previous,
         };
         if (runTime.isDragging) {
@@ -1021,7 +1024,7 @@ const _hover = async (target, options) => {
  * @param {PointerOptions} [options]
  */
 const _implicitHover = async (target, options) => {
-    if (runTime.currentPointerTarget !== target || isDifferentPosition(target, options)) {
+    if (runTime.pointerTarget !== target || isDifferentPosition(target, options)) {
         await _hover(target, options);
     }
 };
@@ -1034,10 +1037,8 @@ const _keyDown = async (target, eventInit) => {
     registerSpecialKey(eventInit, true);
 
     const repeat =
-        typeof eventInit.repeat === "boolean"
-            ? eventInit.repeat
-            : runTime.currentKey === eventInit.key;
-    runTime.currentKey = eventInit.key;
+        typeof eventInit.repeat === "boolean" ? eventInit.repeat : runTime.key === eventInit.key;
+    runTime.key = eventInit.key;
     const keyDownEvent = await dispatch(target, "keydown", { ...eventInit, repeat });
 
     if (isPrevented(keyDownEvent)) {
@@ -1292,7 +1293,7 @@ const _keyDown = async (target, eventInit) => {
 const _keyUp = async (target, eventInit) => {
     await dispatch(target, "keyup", eventInit);
 
-    runTime.currentKey = null;
+    runTime.key = null;
     registerSpecialKey(eventInit, false);
 
     if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
@@ -1312,12 +1313,13 @@ const _keyUp = async (target, eventInit) => {
 const _pointerDown = async (target, options) => {
     setPointerDownTarget(target);
 
+    const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
-        ...runTime.currentPosition,
+        ...runTime.position,
         button: options?.button || 0,
     };
 
-    if (runTime.currentPointerDownTarget !== runTime.previousPointerDownTarget) {
+    if (pointerDownTarget !== runTime.previousPointerDownTarget) {
         runTime.clickCount = 0;
     }
 
@@ -1337,7 +1339,7 @@ const _pointerDown = async (target, options) => {
     // Focus the element (if focusable)
     await triggerFocus(target);
 
-    if (eventInit.button === 0 && !hasTouch() && runTime.currentPointerDownTarget.draggable) {
+    if (eventInit.button === 0 && !hasTouch() && pointerDownTarget.draggable) {
         runTime.canStartDrag = true;
     } else if (eventInit.button === 2) {
         /**
@@ -1355,8 +1357,9 @@ const _pointerDown = async (target, options) => {
  * @param {PointerOptions} options
  */
 const _pointerUp = async (target, options) => {
+    const pointerDownTarget = runTime.pointerDownTarget;
     const eventInit = {
-        ...runTime.currentPosition,
+        ...runTime.position,
         button: options?.button || 0,
         detail: runTime.clickCount,
     };
@@ -1395,12 +1398,11 @@ const _pointerUp = async (target, options) => {
     }
 
     const clickEventInit = { ...eventInit, detail: runTime.clickCount + 1 };
-    const currentTarget = runTime.currentPointerDownTarget;
     let actualTarget;
     if (hasTouch()) {
-        actualTarget = currentTarget === target && target;
+        actualTarget = pointerDownTarget === target && target;
     } else {
-        actualTarget = getFirstCommonParent(target, currentTarget);
+        actualTarget = getFirstCommonParent(target, pointerDownTarget);
     }
     if (actualTarget) {
         await triggerClick(actualTarget, clickEventInit);
@@ -1411,14 +1413,14 @@ const _pointerUp = async (target, options) => {
     }
 
     setPointerDownTarget(null);
-    if (runTime.currentPointerDownTimeout) {
-        globalThis.clearTimeout(runTime.currentPointerDownTimeout);
+    if (runTime.pointerDownTimeout) {
+        globalThis.clearTimeout(runTime.pointerDownTimeout);
     }
-    runTime.currentPointerDownTimeout = globalThis.setTimeout(() => {
+    runTime.pointerDownTimeout = globalThis.setTimeout(() => {
         // Use `globalThis.setTimeout` to potentially make use of the mock timeouts
         // since the events run in the same temporal context as the tests
         runTime.clickCount = 0;
-        runTime.currentPointerDownTimeout = 0;
+        runTime.pointerDownTimeout = 0;
     }, DOUBLE_CLICK_DELAY);
 };
 
@@ -1926,7 +1928,7 @@ export async function drag(target, options) {
 
             const finalizeEvents = setupEvents("drag & drop: drop");
 
-            await _pointerUp(runTime.currentPointerTarget, options);
+            await _pointerUp(runTime.pointerTarget, options);
 
             dragEvents.push(...(await finalizeEvents(options)));
 
@@ -2364,7 +2366,7 @@ export async function select(value, options) {
  * @returns {Promise<Event[]>}
  */
 export async function setInputFiles(files, options) {
-    if (!runTime.currentFileInput) {
+    if (!runTime.fileInput) {
         throw new HootDomError(
             `cannot call \`setInputFiles()\`: no file input has been interacted with`
         );
@@ -2372,9 +2374,9 @@ export async function setInputFiles(files, options) {
 
     const finalizeEvents = setupEvents("setInputFiles");
 
-    await _fill(runTime.currentFileInput, files);
+    await _fill(runTime.fileInput, files);
 
-    runTime.currentFileInput = null;
+    runTime.fileInput = null;
 
     return finalizeEvents(options);
 }
@@ -2409,8 +2411,8 @@ export async function setInputRange(target, value, options) {
  * @param {HTMLElement} fixture
  */
 export function setupEventActions(fixture) {
-    if (runTime.currentPointerDownTimeout) {
-        globalThis.clearTimeout(runTime.currentPointerDownTimeout);
+    if (runTime.pointerDownTimeout) {
+        globalThis.clearTimeout(runTime.pointerDownTimeout);
     }
 
     removeChangeTargetListeners();
