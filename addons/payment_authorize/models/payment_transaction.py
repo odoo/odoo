@@ -246,7 +246,7 @@ class PaymentTransaction(models.Model):
                 # triggered by a customer browsing the transaction from the portal.
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif status_code == '2':  # Declined
-            self._set_canceled()
+            self._set_canceled(state_message=response_content.get('x_response_reason_text'))
         elif status_code == '4':  # Held for Review
             self._set_pending()
         else:  # Error / Unknown code
