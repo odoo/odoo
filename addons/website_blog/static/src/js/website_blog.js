@@ -37,7 +37,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         const recordCoverContainerEl = ev.currentTarget.querySelector(".o_record_cover_container");
         const classes = nexInfo.size.split(" ");
         recordCoverContainerEl.classList.add(...classes, nexInfo.textContent);
-        ev.currentTarget.querySelector(".o_wblog_toggle").classList.toggle("d-none");
+        ev.currentTarget.querySelectorAll(".o_wblog_toggle").forEach(el => el.classList.toggle("d-none"));
         // Appending a placeholder so that the cover can scroll to the top of the
         // screen, regardless of its height.
         const placeholder = document.createElement('div');
