@@ -87,7 +87,7 @@ class IrEmbeddedActions(models.Model):
                     record.is_visible = False
 
     # Delete the filters linked to a embedded action.
-    @api.ondelete(at_uninstall=True)
+    @api.ondelete(at_uninstall=False)
     def _unlink_if_action_deletable(self):
         for record in self:
             if not record.is_deletable:
