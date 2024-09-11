@@ -158,7 +158,7 @@
         <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.list</field>
             <field name="model">account.move.line</field>
-            <field eval="100" name="priority"/>
+            <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <list name="move_line_tree" string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
                     <field name="move_id" column_invisible="True"/>
