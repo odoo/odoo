@@ -30,9 +30,7 @@ export class DiscussCoreCommon {
         this.busService.subscribe("discuss.channel/leave", (payload) => {
             const { Thread } = this.store.insert(payload);
             const [thread] = Thread;
-            if (thread.displayName) {
-                // Ignore if thread displayName (which might depend on knowledge of members for
-                // groups) is not known in the current tab.
+            if (thread.notifyOnLeave) {
                 this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
                     type: "info",
                 });
