@@ -979,6 +979,7 @@ patch(PosOrder.prototype, {
         const linesToDiscount = [];
         const discountLinesPerReward = {};
         const orderLines = this.get_orderlines();
+        const orderProducts = orderLines.map((line) => line.product_id.id);
         const remainingAmountPerLine = {};
         for (const line of orderLines) {
             if (!line.get_quantity() || !line.price_unit) {
@@ -992,7 +993,18 @@ patch(PosOrder.prototype, {
                 linesToDiscount.push(line);
             } else if (line.reward_id) {
                 const lineReward = line.reward_id;
-                if (lineReward.id === reward.id) {
+                const lineRewardApplicableProductsIds = new Set(
+                    lineReward.all_discount_product_ids.map((p) => p.id)
+                );
+                if (
+                    lineReward.id === reward.id ||
+                    (orderProducts.some(
+                        (product) =>
+                            lineRewardApplicableProductsIds.has(product) &&
+                            applicableProductIds.has(product)
+                    ) &&
+                        lineReward.reward_type === "discount")
+                ) {
                     linesToDiscount.push(line);
                 }
                 if (!discountLinesPerReward[line.reward_identifier_code]) {
@@ -1019,39 +1031,25 @@ patch(PosOrder.prototype, {
                 continue;
             }
             const commonLines = linesToDiscount.filter((line) => discountedLines.includes(line));
-            if (lineReward.discount_mode === "percent") {
-                const discount = lineReward.discount / 100;
-                for (const line of discountedLines) {
-                    if (line.reward_id) {
-                        continue;
-                    }
-                    if (lineReward.discount_applicability === "cheapest") {
-                        remainingAmountPerLine[line.uuid] *= 1 - discount / line.get_quantity();
-                    } else {
-                        remainingAmountPerLine[line.uuid] *= 1 - discount;
-                    }
+            const nonCommonLines = discountedLines.filter(
+                (line) => !linesToDiscount.includes(line)
+            );
+            const discountedAmounts = lines.reduce((map, line) => {
+                map[line.tax_ids.map((t) => t.id)];
+                return map;
+            }, {});
+            const process = (line) => {
+                const key = line.tax_ids.map((t) => t.id);
+                if (!discountedAmounts[key] || line.reward_id) {
+                    return;
                 }
-            } else {
-                const nonCommonLines = discountedLines.filter(
-                    (line) => !linesToDiscount.includes(line)
-                );
-                const discountedAmounts = lines.reduce((map, line) => {
-                    map[line.tax_ids.map((t) => t.id)];
-                    return map;
-                }, {});
-                const process = (line) => {
-                    const key = line.tax_ids.map((t) => t.id);
-                    if (!discountedAmounts[key] || line.reward_id) {
-                        return;
-                    }
-                    const remaining = remainingAmountPerLine[line.uuid];
-                    const consumed = Math.min(remaining, discountedAmounts[key]);
-                    discountedAmounts[key] -= consumed;
-                    remainingAmountPerLine[line.uuid] -= consumed;
-                };
-                nonCommonLines.forEach(process);
-                commonLines.forEach(process);
-            }
+                const remaining = remainingAmountPerLine[line.uuid];
+                const consumed = Math.min(remaining, discountedAmounts[key]);
+                discountedAmounts[key] -= consumed;
+                remainingAmountPerLine[line.uuid] -= consumed;
+            };
+            nonCommonLines.forEach(process);
+            commonLines.forEach(process);
         }
 
         let discountable = 0;
