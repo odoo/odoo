@@ -181,7 +181,7 @@
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
-                    <field name="tax_tag_ids" string="Tax Grids" domain="[('applicability', '=', 'taxes')]" widget="many2many_tags" optional="hide"/>
+                    <field name="tax_tag_ids" string="Tax Grids" options="{'no_create': True, 'no_create_edit': True}" domain="[('applicability', '=', 'taxes')]" widget="many2many_tags" optional="hide"/>
                     <field name="discount_date" string="Discount Date" optional="hide" />
                     <field name="discount_amount_currency" string="Discount Amount" optional="hide" />
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
