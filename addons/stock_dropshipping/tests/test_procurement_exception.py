@@ -49,9 +49,11 @@ class TestProcurementException(common.TransactionCase):
             line.route_id = self.env.ref('stock_dropshipping.route_drop_shipping')
         sale_order_route_dropship01 = so_form.save()
 
-        # I confirm the sales order, but it will raise an error
-        with self.assertRaises(Exception):
-            sale_order_route_dropship01.action_confirm()
+        # I confirm the sales order, but no purchase quotation should be created
+        sale_order_route_dropship01.action_confirm()
+        purchase = self.env['purchase.order.line'].search([
+            ('sale_line_id', '=', sale_order_route_dropship01.order_line.ids[0])]).order_id
+        self.assertFalse(purchase, 'No Purchase Quotation should be created')
 
         # I set the at least one supplier on the product.
         with Form(product_with_no_seller) as f:
@@ -60,11 +62,12 @@ class TestProcurementException(common.TransactionCase):
                 seller.partner_id = res_partner_2
                 seller.min_qty = 2.0
 
-        # I confirm the sales order, no error this time
-        sale_order_route_dropship01.action_confirm()
+        # Create another sales order with the same product
+        sale_order_route_dropship02 = sale_order_route_dropship01.copy()
+        sale_order_route_dropship02.action_confirm()
 
         # I check a purchase quotation was created.
         purchase = self.env['purchase.order.line'].search([
-            ('sale_line_id', '=', sale_order_route_dropship01.order_line.ids[0])]).order_id
+            ('sale_line_id', '=', sale_order_route_dropship02.order_line.ids[0])]).order_id
 
         self.assertTrue(purchase, 'No Purchase Quotation is created')

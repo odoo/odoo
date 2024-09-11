@@ -4,6 +4,7 @@
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 from odoo.tools import float_compare
 
 from odoo import api, fields, models, SUPERUSER_ID, _
@@ -71,9 +72,17 @@ class StockRule(models.Model):
                 lambda s: not s.company_id or s.company_id == procurement.company_id
             )[:1]
 
-            if not supplier:
+            if not supplier and self.env.context.get('from_orderpoint'):
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
                 errors.append((procurement, msg))
+            elif not supplier:
+                # If the supplier is not set, we cannot create a PO.
+                moves = procurement.values.get('move_dest_ids', self.env['stock.move'])
+                if moves.propagate_cancel:
+                    moves._action_cancel()
+                moves.procure_method = 'make_to_stock'
+                self._notify_responsible(procurement)
+                return
 
             partner = supplier.partner_id
             # we put `supplier_info` in values for extensibility purposes
@@ -153,6 +162,14 @@ class StockRule(models.Model):
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
                         po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
+
+    def _post_vendor_notification(self, records_to_notify, users_to_notify, product):
+        notification_msg = Markup(" ").join(Markup("%s") % user._get_html_link(f'@{user.name}') for user in users_to_notify)
+        notification_msg += Markup("<br/>%s <strong>%s</strong>, %s") % (_("No supplier has been found to replenish"), product.display_name, _("this product should be manually replenished."))
+        records_to_notify.message_post(body=notification_msg, partner_ids=users_to_notify.ids)
+
+    def _notify_responsible(self, procurement):
+        pass  # Override in sale_purchase_stock and purchase_mrp to notify salesperson or MO responsible
 
     def _get_lead_days(self, product, **values):
         """Add the company security lead time and the supplier delay to the cumulative delay
