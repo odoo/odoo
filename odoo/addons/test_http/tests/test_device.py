@@ -33,7 +33,7 @@ class TestDevice(TestHttpBase):
             'groups_id': [Command.set([self.env.ref('base.group_user').id])],
         })
 
-    def hit(self, time, endpoint, headers=None, ip=None):
+    def hit(self, time, endpoint, headers=None, ip=None, cookies=None):
         if ip:
             headers = headers or {}
             headers = {
@@ -45,7 +45,7 @@ class TestDevice(TestHttpBase):
             }
         with freeze_time(time), \
             patch.dict(odoo.tools.config.options, {'proxy_mode': bool(ip)}):
-            res = self.url_open(url=endpoint, headers=headers)
+            res = self.url_open(url=endpoint, headers=headers, cookies=cookies)
         return res
 
     def info_trace(self, trace):
@@ -271,6 +271,20 @@ class TestDevice(TestHttpBase):
         self.assertIn('192.0.2.42', device_chrome.linked_ip_addresses)
         self.assertNotIn('191.0.1.41', device_chrome.linked_ip_addresses)
         self.assertIn('191.0.1.41', device_firefox.linked_ip_addresses)
+
+    def test_detection_no_trace_mechanism(self):
+        session = self.authenticate(self.user_admin.login, self.user_admin.login)
+        with freeze_time('2024-01-01 08:00:00'):
+            token = self.DeviceLog._generate_no_trace_token(session.sid)
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-public-rw', cookies={'no_trace': token})
+        devices, logs = self.get_devices_logs(self.user_admin)
+        self.assertEqual(len(devices), 0)
+        self.assertEqual(len(logs), 0)
+        # Check that the token is valid only during 24 hours
+        self.hit('2024-01-02 09:00:00', '/test_http/greeting-public-rw', cookies={'no_trace': token})
+        devices, logs = self.get_devices_logs(self.user_admin)
+        self.assertEqual(len(devices), 1)
+        self.assertEqual(len(logs), 1)
 
     # --------------------
     # DELETION

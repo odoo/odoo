@@ -516,10 +516,13 @@ class IrActionsReport(models.Model):
         temporary_files = []
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
-        if request and request.db:
+        if request and request.db and request.session.sid:
             base_url = self._get_report_url()
             domain = urlparse(base_url).hostname
-            cookie = f'session_id={request.session.sid}; HttpOnly; domain={domain}; path=/;'
+            sid = request.session.sid
+            token = self.env['res.device.log']._generate_no_trace_token(sid)
+            cookie = f'session_id={sid}; HttpOnly; domain={domain}; path=/;\n'
+            cookie += f'no_trace={token}; HttpOnly; domain={domain}; path=/;'
             cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
             temporary_files.append(cookie_jar_file_path)
             with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
