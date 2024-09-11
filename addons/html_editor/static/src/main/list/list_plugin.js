@@ -629,7 +629,12 @@ export class ListPlugin extends Plugin {
 
     handleSplitBlock(params) {
         const closestLI = closestElement(params.targetNode, "LI");
-        if (!closestLI) {
+        const isBlockUnsplittable =
+            closestLI &&
+            Array.from(closestLI.childNodes).some(
+                (node) => isBlock(node) && this.shared.isUnsplittable(node)
+            );
+        if (!closestLI || isBlockUnsplittable) {
             return;
         }
         if (!closestLI.textContent) {
