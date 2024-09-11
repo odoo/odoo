@@ -1,7 +1,22 @@
 .splitbill-screen .order-info {
     font-size: clamp(24px, 3vw, 64px);
+    .subtotal {
+        font-size: 64px;
+        color: green;
+    }
+    .total {
+        font-size: 21px;
+    }
 }
 
 .splitbill-screen .order .orderline.partially.selected{
     background: rgb(136, 214, 176);
+}
+
+.order-summary {
+    background-color: transparent !important;
+}
+
+.btn-disabled {
+    background-color: #d8dadd;
 }

@@ -3,6 +3,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
+import { useService } from "@web/core/utils/hooks";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
@@ -15,6 +16,7 @@ export class SplitBillScreen extends Component {
         this.pos = usePos();
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
+        this.ui = useState(useService("ui"));
     }
 
     get currentOrder() {
@@ -53,6 +55,10 @@ export class SplitBillScreen extends Component {
     }
 
     createSplittedOrder() {
+        if (this.getProductSelectedQuantity() === 0) {
+            return;
+        }
+
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         this.pos.selectedTable = null;
@@ -120,6 +126,14 @@ export class SplitBillScreen extends Component {
 
     back() {
         this.pos.showScreen("ProductScreen");
+    }
+
+    getProductSelectedQuantity() {
+        if (this.qtyTracker !== null) {
+            return Object.values(this.qtyTracker).reduce((total, qty) => total + qty, 0);
+        }
+
+        return 0;
     }
 }
 
