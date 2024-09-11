@@ -10,7 +10,6 @@ import {
     redo,
 } from "@spreadsheet/../tests/helpers/commands";
 import {
-    getBorders,
     getCell,
     getCellContent,
     getCellFormula,
@@ -29,10 +28,13 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import {
     defineSpreadsheetActions,
     defineSpreadsheetModels,
+    generateListDefinition,
     getBasicServerData,
 } from "@spreadsheet/../tests/helpers/data";
+
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-const { DEFAULT_LOCALE } = spreadsheet.constants;
+const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
+const { toZone } = spreadsheet.helpers;
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -907,25 +909,6 @@ test("Load list spreadsheet with models that cannot be accessed", async function
     expect(cell.message).toBe("ya done!");
 });
 
-test("Cells in the list header zone have borders", async function () {
-    const { model } = await createSpreadsheetWithList({
-        linesNumber: 4,
-    });
-    const leftBorder = { left: { style: "thin", color: "#2D7E84" } };
-    const rightBorder = { right: { style: "thin", color: "#2D7E84" } };
-    const topBorder = { top: { style: "thin", color: "#2D7E84" } };
-    const bottomBorder = { bottom: { style: "thin", color: "#2D7E84" } };
-    expect(getBorders(model, "A1")).toEqual({ ...topBorder, ...bottomBorder, ...leftBorder });
-    expect(getBorders(model, "B1")).toEqual({ ...topBorder, ...bottomBorder });
-    expect(getBorders(model, "D1")).toEqual({
-        ...topBorder,
-        ...bottomBorder,
-        ...rightBorder,
-    });
-    expect(getBorders(model, "A5")).toEqual({ ...leftBorder, ...bottomBorder });
-    expect(getBorders(model, "D5")).toEqual({ ...rightBorder, ...bottomBorder });
-});
-
 test("Can duplicate a list", async () => {
     const { model } = await createSpreadsheetWithList();
     const [listId] = model.getters.getListIds();
@@ -988,4 +971,29 @@ test("isListUnused getter", async () => {
 
     model.dispatch("REQUEST_UNDO", {});
     expect(model.getters.isListUnused("1")).toBe(true);
+});
+
+test("INSERT_ODOO_LIST_WITH_TABLE adds a table that maches the list dimension", async function () {
+    const { model } = await createSpreadsheetWithList({
+        linesNumber: 4,
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const { columns: currentColumns, model: resModel } = model.getters.getListDefinition("1");
+    const col = 0;
+    const row = 19;
+    const threshold = 5;
+    const { definition, columns } = generateListDefinition(resModel, currentColumns);
+    model.dispatch("INSERT_ODOO_LIST_WITH_TABLE", {
+        sheetId,
+        col,
+        row,
+        id: model.getters.getNextListId(),
+        definition,
+        linesNumber: threshold,
+        columns,
+    });
+    const table = model.getters.getTable({ sheetId, col, row });
+    expect(table.range.zone).toEqual(toZone("A20:D25"));
+    expect(table.type).toBe("static");
+    expect(table.config).toEqual({ ...PIVOT_TABLE_CONFIG, firstColumn: false });
 });

@@ -2,7 +2,6 @@
 
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { helpers } from "@odoo/o-spreadsheet";
-import { TOP_LEVEL_STYLE } from "../../helpers/constants";
 import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
@@ -320,33 +319,6 @@ export class ListCorePlugin extends OdooCorePlugin {
             });
             col++;
         }
-        this.dispatch("SET_FORMATTING", {
-            sheetId,
-            style: TOP_LEVEL_STYLE,
-            target: [
-                {
-                    top: anchor[1],
-                    bottom: anchor[1],
-                    left: anchor[0],
-                    right: anchor[0] + columns.length - 1,
-                },
-            ],
-        });
-        this.dispatch("SET_ZONE_BORDERS", {
-            sheetId,
-            target: [
-                {
-                    top: anchor[1],
-                    bottom: anchor[1],
-                    left: anchor[0],
-                    right: anchor[0] + columns.length - 1,
-                },
-            ],
-            border: {
-                position: "external",
-                color: "#2D7E84",
-            },
-        });
     }
 
     _insertValues(sheetId, anchor, id, columns, linesNumber) {
@@ -365,21 +337,6 @@ export class ListCorePlugin extends OdooCorePlugin {
             }
             row++;
         }
-        this.dispatch("SET_ZONE_BORDERS", {
-            sheetId,
-            target: [
-                {
-                    top: anchor[1],
-                    bottom: anchor[1] + linesNumber,
-                    left: anchor[0],
-                    right: anchor[0] + columns.length - 1,
-                },
-            ],
-            border: {
-                position: "external",
-                color: "#2D7E84",
-            },
-        });
     }
 
     /**
