@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "click Send email",
-        trigger: '.btn[name="action_send_mail"]',
+        trigger: '.btn.o_mail_send',
         run: "click",
     },
     {

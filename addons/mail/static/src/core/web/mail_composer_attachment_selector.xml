@@ -2,12 +2,11 @@
 <templates>
     <t t-name="mail.MailComposerAttachmentSelector">
         <FileInput
-            t-if="props.record.data.can_edit_body"
             multiUpload="true"
             onUpload.bind="onFileUploaded"
             resModel="props.record.resModel"
             resId="props.record.resId or 0">
-            <button class="btn btn-light" data-hotkey="a">
+            <button class="btn btn-light w-auto" data-hotkey="a">
                 <i class="fa fa-fw fa-paperclip"/>
             </button>
         </FileInput>

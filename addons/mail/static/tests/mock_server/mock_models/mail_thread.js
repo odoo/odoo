@@ -298,8 +298,6 @@ export class MailThread extends models.ServerModel {
         reason = kwargs.reason;
         name = kwargs.name;
 
-        /** @type {import("mock_models").MailThread} */
-        const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
@@ -316,7 +314,7 @@ export class MailThread extends models.ServerModel {
                 create_values: {},
             });
         } else {
-            const partnerCreateValues = MailThread._get_customer_information.call(this, id);
+            const partnerCreateValues = this._get_customer_information(id);
             result.push({
                 email,
                 name,
@@ -599,6 +597,8 @@ export class MailThread extends models.ServerModel {
         const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
+        /** @type {import("mock_models").MailScheduledMessage} */
+        const MailScheduledMessage = this.env["mail.scheduled.message"];
 
         if (!fields) {
             fields = [];
@@ -675,6 +675,13 @@ export class MailThread extends models.ServerModel {
             res["suggestedRecipients"] = MailThread._message_get_suggested_recipients.call(this, [
                 id,
             ]);
+        }
+        if (request_list && request_list.includes("scheduledMessages")) {
+            res["scheduledMessages"] = mailDataHelpers.Store.many(
+                MailScheduledMessage.filter(
+                    (message) => message.model === this._name && message.res_id === id,
+                ),
+            );
         }
         store.add(this.env[this._name].browse(id), res, makeKwArgs({ as_thread: true }));
     }
