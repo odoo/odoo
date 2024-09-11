@@ -615,7 +615,7 @@ class ResCompany(models.Model):
             self.env.reset()     # clear the set of environments
             env = self.env()     # get an environment that refers to the new registry
             for company in self.filtered(lambda c: c.country_id and not c.chart_template):
-                template_code = self.env['account.chart.template']._guess_chart_template(company.country_id)
+                template_code = company.parent_id.chart_template or self.env['account.chart.template']._guess_chart_template(company.country_id)
                 if template_code != 'generic_coa':
                     @self.env.cr.precommit.add
                     def try_loading(template_code=template_code, company=company):
