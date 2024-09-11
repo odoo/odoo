@@ -23,3 +23,4 @@ class TestSnippets(odoo.tests.HttpCase):
             'email': 'no-reply@company.com',
         })
         self.start_tour("/?enable_editor=1", "donation_snippet_edition", login='admin')
+        self.start_tour("/", "donation_snippet_use", login="portal")
