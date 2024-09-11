@@ -18,7 +18,7 @@
         </tbody>
 
         <div id="sale_invoices" position="after">
-            <t t-set="delivery_orders" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing').sorted('date', reverse=True)[:3]"/>
+            <t t-set="delivery_orders" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing').sorted('create_date', reverse=True)[:3]"/>
             <div t-if="delivery_orders" class="col-12 col-lg-6 mb-4">
                 <h5 class="mb-1">Last Delivery Orders</h5>
                 <hr class="mt-1 mb-2"/>
