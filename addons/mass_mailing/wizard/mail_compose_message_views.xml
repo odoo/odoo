@@ -15,11 +15,11 @@
                 </xpath>
                 <xpath expr="//button[@name='action_send_mail'][not(hasclass('o_mail_send'))]" position="attributes">
                     <!-- 'Log' button -->
-                    <attribute name="invisible">not subtype_is_log or mass_mailing_name != '' and mass_mailing_name</attribute>
+                    <attribute name="invisible" add="mass_mailing_name != '' and mass_mailing_name" separator="or"/>
                 </xpath>
                 <xpath expr="//button[hasclass('o_mail_send')]" position="attributes">
                     <!-- 'Send' button -->
-                    <attribute name="invisible">subtype_is_log or mass_mailing_name != '' and mass_mailing_name</attribute>
+                    <attribute name="invisible" add="mass_mailing_name != '' and mass_mailing_name" separator="or"/>
                 </xpath>
                 <xpath expr="//button[@name='action_send_mail']" position="after">
                     <button string="Send Mass Mailing" name="action_send_mail" type="object" class="btn-primary o_mail_send"

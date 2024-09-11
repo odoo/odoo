@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, xml } from "@odoo/owl";
+import { Component, onWillDestroy, onWillUpdateProps, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -12,28 +12,30 @@ export class RelativeTime extends Component {
     setup() {
         super.setup();
         this.timeout = null;
-        this.computeRelativeTime();
+        this.computeRelativeTime(this.props.datetime);
         onWillDestroy(() => clearTimeout(this.timeout));
+        onWillUpdateProps((nextProps) => {
+            clearTimeout(this.timeout);
+            this.computeRelativeTime(nextProps.datetime);
+        });
     }
 
-    computeRelativeTime() {
-        const datetime = this.props.datetime;
+    computeRelativeTime(datetime) {
         if (!datetime) {
             this.relativeTime = "";
             return;
         }
         const delta = Date.now() - datetime.ts;
-        if (delta < 45 * 1000) {
-            this.relativeTime = _t("now");
+        const absDelta = Math.abs(delta);
+        if (absDelta < 45 * 1000) {
+            this.relativeTime = delta < 0 ? _t("in a few seconds") : _t("now");
         } else {
             this.relativeTime = datetime.toRelative();
         }
-        const updateDelay = delta < HOUR ? MINUTE : HOUR;
-        if (updateDelay) {
-            this.timeout = setTimeout(() => {
-                this.computeRelativeTime();
-                this.render();
-            }, updateDelay);
-        }
+        const updateDelay = absDelta < MINUTE ? absDelta : absDelta < HOUR ? MINUTE : HOUR;
+        this.timeout = setTimeout(() => {
+            this.computeRelativeTime(this.props.datetime);
+            this.render();
+        }, updateDelay);
     }
 }

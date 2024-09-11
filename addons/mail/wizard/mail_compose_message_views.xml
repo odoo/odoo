@@ -37,7 +37,7 @@
                             invisible="composition_mode != 'mass_mail'"/>
                         <label for="partner_ids" string="To" invisible="composition_mode != 'comment' or subtype_is_log"/>
                         <div groups="base.group_user" invisible="composition_mode != 'comment' or subtype_is_log">
-                            <widget invisible="not model or composition_mode == 'mass_mail'" name="mail_composer_recipient_list"/>
+                            <widget invisible="not model or composition_mode == 'mass_mail'" name="mail_composer_recipient_list" thread_model_field="model" thread_id_field="res_ids"/>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 options="{'no_quick_create': True}" context="{'show_email':True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
                         </div>
@@ -73,14 +73,15 @@
                     <footer>
                         <button string="Send" name="action_send_mail"
                                 type="object" class="btn-primary o_mail_send" data-hotkey="q"
-                                invisible="subtype_is_log"/>
+                                invisible="subtype_is_log or composition_mode == 'comment' and not composition_batch"/>
                         <button string="Log" name="action_send_mail"
                                 type="object" class="btn-primary" data-hotkey="q"
-                                invisible="not subtype_is_log"/>
-                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
-                        <field name="attachment_ids" widget="mail_composer_attachment_selector"/>
+                                invisible="not subtype_is_log or composition_mode =='comment' and not composition_batch"/>
+                        <widget name="mail_composer_send_dropdown" invisible="composition_batch or composition_mode != 'comment'"/>
+                        <button string="Discard" class="btn-secondary w-auto" special="cancel" data-hotkey="x" />
+                        <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not can_edit_body"/>
                         <field name="template_id" widget="mail_composer_template_selector"/>
-                        <field name="body" widget="mail_composer_chatgpt"/>
+                        <field name="body" widget="mail_composer_chatgpt" invisible="not can_edit_body"/>
                     </footer>
                 </form>
             </field>

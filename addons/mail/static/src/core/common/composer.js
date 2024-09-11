@@ -69,6 +69,7 @@ export class Composer extends Component {
         "composer",
         "autofocus?",
         "messageToReplyTo?",
+        "onCloseFullComposerCallback?",
         "onDiscardCallback?",
         "onPostCallback?",
         "mode?",
@@ -412,6 +413,14 @@ export class Composer extends Component {
         }
     }
 
+    onCloseFullComposerCallback() {
+        if (this.props.onCloseFullComposerCallback) {
+            this.props.onCloseFullComposerCallback();
+        } else {
+            this.thread?.fetchNewMessages();
+        }
+    }
+
     /**
      * This doesn't work on firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1699743
      */
@@ -555,7 +564,7 @@ export class Composer extends Component {
                     this.clear();
                 }
                 this.props.messageToReplyTo?.cancel();
-                this.thread?.fetchNewMessages();
+                this.onCloseFullComposerCallback();
             },
         };
         await this.env.services.action.doAction(action, options);

@@ -48,8 +48,17 @@
             <field name="active" eval="False"/>
         </record>
 
+        <record id="ir_cron_post_scheduled_message" model="ir.cron">
+            <field name="name">Mail: Post scheduled messages</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="model_id" ref="model_mail_scheduled_message"/>
+            <field name="code">model._post_messages_cron()</field>
+            <field name="state">code</field>
+        </record>
+
         <record id="ir_cron_send_scheduled_message" model="ir.cron">
-            <field name="name">Notification: Send scheduled message notifications</field>
+            <field name="name">Notification: Notify scheduled messages</field>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
             <field name="model_id" ref="model_mail_message_schedule"/>
