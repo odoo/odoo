@@ -12,7 +12,7 @@ patch(PartnerList.prototype, {
 
     async searchPartner() {
         const res = await super.searchPartner();
-        const coupons = this.pos.fetchCoupons([
+        const coupons = await this.pos.fetchCoupons([
             ["partner_id", "in", res.map((partner) => partner.id)],
         ]);
         this.pos.computePartnerCouponIds(coupons);
