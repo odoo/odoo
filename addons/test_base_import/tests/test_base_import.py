@@ -479,9 +479,9 @@ class test_convert_import_data(TransactionCase):
     def test_date_fields_no_options(self):
         self.env['res.lang']._activate_lang('de_DE')
         import_wizard = self.env['base_import.import'].with_context(lang='de_DE').create({
-            'res_model': 'res.partner',
-            'file': 'name,date,create_date\n'
-                    '"foo","15.10.2023","15.10.2023 15:15:15"\n'.encode('utf-8'),
+            'res_model': 'base_import.complex',
+            'file': 'c,d,create_date\n'
+                    '"foo","15.10.2023","15.10.2023 15:15:15"\n',
             'file_type': 'text/csv',
         })
 
@@ -498,7 +498,7 @@ class test_convert_import_data(TransactionCase):
 
         opts = result_parse['options']
         results = import_wizard.execute_import(
-            ['name', 'date', 'create_date'],
+            ['c', 'd', 'create_date'],
             [],
             {**opts}
         )
