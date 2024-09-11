@@ -77,6 +77,10 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         cls.igst_sale_18 = cls.env["account.chart.template"].ref('igst_sale_18')
         cls.sgst_sale_18 = cls.env["account.chart.template"].ref('sgst_sale_18')
 
+        # === Activate Taxes === #
+        config = cls.env['res.config.settings'].create({})
+        config._activate_gst_taxes()
+
         # === Products === #
         cls.product_a.write({
             "l10n_in_hsn_code": "111111",

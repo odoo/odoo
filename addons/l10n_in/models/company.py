@@ -34,6 +34,7 @@ class ResCompany(models.Model):
              "Thus, PAN acts as an identifier for the person with the tax department.",
     )
     l10n_in_pan_type = fields.Char(string="PAN Type", compute="_compute_l10n_in_pan_type")
+    l10n_in_tan = fields.Char(string="TAN", help="Tax Deduction and Collection Account Number")
 
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit_and_l10n_in_pan(self):

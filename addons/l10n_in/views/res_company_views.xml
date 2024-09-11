@@ -17,6 +17,9 @@
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_in_pan" invisible="country_code != 'IN'"/>
             </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_in_tan" invisible="country_code != 'IN'"/>
+            </xpath>
         </field>
     </record>
 </odoo>

@@ -193,3 +193,25 @@ class AccountMove(models.Model):
                 'taxes_data': line.tax_ids,
             })
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)
+
+    # ----------------------------------------------------------
+    # Utils
+    # ----------------------------------------------------------
+
+    @api.model
+    def _l10n_in_extract_digits(self, string):
+        if not string:
+            return string
+        matches = re.findall(r"\d+", string)
+        result = "".join(matches)
+        return result
+
+    @api.model
+    def _l10n_in_round_value(self, amount, precision_digits=2):
+        """
+            This method is call for rounding.
+            If anything is wrong with rounding then we quick fix in method
+        """
+        value = round(amount, precision_digits)
+        # avoid -0.0
+        return value or 0.0
