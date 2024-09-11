@@ -367,24 +367,21 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
 
         # The invoice just moves amount from `not_invoiced_yet` to `invoiced`.
         # It does not lower the remaining ammount.
-        # TODO: The tax does not get copied onto the created invoices.
-        #       The problem is that in 16.0 there is only 1 downpayment line and not 1 downpayment line per tax.
-        #       So the downpayment line does not have tax information.
-        #       The downpayment line (tax) is used to create the invoice line (tax).
-        #       (see function `_create_invoices` in model 'sale.advance.payment.inv')
         self.assertEqual(
             invoice.l10n_it_edi_doi_warning,
             "Pay attention, the threshold of your Declaration of Intent test 2019-threshold 1000 of 1,000.00\xa0€ is exceeded by 2,000.00\xa0€, this document included.\n"
             "Invoiced: 500.00\xa0€; Not Yet Invoiced: 2,500.00\xa0€"
         )
 
-        invoice.invoice_line_ids[0].price_unit = 2000  # 1000 more than the sales order declaration amount
+        invoice.invoice_line_ids.filtered(lambda l: l.tax_ids.ids == declaration_tax.ids).price_unit = 2000  # 1000 more than the sales order declaration amount
         # Changing an invoice line does not affect the not yet invoiced amount of sale order lines not linked to that line
         self.assertEqual(
             invoice.l10n_it_edi_doi_warning,
             "Pay attention, the threshold of your Declaration of Intent test 2019-threshold 1000 of 1,000.00\xa0€ is exceeded by 3,500.00\xa0€, this document included.\n"
             "Invoiced: 2,000.00\xa0€; Not Yet Invoiced: 2,500.00\xa0€"
         )
+        # WORKAROUND: to post an invoice every invoice line needs to have exactly 1 tax set
+        invoice.invoice_line_ids.filtered(lambda l: not l.tax_ids).tax_ids = self.company.account_sale_tax_id
         invoice.action_post()
         self.assertRecordValues(declaration, [{
             'invoiced': 2000.0,  # 2000 from invoice
@@ -393,6 +390,8 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
         }])
 
         invoice2 = order.invoice_ids[1]
+        # WORKAROUND: to post an invoice every invoice line needs to have exactly 1 tax set
+        invoice2.invoice_line_ids.filtered(lambda l: not l.tax_ids).tax_ids = self.company.account_sale_tax_id
         invoice2.action_post()
         self.assertEqual(
             invoice2.l10n_it_edi_doi_warning,
