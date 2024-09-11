@@ -40,6 +40,15 @@ import {
  *
  * @typedef {{}} EventOptions generic event options
  *
+ * @typedef {{
+ *  clientX: number;
+ *  clientY: number;
+ *  pageX: number;
+ *  pageY: number;
+ *  screenX: number;
+ *  screenY: number;
+ * }} EventPosition
+ *
  * @typedef {keyof HTMLElementEventMap | keyof WindowEventMap} EventType
  *
  * @typedef {EventOptions & {
@@ -71,7 +80,10 @@ import {
 
 /**
  * @template [T=EventInit]
- * @typedef {T & { target: EventTarget }} FullEventInit
+ * @typedef {T & {
+ *  target: EventTarget;
+ *  type: EventType;
+ * }} FullEventInit
  */
 
 /**
@@ -165,6 +177,19 @@ const dispatchRelatedEvents = async (events, eventType, eventInit) => {
 };
 
 /**
+ * All touch events target the same element (the initial "touchstart" target).
+ *
+ * @param {EventType} eventType
+ * @param {TouchEventInit} eventInit
+ */
+const dispatchTouchEvent = async (eventType, eventInit) => {
+    if (!hasTouch() || !runTime.pointerDownTarget) {
+        return;
+    }
+    return dispatch(runTime.pointerDownTarget, eventType, eventInit);
+};
+
+/**
  * @template T
  * @param {MaybeIterable<T>} value
  * @returns {T[]}
@@ -190,14 +215,17 @@ const getDefaultRunTimeValue = () => ({
     lastDragOverCancelled: false,
 
     // Pointer
-    currentClickCount: 0,
+    clickCount: 0,
     currentKey: null,
-    currentPointerDownTarget: null,
-    currentPointerDownTimeout: 0,
-    currentPointerTarget: null,
-    currentPosition: {},
+    pointerDownTarget: null,
+    pointerDownTimeout: 0,
+    pointerTarget: null,
+    /** @type {EventPosition | {}} */
+    position: {},
     previousPointerDownTarget: null,
     previousPointerTarget: null,
+    /** @type {EventPosition | {}} */
+    touchStartPosition: {},
 
     // File
     currentFileInput: null,
@@ -465,12 +493,12 @@ const hasTouch = () =>
     globalThis.ontouchstart !== undefined || globalThis.matchMedia("(pointer:coarse)").matches;
 
 /**
- * @param {EventTarget} target
+ * @param {EventTarget | EventPosition} target
  * @param {PointerOptions} [options]
  */
 const isDifferentPosition = (target, options) => {
-    const previous = runTime.currentPosition;
-    const next = getPosition(target, options);
+    const previous = runTime.position;
+    const next = isNode(target) ? getPosition(target, options) : target;
     for (const key in next) {
         if (previous[key] !== next[key]) {
             return true;
@@ -693,8 +721,9 @@ const setupEvents = (type) => {
 };
 
 /**
- * @param {number} x
- * @param {number} y
+ * @param {number} clientX
+ * @param {number} clientY
+ * @param {Partial<EventPosition>} [position]
  */
 const toEventPosition = (clientX, clientY, position) => {
     clientX ||= 0;
@@ -913,7 +942,7 @@ const _hover = async (target, options) => {
 
     await setPointerTarget(target, options);
 
-    const { previousPointerTarget: previous, currentPointerTarget: current } = runTime;
+    const { previousPointerTarget: previous, pointerTarget: current } = runTime;
     if (isDifferentTarget && previous && (!current || !previous.contains(current))) {
         // Leaves previous target
         const leaveEventInit = {
@@ -929,9 +958,10 @@ const _hover = async (target, options) => {
             // Regular case: pointer events are triggered
             await dispatchEventSequence(
                 previous,
-                ["pointermove", hasTouch() ? "touchmove" : "mousemove"],
+                ["pointermove", !hasTouch() && "mousemove"],
                 leaveEventInit
             );
+            await dispatchTouchEvent("touchmove", leaveEventInit);
             await dispatchEventSequence(
                 previous,
                 ["pointerout", !hasTouch() && "mouseout"],
@@ -978,9 +1008,10 @@ const _hover = async (target, options) => {
             }
             await dispatchEventSequence(
                 target,
-                ["pointermove", hasTouch() ? "touchmove" : "mousemove"],
+                ["pointermove", !hasTouch() && "mousemove"],
                 enterEventInit
             );
+            await dispatchTouchEvent("touchmove", enterEventInit);
         }
     }
 };
@@ -1287,14 +1318,18 @@ const _pointerDown = async (target, options) => {
     };
 
     if (runTime.currentPointerDownTarget !== runTime.previousPointerDownTarget) {
-        runTime.currentClickCount = 0;
+        runTime.clickCount = 0;
     }
 
     const prevented = await dispatchEventSequence(
-        target,
-        ["pointerdown", hasTouch() ? "touchstart" : "mousedown"],
+        pointerDownTarget,
+        ["pointerdown", !hasTouch() && !pointerDownTarget.disabled && "mousedown"],
         eventInit
     );
+
+    runTime.touchStartPosition = { ...runTime.position };
+    await dispatchTouchEvent("touchstart", eventInit);
+
     if (prevented) {
         return;
     }
@@ -1323,7 +1358,7 @@ const _pointerUp = async (target, options) => {
     const eventInit = {
         ...runTime.currentPosition,
         button: options?.button || 0,
-        detail: runTime.currentClickCount,
+        detail: runTime.clickCount,
     };
 
     if (runTime.isDragging) {
@@ -1344,11 +1379,22 @@ const _pointerUp = async (target, options) => {
 
     await dispatchEventSequence(
         target,
-        ["pointerup", hasTouch() ? "touchend" : "mouseup"],
+        ["pointerup", !hasTouch() && !target.disabled && "mouseup"],
         eventInit
     );
 
-    const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
+    await dispatchTouchEvent("touchend", eventInit);
+
+    const touchStartPosition = runTime.touchStartPosition;
+    runTime.touchStartPosition = {};
+
+    if (hasTouch() && isDifferentPosition(touchStartPosition)) {
+        // No further event is trigger: there was a swiping motion since the "touchstart"
+        // event.
+        return;
+    }
+
+    const clickEventInit = { ...eventInit, detail: runTime.clickCount + 1 };
     const currentTarget = runTime.currentPointerDownTarget;
     let actualTarget;
     if (hasTouch()) {
@@ -1358,8 +1404,8 @@ const _pointerUp = async (target, options) => {
     }
     if (actualTarget) {
         await triggerClick(actualTarget, clickEventInit);
-        runTime.currentClickCount++;
-        if (!hasTouch() && runTime.currentClickCount % 2 === 0) {
+        runTime.clickCount++;
+        if (!hasTouch() && runTime.clickCount % 2 === 0) {
             await dispatch(actualTarget, "dblclick", clickEventInit);
         }
     }
@@ -1371,7 +1417,7 @@ const _pointerUp = async (target, options) => {
     runTime.currentPointerDownTimeout = globalThis.setTimeout(() => {
         // Use `globalThis.setTimeout` to potentially make use of the mock timeouts
         // since the events run in the same temporal context as the tests
-        runTime.currentClickCount = 0;
+        runTime.clickCount = 0;
         runTime.currentPointerDownTimeout = 0;
     }, DOUBLE_CLICK_DELAY);
 };
@@ -1478,7 +1524,7 @@ const runTime = getDefaultRunTimeValue();
 /**
  * - bubbles
  * - can be canceled
- * @param {FullEventInit} [eventInit]
+ * @param {FullEventInit} eventInit
  */
 const mapBubblingCancelableEvent = (eventInit) => ({
     ...mapBubblingEvent(eventInit),
@@ -1488,7 +1534,7 @@ const mapBubblingCancelableEvent = (eventInit) => ({
 /**
  * - bubbles
  * - cannot be canceled
- * @param {FullEventInit} [eventInit]
+ * @param {FullEventInit} eventInit
  */
 const mapBubblingEvent = (eventInit) => ({
     composed: true,
@@ -1499,7 +1545,7 @@ const mapBubblingEvent = (eventInit) => ({
 /**
  * - does not bubble
  * - can be canceled
- * @param {FullEventInit} [eventInit]
+ * @param {FullEventInit} eventInit
  */
 const mapNonBubblingCancelableEvent = (eventInit) => ({
     ...mapNonBubblingEvent(eventInit),
@@ -1509,7 +1555,7 @@ const mapNonBubblingCancelableEvent = (eventInit) => ({
 /**
  * - does not bubble
  * - cannot be canceled
- * @param {FullEventInit} [eventInit]
+ * @param {FullEventInit} eventInit
  */
 const mapNonBubblingEvent = (eventInit) => ({
     composed: true,
@@ -1520,18 +1566,18 @@ const mapNonBubblingEvent = (eventInit) => ({
 // ------------------------------------
 
 /**
- * @param {FullEventInit<MouseEventInit>} [eventInit]
+ * @param {FullEventInit<MouseEventInit>} eventInit
  */
 const mapBubblingMouseEvent = (eventInit) => ({
-    clientX: eventInit?.clientX ?? eventInit?.pageX ?? 0,
-    clientY: eventInit?.clientY ?? eventInit?.pageY ?? 0,
+    clientX: eventInit.clientX ?? eventInit.pageX ?? eventInit.screenX ?? 0,
+    clientY: eventInit.clientY ?? eventInit.pageY ?? eventInit.screenY ?? 0,
     view: getWindow(),
     ...specialKeys,
     ...mapBubblingCancelableEvent(eventInit),
 });
 
 /**
- * @param {FullEventInit<MouseEventInit>} [eventInit]
+ * @param {FullEventInit<MouseEventInit>} eventInit
  */
 const mapNonBubblingMouseEvent = (eventInit) => ({
     ...mapBubblingMouseEvent(eventInit),
@@ -1540,7 +1586,7 @@ const mapNonBubblingMouseEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<PointerEventInit>} [eventInit]
+ * @param {FullEventInit<PointerEventInit>} eventInit
  */
 const mapBubblingPointerEvent = (eventInit) => ({
     pointerId: 1,
@@ -1549,7 +1595,7 @@ const mapBubblingPointerEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<PointerEventInit>} [eventInit]
+ * @param {FullEventInit<PointerEventInit>} eventInit
  */
 const mapNonBubblingPointerEvent = (eventInit) => ({
     pointerId: 1,
@@ -1558,7 +1604,7 @@ const mapNonBubblingPointerEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<WheelEventInit>} [eventInit]
+ * @param {FullEventInit<WheelEventInit>} eventInit
  */
 const mapWheelEvent = (eventInit) => ({
     ...specialKeys,
@@ -1569,21 +1615,23 @@ const mapWheelEvent = (eventInit) => ({
 // -------------------
 
 /**
- * @param {FullEventInit<TouchEventInit>} [eventInit]
+ * @param {FullEventInit<TouchEventInit>} eventInit
  */
 const mapCancelableTouchEvent = (eventInit) => {
-    const touches = eventInit?.touches ||
-        eventInit?.changedTouches || [new Touch({ identifier: 0, ...eventInit })];
+    const touches = eventInit.targetTouches ||
+        eventInit.touches || [new Touch({ identifier: 0, ...eventInit })];
     return {
         view: getWindow(),
         ...mapBubblingCancelableEvent(eventInit),
-        changedTouches: eventInit?.changedTouches || touches,
-        touches: eventInit?.touches || touches,
+        changedTouches: eventInit.changedTouches || touches,
+        target: eventInit.target,
+        targetTouches: eventInit.targetTouches || touches,
+        touches: eventInit.touches || (eventInit.type === "touchend" ? [] : touches),
     };
 };
 
 /**
- * @param {FullEventInit<TouchEventInit>} [eventInit]
+ * @param {FullEventInit<TouchEventInit>} eventInit
  */
 const mapNonCancelableTouchEvent = (eventInit) => ({
     ...mapCancelableTouchEvent(eventInit),
@@ -1594,7 +1642,7 @@ const mapNonCancelableTouchEvent = (eventInit) => ({
 // ------------------------------
 
 /**
- * @param {FullEventInit<InputEventInit>} [eventInit]
+ * @param {FullEventInit<InputEventInit>} eventInit
  */
 const mapCancelableInputEvent = (eventInit) => ({
     ...mapInputEvent(eventInit),
@@ -1602,7 +1650,7 @@ const mapCancelableInputEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<InputEventInit>} [eventInit]
+ * @param {FullEventInit<InputEventInit>} eventInit
  */
 const mapInputEvent = (eventInit) => ({
     data: null,
@@ -1612,7 +1660,7 @@ const mapInputEvent = (eventInit) => ({
 });
 
 /**
- * @param {FullEventInit<KeyboardEventInit>} [eventInit]
+ * @param {FullEventInit<KeyboardEventInit>} eventInit
  */
 const mapKeyboardEvent = (eventInit) => ({
     ...specialKeys,
@@ -1795,7 +1843,7 @@ export async function dispatch(target, type, eventInit) {
     }
 
     const [Constructor, processParams] = getEventConstructor(type);
-    const params = processParams({ ...eventInit, target });
+    const params = processParams({ ...eventInit, target, type });
     const event = new Constructor(type, params);
 
     await Promise.resolve(target.dispatchEvent(event));
