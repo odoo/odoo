@@ -12,4 +12,6 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_purchase_order_count()
 
     def _get_purchase_orders(self):
-        return super(SaleOrder, self)._get_purchase_orders() | self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id | self.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id
+        return super()._get_purchase_orders() \
+            | self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id \
+            | self.env['stock.move'].browse(self.procurement_group_id.stock_move_ids._rollup_move_origs()).purchase_line_id.order_id
