@@ -962,7 +962,7 @@ class AccountChartTemplate(models.Model):
         for tax in account_template.tax_ids:
             tax_ids.append(tax_template_ref[tax].id)
         val = {
-                'name': account_template.name,
+                'name': account_template.name.strip(),
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
                 'account_type': account_template.account_type or False,
