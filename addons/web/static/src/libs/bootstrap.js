@@ -84,19 +84,28 @@ Dropdown.prototype._detectNavbar = function () {
 const bsAdjustDialogFunction = Modal.prototype._adjustDialog;
 Modal.prototype._adjustDialog = function () {
     const document = this._element.ownerDocument;
+
+    this._scrollBar.reset();
     document.body.classList.remove("modal-open");
+
     const scrollable = getScrollingElement(document);
     if (document.body.contains(scrollable)) {
         compensateScrollbar(scrollable, true);
     }
+
+    this._scrollBar.hide();
     document.body.classList.add("modal-open");
+
     return bsAdjustDialogFunction.apply(this, arguments);
 };
 
 const bsResetAdjustmentsFunction = Modal.prototype._resetAdjustments;
 Modal.prototype._resetAdjustments = function () {
     const document = this._element.ownerDocument;
+
+    this._scrollBar.reset();
     document.body.classList.remove("modal-open");
+
     const scrollable = getScrollingElement(document);
     if (document.body.contains(scrollable)) {
         compensateScrollbar(scrollable, false);
