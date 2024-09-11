@@ -25,8 +25,9 @@ import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { session } from "@web/session";
+import { ListCogMenu } from "./list_cog_menu";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 import {
     Component,
@@ -49,7 +50,8 @@ export class ListController extends Component {
         ViewButton,
         MultiRecordViewButton,
         SearchBar,
-        CogMenu,
+        CogMenu: ListCogMenu,
+        DropdownItem,
     };
     static props = {
         ...standardViewProps,

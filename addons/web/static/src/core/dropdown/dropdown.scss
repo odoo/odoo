@@ -98,3 +98,12 @@
         }
     }
 }
+
+// Unstyle buttons so they behave like regular dropdown-item
+.o-dropdown-item-unstyled-button {
+    &, .o_web_client.o_touch_device & {
+        button, button:hover, button:disabled {
+            all: unset;
+        }
+    }
+}

@@ -874,7 +874,7 @@ test(`list view: action button in controlPanel with display='always'`, async () 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
-    ).toEqual(["New", "display", "default-selection"]);
+    ).toEqual(["New", "display", "" /* unselect all btn */, "default-selection"]);
 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(
