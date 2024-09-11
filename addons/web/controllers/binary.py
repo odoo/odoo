@@ -139,7 +139,7 @@ class Binary(http.Controller):
                         return request.redirect(bundle.get_link(asset_type))
                     if css and bundle.stylesheets:
                         attachment = env['ir.attachment'].sudo().browse(bundle.css().id)
-                    elif js and bundle.javascripts:
+                    elif js and (bundle.javascripts or bundle.templates):
                         attachment = env['ir.attachment'].sudo().browse(bundle.js().id)
                 except ValueError as e:
                     _logger.warning("Parsing asset bundle %s has failed: %s", filename, e)

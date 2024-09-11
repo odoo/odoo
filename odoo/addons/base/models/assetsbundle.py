@@ -114,7 +114,7 @@ class AssetsBundle(object):
         if self.has_css and self.stylesheets:
             response.append(self.get_link('css'))
 
-        if self.has_js and self.javascripts:
+        if self.has_js and (self.javascripts or self.templates) :
             response.append(self.get_link('js'))
 
         return self.external_assets + response
