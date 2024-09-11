@@ -320,7 +320,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                 'name': 'not a declaration line',
                 'product_id': self.product_1.id,
                 'price_unit': 2000.0,  # > declaration.threshold; not counted
-                'tax_id': False,
+                'tax_id': [Command.set(self.company.account_sale_tax_id.ids)],
             }),
         ])
         independent_order.action_confirm()
@@ -341,7 +341,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                 'name': 'not a declaration line',
                 'product_id': self.product_1.id,
                 'price_unit': 2000.0,  # > declaration.threshold; not counted
-                'tax_id': False,
+                'tax_id': [Command.set(self.company.account_sale_tax_id.ids)],
             }),
         ])
         order.action_confirm()
@@ -351,6 +351,12 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
             'remaining': -2000.0,
         }])
 
+        downpayment_product = self.env['product.product'].create({
+            'name': 'Down Payment',
+            'taxes_id': [Command.set(self.company.account_sale_tax_id.copy({'price_include': True}).ids)],
+            'type': 'service',
+        })
+        self.env['ir.config_parameter'].sudo().set_param('sale.default_deposit_product_id', downpayment_product.id)
         for i in range(2):
             self.env['sale.advance.payment.inv'].with_context({
                    'active_model': 'sale.order',
@@ -367,18 +373,13 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
 
         # The invoice just moves amount from `not_invoiced_yet` to `invoiced`.
         # It does not lower the remaining ammount.
-        # TODO: The tax does not get copied onto the created invoices.
-        #       The problem is that in 16.0 there is only 1 downpayment line and not 1 downpayment line per tax.
-        #       So the downpayment line does not have tax information.
-        #       The downpayment line (tax) is used to create the invoice line (tax).
-        #       (see function `_create_invoices` in model 'sale.advance.payment.inv')
         self.assertEqual(
             invoice.l10n_it_edi_doi_warning,
             "Pay attention, the threshold of your Declaration of Intent test 2019-threshold 1000 of 1,000.00\xa0€ is exceeded by 2,000.00\xa0€, this document included.\n"
             "Invoiced: 500.00\xa0€; Not Yet Invoiced: 2,500.00\xa0€"
         )
 
-        invoice.invoice_line_ids[0].price_unit = 2000  # 1000 more than the sales order declaration amount
+        invoice.invoice_line_ids.filtered(lambda l: l.tax_ids.ids == declaration_tax.ids).price_unit = 2000  # 1000 more than the sales order declaration amount
         # Changing an invoice line does not affect the not yet invoiced amount of sale order lines not linked to that line
         self.assertEqual(
             invoice.l10n_it_edi_doi_warning,
