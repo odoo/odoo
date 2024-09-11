@@ -25,5 +25,19 @@
                 </b>
             </field>
         </record>
+
+        <record id="project_update_report_view_search_inherit" model="ir.ui.view">
+            <field name="name">project.update.report.view.search.inherit</field>
+            <field name="model">project.update</field>
+            <field name="inherit_id" ref="project.project_update_report_view_search"/>
+            <field name="arch" type="xml">
+                <filter name="my_team_updates" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </filter>
+                <filter name="my_department_updates" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </filter>
+            </field>
+        </record>
     </data>
 </odoo>
