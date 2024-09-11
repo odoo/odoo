@@ -21,6 +21,8 @@ class IrActionsReport(models.Model):
         orders = self.env['sale.order'].browse(res_ids)
 
         for order in orders:
+            if order.state == 'sale':
+                continue
             initial_stream = result[order.id]['stream']
             if initial_stream:
                 quotation_documents = order.quotation_document_ids
