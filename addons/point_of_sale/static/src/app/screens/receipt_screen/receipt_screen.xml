@@ -27,7 +27,7 @@
                                         <i class="fa fa-arrow-circle-right fs-1 pe-3" aria-hidden="true" />
                                     </div>
                                 </div>
-                                <div t-att-class="{'mt-1': this.ui.isSmall}" class="gap-1 d-flex sending-receipt-management justify-content-center">
+                                <div t-if="pos.config.module_pos_sms or pos.config.whatsapp_enabled" t-att-class="{'mt-1': this.ui.isSmall}" class="gap-1 d-flex sending-receipt-management justify-content-center">
                                     <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary flex-grow-1 d-flex align-items-center justify-content-center" >
                                         <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
                                     </button>
