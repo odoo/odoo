@@ -696,6 +696,44 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("drag & drop: touch environment", async () => {
+        mockTouch(true);
+
+        await mountOnFixture(/* xml */ `
+            <ul>
+                <li id="first-item">Item 1</li>
+                <li id="second-item">Item 2</li>
+                <li id="third-item">Item 3</li>
+            </ul>
+        `);
+
+        const firstItem = queryOne("#first-item");
+        const events = await (await drag("#first-item")).drop("#third-item");
+        const touchEvents = events.filter((e) => e.type.startsWith("touch"));
+
+        expect(touchEvents.map((e) => e.target)).toEqual(
+            [
+                firstItem, // start
+                firstItem, // move (on first)
+                firstItem, // move (on last)
+                firstItem, // end
+            ],
+            { message: "touch events should all target the same element" }
+        );
+
+        const [touchStart, touchMove, , touchEnd] = touchEvents;
+
+        expect(touchStart).not.toInclude("clientX");
+        expect(touchStart).not.toInclude("clientY");
+        expect(touchStart.touches).toHaveLength(1);
+
+        expect(touchMove.touches).toHaveLength(1);
+
+        expect(touchEnd).not.toInclude("clientX");
+        expect(touchEnd).not.toInclude("clientY");
+        expect(touchEnd.touches).toHaveLength(0);
+    });
+
     test("fill: text", async () => {
         await mountOnFixture(/* xml */ `<input type="text" value="" />`);
 
