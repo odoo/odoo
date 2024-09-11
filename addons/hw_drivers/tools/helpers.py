@@ -602,7 +602,7 @@ def migrate_old_config_files_to_new_config_file():
         enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
         remote_server = read_file_first_line('odoo-remote-server.conf')
         token = read_file_first_line('token')
-        subject = read_file_first_line('subject')
+        subject = read_file_first_line('odoo-subject.conf')
 
         update_conf({
             'iotbox_version': iotbox_version,
@@ -633,4 +633,4 @@ def migrate_old_config_files_to_new_config_file():
         unlink_file('odoo-enterprise-code.conf')
         unlink_file('odoo-remote-server.conf')
         unlink_file('token')
-        unlink_file('subject')
+        unlink_file('odoo-subject.conf')
