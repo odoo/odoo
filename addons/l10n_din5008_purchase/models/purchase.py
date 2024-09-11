@@ -28,7 +28,7 @@ class PurchaseOrder(models.Model):
             elif record.date_order:
                 data.append((_("Order Deadline"), format_date(self.env, record.date_order)))
             if record.incoterm_id:
-                data.append((_("Incoterm"), record.incoterm_id.code))
+                data.append((_("Incoterms"), record.incoterm_id.code))
 
 
 
