@@ -132,7 +132,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.display_type or line.analytic_distribution or not line.product_id:
                 continue
-            project = line.product_id.project_id or line.product_id.project_template_id or line.order_id.project_id
+            project = line.product_id.project_id or line.order_id.project_id
             distribution = project._get_analytic_distribution()
             if distribution:
                 line.analytic_distribution = distribution
