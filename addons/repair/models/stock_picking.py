@@ -39,6 +39,7 @@ class PickingType(models.Model):
         compute='_compute_is_repairable', store=True, readonly=False, default=False,
         help="If ticked, you will be able to directly create repair orders from a return.")
     return_type_of_ids = fields.One2many('stock.picking.type', 'return_picking_type_id')
+    repair_properties_definition = fields.PropertiesDefinition('Repair Properties')
 
     def _compute_count_repair(self):
         repair_picking_types = self.filtered(lambda picking: picking.code == 'repair_operation')
