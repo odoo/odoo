@@ -1128,12 +1128,17 @@ class AccountChartTemplate(models.AbstractModel):
         assert re.fullmatch(r"[a-z0-9_]+", module)
 
         def evaluate(key, value, model_fields):
+            if not value:
+                return value
             if '@' in key:
                 return value
             if '/' in key:
                 return []
-            if model_fields and model_fields[key].type in ('boolean', 'int', 'float'):
-                return ast.literal_eval(value) if value else False
+            if model_fields:
+                if model_fields[key].type in ('boolean', 'int', 'float'):
+                    return ast.literal_eval(value)
+                if model_fields[key].type == 'char':
+                    return value.strip()
             return value
 
         res = {}
