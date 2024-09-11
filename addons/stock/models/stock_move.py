@@ -2250,8 +2250,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         :return: a defaultdict of outgoing moves from warehouse for product_id in self, values are tuple (sum_qty_expected, max_date_expected)
         :rtype: defaultdict
         """
-        wh_location_query = self.env['stock.location']._search([('id', 'child_of', location_id.id if location_id else warehouse.view_location_id.id)])
-
+        wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
         forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, self.product_id.ids, wh_location_query, location_id or warehouse.lot_stock_id, read=False)
         result = defaultdict(lambda: (0.0, False))
         for line in forecast_lines:
