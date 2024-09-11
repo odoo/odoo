@@ -125,6 +125,7 @@
                 <filter name="work_entries_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
                 <filter name="work_entries_validated" string="Validated" domain="[('state', '=', 'validated')]"/>
                 <filter name="work_entries_error" string="Conflicting" domain="[('state', '=', 'conflict')]"/>
+                <filter name="missing_work_entry_hours" string="Missing Hours" domain="[('is_missing_work_entry_hours', '=', True)]"/>
                 <separator/>
                 <filter name="date_filter" string="Date" date="date_start"/>
                 <filter name="current_month" string="Current Month" domain="[
