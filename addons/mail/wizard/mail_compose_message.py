@@ -1430,10 +1430,13 @@ class MailComposer(models.TransientModel):
             if self.composition_mode == 'comment' and not self.composition_batch:
                 res_ids = self._evaluate_res_ids()
                 rendering_res_ids = res_ids or [0]
-                self[composer_fname] = self.template_id._generate_template(
-                    rendering_res_ids,
-                    {template_fname},
-                )[rendering_res_ids[0]][template_fname]
+                try:
+                    self[composer_fname] = self.template_id._generate_template(
+                        rendering_res_ids,
+                        {template_fname},
+                    )[rendering_res_ids[0]][template_fname]
+                except UserError:
+                    self[composer_fname] = None
             else:
                 self[composer_fname] = self.template_id[template_fname]
         return self[composer_fname]
