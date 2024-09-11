@@ -103,8 +103,17 @@ class SaleOrder(models.Model):
     def _check_warehouse(self):
         """ Ensure that the warehouse is set in case of storable products """
         orders_without_wh = self.filtered(lambda order: order.state not in ('draft', 'cancel') and not order.warehouse_id)
-        if any(l for l in orders_without_wh.order_line if l.product_id.type == 'consu'):
-            raise UserError(_('You must define a warehouse on a sale order with goods.'))
+        other_company = set()
+        for order_line in orders_without_wh.order_line:
+            if order_line.product_id.type != 'consu':
+                continue
+            if order_line.route_id.company_id and order_line.route_id.company_id != order_line.company_id:
+                other_company.add(order_line.route_id.company_id.id)
+                continue
+            self.env['stock.warehouse'].with_company(order_line.order_id.company_id)._warehouse_redirect_warning()
+        other_company_warehouses = self.env['stock.warehouse'].search([('company_id', 'in', list(other_company))])
+        if any(c not in other_company_warehouses.company_id.ids for c in other_company):
+            raise UserError(_("You must have a warehouse for line using a delivery in different company."))
 
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
