@@ -526,8 +526,10 @@ export function compileStepManual(stepIndex, step, options) {
 
                     if (subAction.altAnchor) {
                         let altAnchorEl = hoot.queryAll(subAction.altAnchor).at(0);
-                        altAnchorEl = getAnchorEl(altAnchorEl, subAction.event);
-                        consumeEvents.push(...getConsumeEventType(altAnchorEl, subAction.event));
+                        if (altAnchorEl && canContinue(altAnchorEl, step)) {
+                            altAnchorEl = getAnchorEl(altAnchorEl, subAction.event);
+                            consumeEvents.push(...getConsumeEventType(altAnchorEl, subAction.event));
+                        }
                     }
 
                     const updatePointer = () => {
