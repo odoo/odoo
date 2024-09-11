@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_in_pan_entity_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.pan.entity.view.form.inherit</field>
+        <field name="model">l10n_in.pan.entity</field>
+        <field name="inherit_id" ref="l10n_in.l10n_in_pan_entity_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="TDS">
+                    <field name="l10n_in_tax_tds_ids" context="{'default_section_type': 'tds'}">
+                        <list>
+                            <field name="l10n_in_section_id"/>
+                            <field name="valid_from"/>
+                            <field name="valid_upto"/>
+                            <field name="tax_id" widget="many2one"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="TCS">
+                    <field name="l10n_in_tax_tcs_ids" context="{'default_section_type': 'tcs'}">
+                        <list>
+                            <field name="l10n_in_section_id"/>
+                            <field name="valid_from"/>
+                            <field name="valid_upto"/>
+                            <field name="tax_id" widget="many2one"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_in_pan_entity_section_tax_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.pan.entity.section.tax.view.form</field>
+        <field name="model">l10n_in.pan.entity.section.tax</field>
+        <field name="arch" type="xml">
+            <form string="Tax selection">
+                <sheet>
+                    <group>
+                        <field name="section_type" invisible="1"/>
+                        <field name="l10n_in_section_id" invisible="section_type != 'tds'"
+                               domain="[('tax_source_type', '=', 'tds')]"/>
+                        <field name="l10n_in_section_id" invisible="section_type != 'tcs'"
+                               domain="[('tax_source_type', '=', 'tcs')]"/>
+                        <field name="valid_from"/>
+                        <field name="valid_upto"/>
+                        <field name="tax_id" widget="many2one" invisible="section_type != 'tds'"
+                               domain="[('l10n_in_section_id.tax_source_type', '=', 'tds'), ('l10n_in_tds_tax_type', '=', 'purchase')]"/>
+                        <field name="tax_id" widget="many2one" invisible="section_type != 'tcs'"
+                               domain="[('l10n_in_section_id.tax_source_type', '=', 'tcs'), ('type_tax_use', '=', 'sale')]"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_pan_entity_section_tax_action" model="ir.actions.act_window">
+        <field name="name">Pan Entity Section Tax</field>
+        <field name="res_model">l10n_in.pan.entity.section.tax</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_in_pan_entity_section_tax_view_form"/>
+    </record>
+</odoo>

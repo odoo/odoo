@@ -40,6 +40,19 @@
                             <field class="w-25" name="aggregate_period" invisible="not is_aggregate_limit"/>
                         </div>
                     </group>
+                    <notebook>
+                        <page string="Applicable Taxes">
+                            <field name="entity_tax_lines">
+                                <list editable="bottom">
+                                    <field name="entity_type" widget="selection"/>
+                                    <field name="valid_from"/>
+                                    <field name="valid_upto"/>
+                                    <field name="tax_id" column_invisible="parent.tax_source_type != 'tcs'" widget="many2one" domain="[('l10n_in_section_id', '=', parent.id), ('type_tax_use', '=', 'sale')]"/>
+                                    <field name="tax_id" column_invisible="parent.tax_source_type != 'tds'" widget="many2one" domain="[('l10n_in_section_id', '=', parent.id), ('l10n_in_tds_tax_type', '=', 'purchase')]"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

@@ -1,4 +1,6 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+from stdnum.in_ import pan
 
 
 class L10nInSectionAlert(models.Model):
@@ -22,6 +24,7 @@ class L10nInSectionAlert(models.Model):
             ('monthly', 'Monthly'),
             ('fiscal_yearly', 'Financial Yearly'),
         ], string="Aggregate Period", default='fiscal_yearly')
+    entity_tax_lines = fields.One2many('l10n_in.section.alert.tax', 'section_id')
 
     _sql_constraints = [
         ('per_transaction_limit', 'CHECK(per_transaction_limit >= 0)', 'Per transaction limit must be positive'),
@@ -42,3 +45,43 @@ class L10nInSectionAlert(models.Model):
             section_type=section_type,
             warning=warning
         )
+
+
+class L10nInSectionAlertTax(models.Model):
+    _name = 'l10n_in.section.alert.tax'
+    _description = 'Indian section alert Tax'
+
+    entity_type = fields.Selection([
+        ('no_pan', 'No PAN'),
+        ('c', 'Company'),
+        ('p', 'Individual'),
+        ('h', 'Hindu Undivided Family'),
+        ('f', 'Firms'),
+        ('t', 'Association of Persons for a Trust'),
+        ('a', 'Association of Persons'),
+        ('b', 'Body of Individuals'),
+        ('g', 'Government'),
+        ('l', 'Local Authority'),
+        ('j', 'Artificial Judicial Person'),
+        ('other', 'Any Other'),
+    ], required=True)
+    valid_from = fields.Date(string="Valid From", required=True)
+    valid_upto = fields.Date(string="Valid Upto", required=True)
+    tax_id = fields.Many2one('account.tax', required=True)
+    section_id = fields.Many2one('l10n_in.section.alert')
+
+    @api.constrains('valid_from', 'valid_upto')
+    def _check_section_period(self):
+        for record in self:
+            if record.valid_upto <= record.valid_from:
+                raise ValidationError(_('You cannot set start date greater than end date'))
+            overlapping_lines = self.env['l10n_in.section.alert.tax'].search([
+                "&", "&", "&",
+                ('id', '!=', record.id),
+                ('entity_type', '=', record.entity_type),
+                ('section_id', '=', record.section_id.id),
+                "|", "&", ("valid_from", ">=", record.valid_from), ("valid_from", "<=", record.valid_upto),
+                "&", ("valid_upto", ">=", record.valid_from), ("valid_upto", "<=", record.valid_upto),
+            ])
+            if overlapping_lines:
+                raise ValidationError("The date range overlaps with an same existing section.")
