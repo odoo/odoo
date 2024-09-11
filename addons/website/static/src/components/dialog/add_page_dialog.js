@@ -212,7 +212,7 @@ export class AddPageTemplatePreview extends Component {
                 imgEl.setAttribute("loading", "lazy");
             }
             // Wait for fonts.
-            await iframeEl.contentDocument.fonts.ready;
+            await iframeEl.contentDocument?.fonts.ready;
             holderEl.classList.remove("o_loading");
             const adjustHeight = () => {
                 if (!this.previewRef.el) {
