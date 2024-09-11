@@ -903,15 +903,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                             }
                         }
                     }
-                    // Connect existing records in case of post-loading
-                    if (name.includes("<-")) {
-                        const toConnect = Object.values(records[field.relation]).filter(
-                            (r) => r.raw[field.inverse_name] === rawRec.id
-                        );
-                        for (const rec of toConnect) {
-                            connect(field, recorded, rec);
-                        }
-                    }
                 }
 
                 modelToSetup.push({ raw: rawRec, record: recorded });
