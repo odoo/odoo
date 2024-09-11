@@ -487,47 +487,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.journal_item_count = AccountMoveLine.search_count([('partner_id', '=', partner.id)])
 
-    def _compute_has_unreconciled_entries(self):
-        for partner in self:
-            # Avoid useless work if has_unreconciled_entries is not relevant for this partner
-            if not partner.active or not partner.is_company and partner.parent_id:
-                partner.has_unreconciled_entries = False
-                continue
-            self.env.cr.execute(
-                """ SELECT 1 FROM(
-                        SELECT
-                            p.last_time_entries_checked AS last_time_entries_checked,
-                            MAX(l.write_date) AS max_date
-                        FROM
-                            account_move_line l
-                            RIGHT JOIN account_account a ON (a.id = l.account_id)
-                            RIGHT JOIN res_partner p ON (l.partner_id = p.id)
-                        WHERE
-                            p.id = %s
-                            AND EXISTS (
-                                SELECT 1
-                                FROM account_move_line l
-                                WHERE l.account_id = a.id
-                                AND l.partner_id = p.id
-                                AND l.amount_residual > 0
-                            )
-                            AND EXISTS (
-                                SELECT 1
-                                FROM account_move_line l
-                                WHERE l.account_id = a.id
-                                AND l.partner_id = p.id
-                                AND l.amount_residual < 0
-                            )
-                        GROUP BY p.last_time_entries_checked
-                    ) as s
-                    WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-                """, (partner.id,))
-            partner.has_unreconciled_entries = self.env.cr.rowcount == 1
-
-    def mark_as_reconciled(self):
-        self.env['account.partial.reconcile'].check_access_rights('write')
-        return self.sudo().write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-
     def _get_company_currency(self):
         for partner in self:
             if partner.company_id:
@@ -588,13 +547,6 @@ class ResPartner(models.Model):
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
-    has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
-        help="The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
-    last_time_entries_checked = fields.Datetime(
-        string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
-        help='Last time the invoices & payments matching was performed for this partner. '
-             'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
-             'or if you click the "Done" button.')
     invoice_ids = fields.One2many('account.move', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
@@ -684,7 +636,7 @@ class ResPartner(models.Model):
     def _commercial_fields(self):
         return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
-             'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked', 'credit_limit']
+             'property_payment_term_id', 'property_supplier_payment_term_id', 'credit_limit']
 
     def action_view_partner_invoices(self):
         self.ensure_one()
