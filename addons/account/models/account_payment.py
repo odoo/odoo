@@ -106,6 +106,7 @@ class AccountPayment(models.Model):
         string='Destination Account',
         store=True, readonly=False,
         compute='_compute_destination_account_id',
+        index='btree_not_null',
         domain="[('account_type', 'in', ('asset_receivable', 'liability_payable'))]",
         check_company=True)
     destination_journal_id = fields.Many2one(
