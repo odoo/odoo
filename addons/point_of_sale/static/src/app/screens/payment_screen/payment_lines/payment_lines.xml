@@ -20,8 +20,10 @@
                                     <i class="oi oi-close text-danger" />
                                 </button>
                             </t>
-                            <t t-else="">
-                                <div class="mx-2 px-4"/>
+                           <t t-elif="line.payment_status and ['waitingCard', 'waitingCapture'].includes(line.payment_status)">
+                                <div class="mx-2 px-3">
+                                    <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                                </div>
                             </t>
                         </div>
                         <t t-if="line and line.payment_status">
@@ -111,9 +113,6 @@
                                     aria-label="Delete" title="Delete">
                                     <i class="oi oi-close text-danger" />
                                 </div>
-                            </t>
-                            <t t-else="">
-                                <div class="mx-2 px-4"/>
                             </t>
                         </div>
                     </t>
