@@ -31,24 +31,30 @@ import { OptimizeSEODialog } from "@website/components/dialog/seo";
  * @param {boolean} [show]
  * @returns {Promise<jQuery>}
  */
-function toggleDropdown($toggles, show) {
-    return Promise.all($($toggles).toArray().map(toggle => {
-        // We must select the element via the iframe so that the event handlers
-        // declared on the iframe are triggered.
-        const $toggle = toggle.ownerDocument.defaultView.$(toggle);
+function toggleDropdown(toggles, show) {
+    return Promise.all(Array.from(toggles).map(toggle => {
         const shown = toggle.classList.contains('show');
         if (shown === show) {
             return;
         }
         const toShow = !shown;
         return new Promise(resolve => {
-            $toggle.parent().one(
+            const parent = toggle.parentNode;
+            parent.addEventListener(
                 toShow ? 'shown.bs.dropdown' : 'hidden.bs.dropdown',
-                () => resolve()
+                () => resolve(),
+                { once: true }
             );
-            $toggle.dropdown(toShow ? 'show' : 'hide');
+
+            if (toShow) {
+                toggle.classList.add('show');
+                toggle.dispatchEvent(new Event('shown.bs.dropdown'));
+            } else {
+                toggle.classList.remove('show');
+                toggle.dispatchEvent(new Event('hidden.bs.dropdown'));
+            }
         });
-    })).then(() => $toggles);
+    })).then(() => toggles);
 }
 
 /**
@@ -196,30 +202,51 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // Do not insert a paragraph after each column added by the column commands:
         this.options.insertParagraphAfterColumns = false;
 
-        const $editableWindow = this.$editable[0].ownerDocument.defaultView;
+        const editableWindow = this.editable.ownerDocument.defaultView;
         // Dropdown menu initialization: handle dropdown openings by hand
-        const $dropdownMenuToggles = $editableWindow.$(".o_mega_menu_toggle, .o_main_nav .dropdown-toggle");
-        $dropdownMenuToggles.removeAttr('data-bs-toggle').dropdown('dispose');
+        const dropdownMenuToggleEls = editableWindow.document.querySelectorAll(
+            ".o_mega_menu_toggle, .o_main_nav .dropdown-toggle"
+        );
+        dropdownMenuToggleEls.forEach((toggleEl) => {
+            toggleEl.removeAttribute("data-bs-toggle");
+            var dropdown = Dropdown.getOrCreateInstance(toggleEl);
+            dropdown.dispose();
+        });
         // Since bootstrap 5.1.3, removing bsToggle is not sufficient anymore.
-        $dropdownMenuToggles.siblings(".dropdown-menu").addClass("o_wysiwyg_submenu");
-        $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
-            var $toggle = $(ev.currentTarget);
+        dropdownMenuToggleEls.forEach((toggleEl) => {
+            const siblingDropdownMenuEls = Array.from(toggleEl.parentNode.children).filter(
+                (childEl) => childEl !== toggleEl && childEl.classList.contains("dropdown-menu")
+            );
+            siblingDropdownMenuEls.forEach((menuEl) => menuEl.classList.add("o_wysiwyg_submenu"));
+        });
 
-            // Each time we toggle a dropdown, we will destroy the dropdown
-            // behavior afterwards to keep manual control of it
-            var dispose = ($els => $els.dropdown('dispose'));
+        dropdownMenuToggleEls.forEach((toggleEls) => {
+            toggleEls.addEventListener("mousedown", (ev) => {
+                const clickedToggle = ev.currentTarget;
 
-            // First hide all other dropdown menus
-            toggleDropdown($dropdownMenuToggles.not($toggle), false).then(dispose);
-
-            // Then toggle the clicked one
-            toggleDropdown($toggle)
-                .then(dispose)
-                .then(() => {
-                    if (!this.options.enableTranslation) {
-                        this._toggleMegaMenu($toggle[0]);
+                const dispose = (els) => {
+                    const dropdowns = Dropdown.getOrCreateInstance(els);
+                    if (dropdowns) {
+                        dropdowns.dispose();
                     }
-                });
+                };
+
+                // First hide all other dropdown menus
+                Array.from(dropdownMenuToggleEls)
+                    .filter((el) => el !== clickedToggle)
+                    .forEach((el) => {
+                        toggleDropdown(el, false).then(() => dispose(el));
+                    });
+
+                // Then toggle the clicked one
+                toggleDropdown(clickedToggle)
+                    .then(() => dispose(clickedToggle))
+                    .then(() => {
+                        if (!this.options.enableTranslation) {
+                            this._toggleMegaMenu(clickedToggle);
+                        }
+                    });
+            });
         });
 
         // Ensure :blank oe_structure elements are in fact empty as ':blank'
@@ -1067,11 +1094,14 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @returns {Promise}
      */
     _restoreMegaMenus() {
-        var $megaMenuToggles = this.$editable.find('.o_mega_menu_toggle');
-        $megaMenuToggles.off('.wysiwyg_megamenu')
-            .attr('data-bs-toggle', 'dropdown')
-            .dropdown({});
-        return toggleDropdown($megaMenuToggles, false);
+        const megaMenuToggleEls = this.editable.querySelectorAll(".o_mega_menu_toggle");
+        // TODO-VISP: find binded event and remove it javascript
+        $(megaMenuToggleEls).off('.wysiwyg_megamenu')
+        megaMenuToggleEls.forEach((el) => {
+            el.setAttribute("data-bs-toggle", "dropdown");
+            Dropdown.getOrCreateInstance(el);
+        });
+        return toggleDropdown(megaMenuToggleEls, false);
     }
     /**
      * Toggles the mega menu.
