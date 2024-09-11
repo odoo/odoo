@@ -82,6 +82,17 @@ class Company(models.Model):
                                 'company_id': company.id,
                             })
                         mapping.append((0, 0, {'tax_src_id': domestic_tax.id, 'tax_dest_id': foreign_taxes[tax_amount].id}))
+                    elif tax_amount and tax_amount not in [tax_line.tax_dest_id.amount for tax_line in fpos.tax_ids if tax_line.tax_src_id.amount == domestic_tax.amount]:
+                        foreign_taxes[tax_amount] = self.env['account.tax'].search([
+                            ('name', '=', f'{tax_amount}% {destination_country.code} {destination_country.vat_label}'),
+                            ('amount', '=', tax_amount),
+                            ('country_id', '=', company.account_fiscal_country_id.id),
+                            ('company_id', '=', company.id),
+                        ], limit=1)
+                        mapping.append((0, 0, {'tax_src_id': domestic_tax.id, 'tax_dest_id': foreign_taxes[tax_amount].id}))
+                        replaced_tax_id = fpos.tax_ids.filtered(lambda tax_line: tax_line.tax_src_id.amount == domestic_tax.amount).id
+                        if replaced_tax_id:
+                            fpos.tax_ids.filtered(lambda tax_id: tax_id.id == replaced_tax_id).unlink()
                 if mapping:
                     fpos.write({
                         'tax_ids': mapping
