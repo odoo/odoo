@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import { wrapInlinesInBlocks, removeClass, setTagName, toggleClass } from "@html_editor/utils/dom";
+import { removeClass, toggleClass, wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isEmptyBlock,
@@ -16,8 +16,9 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
-import { compareListTypes, createList, getListMode, insertListAfter, isListItem } from "./utils";
+import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { getListMode, switchListMode } from "@html_editor/utils/list";
 
 function isListActive(listMode) {
     return (selection) => {
@@ -224,7 +225,9 @@ export class ListPlugin extends Plugin {
         // Apply changes.
         if (listsToSwitch.size || nonListBlocks.size) {
             for (const list of listsToSwitch) {
-                this.switchListMode(list, mode);
+                const cursors = this.shared.preserveSelection();
+                const newList = switchListMode(list, mode);
+                cursors.remapNode(list, newList).restore();
             }
             for (const block of nonListBlocks) {
                 const list = this.blockToList(block, mode, listStyle);
@@ -262,38 +265,6 @@ export class ListPlugin extends Plugin {
     // --------------------------------------------------------------------------
     // Helpers for toggleList
     // --------------------------------------------------------------------------
-
-    /**
-     * Switches the list mode of the given list element.
-     *
-     * @param {HTMLOListElement|HTMLUListElement} list - The list element to switch the mode of.
-     * @param {"UL"|"OL"|"CL"} newMode - The new mode to switch to.
-     * @returns {HTMLOListElement|HTMLUListElement} The modified list element.
-     */
-    switchListMode(list, newMode) {
-        if (getListMode(list) === newMode) {
-            return;
-        }
-        const newTag = newMode === "CL" ? "UL" : newMode;
-        const cursors = this.shared.preserveSelection();
-        const newList = setTagName(list, newTag);
-        // Clear list style (@todo @phoenix - why??)
-        newList.style.removeProperty("list-style");
-        for (const li of newList.children) {
-            if (li.style.listStyle !== "none") {
-                li.style.listStyle = null;
-                if (!li.style.all) {
-                    li.removeAttribute("style");
-                }
-            }
-        }
-        removeClass(newList, "o_checklist");
-        if (newMode === "CL") {
-            newList.classList.add("o_checklist");
-        }
-        cursors.remapNode(list, newList).restore();
-        return newList;
-    }
 
     /**
      * @param {HTMLElement} element
