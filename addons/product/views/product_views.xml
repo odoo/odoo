@@ -347,7 +347,10 @@
                                 </div>
                                 <label for="standard_price"/>
                                 <div class="o_row">
-                                    <field name="standard_price" widget='monetary' class="oe_inline" options="{'currency_field': 'cost_currency_id'}"/>
+                                    <field name="standard_price"
+                                        class="oe_inline"
+                                        widget="monetary"
+                                        options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                 </div>
                                 <field name="currency_id" invisible='1'/>
                                 <field name="cost_currency_id" invisible="1"/>
