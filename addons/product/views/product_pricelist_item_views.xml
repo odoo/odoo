@@ -78,7 +78,7 @@
                 <field name="fixed_price"
                         widget="monetary"
                         string="Price"
-                        options="{'currency_field': 'currency_id'}"
+                        options="{'currency_field': 'currency_id', 'field_digits': True}"
                         required='1'/>
                 <field name="min_quantity" colspan="4"/>
                 <field name="currency_id" column_invisible="True"/>
@@ -125,8 +125,9 @@
                                 invisible="display_applied_on == '1_product' and compute_price == 'fixed_price'"/>
                             <label for="fixed_price" invisible="compute_price != 'fixed'"/>
                             <div class="o_row" invisible="compute_price != 'fixed'" style="width: 60% !important;">
-                                <field name="fixed_price" widget="monetary"
-                                    options="{'currency_field': 'currency_id'}"/>
+                                <field name="fixed_price"
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                 <span class="d-flex gap-2 p-0" invisible="not product_uom ">per<field
                                         name="product_uom"/></span>
                             </div>
@@ -169,7 +170,9 @@
                                 <span>%</span>
                             </div>
                             <field name="price_round" string="Round off to"/>
-                            <field name="price_surcharge" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="price_surcharge"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <label string="Margins" for="price_min_margin"
                                 groups="base.group_no_one"/>
                             <div class="d-flex align-items-baseline" groups="base.group_no_one">
