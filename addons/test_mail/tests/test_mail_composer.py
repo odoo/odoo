@@ -1234,6 +1234,7 @@ class TestComposerInternals(TestMailComposer):
         self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record, add_web=False)
         ).create({
+            'template_name': 'My Template',
             'subject': 'Template Subject',
             'body': '<p>Template Body</p>',
         }).create_mail_template()
@@ -1243,7 +1244,9 @@ class TestComposerInternals(TestMailComposer):
             ('model', '=', self.test_record._name),
             ('subject', '=', 'Template Subject')
         ], limit=1)
-        self.assertEqual(template.name, 'Template Subject')
+
+        self.assertEqual(template.name, 'My Template')
+        self.assertEqual(template.subject, 'Template Subject')
         self.assertEqual(template.body_html, '<p>Template Body</p>', 'email_template incorrect body_html')
 
     @users('erp_manager')
