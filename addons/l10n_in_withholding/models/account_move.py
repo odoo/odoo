@@ -110,17 +110,18 @@ class AccountMove(models.Model):
             case _:
                 return False
 
-    @api.depends('invoice_line_ids.price_total')
-    def _compute_l10n_in_tcs_tds_warning(self):
-        def _group_by_section_alert(invoice_lines):
-            group_by_lines = {}
-            for line in invoice_lines:
-                group_key = line.account_id.l10n_in_tds_tcs_section_id
-                if group_key and not line.company_currency_id.is_zero(line.price_total):
-                    group_by_lines.setdefault(group_key, [])
-                    group_by_lines[group_key].append(line)
-            return group_by_lines
+    def _l10n_in_group_by_section_alert(self):
+        self.ensure_one()
+        group_by_lines = {}
+        for line in self.invoice_line_ids:
+            group_key = line.account_id.l10n_in_tds_tcs_section_id
+            if group_key and not line.company_currency_id.is_zero(line.price_total):
+                group_by_lines.setdefault(group_key, [])
+                group_by_lines[group_key].append(line)
+        return group_by_lines
 
+    def _l10n_in_get_warning_sections(self):
+        self.ensure_one()
         def _is_section_applicable(section_alert, threshold_sums, invoice_currency_rate, lines):
             lines_total = sum(
                     (line.price_total * invoice_currency_rate) if section_alert.consider_amount == 'total_amount' else line.balance
@@ -129,7 +130,7 @@ class AccountMove(models.Model):
             if section_alert.is_aggregate_limit:
                 aggregate_period_key = section_alert.consider_amount == 'total_amount' and 'price_total' or 'balance'
                 aggregate_total = threshold_sums.get(section_alert.aggregate_period, {}).get(aggregate_period_key)
-                if move.state == 'draft':
+                if self.state == 'draft':
                     aggregate_total += lines_total
                 if aggregate_total > section_alert.aggregate_limit:
                     return True
@@ -138,28 +139,33 @@ class AccountMove(models.Model):
                 and lines_total > section_alert.per_transaction_limit
             )
 
+        warning = set()
+        commercial_partner_id = self.commercial_partner_id
+        existing_section = (self.l10n_in_withhold_move_ids.line_ids + self.line_ids).tax_ids.l10n_in_section_id
+        for section_alert, lines in self._l10n_in_group_by_section_alert().items():
+            if (
+                (section_alert not in existing_section
+                 or [line for line in lines if section_alert not in line.tax_ids.l10n_in_section_id])
+                and self._l10n_in_is_warning_applicable(section_alert)
+                and _is_section_applicable(
+                    section_alert,
+                    self._get_sections_aggregate_sum_by_pan(
+                        section_alert,
+                        commercial_partner_id
+                    ),
+                    self.invoice_currency_rate,
+                    lines
+            )
+            ):
+                warning.add(section_alert.id)
+        return self.env['l10n_in.section.alert'].browse(warning)
+
+
+    @api.depends('invoice_line_ids.price_total')
+    def _compute_l10n_in_tcs_tds_warning(self):
         for move in self:
             if move.country_code == 'IN' and move.move_type in ['in_invoice', 'out_invoice']:
-                warning = set()
-                commercial_partner_id = move.commercial_partner_id
-                existing_section = (self.l10n_in_withhold_move_ids.line_ids + move.line_ids).tax_ids.l10n_in_section_id
-                for section_alert, lines in _group_by_section_alert(move.invoice_line_ids).items():
-                    if (
-                        (section_alert not in existing_section
-                        or [line for line in lines if section_alert not in line.tax_ids.l10n_in_section_id])
-                        and move._l10n_in_is_warning_applicable(section_alert)
-                        and _is_section_applicable(
-                            section_alert,
-                            move._get_sections_aggregate_sum_by_pan(
-                                section_alert,
-                                commercial_partner_id
-                            ),
-                            move.invoice_currency_rate,
-                            lines
-                        )
-                    ):
-                        warning.add(section_alert.id)
-                warning_sections = self.env['l10n_in.section.alert'].browse(warning)
+                warning_sections = move._l10n_in_get_warning_sections()
                 if warning_sections:
                     move.l10n_in_tcs_tds_warning = warning_sections._get_warning_message()
                 else:
