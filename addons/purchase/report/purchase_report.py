@@ -79,17 +79,17 @@ class PurchaseReport(models.Model):
                     extract(epoch from age(po.date_approve,po.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,po.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr_lines,
-                    sum(l.price_total / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * currency_table.rate as price_total,
-                    (sum(l.product_qty * l.price_unit / COALESCE(po.currency_rate, 1.0))/NULLIF(sum(l.product_qty/line_uom.factor*product_uom.factor),0.0))::decimal(16,2) * currency_table.rate as price_average,
+                    sum(l.price_total / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * account_currency_table.rate as price_total,
+                    (sum(l.product_qty * l.price_unit / COALESCE(po.currency_rate, 1.0))/NULLIF(sum(l.product_qty/line_uom.factor*product_uom.factor),0.0))::decimal(16,2) * account_currency_table.rate as price_average,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
                     sum(p.weight * l.product_qty/line_uom.factor*product_uom.factor) as weight,
                     sum(p.volume * l.product_qty/line_uom.factor*product_uom.factor) as volume,
-                    sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * currency_table.rate as untaxed_total,
+                    sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * account_currency_table.rate as untaxed_total,
                     sum(l.product_qty / line_uom.factor * product_uom.factor) as qty_ordered,
                     sum(l.qty_received / line_uom.factor * product_uom.factor) as qty_received,
                     sum(l.qty_invoiced / line_uom.factor * product_uom.factor) as qty_billed,
-                    case when t.purchase_method = 'purchase' 
+                    case when t.purchase_method = 'purchase'
                          then sum(l.product_qty / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                          else sum(l.qty_received / line_uom.factor * product_uom.factor) - sum(l.qty_invoiced / line_uom.factor * product_uom.factor)
                     end as qty_to_be_billed
@@ -108,9 +108,9 @@ class PurchaseReport(models.Model):
                 left join res_company C ON C.id = po.company_id
                 left join uom_uom line_uom on (line_uom.id=l.product_uom)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
-                left join %(currency_table)s ON currency_table.company_id = po.company_id
+                left join %(currency_table)s ON account_currency_table.company_id = po.company_id
             """,
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
+            currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),
         )
 
     def _where(self) -> SQL:
@@ -150,7 +150,7 @@ class PurchaseReport(models.Model):
                 partner.country_id,
                 partner.commercial_partner_id,
                 po.id,
-                currency_table.rate
+                account_currency_table.rate
             """,
         )
 

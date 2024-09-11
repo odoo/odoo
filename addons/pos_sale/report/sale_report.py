@@ -36,23 +36,23 @@ class SaleReport(models.Model):
             CASE WHEN pos.state != 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_to_invoice,
             SUM(l.price_unit)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('account_currency_table.rate')}
             AS price_unit,
             SUM(l.price_subtotal_incl)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('account_currency_table.rate')}
             AS price_total,
             SUM(l.price_subtotal)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('account_currency_table.rate')}
             AS price_subtotal,
             (CASE WHEN pos.state != 'invoiced' THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('account_currency_table.rate')}
             AS amount_to_invoice,
             (CASE WHEN pos.state = 'invoiced' THEN SUM(l.price_subtotal) ELSE 0 END)
                 / MIN({self._case_value_or_one('pos.currency_rate')})
-                * {self._case_value_or_one('currency_table.rate')}
+                * {self._case_value_or_one('account_currency_table.rate')}
             AS amount_invoiced,
             count(*) AS nbr,
             pos.name AS name,
@@ -79,7 +79,7 @@ class SaleReport(models.Model):
             l.discount AS discount,
             SUM((l.price_unit * l.discount * l.qty / 100.0
                 / {self._case_value_or_one('pos.currency_rate')}
-                * {self._case_value_or_one('currency_table.rate')}))
+                * {self._case_value_or_one('account_currency_table.rate')}))
             AS discount_amount,
             concat('pos.order', ',', pos.id) AS order_reference"""
 
@@ -110,7 +110,7 @@ class SaleReport(models.Model):
         return filled_fields
 
     def _from_pos(self):
-        currency_table_sql = self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today())
+        currency_table = self.env['res.currency']._get_simple_currency_table(self.env.companies)
         return """
             pos_order_line l
             JOIN pos_order pos ON l.order_id = pos.id
@@ -121,9 +121,9 @@ class SaleReport(models.Model):
             LEFT JOIN pos_session session ON session.id = pos.session_id
             LEFT JOIN pos_config config ON config.id = session.config_id
             LEFT JOIN stock_picking_type picking ON picking.id = config.picking_type_id
-            JOIN {currency_table} ON currency_table.company_id = pos.company_id
+            JOIN {currency_table} ON account_currency_table.company_id = pos.company_id
             """.format(
-            currency_table=self.env.cr.mogrify(currency_table_sql).decode(self.env.cr.connection.encoding),
+            currency_table=self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding),
             )
 
     def _where_pos(self):
@@ -155,7 +155,7 @@ class SaleReport(models.Model):
             partner.zip,
             u.factor,
             pos.crm_team_id,
-            currency_table.rate,
+            account_currency_table.rate,
             picking.warehouse_id"""
 
     def _query(self):

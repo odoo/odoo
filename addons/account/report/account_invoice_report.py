@@ -102,7 +102,7 @@ class AccountInvoiceReport(models.Model):
                                                                             AS quantity,
                 line.price_subtotal * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS price_subtotal_currency,
-                -line.balance * currency_table.rate                         AS price_subtotal,
+                -line.balance * account_currency_table.rate                         AS price_subtotal,
                 line.price_total * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS price_total,
                 -COALESCE(
@@ -110,10 +110,10 @@ class AccountInvoiceReport(models.Model):
                    (line.balance / NULLIF(line.quantity, 0.0)) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                    -- convert to template uom
                    * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
-                   0.0) * currency_table.rate                               AS price_average,
+                   0.0) * account_currency_table.rate                               AS price_average,
                 CASE
                     WHEN move.move_type NOT IN ('out_invoice', 'out_receipt') THEN 0.0
-                    ELSE -line.balance * currency_table.rate - (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product_standard_price.value_float, 0.0)
+                    ELSE -line.balance * account_currency_table.rate - (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product_standard_price.value_float, 0.0)
                 END
                                                                             AS price_margin,
                 line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('out_invoice','in_refund','out_receipt') THEN -1 ELSE 1 END)
@@ -140,9 +140,9 @@ class AccountInvoiceReport(models.Model):
                     ON product_standard_price.res_id = CONCAT('product.product,', product.id)
                     AND product_standard_price.name = 'standard_price'
                     AND product_standard_price.company_id = line.company_id
-                JOIN %(currency_table)s ON currency_table.company_id = line.company_id
+                JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id
             ''',
-            currency_table=self.env['res.currency']._get_query_currency_table(self.env.companies.ids, fields.Date.today()),
+            currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),
         )
 
     @api.model
