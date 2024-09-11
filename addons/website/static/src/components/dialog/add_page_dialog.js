@@ -195,6 +195,10 @@ export class AddPageTemplatePreview extends Component {
             for (const imgEl of lazyLoadedImgEls) {
                 imgEl.setAttribute("loading", "lazy");
             }
+            if (!this.previewRef.el) {
+                // Stop the process when preview is removed
+                return;
+            }
             // Wait for fonts.
             await iframeEl.contentDocument.fonts.ready;
             holderEl.classList.remove("o_loading");
