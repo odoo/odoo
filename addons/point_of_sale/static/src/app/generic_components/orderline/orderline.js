@@ -26,9 +26,11 @@ export class Orderline extends Component {
         },
         showTaxGroupLabels: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
+        basic_receipt: { type: Boolean, optional: true },
     };
     static defaultProps = {
         class: {},
         showTaxGroupLabels: false,
+        basic_receipt: false,
     };
 }

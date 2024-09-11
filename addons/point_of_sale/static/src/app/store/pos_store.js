@@ -1394,12 +1394,13 @@ export class PosStore extends Reactive {
         const baseUrl = this.session._base_url;
         return order.export_for_printing(baseUrl, headerData);
     }
-    async printReceipt(order = this.get_order()) {
+    async printReceipt({ basic = false, order = this.get_order() } = {}) {
         await this.printer.print(
             OrderReceipt,
             {
                 data: this.orderExportForPrinting(order),
                 formatCurrency: this.env.utils.formatCurrency,
+                basic_receipt: basic,
             },
             { webPrintFallback: true }
         );

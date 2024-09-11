@@ -14,6 +14,10 @@ export class OrderReceipt extends Component {
     static props = {
         data: Object,
         formatCurrency: Function,
+        basic_receipt: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        basic_receipt: false,
     };
     omit(...args) {
         return omit(...args);

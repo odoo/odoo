@@ -13,7 +13,7 @@
                         <td class="text-truncate" style="max-width: 275px;"
                             t-esc="soLine.product_name" />
                         <td class="text-truncate">: </td>
-                        <td class="text-truncate"><t t-esc="soLine.total" /> (tax incl.)</td>
+                        <td t-if="!props.basic_receipt" class="text-truncate"><t t-esc="soLine.total" /> (tax incl.)</td>
                     </tr>
                 </table>
             </t>
