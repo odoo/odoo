@@ -232,6 +232,27 @@ describe(parseUrl(import.meta.url), () => {
         expect(clickEvent.detail).toBe(1);
     });
 
+    test("click on disabled element", async () => {
+        await mountOnFixture(/* xml */ `<button type="button" disabled="">Click me</button>`);
+
+        monitorEvents("button");
+
+        await click("button");
+
+        expect.verifySteps([
+            // Hover
+            "button.pointerover",
+            "button.mouseover",
+            "button.pointerenter",
+            "button.mouseenter",
+            "button.pointermove",
+            "button.mousemove",
+            // Click (mouse events disabled)
+            "button.pointerdown",
+            "button.pointerup",
+        ]);
+    });
+
     test("click on common parent", async () => {
         await mountOnFixture(/* xml */ `
             <main class="parent">
