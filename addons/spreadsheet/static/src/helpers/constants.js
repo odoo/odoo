@@ -5,8 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 
 export const DEFAULT_LINES_NUMBER = 20;
 
-export const TOP_LEVEL_STYLE = { bold: true, fillColor: "#E6F2F3" };
-
 export const UNTITLED_SPREADSHEET_NAME = _t("Untitled spreadsheet");
 
 export const RELATIVE_DATE_RANGE_TYPES = [

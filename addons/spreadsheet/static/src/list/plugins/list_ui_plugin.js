@@ -7,8 +7,9 @@ import { ListDataSource } from "../list_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 
-const { astToFormula } = spreadsheet;
+const { astToFormula, constants } = spreadsheet;
 const { isEvaluationError } = spreadsheet.helpers;
+const { PIVOT_TABLE_CONFIG } = constants;
 
 /**
  * @typedef {import("./list_core_plugin").SpreadsheetList} SpreadsheetList
@@ -64,6 +65,16 @@ export class ListUIPlugin extends OdooUIPlugin {
             case "INSERT_ODOO_LIST": {
                 const { id, linesNumber } = cmd;
                 this._setupListDataSource(id, linesNumber);
+                break;
+            }
+            case "INSERT_ODOO_LIST_WITH_TABLE": {
+                this.dispatch("INSERT_ODOO_LIST", cmd);
+                this._addTable(cmd);
+                break;
+            }
+            case "RE_INSERT_ODOO_LIST_WITH_TABLE": {
+                this.dispatch("RE_INSERT_ODOO_LIST", cmd);
+                this._addTable(cmd);
                 break;
             }
             case "DUPLICATE_ODOO_LIST": {
@@ -238,6 +249,21 @@ export class ListUIPlugin extends OdooUIPlugin {
             default:
                 return undefined;
         }
+    }
+
+    _addTable({ sheetId, col, row, linesNumber, columns }) {
+        const zone = {
+            left: col,
+            right: col + columns.length - 1,
+            top: row,
+            bottom: row + linesNumber,
+        };
+        this.dispatch("CREATE_TABLE", {
+            tableType: "static",
+            sheetId,
+            ranges: [this.getters.getRangeDataFromZone(sheetId, zone)],
+            config: { ...PIVOT_TABLE_CONFIG, firstColumn: false },
+        });
     }
 
     // -------------------------------------------------------------------------
