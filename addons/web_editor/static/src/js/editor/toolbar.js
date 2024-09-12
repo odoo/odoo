@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useActiveElement, utils as uiUtils } from "@web/core/ui/ui_service";
+import { utils as uiUtils } from "@web/core/ui/ui_service";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 
 import {
@@ -90,7 +90,6 @@ export class Toolbar extends Component {
     setup() {
         this.orm = useService("orm");
         this.state = useState({ languages : [] });
-        useActiveElement("toolbarRef");
         onMounted(() => {
             for (const [colorType, ref] of Object.entries(this.colorDropdownRef)) {
                 const dropdown = ref.el;
