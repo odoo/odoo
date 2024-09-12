@@ -186,4 +186,21 @@ export class ProductConfiguratorPopup extends Component {
         this.props.getPayload(this.computePayload());
         this.props.close();
     }
+    isArchivedCombination() {
+        const variantAttributeValueIds = this.getVariantAttributeValueIds();
+        if (variantAttributeValueIds.length === 0) {
+            return false;
+        }
+        return this.props.product._isArchivedCombination(variantAttributeValueIds);
+    }
+    getVariantAttributeValueIds() {
+        const attribute_value_ids = [];
+        this.state.payload.forEach((att_component) => {
+            const { valueIds } = att_component.getValue();
+            if (att_component.attributeLine.attribute_id.create_variant === "always") {
+                attribute_value_ids.push(valueIds);
+            }
+        });
+        return attribute_value_ids.flat();
+    }
 }
