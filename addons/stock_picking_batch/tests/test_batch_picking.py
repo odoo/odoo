@@ -238,7 +238,7 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
+        back_order_wizard = Form.from_action(self.env, back_order_wizard_dict).save()
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
         back_order_wizard.process()
 
@@ -275,7 +275,7 @@ class TestBatchPicking(TransactionCase):
         # There should be a wizard asking to process picking without quantity done
         back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
+        back_order_wizard = Form.from_action(self.env, back_order_wizard_dict).save()
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
         back_order_wizard.process()
 
@@ -313,7 +313,7 @@ class TestBatchPicking(TransactionCase):
         back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
         self.assertEqual(back_order_wizard_dict.get('res_model'), 'stock.backorder.confirmation')
-        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
+        back_order_wizard = Form.from_action(self.env, back_order_wizard_dict).save()
         # Empty pickings are excluded from the validation process, to be removed from the batch afterwards.
         self.assertEqual(len(back_order_wizard.pick_ids), 1)
         back_order_wizard.process()
@@ -353,7 +353,7 @@ class TestBatchPicking(TransactionCase):
         # confirm w/ backorder
         back_order_wizard_dict = self.batch.action_done()
         self.assertTrue(back_order_wizard_dict)
-        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
+        back_order_wizard = Form.from_action(self.env, back_order_wizard_dict).save()
         self.assertEqual(len(back_order_wizard.pick_ids), 2)
         back_order_wizard.process()
 
@@ -592,9 +592,7 @@ class TestBatchPicking(TransactionCase):
         self.picking_client_1.move_ids.write({'quantity': 10, 'picked': True})
         self.picking_client_2.move_ids.write({'quantity': 7, 'picked': True})
 
-        action = self.batch.action_done()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.process_cancel_backorder()
+        Form.from_action(self.env, self.batch.action_done()).save().process_cancel_backorder()
 
         self.assertEqual(self.picking_client_1.state, 'done')
         self.assertEqual(self.picking_client_2.state, 'done')
@@ -651,9 +649,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(batch.picking_ids, receipt01 | receipt02)
 
         receipt01.move_ids.quantity = 0.75
-        action = receipt01.button_validate()
-        wizard = Form(self.env[action.get('res_model')].with_context(action['context'])).save()
-        res = wizard.process()
+        res = Form.from_action(self.env, receipt01.button_validate()).save().process()
         self.assertEqual(receipt01.state, 'done')
         self.assertIsInstance(res, dict)
         self.assertEqual(res.get('res_model'), 'report.stock.report_reception')
@@ -829,7 +825,7 @@ class TestBatchPicking02(TransactionCase):
         })
         batch.action_confirm()
         action = batch.action_done()
-        Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
+        Form.from_action(self.env, action).save().process_cancel_backorder()
         self.assertEqual(batch.state, 'done')
 
     def test_backorder_batching(self):
@@ -892,9 +888,7 @@ class TestBatchPicking02(TransactionCase):
         batch = pickings.batch_id
         self.assertEqual(batch.picking_ids, picking_1 | picking_2)
         picking_2.move_ids.filtered(lambda m: m.product_id == productA).quantity = 0.0
-        backorder_wizard_dict = picking_2.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, picking_2.button_validate()).save().process()
         self.assertEqual(picking_2.state, 'done')
         self.assertFalse(picking_2 in batch.picking_ids)
         backorder = batch.picking_ids - picking_1
@@ -953,9 +947,7 @@ class TestBatchPicking02(TransactionCase):
         })
         pickings.move_ids.quantity = 1.0
         batch.action_confirm()
-        backorder_wizard_dict = batch.action_done()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, batch.action_done()).save().process()
         self.assertEqual(batch.state, 'done')
         self.assertEqual(batch.picking_ids.mapped('state'), ['done', 'done', 'done'])
         bo_1 = pickings[0].backorder_ids
@@ -973,9 +965,7 @@ class TestBatchPicking02(TransactionCase):
         backorders.action_confirm()
         backorders.move_ids.quantity = 1.0
         bo_batch.action_confirm()
-        backorder_wizard_dict = bo_batch.action_done()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, bo_batch.action_done()).save().process()
         self.assertEqual(bo_batch.state, 'done')
         self.assertEqual(bo_batch.picking_ids.mapped('state'), ['done', 'done'])
         bo_3 = bo_batch.picking_ids[0].backorder_ids

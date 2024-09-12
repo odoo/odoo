@@ -1716,9 +1716,7 @@ class TestReports(TestReportsCommon):
         for move in receipt.move_ids:
             move.quantity = orig_incoming_quantity
         receipt.move_ids.picked = True
-        res_dict = receipt.button_validate()
-        backorder_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, receipt.button_validate()).save().process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', receipt.id)])
 
         # Check backorder assigned quantities

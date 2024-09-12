@@ -82,9 +82,7 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
         receipt.move_line_ids.quantity = 1
         receipt.button_validate()
 
-        action = po.action_create_invoice()
-        bill = self.env['account.move'].browse(action['res_id'])
-        bill_form = Form(bill)
+        bill_form = Form.from_action(self.env, po.action_create_invoice())
         bill_form.invoice_date = bill_form.date
         with bill_form.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
@@ -92,8 +90,7 @@ class TestStockLandedCostsBranches(TestStockValuationLCCommon):
         bill = bill_form.save()
         bill.action_post()
 
-        action = bill.button_create_landed_costs()
-        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form = Form.from_action(self.env, bill.button_create_landed_costs())
         lc_form.picking_ids.add(receipt)
         lc = lc_form.save()
         lc.button_validate()

@@ -546,9 +546,7 @@ class TestTraceability(TestMrpCommon):
         mo.button_mark_done()
 
         # unbuild
-        action = mo.button_unbuild()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.action_validate()
+        Form.from_action(self.env, mo.button_unbuild()).save().action_validate()
 
         # scrap the component
         scrap = self.env['stock.scrap'].create({

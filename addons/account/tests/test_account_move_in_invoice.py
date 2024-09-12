@@ -1549,8 +1549,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             ],
         })
         move.action_post()
-        action_data = move.action_register_payment()
-        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
+        with Form.from_action(self.env, move.action_register_payment()) as wiz_form:
             self.assertEqual(wiz_form.payment_date.strftime('%Y-%m-%d'), '2023-02-01')
             self.assertEqual(wiz_form.amount, 276)  # First installment of 30%
             self.assertTrue(wiz_form.group_payment)

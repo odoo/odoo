@@ -316,9 +316,7 @@ class TestSaleStockInvoices(TestSaleCommon):
             line.quantity = 3
         move_form.save()
         delivery02.move_ids.picked = True
-        action = delivery02.button_validate()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.process()
+        Form.from_action(self.env, delivery02.button_validate()).save().process()
 
         # Invoice 2 x P
         invoice01 = so._create_invoices()

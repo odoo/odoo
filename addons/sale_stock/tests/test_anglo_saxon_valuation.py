@@ -127,9 +127,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        wiz = sale_order.picking_ids.button_validate()
-        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         # Invoice 1
         invoice = sale_order._create_invoices()
@@ -199,9 +197,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        wiz = sale_order.picking_ids.button_validate()
-        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         # change the standard price to 14
         self.product.standard_price = 14.0
@@ -266,9 +262,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        wiz = sale_order.picking_ids.button_validate()
-        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         # Invoice 1
         invoice = sale_order._create_invoices()
@@ -338,9 +332,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        wiz = sale_order.picking_ids.button_validate()
-        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         # change the standard price to 14
         self.product.standard_price = 14.0
@@ -418,9 +410,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        wiz = sale_order.picking_ids.button_validate()
-        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -574,9 +564,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        wiz = sale_order.picking_ids.button_validate()
-        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -748,9 +736,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        wiz = sale_order.picking_ids.button_validate()
-        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         # upate the standard price to 12
         self.product.standard_price = 12
@@ -844,9 +830,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        wiz = sale_order.picking_ids.button_validate()
-        wiz = Form(self.env[wiz['res_model']].with_context(wiz['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         # upate the standard price to 12
         self.product.standard_price = 12
@@ -1410,8 +1394,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             picking.move_ids.write({'quantity': 1, 'picked': True})
             action = picking.button_validate()
             if isinstance(action, dict):
-                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, action).save().process()
             picking = picking.backorder_ids
 
         invoice = so._create_invoices()
@@ -1503,8 +1486,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             picking.move_ids.write({'quantity': 1, 'picked': True})
             action = picking.button_validate()
             if isinstance(action, dict):
-                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, action).save().process()
             picking = picking.backorder_ids
 
         invoice = so._create_invoices()
@@ -1590,8 +1572,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             picking.move_ids.write({'quantity': 1, 'picked': True})
             action = picking.button_validate()
             if isinstance(action, dict):
-                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, action).save().process()
             picking = picking.backorder_ids
 
             invoice = so._create_invoices()
@@ -1764,9 +1745,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         # Deliver a part of it with a backorder
         so.picking_ids.move_ids.quantity = 4
         so.picking_ids.move_ids.picked = True
-        backorder_wizard_dict = so.picking_ids.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, so.picking_ids.button_validate()).save().process()
 
         invoice_wizard = self.env['sale.advance.payment.inv'].with_context(active_ids=so.ids, open_invoices=True).create({})
         invoice_wizard.create_invoices()

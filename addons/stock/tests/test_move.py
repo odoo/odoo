@@ -2931,9 +2931,7 @@ class StockMove(TransactionCase):
         move_stock_pack.picked = True
 
         # create the backorder in the uom of the quants
-        backorder_wizard_dict = picking_stock_pack.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, picking_stock_pack.button_validate()).save().process()
         self.assertEqual(move_stock_pack.state, 'done')
         self.assertEqual(move_stock_pack.quantity, 0.5)
         self.assertEqual(move_stock_pack.product_uom_qty, 0.5)
@@ -5915,7 +5913,7 @@ class StockMove(TransactionCase):
         delivery.move_ids.filtered(lambda ml: ml.product_id == product4).quantity = 2
         (delivery.move_ids[:2] | delivery.move_ids[3]).picked = True
         backorder_wizard_dict = delivery.button_validate()
-        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process()  # Creates the backorder.
 
         first_backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)], limit=1)
@@ -5942,7 +5940,7 @@ class StockMove(TransactionCase):
         first_backorder.move_ids.filtered(lambda ml: ml.product_id == product4).quantity = 8
         first_backorder.move_ids.picked = True
         backorder_wizard_dict = first_backorder.button_validate()
-        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process()  # Creates the backorder.
 
         second_backorder = self.env['stock.picking'].search([('backorder_id', '=', first_backorder.id)], limit=1)
@@ -5986,7 +5984,7 @@ class StockMove(TransactionCase):
         second_backorder.move_line_ids.filtered(lambda ml: ml.product_id == product2).unlink()
         second_backorder.move_ids.picked = True
         backorder_wizard_dict = second_backorder.button_validate()
-        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process_cancel_backorder()
 
         # Checks again the values for the original delivery.
@@ -6171,7 +6169,7 @@ class StockMove(TransactionCase):
         delivery.action_confirm()
 
         backorder_wizard_dict = delivery.button_validate()
-        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process()
         picking.backorder_ids.action_cancel()
 
@@ -6587,9 +6585,7 @@ class StockMove(TransactionCase):
         # Complete one move and create a backorder with the remaining move
         move_product.quantity = 1
         move_consu.quantity = 0
-        backorder_wizard_dict = picking.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.with_user(self.user_stock_user).process()
+        Form.from_action(self.env, picking.button_validate()).save().with_user(self.user_stock_user).process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
 
         self.assertEqual(picking.scheduled_date, today + relativedelta(day=5))

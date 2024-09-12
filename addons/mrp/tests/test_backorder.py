@@ -418,13 +418,12 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo.action_generate_serial()
         res_dict = mo.button_mark_done()
         self.assertEqual(res_dict.get('res_model'), 'mrp.production.backorder')
-        backorder_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+        backorder_wizard = Form.from_action(self.env, res_dict)
 
         # backorder should automatically open
         action = backorder_wizard.save().action_backorder()
         self.assertEqual(action.get('res_model'), 'mrp.production')
-        backorder_mo_form = Form(self.env[action['res_model']].with_context(action['context']).browse(action['res_id']))
-        backorder_mo = backorder_mo_form.save()
+        backorder_mo = Form.from_action(self.env, action).save()
         backorder_mo.button_mark_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 2, "Incorrect number of final product produced.")
@@ -486,7 +485,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.state, 'draft')
 
         action = mo.action_split()
-        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard = Form.from_action(self.env, action)
         wizard.counter = 2
         wizard.save().action_split()
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
@@ -503,7 +502,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo, _, _, p1, p2 = self.generate_mo(qty_final=10)
         # Split in 3 parts
         action = mo.action_split()
-        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard = Form.from_action(self.env, action)
         wizard.counter = 3
         action = wizard.save().action_split()
         # Should have 3 mos
@@ -619,7 +618,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [5, 10])
         self.assertEqual(mo.state, 'draft')
         action = mo.action_split()
-        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard = Form.from_action(self.env, action)
         wizard.counter = 10
         action = wizard.save().action_split()
         # check that the MO is split in 10 and the components are split accordingly
@@ -652,7 +651,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo.state, 'confirmed')
         mo.action_assign()
         action = mo.action_split()
-        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard = Form.from_action(self.env, action)
         wizard.counter = 10
         action = wizard.save().action_split()
         # check that the MO is split in 10 and exactly one of the components is not available

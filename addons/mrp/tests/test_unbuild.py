@@ -420,9 +420,7 @@ class TestUnbuild(TestMrpCommon):
             ml.lot_id = lot_1
         details_operation_form.save()
         mo.move_raw_ids.picked = True
-        action = mo.button_mark_done()
-        backorder = Form(self.env[action['res_model']].with_context(**action['context']))
-        backorder.save().action_backorder()
+        Form.from_action(self.env, mo.button_mark_done()).save().action_backorder()
 
         lot_2 = self.env['stock.lot'].create({
             'name': 'lot_2',
@@ -846,9 +844,7 @@ class TestUnbuild(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
         # unbuild order mo_1
-        action = mo.button_unbuild()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.action_validate()
+        Form.from_action(self.env, mo.button_unbuild()).save().action_validate()
         self.assertEqual(mo.unbuild_ids.produce_line_ids[0].product_id, finished_product)
         self.assertEqual(mo.unbuild_ids.produce_line_ids[0].lot_ids, finished_product_sn)
         self.assertEqual(mo.unbuild_ids.produce_line_ids[1].product_id, component)
@@ -875,8 +871,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(mo_2.state, 'done', "Production order should be in done state.")
         # unbuild mo_2
         action = mo_2.button_unbuild()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.action_validate()
+        Form.from_action(self.env, action).save().action_validate()
         self.assertEqual(mo_2.unbuild_ids.produce_line_ids[0].product_id, finished_product)
         self.assertEqual(mo_2.unbuild_ids.produce_line_ids[0].lot_ids, finished_product_sn)
         self.assertEqual(mo_2.unbuild_ids.produce_line_ids[1].product_id, component)
@@ -956,9 +951,7 @@ class TestUnbuild(TestMrpCommon):
         mo.move_raw_ids.write({'quantity': 15, 'picked': True})
         mo.button_mark_done()
 
-        unbuild_action = mo.button_unbuild()
-        unbuild_wizard = Form(self.env[unbuild_action['res_model']].with_context(**unbuild_action['context'])).save()
-        unbuild_wizard.action_validate()
+        Form.from_action(self.env, mo.button_unbuild()).save().action_validate()
         self.assertEqual(mo.unbuild_ids.produce_line_ids.filtered(lambda m: m.product_id == self.product_3).product_uom_qty, 15)
 
     def test_unbuild_mo_different_qty(self):
@@ -985,8 +978,8 @@ class TestUnbuild(TestMrpCommon):
         mo.button_mark_done()
 
         unbuild_action = mo.button_unbuild()
-        unbuild_wizard = Form(self.env[unbuild_action['res_model']].with_context(**unbuild_action['context'], default_product_qty=12)).save()
-        unbuild_wizard.action_validate()
+        unbuild_action['context']['default_product_qty'] = 12
+        Form.from_action(self.env, unbuild_action).save().action_validate()
 
         unbuild_fns_move = mo.unbuild_ids.produce_line_ids.filtered(lambda m: m.product_id == self.product_2)
         self.assertEqual(len(unbuild_fns_move), 1)
