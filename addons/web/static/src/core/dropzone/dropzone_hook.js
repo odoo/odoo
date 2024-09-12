@@ -1,4 +1,4 @@
-import { Dropzone } from "@mail/core/common/dropzone";
+import { Dropzone } from "@web/core/dropzone/dropzone";
 
 import { useEffect, useExternalListener } from "@odoo/owl";
 
@@ -8,7 +8,7 @@ const componentRegistry = registry.category("main_components");
 
 let id = 1;
 export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = () => true) {
-    const dropzoneId = `mail.dropzone_${id++}`;
+    const dropzoneId = `web.dropzone_${id++}`;
     let dragCount = 0;
     let hasTarget = false;
 

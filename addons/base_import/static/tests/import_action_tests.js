@@ -11,6 +11,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { dragenterFiles, dropFiles } from "@web/../tests/legacy/utils";
 import { registry } from "@web/core/registry";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { ImportDataProgress } from "../src/import_data_progress/import_data_progress";
@@ -539,6 +540,29 @@ QUnit.module("Base Import Tests", (hooks) => {
             ".o_import_data_sidepanel .o_import_formatting",
             "formatting options are present in the side panel"
         );
+        assert.containsOnce(
+            target,
+            ".o_import_action .o_import_data_content",
+            "content panel is visible"
+        );
+    });
+
+    QUnit.test("Import view: drag-and-drop file support", async function (assert) {
+        registerFakeHTTPService((route, params) => {
+            assert.strictEqual(route, "/base_import/set_file");
+            assert.strictEqual(
+                params.ufile[0].name,
+                "fake_file.csv",
+                "file is correctly uploaded to the server"
+            );
+        });
+        await createImportAction();
+        const file = new File(["fake_file"], "fake_file.csv", {
+            type: "text/plain"
+        });
+        await dragenterFiles(".o_import_action", [file]);
+        await dropFiles(".o-Dropzone", [file]);
+        await nextTick();
         assert.containsOnce(
             target,
             ".o_import_action .o_import_data_content",

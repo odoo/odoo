@@ -39,7 +39,7 @@ test("dragover files on thread with composer", async () => {
     await start();
     await openDiscuss(channelId);
     await dragenterFiles(".o-mail-Thread", [text3]);
-    await contains(".o-mail-Dropzone");
+    await contains(".o-Dropzone");
 });
 
 test("load more messages from channel (auto-load on scroll)", async () => {
