@@ -82,6 +82,9 @@ class Survey(http.Controller):
         if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
             return 'survey_void'
 
+        if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
+            return 'answer_deadline'
+
         if answer_sudo and check_partner:
             if request.env.user._is_public() and answer_sudo.partner_id and not answer_token:
                 # answers from public user should not have any partner_id; this indicates probably a cookie issue
@@ -89,9 +92,6 @@ class Survey(http.Controller):
             if not request.env.user._is_public() and answer_sudo.partner_id != request.env.user.partner_id:
                 # partner mismatch, probably a cookie issue
                 return 'answer_wrong_user'
-
-        if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
-            return 'answer_deadline'
 
         return True
 
