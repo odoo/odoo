@@ -459,10 +459,13 @@ registerWebsitePreviewTour("website_form_editor_tour", {
                     ":has(option:contains('Canada'))" +
                     ":has(option:contains('44 - UK'))" +
                     ":not(:has(option:contains('Germany')))",
-        run: function () {},
     }, {
         content: "Remove placeholder options.",
-        trigger: "we-button[data-name='form_allow_empty']"
+        trigger: "we-button[data-name='form_allow_empty'] we-checkbox",
+        run: 'click',
+    }, {
+        content: "Check required option should not visible",
+        trigger: "we-button[data-name='required_opt']:not(:visible)"
     }, {
         content: "Check the resulting snippet without placeholder",
         trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
@@ -474,7 +477,6 @@ registerWebsitePreviewTour("website_form_editor_tour", {
                     ":has(option:contains('Canada'))" +
                     ":has(option:contains('44 - UK'))" +
                     ":not(:has(option:contains('Germany')))",
-        run: function () {},
     },
 
     ...addExistingField('attachment_ids', 'file', 'Invoice Scan'),

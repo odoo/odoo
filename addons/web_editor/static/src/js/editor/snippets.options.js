@@ -2412,7 +2412,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         const isIdModeName = this.el.dataset.idMode === "name" || !this.isCustom;
         const trimmed = (str) => str.trim().replace(/\s+/g, " ");
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            const id = trimmed(isIdModeName ? el.name : el.value);
+            let id = trimmed(isIdModeName ? el.name : el.value);
             if (el.classList.contains("o_we_list_placeholder")) {
                 id = "";
             }
