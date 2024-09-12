@@ -241,6 +241,7 @@ test("next step with new anchor at same position", async () => {
 test("a failing tour logs the step that failed in run", async () => {
     patchWithCleanup(browser.console, {
         groupCollapsed: (s) => expect.step(`log: ${s}`),
+        log: (s) => expect.step(`log: ${s}`),
         warn: (s) => {},
         error: (s) => expect.step(`error: ${s}`),
     });
@@ -348,6 +349,7 @@ test("a failing tour logs the step that failed", async () => {
     patchWithCleanup(browser.console, {
         dir: (s) => expect.step(`runbot: ${s.replace(/[\s-]*/g, "")}`),
         groupCollapsed: (s) => expect.step(`log: ${s}`),
+        log: (s) => expect.step(`log: ${s}`),
         warn: (s) => expect.step(`warn: ${s.replace(/[\s-]*/gi, "")}`),
         error: (s) => expect.step(`error: ${s}`),
     });
@@ -998,13 +1000,23 @@ test("manual tour with inactive steps", async () => {
 });
 
 test("automatic tour with alternative trigger", async () => {
+    let suppressLog = false;
     patchWithCleanup(browser.console, {
         groupCollapsed: (s) => {
             expect.step("on step");
+            suppressLog = true;
+        },
+        groupEnd: () => {
+            suppressLog = false;
         },
         log: (s) => {
+            if (suppressLog) {
+                return;
+            }
             if (s.toLowerCase().includes("tour tour_des_flandres succeeded")) {
                 expect.step("succeeded");
+            } else if (s !== "tour succeeded") {
+                expect.step("on step");
             }
         },
     });
