@@ -13,7 +13,7 @@ const checkNoTranslate = {
 };
 const translate = [{
     content: "Open Edit menu",
-    trigger: ".o_menu_systray .o_edit_website_container button:contains(edit)",
+    trigger: ".o_menu_systray .o_edit_website_container button.o-dropdown-toggle-custo:contains(edit)",
     run: "click",
 }, {
     content: "Click on translate button",
