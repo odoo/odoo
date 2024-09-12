@@ -1,15 +1,7 @@
-import { messageActionsRegistry } from "@mail/core/common/message_actions";
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
-
-const downloadFilesAction = messageActionsRegistry.get("download_files");
-patch(downloadFilesAction, {
-    condition(component) {
-        return component.message.thread.channel_type !== "livechat" && super.condition(component);
-    },
-});
 
 patch(Thread.prototype, {
     get hasMemberList() {
