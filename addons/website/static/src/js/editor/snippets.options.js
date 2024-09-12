@@ -1116,7 +1116,8 @@ options.registry.ReplaceMedia.include({
         URLWidgetEl.title = _t("Hint: Type '/' to search an existing page and '#' to link to an anchor.");
         oldURLWidgetEl.replaceWith(URLWidgetEl);
 
-        const hrefValue = this.$target[0].parentElement.getAttribute('href');
+        const parentEl = this.$target[0].parentElement;
+        const hrefValue = parentEl ? parentEl.getAttribute("href") : null;
         if (!hrefValue || !hrefValue.startsWith('/')) {
             return;
         }
