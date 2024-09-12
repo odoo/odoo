@@ -1056,7 +1056,8 @@ class Message(models.Model):
                 "is_discussion": message.subtype_id.id == com_id,
                 # sudo: mail.message.subtype - reading description on accessible message is allowed
                 "subtype_description": message.subtype_id.sudo().description,
-                "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
+                # sudo: res.partner: reading limited data of recipients is acceptable
+                "recipients": Store.many(message.sudo().partner_ids, fields=["name", "write_date"]),
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.one(record, as_thread=True, only_id=True),
             }
@@ -1071,7 +1072,8 @@ class Message(models.Model):
                     displayed_tracking_ids = record._track_filter_for_display(
                         displayed_tracking_ids
                     )
-                notifications_partners = message.notification_ids.filtered(
+                # sudo: mail.message - checking whether there is a notification for the current user is acceptable
+                notifications_partners = message.sudo().notification_ids.filtered(
                     lambda n: not n.is_read
                 ).res_partner_id
                 vals["needaction"] = (
