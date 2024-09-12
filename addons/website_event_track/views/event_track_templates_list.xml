@@ -36,15 +36,17 @@
                     Favorites
                 </a>
                 <div class="dropdown-menu">
-                    <a t-att-href="'/event/%s/track?%s' % (
+                    <a t-att-href="'/event/%s/track/talks-%s?%s' % (
                             slug(event),
+                            event.name.replace(' ','-').lower(),
                             keep_query('*', search_wishlist='')
                         )"
                         class="dropdown-item d-flex align-items-center justify-content-between">
                         All Talks
                     </a>
-                    <a t-att-href="'/event/%s/track?%s' % (
+                    <a t-att-href="'/event/%s/track/talks-%s?%s' % (
                             slug(event),
+                            event.name.replace(' ','-').lower(),
                             keep_query('*', search_wishlist='1')
                         )"
                         t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if search_wishlist else ''}">
@@ -56,7 +58,7 @@
                 <t t-set="event_search_placeholder">Search a talk ...</t>
                 <t t-call="website_event.events_search_box">
                     <t t-set="_searches" t-value="searches"/>
-                    <t t-set="action" t-value="'/event/%s/track' % (slug(event))"/>
+                    <t t-set="action" t-value="'/event/%s/track/talks-%s' % (slug(event), event.name.replace(' ','-').lower())"/>
                     <t t-set="_placeholder" t-value="event_search_placeholder"/>
                 </t>
                 <button class="btn btn-light position-relative ms-2 d-lg-none"
@@ -90,8 +92,9 @@
                                 <ul class="list-group list-group-flush">
                                     <!-- Optional wishlist filter -->
                                     <li class="list-group-item border-0 px-0">
-                                        <a t-att-href="'/event/%s/track?%s' % (
+                                        <a t-att-href="'/event/%s/track/talks-%s?%s' % (
                                                 slug(event),
+                                                event.name.replace(' ','-').lower(),
                                                 keep_query('*', search_wishlist='')
                                             )"
                                             class="d-flex align-items-center justify-content-between text-reset">
@@ -99,8 +102,9 @@
                                         </a>
                                     </li>
                                     <li class="list-group-item border-0 px-0">
-                                        <a t-att-href="'/event/%s/track?%s' % (
+                                        <a t-att-href="'/event/%s/track/talks-%s?%s' % (
                                                 slug(event),
+                                                event.name.replace(' ','-').lower(),
                                                 keep_query('*', search_wishlist='1')
                                             )"
                                             t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if search_wishlist else ''}">
@@ -128,8 +132,9 @@
                                     <t t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" t-foreach="tag_category.tag_ids" t-as="tag">
                                         <li class="list-group-item border-0 px-0">
                                             <span t-if="tag.color"
-                                                t-att-data-post="'/event/%s/track?%s' % (
+                                                t-att-data-post="'/event/%s/track/talks-%s?%s' % (
                                                     slug(event),
+                                                    event.name.replace(' ','-').lower(),
                                                     keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
                                                 )"
                                                 t-attf-class="post_link cursot-pointer d-flex align-items-center justify-content-between text-reset #{'active' if tag in search_tags else ''}">
@@ -161,8 +166,9 @@
                 </a>
                 <div class="dropdown-menu">
                     <t t-foreach="tag_category.tag_ids" t-as="tag">
-                        <span t-att-data-post="'/event/%s/track?%s' % (
+                        <span t-att-data-post="'/event/%s/track/talks-%s?%s' % (
                                 slug(event),
+                                event.name.replace(' ','-').lower(),
                                 keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
                             )"
                             t-if="tag.color"
@@ -435,7 +441,7 @@
         <span t-if="search_wishlist"
             class="align-items-baseline border d-inline-flex rounded">
             <i class="fa fa-bell mx-2 text-muted"/> Favorite Talks
-            <a t-att-href="'/event/%s/track?%s' % (slug(event), keep_query('*', search_wishlist=''))"
+            <a t-att-href="'/event/%s/track/talks-%s?%s' % (slug(event), event.name.replace(' ','-').lower(), keep_query('*', search_wishlist=''))"
                 class="btn border-0 py-1">
                 &#215;
             </a>
@@ -445,7 +451,7 @@
             <span class="align-items-baseline border d-inline-flex rounded">
                 <i class="fa fa-tag mx-2 text-muted"/>
                 <t t-out="tag.display_name"/>
-                <span t-att-data-post="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True))"
+                <span t-att-data-post="'/event/%s/track/talks-%s?%s' % (slug(event), event.name.replace(' ','-').lower(), keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True))"
                     class="post_link cursor-pointer btn border-0 py-1">
                     &#215;
                 </span>
@@ -460,15 +466,17 @@
 
 <template id="track_tag_badge_link" name="Track: Tag Badge Link">
     <span t-if="search_tags"
-        t-att-data-post="'/event/%s/track?%s'% (
+        t-att-data-post="'/event/%s/track/talks-%s?%s'% (
             slug(event),
+            event.name.replace(' ','-').lower(),
             keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
         )"
         t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_badge o_badge_clickable o_color_0')"
         t-out="tag.name"/>
     <span t-else=""
-        t-att-data-post="'/event/%s/track?%s'% (
+        t-att-data-post="'/event/%s/track/talks-%s?%s'% (
             slug(event),
+            event.name.replace(' ','-').lower(),
             keep_query('*', tags=str(tag.ids), prevent_redirect=True)
         )"
         t-att-class="'post_link cursor-pointer badge rounded-pill text-decoration-none o_badge o_badge_clickable o_color_%s' % (tag.color)"

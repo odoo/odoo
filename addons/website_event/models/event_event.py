@@ -345,7 +345,7 @@ class Event(models.Model):
             (_('Introduction'), False, 'website_event.template_intro', 1, 'introduction'),
             (_('Location'), False, 'website_event.template_location', 50, 'location'),
             (_('Info'), '/event/%s/register' % self.env['ir.http']._slug(self), False, 100, 'register'),
-            (_('Community'), '/event/%s/community' % self.env['ir.http']._slug(self), False, 80, 'community'),
+            (_('Community'), '/event/%s/community' % self.env['ir.http']._slug(self), 'website_event.template_community', 80, 'community'),
         ]
 
     def _update_website_menus(self, menus_update_by_field=None):
@@ -413,6 +413,16 @@ class Event(models.Model):
         """
         self.check_access_rights('write')
         view_id = False
+
+        # Here, we have used both url and xml_id to ensure that the code does not
+        # follow the existing flow of the Introduction and Location menus. We are
+        # creating a new ir.ui.view with the specified template (xml_id) and using
+        # the url to modify the existing path, keeping them consistent.
+        if url and xml_id:
+            page_result = self.env['website'].sudo().new_page(
+                name=f'{name} {self.name}', template=xml_id,
+                add_menu=False, ispage=False)
+            url += page_result['url']
         if not url:
             # add_menu=False, ispage=False -> simply create a new ir.ui.view with name
             # and template

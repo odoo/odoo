@@ -10,7 +10,7 @@ from odoo.addons.website_event.controllers import main
 
 class WebsiteEventController(main.WebsiteEventController):
     def _prepare_event_register_values(self, event, **post):
-        values = super(WebsiteEventController, self)._prepare_event_register_values(event, **post)
+        values = super()._prepare_event_register_values(event, **post)
 
         if "from_room_id" in post and not event.is_ongoing:
             meeting_room = request.env["event.meeting.room"].browse(int(post["from_room_id"])).sudo().exists()

@@ -45,8 +45,8 @@ class WebsiteEventBoothController(WebsiteEventController):
             values.get('booth_category', request.env['event.booth.category']).price
         return values
 
-    def _prepare_booth_main_values(self, event, booth_category_id=False, booth_ids=False):
-        values = super()._prepare_booth_main_values(event, booth_category_id=booth_category_id, booth_ids=booth_ids)
+    def _prepare_booth_main_values(self, event, seo_object, booth_category_id=False, booth_ids=False):
+        values = super()._prepare_booth_main_values(event, seo_object, booth_category_id=booth_category_id, booth_ids=booth_ids)
         values['has_payment_step'] = request.website.sale_get_order().amount_total or \
             any(booth_category.price for booth_category in values.get('available_booth_category_ids', request.env['event.booth.category']))
         return values
