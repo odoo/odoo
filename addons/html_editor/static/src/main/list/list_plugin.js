@@ -7,12 +7,14 @@ import {
     isProtected,
     isProtecting,
     isVisible,
+    paragraphRelatedElements,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     descendants,
     getAdjacents,
     selectElements,
+    ancestors,
 } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
@@ -606,6 +608,17 @@ export class ListPlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     handleTab() {
+        const selection = this.shared.getEditableSelection();
+        const closestLI = closestElement(selection.anchorNode, "LI");
+        if (closestLI) {
+            const block = closestBlock(selection.anchorNode);
+            const isLiContainsUnSpittable =
+                paragraphRelatedElements.includes(block.nodeName) &&
+                ancestors(block, closestLI).find((node) => this.shared.isUnsplittable(node));
+            if (isLiContainsUnSpittable) {
+                return;
+            }
+        }
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.indentListNodes(listItems);
@@ -617,6 +630,17 @@ export class ListPlugin extends Plugin {
     }
 
     handleShiftTab() {
+        const selection = this.shared.getEditableSelection();
+        const closestLI = closestElement(selection.anchorNode, "LI");
+        if (closestLI) {
+            const block = closestBlock(selection.anchorNode);
+            const isLiContainsUnSpittable =
+                paragraphRelatedElements.includes(block.nodeName) &&
+                ancestors(block, closestLI).find((node) => this.shared.isUnsplittable(node));
+            if (isLiContainsUnSpittable) {
+                return;
+            }
+        }
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.outdentListNodes(listItems);

@@ -93,6 +93,43 @@ describe("move selection with tab/shift+tab", () => {
                 `),
             });
         });
+        test("move cursor to end of next cell when selection is inside table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li>
+                            <br>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><p>[]ab</p></td>
+                                        <td><p>cd</p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br>
+                        </li>
+                    </ul>
+                `),
+                stepFunction: async () => press("Tab"),
+                contentAfter: unformat(`
+                    <ul>
+                        <li>
+                            <br>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><p>ab</p></td>
+                                        <td><p>cd[]</p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br>
+                        </li>
+                    </ul>
+                `),
+            });
+        });
     });
     describe("shift+tab", () => {
         test("should move cursor to the end of previous cell", async () => {
@@ -179,6 +216,43 @@ describe("move selection with tab/shift+tab", () => {
                             </tr>
                         </tbody>
                     </table>
+                `),
+            });
+        });
+        test("move cursor to end of previous cell when selection is inside table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li>
+                            <br>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><p>ab</p></td>
+                                        <td><p>[]cd</p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br>
+                        </li>
+                    </ul>
+                `),
+                stepFunction: async () => press(["Shift", "Tab"]),
+                contentAfter: unformat(`
+                    <ul>
+                        <li>
+                            <br>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><p>ab[]</p></td>
+                                        <td><p>cd</p></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br>
+                        </li>
+                    </ul>
                 `),
             });
         });
