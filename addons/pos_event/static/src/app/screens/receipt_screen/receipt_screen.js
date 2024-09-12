@@ -19,7 +19,35 @@ patch(ReceiptScreen.prototype, {
         ]);
     },
     async printEventBadge() {
-        const registrations = this.pos.get_order().eventRegistrations.map((reg) => reg.id);
-        await this.report.doAction("event.action_report_event_registration_badge", [registrations]);
+        const registrations = this.pos.get_order().eventRegistrations;
+
+        const smallBadgeRegistrations = registrations.filter(
+            (reg) => reg.event_id.badge_format === "96x82"
+        );
+        const largeBadgeRegistrations = registrations.filter(
+            (reg) => reg.event_id.badge_format === "96x134"
+        );
+        const nonBadgePrinterRegistrations = registrations.filter(
+            (reg) => !["96x82", "96x134"].includes(reg.event_id.badge_format)
+        );
+
+        if (nonBadgePrinterRegistrations.length > 0) {
+            await this.report.doAction(
+                "event.action_report_event_registration_badge",
+                nonBadgePrinterRegistrations.map((reg) => reg.id)
+            );
+        }
+        if (largeBadgeRegistrations.length > 0) {
+            await this.report.doAction(
+                "event.action_report_event_registration_badge_96x134",
+                largeBadgeRegistrations.map((reg) => reg.id)
+            );
+        }
+        if (smallBadgeRegistrations.length > 0) {
+            await this.report.doAction(
+                "event.action_report_event_registration_badge_96x82",
+                smallBadgeRegistrations.map((reg) => reg.id)
+            );
+        }
     },
 });
