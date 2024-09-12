@@ -849,22 +849,23 @@ class ProductCategory(models.Model):
 
     @api.model
     def _get_stock_account_property_field_names(self):
+        return self._get_mandatory_stock_account_property_field_names()
+
+    @api.model
+    def _get_mandatory_stock_account_property_field_names(self):
         return [
             'property_stock_account_input_categ_id',
             'property_stock_account_output_categ_id',
             'property_stock_valuation_account_id',
         ]
 
-    @api.constrains(lambda self: tuple(self._get_stock_account_property_field_names() + ['property_valuation']))
+    @api.constrains(lambda self: tuple(self._get_mandatory_stock_account_property_field_names() + ['property_valuation']))
     def _check_valuation_accounts(self):
-        fnames = self._get_stock_account_property_field_names()
+        fnames = self._get_mandatory_stock_account_property_field_names()
         for category in self:
-            # "compute" properties in constraint because ORM doesn't support computed properties
-            for property_field in fnames:
-                category[property_field] = category.property_valuation == 'real_time' and (
-                    category[property_field]
-                    or self.env['ir.property']._get(property_field, 'product.category')
-                )
+            if category.property_valuation == 'real_time':
+                if any(not category[account] for account in fnames):
+                    raise ValidationError(_('The stock accounts should be set in order to use the automatic valuation.'))
 
             # Prevent to set the valuation account as the input or output account.
             valuation_account = category.property_stock_valuation_account_id
