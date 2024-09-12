@@ -35,8 +35,9 @@ export class PortalFileInput extends FileInput {
             files.map(
                 (file) =>
                     super.uploadFiles({
-                        file,
-                        name: file.name,
+                        ufile: [file],
+                        token: otherParams.access_token,
+                        is_pending: true,
                         ...otherParams,
                     })
             )

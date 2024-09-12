@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import json
 import math
 import re
 
@@ -297,63 +294,6 @@ class CustomerPortal(Controller):
             'X-Frame-Options': 'SAMEORIGIN',
             'Content-Security-Policy': "frame-ancestors 'self'",
         })
-
-    @http.route('/portal/attachment/add', type='http', auth='public', methods=['POST'], website=True)
-    def attachment_add(self, name, file, thread_model, thread_id, access_token=None):
-        """Process a file uploaded from the portal chatter and create the
-        corresponding `ir.attachment`.
-
-        The attachment will be created "pending" until the associated message
-        is actually created, and it will be garbage collected otherwise.
-
-        :param name: name of the file to save.
-        :type name: string
-
-        :param file: the file to save
-        :type file: werkzeug.FileStorage
-
-        :param thread_model: name of the model of the original document.
-            To check access rights only, it will not be saved here.
-        :type thread_model: string
-
-        :param thread_id: id of the original document.
-            To check access rights only, it will not be saved here.
-        :type thread_id: int
-
-        :param access_token: access_token of the original document.
-            To check access rights only, it will not be saved here.
-        :type access_token: string
-
-        :return: attachment data {id, name, mimetype, file_size, access_token}
-        :rtype: dict
-        """
-        try:
-            self._document_check_access(thread_model, int(thread_id), access_token=access_token)
-        except (AccessError, MissingError) as e:
-            raise UserError(_("The document does not exist or you do not have the rights to access it."))
-
-        IrAttachment = request.env['ir.attachment']
-
-        # Avoid using sudo when not necessary: internal users can create attachments,
-        # as opposed to public and portal users.
-        if not request.env.user._is_internal():
-            IrAttachment = IrAttachment.sudo()
-
-        # At this point the related message does not exist yet, so we assign
-        # those specific res_model and res_is. They will be correctly set
-        # when the message is created: see `mail_message_post`,
-        # or garbage collected otherwise: see  `_garbage_collect_attachments`.
-        attachment = IrAttachment.create({
-            'name': name,
-            'datas': base64.b64encode(file.read()),
-            'res_model': 'mail.compose.message',
-            'res_id': 0,
-            'access_token': IrAttachment._generate_access_token(),
-        })
-        return request.make_response(
-            data=json.dumps(attachment.read(['id', 'name', 'mimetype', 'file_size', 'access_token'])[0]),
-            headers=[('Content-Type', 'application/json')]
-        )
 
     @http.route('/portal/attachment/remove', type='json', auth='public')
     def attachment_remove(self, attachment_id, access_token=None):
