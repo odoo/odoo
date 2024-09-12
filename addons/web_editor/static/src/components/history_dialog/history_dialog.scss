@@ -1,16 +1,5 @@
 .html-history-dialog {
     .history-container {
-        --border-color: #ddd;
-        margin-left: 240px;
-        .o_notebook_content {
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-top: 0;
-        }
-        .nav {
-            padding-left: 24px;
-        }
-
         removed {
             display: inline;
             background-color: #f1afaf;
@@ -21,31 +10,97 @@
             display: inline;
             background-color: #c8f1af;
         }
-        p {
-            margin-bottom: 0.6rem;
+        .tab-content {
+            position: relative;
+        }
+        .top-message {
+            border-bottom: 1px solid $border-color;
+            padding: 4px 16px 0;
+            margin: 0 -16px 12px;
+            .fa {
+                margin-right: 6px;
+            }
         }
     }
     .revision-list {
-        margin: 38px 0 0 8px;
-        overflow: auto;
-        max-height: 100%;
-        width: 220px;
-        float : left;
-
-        .btn {
-            border-radius: 0;
-            display: block;
-            text-align: left;
-            width: 220px;
-            margin-bottom: 8px;
+        .revision-entry {
             position: relative;
-            &:before {
+            margin-bottom: 10px;
+            &.active {
+                border: 1px solid $o-brand-primary;
+                border-radius: $o-border-radius * 1.4;
+            }
+        }
+        .btn {
+            display: block;
+        }
+        .revision-list-title {
+            &:hover:before, &.active:before{
                 content: '\f105';
                 font-family: 'FontAwesome';
                 position: absolute;
                 right : 8px;
-                top: 0;
-                font-size: 34px;
+                top: -5px;
+                font-size: 28px;
+            }
+            &.active {
+                border: 0;
+                margin-bottom: 18px;
+            }
+        }
+        .revision-list-detail {
+            display: none;
+            font-weight: 400;
+            text-align: left;
+            position: relative;
+            margin: 0 8px;
+            padding: 3px 10px;
+            border-radius: 0;
+            border:0;
+            &:last-child {
+                margin-bottom: 8px;
+            }
+        }
+        .revision-entry.active .revision-list-detail {
+            display: block;
+        }
+    }
+    .o_notebook {
+        .o_notebook_content {
+            border: 1px solid $border-color;
+            border-top-width: 0;
+            padding: map-get($spacers, 3);
+        }
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .html-history-dialog {
+        height: 750px;
+        & > div {
+            height: 100%;
+        }
+        .revision-list,
+        .history-container {
+            overflow-y: auto;
+        }
+        .revision-list {
+            width: 25%;
+            .revision-list-detail {
+                margin-left: 0;
+                margin-right: 0;
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+        }
+        .o_notebook {
+            .o_notebook_headers {
+                flex-shrink: 0;
+            }
+            .o_notebook_content {
+                flex-grow: 1;
+                flex-basis: 0;
+                overflow-y: auto;
             }
         }
     }

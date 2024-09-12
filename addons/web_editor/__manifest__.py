@@ -222,7 +222,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
             'web_editor/static/src/components/history_dialog/**/*',
-            ('remove', 'web_editor/static/src/components/history_dialog/history_dialog.dark.scss'),
         ],
         "web.assets_web_dark": [
             'web_editor/static/src/scss/odoo-editor/powerbox.dark.scss',
@@ -230,7 +229,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/odoo-editor/tableui.dark.scss',
             'web_editor/static/src/scss/wysiwyg.dark.scss',
             'web_editor/static/src/scss/web_editor.common.dark.scss',
-            'web_editor/static/src/components/history_dialog/history_dialog.dark.scss',
         ],
         'web.assets_frontend_minimal': [
             'web_editor/static/src/js/frontend/loader_loading.js',

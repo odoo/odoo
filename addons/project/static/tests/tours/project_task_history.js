@@ -88,9 +88,9 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         run: "click",
     }, {
         content: "Verify that 4 revisions are displayed (default empty description after the creation of the task + 3 edits)",
-        trigger: ".modal .html-history-dialog .revision-list .btn",
+        trigger: ".html-history-dialog .revision-list .revision-list-detail",
         run: function () {
-            const items = document.querySelectorAll(".revision-list .btn");
+            const items = document.querySelectorAll(".revision-list .revision-list-detail");
             if (items.length !== 4) {
                 throw new Error('Expect 4 Revisions in the history dialog, got ' + items.length);
             }
@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         run: "click",
     }, {
         content: "Go to the third revision related to the second edit",
-        trigger: ".modal .html-history-dialog .revision-list .btn:nth-child(2)",
+        trigger: ".html-history-dialog .revision-list .revision-list-detail:nth-child(3)",
         run: "click",
     }, {
         content: "Verify that the active revision is the one clicked in the previous step",
@@ -115,22 +115,22 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Verify comparaison text",
         trigger: ".modal .history-container .tab-pane",
         run: function () {
-            const comparaisonHtml = document.querySelector(".history-container .tab-pane").innerHTML;
-            const correctHtml = `<p><added>${baseDescriptionContent} 1</added><removed>${baseDescriptionContent} 3</removed></p>`;
+            const comparaisonHtml = document.querySelector(".history-container .history-tab-content").innerHTML;
+            const correctHtml = `<p><added>${baseDescriptionContent} 3</added><removed>${baseDescriptionContent} 1</removed></p>`;
             if (comparaisonHtml !== correctHtml) {
                 throw new Error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
             }
         },
     }, {
         content: "Click on Restore History btn to get back to the selected revision in the previous step",
-        trigger: ".modal button.btn-primary:contains(/^Restore history$/)",
+        trigger: ".modal:not(.o_inactive_modal) button.btn-primary:contains(/^Restore/)",
         run: "click",
     }, {
         content: "Verify the confirmation dialog is opened",
-        trigger: ".modal button.btn-primary:contains(/^Restore$/)",
+        trigger: ".modal:not(.o_inactive_modal) button.btn-primary:contains(/^Restore$/)",
         run: "click",
     }, {
-            trigger: "body:not(:has(.modal))",
+        trigger: "body:not(:has(.modal))",
     }, {
         content: "Verify that the description contains the right text after the restore",
         trigger: descriptionField,
