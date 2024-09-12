@@ -45,8 +45,8 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
 
     QUnit.test("Boolean fields are correctly formatted", async (assert) => {
         const { model } = await createSpreadsheetWithList({ columns: ["bar"] });
-        assert.strictEqual(getCellValue(model, "A2"), "TRUE");
-        assert.strictEqual(getCellValue(model, "A5"), "FALSE");
+        assert.strictEqual(getCellValue(model, "A2"), true);
+        assert.strictEqual(getCellValue(model, "A5"), false);
     });
 
     QUnit.test("properties field displays property display names", async (assert) => {
@@ -416,7 +416,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList();
         const [listId] = model.getters.getListIds();
         assert.deepEqual(model.getters.getListDefinition(listId).domain, []);
-        assert.strictEqual(getCellValue(model, "B2"), "TRUE");
+        assert.strictEqual(getCellValue(model, "B2"), true);
         model.dispatch("UPDATE_ODOO_LIST_DOMAIN", {
             listId,
             domain: [["foo", "in", [55]]],
@@ -428,7 +428,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         await waitForDataSourcesLoaded(model);
         assert.deepEqual(model.getters.getListDefinition(listId).domain, []);
         await waitForDataSourcesLoaded(model);
-        assert.strictEqual(getCellValue(model, "B2"), "TRUE");
+        assert.strictEqual(getCellValue(model, "B2"), true);
         model.dispatch("REQUEST_REDO");
         assert.deepEqual(model.getters.getListDefinition(listId).domain, [["foo", "in", [55]]]);
         await waitForDataSourcesLoaded(model);
