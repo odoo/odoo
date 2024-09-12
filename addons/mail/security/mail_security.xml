@@ -18,9 +18,17 @@
                             ("is_member", "=", True),
                         "&amp;",
                             ("channel_type", "=", "channel"),
-                            '|',
-                                ('group_public_id', '=', False),
-                                ('group_public_id', 'in', user.groups_id.ids)
+                            "|",
+                                "&amp;",
+                                    ("parent_channel_id", "=", False),
+                                    "|",
+                                        ("group_public_id", "=", False),
+                                        ("group_public_id", "in", user.groups_id.ids),
+                                "&amp;",
+                                    ("parent_channel_id", "!=", False),
+                                    "|",
+                                        ("parent_channel_id.group_public_id", "=", False),
+                                        ("parent_channel_id.group_public_id", "in", user.groups_id.ids),
                 ]
             </field>
         </record>
@@ -47,11 +55,17 @@
                     ('is_self', '=', True),
                     "|",
                         ("channel_id.channel_type", "!=", "channel"),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            '|',
-                                ('channel_id.group_public_id', '=', False),
-                                ('channel_id.group_public_id', 'in', user.groups_id.ids)
+                        "|",
+                            "&amp;",
+                                ("channel_id.parent_channel_id", "=", False),
+                                "|",
+                                    ("channel_id.group_public_id", "=", False),
+                                    ("channel_id.group_public_id", "in", user.groups_id.ids),
+                            "&amp;",
+                                ("channel_id.parent_channel_id", "!=", False),
+                                "|",
+                                    ("channel_id.parent_channel_id.group_public_id", "=", False),
+                                    ("channel_id.parent_channel_id.group_public_id", "in", user.groups_id.ids),
                 ]
             </field>
             <!--
@@ -84,9 +98,17 @@
                             ("channel_id.is_member", "=", True),
                         "&amp;",
                             ("channel_id.channel_type", "=", "channel"),
-                            '|',
-                                ('channel_id.group_public_id', '=', False),
-                                ('channel_id.group_public_id', 'in', user.groups_id.ids)
+                            "|",
+                                "&amp;",
+                                    ("channel_id.parent_channel_id", "=", False),
+                                    "|",
+                                        ("channel_id.group_public_id", "=", False),
+                                        ("channel_id.group_public_id", "in", user.groups_id.ids),
+                                "&amp;",
+                                    ("channel_id.parent_channel_id", "!=", False),
+                                    "|",
+                                        ("channel_id.parent_channel_id.group_public_id", "=", False),
+                                        ("channel_id.parent_channel_id.group_public_id", "in", user.groups_id.ids),
                 ]
             </field>
             <field name="perm_create" eval="False"/>
