@@ -217,6 +217,11 @@ class TestAnalyticAccount(TransactionCase):
         """
         Test that an analytic account defined in a parent company is accessible in its branches (children)
         """
+        # timesheet adds a rule to forcer a project_id; account overrides it
+        timesheet_group = self.env.ref('hr_timesheet.group_hr_timesheet_user', raise_if_not_found=False)
+        if timesheet_group:
+            self.env.user.groups_id -= timesheet_group
+
         self.analytic_account_1.company_id = self.company_data
         self.env['account.analytic.line'].create({
             'name': 'company specific account',
