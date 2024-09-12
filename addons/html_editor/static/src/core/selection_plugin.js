@@ -126,6 +126,7 @@ export class SelectionPlugin extends Plugin {
     });
 
     setup() {
+        this.canApplySelectionToDocument = true;
         this.resetSelection();
         this.addDomListener(this.document, "selectionchange", this.updateActiveSelection);
         this.addDomListener(this.editable, "mousedown", (ev) => {
@@ -432,15 +433,38 @@ export class SelectionPlugin extends Plugin {
         [focusNode, focusOffset] = normalizeFakeBR(focusNode, focusOffset);
         const selection = this.document.getSelection();
         if (selection) {
-            if (
-                selection.anchorNode !== anchorNode ||
-                selection.focusNode !== focusNode ||
-                selection.anchorOffset !== anchorOffset ||
-                selection.focusOffset !== focusOffset
-            ) {
-                selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+            if (this.canApplySelectionToDocument) {
+                if (
+                    selection.anchorNode !== anchorNode ||
+                    selection.focusNode !== focusNode ||
+                    selection.anchorOffset !== anchorOffset ||
+                    selection.focusOffset !== focusOffset
+                ) {
+                    selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+                }
+                this.activeSelection = this.makeActiveSelection(selection, true);
+            } else {
+                let range = new Range();
+                range.setStart(anchorNode, anchorOffset);
+                range.setEnd(focusNode, focusOffset);
+                if (anchorNode !== focusNode || anchorOffset !== focusOffset) {
+                    // Check if the direction is correct
+                    if (range.collapsed) {
+                        range = new Range();
+                        range.setEnd(anchorNode, anchorOffset);
+                        range.setStart(focusNode, focusOffset);
+                    }
+                }
+
+                this.activeSelection = this.makeActiveSelection({
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
+                    getRangeAt: () => range,
+                    rangeCount: 1,
+                });
             }
-            this.activeSelection = this.makeActiveSelection(selection, true);
         }
 
         return this.activeSelection;
@@ -475,16 +499,12 @@ export class SelectionPlugin extends Plugin {
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
         const focus = { node: selection.focusNode, offset: selection.focusOffset };
 
-        let documentSelectionToRestore;
-        if (!selectionData.documentSelectionIsInEditable) {
-            documentSelectionToRestore = selectionData.documentSelection;
-        }
+        this.canApplySelectionToDocument = selectionData.documentSelectionIsInEditable;
         return {
             restore: () => {
                 if (selection.isDefault) {
                     return;
                 }
-                // update the active selection
                 this.setSelection(
                     {
                         anchorNode: anchor.node,
@@ -494,14 +514,7 @@ export class SelectionPlugin extends Plugin {
                     },
                     { normalize: false }
                 );
-
-                if (documentSelectionToRestore && documentSelectionToRestore.anchorNode) {
-                    const { anchorNode, anchorOffset, focusNode, focusOffset } =
-                        documentSelectionToRestore;
-                    this.document
-                        .getSelection()
-                        .setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
-                }
+                this.canApplySelectionToDocument = true;
             },
             update(callback) {
                 callback(anchor);
