@@ -435,7 +435,7 @@ describe("to blockquote", () => {
         expect(getContent(el)).toBe("<p>abcd</p>");
 
         setTag("h1")(editor);
-        expect(getContent(el)).toBe("<h1>ab[]cd</h1>");
+        expect(getContent(el)).toBe("<h1>abcd</h1>");
     });
 
     test("setTag should work when we move the selection outside of the editor", async () => {
