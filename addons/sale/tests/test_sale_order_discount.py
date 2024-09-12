@@ -32,7 +32,7 @@ class TestSaleOrderDiscount(SaleCommon):
 
     def test_so_discount(self):
         solines = self.sale_order.order_line
-        amount_before_discount = sum(line.price_unit for line in solines)
+        amount_before_discount = self.sale_order.amount_total
         self.assertEqual(len(solines), 2)
 
         # No taxes
@@ -56,7 +56,7 @@ class TestSaleOrderDiscount(SaleCommon):
 
         discount_line = self.sale_order.order_line - solines
         discount_line.ensure_one()
-        self.assertAlmostEqual(discount_line.price_unit, -sum(line.price_unit for line in solines) * 0.5)
+        self.assertAlmostEqual(discount_line.price_unit, -amount_before_discount * 0.5)
         self.assertEqual(discount_line.tax_id, dumb_tax)
         self.assertEqual(discount_line.product_uom_qty, 1.0)
 
@@ -66,10 +66,11 @@ class TestSaleOrderDiscount(SaleCommon):
         self.wizard.action_apply_discount()
         discount_lines = self.sale_order.order_line - solines
         self.assertEqual(len(discount_lines), 2)
-        for soline, discount_line in zip(solines, discount_lines):
-            self.assertEqual(discount_line.price_unit, -soline.price_unit * 0.5)
-            self.assertEqual(discount_line.tax_id, soline.tax_id)
-            self.assertEqual(discount_line.product_uom_qty, 1.0)
+        self.assertEqual(discount_lines[0].price_unit, -solines[0].price_subtotal * 0.5)
+        self.assertEqual(discount_lines[1].price_unit, -solines[1].price_subtotal * 0.5)
+        self.assertEqual(discount_lines[0].tax_id, solines[0].tax_id)
+        self.assertEqual(discount_lines[1].tax_id, solines[1].tax_id)
+        self.assertTrue(all(line.product_uom_qty == 1.0 for line in discount_lines))
 
     def test_sol_discount(self):
         so_amount = self.sale_order.amount_untaxed
