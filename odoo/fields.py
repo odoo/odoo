@@ -4,30 +4,32 @@
 """ High-level objects for fields. """
 from __future__ import annotations
 
-from collections import defaultdict
-from datetime import date, datetime, time
-from operator import attrgetter
-from xmlrpc.client import MAXINT
 import ast
 import base64
+import binascii
 import copy
 import contextlib
-import binascii
 import enum
 import itertools
 import json
 import logging
+import typing
 import uuid
 import warnings
+from collections import defaultdict
+from datetime import date, datetime, time
+from difflib import get_close_matches, unified_diff
+from hashlib import sha256
+from operator import attrgetter
+from xmlrpc.client import MAXINT
 
 import psycopg2
 import pytz
 from markupsafe import Markup, escape as markup_escape
 from psycopg2.extras import Json as PsycopgJson
-from difflib import get_close_matches, unified_diff
-from hashlib import sha256
 
-from .models import check_property_field_value_name
+from .api import ContextType, DomainType, IdType, NewId, ValuesType
+from .models import BaseModel, check_property_field_value_name
 from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
@@ -45,8 +47,8 @@ from .tools.translate import html_translate
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
 
-import typing
-from odoo.api import ContextType, DomainType, IdType, NewId, M, T
+T = typing.TypeVar("T")
+M = typing.TypeVar("M", bound=BaseModel)
 
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
@@ -4195,7 +4197,7 @@ class Command(enum.IntEnum):
     SET = 6
 
     @classmethod
-    def create(cls, values: dict):
+    def create(cls, values: ValuesType) -> tuple[Command, typing.Literal[0], ValuesType]:
         """
         Create new records in the comodel using ``values``, link the created
         records to ``self``.
@@ -4213,7 +4215,7 @@ class Command(enum.IntEnum):
         return (cls.CREATE, 0, values)
 
     @classmethod
-    def update(cls, id: int, values: dict):
+    def update(cls, id: int, values: ValuesType) -> tuple[Command, int, ValuesType]:
         """
         Write ``values`` on the related record.
 
@@ -4222,7 +4224,7 @@ class Command(enum.IntEnum):
         return (cls.UPDATE, id, values)
 
     @classmethod
-    def delete(cls, id: int):
+    def delete(cls, id: int) -> tuple[Command, int, typing.Literal[0]]:
         """
         Remove the related record from the database and remove its relation
         with ``self``.
@@ -4236,7 +4238,7 @@ class Command(enum.IntEnum):
         return (cls.DELETE, id, 0)
 
     @classmethod
-    def unlink(cls, id: int):
+    def unlink(cls, id: int) -> tuple[Command, int, typing.Literal[0]]:
         """
         Remove the relation between ``self`` and the related record.
 
@@ -4250,7 +4252,7 @@ class Command(enum.IntEnum):
         return (cls.UNLINK, id, 0)
 
     @classmethod
-    def link(cls, id: int):
+    def link(cls, id: int) -> tuple[Command, int, typing.Literal[0]]:
         """
         Add a relation between ``self`` and the related record.
 
@@ -4259,7 +4261,7 @@ class Command(enum.IntEnum):
         return (cls.LINK, id, 0)
 
     @classmethod
-    def clear(cls):
+    def clear(cls) -> tuple[Command, typing.Literal[0], typing.Literal[0]]:
         """
         Remove all records from the relation with ``self``. It behaves like
         executing the `unlink` command on every record.
@@ -4269,7 +4271,7 @@ class Command(enum.IntEnum):
         return (cls.CLEAR, 0, 0)
 
     @classmethod
-    def set(cls, ids: list):
+    def set(cls, ids: list[int]) -> tuple[Command, typing.Literal[0], list[int]]:
         """
         Replace the current relations of ``self`` by the given ones. It behaves
         like executing the ``unlink`` command on every removed relation then
