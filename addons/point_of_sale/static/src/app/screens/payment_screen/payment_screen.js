@@ -26,7 +26,9 @@ export class PaymentScreen extends Component {
         PaymentScreenPaymentLines,
         PaymentScreenStatus,
     };
-    static props = {};
+    static props = {
+        orderUuid: String,
+    };
 
     setup() {
         this.pos = usePos();
@@ -99,7 +101,7 @@ export class PaymentScreen extends Component {
         return config;
     }
     get currentOrder() {
-        return this.pos.get_order();
+        return this.pos.models["pos.order"].getBy("uuid", this.props.orderUuid);
     }
     get paymentLines() {
         return this.currentOrder.payment_ids;
@@ -108,9 +110,17 @@ export class PaymentScreen extends Component {
         return this.currentOrder.get_selected_paymentline();
     }
     async addNewPaymentLine(paymentMethod) {
+        if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Error"),
+                body: _t("There is already an electronic payment in progress."),
+            });
+            return;
+        }
+
         // original function: click_paymentmethods
         const result = this.currentOrder.add_paymentline(paymentMethod);
-        if (!this.pos.get_order().check_paymentlines_rounding()) {
+        if (!this.currentOrder.check_paymentlines_rounding()) {
             this._display_popup_error_paymentlines_rounding();
         }
         if (result) {
@@ -169,7 +179,7 @@ export class PaymentScreen extends Component {
         } else {
             this.selectedPaymentLine.set_amount(amount);
         }
-        if (!this.pos.get_order().check_paymentlines_rounding()) {
+        if (!this.currentOrder.check_paymentlines_rounding()) {
             this._display_popup_error_paymentlines_rounding();
         }
     }
@@ -237,7 +247,7 @@ export class PaymentScreen extends Component {
     async validateOrder(isForceValidate) {
         this.numberBuffer.capture();
         if (this.pos.config.cash_rounding) {
-            if (!this.pos.get_order().check_paymentlines_rounding()) {
+            if (!this.currentOrder.check_paymentlines_rounding()) {
                 this._display_popup_error_paymentlines_rounding();
                 return;
             }
@@ -327,6 +337,7 @@ export class PaymentScreen extends Component {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
         let nextScreen = this.nextScreen;
+        let switchScreen = false;
 
         if (
             nextScreen === "ReceiptScreen" &&
@@ -338,18 +349,26 @@ export class PaymentScreen extends Component {
                 : true;
 
             if (invoiced_finalized) {
-                const printResult = await this.pos.printReceipt();
+                this.pos.printReceipt(this.currentOrder);
 
-                if (printResult && this.pos.config.iface_print_skip_screen) {
+                if (this.pos.config.iface_print_skip_screen) {
                     this.currentOrder.uiState.screen_data["value"] = "";
                     this.currentOrder.uiState.locked = true;
-                    this.pos.add_new_order();
+                    switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextScreen = "ProductScreen";
+
+                    if (switchScreen) {
+                        this.pos.add_new_order();
+                    }
                 }
             }
+        } else {
+            switchScreen = true;
         }
 
-        this.pos.showScreen(nextScreen);
+        if (switchScreen) {
+            this.pos.showScreen(nextScreen);
+        }
     }
     /**
      * This method is meant to be overriden by localization that do not want to print the invoice pdf
@@ -509,6 +528,7 @@ export class PaymentScreen extends Component {
     }
     async sendPaymentRequest(line) {
         // Other payment lines can not be reversed anymore
+        this.pos.paymentTerminalInProgress = true;
         this.numberBuffer.capture();
         this.paymentLines.forEach(function (line) {
             line.can_be_reversed = false;
@@ -524,9 +544,10 @@ export class PaymentScreen extends Component {
 
         // Automatically validate the order when after an electronic payment,
         // the current order is fully paid and due is zero.
+        this.pos.paymentTerminalInProgress = false;
         const config = this.pos.config;
         const currency = this.pos.currency;
-        const currentOrder = this.pos.get_order();
+        const currentOrder = line.pos_order_id;
         if (
             isPaymentSuccessful &&
             currentOrder.is_paid() &&
