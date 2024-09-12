@@ -110,9 +110,5 @@ class TestRecruitmentSurvey(common.TransactionCase):
         self.job_applicant.with_user(self.hr_recruitment_user).action_print_survey()
 
     def _prepare_invite(self, survey, applicant):
-        survey.write({
-            'access_mode': 'public',
-            'users_login_required': False})
-        action = applicant.action_send_survey()
-        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
-        return invite_form.save()
+        survey.write({'access_mode': 'public', 'users_login_required': False})
+        return Form.from_action(self.env, applicant.action_send_survey()).save()

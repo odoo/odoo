@@ -352,8 +352,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         # Create a backorder for the missing componenents
         pick = po.picking_ids[0]
-        res = pick.button_validate()
-        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
+        Form.from_action(self.env, pick.button_validate()).save().process()
 
         # Check that a backorded is created
         self.assertEqual(len(po.picking_ids), 2)
@@ -372,8 +371,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self._process_quantities(backorder_1.move_ids, qty_to_process)
 
         # Create a backorder for the missing componenents
-        res = backorder_1.button_validate()
-        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
+        Form.from_action(self.env, backorder_1.button_validate()).save().process()
 
         # Only 1 kit_parent should be received at this point
         self.assertEqual(order_line.qty_received, 1)
@@ -411,8 +409,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self._process_quantities(backorder_2.move_ids, qty_to_process)
 
         # Create a backorder for the missing componenents
-        res = backorder_2.button_validate()
-        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
+        Form.from_action(self.env, backorder_2.button_validate()).save().process()
 
         # Check that x3 kit_parents are indeed received
         self.assertEqual(order_line.qty_received, 3)
@@ -476,9 +473,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
                 'to_refund': True
             })
 
-        wiz_act = return_of_return_pick.button_validate()
-        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, return_of_return_pick.button_validate()).save().process()
 
         # As one of each component is missing, only 6 kit_parents should be received
         self.assertEqual(order_line.qty_received, 6)
@@ -1110,9 +1105,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         receipt = po.picking_ids
         receipt.move_line_ids[0].quantity = 4
         receipt.move_line_ids[1].quantity = 2
-        action = receipt.button_validate()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.process()
+        Form.from_action(self.env, receipt.button_validate()).save().process()
         # Price Unit for 1 gm of the kit = 90000/1000 = 90
         # unit_cost for cmp1 = 90 *1000* 3 / 2 / 2 / 1000 = 67.5
         # unit_cost for cmp2  = 90 *1000* 3 / 2 / 1  * 1000 = 135000000

@@ -495,9 +495,7 @@ class TestCreatePicking(common.TestProductCommon):
         first_picking.move_ids.quantity = 5
         first_picking.move_ids.picked = True
         # create the backorder
-        backorder_wizard_dict = first_picking.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, first_picking.button_validate()).save().process()
 
         self.assertEqual(len(po.picking_ids), 2)
 

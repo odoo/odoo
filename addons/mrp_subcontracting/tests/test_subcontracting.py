@@ -475,9 +475,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         picking_receipt.move_ids.quantity = 3
         picking_receipt.move_ids.picked = True
-        backorder_wiz = picking_receipt.button_validate()
-        backorder_wiz = Form(self.env[backorder_wiz['res_model']].with_context(backorder_wiz['context'])).save()
-        backorder_wiz.process()
+        Form.from_action(self.env, picking_receipt.button_validate()).save().process()
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_receipt.id)])
         self.assertTrue(backorder)
@@ -684,9 +682,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(sbc_mo.move_raw_ids[0].move_line_ids.quantity, 5)
 
         # Validate the picking without backorders
-        action_backorder = receipt.button_validate()
-        wizard_backorder = Form(self.env[action_backorder['res_model']].with_context(action_backorder['context'])).save()
-        wizard_backorder.process_cancel_backorder()
+        Form.from_action(self.env, receipt.button_validate()).save().process_cancel_backorder()
 
         # Check that the over-consumption is still present
         self.assertEqual(sbc_mo.move_raw_ids[0].move_line_ids.quantity, 5)
@@ -740,8 +736,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             picking.move_ids.picked = True
             action = picking.button_validate()
             if isinstance(action, dict):
-                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, action).save().process()
 
         resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         finished, component = self.env['product.product'].create([{
@@ -797,8 +792,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             move_line.picked = True
             action = picking.button_validate()
             if isinstance(action, dict):
-                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, action).save().process()
             return picking.backorder_ids
 
         def check_quants(product, stock_qty, sub_qty, prod_qty):
@@ -1002,9 +996,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(move.quantity, 7)
 
         # Validate picking without backorder
-        backorder_wizard_dict = picking_receipt.button_validate()
-        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
-        backorder_wizard_form.save().process_cancel_backorder()
+        Form.from_action(self.env, picking_receipt.button_validate()).save().process_cancel_backorder()
 
         self.assertRecordValues(move._get_subcontract_production(), [
             {'product_qty': 5, 'state': 'done'},
@@ -1486,8 +1478,7 @@ class TestSubcontractingTracking(TransactionCase):
             # Validate the picking and create a backorder
             wizard_data = picking_receipt.button_validate()
             if qty == 3:
-                wizard = Form(self.env[wizard_data['res_model']].with_context(wizard_data['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, wizard_data).save().process()
 
             self.assertEqual(picking_receipt.state, 'done')
 
@@ -1756,8 +1747,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             wizard_data = picking_receipt.button_validate()
             if wizard_data is not True:
                 # Create backorder
-                wizard = Form(self.env[wizard_data['res_model']].with_context(wizard_data['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, wizard_data).save().process()
                 self.assertEqual(picking_receipt.state, 'done')
                 picking_receipt = picking_receipt.backorder_ids[-1]
                 self.assertEqual(picking_receipt.state, 'assigned')

@@ -120,8 +120,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 
-        backorder_wizard_dict = mo.button_mark_done()
-        Form(self.env[(backorder_wizard_dict.get('res_model'))].with_context(backorder_wizard_dict['context'])).save().action_backorder()
+        Form.from_action(self.env, mo.button_mark_done()).save().action_backorder()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.amount, -50.0)
 

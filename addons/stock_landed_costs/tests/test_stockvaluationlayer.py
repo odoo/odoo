@@ -323,9 +323,7 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         receipt.move_line_ids.quantity = 1
         receipt.button_validate()
 
-        action = po.action_create_invoice()
-        bill = self.env['account.move'].browse(action['res_id'])
-        bill_form = Form(bill)
+        bill_form = Form.from_action(self.env, po.action_create_invoice())
         bill_form.invoice_date = bill_form.date
         with bill_form.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
@@ -334,8 +332,7 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         bill = bill_form.save()
         bill.action_post()
 
-        action = bill.button_create_landed_costs()
-        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form = Form.from_action(self.env, bill.button_create_landed_costs())
         lc_form.picking_ids.add(receipt)
         lc = lc_form.save()
         lc.button_validate()
@@ -422,8 +419,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         self.assertEqual(payable_aml.debit, 0)
         self.assertEqual(payable_aml.credit, 50)
 
-        action = lcvb.button_create_landed_costs()
-        lc = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc = Form.from_action(self.env, lcvb.button_create_landed_costs())
         lc.picking_ids.add(receipt)
         lc = lc.save()
         lc.button_validate()
@@ -488,8 +484,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         vb = vb.save()
         vb.action_post()
 
-        action = vb.button_create_landed_costs()
-        lc = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc = Form.from_action(self.env, vb.button_create_landed_costs())
         lc.picking_ids.add(receipt)
         lc = lc.save()
         lc.button_validate()
@@ -564,8 +559,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         self.assertEqual(payable_aml.debit, 0)
         self.assertEqual(payable_aml.credit, 50)
 
-        action = lcvb.button_create_landed_costs()
-        lc = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc = Form.from_action(self.env, lcvb.button_create_landed_costs())
         lc.picking_ids.add(receipt)
         lc = lc.save()
         lc.button_validate()
@@ -648,8 +642,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         bill = bill_form.save()
         bill.action_post()
 
-        action = bill.button_create_landed_costs()
-        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form = Form.from_action(self.env, bill.button_create_landed_costs())
         lc_form.picking_ids.add(receipt)
         lc = lc_form.save()
         lc.button_validate()

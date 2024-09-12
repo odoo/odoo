@@ -383,8 +383,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
 
             action = receipt.button_validate()
             if isinstance(action, dict):
-                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, action).save().process()
                 receipt = receipt.backorder_ids
 
         self.assertRecordValues(self.finished.stock_valuation_layer_ids, [

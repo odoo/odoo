@@ -162,9 +162,7 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         self.assertEqual(sum([line.quantity for line in so.picking_ids.move_ids]), 2)
         so.picking_ids.move_ids[0].quantity = 1
         so.picking_ids.move_ids[0].picked = True
-        backorder_wizard_dict = so.picking_ids.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, so.picking_ids.button_validate()).save().process()
         self.assertEqual(len(so.picking_ids), 2)
         self.assertEqual(sum([line.quantity for line in so.picking_ids.move_ids]), 2)
 

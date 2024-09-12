@@ -104,7 +104,7 @@ class TestManualConsumption(TestMrpCommon):
 
         # Split in 3 parts
         action = mo.action_split()
-        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard = Form.from_action(self.env, action)
         wizard.counter = 3
         action = wizard.save().action_split()
         for production in mo.procurement_group_id.mrp_production_ids:

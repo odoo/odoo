@@ -267,8 +267,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
             picking.move_ids.write({'quantity': 1, 'picked': True})
             action = picking.button_validate()
             if isinstance(action, dict):
-                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, action).save().process()
             picking = picking.backorder_ids
 
         invoice = so._create_invoices()
@@ -371,8 +370,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
             picking.move_ids.write({'quantity': 1, 'picked': True})
             action = picking.button_validate()
             if isinstance(action, dict):
-                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-                wizard.process()
+                Form.from_action(self.env, action).save().process()
             picking = picking.backorder_ids
 
         invoice = so._create_invoices()

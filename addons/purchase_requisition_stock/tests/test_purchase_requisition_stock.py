@@ -290,9 +290,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         alt_po = orig_po.alternative_po_ids.filtered(lambda po: po.id != orig_po.id)
         self.assertEqual(len(orig_po.alternative_po_ids), 2, "Base PO should be linked with the alternative PO.")
         # Validate it
-        warning_action = alt_po.button_confirm()
-        warning_wizard = Form(self.env[warning_action['res_model']].with_context(**warning_action['context']))
-        warning_wizard = warning_wizard.save()
+        warning_wizard = Form.from_action(self.env, alt_po.button_confirm()).save()
         # Cancel other alternatives
         warning_wizard.action_cancel_alternatives()
         self.assertEqual(orig_po.state, 'cancel', "Original PO should have been cancelled.")

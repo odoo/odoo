@@ -539,7 +539,7 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(return_picking.state, 'done')
 
         res_dict = return_picking.action_repair_return()
-        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']), view=res_dict['view_id'])
+        repair_form = Form.from_action(self.env, res_dict)
         repair_form.product_id = product
         # The repair needs to be saved to ensure the context is correctly set.
         repair = repair_form.save()

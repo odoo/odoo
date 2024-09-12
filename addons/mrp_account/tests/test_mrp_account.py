@@ -262,9 +262,7 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         self.assertEqual(productB_credit_line.account_id, self.stock_valuation_account)
 
         # unbuild
-        res_dict = production.button_unbuild()
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.action_validate()
+        Form.from_action(self.env, production.button_unbuild()).save().action_validate()
 
         # finished product move
         productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('credit', '=', 0)])

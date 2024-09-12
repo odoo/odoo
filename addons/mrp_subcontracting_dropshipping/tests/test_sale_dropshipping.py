@@ -160,9 +160,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         picking01 = sale_order.picking_ids
         picking01.move_ids.quantity = 2
         picking01.move_ids.picked = True
-        action = picking01.button_validate()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.process()
+        Form.from_action(self.env, picking01.button_validate()).save().process()
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 2/4")
 
         # Create a return of picking01 (with both components)
@@ -180,9 +178,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         picking02 = picking01.backorder_ids
         picking02.move_ids.quantity = 1
         picking02.move_ids.picked = True
-        action = picking02.button_validate()
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        wizard.process()
+        Form.from_action(self.env, picking02.button_validate()).save().process()
         self.assertEqual(sale_order.order_line.qty_delivered, 0.0, "Delivered components: 1/4")
 
         picking03 = picking02.backorder_ids

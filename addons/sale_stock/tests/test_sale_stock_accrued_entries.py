@@ -43,14 +43,13 @@ class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
         pick.move_ids.write({'quantity': 2, 'picked': True})
         pick.button_validate()
         wiz_act = pick.button_validate()
-        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, wiz_act).save().process()
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-02')})
 
         # deliver 3 on 2020-01-06
         pick = pick.copy()
         pick.move_ids.write({'quantity': 3, 'picked': True})
-        wiz_act = pick.button_validate()
+        pick.button_validate()
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-06')})
 
         wizard = self.env['account.accrued.orders.wizard'].with_context({
@@ -91,9 +90,7 @@ class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
         pick = self.sale_order.picking_ids
         pick.move_ids.write({'quantity': 2, 'picked': True})
         pick.button_validate()
-        wiz_act = pick.button_validate()
-        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
-        wiz.process()
+        Form.from_action(self.env, pick.button_validate()).save().process()
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-02')})
 
         # invoice on 2020-01-04
@@ -104,7 +101,7 @@ class TestAccruedStockSaleOrders(AccountTestInvoicingCommon):
         # deliver 3 on 2020-01-06
         pick = pick.copy()
         pick.move_ids.write({'quantity': 3, 'picked': True})
-        wiz_act = pick.button_validate()
+        pick.button_validate()
         pick.move_ids.write({'date': fields.Date.to_date('2020-01-06')})
 
         # invoice on 2020-01-08
