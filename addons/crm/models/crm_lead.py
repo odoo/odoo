@@ -183,7 +183,8 @@ class Lead(models.Model):
     title = fields.Many2one('res.partner.title', string='Title', compute='_compute_title', readonly=False, store=True)
     email_from = fields.Char(
         'Email', tracking=40, index=True,
-        compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
+        compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True,
+        help='Email address of the contact if there is any matching this email address.')
     phone = fields.Char(
         'Phone', tracking=50,
         compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True)

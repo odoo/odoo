@@ -167,7 +167,8 @@
                                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
-                                    <field name="email_from" string="Email" widget="email"/>
+                                    <field name="email_from" string="Email" widget="email" 
+                                        attrs="{'readonly': [('partner_id', '!=', False)]}"/>
                                     <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
                                         title="By saving this change, the customer email will also be updated."
                                         attrs="{'invisible': [('partner_email_update', '=', False)]}"/>
