@@ -17,7 +17,7 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
 import { FontSelector } from "./font_selector";
 
-const fontItems = [
+export const fontItems = [
     {
         name: _t("Header 1 Display 1"),
         tagName: "h1",
