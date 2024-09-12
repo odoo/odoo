@@ -13,26 +13,26 @@ class TestPortalMessageReactionController(TestMessageReactionControllerCommon):
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
         message = record.message_post(body="portal no partner")
         token = record._portal_ensure_token()
-        sign_partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = record._sign_token(sign_partner.id)
+        partner = self.env["res.partner"].create({"name": "Sign Partner"})
+        _hash = record._sign_token(partner.id)
         token_param = {"token": token}
         incorrect_token_param = {"token": "incorrect token"}
-        hash_pid_param = {"hash": _hash, "pid": sign_partner.id}
-        incorrect_hash_pid_param = {"hash": "incorrect hash", "pid": sign_partner.id}
+        hash_pid_param = {"hash": _hash, "pid": partner.id}
+        incorrect_hash_pid_param = {"hash": "incorrect hash", "pid": partner.id}
         self._execute_subtests(
             message,
             (
-                (self.no_user, False),
-                (self.no_user, False, incorrect_token_param),
-                (self.no_user, False, incorrect_hash_pid_param),
+                (self.user_public, False),
+                (self.user_public, False, incorrect_token_param),
+                (self.user_public, False, incorrect_hash_pid_param),
                 # False because no portal partner, no guest
-                (self.no_user, False, token_param),
-                (self.no_user, True, hash_pid_param, {"partner": sign_partner}),
-                (self.public_w_guest, False),
-                (self.public_w_guest, False, incorrect_token_param),
-                (self.public_w_guest, False, incorrect_hash_pid_param),
-                (self.public_w_guest, True, token_param),
-                (self.public_w_guest, True, hash_pid_param, {"partner": sign_partner}),
+                (self.user_public, False, token_param),
+                (self.user_public, True, hash_pid_param, {"partner": partner}),
+                (self.guest, False),
+                (self.guest, False, incorrect_token_param),
+                (self.guest, False, incorrect_hash_pid_param),
+                (self.guest, True, token_param),
+                (self.guest, True, hash_pid_param, {"partner": partner}),
                 (self.user_portal, False),
                 (self.user_portal, False, incorrect_token_param),
                 (self.user_portal, False, incorrect_hash_pid_param),
@@ -62,28 +62,28 @@ class TestPortalMessageReactionController(TestMessageReactionControllerCommon):
         record = self.env["mail.test.portal"].create({"name": "Test", "partner_id": rec_partner.id})
         message = record.message_post(body="portal with partner")
         token = record._portal_ensure_token()
-        sign_partner = self.env["res.partner"].create({"name": "Sign Partner"})
-        _hash = record._sign_token(sign_partner.id)
+        partner = self.env["res.partner"].create({"name": "Sign Partner"})
+        _hash = record._sign_token(partner.id)
         token_param = {"token": token}
         incorrect_token_param = {"token": "incorrect token"}
-        hash_pid_param = {"hash": _hash, "pid": sign_partner.id}
-        incorrect_hash_pid_param = {"hash": "incorrect hash", "pid": sign_partner.id}
+        hash_pid_param = {"hash": _hash, "pid": partner.id}
+        incorrect_hash_pid_param = {"hash": "incorrect hash", "pid": partner.id}
         self._execute_subtests(
             message,
             (
-                (self.no_user, False),
-                (self.no_user, False, incorrect_token_param),
-                (self.no_user, False, incorrect_hash_pid_param),
-                (self.no_user, True, token_param, {"partner": rec_partner}),
-                (self.no_user, True, hash_pid_param, {"partner": sign_partner}),
+                (self.user_public, False),
+                (self.user_public, False, incorrect_token_param),
+                (self.user_public, False, incorrect_hash_pid_param),
+                (self.user_public, True, token_param, {"partner": rec_partner}),
+                (self.user_public, True, hash_pid_param, {"partner": partner}),
                 # sign has priority over token when both are provided
-                (self.no_user, True, token_param | hash_pid_param, {"partner": sign_partner}),
-                (self.public_w_guest, False),
-                (self.public_w_guest, False, incorrect_token_param),
-                (self.public_w_guest, False, incorrect_hash_pid_param),
-                (self.public_w_guest, True, token_param, {"partner": rec_partner}),
-                (self.public_w_guest, True, hash_pid_param, {"partner": sign_partner}),
-                (self.public_w_guest, True, token_param | hash_pid_param, {"partner": sign_partner}),
+                (self.user_public, True, token_param | hash_pid_param, {"partner": partner}),
+                (self.guest, False),
+                (self.guest, False, incorrect_token_param),
+                (self.guest, False, incorrect_hash_pid_param),
+                (self.guest, True, token_param, {"partner": rec_partner}),
+                (self.guest, True, hash_pid_param, {"partner": partner}),
+                (self.guest, True, token_param | hash_pid_param, {"partner": partner}),
                 (self.user_portal, False),
                 (self.user_portal, False, incorrect_token_param),
                 (self.user_portal, False, incorrect_hash_pid_param),

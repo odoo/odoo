@@ -66,15 +66,9 @@ test("can post a message on a record thread", async () => {
             context: args.context,
             post_data: {
                 body: "hey",
-                attachment_ids: [],
                 message_type: "comment",
-                partner_ids: [],
                 subtype_xmlid: "mail.mt_comment",
             },
-            canned_response_ids: [],
-            attachment_tokens: [],
-            partner_additional_values: {},
-            partner_emails: [],
             thread_id: partnerId,
             thread_model: "res.partner",
         };
@@ -101,16 +95,10 @@ test("can post a note on a record thread", async () => {
         const expected = {
             context: args.context,
             post_data: {
-                attachment_ids: [],
                 body: "hey",
                 message_type: "comment",
-                partner_ids: [],
                 subtype_xmlid: "mail.mt_note",
             },
-            attachment_tokens: [],
-            canned_response_ids: [],
-            partner_additional_values: {},
-            partner_emails: [],
             thread_id: partnerId,
             thread_model: "res.partner",
         };
