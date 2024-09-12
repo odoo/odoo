@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models, Command
+from odoo.osv import expression
 from odoo.tools import create_index
 from odoo.tools.misc import format_datetime
 from odoo.exceptions import UserError, ValidationError
@@ -62,6 +63,11 @@ class AccountLockException(models.Model):
     lock_date = fields.Date(
         string="Changed Lock Date",
         help="Technical field giving the date the lock date was changed to.",
+    )
+    company_lock_date = fields.Date(
+        string="Original Lock Date",
+        copy=False,
+        help="Technical field giving the date the company lock date at the time the exception was created.",
     )
 
     # (Non-stored) computed lock date fields; c.f. res.company
@@ -182,9 +188,11 @@ class AccountLockException(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # Preprocess arguments:
-        # E.g. to create an exception for 'fiscalyear_lock_date' to '2024-01-01' put
-        # {'fiscalyear_lock_date': '2024-01-01'} in the create vals.
-        # The same thing works for all other fields in SOFT_LOCK_DATE_FIELDS.
+        # 1. Parse lock date arguments
+        #   E.g. to create an exception for 'fiscalyear_lock_date' to '2024-01-01' put
+        #   {'fiscalyear_lock_date': '2024-01-01'} in the create vals.
+        #   The same thing works for all other fields in SOFT_LOCK_DATE_FIELDS.
+        # 2. Fetch company lock date
         for vals in vals_list:
             if 'lock_date' not in vals or 'lock_date_field' not in vals:
                 # Use vals[field] (for field in SOFT_LOCK_DATE_FIELDS) to init the data
@@ -194,6 +202,9 @@ class AccountLockException(models.Model):
                 field = changed_fields[0]
                 vals['lock_date_field'] = field
                 vals['lock_date'] = vals.pop(field)
+            company = self.env['res.company'].browse(vals.get('company_id', self.env.company.id))
+            if 'company_lock_date' not in vals:
+                vals['company_lock_date'] = company[vals['lock_date_field']]
 
         exceptions = super().create(vals_list)
 
@@ -231,6 +242,19 @@ class AccountLockException(models.Model):
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a Lock Date Exception.'))
 
+    def _recreate(self):
+        """
+        1. Copy all exceptions in self but update the company lock date.
+        2. Revoke all exceptions in self.
+        3. Return the new records from step 1.
+        """
+        if not self:
+            return self.env['account.lock_exception']
+        vals_list = self.with_context(active_test=False).copy_data()
+        new_records = self.create(vals_list)
+        self.sudo().action_revoke()
+        return new_records
+
     def action_revoke(self):
         """Revokes an active exception."""
         if not self.env.user.has_group('account.group_account_manager'):
@@ -241,6 +265,14 @@ class AccountLockException(models.Model):
                 record_sudo.active = False
                 record_sudo.end_datetime = fields.Datetime.now()
                 record._invalidate_affected_user_lock_dates()
+
+    @api.model
+    def _get_active_exceptions_domain(self, company, soft_lock_date_fields):
+        return [
+            *expression.OR([(field, '<', company[field])] for field in soft_lock_date_fields if company[field]),
+            ('company_id', '=', company.id),
+            ('state', '=', 'active'),  # checks the datetime
+        ]
 
     def _get_audit_trail_during_exception_domain(self):
         self.ensure_one()
@@ -257,6 +289,30 @@ class AccountLockException(models.Model):
             domain.append(('create_uid', '=', self.user_id.id))
         if self.end_datetime:
             domain.append(('date', '<=', self.end_datetime))
+
+        # Add a restriction on the accounting date to avoid unnecessary entries
+        min_date = self.lock_date
+        max_date = self.company_lock_date
+        move_date_domain = []
+        tracking_old_datetime_domain = []
+        tracking_new_datetime_domain = []
+        if min_date:
+            move_date_domain.append([('account_audit_log_move_id.date', '>=', min_date)])
+            tracking_old_datetime_domain.append([('tracking_value_ids.old_value_datetime', '>=', min_date)])
+            tracking_new_datetime_domain.append([('tracking_value_ids.new_value_datetime', '>=', min_date)])
+        if max_date:
+            move_date_domain.append([('account_audit_log_move_id.date', '<=', max_date)])
+            tracking_old_datetime_domain.append([('tracking_value_ids.old_value_datetime', '<=', max_date)])
+            tracking_new_datetime_domain.append([('tracking_value_ids.new_value_datetime', '<=', max_date)])
+        domain.extend([
+            '|',
+                *expression.AND(move_date_domain),
+                '&',
+                    ('tracking_value_ids.field_id', '=', self.env['ir.model.fields']._get('account.move', 'date').id),
+                    '|',
+                        *expression.AND(tracking_old_datetime_domain),
+                        *expression.AND(tracking_new_datetime_domain),
+        ])
 
         return domain
 

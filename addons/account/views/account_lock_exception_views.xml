@@ -42,10 +42,16 @@
                                     <div colspan="2" class="o_wrap_label">
                                         <span class="o_form_label">Changed Lock Date:</span>
                                     </div>
-                                    <field name="sale_lock_date" readonly="True" invisible="lock_date_field != 'sale_lock_date'"/>
-                                    <field name="purchase_lock_date" readonly="True" invisible="lock_date_field != 'purchase_lock_date'"/>
-                                    <field name="tax_lock_date" readonly="True" invisible="lock_date_field != 'tax_lock_date'"/>
-                                    <field name="fiscalyear_lock_date" readonly="True" invisible="lock_date_field != 'fiscalyear_lock_date'"/>
+
+                                    <div class="o_wrap_label">
+                                        <field name="lock_date_field" class="o_form_label o_form_label_readonly" nolabel="1" readonly="True"/>
+                                    </div>
+                                    <div>
+                                        <field name="lock_date" nolabel="1" class="oe_inline" readonly="True"/>
+                                        <i class="text-muted">
+                                        (from <field name="company_lock_date" class="oe_inline" readonly="True"/>)
+                                        </i>
+                                    </div>
                                 </group>
                             </group>
                         </div>
