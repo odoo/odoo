@@ -6,7 +6,7 @@ export function manageMessages({ component, env }) {
     if (!resId) {
         return null; // No record
     }
-    const description = _t("Manage Messages");
+    const description = _t("Messages");
     return {
         type: "item",
         description,
@@ -29,7 +29,8 @@ export function manageMessages({ component, env }) {
                 },
             });
         },
-        sequence: 325,
+        sequence: 130,
+        section: "record",
     };
 }
 

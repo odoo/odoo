@@ -29,7 +29,7 @@
             },
             {
                 content: "Click the Set Defaults menu",
-                trigger: '.dropdown-item:contains(Set Defaults)',
+                trigger: '.dropdown-item:contains(Set Default Values)',
                 run: "click",
             },
             {

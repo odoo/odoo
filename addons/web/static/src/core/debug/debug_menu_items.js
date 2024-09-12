@@ -4,37 +4,32 @@ import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 
-function activateAssetsDebugging({ env }) {
-    return {
-        type: "item",
-        description: _t("Activate Assets Debugging"),
-        callback: () => {
-            router.pushState({ debug: "assets" }, { reload: true });
-        },
-        sequence: 410,
-    };
-}
-
 function activateTestsAssetsDebugging({ env }) {
+    if (String(router.current.debug).includes("tests")) {
+        return;
+    }
+
     return {
         type: "item",
-        description: _t("Activate Tests Assets Debugging"),
+        description: _t("Activate Test Mode"),
         callback: () => {
             router.pushState({ debug: "assets,tests" }, { reload: true });
         },
-        sequence: 420,
+        sequence: 580,
+        section: "tools",
     };
 }
 
 export function regenerateAssets({ env }) {
     return {
         type: "item",
-        description: _t("Regenerate Assets Bundles"),
+        description: _t("Regenerate Assets"),
         callback: async () => {
             await env.services.orm.call("ir.attachment", "regenerate_assets_bundles");
             browser.location.reload();
         },
-        sequence: 430,
+        sequence: 550,
+        section: "tools",
     };
 }
 
@@ -48,26 +43,26 @@ function becomeSuperuser({ env }) {
         callback: () => {
             browser.open(becomeSuperuserURL, "_self");
         },
-        sequence: 440,
+        sequence: 560,
+        section: "tools",
     };
 }
 
 function leaveDebugMode() {
     return {
         type: "item",
-        description: _t("Leave the Developer Tools"),
+        description: _t("Leave Debug Mode"),
         callback: () => {
             router.pushState({ debug: 0 }, { reload: true });
         },
-        sequence: 450,
+        sequence: 650,
     };
 }
 
 registry
     .category("debug")
     .category("default")
-    .add("activateAssetsDebugging", activateAssetsDebugging)
     .add("regenerateAssets", regenerateAssets)
     .add("becomeSuperuser", becomeSuperuser)
-    .add("leaveDebugMode", leaveDebugMode)
-    .add("activateTestsAssetsDebugging", activateTestsAssetsDebugging);
+    .add("activateTestsAssetsDebugging", activateTestsAssetsDebugging)
+    .add("leaveDebugMode", leaveDebugMode);

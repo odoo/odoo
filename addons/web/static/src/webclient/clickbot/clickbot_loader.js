@@ -11,11 +11,12 @@ export async function startClickEverywhere(xmlId, light, currentState) {
 export function runClickTestItem({ env }) {
     return {
         type: "item",
-        description: _t("Run Click Everywhere Test"),
+        description: _t("Run Click Everywhere"),
         callback: () => {
             startClickEverywhere();
         },
-        sequence: 30,
+        sequence: 460,
+        section: "testing",
     };
 }
 
