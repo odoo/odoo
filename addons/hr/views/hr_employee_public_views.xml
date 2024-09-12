@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
-                    <searchpanel>
+                    <searchpanel view_types="kanban,list,graph,pivot,hierarchy">
                         <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
