@@ -14,16 +14,14 @@
                 </div>
             </t>
             <br />
-            <br />
             <div class="pos-receipt-title">
                 NEW
                 <t t-esc='changes.time.hours'/>:<t t-esc='changes.time.minutes'/>
             </div>
             <br />
-            <br />
             <t t-foreach="changes.new" t-as="change" t-key="change_index">
-                <div class="multiprint-flex">
-                    <span class="product-quantity" t-esc="change.qty"/>
+                <div class="product-details d-flex">
+                    <span class="product-quantity me-5 mb-1" t-esc="change.qty"/>
                     <span class="product-name" t-esc="change.full_product_name"/>
                 </div>
                 <t t-if="change.customer_note">
