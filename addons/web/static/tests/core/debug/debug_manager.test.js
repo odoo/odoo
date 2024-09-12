@@ -66,6 +66,7 @@ describe.tags("desktop")("DebugMenu", () => {
                         expect.step("callback item_1");
                     },
                     sequence: 10,
+                    section: "a",
                 };
             })
             .add("item_2", () => {
@@ -76,6 +77,7 @@ describe.tags("desktop")("DebugMenu", () => {
                         expect.step("callback item_2");
                     },
                     sequence: 5,
+                    section: "a",
                 };
             })
             .add("item_3", () => {
@@ -85,16 +87,8 @@ describe.tags("desktop")("DebugMenu", () => {
                     callback: () => {
                         expect.step("callback item_3");
                     },
+                    section: "b",
                 };
-            })
-            .add("separator", () => {
-                return {
-                    type: "separator",
-                    sequence: 20,
-                };
-            })
-            .add("separator_2", () => {
-                return null;
             })
             .add("item_4", () => {
                 return null;
@@ -102,12 +96,12 @@ describe.tags("desktop")("DebugMenu", () => {
         await mountWithCleanup(DebugMenuParent);
         await contains("button.dropdown-toggle").click();
         expect(".dropdown-menu .dropdown-item").toHaveCount(3);
-        expect(".dropdown-divider").toHaveCount(1);
+        expect(".dropdown-menu .dropdown-menu_group").toHaveCount(2);
         const children = [...queryOne(".dropdown-menu").children] || [];
-        expect(children.map((el) => el.tagName)).toEqual(["SPAN", "SPAN", "DIV", "SPAN"]);
-        const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
-        expect(queryAllTexts(items)).toEqual(["Item 2", "Item 1", "Item 3"]);
+        expect(children.map((el) => el.tagName)).toEqual(["DIV", "SPAN", "SPAN", "DIV", "SPAN"]);
+        expect(queryAllTexts(children)).toEqual(["a", "Item 2", "Item 1", "b", "Item 3"]);
 
+        const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
         for (const item of items) {
             click(item);
         }
@@ -232,7 +226,7 @@ describe.tags("desktop")("DebugMenu", () => {
         await contains("button.dropdown-toggle").click();
         expect(".dropdown-menu .dropdown-item").toHaveCount(1);
         const item = queryOne(".dropdown-menu .dropdown-item");
-        expect(item).toHaveText("Regenerate Assets Bundles");
+        expect(item).toHaveText("Regenerate Assets");
         click(item);
         await animationFrame();
         expect.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
@@ -283,7 +277,7 @@ describe.tags("desktop")("DebugMenu", () => {
         });
 
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('Get View')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Computed Arch')").click();
         expect(".modal").toHaveCount(1);
         expect(".modal-body").toHaveText(`<list><field name="name"/></list>`);
     });
@@ -306,7 +300,7 @@ describe.tags("desktop")("DebugMenu", () => {
             views: [[false, "pivot"]],
         });
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('Edit View: Pivot')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('View: Pivot')").click();
 
         expect(".breadcrumb-item").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveCount(1);
@@ -337,7 +331,7 @@ describe.tags("desktop")("DebugMenu", () => {
             views: [[false, "list"]],
         });
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('Edit SearchView')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('SearchView')").click();
         expect(".breadcrumb-item").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveText("Edit View");
@@ -363,7 +357,7 @@ describe.tags("desktop")("DebugMenu", () => {
             views: [[false, "list"]],
         });
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('Edit SearchView')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('SearchView')").click();
         expect(".breadcrumb-item").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveText("Edit View");
@@ -387,7 +381,7 @@ describe.tags("desktop")("DebugMenu", () => {
         });
 
         await contains(".o_dialog .o_debug_manager button").click();
-        expect(".dropdown-menu .dropdown-item:contains('Edit SearchView')").toHaveCount(0);
+        expect(".dropdown-menu .dropdown-item:contains('SearchView')").toHaveCount(0);
     });
 
     test("set defaults: basic rendering", async () => {
@@ -411,7 +405,7 @@ describe.tags("desktop")("DebugMenu", () => {
             views: [[24, "form"]],
         });
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('Set Defaults')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
         expect(".modal").toHaveCount(1);
         expect(".modal select#formview_default_fields").toHaveCount(1);
         expect(".modal #formview_default_fields option").toHaveCount(2);
@@ -445,7 +439,7 @@ describe.tags("desktop")("DebugMenu", () => {
             views: [[25, "form"]],
         });
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('Set Defaults')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
         expect(".modal").toHaveCount(1);
         await contains(".modal .modal-footer button").click();
         expect(".modal").toHaveCount(0);
@@ -478,7 +472,7 @@ describe.tags("desktop")("DebugMenu", () => {
             views: [[26, "form"]],
         });
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('Set Defaults')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
         expect(".modal").toHaveCount(1);
 
         await contains(".modal #formview_default_fields").select("name");
@@ -518,11 +512,8 @@ describe.tags("desktop")("DebugMenu", () => {
             views: [[false, "form"]],
         });
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('View Raw Record Data')").click();
-        expect(".modal").toHaveCount(1);
-        expect(".modal-body pre").toHaveText(
-            '{\n "create_date": "2019-03-11 09:30:00",\n "display_name": "custom1",\n "id": 1,\n "name": "custom1",\n "write_date": "2019-03-11 09:30:00"\n}'
-        );
+        await contains(".dropdown-menu .dropdown-item:contains(/^Data/)").click();
+        expect(browser.location.pathname).toBe("/json/m-custom/1");
     });
 
     test("view metadata: basic rendering", async () => {
@@ -557,7 +548,7 @@ describe.tags("desktop")("DebugMenu", () => {
             views: [[false, "form"]],
         });
         await contains(".o_debug_manager button").click();
-        await contains(".dropdown-menu .dropdown-item:contains('View Metadata')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Metadata')").click();
         expect(".modal").toHaveCount(1);
         const contentModal = queryAll(".modal-body table tr th, .modal-body table tr td");
         expect(queryAllTexts(contentModal)).toEqual([
@@ -643,7 +634,7 @@ describe.tags("desktop")("DebugMenu", () => {
                 views: [[18, "form"]],
             });
             await contains(".o_debug_manager button").click();
-            await contains(".dropdown-menu .dropdown-item:contains('Set Defaults')").click();
+            await contains(".dropdown-menu .dropdown-item:contains('Set Default Values')").click();
             expect(".modal").toHaveCount(1);
 
             await contains(".modal #formview_default_fields").select(field_name);
@@ -687,8 +678,7 @@ describe.tags("desktop")("DebugMenu", () => {
         });
 
         await contains(".o_debug_manager button").click();
-        expect(queryAll(".dropdown-menu .dropdown-item")[0]).toHaveText("View Model: res.partner");
-        await contains(".dropdown-menu .dropdown-item:contains('View Model:')").click();
+        await contains(".dropdown-menu .dropdown-item:contains('Model:')").click();
 
         expect(".breadcrumb-item").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveCount(1);

@@ -46,12 +46,12 @@ test("Manage Messages", async (assert) => {
     await click(target, ".o_debug_manager .dropdown-toggle");
     const dropdownItems = target.querySelectorAll(".dropdown-menu .dropdown-item");
     assert.strictEqual(dropdownItems.length, 1);
-    assert.strictEqual(dropdownItems[0].innerText.trim(), "Manage Messages");
+    assert.strictEqual(dropdownItems[0].innerText.trim(), "Messages");
 
     await click(dropdownItems[0]);
     await assertSteps(["message_read"]);
     assert.strictEqual(
         target.querySelector(".o_breadcrumb .active > span").innerText.trim(),
-        "Manage Messages"
+        "Messages"
     );
 });

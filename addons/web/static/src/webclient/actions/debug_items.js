@@ -4,39 +4,19 @@ import { registry } from "@web/core/registry";
 
 const debugRegistry = registry.category("debug");
 
-function actionSeparator({ action }) {
-    if (!action.id || !action.res_model) {
-        return null;
-    }
-    return {
-        type: "separator",
-        sequence: 100,
-    };
-}
-
-function accessSeparator({ accessRights, action }) {
-    const { canSeeModelAccess, canSeeRecordRules } = accessRights;
-    if (!action.res_model || (!canSeeModelAccess && !canSeeRecordRules)) {
-        return null;
-    }
-    return {
-        type: "separator",
-        sequence: 200,
-    };
-}
-
 function editAction({ action, env }) {
     if (!action.id) {
         return null;
     }
-    const description = _t("Edit Action");
+    const description = _t("Action");
     return {
         type: "item",
         description,
         callback: () => {
             editModelDebug(env, description, action.type, action.id);
         },
-        sequence: 110,
+        sequence: 220,
+        section: "ui",
     };
 }
 
@@ -44,7 +24,7 @@ function viewFields({ action, env }) {
     if (!action.res_model) {
         return null;
     }
-    const description = _t("View Fields");
+    const description = _t("Fields");
     return {
         type: "item",
         description,
@@ -68,7 +48,8 @@ function viewFields({ action, env }) {
                 },
             });
         },
-        sequence: 130,
+        sequence: 250,
+        section: "ui",
     };
 }
 
@@ -76,10 +57,10 @@ function ViewModel({ action, env }) {
     if (!action.res_model) {
         return null;
     }
-    const modelName = action.res_model
+    const modelName = action.res_model;
     return {
         type: "item",
-        description: _t("View Model: %s", modelName),
+        description: _t("Model: %s", modelName),
         callback: async () => {
             const modelId = (
                 await env.services.orm.search("ir.model", [["model", "=", modelName]], {
@@ -88,7 +69,8 @@ function ViewModel({ action, env }) {
             )[0];
             editModelDebug(env, modelName, "ir.model", modelId);
         },
-        sequence: 120,
+        sequence: 210,
+        section: "ui",
     };
 }
 
@@ -96,7 +78,7 @@ function manageFilters({ action, env }) {
     if (!action.res_model) {
         return null;
     }
-    const description = _t("Manage Filters");
+    const description = _t("Filters");
     return {
         type: "item",
         description,
@@ -116,7 +98,8 @@ function manageFilters({ action, env }) {
                 },
             });
         },
-        sequence: 140,
+        sequence: 260,
+        section: "ui",
     };
 }
 
@@ -124,7 +107,7 @@ function viewAccessRights({ accessRights, action, env }) {
     if (!action.res_model || !accessRights.canSeeModelAccess) {
         return null;
     }
-    const description = _t("View Access Rights");
+    const description = _t("Access Rights");
     return {
         type: "item",
         description,
@@ -148,7 +131,8 @@ function viewAccessRights({ accessRights, action, env }) {
                 },
             });
         },
-        sequence: 210,
+        sequence: 350,
+        section: "security",
     };
 }
 
@@ -159,7 +143,7 @@ function viewRecordRules({ accessRights, action, env }) {
     const description = _t("Model Record Rules");
     return {
         type: "item",
-        description: _t("View Record Rules"),
+        description: _t("Record Rules"),
         callback: async () => {
             const modelId = (
                 await env.services.orm.search("ir.model", [["model", "=", action.res_model]], {
@@ -180,17 +164,16 @@ function viewRecordRules({ accessRights, action, env }) {
                 },
             });
         },
-        sequence: 220,
+        sequence: 360,
+        section: "security",
     };
 }
 
 debugRegistry
     .category("action")
-    .add("actionSeparator", actionSeparator)
     .add("editAction", editAction)
     .add("viewFields", viewFields)
     .add("ViewModel", ViewModel)
     .add("manageFilters", manageFilters)
-    .add("accessSeparator", accessSeparator)
     .add("viewAccessRights", viewAccessRights)
     .add("viewRecordRules", viewRecordRules);

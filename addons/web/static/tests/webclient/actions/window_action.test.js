@@ -2332,9 +2332,9 @@ test("debugManager is active for views", async () => {
     onRpc("has_access", () => true);
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    expect(".o-dropdown--menu .o-dropdown-item:contains('Edit View: Kanban')").toHaveCount(0);
+    expect(".o-dropdown--menu .o-dropdown-item:contains('View: Kanban')").toHaveCount(0);
     await contains(".o_debug_manager .dropdown-toggle").click();
-    expect(".o-dropdown--menu .o-dropdown-item:contains('Edit View: Kanban')").toHaveCount(1);
+    expect(".o-dropdown--menu .o-dropdown-item:contains('View: Kanban')").toHaveCount(1);
 });
 
 test.tags("desktop")("reload a view via the view switcher keep state", async () => {
