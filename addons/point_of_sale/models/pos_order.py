@@ -1552,6 +1552,10 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         return self.product_id.is_storable and self.product_id.cost_method in ['fifo', 'average']
 
+    def _eligible_for_valuation(self):
+        self.ensure_one()
+        return self.product_id.is_storable and self.product_id.valuation == 'real_time'
+
     def _compute_total_cost(self, stock_moves):
         """
         Compute the total cost of the order lines.
