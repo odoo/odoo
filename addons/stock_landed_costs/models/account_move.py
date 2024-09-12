@@ -75,4 +75,8 @@ class AccountMoveLine(models.Model):
         return layers.filtered(lambda svl: not svl.stock_landed_cost_id)
 
     def _eligible_for_cogs(self):
-        return super()._eligible_for_cogs() or (self.product_id.type == 'service' and self.product_id.landed_cost_ok)
+        return super()._eligible_for_cogs() or (
+            self.product_id.type == "service"
+            and self.product_id.landed_cost_ok
+            and self.product_id.valuation == "real_time"
+        )
