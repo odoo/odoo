@@ -31,10 +31,13 @@ export class ImportAction extends Component {
         this.resModel = this.props.action.params.model;
         this.model = useImportModel({
             env: this.env,
-            resModel: this.resModel,
+            resModel: this.resModel || this.props.action.params.res_model,
             context: this.props.action.params.context || {},
             orm: this.orm,
         });
+        if (this.model.resModel) {
+            this.props.updateActionState({ res_model: this.model.resModel });
+        }
 
         this.state = useState({
             filename: undefined,
