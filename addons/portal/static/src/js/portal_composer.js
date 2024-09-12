@@ -98,11 +98,11 @@ var PortalComposer = publicWidget.Widget.extend({
     },
     _prepareAttachmentData: function (file) {
         return {
-            'name': file.name,
-            'file': file,
-            'thread_id': this.options.res_id,
-            'thread_model': this.options.res_model,
-            'access_token': this.options.token,
+            is_pending: true,
+            thread_id: this.options.res_id,
+            thread_model: this.options.res_model,
+            token: this.options.token,
+            ufile: file,
         };
     },
     /**
@@ -120,7 +120,8 @@ var PortalComposer = publicWidget.Widget.extend({
                 if (odoo.csrf_token) {
                     data.csrf_token = odoo.csrf_token;
                 }
-                post('/portal/attachment/add', data).then(function (attachment) {
+                post('/mail/attachment/upload', data).then(function (res) {
+                    let attachment = res.data["ir.attachment"][0]
                     attachment.state = 'pending';
                     self.attachments.push(attachment);
                     self._updateAttachments();

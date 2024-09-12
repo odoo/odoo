@@ -270,18 +270,3 @@ class TestUiPublisherYoutube(HttpCaseGamification):
         })
 
         self.start_tour(self.env['website'].get_client_action_url('/slides'), 'course_publisher', login=user_demo.login)
-
-
-@tests.common.tagged('external', 'post_install', '-standard', '-at_install')
-class TestPortalComposer(TestUICommon):
-    def test_portal_composer_attachment(self):
-        """Check that the access token is returned when we upload an attachment."""
-        self.authenticate('demo', 'demo')
-        response = self.url_open('/portal/attachment/add', data={
-            'name': 'image.png',
-            'res_id': self.channel.id,
-            'res_model': 'slide.channel',
-            'csrf_token': http.WebRequest.csrf_token(self),
-        }, files={'file': ('image.png', '', 'image/png')})
-        self.assertTrue(response.ok)
-        self.assertTrue(response.json().get('access_token'))

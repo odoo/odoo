@@ -6,7 +6,7 @@ from odoo.tests.common import tagged
 import json
 
 from odoo import http
-from odoo.tools import mute_logger
+from odoo.tools import file_open, mute_logger
 
 
 @tagged('post_install', '-at_install')
@@ -38,33 +38,33 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.authenticate(None, None)
 
         # Test public user can't create attachment without token of document
-        res = self.url_open(
-            url=f'{self.invoice_base_url}/portal/attachment/add',
-            data={
-                'name': "new attachment",
-                'thread_model': self.out_invoice._name,
-                'thread_id': self.out_invoice.id,
-                'csrf_token': http.Request.csrf_token(self),
-            },
-            files=[('file', ('test.txt', b'test', 'plain/text'))],
-        )
-        self.assertEqual(res.status_code, 400)
-        self.assertIn("you do not have the rights", res.text)
+        with file_open("addons/web/__init__.py") as file:
+            res = self.url_open(
+                url=f"{self.invoice_base_url}/mail/attachment/upload",
+                data={
+                    "csrf_token": http.Request.csrf_token(self),
+                    "thread_id": self.out_invoice.id,
+                    "thread_model": self.out_invoice._name,
+                },
+                files={"ufile": file},
+            )
+        self.assertEqual(res.status_code, 404)
+        self.assertIn("The requested URL was not found on the server.", res.text)
 
         # Test public user can create attachment with token
-        res = self.url_open(
-            url=f'{self.invoice_base_url}/portal/attachment/add',
-            data={
-                'name': "new attachment",
-                'thread_model': self.out_invoice._name,
-                'thread_id': self.out_invoice.id,
-                'csrf_token': http.Request.csrf_token(self),
-                'access_token': self.out_invoice._portal_ensure_token(),
-            },
-            files=[('file', ('test.txt', b'test', 'plain/text'))],
-        )
+        with file_open("addons/web/__init__.py") as file:
+            res = self.url_open(
+                url=f"{self.invoice_base_url}/mail/attachment/upload",
+                data={
+                    "csrf_token": http.Request.csrf_token(self),
+                    "thread_id": self.out_invoice.id,
+                    "thread_model": self.out_invoice._name,
+                    "token": self.out_invoice._portal_ensure_token(),
+                },
+                files={"ufile": file},
+            )
         self.assertEqual(res.status_code, 200)
-        create_res = json.loads(res.content.decode('utf-8'))
+        create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
         self.assertTrue(self.env['ir.attachment'].sudo().search([('id', '=', create_res['id'])]))
 
         # Test created attachment is private
@@ -77,18 +77,18 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test mimetype is neutered as non-admin
         res = self.url_open(
-            url=f'{self.invoice_base_url}/portal/attachment/add',
+            url=f"{self.invoice_base_url}/mail/attachment/upload",
             data={
-                'name': "new attachment",
-                'thread_model': self.out_invoice._name,
-                'thread_id': self.out_invoice.id,
-                'csrf_token': http.Request.csrf_token(self),
-                'access_token': self.out_invoice._portal_ensure_token(),
+                "csrf_token": http.Request.csrf_token(self),
+                "is_pending": True,
+                "thread_id": self.out_invoice.id,
+                "thread_model": self.out_invoice._name,
+                "token": self.out_invoice._portal_ensure_token(),
             },
-            files=[('file', ('test.svg', b'<svg></svg>', 'image/svg+xml'))],
+            files={"ufile": ("test.svg", b'<svg></svg>', "image/svg+xml")},
         )
         self.assertEqual(res.status_code, 200)
-        create_res = json.loads(res.content.decode('utf-8'))
+        create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
         self.assertEqual(create_res['mimetype'], 'text/plain')
 
         res_binary = self.url_open('/web/content/%d?access_token=%s' % (create_res['id'], create_res['access_token']))
@@ -203,7 +203,9 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertIn("The requested URL was not found on the server.", res.text)
 
         # Test attachment can't be associated if not "pending" state
-        self.assertFalse(self.out_invoice.message_ids)
+        # not messages which are sent by `_post_add_create` in the previous steps
+        self.assertFalse(
+            self.out_invoice.message_ids.filtered(lambda m: m.author_id == self.partner_a))
         attachment.write({'res_model': 'model'})
         res = self.opener.post(
             url=f'{self.invoice_base_url}/mail/message/post',
@@ -219,9 +221,11 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
         self.out_invoice.invalidate_recordset(['message_ids'])
-        self.assertEqual(len(self.out_invoice.message_ids), 1)
-        self.assertEqual(self.out_invoice.message_ids.body, "<p>test message 1</p>")
-        self.assertFalse(self.out_invoice.message_ids.attachment_ids)
+        # not messages which are sent by `_post_add_create` in the previous steps
+        message = self.out_invoice.message_ids.filtered(lambda m: m.author_id == self.partner_a)
+        self.assertEqual(len(message), 1)
+        self.assertEqual(message.body, "<p>test message 1</p>")
+        self.assertFalse(message.attachment_ids)
 
         # Test attachment can't be associated if not correct user
         attachment.write({'res_model': 'mail.compose.message'})
@@ -239,26 +243,28 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
         self.out_invoice.invalidate_recordset(['message_ids'])
-        self.assertEqual(len(self.out_invoice.message_ids), 2)
-        self.assertEqual(self.out_invoice.message_ids[0].author_id, self.partner_a)
-        self.assertEqual(self.out_invoice.message_ids[0].body, "<p>test message 2</p>")
-        self.assertEqual(self.out_invoice.message_ids[0].email_from, self.partner_a.email_formatted)
-        self.assertFalse(self.out_invoice.message_ids.attachment_ids)
+        # not messages which are sent by `_post_add_create` in the previous steps
+        messages = self.out_invoice.message_ids.filtered(lambda m: m.author_id == self.partner_a)
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(messages[0].author_id, self.partner_a)
+        self.assertEqual(messages[0].body, "<p>test message 2</p>")
+        self.assertEqual(messages[0].email_from, self.partner_a.email_formatted)
+        self.assertFalse(messages.attachment_ids)
 
         # Test attachment can be associated if all good (complete flow)
         res = self.url_open(
-            url=f'{self.invoice_base_url}/portal/attachment/add',
+            url=f"{self.invoice_base_url}/mail/attachment/upload",
             data={
-                'name': "final attachment",
-                'thread_model': self.out_invoice._name,
-                'thread_id': self.out_invoice.id,
-                'csrf_token': http.Request.csrf_token(self),
-                'access_token': self.out_invoice._portal_ensure_token(),
+                "csrf_token": http.Request.csrf_token(self),
+                "is_pending": True,
+                "thread_id": self.out_invoice.id,
+                "thread_model": self.out_invoice._name,
+                "token": self.out_invoice._portal_ensure_token(),
             },
-            files=[('file', ('test.txt', b'test', 'plain/text'))],
+            files={"ufile": ("final attachment", b'test', "plain/text")},
         )
         self.assertEqual(res.status_code, 200)
-        create_res = json.loads(res.content.decode('utf-8'))
+        create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
         self.assertEqual(create_res['name'], "final attachment")
 
         res = self.opener.post(
@@ -275,6 +281,8 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
         self.out_invoice.invalidate_recordset(['message_ids'])
-        self.assertEqual(len(self.out_invoice.message_ids), 3)
-        self.assertEqual(self.out_invoice.message_ids[0].body, "<p>test message 3</p>")
-        self.assertEqual(len(self.out_invoice.message_ids[0].attachment_ids), 1)
+        # not messages which are sent by `_post_add_create` in previous steps
+        messages = self.out_invoice.message_ids.filtered(lambda m: m.author_id == self.partner_a)
+        self.assertEqual(len(messages), 3)
+        self.assertEqual(messages[0].body, "<p>test message 3</p>")
+        self.assertEqual(len(messages[0].attachment_ids), 1)
