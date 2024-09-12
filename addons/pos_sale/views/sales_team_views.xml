@@ -37,14 +37,12 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//t[@name='first_options']" position="before">
-                <div class="row" t-if="record.pos_sessions_open_count.raw_value" groups="point_of_sale.group_pos_user">
-                    <div class="col-8">
-                        <a name="%(pos_session_action_from_crm_team)d" type="action">
-                            <field name="pos_sessions_open_count"/>
-                            <t t-if="record.pos_sessions_open_count.raw_value == 1">Session Running</t>
-                            <t t-else="">Sessions Running</t>
-                        </a>
-                    </div>
+                <div class="row" groups="point_of_sale.group_pos_user">
+                    <a class="col-8" name="%(pos_session_action_from_crm_team)d" type="action">
+                        <field class="me-1" name="pos_sessions_open_count"/>
+                        <t t-if="record.pos_sessions_open_count.raw_value == 1">Session Running</t>
+                        <t t-else="">Sessions Running</t>
+                    </a>
                     <div class="col-4 text-end">
                         <field name="pos_order_amount_total" widget="monetary"/>
                     </div>
