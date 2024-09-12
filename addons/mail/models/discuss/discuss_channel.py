@@ -235,7 +235,9 @@ class Channel(models.Model):
     @api.depends('channel_type')
     def _compute_group_public_id(self):
         channels = self.filtered(lambda channel: channel.channel_type == 'channel')
-        channels.filtered(lambda channel: not channel.group_public_id).group_public_id = self.env.ref('base.group_user')
+        channels.filtered(
+            lambda channel: not channel.parent_channel_id and not channel.group_public_id
+        ).group_public_id = self.env.ref("base.group_user")
         (self - channels).group_public_id = None
 
     @api.depends('uuid')

@@ -241,7 +241,7 @@ class TestDiscussChannelAccess(MailCommon):
             groups="base.group_user,mail.secret_group",
         )
 
-    def _test_discuss_channel_access(self, cases):
+    def _test_discuss_channel_access(self, cases, for_sub_channel):
         """
         Executes a list of operations on channels in various setups and checks whether the outcomes
         match the expected results.
@@ -257,12 +257,14 @@ class TestDiscussChannelAccess(MailCommon):
             - expected_result (bool): Whether the action is expected to be allowed (``True``) or denied
             (``False``).
         :type cases: List[Tuple[str, str, str, str, bool]]
+        :param for_sub_channel: Whether the operation is being tested on a sub-channel. In this case, the
+            ``cases`` parameter is used to configure the parent channel.
         """
         for user_key, channel_key, membership, operation, result in cases:
             if result:
                 try:
                     self._execute_action_channel(
-                        user_key, channel_key, membership, operation, result
+                        user_key, channel_key, membership, operation, result, for_sub_channel
                     )
                 except Exception as e:  # noqa: BLE001 - re-raising, just with a more contextual message
                     raise AssertionError(
@@ -276,7 +278,7 @@ class TestDiscussChannelAccess(MailCommon):
                         "odoo.models.unlink"
                     ):
                         self._execute_action_channel(
-                            user_key, channel_key, membership, operation, result
+                            user_key, channel_key, membership, operation, result, for_sub_channel
                         )
                 except AssertionError as e:
                     raise AssertionError(
@@ -326,9 +328,14 @@ class TestDiscussChannelAccess(MailCommon):
             ("user", "chat", "outside", "write", False),
             ("user", "chat", "outside", "unlink", False),
         ]
-        self._test_discuss_channel_access(cases)
+        self._test_discuss_channel_access(cases, for_sub_channel=False)
 
-    def _test_discuss_channel_member_access(self, cases):
+    def test_02_discuss_sub_channel_access(self):
+        self._test_discuss_channel_access(
+            self._channel_type_channel_access_cases, for_sub_channel=True
+        )
+
+    def _test_discuss_channel_member_access(self, cases, for_sub_channel):
         """
         Executes a list of operations on channel members in various setups and checks whether the
         outcomes match the expected results.
@@ -349,9 +356,11 @@ class TestDiscussChannelAccess(MailCommon):
             - expected_result (bool):
                 Whether the action is expected to be allowed (``True``) or denied (``False``).
         :type cases: List[Tuple[str, str, str, str, str, bool]]
+        :param for_sub_channel: Whether the operation is being tested on a sub-channel. In this case, the
+            ``cases`` parameter is used to configure the parent channel's member.
         """
         for user_key, channel_key, membership, target, operation, result in cases:
-            channel_id = self._get_channel_id(user_key, channel_key, membership)
+            channel_id = self._get_channel_id(user_key, channel_key, membership, for_sub_channel)
             if result:
                 try:
                     self._execute_action_member(channel_id, user_key, target, operation, result)
@@ -451,9 +460,14 @@ class TestDiscussChannelAccess(MailCommon):
             ("user", "chat", "outside", "other", "write", False),
             ("user", "chat", "outside", "other", "unlink", False),
         ]
-        self._test_discuss_channel_member_access(cases)
+        self._test_discuss_channel_member_access(cases, for_sub_channel=False)
 
-    def _get_channel_id(self, user_key, channel_key, membership):
+    def test_11_discuss_sub_channel_member_access(self):
+        self._test_discuss_channel_member_access(
+            self._channel_type_channel_member_access_cases, for_sub_channel=True
+        )
+
+    def _get_channel_id(self, user_key, channel_key, membership, sub_channel):
         partner = self.env["res.partner"] if user_key == "public" else self.users[user_key].partner_id
         guest = self.guest if user_key == "public" else self.env["mail.guest"]
         partners = self.other_user.partner_id
@@ -476,9 +490,14 @@ class TestDiscussChannelAccess(MailCommon):
             channel.group_public_id = self.secret_group
         elif channel_key == "group_failing":
             channel.group_public_id = self.env.ref("base.group_system")
+        if sub_channel:
+            channel.sudo()._create_sub_channel()
+            channel = channel.sub_channel_ids[0]
+            if membership == "member":
+                channel.sudo().add_members(partner_ids=partner.ids, guest_ids=guest.ids)
         return channel.id
 
-    def _execute_action_channel(self, user_key, channel_key, membership, operation, result):
+    def _execute_action_channel(self, user_key, channel_key, membership, operation, result, for_sub_channel):
         current_user = self.users[user_key]
         guest = self.guest if user_key == "public" else self.env["mail.guest"]
         ChannelAsUser = self.env["discuss.channel"].with_user(current_user).with_context(guest=guest)
@@ -495,7 +514,9 @@ class TestDiscussChannelAccess(MailCommon):
             }
             ChannelAsUser.create(data)
         else:
-            channel = ChannelAsUser.browse(self._get_channel_id(user_key, channel_key, membership))
+            channel = ChannelAsUser.browse(
+                self._get_channel_id(user_key, channel_key, membership, for_sub_channel)
+            )
             self.assertEqual(len(channel), 1, "should find the channel")
             if operation == "read":
                 self.assertEqual(len(ChannelAsUser.search([("id", "=", channel.id)])), 1 if result else 0)
