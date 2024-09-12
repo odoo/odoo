@@ -12,6 +12,7 @@
                     </div>
                 </div>
             </t>
+<<<<<<< master
                 <div class="payment-methods-overview">
                     <div t-if="pos.config.cash_control" class="w-100 mb-3">
                         <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
@@ -56,6 +57,139 @@
                             <span t-esc="env.utils.formatCurrency(diff)" />
                         </div>
                     </div>
+||||||| 9d6f200af1bbbd8d8975ce6b5d26f2f96478fe1f
+                <div class="payment-methods-overview overflow-auto">
+                    <table class="text-start">
+                        <thead>
+                            <tr class="text-dark">
+                                <th class="payment-method-header">Payment Method</th>
+                                <th>Expected</th>
+                                <th style="width:20%">Counted</th>
+                                <th>Difference</th>
+                            </tr>
+                        </thead>
+                        <t t-if="pos.config.cash_control">
+                            <tbody>
+                                <tr>
+                                    <td t-esc="props.default_cash_details.name"/>
+                                    <td t-esc="env.utils.formatCurrency(props.default_cash_details.amount)"/>
+                                    <td class="d-flex">
+                                        <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
+                                            callback.bind="(value) =>  this.setManualCashInput(value)"
+                                            isValid.bind="env.utils.isValidFloat" class="'cash-input'"/>
+                                        <button class="icon fa fa-money fa-lg btn btn-secondary ms-1" t-on-click="openDetailsPopup" />
+                                    </td>
+                                    <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
+                                    <td t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"
+                                        t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"/>
+                                </tr>
+                            </tbody>
+                            <tbody class="cash-overview border-start small text-muted">
+                                <tr>
+                                    <td>Opening</td>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(props.default_cash_details.opening)"/>
+                                </tr>
+                                <tr t-foreach="props.default_cash_details.moves" t-as="move" t-key="move_index">
+                                    <td>
+                                        <div class="flex d-flex flex-row text-nowrap">
+                                            <div class="cash-sign me-1" t-esc="move.amount lt 0 ? '-' : '+'"/>
+                                            <t t-esc="move.name"/>
+                                        </div>
+                                    </td>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(move.amount))"/>
+                                </tr>
+                                <tr t-if="props.default_cash_details.payment_amount">
+                                    <td>
+                                        <div class="flex d-flex flex-row text-nowrap">
+                                            <div class="cash-sign me-1" t-esc="props.default_cash_details.payment_amount &lt; 0 ? '-' : '+'"/>
+                                            Payments in <t t-esc="props.default_cash_details.name"/>
+                                        </div>
+                                    </td>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(props.default_cash_details.payment_amount))"/>
+                                </tr>
+                            </tbody>
+                        </t>
+                        <tbody t-if="props.other_payment_methods.length > 0">
+                            <tr t-foreach="props.other_payment_methods" t-as="pm" t-key="pm.id">
+                                <td t-esc="pm.name" class="text-nowrap" t-att-class="{ 'pt-2': pm_index === 0 }" />
+                                <td t-esc="env.utils.formatCurrency(pm.amount)"/>
+                                <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
+                                <td t-if="_showDiff">
+                                    <Input tModel="[state.payments[pm.id], 'counted']"
+                                        isValid.bind="env.utils.isValidFloat" />
+                                </td>
+                                <td t-if="_showDiff" t-esc="env.utils.formatCurrency(getDifference(pm.id))"
+                                    t-att-class="{'warning text-danger fw-bolder': getDifference(pm.id)}"/>
+                            </tr>
+                        </tbody>
+                    </table>
+=======
+                <div class="payment-methods-overview overflow-auto">
+                    <table class="text-start">
+                        <thead>
+                            <tr class="text-dark">
+                                <th class="payment-method-header">Payment Method</th>
+                                <th>Expected</th>
+                                <th style="width:20%">Counted</th>
+                                <th>Difference</th>
+                            </tr>
+                        </thead>
+                        <t t-if="pos.config.cash_control">
+                            <tbody>
+                                <tr>
+                                    <td t-esc="props.default_cash_details.name"/>
+                                    <td t-esc="env.utils.formatCurrency(props.default_cash_details.amount)"/>
+                                    <td class="d-flex">
+                                        <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
+                                            callback.bind="(value) =>  this.setManualCashInput(value)"
+                                            isValid.bind="env.utils.isValidFloat" class="'cash-input'"/>
+                                        <button class="icon fa fa-money fa-lg btn btn-secondary ms-1" t-on-click="openDetailsPopup" />
+                                    </td>
+                                    <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
+                                    <td t-esc="diff !== null ? env.utils.formatCurrency(diff) : ''"
+                                        t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"/>
+                                </tr>
+                            </tbody>
+                            <tbody class="cash-overview border-start small text-muted">
+                                <tr>
+                                    <td>Opening</td>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(props.default_cash_details.opening)"/>
+                                </tr>
+                                <tr t-foreach="props.default_cash_details.moves" t-as="move" t-key="move_index">
+                                    <td>
+                                        <div class="flex d-flex flex-row text-nowrap">
+                                            <div class="cash-sign me-1" t-esc="move.amount lt 0 ? '-' : '+'"/>
+                                            <t t-esc="move.name"/>
+                                        </div>
+                                    </td>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(move.amount))"/>
+                                </tr>
+                                <tr t-if="props.default_cash_details.payment_amount">
+                                    <td>
+                                        <div class="flex d-flex flex-row text-nowrap">
+                                            <div class="cash-sign me-1" t-esc="props.default_cash_details.payment_amount &lt; 0 ? '-' : '+'"/>
+                                            Payments in <t t-esc="props.default_cash_details.name"/>
+                                        </div>
+                                    </td>
+                                    <td class="align-top" t-esc="env.utils.formatCurrency(Math.abs(props.default_cash_details.payment_amount))"/>
+                                </tr>
+                            </tbody>
+                        </t>
+                        <tbody t-if="props.other_payment_methods.length > 0">
+                            <tr t-foreach="props.other_payment_methods" t-as="pm" t-key="pm.id">
+                                <td t-esc="pm.name" class="text-nowrap" t-att-class="{ 'pt-2': pm_index === 0 }" />
+                                <td t-esc="env.utils.formatCurrency(pm.amount)"/>
+                                <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
+                                <td t-if="_showDiff">
+                                    <Input tModel="[state.payments[pm.id], 'counted']"
+                                        isValid.bind="env.utils.isValidFloat" />
+                                </td>
+                                <td t-if="_showDiff" t-esc="env.utils.formatCurrency(getDifference(pm.id))"
+                                    t-att-class="{'warning text-danger fw-bolder': getDifference(pm.id)}"/>
+                            </tr>
+                        </tbody>
+                    </table>
+>>>>>>> 3dcd1c5f9a8971917aa89113c85ba346eda538bb
                 </div>
                 <hr/>
                 <div class="mb-3">
