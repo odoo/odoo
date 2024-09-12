@@ -445,7 +445,7 @@ class IrModule(models.Model):
 
     @api.model
     def _get_missing_dependencies(self, zip_data):
-        modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
+        _modules, unavailable_modules = self._get_missing_dependencies_modules(zip_data)
         description = ''
         if unavailable_modules:
             description = _(
@@ -459,10 +459,11 @@ class IrModule(models.Model):
                 "https://www.odoo.com/pricing-plan for more information.\n"
                 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
             )
-        elif modules:
-            description = _("The following modules will also be installed:\n")
-            for mod in modules:
-                description += "- " + mod.shortdesc + "\n"
+        else:
+            description = _(
+                "Load demo data to test the industry's features with sample records. "
+                "Do not load them if this is your production database.",
+            )
         return description, unavailable_modules
 
     def _get_missing_dependencies_modules(self, zip_data):
