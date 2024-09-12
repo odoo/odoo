@@ -29,6 +29,10 @@ export class SplitBillScreen extends Component {
         return Object.values(this.priceTracker).reduce((a, b) => a + b, 0);
     }
 
+    get qtyTrackerLength() {
+        return Object.values(this.qtyTracker).filter((l) => l > 0).length;
+    }
+
     onClickLine(line) {
         const lines = line.getAllLinesInCombo();
 
