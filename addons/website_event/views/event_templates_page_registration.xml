@@ -391,7 +391,7 @@
 
 <!-- Button to configure Tickets -->
 <template id="registration_configure_tickets_button" name="Registration Configure Ticket Button">
-    <a t-attf-class="o_not_editable text-nowrap {{linkClasses or '' }}" t-attf-href="/odoo/event.event/{event.id}?menu_id={backend_menu_id}" role="link"  title="Configure event tickets">
+    <a t-attf-class="o_not_editable text-nowrap {{linkClasses or '' }}" t-attf-href="/odoo/event.event/{{event.id}}?menu_id={{backend_menu_id}}" role="link"  title="Configure event tickets">
         <i class="fa fa-gear me-1" role="img" aria-label="Configure" title="Configure event tickets"/><em>Configure Tickets</em>
     </a>
 </template>

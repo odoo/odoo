@@ -83,7 +83,7 @@
         <div t-if="channel.enroll == 'payment' and not channel.product_id.is_published"
             class="alert alert-info" role="alert" groups="website_slides.group_website_slides_officer">
             This course cannot be bought because its linked product
-            <a t-attf-href="/odoo/action-website_sale.product_template_action_website/{channel.product_id.product_tmpl_id.id}"
+            <a t-attf-href="/odoo/action-website_sale.product_template_action_website/{{channel.product_id.product_tmpl_id.id}}"
                 class="alert-link" t-out="channel.product_id.name"/>
             is not published.
         </div>
