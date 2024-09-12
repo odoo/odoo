@@ -175,7 +175,14 @@ messageActionsRegistry
         sequence: 90,
     })
     .add("download_files", {
+<<<<<<< master
         condition: (component) => component.message.attachment_ids.length > 1,
+||||||| 8af06292ffd81314d4eb33424710964bd9681c2f
+        condition: (component) => component.message.attachments.length > 1,
+=======
+        condition: (component) =>
+            component.message.attachments.length > 1 && component.store.self.isInternalUser,
+>>>>>>> 43e5e84781941c903f5a8e6fa347c20870cf3296
         icon: "fa-download",
         title: _t("Download Files"),
         onClick: (component) =>
