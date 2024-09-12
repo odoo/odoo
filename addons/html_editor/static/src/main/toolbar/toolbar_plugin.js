@@ -78,10 +78,7 @@ export class ToolbarPlugin extends Plugin {
             case "CONTENT_UPDATED":
                 if (this.overlay.isOpen) {
                     const selectionData = this.shared.getSelectionData();
-                    if (
-                        !selectionData.documentSelectionIsInEditable ||
-                        selectionData.editableSelection.isCollapsed
-                    ) {
+                    if (selectionData.editableSelection.isCollapsed) {
                         this.overlay.close();
                     } else {
                         this.updateButtonsStates(selectionData.editableSelection);
