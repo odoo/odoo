@@ -1056,13 +1056,13 @@ class Message(models.Model):
                 "is_discussion": message.subtype_id.id == com_id,
                 # sudo: mail.message.subtype - reading description on accessible message is allowed
                 "subtype_description": message.subtype_id.sudo().description,
-                "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
+                "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]) if not self.env.user._is_public() else [],
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.one(record, as_thread=True, only_id=True),
             }
             if self.env.user._is_internal():
                 vals["notifications"] = Store.many(message.notification_ids._filtered_for_web_client())
-            if for_current_user:
+            if for_current_user and not self.env.user._is_public():
                 # sudo: mail.message - filtering allowed tracking values
                 displayed_tracking_ids = message.sudo().tracking_value_ids._filter_has_field_access(
                     self.env
@@ -1075,8 +1075,7 @@ class Message(models.Model):
                     lambda n: not n.is_read
                 ).res_partner_id
                 vals["needaction"] = (
-                    not self.env.user._is_public()
-                    and self.env.user.partner_id in notifications_partners
+                    self.env.user.partner_id in notifications_partners
                 )
                 vals["starred"] = message.starred
                 vals["trackingValues"] = displayed_tracking_ids._tracking_value_format()
