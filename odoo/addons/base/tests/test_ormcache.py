@@ -13,9 +13,12 @@ class TestOrmCache(TransactionCase):
         super().setUpClass()
         if cls.registry.registry_invalidated:
             raise AssertionError('Registry should not be invalidated when starting this test')
+        if cls.registry.cache_invalidated:
+            raise AssertionError('Cache should not be invalidated when starting this test')
+
         # this test verifies the actual side effects of signaling changes
         cls._signal_changes_patcher.stop()
-        # if something invalidate the cache or registry before test_signaling_01_multiple, 
+        # if something invalidate the cache or registry before test_signaling_01_multiple,
         # the test may fail the first time but succeed on retry
         # disabling autoretry to avoid hidding "real" errrors
         cls._retry = False
