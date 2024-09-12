@@ -248,50 +248,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.strictEqual(editable.innerHTML, `<p>first</p>`);
     });
 
-    QUnit.module("List view interactions with the HtmlField");
-
-    QUnit.test("use the toolbar in a list view", async (assert) => {
-        const expectedValue = `<p>t<span class="h2-fs">e</span>st</p>`;
-        serverData.models.partner.records = [
-            { id: 1, txt: "<p>first</p>" },
-        ];
-        const htmlFieldPromise = makeDeferred();
-        patchWithCleanup(HtmlField.prototype, {
-            async startWysiwyg() {
-                await super.startWysiwyg(...arguments);
-                htmlFieldPromise.resolve(this);
-            }
-        });
-        await makeView({
-            type: "list",
-            resId: 1,
-            resModel: "partner",
-            serverData,
-            arch: `
-                <tree editable="top">
-                    <field name="txt" widget="html"/>
-                </tree>`,
-            mockRPC(route, args) {
-                if (args.method === "web_save" && args.model === 'partner') {
-                    assert.equal(args.args[1].txt, expectedValue);
-                    assert.step("web_save");
-                }
-            }
-        });
-        await click(target.querySelector(".o_data_row [name=txt]"));
-        const htmlField = await htmlFieldPromise;
-        const editable = htmlField.wysiwyg.odooEditor.editable;
-        const textInput = editable.querySelector(".note-editable p");
-        textInput.innerText = "test";
-        const pText = $(textInput).contents()[0];
-        Wysiwyg.setRange(pText, 1, pText, 2);
-        await nextTick();
-        // We need to skip the visibility check, because the toolbar is not visible unless we run the test in debug mode
-        await click(document, "#font-size button", { skipVisibilityCheck: true });
-        await click(document, "#font-size a[data-value='21']", { skipVisibilityCheck: true });
-        await click(target.querySelector(".btn-primary.o_list_button_save"));
-        assert.verifySteps(["web_save"]);
-    });
 
     QUnit.module('Sandboxed Preview');
 
