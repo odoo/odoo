@@ -15,7 +15,7 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import { contains, patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { fontSizeItems } from "../src/main/font/font_plugin";
+import { fontSizeItems, fontItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
@@ -213,6 +213,28 @@ test("toolbar works: can select font", async () => {
     await contains(".o_font_selector_menu .dropdown-item:contains('Header 2')").click();
     expect(getContent(el)).toBe("<h2>[test]</h2>");
     expect(".o-we-toolbar [name='font']").toHaveText("Header 2");
+});
+
+test("toolbar works: show the right font name", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    for (const item of fontItems) {
+        await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+        const name = item.name.toString();
+        let selector = `.o_font_selector_menu .dropdown-item:contains('${name}')`;
+        for (const tempItem of fontItems) {
+            // we need to exclude the font names which have the current name as a substring.
+            if (tempItem === item) {
+                continue;
+            }
+            const tempItemName = tempItem.name.toString();
+            if (tempItemName.includes(name)) {
+                selector += `:not(:contains(${tempItemName}))`;
+            }
+        }
+        await contains(selector).click();
+        expect(".o-we-toolbar [name='font']").toHaveText(name);
+    }
 });
 
 test("toolbar works: can select font size", async () => {
