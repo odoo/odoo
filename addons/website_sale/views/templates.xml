@@ -2876,7 +2876,7 @@
                 'bg-danger'}">
                 <div class="card-header">
                     <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-end" target="_blank" aria-label="Edit" title="Edit"
-                            t-attf-href="/odoo/action-payment.action_payment_provider/{tx_sudo.provider_id.id}">
+                            t-attf-href="/odoo/action-payment.action_payment_provider/{{tx_sudo.provider_id.id}}">
                         <i class="fa fa-pencil"></i>
                     </a>
                     <t t-if="tx_sudo.state == 'pending'">
