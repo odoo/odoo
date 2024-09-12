@@ -1158,11 +1158,15 @@ export class PosStore extends Reactive {
             });
             if (confirmed) {
                 this.mobile_pane = "right";
-                this.env.services.pos.showScreen("PaymentScreen");
+                this.env.services.pos.showScreen("PaymentScreen", {
+                    orderUuid: this.selectedOrderUuid,
+                });
             }
         } else {
             this.mobile_pane = "right";
-            this.env.services.pos.showScreen("PaymentScreen");
+            this.env.services.pos.showScreen("PaymentScreen", {
+                orderUuid: this.selectedOrderUuid,
+            });
         }
     }
     async getServerOrders() {
@@ -1318,11 +1322,16 @@ export class PosStore extends Reactive {
      * @param {str} terminalName
      */
     getPendingPaymentLine(terminalName) {
-        return this.get_order().payment_ids.find(
-            (paymentLine) =>
-                paymentLine.payment_method_id.use_payment_terminal === terminalName &&
-                !paymentLine.is_done()
-        );
+        for (const order of this.models["pos.order"].getAll()) {
+            const paymentLine = order.payment_ids.find(
+                (paymentLine) =>
+                    paymentLine.payment_method_id.use_payment_terminal === terminalName &&
+                    !paymentLine.is_done()
+            );
+            if (paymentLine) {
+                return paymentLine;
+            }
+        }
     }
 
     get linesToRefund() {
@@ -1436,7 +1445,11 @@ export class PosStore extends Reactive {
     closeScreen() {
         this.addOrderIfEmpty();
         const { name: screenName } = this.get_order().get_screen_data();
-        this.showScreen(screenName);
+        const props = {};
+        if (screenName === "PaymentScreen") {
+            props.orderUuid = this.selectedOrderUuid;
+        }
+        this.showScreen(screenName, props);
     }
 
     addOrderIfEmpty() {

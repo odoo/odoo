@@ -144,7 +144,9 @@
         <div class="paymentmethods-container mb-3" t-att-class="ui.isSmall ? 'my-2 rounded-3' : 'flex-grow-1'">
             <div class="paymentmethods  gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-300': ui.isSmall, 'd-flex flex-column gap-lg-2': !ui.isSmall }">
                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
-                    <div class="button paymentmethod btn btn-light btn-lg lh-lg flex-fill" t-on-click="() => this.addNewPaymentLine(paymentMethod)">
+                    <div class="button paymentmethod btn btn-light btn-lg lh-lg flex-fill"
+                        t-att-class="{'opacity-50': this.pos.paymentTerminalInProgress and paymentMethod.use_payment_terminal}"
+                        t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                         <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
                             <img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)" />
                             <span class="payment-name" t-esc="paymentMethod.name" />
