@@ -194,5 +194,17 @@ export class ProductProduct extends Base {
         const fields = ["barcode", "default_code"];
         return fields.some((field) => this[field] && this[field].includes(searchWord));
     }
+
+    _isArchivedCombination(attributeValueIds) {
+        for (const archivedCombination of this._archived_combinations) {
+            const ptavCommon = archivedCombination.filter((ptav) =>
+                attributeValueIds.includes(ptav)
+            );
+            if (ptavCommon.length === attributeValueIds.length) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 registry.category("pos_available_models").add(ProductProduct.pythonModel, ProductProduct);
