@@ -19,7 +19,7 @@ class PosOrder(models.Model):
     @api.model
     def _complete_values_from_session(self, session, values):
         values = super(PosOrder, self)._complete_values_from_session(session, values)
-        values.setdefault('crm_team_id', session.config_id.crm_team_id.id)
+        values['crm_team_id'] = values['crm_team_id'] if values.get('crm_team_id') else session.config_id.crm_team_id.id
         return values
 
     @api.depends('date_order', 'company_id')
