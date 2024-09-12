@@ -741,3 +741,18 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({'ship_later': True})
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosShipLaterNoDefault', login="accountman")
+
+    def test_order_sale_team(self):
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'lst_price': 100.0,
+            'taxes_id': False,
+        })
+        sale_team = self.env['crm.team'].create({'name': 'Test team'})
+        self.main_pos_config.write({'crm_team_id': sale_team})
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSaleTeam', login="accountman")
+        order = self.env['pos.order'].search([])
+        self.assertEqual(len(order), 1)
+        self.assertEqual(order.crm_team_id, sale_team)

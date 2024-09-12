@@ -268,3 +268,16 @@ registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
             Utils.negateStep(PaymentScreen.shippingLaterHighlighted()),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosSaleTeam", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
