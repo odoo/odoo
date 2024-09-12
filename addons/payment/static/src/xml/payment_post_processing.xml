@@ -29,7 +29,7 @@
             <t t-elif="state == 'cancel'">
                 <t t-set="alert_style" t-value="'danger'"/>
                 <t t-set="alert_header" t-value="'This payment has been canceled'"/>
-                <t t-set="alert_message" t-value="'No payment has been processed.'"/>
+                <t t-set="alert_message" t-value="state_message ? 'Reason: ' + state_message : 'No payment has been processed.'"/>
             </t>
             <t t-elif="state == 'error'">
                 <t t-set="alert_style" t-value="'danger'"/>
