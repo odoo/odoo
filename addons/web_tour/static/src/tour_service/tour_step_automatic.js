@@ -47,11 +47,13 @@ export class TourStepAutomatic extends TourStep {
             },
             {
                 action: async () => {
-                    console.groupCollapsed(this.describeMe);
-                    if (debugMode !== false) {
+                    if (debugMode === false) {
+                        console.log(this.describeMe);
+                    } else {
+                        console.groupCollapsed(this.describeMe);
                         console.log(this.stringify);
+                        console.groupEnd();
                     }
-                    console.groupEnd();
                     this._timeout = browser.setTimeout(
                         () => this.throwError(),
                         (this.timeout || 10000) + this.tour.stepDelay
