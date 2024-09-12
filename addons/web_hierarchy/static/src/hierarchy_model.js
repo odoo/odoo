@@ -603,7 +603,7 @@ export class HierarchyModel extends Model {
         const data = await this.keepLast.add(this._loadData({ ...config, resIds }));
         this.root = this._createRoot(config, data);
         this.config = config;
-        this.notify();
+        this.notify({ scrollTarget: "none" });
     }
 
     /**
@@ -785,6 +785,12 @@ export class HierarchyModel extends Model {
     isSearchDefaultOrEmpty() {
         if (!this.env.searchModel) {
             return true;
+        }
+        if (this.env.searchModel.display?.searchPanel) {
+            const searchPanelDomain = this.env.searchModel._getSearchPanelDomain();
+            if (searchPanelDomain.toList(this.env.searchModel.context).length) {
+                return false;
+            }
         }
         const isDisabledOptionalSearchMenuType = (type) => {
             return (
