@@ -77,5 +77,6 @@ class StockPickingBatch(models.Model):
         if self.dock_id:
             self.move_ids.write({'location_dest_id': self.dock_id.id})
         else:
-            for picking in self:
-                picking.move_ids.write({'location_dest_id': picking.location_dest_id.id})
+            for batch in self:
+                for picking in batch.picking_ids:
+                    picking.move_ids.write({'location_dest_id': picking.location_dest_id.id})
