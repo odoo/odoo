@@ -189,6 +189,9 @@ class PosSession(models.Model):
 
         pricelist_item_domain = [
             '|',
+            ('company_id', '=', False),
+            ('company_id', '=', self.company_id.id),
+            '|',
             '&', ('product_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
             ('product_id', 'in', product_ids)]
 
