@@ -245,56 +245,49 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//templates" position="before">
-                        <field name="alias_id"/>
                         <field name="alias_name"/>
                         <field name="alias_domain"/>
                         <field name="use_opportunities"/>
                         <field name="use_leads"/>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_primary')]" position="after">
-                        <div t-if="record.alias_name.value and record.alias_domain.value">
+                    <xpath expr="//field[@name='name']" position="after">
+                        <div class="ms-2" t-if="record.alias_name.value and record.alias_domain.value">
                             <span t-translation="off"><i class="fa fa-envelope-o" aria-label="Leads" title="Leads" role="img"></i>&amp;nbsp; <field name="alias_id"/></span>
                         </div>
                     </xpath>
 
                     <xpath expr="//t[@name='first_options']" position="after">
                         <div class="row" t-if="record.lead_unassigned_count.raw_value">
-                            <div class="col-8">
-                                <a name="%(crm_case_form_view_salesteams_lead)d" type="action" context="{'search_default_unassigned_leads': 1}">
-                                    <field name="lead_unassigned_count" class="me-1"/>
-                                    <t t-if="record.lead_unassigned_count.raw_value == 1">Unassigned Lead</t>
-                                    <t t-else="">Unassigned Leads</t>
-                                </a>
-                            </div>
+                            <a class="col-8" name="%(crm_case_form_view_salesteams_lead)d" type="action" context="{'search_default_unassigned_leads': 1}">
+                                <field name="lead_unassigned_count" class="me-1"/>
+                                <t t-if="record.lead_unassigned_count.raw_value == 1">Unassigned Lead</t>
+                                <t t-else="">Unassigned Leads</t>
+                            </a>
                         </div>
                         <div class="row" t-if="record.opportunities_count.raw_value">
-                            <div class="col-8">
-                                <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action" context="{'search_default_open_opportunities': True}"> <!-- context="{'search_default_probability': NOT or < 100}" -->
-                                    <field name="opportunities_count" class="me-1"/>
-                                    <t t-if="record.opportunities_count.raw_value == 1">Open Opportunity</t>
-                                    <t t-else="">Open Opportunities</t>
-                                </a>
-                            </div>
+                            <a class="col-8" name="%(crm_case_form_view_salesteams_opportunity)d" type="action" context="{'search_default_open_opportunities': True}"> <!-- context="{'search_default_probability': NOT or < 100}" -->
+                                <field name="opportunities_count" class="me-1"/>
+                                <t t-if="record.opportunities_count.raw_value == 1">Open Opportunity</t>
+                                <t t-else="">Open Opportunities</t>
+                            </a>
                             <div class="col-4 text-end text-truncate">
                                 <field name="opportunities_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </div>
                         </div>
                         <div class="row" t-if="record.opportunities_overdue_count.raw_value">
-                            <div class="col-8">
-                                <a name="%(crm_lead_action_team_overdue_opportunity)d" type="action">
-                                    <field name="opportunities_overdue_count" class="me-1"/>
-                                    <t t-if="record.opportunities_overdue_count.raw_value == 1">Overdue Opportunity</t>
-                                    <t t-else="">Overdue Opportunities</t>
-                                </a>
-                            </div>
+                            <a class="col-8" name="%(crm_lead_action_team_overdue_opportunity)d" type="action">
+                                <field name="opportunities_overdue_count" class="me-1"/>
+                                <t t-if="record.opportunities_overdue_count.raw_value == 1">Overdue Opportunity</t>
+                                <t t-else="">Overdue Opportunities</t>
+                            </a>
                              <div class="col-4 text-end text-truncate">
                                 <field name="opportunities_overdue_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </div>
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_view')]/h5[hasclass('o_kanban_card_manage_title')]" position="after">
+                    <xpath expr="//div[@name='manage_view']/h5[hasclass('o_kanban_card_manage_title')]" position="after">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                 Leads
@@ -307,7 +300,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_new')]/h5[hasclass('o_kanban_card_manage_title')]" position="after">
+                    <xpath expr="//div[@name='manage_new']/h5[hasclass('o_kanban_card_manage_title')]" position="after">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_lead_action_open_lead_form)d" type="action">
                                 Leads
@@ -320,7 +313,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]/h5[hasclass('o_kanban_card_manage_title')]" position="after">
+                    <xpath expr="//div[@name='manage_reports']/h5[hasclass('o_kanban_card_manage_title')]" position="after">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(action_report_crm_lead_salesteam)d" type="action">
                                 Leads
@@ -333,7 +326,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[@name='o_team_kanban_report_separator']" position="after">
+                    <xpath expr="//div[@name='manage_reports']/div[@name='o_team_kanban_report_separator']" position="after">
                         <div t-if="record.use_opportunities.raw_value">
                             <a name="%(crm.crm_activity_report_action_team)d" type="action">
                                 Activities

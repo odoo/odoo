@@ -125,28 +125,22 @@
         <field name="model">crm.team</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard o_crm_team_kanban" create="0" can_open="0" sample="1">
-                <field name="name"/>
-                <field name="user_id"/>
-                <field name="member_ids"/>
-                <field name="color"/>
-                <field name="currency_id"/>
-                <field name="is_favorite"/>
+            <kanban class="o_crm_team_kanban" highlight_color="color" create="0" can_open="0" sample="1">
                 <templates>
                     <t t-name="kanban-menu">
                         <div class="container">
                             <div class="row">
-                                <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
+                                <div name="manage_view" class="col-4">
                                     <h5 role="menuitem" class=" o_kanban_card_manage_title">
                                         <span>View</span>
                                     </h5>
                                 </div>
-                                <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
+                                <div name="manage_new" class="col-4">
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <span>New</span>
                                     </h5>
                                 </div>
-                                <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                <div name="manage_reports" class="col-4">
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <span>Reporting</span>
                                     </h5>
@@ -156,7 +150,7 @@
 
                             <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="sales_team.group_sale_manager">
                                 <div role="menuitem" aria-haspopup="true" class="col-8">
-                                    <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                    <field name="color" widget="kanban_color_picker"/>
                                 </div>
                                 <div role="menuitem" class="col-4">
                                     <a class="dropdown-item" type="edit">Configuration</a>
@@ -164,36 +158,26 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
-                            <div t-attf-class="o_kanban_card_header">
-                                <div class="o_kanban_card_header_title">
-                                    <div class="o_primary o_text_overflow"><field name="name"/></div>
-                                </div>
+                    <t t-name="kanban-card">
+                        <field name="name" class="fw-bold text-truncate fs-4 ms-2"/>
+                        <div class="row mt-3 px-2">
+                            <div class="col-4" name="to_replace_in_sale_crm">
+                                <button type="object" class="btn text-wrap btn-primary" name="action_primary_channel_button"><field name="dashboard_button_name"/></button>
                             </div>
-                            <div class="container o_kanban_card_content">
-                                <div class="row o_kanban_card_upper_content">
-                                    <div class="col-4 o_kanban_primary_left" name="to_replace_in_sale_crm">
-                                        <button type="object" class="btn btn-primary" name="action_primary_channel_button"><field name="dashboard_button_name"/></button>
-                                    </div>
-                                    <div class="col-8 o_kanban_primary_right" style="padding-bottom:0;">
-                                        <t name="first_options"/>
-                                        <t name="second_options"/>
-                                        <t name="third_options"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 o_kanban_primary_bottom">
-                                        <t t-call="SalesTeamDashboardGraph"/>
-                                    </div>
-                                </div>
+                            <div class="col-8 mb-2 text-truncate">
+                                <t name="first_options"/>
+                                <t name="second_options"/>
+                                <t name="third_options"/>
+                            </div>
+                        </div>
+                        <div class="row px-2 mt-auto mb-n2">
+                            <div name="o_kanban_primary_bottom" class="col-12">
+                                <t t-call="SalesTeamDashboardGraph"/>
                             </div>
                         </div>
                     </t>
                     <t t-name="SalesTeamDashboardGraph">
-                        <div t-if="record.dashboard_graph_data.raw_value" class="o_sales_team_kanban_graph_section">
-                            <field name="dashboard_graph_data" widget="dashboard_graph" t-att-graph_type="'bar'"/>
-                        </div>
+                        <field t-if="record.dashboard_graph_data.raw_value" name="dashboard_graph_data" widget="dashboard_graph" t-att-graph_type="'bar'"/>
                     </t>
                 </templates>
             </kanban>
