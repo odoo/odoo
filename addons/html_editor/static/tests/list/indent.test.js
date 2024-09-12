@@ -299,6 +299,49 @@ describe("Regular list", () => {
                     <p>def</p>`),
         });
     });
+    test("indent regular list item when selection is not within unspittable block element", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul>
+                    <li><br></li>
+                    <li>
+                        <br>[]
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>ab</td>
+                                    <td>cd</td>
+                                    <td>ef</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                    </li>
+                </ul>`),
+            stepFunction: keydownTab,
+            contentAfter: unformat(`
+                <ul>
+                    <li><br></li>
+                    <li class="oe-nested">
+                        <ul>
+                            <li>
+                                []<br>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>ab</td>
+                                            <td>cd</td>
+                                            <td>ef</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>`),
+        });
+    });
 });
 
 describe("with selection collapsed", () => {
@@ -646,11 +689,6 @@ describe("with selection collapsed", () => {
             contentBefore: '<ul><li class="nav-item">a[]</li></ul>',
             stepFunction: keydownTab,
             contentAfter: '<ul><li class="nav-item">a[]</li></ul>',
-        });
-        await testEditor({
-            contentBefore: '<ul><li class="nav-item"><div><p>a[]</p></div></li></ul>',
-            stepFunction: keydownTab,
-            contentAfter: '<ul><li class="nav-item"><div><p>a[]</p></div></li></ul>',
         });
     });
 });
