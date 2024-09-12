@@ -62,3 +62,10 @@ export function clickBtn(name) {
         run: "click",
     };
 }
+export function fillTextArea(target, value) {
+    return {
+        content: `Fill text area with ${value}`,
+        trigger: `textarea${target}`,
+        run: `edit ${value}`,
+    };
+}
