@@ -34,7 +34,7 @@ patch(PaymentScreen.prototype, {
     },
     shouldDownloadInvoice() {
         return this.pos.config.is_spanish
-            ? !this.pos.get_order().is_l10n_es_simplified_invoice
+            ? !this.currentOrder.is_l10n_es_simplified_invoice
             : super.shouldDownloadInvoice();
     },
     async _postPushOrderResolve(order, order_server_ids) {
