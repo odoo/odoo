@@ -485,6 +485,14 @@ describe("Selection collapsed", () => {
                 contentAfter: `<div contenteditable="false"><div contenteditable="true"><p>abc[]def</p></div></div>`,
             });
         });
+        test("should not add empty line to a seperator", async () => {
+            const { editor, el } = await setupEditor(
+                `<hr contenteditable="false"><p>abc</p><p><br>[]</p>`
+            );
+            deleteBackward(editor);
+            expect("br").toHaveCount(0);
+            expect(getContent(el)).toBe(`<hr contenteditable="false"><p>abc[]</p>`);
+        });
     });
 
     describe("Line breaks", () => {

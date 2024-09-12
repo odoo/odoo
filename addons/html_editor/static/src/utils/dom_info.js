@@ -525,7 +525,12 @@ export function isEmptyBlock(blockEl) {
  * @returns {boolean}
  */
 export function isShrunkBlock(blockEl) {
-    return isEmptyBlock(blockEl) && !blockEl.querySelector("br") && blockEl.nodeName !== "IMG";
+    return (
+        isEmptyBlock(blockEl) &&
+        !blockEl.querySelector("br") &&
+        blockEl.nodeName !== "IMG" &&
+        blockEl.nodeName !== "HR"
+    );
 }
 
 export function isEditorTab(node) {
