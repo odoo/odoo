@@ -34,17 +34,6 @@ export const ACTION_HELPERS = {
     },
 };
 
-function findAllShadowRoots(node, shadowRoots = []) {
-    if (node.shadowRoot) {
-        shadowRoots.push(node.shadowRoot);
-        findAllShadowRoots(node.shadowRoot, shadowRoots);
-    }
-    node.childNodes.forEach((child) => {
-        findAllShadowRoots(child, shadowRoots);
-    });
-    return shadowRoots;
-}
-
 const mutex = new Mutex();
 
 class TimeoutError extends Error {}
@@ -181,47 +170,7 @@ export class MacroEngine {
         this.target = params.target || document.body;
         this.defaultCheckDelay = params.defaultCheckDelay ?? 750;
         this.macros = new Set();
-        this.observerOptions = {
-            attributes: true,
-            childList: true,
-            subtree: true,
-            characterData: true,
-        };
-        this.observer = new MutationObserver((mutationList, observer) => {
-            this.delayedCheck();
-            //When iframes or shadowDom are added to "this.target"
-            mutationList.forEach((mutationRecord) =>
-                Array.from(mutationRecord.addedNodes).forEach((node) => {
-                    let iframes = [];
-                    if (String(node.tagName).toLowerCase() === "iframe") {
-                        iframes = [node];
-                    } else if (node instanceof HTMLElement) {
-                        iframes = Array.from(node.querySelectorAll("iframe"));
-                    }
-                    iframes.forEach((iframeEl) => this.observeIframe(iframeEl, observer));
-                    findAllShadowRoots(node).forEach((shadowRoot) =>
-                        observer.observe(shadowRoot, this.observerOptions)
-                    );
-                })
-            );
-        });
-    }
-
-    observeIframe(iframeEl, observer) {
-        const observeIframeContent = () => {
-            if (iframeEl.contentDocument) {
-                iframeEl.contentDocument.addEventListener("load", (event) => {
-                    this.delayedCheck();
-                    observer.observe(event.target, this.observerOptions);
-                });
-                if (!iframeEl.src || iframeEl.contentDocument.readyState === "complete") {
-                    this.delayedCheck();
-                    observer.observe(iframeEl.contentDocument, this.observerOptions);
-                }
-            }
-        };
-        observeIframeContent();
-        iframeEl.addEventListener("load", observeIframeContent);
+        this.macroMutationObserver = new MacroMutationObserver(() => this.delayedCheck());
     }
 
     async activate(descr, exclusive = false) {
@@ -244,15 +193,7 @@ export class MacroEngine {
     start() {
         if (!this.isRunning) {
             this.isRunning = true;
-            this.observer.observe(this.target, this.observerOptions);
-            //When iframes already exist at "this.target" initialization
-            this.target
-                .querySelectorAll("iframe")
-                .forEach((el) => this.observeIframe(el, this.observer));
-            //When shadowDom already exist at "this.target" initialization
-            findAllShadowRoots(this.target).forEach((shadowRoot) => {
-                this.observer.observe(shadowRoot, this.observerOptions);
-            });
+            this.macroMutationObserver.observe(this.target);
         }
         this.delayedCheck();
     }
@@ -262,7 +203,7 @@ export class MacroEngine {
             this.isRunning = false;
             browser.clearTimeout(this.timeout);
             this.timeout = null;
-            this.observer.disconnect();
+            this.macroMutationObserver.disconnect();
         }
     }
 
@@ -296,5 +237,82 @@ export class MacroEngine {
         if (this.macros.size === 0) {
             this.stop();
         }
+    }
+}
+
+export class MacroMutationObserver {
+    observerOptions = {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        characterData: true,
+    };
+    constructor(callback) {
+        this.callback = callback;
+        this.observer = new MutationObserver((mutationList, observer) => {
+            callback();
+            mutationList.forEach((mutationRecord) =>
+                Array.from(mutationRecord.addedNodes).forEach((node) => {
+                    let iframes = [];
+                    if (String(node.tagName).toLowerCase() === "iframe") {
+                        iframes = [node];
+                    } else if (node instanceof HTMLElement) {
+                        iframes = Array.from(node.querySelectorAll("iframe"));
+                    }
+                    iframes.forEach((iframeEl) =>
+                        this.observeIframe(iframeEl, observer, () => callback())
+                    );
+                    this.findAllShadowRoots(node).forEach((shadowRoot) =>
+                        observer.observe(shadowRoot, this.observerOptions)
+                    );
+                })
+            );
+        });
+    }
+    disconnect() {
+        this.observer.disconnect();
+    }
+    findAllShadowRoots(node, shadowRoots = []) {
+        if (node.shadowRoot) {
+            shadowRoots.push(node.shadowRoot);
+            this.findAllShadowRoots(node.shadowRoot, shadowRoots);
+        }
+        node.childNodes.forEach((child) => {
+            this.findAllShadowRoots(child, shadowRoots);
+        });
+        return shadowRoots;
+    }
+    observe(target) {
+        this.observer.observe(target, this.observerOptions);
+        //When iframes already exist at "this.target" initialization
+        target
+            .querySelectorAll("iframe")
+            .forEach((el) => this.observeIframe(el, this.observer, () => this.callback()));
+        //When shadowDom already exist at "this.target" initialization
+        this.findAllShadowRoots(target).forEach((shadowRoot) => {
+            this.observer.observe(shadowRoot, this.observerOptions);
+        });
+    }
+    observeIframe(iframeEl, observer, callback) {
+        const observerOptions = {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            characterData: true,
+        };
+        const observeIframeContent = () => {
+            if (iframeEl.contentDocument) {
+                iframeEl.contentDocument.addEventListener("load", (event) => {
+                    callback();
+                    observer.observe(event.target, observerOptions);
+                });
+                if (!iframeEl.src || iframeEl.contentDocument.readyState === "complete") {
+                    callback();
+                    observer.observe(iframeEl.contentDocument, observerOptions);
+                }
+            }
+        };
+        observeIframeContent();
+        iframeEl.addEventListener("load", observeIframeContent);
     }
 }
