@@ -6,15 +6,12 @@
             <field name="arch" type="xml">
                 <form string="Install the application">
                     <field name="state" invisible="1"/>
-                    <p class="alert alert-danger" role="alert" invisible="not with_demo or state == 'done'">
-                        Demo data should only be used on test databases. Once they are loaded, they cannot be entirely removed!
-                    </p>
                     <p class="alert alert-warning" role="alert" invisible="state == 'done' or context.get('data_module')">Note: you can only import data modules (.xml files and static assets)</p>
                     <field name="modules_dependencies" readonly="1" nolabel="1" invisible="state == 'done'"/>
                     <group invisible="state != 'init'">
                         <field name="module_file" string="Module file (.zip)" options="{'accepted_file_extensions': '.zip'}" invisible="context.get('data_module')"/>
                         <field name="force" groups="base.group_no_one"/>
-                        <field name="with_demo" string="Import demo data"/>
+                        <field name="with_demo" string="Load demo data"/>
                     </group>
                     <group invisible="state != 'done'">
                         <field name="import_message" nolabel="1" readonly="1"/>
