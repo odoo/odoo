@@ -86,30 +86,31 @@ class SaleOrderLine(models.Model):
             treated |= line
 
         qty_processed_per_product = defaultdict(lambda: 0)
-        grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
-        # We first loop over the SO lines to group them by warehouse and schedule
-        # date in order to batch the read of the quantities computed field.
-        for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
-            if not (line.product_id and line.display_qty_widget):
-                continue
-            grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
+        # Group the SO lines by warehouse and schedule date in order to
+        # batch the read of the quantities computed field.
+        grouped_lines = self._prepare_grouped_lines_at_date()
 
-        for (warehouse, scheduled_date), lines in grouped_lines.items():
-            product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse=warehouse).read([
-                'qty_available',
-                'free_qty',
-                'virtual_available',
-            ])
-            qties_per_product = {
-                product['id']: (product['qty_available'], product['free_qty'], product['virtual_available'])
-                for product in product_qties
-            }
+        for (loc_warehouse, scheduled_date), lines in grouped_lines.items():
+            qties_per_product = lines._get_quantities_at_date_per_product(
+                scheduled_date, loc_warehouse
+            )
             for line in lines:
                 line.scheduled_date = scheduled_date
-                qty_available_today, free_qty_today, virtual_available_at_date = qties_per_product[line.product_id.id]
-                line.qty_available_today = qty_available_today - qty_processed_per_product[line.product_id.id]
-                line.free_qty_today = free_qty_today - qty_processed_per_product[line.product_id.id]
-                line.virtual_available_at_date = virtual_available_at_date - qty_processed_per_product[line.product_id.id]
+                qty_available_today, free_qty_today, virtual_available_at_date = (
+                    qties_per_product[(line.product_id.id, loc_warehouse)]
+                )
+                line.qty_available_today = (
+                    qty_available_today
+                    - qty_processed_per_product[(line.product_id.id, loc_warehouse)]
+                )
+                line.free_qty_today = (
+                    free_qty_today
+                    - qty_processed_per_product[(line.product_id.id, loc_warehouse)]
+                )
+                line.virtual_available_at_date = (
+                    virtual_available_at_date
+                    - qty_processed_per_product[(line.product_id.id, loc_warehouse)]
+                )
                 line.forecast_expected_date = False
                 product_qty = line.product_uom_qty
                 if line.product_uom and line.product_id.uom_id and line.product_uom != line.product_id.uom_id:
@@ -117,7 +118,7 @@ class SaleOrderLine(models.Model):
                     line.free_qty_today = line.product_id.uom_id._compute_quantity(line.free_qty_today, line.product_uom)
                     line.virtual_available_at_date = line.product_id.uom_id._compute_quantity(line.virtual_available_at_date, line.product_uom)
                     product_qty = line.product_uom._compute_quantity(product_qty, line.product_id.uom_id)
-                qty_processed_per_product[line.product_id.id] += product_qty
+                qty_processed_per_product[(line.product_id.id, loc_warehouse)] += product_qty
             treated |= lines
         remaining = (self - treated)
         remaining.virtual_available_at_date = False
@@ -125,6 +126,59 @@ class SaleOrderLine(models.Model):
         remaining.forecast_expected_date = False
         remaining.free_qty_today = False
         remaining.qty_available_today = False
+
+    def _prepare_grouped_lines_at_date(self):
+        """
+            Loop over the SO lines to group them by warehouse and schedule
+        """
+        grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
+        for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
+            if not (line.product_id and line.display_qty_widget):
+                continue
+            grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
+        return grouped_lines
+
+    def _get_quantities_at_date_per_product(
+        self, scheduled_date, loc_warehouse, from_location=False
+    ):
+        """
+        Calculate and return the quantities of each product at a specific date and warehouse/location.
+
+        :param scheduled_date: The date for which to calculate the quantities.
+        :param loc_warehouse: The warehouse or location for which to calculate the quantities.
+        :param from_location: Optional parameter to indicate if the quantities should be retrieved
+                            from a warehouse or specified location.
+
+        :return: A dictionary where keys are tuples of (product_id, loc_warehouse) and values are tuples of
+                (qty_available, free_qty, virtual_available) for each product and warehouse/location.
+        """
+        ctx = {
+            "to_date": scheduled_date,
+            "warehouse": loc_warehouse,
+        }
+        if from_location:
+            ctx["location"] = ctx.pop("warehouse")
+
+        product_qties = (
+            self.mapped("product_id")
+            .with_context(**ctx)
+            .read(
+                [
+                    "qty_available",
+                    "free_qty",
+                    "virtual_available",
+                ]
+            )
+        )
+        qties_per_product = {
+            (product["id"], loc_warehouse): (
+                product["qty_available"],
+                product["free_qty"],
+                product["virtual_available"],
+            )
+            for product in product_qties
+        }
+        return qties_per_product
 
     @api.depends('product_id', 'route_id', 'order_id.warehouse_id', 'product_id.route_ids')
     def _compute_is_mto(self):
