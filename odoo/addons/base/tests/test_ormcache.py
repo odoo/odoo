@@ -7,7 +7,7 @@ from threading import Thread, Barrier
 
 
 @tagged('-at_install', 'post_install')
-class TestOrmcache(TransactionCase):
+class TestOrmCache(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -15,6 +15,10 @@ class TestOrmcache(TransactionCase):
             raise AssertionError('Registry should not be invalidated when starting this test')
         # this test verifies the actual side effects of signaling changes
         cls._signal_changes_patcher.stop()
+        # if something invalidate the cache or registry before test_signaling_01_multiple, 
+        # the test may fail the first time but succeed on retry
+        # disabling autoretry to avoid hidding "real" errrors
+        cls._retry = False
 
     def test_ormcache(self):
         """ Test the effectiveness of the ormcache() decorator. """
