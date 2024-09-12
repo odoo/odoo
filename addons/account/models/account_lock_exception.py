@@ -10,7 +10,10 @@ class AccountLockException(models.Model):
     _name = "account.lock_exception"
     _description = "Account Lock Exception"
 
-    active = fields.Boolean('Active', default=True)
+    active = fields.Boolean(
+        string='Active',
+        default=True,
+    )
     state = fields.Selection(
         selection=[
             ('active', 'Active'),
@@ -39,7 +42,7 @@ class AccountLockException(models.Model):
     )
     # An exception without `end_datetime` is valid forever
     end_datetime = fields.Datetime(
-        'End Date',
+        string='End Date',
     )
 
     # Lock date fields; c.f. res.company
@@ -54,11 +57,11 @@ class AccountLockException(models.Model):
         help="The date the Tax Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
     sale_lock_date = fields.Date(
-        string='Lock Sales',
+        string='Sales Lock Date',
         help="The date the Sale Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
     purchase_lock_date = fields.Date(
-        string='Lock Purchases',
+        string='Purchase Lock Date',
         help="The date the Purchase Lock Date is set to by this exception. If no date is set the lock date is not changed.",
     )
 
