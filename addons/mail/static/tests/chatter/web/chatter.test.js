@@ -201,13 +201,13 @@ test("chatter: drop attachments", async () => {
     await openFormView("res.partner", partnerId);
     const files = [text, text2];
     await dragenterFiles(".o-mail-Chatter", files);
-    await contains(".o-mail-Dropzone");
+    await contains(".o-Dropzone");
     await contains(".o-mail-AttachmentCard", { count: 0 });
-    await dropFiles(".o-mail-Dropzone", files);
+    await dropFiles(".o-Dropzone", files);
     await contains(".o-mail-AttachmentCard", { count: 2 });
     const extraFiles = [text3];
     await dragenterFiles(".o-mail-Chatter", extraFiles);
-    await dropFiles(".o-mail-Dropzone", extraFiles);
+    await dropFiles(".o-Dropzone", extraFiles);
     await contains(".o-mail-AttachmentCard", { count: 3 });
 });
 
@@ -229,7 +229,7 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
             </form>`,
     });
     await dragenterFiles(".o-mail-Chatter", [textPdf]);
-    await dropFiles(".o-mail-Dropzone", [textPdf]);
+    await dropFiles(".o-Dropzone", [textPdf]);
     await contains(".o-mail-Attachment iframe", { count: 1 });
 });
 
@@ -627,7 +627,7 @@ test("upload attachment on draft record", async () => {
     await contains("button[aria-label='Attach files']");
     await contains("button[aria-label='Attach files']", { count: 0, text: "1" });
     await dragenterFiles(".o-mail-Chatter", [text]);
-    await dropFiles(".o-mail-Dropzone", [text]);
+    await dropFiles(".o-Dropzone", [text]);
     await contains("button[aria-label='Attach files']", { text: "1" });
 });
 
