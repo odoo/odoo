@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
-import { Component } from "@odoo/owl";
+import { Component, markup } from "@odoo/owl";
 
 export class ForecastedHeader extends Component {
     static template = "stock.ForecastedHeader";
@@ -17,6 +17,9 @@ export class ForecastedHeader extends Component {
     async _onClickInventory(){
         const context = this._getActionContext();
         const action = await this.orm.call('stock.quant', 'action_view_quants', [], { context });
+        if (action.help) {
+            action.help = markup(action.help);
+        }
         return this.action.doAction(action);
     }
 
