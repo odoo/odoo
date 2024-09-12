@@ -30,6 +30,16 @@
                 border-top-right-radius: 0;
                 border-bottom-right-radius: 0;
             }
+
+            &.disabled {
+                pointer-events: auto;
+                cursor: auto;
+                &:active {
+                    border-color: var(--btn-disabled-border-color);
+                    background-color: var(--btn-disabled-bg);;
+                    color: var(--btn-disabled-color);
+                }
+            }
         }
     }
 
