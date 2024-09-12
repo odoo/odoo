@@ -40,7 +40,7 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
     });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -148,7 +148,7 @@ test("can join a chat conversation", async () => {
     });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,

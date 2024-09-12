@@ -1123,7 +1123,7 @@ test("can open messaging menu even if messaging is not initialized", async () =>
     patchBrowserNotification("default");
     await startServer();
     const def = new Deferred();
-    onRpcBefore("/mail/action", async (args) => {
+    onRpcBefore("/mail/data", async (args) => {
         if (args.init_messaging) {
             await def;
         }

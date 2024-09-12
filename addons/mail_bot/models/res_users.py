@@ -2,7 +2,8 @@
 
 from markupsafe import Markup
 
-from odoo import models, fields, _
+from odoo import models, fields, _, api
+from odoo.addons.mail.tools.discuss import Store
 
 class Users(models.Model):
     _inherit = 'res.users'
@@ -24,12 +25,13 @@ class Users(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['odoobot_state']
 
-    def _init_messaging(self, store):
+    @api.model
+    def _init_store_data(self, store: Store, /):
         odoobot_onboarding = False
-        if self.odoobot_state in [False, 'not_initialized'] and self._is_internal():
+        if self.odoobot_state in [False, 'not_initialized'] and self.env.user and self.env.user._is_internal():
             odoobot_onboarding = True
-            self._init_odoobot()
-        super()._init_messaging(store)
+            self.env.user._init_odoobot()
+        super()._init_store_data(store)
         store.add({"odoobotOnboarding": odoobot_onboarding})
 
     def _init_odoobot(self):

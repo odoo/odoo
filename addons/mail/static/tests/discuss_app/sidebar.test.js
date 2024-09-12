@@ -861,14 +861,14 @@ test("channel - states: open from the bus", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,
@@ -1013,14 +1013,14 @@ test("chat - states: open from the bus", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    onRpcBefore("/mail/action", (args) => {
+    onRpcBefore("/mail/data", (args) => {
         if (args.init_messaging) {
-            step(`/mail/action - ${JSON.stringify(args)}`);
+            step(`/mail/data - ${JSON.stringify(args)}`);
         }
     });
     await start();
     await assertSteps([
-        `/mail/action - ${JSON.stringify({
+        `/mail/data - ${JSON.stringify({
             init_messaging: {},
             failures: true,
             systray_get_activities: true,

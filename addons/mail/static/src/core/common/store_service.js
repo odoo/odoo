@@ -265,7 +265,7 @@ export class Store extends BaseStore {
 
     /** Import data received from init_messaging */
     async initialize() {
-        await this.fetchData(this.initMessagingParams, { readonly: false });
+        await this.fetchData(this.initMessagingParams);
         this.isReady.resolve();
     }
 
