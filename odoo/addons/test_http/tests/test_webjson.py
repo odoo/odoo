@@ -33,7 +33,7 @@ class TestHttpWebJson_18_0(TestHttpBase):
     def test_webjson_access_error_crm(self):
         action_crm = self.env['ir.actions.server'].search([('path', '=', 'crm')])
         if not action_crm:
-            self.skip("crm is not installed")
+            self.skipTest("crm is not installed")
 
         self.authenticate('demo', 'demo')
         self.url_open('/json/18.0/crm').raise_for_status()
