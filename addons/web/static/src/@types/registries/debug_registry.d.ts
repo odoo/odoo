@@ -19,6 +19,7 @@ declare module "registries" {
         Component: typeof Component;
         props: object;
         sequence: number;
+        section?: string;
     }
 
     interface DebugItem {
@@ -27,20 +28,22 @@ declare module "registries" {
         description: string;
         href?: string;
         sequence: number;
+        section?: string;
     }
 
-    interface DebugSeparator {
-        type: "separator";
-        sequence: number;
-    }
-
-    type DebugRegistryItemShapeResult = DebugComponent | DebugItem | DebugSeparator | null;
+    type DebugRegistryItemShapeResult = DebugComponent | DebugItem | null;
 
     export type DebugRegistryItemShape = (params: DebugRegistryItemShapeParams) => DebugRegistryItemShapeResult;
 
     export type DebugRegistryCategories = Record<string, DebugRegistryItemShape>;
 
+    export interface DebugSectionRegistryItemShape {
+        label: string;
+        sequence: number;
+    };
+
     interface GlobalRegistryCategories {
         debug: RegistryData<DebugRegistryItemShape, DebugRegistryCategories>;
+        debug_section: DebugSectionRegistryItemShape;
     }
 }

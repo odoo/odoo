@@ -60,27 +60,17 @@ export const profilingService = {
             }
         }
 
-        function profilingSeparator() {
-            return {
-                type: "separator",
-                sequence: 500,
-            };
-        }
-
         function profilingItem() {
             return {
                 type: "component",
                 Component: ProfilingItem,
                 props: { bus },
-                sequence: 510,
+                sequence: 570,
+                section: "tools",
             };
         }
 
-        registry
-            .category("debug")
-            .category("default")
-            .add("profilingSeparator", profilingSeparator)
-            .add("profilingItem", profilingItem);
+        registry.category("debug").category("default").add("profilingItem", profilingItem);
 
         return {
             state,
