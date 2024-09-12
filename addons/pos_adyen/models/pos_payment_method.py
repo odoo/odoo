@@ -26,6 +26,13 @@ class PosPaymentMethod(models.Model):
     adyen_test_mode = fields.Boolean(help='Run transactions in the test environment.', groups='base.group_erp_manager')
 
     adyen_latest_response = fields.Char(copy=False, groups='base.group_erp_manager') # used to buffer the latest asynchronous notification from Adyen.
+    adyen_event_url = fields.Char(
+        string="Event URL",
+        help="This URL needs to be pasted on Adyen's portal terminal settings.",
+        readonly=True,
+        store=False,
+        default=lambda self: f"{self.get_base_url()}/pos_adyen/notification",
+    )
 
     @api.model
     def _load_pos_data_fields(self, config_id):
