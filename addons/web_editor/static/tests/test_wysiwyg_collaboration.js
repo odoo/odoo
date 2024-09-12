@@ -13,7 +13,6 @@ import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { mount, getFixture } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui/ui_service";
 
 export function makeSpy(obj, functionName) {
     const spy = {
@@ -153,23 +152,6 @@ export async function createPeers(peers) {
 
     let lastGeneratedId = 0;
 
-    registry.category("services").add("notification", makeFakeNotificationService(), {
-        force: true,
-    });
-    registry.category("services").add("popover", { start: () => ({}) }, {
-        force: true,
-    });
-    registry.category("services").add("ui", uiService, {
-        force: true,
-    });
-    const env = await makeTestEnv({
-        mockRPC(route) {
-            if (route === "/web/dataset/call_kw/res.users/read") {
-                return [{ id: 0, name: "admin" }];
-            }
-        }
-    });
-
     for (const peerId of peers) {
         const iframe = document.createElement('iframe');
         if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
@@ -182,6 +164,20 @@ export async function createPeers(peers) {
         iframe.contentDocument.body.innerHTML = `<div class="peer_wysiwyg_wrapper client_${peerId}"></div>`;
         const peerWysiwygWrapper = iframe.contentDocument.querySelector('.peer_wysiwyg_wrapper');
         iframe.contentWindow.$ = $;
+
+        registry.category("services").add("notification", makeFakeNotificationService(), {
+            force: true,
+        });
+        registry.category("services").add("popover", { start: () => ({  }) }, {
+            force: true,
+        });
+        const env = await makeTestEnv({
+            mockRPC(route) {
+                if (route === "/web/dataset/call_kw/res.users/read") {
+                    return [{ id: 0, name: "admin" }];
+                }
+            }
+        });
 
         const wysiwyg = await mount(Wysiwyg, peerWysiwygWrapper, {
             env,
