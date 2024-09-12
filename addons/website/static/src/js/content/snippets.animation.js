@@ -1122,7 +1122,7 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
     _computeIdealHeight() {
         const windowHeight = $(window).outerHeight();
         if (this.inModal) {
-            return (windowHeight - $('#wrapwrap').position().top);
+            return windowHeight;
         }
 
         // Doing it that way allows to considerer fixed headers, hidden headers,
