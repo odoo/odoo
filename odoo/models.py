@@ -4807,14 +4807,12 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
-        """ create(vals_list) -> records
-
-        Creates new records for the model.
+        """Creates new records for the model.
 
         The new records are initialized using the values from the list of dicts
         ``vals_list``, and if necessary those from :meth:`~.default_get`.
 
-        :param Union[list[dict], dict] vals_list:
+        :param vals_list:
             values for the model's fields, as a list of dictionaries::
 
                 [{'field_name': field_value, ...}, ...]
