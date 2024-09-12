@@ -195,7 +195,7 @@ class ProductProduct(models.Model):
             'available_quantity': self.with_context({'warehouse_id': w.id}).qty_available,
             'forecasted_quantity': self.with_context({'warehouse_id': w.id}).virtual_available,
             'uom': self.uom_name}
-            for w in self.env['stock.warehouse'].search([])]
+            for w in self.env['stock.warehouse'].search([('company_id', '=', config.company_id.id)])]
 
         if config.picking_type_id.warehouse_id:
             # Sort the warehouse_list, prioritizing config.picking_type_id.warehouse_id

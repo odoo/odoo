@@ -13,4 +13,4 @@ class EventRegistrationAnswer(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('question_id', 'in', [quest['id'] for quest in data['event.question']['data']])]
+        return False

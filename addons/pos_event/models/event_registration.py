@@ -11,7 +11,7 @@ class EventRegistration(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('event_ticket_id', 'in', [ticket['id'] for ticket in data['event.event.ticket']['data']])]
+        return False
 
     @api.model
     def _load_pos_data_fields(self, config_id):
