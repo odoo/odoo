@@ -16,7 +16,7 @@ export class IconPlugin extends Plugin {
                                 // All nodes should be icons, its ZWS child or its ancestors
                                 node.classList?.contains("fa") ||
                                 node.parentElement.classList.contains("fa") ||
-                                node.querySelector?.(".fa")
+                                (node.querySelector?.(".fa") && node.isContentEditable !== false)
                         ),
                 },
             ],

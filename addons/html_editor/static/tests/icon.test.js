@@ -2,6 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { click, waitFor } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
+import { setContent } from "./_helpers/selection";
 
 test("icon toolbar is displayed", async () => {
     await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
@@ -19,6 +20,18 @@ test("icon toolbar is displayed (3)", async () => {
     await setupEditor(`<p>abc[<span class="fa fa-glass"></span>]def</p>`);
     await waitFor(".o-we-toolbar");
     expect(".btn-group[name='icon_size']").toHaveCount(1);
+});
+
+test("icon toolbar is not displayed on rating stars", async () => {
+    const { el } = await setupEditor(`<p>[<span class="fa fa-glass"></span>]</p>`);
+    await waitFor(".o-we-toolbar");
+    expect(".btn-group[name='icon_size']").toHaveCount(1);
+    setContent(
+        el,
+        `<p>\u200B<span contenteditable="false" class="o_stars"><i class="fa fa-star-o" contenteditable="false">\u200B</i><i class="fa fa-star-o" contenteditable="false">\u200B</i>[<i class="fa fa-star-o" contenteditable="false">\u200B</i></span>]\u200B</p>`
+    );
+    await animationFrame();
+    expect(".btn-group[name='icon_size']").toHaveCount(0);
 });
 
 test("toolbar should not be namespaced for icon", async () => {
