@@ -81,18 +81,29 @@ class ThreadController(http.Controller):
         )
 
     def _prepare_post_data(self, post_data, thread, **kwargs):
+        partners = request.env["res.partner"].browse(post_data.pop("partner_ids", []))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
-        new_partners = []
-        if "partner_emails" in kwargs:
-            new_partners = [
-                record.id
-                for record in request.env["res.partner"]._find_or_create_from_emails(
+        if "partner_emails" in kwargs and request.env.user.has_group("base.group_partner_manager"):
+            partners |= request.env["res.partner"].browse(
+                partner.id
+                for partner in request.env["res.partner"]._find_or_create_from_emails(
                     kwargs["partner_emails"], kwargs.get("partner_additional_values", {})
                 )
-            ]
-        post_data["partner_ids"] = list(set((post_data.get("partner_ids", [])) + new_partners))
+            )
+        if not request.env.user._is_internal():
+            partners = partners & self._filter_message_post_partners(thread, partners)
+        post_data["partner_ids"] = partners.ids
         return post_data
+
+    def _filter_message_post_partners(self, thread, partners):
+        domain = [
+            ("res_model", "=", thread._name),
+            ("res_id", "=", thread.id),
+            ("partner_id", "in", partners.ids),
+        ]
+        # sudo: mail.followers - filtering partners that are followers is acceptable
+        return request.env["mail.followers"].sudo().search(domain).partner_id
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
@@ -122,7 +133,7 @@ class ThreadController(http.Controller):
         )
         if not thread:
             raise NotFound()
-        if thread.env.su:
+        if not request.env[thread_model]._get_thread_with_access(thread_id, "write"):
             thread.env.context = frozendict(
                 thread.env.context, mail_create_nosubscribe=True, mail_post_autofollow=False
             )
@@ -131,9 +142,8 @@ class ThreadController(http.Controller):
                 for key, value in post_data.items()
                 if key in thread._get_allowed_message_post_params()
             }
-        message = thread.message_post(
-            **self._prepare_post_data(post_data, thread, **kwargs)
-        )
+        # sudo: mail.thread - users can post on accessible threads
+        message = thread.sudo().message_post(**self._prepare_post_data(post_data, thread, **kwargs))
         return Store(message, for_current_user=True).get_result()
 
     @http.route("/mail/message/update_content", methods=["POST"], type="json", auth="public")

@@ -118,7 +118,7 @@ export class Composer extends Component {
                 );
             },
         });
-        this.suggestion = this.store.self.type === "partner" ? useSuggestion() : undefined;
+        this.suggestion = useSuggestion();
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
@@ -497,13 +497,10 @@ export class Composer extends Component {
         }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         const body = this.props.composer.text;
-        const validMentions =
-            this.store.self.type === "partner"
-                ? this.store.getMentionsFromText(body, {
-                      mentionedChannels: this.props.composer.mentionedChannels,
-                      mentionedPartners: this.props.composer.mentionedPartners,
-                  })
-                : undefined;
+        const validMentions = this.store.getMentionsFromText(body, {
+            mentionedChannels: this.props.composer.mentionedChannels,
+            mentionedPartners: this.props.composer.mentionedPartners,
+        });
         const context = {
             default_attachment_ids: attachmentIds,
             default_body: await prettifyMessageContent(body, validMentions),

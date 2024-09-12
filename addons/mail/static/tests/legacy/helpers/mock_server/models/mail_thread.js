@@ -192,7 +192,7 @@ patch(MockServer.prototype, {
         }
         delete kwargs.partner_emails;
         delete kwargs.partner_additional_values;
-        if (context?.["mail_post_autofollow"] && kwargs["partner_ids"].length > 0) {
+        if (context?.["mail_post_autofollow"] && kwargs["partner_ids"]?.length > 0) {
             this._mockMailThreadMessageSubscribe(model, ids, kwargs["partner_ids"]);
         }
         if (kwargs.attachment_ids) {

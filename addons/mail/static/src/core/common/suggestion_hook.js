@@ -12,6 +12,9 @@ class UseSuggestion {
                 if (this.search.position === undefined || !this.search.delimiter) {
                     return; // nothing else to fetch
                 }
+                if (this.composer.store.self.type !== "partner") {
+                    return; // guests cannot access fetch suggestion method
+                }
                 this.sequential(async () => {
                     if (
                         this.search.delimiter !== delimiter ||
