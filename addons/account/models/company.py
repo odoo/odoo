@@ -532,7 +532,7 @@ class ResCompany(models.Model):
                           (soft_lock_date_field, '<', company[soft_lock_date_field]),
                           ('company_id', '=', company.id),
                         ],
-                        order=f'{soft_lock_date_field} asc',
+                        order='lock_date asc NULLS FIRST',
                         limit=1,
                     )
                 if exception:
