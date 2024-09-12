@@ -667,7 +667,7 @@ export class HierarchyModel extends Model {
             );
             parentNode.createChildNodes();
             node.setParentNode(parentNode);
-            this.notify();
+            this.notify({ scrollTarget: "up" });
         }
     }
 

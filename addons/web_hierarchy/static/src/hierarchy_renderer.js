@@ -70,17 +70,21 @@ export class HierarchyRenderer extends Component {
     }
 
     onPatched() {
-        if (this.scrollTarget === "none") {
-            return;
+        let row;
+        switch (this.scrollTarget) {
+            case "none":
+                return;
+            case "bottom":
+                row = this.rendererRef.el.querySelector(":scope .o_hierarchy_row:last-child");
+                break;
+            case "up":
+                row = this.rendererRef.el.querySelector(":scope .o_hierarchy_row:first-child");
+                break;
+            default:
+                row = this.rendererRef.el
+                    .querySelector(`:scope .o_hierarchy_node[data-node-id="${this.scrollTarget}"]`)
+                    ?.closest(".o_hierarchy_row");
         }
-        const row =
-            this.scrollTarget === "bottom"
-                ? this.rendererRef.el.querySelector(":scope .o_hierarchy_row:last-child")
-                : this.rendererRef.el
-                      .querySelector(
-                          `:scope .o_hierarchy_node[data-node-id="${this.scrollTarget}"]`
-                      )
-                      ?.closest(".o_hierarchy_row");
         this.scrollTarget = "none";
         if (!row) {
             return;
