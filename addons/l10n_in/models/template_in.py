@@ -58,6 +58,7 @@ class AccountChartTemplate(models.AbstractModel):
             'fiscal_position_in_intra_state': {
                 'name': intra_state_name,
                 'sequence': 1,
+                'l10n_in_fiscal_position_type': 'intra_state',
                 'auto_apply': True,
                 'state_ids': state_ids,
                 'country_id': self.env.ref('base.in').id,
@@ -65,6 +66,7 @@ class AccountChartTemplate(models.AbstractModel):
             'fiscal_position_in_inter_state': {
                 'name': _('Inter State'),
                 'sequence': 2,
+                'l10n_in_fiscal_position_type': 'inter_state',
                 'auto_apply': True,
                 'tax_ids': self._get_l10n_in_fiscal_tax_vals(),
                 'country_group_id': 'l10n_in.inter_state_group',
@@ -77,6 +79,7 @@ class AccountChartTemplate(models.AbstractModel):
             'fiscal_position_in_export_sez_in': {
                 'name': _('Export/SEZ'),
                 'sequence': 3,
+                'l10n_in_fiscal_position_type': 'inter_state',
                 'auto_apply': True,
                 'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS ON PAYMENT OF INTEGRATED TAX.'),
                 'tax_ids': (
@@ -88,6 +91,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('LUT - Export/SEZ'),
                 'sequence': 4,
                 'note': _('SUPPLY MEANT FOR EXPORT/SUPPLY TO SEZ UNIT OR SEZ DEVELOPER FOR AUTHORISED OPERATIONS UNDER BOND OR LETTER OF UNDERTAKING WITHOUT PAYMENT OF INTEGRATED TAX.'),
+                'l10n_in_fiscal_position_type': 'inter_state',
                 'tax_ids': (
                     self._get_l10n_in_fiscal_tax_vals(use_zero_rated_igst=True, trailing_id='_sez_exp_lut')
                     + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
@@ -98,10 +102,11 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_l10n_in_fiscal_tax_vals(self, use_zero_rated_igst=False, trailing_id=False):
         return [Command.clear()] + [
             Command.create({
-                'tax_src_id': f"sgst_{tax_type}_{rate}",
-                'tax_dest_id': f"igst_{tax_type}_{0 if use_zero_rated_igst and tax_type == 'purchase' else rate}{(tax_type == 'sale' and trailing_id) or ''}",
+                'tax_src_id': f"sgst_{tax_type}_{tax_scope + '_' if tax_scope else tax_scope}{rate}",
+                'tax_dest_id': f"igst_{tax_type}_{tax_scope + '_' if tax_scope else tax_scope}{0 if use_zero_rated_igst and tax_type == 'purchase' else rate}{(tax_type == 'sale' and trailing_id) or ''}",
             })
             for tax_type in ["sale", "purchase"]
+            for tax_scope in ([""] if tax_type == 'sale' else ["service", ""])
             for rate in [1, 2, 5, 12, 18, 28]  # Available existing GST Rates
         ]
 
