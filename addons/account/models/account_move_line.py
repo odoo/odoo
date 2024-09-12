@@ -899,26 +899,25 @@ class AccountMoveLine(models.Model):
             if (line.product_id or line.account_id.tax_ids or not line.tax_ids) and not line.is_imported:
                 line.tax_ids = line._get_computed_taxes()
 
+    def _get_sale_tax_filter_domain(self):
+        """ Return the domain to use in _get_computed_taxes to filter the product sale taxes that could be added to the invoice. """
+        return self.env['account.tax']._check_company_domain(self.move_id.company_id)
+
+    def _get_purchase_tax_filter_domain(self):
+        """ Return the domain to use in _get_computed_taxes to filter the product purchase taxes that could be added to the invoice. """
+        return self.env['account.tax']._check_company_domain(self.move_id.company_id)
+
     def _get_computed_taxes(self):
         self.ensure_one()
 
-        filter_domain = self.env['account.tax']._check_company_domain(self.move_id.company_id)
         if self.move_id.is_sale_document(include_receipts=True):
-            # Out invoice.
-            filter_domain = expression.AND([
-                filter_domain,
-                [('type_tax_use', '=', 'sale')],
-            ])
-            filtered_taxes_id = self.product_id.taxes_id.filtered_domain(filter_domain)
+            # Out invoice.)
+            filtered_taxes_id = self.product_id.taxes_id.filtered_domain(self._get_sale_tax_filter_domain())
             tax_ids = filtered_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
 
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
-            filter_domain = expression.AND([
-                filter_domain,
-                [('type_tax_use', '=', 'purchase')],
-            ])
-            filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(filter_domain)
+            filtered_supplier_taxes_id = self.product_id.supplier_taxes_id.filtered_domain(self._get_purchase_tax_filter_domain())
             tax_ids = filtered_supplier_taxes_id or self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
 
         else:

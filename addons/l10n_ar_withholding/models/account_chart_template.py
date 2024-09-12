@@ -1,9 +1,10 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
 class AccountChartTemplate(models.AbstractModel):
-
     _inherit = 'account.chart.template'
 
     # ar base
@@ -36,5 +37,5 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ar_base', 'res.company')
     def _get_ar_base_res_company(self):
         res = super()._get_ar_base_res_company()
-        res[self.env.company.id].update({'l10n_ar_tax_base_account_id': 'base_tax_account'})
+        res[self.env.company.id].update({'l10n_account_withholding_tax_base_account_id': 'base_tax_account'})
         return res

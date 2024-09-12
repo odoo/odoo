@@ -4,7 +4,8 @@ import io
 import zipfile
 
 from odoo import _, http
-from odoo.http import content_disposition, request
+from odoo.http import request
+from odoo.addons.account.controllers.download_docs import _get_headers
 
 
 class AccountWithholdingCertificateDownloadController(http.Controller):
@@ -39,9 +40,4 @@ class AccountWithholdingCertificateDownloadController(http.Controller):
                         zipfile_obj.writestr(f"{invoice.name.replace('/', '_')}_{index}.{attachment.name.split('.')[-1]}", attachment.raw)
             content = buffer.getvalue()
 
-        return request.make_response(content, [
-            ('Content-Type', mimetype),
-            ('Content-Length', len(content)),
-            ('Content-Disposition', content_disposition(filename)),
-            ('X-Content-Type-Options', 'nosniff'),
-        ])
+        return request.make_response(content, _get_headers(filename, mimetype, content))

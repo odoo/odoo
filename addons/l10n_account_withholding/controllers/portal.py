@@ -8,7 +8,7 @@ from odoo.http import request
 
 class PortalAccountWithholding(PortalAccount):
 
-    @http.route(['/my/invoices/upload_withholding_certificate'], type='http', auth="public", website=True)
+    @http.route(['/my/invoices/upload_withholding_certificate'], type='http', auth="public", methods=['POST'], website=True)
     def portal_my_invoice_upload_withholding_certificate(self, name, file, thread_model, thread_id, access_token=None):
         try:
             invoice = self._document_check_access(thread_model, int(thread_id), access_token=access_token)
@@ -52,4 +52,4 @@ class PortalAccountWithholding(PortalAccount):
             message_type='comment',
             subtype_id=request.env.ref('mail.mt_comment').id,
         )
-        return request.make_response('ok')
+        return 'upload_successful'

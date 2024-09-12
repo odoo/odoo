@@ -1,7 +1,7 @@
 <odoo>
     <template id="portal_invoice_page_withholding" inherit_id="account.portal_invoice_page">
         <xpath expr="//div[hasclass('o_download_pdf')]" position="after">
-            <div class="o_upload_cert d-flex flex-lg-column flex-xl-row flex-wrap gap-2">
+            <div class="d-flex flex-lg-column flex-xl-row flex-wrap gap-2">
                 <a class="btn btn-light o_upload_withh_cert_btn flex-grow-1" title="Upload Withholding Tax Certificate"
                    role="button" t-att-data-id="invoice.id" t-att-data-model="invoice._name" t-att-data-token="invoice.access_token">
                     <i class="fa fa-upload"/>

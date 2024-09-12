@@ -5,7 +5,7 @@ import { escape } from "@web/core/utils/strings";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { post } from "@web/core/network/http_service";
 import AccountPortalSidebar from "@account/js/account_portal_sidebar";
-import {Component} from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 publicWidget.registry.AccountPortalSidebarWithholding = AccountPortalSidebar.extend({
     events: {
@@ -72,21 +72,22 @@ publicWidget.registry.AccountPortalSidebarWithholding = AccountPortalSidebar.ext
         // If a traceback happens in the backend, we will simply raise a warning toast notification.
         return post('/my/invoices/upload_withholding_certificate', data, 'text')
             .then((response) => {
-                if (response === "ok") {
+                if (response === "upload_successful") {
                     // Ensure that the chatter displays the user message.
                     Component.env.bus.trigger('reload_chatter_content', {});
                     // Trigger a notification.
-                    self.notification.add(_t('The certificate has been uploaded'), {
-                        type: 'success',
-                    });
+                    self.notification.add(
+                        _t('The certificate has been uploaded'),
+                        {type: 'success'}
+                    );
                 } else {
-                    // In case of error, we simply notify of the issue and move on
+                    // In case of error, we simply notify the issue and move on.
                     self.notification.add(
                         _t("Could not save the file '%s'", escape(file.name)),
                         {type: 'warning', sticky: true}
                     );
                 }
-                // reset the input so that re-uploading works as well if needed, without refreshing.
+                // Reset the input so that re-uploading works if needed, without refreshing.
                 self.$withholdingFileInput[0].value = null;
                 self.$withholdingFileButton.prop('disabled', false);
             });

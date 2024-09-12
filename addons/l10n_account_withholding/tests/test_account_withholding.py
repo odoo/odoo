@@ -53,7 +53,7 @@ class TestL10nAccountWithholdingTaxes(AccountTestInvoicingCommon):
         # Set a withholding tax on product B to test later.
         cls.product_b.taxes_id = cls.tax_sale_b
         # We'll need a foreign currency
-        cls.foreign_currency = cls.setup_other_currency('EUR', rounding=0.1)
+        cls.foreign_currency = cls.setup_other_currency('EUR')
         # Fiscal position
         cls.fiscal_pos_withh = cls.env['account.fiscal.position'].create({
             'name': 'fiscal_pos_withh',

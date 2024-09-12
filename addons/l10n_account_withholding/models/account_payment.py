@@ -15,7 +15,6 @@ class AccountPayment(models.Model):
         inverse_name='payment_id',
         string='Withholding Lines',
         compute='_l10n_account_withholding_compute_withholding_line_ids',
-        readonly=True
     )
 
     # --------------------------------
@@ -35,6 +34,6 @@ class AccountPayment(models.Model):
         # OVERRIDE
         if vals:
             for payment in self.filtered('l10n_account_withholding_line_ids'):
-                raise UserError(_("You cannot modify payment %(payment_number)s as it has withholding taxes on it.\n"
-                                  "If it is required, please cancel the payment and register a new one.", payment_number=payment.name))
+                raise UserError(_("You cannot modify payment %(payment_name)s as it has withholding taxes on it.\n"
+                                  "If it is required, please cancel the payment and register a new one.", payment_name=payment.name))
         return super().write(vals)
