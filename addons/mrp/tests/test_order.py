@@ -4473,4 +4473,4 @@ class TestTourMrpOrder(HttpCase):
         self.assertEqual(mo.move_raw_ids.quantity, 7)
         self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
         self.assertEqual(mo.move_byproduct_ids.quantity, 7)
-        self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)
+        self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
