@@ -4,7 +4,9 @@ import { CallSettings } from "@mail/discuss/call/common/call_settings";
 import { useComponent, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { CallConfirmation } from "./call_confirmation";
 
 threadActionsRegistry
     .add("call", {
@@ -16,13 +18,24 @@ threadActionsRegistry
         icon: "fa fa-fw fa-phone",
         iconLarge: "fa fa-fw fa-lg fa-phone",
         name: _t("Start a Call"),
-        open(component) {
-            component.rtc.toggleCall(component.thread);
+        open(component, action) {
+            if (!component.thread.rtcSessions.length) {
+                action.popover.open(component.root.el.querySelector(`[name="${action.id}"]`), {
+                    thread: component.thread,
+                });
+            } else {
+                component.rtc.toggleCall(component.thread);
+            }
         },
+        panelOuterClass: "shadow-sm m-1",
         sequence: 10,
-        setup() {
+        setup(action) {
             const component = useComponent();
             component.rtc = useState(useService("discuss.rtc"));
+            action.popover = usePopover(CallConfirmation, {
+                onClose: () => action.close(),
+                popoverClass: action.panelOuterClass,
+            });
         },
     })
     .add("settings", {
