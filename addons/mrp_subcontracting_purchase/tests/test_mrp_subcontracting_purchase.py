@@ -692,9 +692,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         picking = po.picking_ids
         picking.move_ids.quantity = 2.0
         # When we validate the picking manually, we create a backorder.
-        backorder_wizard_dict = picking.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, picking.button_validate()).save().process()
         self.assertEqual(len(po.picking_ids), 2)
         picking.backorder_ids.action_cancel()
         self.assertEqual(picking.backorder_ids.state, 'cancel')
@@ -874,9 +872,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         # change the destination location on the move line too
         receipt.move_line_ids.location_dest_id = final_loc
         # create the backorder
-        backorder_wizard_dict = receipt.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, receipt.button_validate()).save().process()
         backorder = receipt.backorder_ids
         # test the stock quantities after receiving 1 product
         stock_quants = self.env['stock.quant'].search([('product_id', '=', self.finished.id)])

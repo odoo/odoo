@@ -314,8 +314,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt01 = po.picking_ids
         receipt01_move = receipt01.move_ids
         receipt01_move.quantity = 6
-        action = receipt01.button_validate()
-        Form(self.env[action['res_model']].with_context(action['context'])).save().process()
+        Form.from_action(self.env, receipt01.button_validate()).save().process()
 
         data = self.env['vendor.delay.report'].read_group(
             [('partner_id', '=', self.partner.id)],
@@ -359,8 +358,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt01_move = receipt01.move_ids
         receipt01_move.quantity = 6
         receipt01_move.picked = True
-        action = receipt01.button_validate()
-        Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
+        Form.from_action(self.env, receipt01.button_validate()).save().process_cancel_backorder()
 
         data = self.env['vendor.delay.report'].read_group(
             [('partner_id', '=', self.partner.id)],

@@ -129,8 +129,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertAlmostEqual(sale_order.margin, 10)
 
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        res = sale_order.picking_ids.button_validate()
-        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         self.assertAlmostEqual(order_line.purchase_price, 15)
         self.assertAlmostEqual(order_line.margin, 10)
@@ -162,8 +161,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         sale_order.picking_ids.move_ids[0].write({'quantity': 2, 'picked': True})
         sale_order.picking_ids.move_ids[1].write({'quantity': 3, 'picked': True})
 
-        res = sale_order.picking_ids.button_validate()
-        Form(self.env[res['res_model']].with_context(res['context'])).save().process()
+        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
         self.assertAlmostEqual(order_line_1.purchase_price, 43)       # (35 + 51) / 2
         self.assertAlmostEqual(order_line_2.purchase_price, 12.5)     # (17 + 11 + 11 + 11) / 4

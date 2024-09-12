@@ -455,21 +455,15 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         first_picking = _purchase_order.picking_ids[0]
         first_picking.move_ids.quantity = 5
-        backorder_wizard_dict = first_picking.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, first_picking.button_validate()).save().process()
 
         second_picking = _purchase_order.picking_ids[1]
         second_picking.move_ids.quantity = 5
-        backorder_wizard_dict = second_picking.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, second_picking.button_validate()).save().process()
 
         third_picking = _purchase_order.picking_ids[2]
         third_picking.move_ids.quantity = 5
-        backorder_wizard_dict = third_picking.button_validate()
-        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
-        backorder_wizard.process()
+        Form.from_action(self.env, third_picking.button_validate()).save().process()
 
         _message_content = _purchase_order.message_ids.mapped("body")[0]
         self.assertIsNotNone(re.search(r"Received Quantity: 5.0 -&gt; 10.0", _message_content), "Already received quantity isn't correctly taken into consideration")

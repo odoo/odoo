@@ -1874,8 +1874,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_generate_serial()
         action = mo.button_mark_done()
         self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        action = wizard.action_backorder()
+        Form.from_action(self.env, action).save().action_backorder()
         self.assertEqual(mo.qty_producing, 1)
         self.assertEqual(mo.move_raw_ids.mapped('quantity'), [1, 1])
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
@@ -1892,8 +1891,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_generate_serial()
         action = mo.button_mark_done()
         self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
-        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
-        action = wizard.action_backorder()
+        Form.from_action(self.env, action).save().action_backorder()
         self.assertEqual(mo.qty_producing, 1)
         self.assertEqual(mo.move_raw_ids.mapped('quantity'), [1, 1])
         self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
@@ -4093,7 +4091,7 @@ class TestMrpOrder(TestMrpCommon):
         production.workorder_ids.duration_expected = current_duration_expected + 10
 
         backorder_wizard_dict = production.button_mark_done()
-        Form(self.env[(backorder_wizard_dict.get('res_model'))].with_context(backorder_wizard_dict['context'])).save().action_backorder()
+        Form.from_action(self.env, backorder_wizard_dict).save().action_backorder()
 
         self.assertEqual(production.workorder_ids.duration_expected, current_duration_expected + 10)
 

@@ -247,9 +247,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
             'result_package_id': package.id,
         })
 
-        res_dict = picking.button_validate()
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.process()
+        Form.from_action(self.env, picking.button_validate()).save().process()
 
         backorder = picking.backorder_ids
         backorder.move_line_ids.quantity = 80
@@ -522,7 +520,7 @@ class TestKitPicking(common.TestMrpCommon):
         delivery.move_line_ids.filtered(lambda ml: ml.product_id == not_kit_1).quantity = 4
         delivery.move_line_ids.filtered(lambda ml: ml.product_id == not_kit_2).quantity = 2
         backorder_wizard_dict = delivery.button_validate()
-        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process_cancel_backorder()
 
         aggregate_not_kit_values = delivery.move_line_ids._get_aggregated_product_quantities()
@@ -561,9 +559,7 @@ class TestKitPicking(common.TestMrpCommon):
             'bom_id': bom.id,
         })
 
-        res = scrap.action_validate()
-        wizard = Form(self.env[res['res_model']].with_context(**res['context'])).save()
-        wizard.action_done()
+        Form.from_action(self.env, scrap.action_validate()).save().action_done()
 
         self.assertEqual(scrap.state, 'done')
         self.assertRecordValues(scrap.move_ids, [

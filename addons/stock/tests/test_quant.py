@@ -932,8 +932,7 @@ class StockQuant(TransactionCase):
     def test_relocate(self):
         """ Test the relocation wizard. """
         def _get_relocate_wizard(quant_ids):
-            relocate_wizard_dict = quant_ids.action_stock_quant_relocate()
-            return Form(self.env[relocate_wizard_dict['res_model']].with_context(relocate_wizard_dict['context']))
+            return Form.from_action(self.env, quant_ids.action_stock_quant_relocate())
 
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
         package_01 = self.env['stock.quant.package'].create({})
