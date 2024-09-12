@@ -113,7 +113,8 @@ export class ChatterComposer extends Component {
     onFileUpload(files) {
         this.state.loading = false;
         this.clearErrors();
-        for (const file of files) {
+        for (const fileData of files) {
+            let file = fileData.data["ir.attachment"][0];
             file.state = 'pending';
             this.state.attachments.push(file);
         }

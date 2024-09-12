@@ -67,7 +67,7 @@
                     <button t-if="showDelete and attachment.state == 'pending'" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" title="Delete">
                         <i class="fa fa-times"/>
                     </button>
-                    <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank" class="d-flex flex-row">
+                    <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;#{attachment.access_token and 'access_token=' + attachment.access_token}" target="_blank" class="d-flex flex-row">
                         <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
                         <div class='o_portal_chatter_attachment_name align-self-center text-truncate' t-att-data-tooltip="attachment.name" data-tooltip-position="top">
                             <t t-esc='attachment.name'/>

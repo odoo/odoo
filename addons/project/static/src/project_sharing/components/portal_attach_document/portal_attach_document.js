@@ -26,7 +26,7 @@ export class PortalAttachDocument extends Component {
     static defaultProps = {
         acceptedFileExtensions: "*",
         onUpload: () => {},
-        route: "/portal/attachment/add",
+        route: "/mail/attachment/upload",
         beforeOpen: async () => true,
     };
 }
