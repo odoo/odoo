@@ -37,20 +37,17 @@ class EditWebsiteSystray extends Component {
     }
 
     get translatable() {
-        return this.websiteService.currentWebsite && this.websiteService.currentWebsite.metadata.translatable;
+        return this.websiteService.currentWebsite
+            && this.websiteService.currentWebsite.metadata.translatable
+            && this.websiteContext.isPublicRootReady;
     }
 
     get label() {
         return _t("Edit");
     }
 
-    attemptStartTranslate() {
+    async attemptStartTranslate() {
         if (this.websiteService.isRestrictedEditor && !this.websiteService.isDesigner) {
-            if (!this.websiteService.websiteRootInstance) {
-                // Root instance might not be there yet if user clicks too fast.
-                // Let's have him click again rather than apply different rules.
-                return;
-            }
             const object = this.websiteService.currentWebsite.metadata.mainObject;
             const objects = {
                 [object.model]: object.id,
@@ -65,19 +62,14 @@ class EditWebsiteSystray extends Component {
                     objects[model] = parseInt(el.dataset.resId || el.dataset.oeId);
                 }
             }
-            rpc('/website/check_can_modify_any', {
-                records: Object.entries(objects).map((kv) => {
-                    return {
-                        res_model: kv[0],
-                        res_id: kv[1],
-                    };
-                }),
-            }).then(() => {
-                this.startTranslate();
-            });
-        } else {
-            this.startTranslate();
+            await rpc('/website/check_can_modify_any', {
+                records: Object.entries(objects).map(([res_model, res_id]) => ({
+                    res_model,
+                    res_id,
+                })),
+            })
         }
+        this.startTranslate();
     }
 
     startTranslate() {
