@@ -183,6 +183,8 @@ class MailComposer(models.TransientModel):
              "In mass mail mode: if sent, send emails after that date. "
              "This date is considered as being in UTC timezone.")
     use_exclusion_list = fields.Boolean('Check Exclusion List', default=True)
+    # template generation
+    template_name = fields.Char('Template Name')
 
     @api.constrains('res_ids')
     def _check_res_ids(self):
@@ -759,15 +761,13 @@ class MailComposer(models.TransientModel):
             `create_mail_template` is called when saving the new wizard. """
 
         self.ensure_one()
-        saved_subject = self.subject
-        self.subject = False
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_id': self.env.ref('mail.mail_compose_message_view_form_template_save').id,
-            'name': _('Create a new Mail Template'),
+            'name': _('Create a Mail Template'),
             'res_model': 'mail.compose.message',
-            'context': {'dialog_size': 'medium', 'mail_composer_saved_subject': saved_subject},
+            'context': {'dialog_size': 'medium'},
             'target': 'new',
             'res_id': self.id,
         }
@@ -779,7 +779,7 @@ class MailComposer(models.TransientModel):
             raise UserError(_('Template creation from composer requires a valid model.'))
         model_id = self.env['ir.model']._get_id(self.model)
         values = {
-            'name': self.subject,
+            'name': self.template_name or self.subject,
             'subject': self.subject,
             'body_html': self.body,
             'model_id': model_id,
@@ -803,7 +803,6 @@ class MailComposer(models.TransientModel):
         """ Restore old subject when canceling the 'save as template' action
             as it was erased to let user give a more custom input. """
         self.ensure_one()
-        self.subject = self.env.context.get('mail_composer_saved_subject')
         return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
 
     # ------------------------------------------------------------
