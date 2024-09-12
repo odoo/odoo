@@ -866,8 +866,11 @@ class MrpProduction(models.Model):
                 location_source = self.env['stock.location'].browse(vals.get('location_src_id'))
                 warehouse_id = location_source.warehouse_id.id
             for move_vals in vals[move_str]:
-                command, _id, field_values = move_vals
-                if command == Command.CREATE and not field_values.get('warehouse_id', False):
+                command = move_vals[0]
+                if command != Command.CREATE:
+                    continue
+                field_values = move_vals[2]
+                if not field_values.get('warehouse_id', False):
                     field_values['warehouse_id'] = warehouse_id
 
         if vals.get('picking_type_id'):
