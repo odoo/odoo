@@ -179,3 +179,36 @@ class TestAnalyticAccount(AnalyticCommon):
             with self.subTest(plan=plan.name, expected_count=expected_value):
                 with Form(plan) as plan_form:
                     self.assertEqual(plan_form.record.all_account_count, expected_value)
+<<<<<<< saas-17.4
+||||||| 322a655e6a5a783f0c6b8c4e956b6b39ec20677d
+
+    def test_analytic_account_branches(self):
+        """
+        Test that an analytic account defined in a parent company is accessible in its branches (children)
+        """
+        self.analytic_account_1.company_id = self.company_data
+        self.env['account.analytic.line'].create({
+            'name': 'company specific account',
+            'account_id': self.analytic_account_1.id,
+            'amount': 100,
+            'company_id': self.company_b_branch.id,
+        })
+=======
+
+    def test_analytic_account_branches(self):
+        """
+        Test that an analytic account defined in a parent company is accessible in its branches (children)
+        """
+        # timesheet adds a rule to forcer a project_id; account overrides it
+        timesheet_group = self.env.ref('hr_timesheet.group_hr_timesheet_user', raise_if_not_found=False)
+        if timesheet_group:
+            self.env.user.groups_id -= timesheet_group
+
+        self.analytic_account_1.company_id = self.company_data
+        self.env['account.analytic.line'].create({
+            'name': 'company specific account',
+            'account_id': self.analytic_account_1.id,
+            'amount': 100,
+            'company_id': self.company_b_branch.id,
+        })
+>>>>>>> 9d164c1d2cd8e532109b9859ab776fcf2f71d115
