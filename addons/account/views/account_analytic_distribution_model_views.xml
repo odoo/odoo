@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='partner_id']" position="before">
-                            <field name="account_prefix" optional="show"/>
+                        <field name="prefix_placeholder" column_invisible="1"/> <!-- Needed for the char_with_placeholder_field widget -->
+                        <field name="account_prefix" string="Accounts Prefixes" optional="show" widget="char_with_placeholder_field" options="{'placeholder_field': 'prefix_placeholder'}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="before">
                             <field name="product_id" optional="show"/>
@@ -25,7 +26,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='partner_category_id']" position="after">
-                            <field name="account_prefix"/>
+                        <field name="prefix_placeholder" invisible="1"/> <!-- Needed for the char_with_placeholder_field widget -->
+                        <field name="account_prefix" string="Accounts Prefixes" widget="char_with_placeholder_field" options="{'placeholder_field': 'prefix_placeholder'}"/>
                     </xpath>
                     <xpath expr="//field[@name='company_id']" position="before">
                             <field name="product_id"/>

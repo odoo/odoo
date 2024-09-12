@@ -314,3 +314,29 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         m1.sequence, m2.sequence, m3.sequence = 2, 3, 1
         distribution = self.env['account.analytic.distribution.model']._get_distribution(criteria)
         self.assertEqual(distribution, m2.analytic_distribution | m3.analytic_distribution, 'm3 fills B, ignore m1')
+
+    def test_analytic_distribution_multiple_prefixes(self):
+        self.env['account.analytic.distribution.model'].create([{
+            'account_prefix': '61;62',
+            'analytic_distribution': {self.analytic_account_3.id: 100},
+            'company_id': False,
+        }, {
+            'account_prefix': '63, 64',
+            'analytic_distribution': {self.analytic_account_4.id: 100},
+            'company_id': False,
+        }])
+        accounts_by_code = self.env['account.account'].search([('code', 'ilike', '6%')]).grouped('code')
+        invoice = self.create_invoice(self.env['res.partner'], self.product_a)
+        # No model is found, don't put anything
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, False)
+        invoice.invoice_line_ids.account_id = accounts_by_code.get('611000')
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_3.id): 100})
+
+        invoice.invoice_line_ids.account_id = accounts_by_code.get('630000')
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_4.id): 100})
+
+        invoice.invoice_line_ids.account_id = accounts_by_code.get('620000')
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_3.id): 100})
+
+        invoice.invoice_line_ids.account_id = accounts_by_code.get('641000')
+        self.assertEqual(invoice.invoice_line_ids.analytic_distribution, {str(self.analytic_account_4.id): 100})
