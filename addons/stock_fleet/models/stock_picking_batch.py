@@ -77,7 +77,7 @@ class StockPickingBatch(models.Model):
         for batch in self:
             if not batch.dock_id:
                 batch.picking_ids._reset_location()
-            if batch.picking_type_id.code in ["internal", "receipt"]:
-                batch.picking_ids.move_ids.write({'location_dest_id': self.dock_id.id})
+            elif batch.picking_type_id.code in ["internal", "incoming"]:
+                batch.picking_ids.move_ids.write({'location_dest_id': batch.dock_id.id})
             else:
-                batch.picking_ids.move_ids.write({'location_id': self.dock_id.id})
+                batch.picking_ids.move_ids.write({'location_id': batch.dock_id.id})
