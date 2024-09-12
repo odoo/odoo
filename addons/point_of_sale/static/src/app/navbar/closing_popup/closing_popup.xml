@@ -34,7 +34,7 @@
                                         <button class="icon fa fa-money fa-lg btn btn-secondary ms-1" t-on-click="openDetailsPopup" />
                                     </td>
                                     <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
-                                    <td t-esc="env.utils.isValidFloat(diff) ? env.utils.formatCurrency(diff) : ''"
+                                    <td t-esc="diff !== null ? env.utils.formatCurrency(diff) : ''"
                                         t-att-class="{'warning text-danger fw-bolder': !env.utils.floatIsZero(getDifference(props.default_cash_details.id))}"/>
                                 </tr>
                             </tbody>
