@@ -1,9 +1,11 @@
 from odoo import _, api, fields, models, Command
 from odoo.tools import create_index
 from odoo.tools.misc import format_datetime
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account.models.company import SOFT_LOCK_DATE_FIELDS
+
+from datetime import date
 
 
 class AccountLockException(models.Model):
@@ -45,24 +47,47 @@ class AccountLockException(models.Model):
         string='End Date',
     )
 
-    # Lock date fields; c.f. res.company
-    # An unset lock date field means the exception does not change this field.
-    # (It is not possible to remove a lock date completely).
+    # The changed lock date
+    lock_date_field = fields.Selection(
+        selection=[
+            ('fiscalyear_lock_date', 'Global Lock Date'),
+            ('tax_lock_date', 'Tax Return Lock Date'),
+            ('sale_lock_date', 'Sales Lock Date'),
+            ('purchase_lock_date', 'Purchase Lock Date'),
+        ],
+        string="Lock Date Field",
+        required=True,
+        help="Technical field identifying the changed lock date",
+    )
+    lock_date = fields.Date(
+        string="Changed Lock Date",
+        help="Technical field giving the date the lock date was changed to.",
+    )
+
+    # (Non-stored) computed lock date fields; c.f. res.company
     fiscalyear_lock_date = fields.Date(
         string="Global Lock Date",
-        help="The date the Global Lock Date is set to by this exception. If no date is set the lock date is not changed.",
+        compute="_compute_lock_dates",
+        search="_search_fiscalyear_lock_date",
+        help="The date the Global Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
     tax_lock_date = fields.Date(
         string="Tax Return Lock Date",
-        help="The date the Tax Lock Date is set to by this exception. If no date is set the lock date is not changed.",
+        compute="_compute_lock_dates",
+        search="_search_tax_lock_date",
+        help="The date the Tax Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
     sale_lock_date = fields.Date(
         string='Sales Lock Date',
-        help="The date the Sale Lock Date is set to by this exception. If no date is set the lock date is not changed.",
+        compute="_compute_lock_dates",
+        search="_search_sale_lock_date",
+        help="The date the Sale Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
     purchase_lock_date = fields.Date(
         string='Purchase Lock Date',
-        help="The date the Purchase Lock Date is set to by this exception. If no date is set the lock date is not changed.",
+        compute="_compute_lock_dates",
+        search="_search_purchase_lock_date",
+        help="The date the Purchase Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
 
     def init(self):
@@ -88,6 +113,15 @@ class AccountLockException(models.Model):
                 record.state = 'expired'
             else:
                 record.state = 'active'
+
+    @api.depends('lock_date_field', 'lock_date')
+    def _compute_lock_dates(self):
+        for exception in self:
+            for field in SOFT_LOCK_DATE_FIELDS:
+                if field == exception.lock_date_field:
+                    exception[field] = exception.lock_date
+                else:
+                    exception[field] = date.max
 
     def _search_state(self, operator, value):
         if operator not in ['=', '!='] or value not in ['revoked', 'expired', 'active']:
@@ -117,21 +151,65 @@ class AccountLockException(models.Model):
         else:
             return ['!'] + normal_domain_for_equals
 
+    def _search_lock_date(self, field, operator, value):
+        if operator not in ['<', '<='] or not value:
+            raise UserError(_('Operation not supported'))
+        return ['&',
+                  ('lock_date_field', '=', field),
+                  '|',
+                      ('lock_date', '=', False),
+                      ('lock_date', operator, value),
+               ]
+
+    def _search_fiscalyear_lock_date(self, operator, value):
+        return self._search_lock_date('fiscalyear_lock_date', operator, value)
+
+    def _search_tax_lock_date(self, operator, value):
+        return self._search_lock_date('tax_lock_date', operator, value)
+
+    def _search_sale_lock_date(self, operator, value):
+        return self._search_lock_date('sale_lock_date', operator, value)
+
+    def _search_purchase_lock_date(self, operator, value):
+        return self._search_lock_date('purchase_lock_date', operator, value)
+
+    def _invalidate_affected_user_lock_dates(self):
+        affected_lock_date_fields = {exception.lock_date_field for exception in self}
+        self.env['res.company'].invalidate_model(
+            fnames=[f'user_{field}' for field in list(affected_lock_date_fields)],
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
+        # Preprocess arguments:
+        # E.g. to create an exception for 'fiscalyear_lock_date' to '2024-01-01' put
+        # {'fiscalyear_lock_date': '2024-01-01'} in the create vals.
+        # The same thing works for all other fields in SOFT_LOCK_DATE_FIELDS.
+        for vals in vals_list:
+            if 'lock_date' not in vals or 'lock_date_field' not in vals:
+                # Use vals[field] (for field in SOFT_LOCK_DATE_FIELDS) to init the data
+                changed_fields = [field for field in SOFT_LOCK_DATE_FIELDS if field in vals]
+                if len(changed_fields) != 1:
+                    raise ValidationError(_("A single exception must change exactly one lock date field."))
+                field = changed_fields[0]
+                vals['lock_date_field'] = field
+                vals['lock_date'] = vals.pop(field)
+
         exceptions = super().create(vals_list)
+
+        # Log the creation of the exception and the changed field on the company chatter
         for exception in exceptions:
             company = exception.company_id
-            changed_fields = [field for field in SOFT_LOCK_DATE_FIELDS if exception[field]]
-            tracking_value_ids = []
-            for field in changed_fields:
-                value = exception[field]
-                field_info = exception.fields_get([field])[field]
-                tracking_values = self.env['mail.tracking.value']._create_tracking_values(
-                    company[field], value, field, field_info, exception
-                )
-                tracking_value_ids.append(Command.create(tracking_values))
-            self.env['res.company'].invalidate_model(fnames=[f'user_{field}' for field in changed_fields])
+
+            # Create tracking values to display the lock date change in the chatter
+            field = exception.lock_date_field
+            value = exception.lock_date
+            field_info = exception.fields_get([field])[field]
+            tracking_values = self.env['mail.tracking.value']._create_tracking_values(
+                company[field], value, field, field_info, exception,
+            )
+            tracking_value_ids = [Command.create(tracking_values)]
+
             # In case there is no explicit end datetime "forever" is implied by not mentioning an end datetime
             end_datetime_string = _(" valid until %s", format_datetime(self.env, exception.end_datetime)) if exception.end_datetime else ""
             reason_string = _(" for '%s'", exception.reason) if exception.reason else ""
@@ -146,6 +224,8 @@ class AccountLockException(models.Model):
                 body=company_chatter_message,
                 tracking_value_ids=tracking_value_ids,
             )
+
+        exceptions._invalidate_affected_user_lock_dates()
         return exceptions
 
     def copy(self, default=None):
@@ -160,8 +240,7 @@ class AccountLockException(models.Model):
                 record_sudo = record.sudo()
                 record_sudo.active = False
                 record_sudo.end_datetime = fields.Datetime.now()
-                fields_to_invalidate = [f'user_{field}' for field in SOFT_LOCK_DATE_FIELDS if record[field]]
-                self.env['res.company'].invalidate_model(fnames=fields_to_invalidate)
+                record._invalidate_affected_user_lock_dates()
 
     def _get_audit_trail_during_exception_domain(self):
         self.ensure_one()
