@@ -389,8 +389,18 @@ class Message(models.Model):
 
         # discard forbidden records, and check remaining ones
         messages = self - result[0] if result else self
-        if not messages:
-            return result
+        if messages and (forbidden := messages._get_forbidden_access(operation)):
+            if result:
+                result = (result[0] + forbidden, result[1])
+            else:
+                result = (forbidden, lambda: forbidden._make_access_error(operation))
+        return result
+
+    def _get_forbidden_access(self, operation: str) -> api.Self:
+        """ Return the subset of ``self`` that does not satisfy the specific
+        conditions for messages.
+        """
+        forbidden = self.browse()
 
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env.user._is_internal():
@@ -402,23 +412,20 @@ class Message(models.Model):
                         AND message.message_type = 'comment'
                         AND (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE)
                 ''',
-                messages.ids,
+                self.ids,
             ))
             if rows:
                 internal = self.browse(id_ for [id_] in rows)
-                if result:
-                    result = (result[0] + internal, result[1])
-                else:
-                    result = (internal, lambda: internal._make_access_error(operation))
-                messages -= internal
-            if not messages:
-                return result
+                forbidden += internal
+                self -= internal  # noqa: PLW0642
+            if not self:
+                return forbidden
 
         # Read the value of messages in order to determine their accessibility.
         # The values are put in 'messages_to_check', and entries are popped
         # once we know they are accessible. At the end, the remaining entries
         # are the invalid ones.
-        messages.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
+        self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
 
         if operation in ('read', 'write'):
@@ -434,14 +441,14 @@ class Message(models.Model):
                     WHERE m.id = ANY(%(ids)s)
                     GROUP BY m.id
                 """,
-                pid=self.env.user.partner_id.id, ids=messages.ids,
+                pid=self.env.user.partner_id.id, ids=self.ids,
             )
         elif operation in ('create', 'unlink'):
             query = SQL(
                 """ SELECT id, model, res_id, author_id, parent_id, message_type
                     FROM "mail_message"
                     WHERE id = ANY(%s)
-                """, messages.ids,
+                """, self.ids,
             )
         else:
             raise ValueError(_('Wrong operation name (%s)', operation))
@@ -469,7 +476,7 @@ class Message(models.Model):
                     messages_to_check.pop(mid)
 
         if not messages_to_check:
-            return result
+            return forbidden
 
         # Recipients condition, for read and write (partner_ids)
         # keep on top, usefull for systray notifications
@@ -478,7 +485,7 @@ class Message(models.Model):
                 if message.get('notified'):
                     messages_to_check.pop(mid)
             if not messages_to_check:
-                return result
+                return forbidden
 
         # CRUD: Access rights related to the document
         # {document_model_name: {document_id: message_ids}}
@@ -502,7 +509,7 @@ class Message(models.Model):
                         messages_to_check.pop(mid)
 
         if not messages_to_check:
-            return result
+            return forbidden
 
         # Parent condition, for create (check for received notifications for the created message parent)
         if operation == 'create':
@@ -524,7 +531,7 @@ class Message(models.Model):
                         messages_to_check.pop(mid)
 
             if not messages_to_check:
-                return result
+                return forbidden
 
             # Recipients condition for create (message_follower_ids)
             for model, docid_msgids in model_docid_msgids.items():
@@ -539,13 +546,10 @@ class Message(models.Model):
                         messages_to_check.pop(mid)
 
             if not messages_to_check:
-                return result
+                return forbidden
 
-        forbidden = self.browse(messages_to_check)
-        if result:
-            return (result[0] + forbidden, result[1])
-        else:
-            return (forbidden, lambda: forbidden._make_access_error(operation))
+        forbidden += self.browse(messages_to_check)
+        return forbidden
 
     def _make_access_error(self, operation: str) -> AccessError:
         return AccessError(_(
@@ -572,7 +576,7 @@ class Message(models.Model):
             # incorrect due to historically having no reason to allow operations on messages to
             # public user before the introduction of guests. Even with ignoring the rights,
             # check_access_rule and its sub methods are already covering all the cases properly.
-            if message.sudo(False).has_access(operation):
+            if not message.sudo(False)._get_forbidden_access(operation):
                 return message
         else:
             if message.sudo(False).has_access(operation):
