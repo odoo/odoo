@@ -37,17 +37,17 @@
                     </a>
                 </div>
             </xpath>
-            <xpath expr="//div[hasclass('o_kanban_card_header_title_name')]" position="after">
+            <xpath expr="//field[@name='name']" position="after">
                 <field name="self_ordering_mode" invisible="1" />
                 <div class="badge text-bg-info o_kanban_inline_block me-2"
                     invisible="not self_ordering_mode == 'mobile'">
                     Self Ordering Enabled
                 </div>
             </xpath>
-            <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="after">
+            <xpath expr="//div[@name='card_left']" position="after">
                 <field name="self_ordering_mode" invisible="1" />
                 <field name="current_session_id" invisible="1" />
-                <div class="col-6 o_kanban_primary_left d-flex flex-column align-items-start" invisible="not self_ordering_mode == 'kiosk'">
+                <div class="col-6 d-flex flex-column align-items-start" invisible="not self_ordering_mode == 'kiosk'">
                     <button t-if="!record.current_session_id.raw_value" class="btn btn-primary pos_open_session_btn" name="action_open_wizard" type="object">
                         Start Kiosk
                     </button>
@@ -59,7 +59,7 @@
                     </button>
                 </div>
             </xpath>
-            <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="attributes">
+            <xpath expr="//div[@name='card_left']" position="attributes">
                 <field name="self_ordering_mode" invisible="1" />
                 <attribute name="invisible">self_ordering_mode == 'kiosk'</attribute>
             </xpath>
