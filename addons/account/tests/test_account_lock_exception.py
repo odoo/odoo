@@ -340,3 +340,57 @@ class TestAccountLockException(AccountTestInvoicingCommon):
         for move in [in_move, out_move]:
             with self.assertRaises(UserError), self.cr.savepoint():
                 move.button_draft()
+
+    def test_company_lock_date(self):
+        """
+        Test the `company_lock_date` field is set corretly on exception creation.
+        Test the behavior when a company lock date is changed.
+          * Every active exception gets revoked and recreated with the new company lock date
+          * Non-active exceptions are not affected
+        """
+        self.env['account.lock_exception'].search([]).sudo().unlink()
+        for lock_date_field, move_type in self.soft_lock_date_info:
+            with self.subTest(lock_date_field=lock_date_field, move_type=move_type), self.cr.savepoint() as sp:
+                self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
+
+                revoked_exception = self.env['account.lock_exception'].create({
+                    'company_id': self.company.id,
+                    'user_id': self.env.user.id,
+                    lock_date_field: fields.Date.to_date('2010-01-01'),
+                    'end_datetime': self.fakenow + timedelta(hours=24),
+                    'reason': 'test_exception_recreated_on_lock_date_change revoked',
+                })
+                revoked_exception.action_revoke()
+                active_exception = self.env['account.lock_exception'].create({
+                    'company_id': self.company.id,
+                    'user_id': self.env.user.id,
+                    lock_date_field: fields.Date.to_date('2010-01-01'),
+                    'end_datetime': self.fakenow + timedelta(hours=24),
+                    'reason': 'test_exception_recreated_on_lock_date_change active',
+                })
+
+                # Check that the company lock date field was set correcyly on exception creation
+                self.assertEqual(revoked_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
+                self.assertEqual(active_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
+
+                # The lock date change should trigger the "recreation" proces
+                self.company[lock_date_field] = fields.Date.to_date('2021-01-01')
+
+                self.assertEqual(revoked_exception.company_lock_date, fields.Date.to_date('2020-01-01'))
+
+                self.assertEqual(active_exception.state, 'revoked')
+
+                exceptions = self.env['account.lock_exception'].with_context(active_test=False).search([])
+                self.assertEqual(len(exceptions), 3)
+                new_exception = exceptions - revoked_exception - active_exception
+                # Check that the new exception is a "recreation" of the `active_exception`
+                self.assertRecordValues(new_exception, [{
+                    'company_id': self.company.id,
+                    'user_id': self.env.user.id,
+                    lock_date_field: fields.Date.to_date('2010-01-01'),
+                    'company_lock_date': fields.Date.to_date('2021-01-01'),
+                    'end_datetime': self.env.cr.now() + timedelta(hours=24),
+                    'reason': 'test_exception_recreated_on_lock_date_change active',
+                }])
+
+                sp.close()  # Rollback to ensure all subtests start in the same situation
