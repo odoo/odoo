@@ -20,14 +20,14 @@
                     getRef="(ref) => this.inputRef = ref" />
             </div>
             <div class="form-floating">
-                <textarea class="form-control" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
+                <textarea class="form-control cash-reason" placeholder="Leave a reason here" name="reason" id="reason" t-model="state.reason" style="height:100px;" />
                 <label for="reason">Reason</label>
             </div>
             <t t-set-slot="footer">
                 <button class="button confirm btn btn-lg lh-lg btn-primary"
                     t-on-click="confirm"
-                    t-att-disabled="!env.utils.isValidFloat(state.amount)">
-                    Confirm <span t-esc="format(state.amount)"/>
+                    t-att-disabled="!env.utils.isValidFloat(state.amount) or !state.reason">
+                    Confirm
                 </button>
                 <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
                     Discard

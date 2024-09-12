@@ -41,6 +41,11 @@ export class ClosePosPopup extends Component {
         this.state.payments[this.props.default_cash_details.id].counted = count.toString();
         this.setManualCashInput(count);
     }
+    async cashMove() {
+        await this.pos.cashMove();
+        this.dialog.closeAll();
+        this.pos.closeSession();
+    }
     getInitialState() {
         const initialState = { notes: "", payments: {} };
         if (this.pos.config.cash_control) {

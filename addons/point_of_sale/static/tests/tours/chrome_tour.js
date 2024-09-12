@@ -14,6 +14,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Dialog.confirm("Open Register"),
             Chrome.clickMenuButton(),
             Chrome.clickMenuDropdownOption("Cash In/Out"),
+            Chrome.fillTextArea(".cash-reason", "MOBT"),
             Dialog.confirm(),
             Chrome.clickMenuButton(),
 

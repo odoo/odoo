@@ -32,6 +32,8 @@ import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
+import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
 
 const { DateTime } = luxon;
 
@@ -260,7 +262,18 @@ export class PosStore extends Reactive {
         this.computeProductPricelistCache();
         await this.processProductAttributes();
     }
+    cashMove() {
+        this.hardwareProxy.openCashbox(_t("Cash in / out"));
+        return makeAwaitable(this.dialog, CashMovePopup);
+    }
+    async closeSession() {
+        const info = await this.getClosePosInfo();
+        await this.data.resetIndexedDB();
 
+        if (info) {
+            this.dialog.add(ClosePosPopup, info);
+        }
+    }
     async processProductAttributes() {
         const productIds = new Set();
         const productTmplIds = new Set();

@@ -12,7 +12,7 @@ import { Input } from "@point_of_sale/app/generic_components/inputs/input/input"
 export class CashMovePopup extends Component {
     static template = "point_of_sale.CashMovePopup";
     static components = { Input, Dialog };
-    static props = ["confirmKey?", "close"];
+    static props = ["confirmKey?", "close", "getPayload?"];
     setup() {
         super.setup();
         this.notification = useService("notification");
