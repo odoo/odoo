@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_in_pan_entity_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.pan.entity.view.form</field>
+        <field name="model">l10n_in.pan.entity</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <div class="oe_title mb-3 mx-3 position-relative">
+                        <strong>
+                            <field name="pan_holder_type"/>
+                        </strong>
+                        <h1>
+                            <field name="name" placeholder="PAN Number" nolabel="1"></field>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Partners">
+                            <field name="partner_ids">
+                                <tree>
+                                    <field name="complete_name" string="Name"/>
+                                    <field name="vat"/>
+                                    <field name="l10n_in_gst_treatment"/>
+                                    <field name="state_id"/>
+                                    <field name="country_id"/>
+                                    <field name="category_id" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="TDS">
+                            <field name="l10n_in_tax_tds_ids">
+                                <tree>
+                                    <field name="tax_group_ids" widget="many2many_tags"/>
+                                    <field name="l10n_in_selection" string="Selection"/>
+                                    <field name="l10n_in_reason"/>
+                                    <field name="l10n_in_certificate_number"/>
+                                    <field name="valid_from"/>
+                                    <field name="valid_upto"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="TCS">
+                            <field name="l10n_in_tax_tcs_ids">
+                                <tree>
+                                    <field name="tax_group_ids" widget="many2many_tags"/>
+                                    <field name="l10n_in_selection" string="Selection"/>
+                                    <field name="l10n_in_reason"/>
+                                    <field name="l10n_in_certificate_number"/>
+                                    <field name="valid_from"/>
+                                    <field name="valid_upto"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_tax_tcs_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.tax.tcs.view.form</field>
+        <field name="model">l10n_in.tax.tcs</field>
+        <field name="arch" type="xml">
+            <form string="TCS">
+                <sheet>
+                    <group>
+                        <field name="tax_group_ids" widget="many2many_tags" domain="[('l10n_in_tax_source_type', '=', 'tcs')]"/>
+                        <field name="l10n_in_selection" string="Selection"/>
+                        <field name="l10n_in_reason" required="l10n_in_selection"/>
+                        <field name="l10n_in_certificate_number" required="l10n_in_selection"/>
+                        <field name="valid_from" required="l10n_in_selection"/>
+                        <field name="valid_upto" required="l10n_in_selection"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_tax_tds_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.tax.tds.view.form</field>
+        <field name="model">l10n_in.tax.tds</field>
+        <field name="arch" type="xml">
+            <form string="TDS">
+                <sheet>
+                    <group>
+                        <field name="tax_group_ids" widget="many2many_tags" domain="[('l10n_in_tax_source_type', '=', 'tds')]"/>
+                        <field name="l10n_in_selection" string="Selection"/>
+                        <field name="l10n_in_reason" required="l10n_in_selection in ('no_deduction', 'low_deduction', 'high_deduction')"/>
+                        <field name="l10n_in_certificate_number" required="l10n_in_selection in ('no_deduction', 'low_deduction')"/>
+                        <field name="valid_from" required="l10n_in_selection in ('no_deduction', 'low_deduction', 'high_deduction')"/>
+                        <field name="valid_upto" required="l10n_in_selection in ('no_deduction', 'low_deduction', 'high_deduction')"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_pan_entity_action" model="ir.actions.act_window">
+        <field name="name">PAN</field>
+        <field name="res_model">l10n_in.pan.entity</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <record id="l10n_in_tax_tcs_action" model="ir.actions.act_window">
+        <field name="name">TCS</field>
+        <field name="res_model">l10n_in.tax.tcs</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_in_tax_tcs_view_form"/>
+    </record>
+
+    <record id="l10n_in_tax_tds_action" model="ir.actions.act_window">
+        <field name="name">TDS</field>
+        <field name="res_model">l10n_in.tax.tds</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_in_tax_tds_view_form"/>
+    </record>
+</odoo>

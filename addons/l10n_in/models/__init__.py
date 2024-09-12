@@ -11,3 +11,4 @@ from . import res_config_settings
 from . import res_country_state
 from . import res_partner
 from . import uom_uom
+from . import l10n_in_pan_entity
