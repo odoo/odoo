@@ -415,9 +415,20 @@ class TestJavascriptAssetsBundle(FileTouchable):
         # trigger the first generation and, thus, the first save in database
         self.bundle.css()
 
+        # there should be no compilation errors
+        self.assertEqual(len(self.bundle.css_errors), 0)
+
         # there should be one attachment associated to this bundle
         self.assertEqual(len(self._any_ira_for_bundle('min.css', rtl=True)), 1)
         self.assertEqual(len(self.bundle.get_attachments('min.css')), 1)
+
+    def test_15_rtl_invalid_css_generation(self):
+        """ Checks that erroneous css cannot be compiled by rtlcss and that errors are registered """
+        self.bundle = self._get_asset('test_assetsbundle.broken_css', rtl=True)
+        with mute_logger('odoo.addons.base.models.assetsbundle'):
+            self.bundle.css()
+        self.assertEqual(len(self.bundle.css_errors), 1)
+        self.assertIn('rtlcss: error processing payload', self.bundle.css_errors[0])
 
     def test_16_ltr_and_rtl_css_access(self):
         """ Checks that the bundle's cache is working, i.e. that the bundle creates only one
