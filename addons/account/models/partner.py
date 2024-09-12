@@ -266,6 +266,9 @@ class AccountFiscalPosition(models.Model):
         self.ensure_one()
         self.env['account.tax.template']._try_instantiating_foreign_taxes(self.country_id, self.company_id)
 
+    def _get_fiscal_country(self):
+        return self.country_id
+
 
 class AccountFiscalPositionTax(models.Model):
     _name = 'account.fiscal.position.tax'

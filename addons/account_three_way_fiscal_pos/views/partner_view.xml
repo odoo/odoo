@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_position_form" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_group_id']" position="replace"/>
+            <xpath expr="//field[@name='country_id']" position="replace"/>
+            <xpath expr="//field[@name='state_ids']" position="replace"/>
+            <xpath expr="//label[@name='zip_range_label']" position="replace"/>
+            <xpath expr="//div[@name='zip_range_div']" position="replace"/>
+
+            <xpath expr="//field[@name='foreign_vat']" position="after">
+                <field name="fiscal_country_id" string="Fiscal Country" attrs="{'required': [('foreign_vat', '=', True)]}"/>
+                <field name="country_group_id" string="Delivery Country Group" attrs="{'invisible': [('auto_apply', '=', False)], 'required': [('foreign_vat', '=', True), ('fiscal_country_id', '=', False)]}" options="{'no_open': True, 'no_create': True}"/>
+                <field name="country_id" string="Delivery Country" attrs="{'invisible': [('auto_apply', '=', False)]}" options="{'no_open': True, 'no_create': True}"/>
+                <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
+                    attrs="{'invisible': ['|', '|', '|', '&amp;', ('auto_apply', '!=', True), ('foreign_vat', '=', False), ('fiscal_country_id', '=', False), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
+                <label for="zip_from" string="Zip Range" name="zip_range_label"
+                    attrs="{'invisible': ['|', ('auto_apply', '=', False), ('fiscal_country_id', '=', False)]}"/>
+                <div attrs="{'invisible': ['|', ('auto_apply', '=', False), ('fiscal_country_id', '=', False)]}" name="zip_range_div">
+                    <span> From </span>
+                    <field name="zip_from" class="oe_inline"/>
+                    <div class="oe_edit_only"/>
+                    <span> To </span>
+                    <field name="zip_to" class="oe_inline"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='tax_src_id']" position="attributes">
+                <attribute name="domain">[
+                    ('type_tax_use', '!=', 'none'),
+                    '|', ('country_id', '=', parent.company_country_id), ('country_id', '=', parent.fiscal_country_id),
+                    '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                    ]
+                </attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='tax_dest_id']" position="attributes">
+                <attribute name="domain">[
+                    ('type_tax_use', '!=', 'none'),
+                    '|', ('country_id', '=', parent.country_id if parent.foreign_vat else parent.company_country_id),
+                         ('country_id', '=', parent.fiscal_country_id),
+                    '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                    ]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -36,25 +36,25 @@ class AccountFiscalPosition(models.Model):
                 foreign_vat_country = self.country_group_id.country_ids.filtered(lambda c: c.code == record.foreign_vat[:2].upper())
                 if not foreign_vat_country:
                     raise ValidationError(_("The country detected for this foreign VAT number does not match any of the countries composing the country group set on this fiscal position."))
-                if record.country_id:
-                    checked_country_code = self.env['res.partner']._run_vat_test(record.foreign_vat, record.country_id) or self.env['res.partner']._run_vat_test(record.foreign_vat, foreign_vat_country)
+                if record._get_fiscal_country():
+                    checked_country_code = self.env['res.partner']._run_vat_test(record.foreign_vat, record._get_fiscal_country()) or self.env['res.partner']._run_vat_test(record.foreign_vat, foreign_vat_country)
                     if not checked_country_code:
                         record.raise_vat_error_message(foreign_vat_country)
                 else:
                     checked_country_code = self.env['res.partner']._run_vat_test(record.foreign_vat, foreign_vat_country)
                     if not checked_country_code:
-                        record.raise_vat_error_message(record.country_id)
-            elif record.country_id:
+                        record.raise_vat_error_message(record._get_fiscal_country())
+            elif record._get_fiscal_country():
                 foreign_vat_country = self.env['res.country'].search([('code', '=', record.foreign_vat[:2].upper())], limit=1)
-                checked_country_code = self.env['res.partner']._run_vat_test(record.foreign_vat, foreign_vat_country or record.country_id)
+                checked_country_code = self.env['res.partner']._run_vat_test(record.foreign_vat, foreign_vat_country or record._get_fiscal_country())
                 if not checked_country_code:
                     record.raise_vat_error_message()
 
-            if record.foreign_vat and not record.country_id and not record.country_group_id:
+            if record.foreign_vat and not record._get_fiscal_country() and not record.country_group_id:
                 raise ValidationError(_("The country of the foreign VAT number could not be detected. Please assign a country to the fiscal position or set a country group"))
 
     def raise_vat_error_message(self, country=False):
         fp_label = _("fiscal position [%s]", self.name)
-        country_code = country.code.lower() if country else self.country_id.code.lower()
+        country_code = country.code.lower() if country else self._get_fiscal_country().code.lower()
         error_message = self.env['res.partner']._build_vat_error_message(country_code, self.foreign_vat, fp_label)
         raise ValidationError(error_message)

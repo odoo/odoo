@@ -57,9 +57,9 @@
                                 options="{'no_open': True, 'no_create': True}"/>
                             <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
                                 attrs="{'invisible': ['|', '|', '&amp;', ('auto_apply', '!=', True), ('foreign_vat', '=', False), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
-                            <label for="zip_from" string="Zip Range"
+                            <label for="zip_from" string="Zip Range" name="zip_range_label"
                                 attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}"/>
-                            <div attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}">
+                            <div attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}" name="zip_range_div">
                                 <span> From </span>
                                 <field name="zip_from" class="oe_inline"/>
                                 <div class="oe_edit_only"/>

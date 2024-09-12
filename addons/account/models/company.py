@@ -238,7 +238,7 @@ class ResCompany(models.Model):
     def _compute_account_enabled_tax_country_ids(self):
         for record in self:
             foreign_vat_fpos = self.env['account.fiscal.position'].search([('company_id', '=', record.id), ('foreign_vat', '!=', False)])
-            record.account_enabled_tax_country_ids = foreign_vat_fpos.country_id + record.account_fiscal_country_id
+            record.account_enabled_tax_country_ids = foreign_vat_fpos._get_fiscal_country() + record.account_fiscal_country_id
 
     @api.depends('account_onboarding_create_invoice_state_flag')
     def _compute_account_onboarding_create_invoice_state(self):
