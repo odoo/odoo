@@ -145,10 +145,39 @@ class Environment(Mapping):
             If ``raise_if_not_found`` is ``False`` and there are multiple
             ``xml_ids`` as input, then it won't be possible to determine which
             specific records weren't found by only looking at the recordset.
+
+        .. warning::
+            | ``raise_if_not_found`` is now a keyword-only argument.
+            | Its use as a non-keyword argument is **deprecated** but it's still working.
+
+            For example::
+
+                self.env.ref('base.us', 'base.x', False)
+                DeprecationWarning: Since 19.0, raise_if_not_found is a keyword-only argument
+                res.country(233)
+
+                self.env.ref('base.us', 'base.x', raise_if_not_found=False)
+                res.country(233)
+
+                self.env.ref('base.us', 'base.x')
+                ValueError: External ID not found in the system: base.x
+
+                self.env.ref('base.us', 'base.x', True)
+                DeprecationWarning: Since 19.0, raise_if_not_found is a keyword-only argument
+                ValueError: External ID not found in the system: base.x
+
+                self.env.ref('base.us', 'base.x', raise_if_not_found=True)
+                ValueError: External ID not found in the system: base.x
+
         """
 
+        # Avoid breaking the API when raise_if_not_found was given as a pure boolean non-keyword arg
+        if len(xml_ids) > 1 and raise_if_not_found is True and isinstance(xml_ids[-1], bool):
+            warnings.warn("Since 19.0, raise_if_not_found is a keyword-only argument", DeprecationWarning)
+            raise_if_not_found = xml_ids[-1]
+            xml_ids = xml_ids[:-1]
+
         id_xmlid = {}
-        res_ids = []
         first_model_name, first_xml_id = None, None
         for xml_id in xml_ids:
             res_model, res_id = self['ir.model.data']._xmlid_to_res_model_res_id(
@@ -163,11 +192,10 @@ class Environment(Mapping):
                         f"'{first_xml_id}' and '{xml_id}' xmlids belong to different models."
                     )
                 id_xmlid[res_id] = xml_id
-                res_ids.append(res_id)
         if not id_xmlid:
             return None
 
-        records = self[first_model_name].browse(res_ids)
+        records = self[first_model_name].browse(id_xmlid)
         existing = records.exists()
         if raise_if_not_found and (missing := records - existing):
             missing_ids = ", ".join(id_xmlid[record.id] for record in missing)
