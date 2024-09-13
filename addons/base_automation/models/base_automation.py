@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -6,7 +5,6 @@ import logging
 import traceback
 from collections import defaultdict
 from uuid import uuid4
-
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, exceptions, fields, models
@@ -64,6 +62,7 @@ TIME_TRIGGERS = [
     'on_time_created',
     'on_time_updated',
 ]
+
 
 def get_webhook_request_payload():
     if not request:
@@ -179,7 +178,8 @@ class BaseAutomation(models.Model):
         string='Before Update Domain',
         compute='_compute_filter_pre_domain',
         readonly=False, store=True,
-        help="If present, this condition must be satisfied before the update of the record.")
+        help="If present, this condition must be satisfied before the update of the record. "
+             "Not checked on record creation.")
     filter_domain = fields.Char(
         string='Apply on',
         help="If present, this condition must be satisfied before executing the automation rule.",
@@ -218,6 +218,7 @@ class BaseAutomation(models.Model):
                       action_names=', '.join(failing_actions.mapped('name'))
                      )
                 )
+
     @api.depends("trigger", "webhook_uuid")
     def _compute_url(self):
         for automation in self:
