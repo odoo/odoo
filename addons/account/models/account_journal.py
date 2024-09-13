@@ -966,13 +966,7 @@ class AccountJournal(models.Model):
             ).message_post(attachment_ids=attachment.ids)
 
             attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
-            if (
-                invoice.company_id.autopost_bills
-                and invoice.partner_id.autopost_bills == 'always'
-                and not invoice.abnormal_amount_warning
-                and not invoice.restrict_mode_hash_table
-            ):
-                invoice.action_post()
+            invoice._autopost_bill()
 
         return all_invoices
 
