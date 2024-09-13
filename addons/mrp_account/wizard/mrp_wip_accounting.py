@@ -53,6 +53,8 @@ class MrpWipAccounting(models.TransientModel):
             res['reference'] = _('Manufacturing WIP - %(orders_list)s', orders_list=productions and format_list(self.env, productions.mapped('name')) or _("Manual Entry"))
         if 'line_ids' in fields_list:
             res['line_ids'] = self._get_line_vals(productions)
+        if 'mo_ids' in fields_list:
+            res['mo_ids'] = [Command.set(productions.ids)]
         return res
 
     date = fields.Date("Date", default=fields.Datetime.now)
@@ -62,6 +64,7 @@ class MrpWipAccounting(models.TransientModel):
     journal_id = fields.Many2one('account.journal', "Journal", required=True)
     reference = fields.Char("Reference")
     line_ids = fields.One2many('mrp.account.wip.accounting.line', 'wip_accounting_id', "WIP accounting lines")
+    mo_ids = fields.Many2many('mrp.production')
 
     def _get_overhead_account(self):
         overhead_account = self.env.company.account_production_wip_overhead_account_id
@@ -116,6 +119,7 @@ class MrpWipAccounting(models.TransientModel):
             raise UserError(_("Reversal date must be after the posting date."))
         move = self.env['account.move'].sudo().create({
             'journal_id': self.journal_id.id,
+            'wip_production_ids': self.mo_ids.ids,
             'date': self.date,
             'ref': self.reference,
             'move_type': 'entry',
@@ -131,5 +135,6 @@ class MrpWipAccounting(models.TransientModel):
         move._post()
         move._reverse_moves(default_values_list=[{
             'ref': _("Reversal of: %s", self.reference),
+            'wip_production_ids': self.mo_ids.ids,
             'date': self.reversal_date,
         }])._post()
