@@ -110,8 +110,12 @@ export const barcodeService = {
             if (ev.key === "Unidentified") {
                 return;
             }
-            if (document.activeElement && !document.activeElement.matches('input:not([type]), input[type="text"], textarea, [contenteditable], ' +
-                '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]')) {
+            if (
+                !document.activeElement.matches(
+                    'input, [type="text"], textarea, [contenteditable], ' +
+                        '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]'
+                )
+            ) {
                 barcodeInput.focus();
             }
             keydownHandler(ev);
