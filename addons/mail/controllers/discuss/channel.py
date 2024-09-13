@@ -144,7 +144,7 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/join", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def discuss_channel_sub_channel_join(self, channel_id):
+    def discuss_channel_join(self, channel_id):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()

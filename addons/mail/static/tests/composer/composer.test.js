@@ -172,8 +172,8 @@ test("Selection is kept when changing channel and going back to original channel
     const textarea = $(".o-mail-Composer-input")[0];
     textarea.setSelectionRange(0, textarea.value.length);
     await tick();
-    await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)");
-    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel)");
+    await click(":nth-child(2 of .o-mail-DiscussSidebarChannel-container)");
+    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel-container)");
     expect(textarea.selectionStart).toBe(0);
     expect(textarea.selectionEnd).toBe(textarea.value.length);
 });

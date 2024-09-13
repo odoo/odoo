@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebar">
-        <div class="o-mail-DiscussSidebar d-flex d-print-none flex-column overflow-auto flex-shrink-0 h-100 border-end z-1 o-mail-discussSidebarBgColor" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }">
-            <div class="o-mail-DiscussSidebar-top position-sticky justify-content-center top-0 z-2 o-mail-discussSidebarBgColor" t-att-class="{ 'py-2': !store.inPublicPage, 'pt-1': store.inPublicPage }">
+        <div class="o-mail-DiscussSidebar d-flex d-print-none flex-column overflow-auto flex-shrink-0 h-100 border-end z-1 o-mail-discussSidebarBgColor gap-1" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }">
+            <div class="o-mail-DiscussSidebar-top position-sticky justify-content-center top-0 z-2 o-mail-discussSidebarBgColor mb-1" t-att-class="{ 'py-2': !store.inPublicPage, 'pt-1': store.inPublicPage }">
                 <div class="d-flex align-items-center justify-content-center" t-att-class="{ 'flex-column gap-2': store.discuss.isSidebarCompact }">
                     <t name="compact-btn">
                         <Dropdown state="compactFloating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-view border p-2 mx-2 my-2 min-w-0 shadow-sm'" manual="true">
