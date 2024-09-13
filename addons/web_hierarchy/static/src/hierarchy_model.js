@@ -139,6 +139,7 @@ export class HierarchyNode {
     get canShowParentNode() {
         return (
             Boolean(this.parentResId) &&
+            this.parentResId !== this.resId &&
             !this.parentNode &&
             this.tree.forest.resIds.filter((resId) => resId === this.resId).length === 1
         );
@@ -689,7 +690,10 @@ export class HierarchyModel extends Model {
                 if (existingChildResIds.length) {
                     // special case with result found with the search view
                     for (const tree of this.root.trees) {
-                        if (existingChildResIds.includes(tree.root.resId)) {
+                        if (
+                            existingChildResIds.includes(tree.root.resId) &&
+                            tree.root.id !== node.id
+                        ) {
                             nodesToUpdate.push(tree.root);
                         }
                     }
