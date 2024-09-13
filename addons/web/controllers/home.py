@@ -177,7 +177,8 @@ class Home(http.Controller):
     def robots(self, **kwargs):
         return "User-agent: *\nDisallow: /\n"
 
-    @http.route('/json/<path:subpath>', auth='public', type='http', readonly=True)
+    # for /json, the route should work in a browser, therefore type=http
+    @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
     def web_json(self, subpath, **kwargs):
         return request.redirect(
             f'/json/18.0/{subpath}?{urlencode(kwargs)}',
@@ -186,6 +187,9 @@ class Home(http.Controller):
 
     @http.route('/json/18.0/<path:subpath>', auth='user', type='http', readonly=True)
     def web_json_18_0(self, subpath, view_type=None, limit=0, offset=0):
+        if not request.env.user.has_group('base.group_allow_export'):
+            raise AccessError(_("You need export permissions to use the /json route"))
+
         try:
             limit = int(limit)
             offset = int(offset)
