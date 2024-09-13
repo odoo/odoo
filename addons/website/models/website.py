@@ -346,9 +346,19 @@ class Website(models.Model):
     @api.model
     def _handle_domain(self, vals):
         if 'domain' in vals and vals['domain']:
-            if not vals['domain'].startswith('http'):
-                vals['domain'] = 'https://%s' % vals['domain']
-            vals['domain'] = vals['domain'].rstrip('/')
+            vals['domain'] = self._normalize_domain_url(vals['domain'])
+
+    def _normalize_domain_url(self, url):
+        """
+        This method:
+        - Prefixes 'https://' if it doesn't start with 'http'
+        - Strips any tailing '/'
+        """
+        normalized_url = url
+        if not normalized_url.startswith('http'):
+            normalized_url = 'https://%s' % normalized_url
+        normalized_url = normalized_url.rstrip('/')
+        return normalized_url
 
     @api.model
     def _handle_homepage_url(self, vals):
