@@ -503,8 +503,8 @@
 
     <template id="website_sale.sort" name="Sort-by Template">
         <div t-attf-class="o_sortby_dropdown dropdown dropdown_sorty_by {{_classes}}">
-            <small class="d-none d-lg-inline text-muted">Sort By:</small>
             <a role="button" href="#" t-attf-class="dropdown-toggle btn btn-{{navClass}}" data-bs-toggle="dropdown">
+                <small class="d-none d-lg-inline text-muted">Sort By:</small>
                 <span class="d-none d-lg-inline">
                     <t t-if="isSortingBy" t-out="isSortingBy[0][1]"/>
                     <span t-else="1" t-field="website.shop_default_sort"/>
