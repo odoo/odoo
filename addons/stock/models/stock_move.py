@@ -1027,7 +1027,6 @@ Please change the quantity done or the rounding precision of your unit of measur
 
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
-            domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
 
@@ -1037,14 +1036,17 @@ Please change the quantity done or the rounding precision of your unit of measur
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
                 warehouse_id = False
 
-            rule = ProcurementGroup._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
+            rule = ProcurementGroup._get_push_rule(move.product_id, move.location_dest_id, {
+                'route_ids': move.route_ids, 'product_packaging_id': move.product_packaging_id, 'warehouse_id': warehouse_id,
+            })
 
             excluded_rule_ids = []
             while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
                 excluded_rule_ids.append(rule.id)
-                rule = ProcurementGroup._search_rule(
-                    move.route_ids, move.product_packaging_id, move.product_id, warehouse_id,
-                    expression.AND([[('id', 'not in', excluded_rule_ids)], domain]))
+                rule = ProcurementGroup._get_push_rule(move.product_id, move.location_dest_id, {
+                    'route_ids': move.route_ids, 'product_packaging_id': move.product_packaging_id, 'warehouse_id': warehouse_id,
+                    'domain': [('id', 'not in', excluded_rule_ids)],
+                })
 
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
