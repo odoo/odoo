@@ -9981,7 +9981,7 @@ test(`form view with inline list view with optional fields and local storage moc
 
     const localStorageKey = "partner,form,123456789,child_ids,list,bar,foo";
     expect.verifySteps([
-        "getItem pwa.installationState",
+        "getItem pwaService.installationState",
         `getItem optional_fields,${localStorageKey}`,
         `getItem debug_open_view,${localStorageKey}`,
     ]);
@@ -10046,7 +10046,7 @@ test.tags("desktop")(
 
         const localStorageKey = "partner,form,123456789,child_ids,list,bar,foo";
         expect.verifySteps([
-            "getItem pwa.installationState",
+            "getItem pwaService.installationState",
             `getItem optional_fields,${localStorageKey}`,
             `getItem debug_open_view,${localStorageKey}`,
         ]);

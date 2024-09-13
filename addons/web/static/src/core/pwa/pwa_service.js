@@ -53,20 +53,22 @@ const pwaService = {
         });
 
         function _getInstallationState(scope = state.startUrl) {
-            const installationState = browser.localStorage.getItem("pwa.installationState");
+            const installationState = browser.localStorage.getItem("pwaService.installationState");
             return installationState ? JSON.parse(installationState)[scope] : "";
         }
 
         function _setInstallationState(value) {
-            const ls = JSON.parse(browser.localStorage.getItem("pwa.installationState") || "{}");
+            const ls = JSON.parse(
+                browser.localStorage.getItem("pwaService.installationState") || "{}"
+            );
             ls[state.startUrl] = value;
-            browser.localStorage.setItem("pwa.installationState", JSON.stringify(ls));
+            browser.localStorage.setItem("pwaService.installationState", JSON.stringify(ls));
         }
 
         function _removeInstallationState() {
-            const ls = JSON.parse(browser.localStorage.getItem("pwa.installationState"));
+            const ls = JSON.parse(browser.localStorage.getItem("pwaService.installationState"));
             delete ls[state.startUrl];
-            browser.localStorage.setItem("pwa.installationState", JSON.stringify(ls));
+            browser.localStorage.setItem("pwaService.installationState", JSON.stringify(ls));
         }
 
         if (state.isScopedApp) {
