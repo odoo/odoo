@@ -8,7 +8,7 @@ from threading import Thread
 import time
 import urllib3
 
-from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.addons.hw_drivers.websocket_client import WebsocketClient
 
 _logger = logging.getLogger(__name__)
@@ -91,9 +91,11 @@ class Manager(Thread):
 
     def run(self):
         """
-        Thread that will load interfaces and drivers and contact the odoo server with the updates
+        Thread that will load interfaces and drivers and contact the odoo server
+        with the updates. It will also reconnect to the Wi-Fi if the connection is lost.
         """
         helpers.migrate_old_config_files_to_new_config_file()
+        wifi.reconnect(helpers.get_conf('wifi_ssid'), helpers.get_conf('wifi_password'))
         server_url = helpers.get_odoo_server_url()
 
         helpers.start_nginx_server()

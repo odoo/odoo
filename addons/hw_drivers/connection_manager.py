@@ -9,7 +9,7 @@ import time
 import urllib3
 
 from odoo.addons.hw_drivers.main import iot_devices, manager
-from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import helpers, wifi
 
 _logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class ConnectionManager(Thread):
         self.pairing_uuid = False
 
     def run(self):
-        if not helpers.get_odoo_server_url() and not helpers.access_point():
+        if not helpers.get_odoo_server_url() and not wifi.is_access_point():
             end_time = datetime.now() + timedelta(minutes=5)
             while datetime.now() < end_time:
                 self._connect_box()

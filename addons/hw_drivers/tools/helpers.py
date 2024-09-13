@@ -10,6 +10,8 @@ from importlib import util
 import io
 import json
 import logging
+from os import access
+
 import netifaces
 from OpenSSL import crypto
 import os
@@ -75,8 +77,6 @@ elif platform.system() == 'Linux':
                 subprocess.run(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"], check=False)
                 subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=False)
 
-def access_point():
-    return get_ip() == '10.11.12.1'
 
 def start_nginx_server():
     if platform.system() == 'Windows':
@@ -277,22 +277,9 @@ def get_mac_address():
 def get_path_nginx():
     return str(list(Path().absolute().parent.glob('*nginx*'))[0])
 
-def get_ssid():
-    ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
-    if not ap:
-        return subprocess.check_output(['grep', '-oP', '(?<=ssid=).*', '/etc/hostapd/hostapd.conf']).decode('utf-8').rstrip()
-    process_iwconfig = subprocess.Popen(['iwconfig'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwconfig.stdout, stdout=subprocess.PIPE)
-    return subprocess.check_output(['sed', 's/.*"\\(.*\\)"/\\1/'], stdin=process_grep.stdout).decode('utf-8').rstrip()
-
 
 @cache
 def get_odoo_server_url():
-    if platform.system() == 'Linux':
-        ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
-        if not ap:
-            return False
-
     return get_conf('remote_server')
 
 
@@ -323,17 +310,8 @@ def get_version(detailed_version=False):
         version += f"-{release.version}"
         if platform.system() == 'Linux':
             version += f'#{get_commit_hash()}'
-    return version
 
-def get_wifi_essid():
-    wifi_options = []
-    process_iwlist = subprocess.Popen(['sudo', 'iwlist', 'wlan0', 'scan'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwlist.stdout, stdout=subprocess.PIPE).stdout.readlines()
-    for ssid in process_grep:
-        essid = ssid.decode('utf-8').split('"')[1]
-        if essid not in wifi_options:
-            wifi_options.append(essid)
-    return wifi_options
+    return version
 
 
 def load_certificate():

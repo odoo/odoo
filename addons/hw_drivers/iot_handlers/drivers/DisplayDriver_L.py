@@ -17,7 +17,7 @@ from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
-from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.tools import helpers, wifi
 from odoo.tools.misc import file_open
 
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../../views'))
@@ -232,7 +232,7 @@ class DisplayController(http.Controller):
             if 'wlan' in iface_id or 'eth' in iface_id:
                 iface_obj = ni.ifaddresses(iface_id)
                 ifconfigs = iface_obj.get(ni.AF_INET, [])
-                essid = helpers.get_ssid()
+                essid = wifi.get_current() or wifi._generate_hostapd_ssid()
                 for conf in ifconfigs:
                     if conf.get('addr'):
                         display_ifaces.append({
