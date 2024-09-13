@@ -1125,6 +1125,20 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 self.bank_line_2.id: no_match_result,
             }, self.bank_st)
 
+            # More complex matching to match something from bank sync data.
+            # Note: the indentation is done with multiple \n to mimic the bank sync behavior. Keep them for this test!
+            rule.partner_mapping_line_ids.write({'narration_regex': ".*coincoin.*"})
+            self.bank_line_1.write({'narration': """
+                {
+                    "informations": "coincoin turlututu tsoin tsoin",
+                }
+            """})
+
+            self._check_statement_matching(rule, {
+                self.bank_line_1.id: match_result,
+                self.bank_line_2.id: no_match_result,
+            }, self.bank_st)
+
     def test_partner_name_in_communication(self):
         self.invoice_line_1.partner_id.write({'name': "Archibald Haddock"})
         self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK-Archibald'})
