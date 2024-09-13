@@ -2339,12 +2339,15 @@ class MailThread(models.AbstractModel):
         for recipients_group_data in recipients_groups_data:
             # generate notification email content
             recipients_ids = recipients_group_data.pop('recipients')
+            if template_values['lang'] != recipients_group_data['lang']:
+                template_values = self.with_context(lang=recipients_group_data['lang'])._notify_prepare_template_context(message, msg_vals, model_description=model_description)
+
             render_values = {**template_values, **recipients_group_data}
             # {company, is_discussion, lang, message, model_description, record, record_name, signature, subtype, tracking_values, website_url}
             # {actions, button_access, has_button_access, recipients}
 
             if base_template:
-                mail_body = base_template._render(render_values, engine='ir.qweb', minimal_qcontext=True)
+                mail_body = base_template.with_context(lang=render_values['lang'])._render(render_values, engine='ir.qweb', minimal_qcontext=True)
             else:
                 mail_body = message.body
             mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
@@ -2513,13 +2516,13 @@ class MailThread(models.AbstractModel):
             return recipients_data
 
         author_id = msg_vals.get('author_id') or message.author_id.id
-        for pid, active, pshare, notif, groups in res:
+        for pid, active, pshare, notif, groups, lang in res:
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pid:
                 if active is False:
                     continue
-                pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups or []}
+                pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups or [], 'lang': lang or self.env.context.get('lang', 'en_US')}
                 if notif == 'inbox':
                     recipients_data.append(dict(pdata, notif=notif, type='user'))
                 elif not pshare and notif:  # has an user and is not shared, is therefore user
@@ -2594,21 +2597,36 @@ class MailThread(models.AbstractModel):
         Groups has a default value that you can find in mail_thread
         ``_notify_classify_recipients`` method.
         """
-        return [
-            (
-                'user',
-                lambda pdata: pdata['type'] == 'user',
-                {}
-            ), (
-                'portal',
-                lambda pdata: pdata['type'] == 'portal',
-                {'has_button_access': False}
-            ), (
-                'customer',
-                lambda pdata: True,
-                {'has_button_access': False}
-            )
+        installed_langs = [code for code, _ in self.env['res.lang'].get_installed()]
+        groups = []
+        types = [
+            ('user', {}),
+            ('portal', {'has_button_access': False}),
+            ('customer', {'has_button_access': False}),
         ]
+
+        for lang_code in installed_langs:
+            for type_name, default_data in types:
+                groups.append((
+                    f'{type_name} ({lang_code})',
+                    lambda pdata, t=type_name, lang=lang_code: (
+                        pdata['type'] == t and (pdata.get('lang') == lang if 'lang' in pdata else True)
+                    ) if t != 'customer' else True,
+                    default_data.copy()
+                ))
+
+        return groups
+
+    @api.model
+    def _notify_get_view_title(self, msg_vals, model_name=None):
+        model = msg_vals and msg_vals.get('model')
+        if model:
+            model_name = (self._fallback_lang().env['ir.model']._get(model).display_name if model else False)
+        if model_name:
+            view_title = _('View %s', model_name)
+        else:
+            view_title = _('View')
+        return view_title
 
     def _notify_classify_recipients(self, recipient_data, model_name, msg_vals=None):
         """ Classify recipients to be notified of a message in groups to have
@@ -2646,10 +2664,7 @@ class MailThread(models.AbstractModel):
         groups = self._notify_get_groups(msg_vals=local_msg_vals)
         access_link = self._notify_get_action_link('view', **local_msg_vals)
 
-        if model_name:
-            view_title = _('View %s', model_name)
-        else:
-            view_title = _('View')
+        view_title = self._notify_get_view_title(msg_vals, model_name)
 
         # fill group_data with default_values if they are not complete
         for group_name, group_func, group_data in groups:
@@ -2668,6 +2683,10 @@ class MailThread(models.AbstractModel):
             for group_name, group_func, group_data in groups:
                 if group_func(recipient):
                     group_data['recipients'].append(recipient['id'])
+                    group_data['lang'] = recipient['lang'] if recipient.get('lang') else None
+                    if group_data['lang']:
+                        view_title = self.with_context(lang=group_data['lang'])._notify_get_view_title(msg_vals, model_name)
+                        group_data['button_access']['title'] = view_title
                     break
 
         result = []

@@ -63,9 +63,9 @@ class MailResendMessage(models.TransientModel):
                 record = self.env[message.model].browse(message.res_id) if message.is_thread_message() else self.env['mail.thread']
 
                 email_partners_data = []
-                for pid, active, pshare, notif, groups in self.env['mail.followers']._get_recipient_data(None, 'comment', False, pids=to_send.ids):
+                for pid, active, pshare, notif, groups, lang in self.env['mail.followers']._get_recipient_data(None, 'comment', False, pids=to_send.ids):
                     if pid and notif == 'email' or not notif:
-                        pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
+                        pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or [], lang: lang}
                         if not pshare and notif:  # has an user and is not shared, is therefore user
                             email_partners_data.append(dict(pdata, type='user'))
                         elif pshare and notif:  # has an user and is shared, is therefore portal

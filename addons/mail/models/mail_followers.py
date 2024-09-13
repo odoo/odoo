@@ -124,7 +124,8 @@ SELECT DISTINCT ON (pid) * FROM (
            partner.active as active,
            partner.partner_share as pshare,
            users.notification_type AS notif,
-           array_agg(groups_rel.gid) AS groups
+           array_agg(groups_rel.gid) AS groups,
+           partner.lang
       FROM res_partner partner
  LEFT JOIN res_users users ON users.partner_id = partner.id
                           AND users.active
@@ -145,7 +146,8 @@ ORDER BY pid, notif
 SELECT partner.id as pid,
     partner.active as active, partner.partner_share as pshare,
     users.notification_type AS notif,
-    array_agg(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
+    array_agg(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups,
+    partner.lang
 FROM res_partner partner
     LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
     LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id

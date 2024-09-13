@@ -15,10 +15,10 @@ class Followers(models.Model):
                 sms_pids = pids
             res = super(Followers, self)._get_recipient_data(records, message_type, subtype_id, pids=pids)
             new_res = []
-            for pid, active, pshare, notif, groups in res:
+            for pid, active, pshare, notif, groups, lang in res:
                 if pid and pid in sms_pids:
                     notif = 'sms'
-                new_res.append((pid, active, pshare, notif, groups))
+                new_res.append((pid, active, pshare, notif, groups, lang))
             return new_res
         else:
             return super(Followers, self)._get_recipient_data(records, message_type, subtype_id, pids=pids)

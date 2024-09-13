@@ -72,8 +72,8 @@ class Invite(models.TransientModel):
                 })
                 partners_data = []
                 recipient_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)
-                for pid, active, pshare, notif, groups in recipient_data:
-                    pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
+                for pid, active, pshare, notif, groups, lang in recipient_data:
+                    pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or [], lang: lang}
                     if not pshare and notif:  # has an user and is not shared, is therefore user
                         partners_data.append(dict(pdata, type='user'))
                     elif pshare and notif:  # has an user and is shared, is therefore portal

@@ -549,7 +549,7 @@ class Channel(models.Model):
         the noise. """
         groups = super(Channel, self)._notify_get_groups(msg_vals=msg_vals)
         for (index, (group_name, group_func, group_data)) in enumerate(groups):
-            if group_name != 'customer':
+            if 'customer' not in group_name:
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
