@@ -219,8 +219,8 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
 
     def test_register_payment_different_payment_types(self):
         """ Test that payment wizard correctly calculates duplicate_move_ids """
-        payment_1 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_1.ids).create({})
-        payment_2 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.in_invoice_1.ids).create({})
+        payment_1 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_1.ids).create({'payment_date': self.payment_in.date})
+        payment_2 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.in_invoice_1.ids).create({'payment_date': self.payment_out.date})
         existing_payment_in = self.payment_in
         existing_payment_out = self.payment_out
 
@@ -230,8 +230,8 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
 
     def test_register_payment_single_batch_duplicate_payments(self):
         """ Test that duplicate_move_ids is correctly calculated for single batches """
-        payment_1 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_1.ids).create({})
-        payment_2 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_2.ids).create({})
+        payment_1 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_1.ids).create({'payment_date': self.payment_in.date})
+        payment_2 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_2.ids).create({'payment_date': self.out_invoice_2.date})
         active_ids = (self.out_invoice_1 + self.out_invoice_2).ids
         combined_payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'amount': 50.0,  # amount can be changed manually
@@ -252,6 +252,6 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
         """
         self.bank_journal.outbound_payment_method_line_ids = None
         self.company.account_journal_payment_debit_account_id = None
-        payment_1 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_1.ids).create({})
+        payment_1 = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=self.out_invoice_1.ids).create({'payment_date': self.payment_in.date})
 
         self.assertRecordValues(payment_1, [{'duplicate_move_ids': [self.payment_in.move_id.id]}])
