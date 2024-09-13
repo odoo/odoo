@@ -33,7 +33,15 @@
             </xpath>
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning" role="alert" invisible="not l10n_in_tcs_tds_warning">
-                    <field name="l10n_in_tcs_tds_warning" readonly="1"/>
+                    <div>
+                        <field name="l10n_in_tcs_tds_warning" readonly="1"/>
+                    </div>
+                    <button name="button_l10n_in_apply_tcs_tax"
+                            class="oe_link ps-0 text-decoration-underline"
+                            type="object"
+                            string="Apply TCS"
+                            invisible="move_type != 'out_invoice'"
+                    />
                 </div>
             </xpath>
         </field>

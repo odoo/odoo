@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_in_pan_entity_view_form" model="ir.ui.view">
+        <field name="name">l10n_in.pan.entity.view.form</field>
+        <field name="model">l10n_in.pan.entity</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <div class="oe_title mb-3 mx-3 position-relative">
+                        <strong>
+                            <field name="pan_holder_type"/>
+                        </strong>
+                        <h1>
+                            <field name="name" placeholder="PAN Number" nolabel="1"></field>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Partners">
+                            <field name="partner_ids">
+                                <list>
+                                    <field name="complete_name" string="Name"/>
+                                    <field name="vat"/>
+                                    <field name="l10n_in_gst_treatment"/>
+                                    <field name="state_id"/>
+                                    <field name="country_id"/>
+                                    <field name="category_id" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_pan_entity_action" model="ir.actions.act_window">
+        <field name="name">PAN</field>
+        <field name="res_model">l10n_in.pan.entity</field>
+        <field name="view_mode">form</field>
+    </record>
+
+</odoo>

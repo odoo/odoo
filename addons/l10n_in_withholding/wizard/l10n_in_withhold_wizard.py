@@ -1,3 +1,4 @@
+from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import _, api, Command, fields, models
@@ -73,6 +74,7 @@ class L10nInWithholdWizard(models.TransientModel):
     withhold_line_ids = fields.One2many(
         comodel_name='l10n_in.withhold.wizard.line',
         inverse_name='withhold_id',
+        compute='_compute_withhold_line_ids',
         string="TDS Lines",
         readonly=False,
         store=True,
@@ -121,6 +123,28 @@ class L10nInWithholdWizard(models.TransientModel):
             elif wizard.related_payment_id and float_compare(wizard.related_payment_id.amount, sum(line.base for line in wizard.withhold_line_ids), precision_digits=precision) < 0:
                 warning_message = _("Warning: The base amount of TDS lines is greater than the untaxed amount of the %s", wizard.type_name)
             wizard.warning_message = warning_message
+
+    @api.depends('related_move_id')
+    def _compute_withhold_line_ids(self):
+        for wizard in self:
+            if wizard.related_move_id:
+                warning_sections = wizard.related_move_id._l10n_in_get_warning_sections()
+                group_by_section = wizard.related_move_id._l10n_in_group_by_section_alert()
+                if warning_sections:
+                    withhold_line_data = []
+                    pan_entity = wizard.related_move_id.commercial_partner_id.l10n_in_pan_entity_id
+                    invoice_date = wizard.related_move_id.invoice_date
+                    for section in warning_sections:
+                        if group_by_section.get(section):
+                            tax_id = section._get_applicable_tax_for_section(pan_entity, invoice_date)
+                            if tax_id:
+                                withhold_line_data.append(
+                                    Command.create({
+                                        'tax_id': tax_id.id,
+                                        'base': sum(line.price_subtotal for line in group_by_section[section])
+                                    })
+                                )
+                    wizard.withhold_line_ids = withhold_line_data
 
     def _get_withhold_type(self):
         if self.related_move_id:
