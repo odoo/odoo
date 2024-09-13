@@ -159,7 +159,7 @@ class HrEmployeeBase(models.AbstractModel):
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
             state = 'out_of_working_hour'
-            if employee.company_id.hr_presence_control_login:
+            if employee.company_id.sudo().hr_presence_control_login:
                 if 'online' in str(employee.user_id.im_status):
                     state = 'present'
                 elif 'offline' in str(employee.user_id.im_status) and employee.id in working_now_list:
