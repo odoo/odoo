@@ -63,8 +63,8 @@ class TestHSNsummary(TestTaxCommon):
         new_base_lines = []
         for base_line in base_lines:
             base_line = dict(base_line)
-            taxes = base_line['taxes']
-            base_line['taxes'] = [self._jsonify_tax(tax) for tax in taxes]
+            taxes = base_line['taxes_data']
+            base_line['taxes_data'] = [self._jsonify_tax(tax) for tax in taxes]
             base_line['product'] = self._jsonify_product(base_line['product'], taxes)
             base_line['uom'] = self._jsonify_uom(base_line['uom'])
             new_base_lines.append(base_line)
@@ -97,7 +97,7 @@ class TestHSNsummary(TestTaxCommon):
             'discount': discount,
             'product': product,
             'uom': uom,
-            'taxes': taxes or self.env['account.tax'],
+            'taxes_data': taxes or self.env['account.tax'],
         }
 
     def test_l10n_in_hsn_summary_1(self):
