@@ -74,9 +74,21 @@ class SaleOrderDiscount(models.TransientModel):
         self.ensure_one()
         discount_product = self.company_id.sale_discount_product_id
         if not discount_product:
-            self.company_id.sudo().sale_discount_product_id = self.env['product.product'].sudo().create(
-                self._prepare_discount_product_values()
-            )
+            if (
+                self.env['product.product'].has_access('create')
+                and self.company_id.has_access('write')
+                and self.company_id._filtered_access('write')
+                and self.company_id.check_field_access_rights('write', ['sale_discount_product_id'])
+            ):
+                self.company_id.sale_discount_product_id = self.env['product.product'].create(
+                    self._prepare_discount_product_values()
+                )
+            else:
+                raise ValidationError(_(
+                    "There does not seem to be any discount product configured for this company yet."
+                    " You can either use a per-line discount, or ask an administrator to grant the"
+                    " discount the first time."
+                ))
             discount_product = self.company_id.sale_discount_product_id
         return discount_product
 
