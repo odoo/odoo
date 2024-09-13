@@ -11,6 +11,7 @@
         }"
         t-on-keydown="onKeydown"
         tabindex="1"
+        t-ref="root"
     >
         <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall and thread, 'pt-2': !thread }">
             <t t-if="threadActions.actions.length > 3">
@@ -30,7 +31,7 @@
                             <t t-else="" t-set="actions" t-value="threadActions.actions.slice(1, -2)"/>
                             <DropdownItem t-foreach="actions" t-as="action" t-key="action.id"
                                 class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0'"
-                                attrs="{ title: action.name }"
+                                attrs="{ title: action.name, name: action.id }"
                                 onSelected="() => action.onSelect()"
                             >
                                 <i t-att-class="action.icon"/>
@@ -101,7 +102,10 @@
 </t>
 
 <t t-name="mail.ChatWindow.dropdownAction">
-    <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-class="itemClass" t-att-title="action.name" t-on-click.stop="() => action.onSelect()"><i t-att-class="action.icon"/></button>
+    <button class="o-mail-ChatWindow-command btn d-flex opacity-75 opacity-100-hover" t-attf-class="#{itemClass}" t-att-title="action.name" t-att-name="action.id" t-on-click.stop="() => action.onSelect()" t-att-class="{
+        'o-active': action.isActive,
+        'p-2': !ui.isSmall,
+    }"><i t-att-class="ui.isSmall ? action.iconLarge : action.icon"/></button>
 </t>
 
 <t t-name="mail.ChatWindow.headerContent">

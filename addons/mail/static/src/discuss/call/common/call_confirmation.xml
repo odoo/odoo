@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallConfirmation">
+        <div class="o-mail-CallConfirmation d-flex align-items-center justify-content-center p-2">
+            <span class="fw-bolder fst-italic text-muted" t-att-class="{ 'fs-5': ui.isSmall }">Start Call?</span>
+            <span class="me-2"/>
+            <div class="btn-group" t-att-class="{ 'btn-group-small': !ui.isSmall }">
+                <button class="btn btn-light border-success bg-success text-success" t-att-class="{ 'px-2 py-0': !ui.isSmall }" t-on-click="() => this.proceed()"><i class="fa fa-phone" t-att-class="{ 'fa-lg': ui.isSmall }"/></button>
+                <button class="btn btn-light border-danger bg-danger text-danger" t-att-class="{ 'px-2 py-0': !ui.isSmall }" t-on-click="() => this.props.close()"><i class="oi oi-close" t-att-class="{ 'fa-lg': ui.isSmall }"/></button>
+            </div>
+        </div>
+    </t>
+
+</templates>

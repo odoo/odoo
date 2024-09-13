@@ -47,6 +47,7 @@ threadActionsRegistry
             return component.props.chatWindow;
         },
         icon: "oi fa-fw oi-close",
+        iconLarge: "oi fa-fw fa-lg oi-close",
         name: _t("Close Chat Window (ESC)"),
         open(component) {
             component.close();
