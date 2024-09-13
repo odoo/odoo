@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryOne, waitFor, waitUntil } from "@odoo/hoot-dom";
+import { click, press, queryOne, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -306,6 +306,26 @@ test("Image transformation dissapear when selection change", async () => {
     for (const transfoContainer of transfoContainers) {
         transfoContainer.remove();
     }
+});
+
+test("Image transformation disappear on escape", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="${base64Img}">
+    `);
+    click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    let toolbar = document.querySelectorAll(".o-we-toolbar");
+    expect(toolbar.length).toBe(1);
+    click(".o-we-toolbar button[name='image_transform']");
+    await animationFrame();
+    toolbar = document.querySelectorAll(".o-we-toolbar");
+    expect(toolbar.length).toBe(0);
+    let transfoContainers = document.querySelectorAll(".transfo-container");
+    expect(transfoContainers.length).toBe(1);
+    press("escape");
+    await animationFrame();
+    transfoContainers = document.querySelectorAll(".transfo-container");
+    expect(transfoContainers.length).toBe(0);
 });
 
 test("Can delete an image", async () => {
