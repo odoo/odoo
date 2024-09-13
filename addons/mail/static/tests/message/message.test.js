@@ -85,7 +85,7 @@ test("Edit message (mobile)", async () => {
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message .fa-paper-plane-o");
-    await contains(".o-mail-Message-content", { text: "edited message" });
+    await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
 test("Editing message keeps the mentioned channels", async () => {
@@ -109,7 +109,7 @@ test("Editing message keeps the mentioned channels", async () => {
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-content", { text: "#other bye" });
+    await contains(".o-mail-Message-content", { text: "#other bye (edited)" });
     await click(".o_channel_redirect", { text: "#other" });
     await contains(".o-mail-Discuss-threadName", { value: "other" });
 });
@@ -130,7 +130,7 @@ test("Can edit message comment in chatter", async () => {
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-content", { text: "edited message" });
+    await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
 test("Can edit message comment in chatter (mobile)", async () => {
@@ -151,7 +151,7 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await contains("button", { text: "Discard editing" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click("button[aria-label='Save editing']");
-    await contains(".o-mail-Message-content", { text: "edited message" });
+    await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
 test("Cursor is at end of composer input on edit", async () => {
@@ -301,7 +301,7 @@ test("Edit and click save", async () => {
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
     await click(".o-mail-Message a", { text: "save" });
-    await contains(".o-mail-Message-body", { text: "Goodbye World" });
+    await contains(".o-mail-Message-body", { text: "Goodbye World (edited)" });
 });
 
 test("Do not call server on save if no changes", async () => {
@@ -398,7 +398,7 @@ test("mentions are kept when editing message", async () => {
     });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message", {
-        text: "Hi @Mitchell Admin",
+        text: "Hi @Mitchell Admin (edited)",
         contains: ["a.o_mail_redirect", { text: "@Mitchell Admin" }],
     });
 });
@@ -434,7 +434,7 @@ test("can add new mentions when editing message", async () => {
     await contains(".o-mail-Composer-input", { value: "Hello @TestPartner " });
     await click(".o-mail-Message a", { text: "save" });
     await contains(".o-mail-Message", {
-        text: "Hello @TestPartner",
+        text: "Hello @TestPartner (edited)",
         contains: ["a.o_mail_redirect", { text: "@TestPartner" }],
     });
 });
@@ -505,7 +505,7 @@ test("Updating the parent message of a reply also updates the visual of the repl
         replace: true,
     });
     triggerHotkey("Enter");
-    await contains(".o-mail-MessageInReply-message", { text: "Goodbye World" });
+    await contains(".o-mail-MessageInReply-message", { text: "Goodbye World (edited)" });
 });
 
 test("Deleting parent message of a reply should adapt reply visual", async () => {
@@ -1577,6 +1577,11 @@ test("message considered empty", async () => {
         },
         {
             body: "<p>   </p>  ",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: '<span class="o-mail-Message-edited"></span>',
             model: "discuss.channel",
             res_id: channelId,
         },

@@ -692,7 +692,11 @@ async function mail_message_update_content(request) {
 
     const { attachment_ids, body, message_id } = await parseRequestParams(request);
     const [message] = MailMessage.browse(message_id);
-    const msg_values = { body };
+    const msg_values = {};
+    if (body !== null) {
+        const edit_label = "<span class='o-mail-Message-edited'/>";
+        msg_values.body = body === "" && attachment_ids.length === 0 ? "" : body + edit_label;
+    }
     if (attachment_ids.length === 0) {
         IrAttachment.unlink(message.attachment_ids);
     } else {

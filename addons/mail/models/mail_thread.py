@@ -4503,9 +4503,14 @@ class MailThread(models.AbstractModel):
         if strict:
             self._check_can_update_message_content(message.sudo())
 
-        msg_values = {
-            'body': escape(body),  # keep html if already Markup, otherwise escape
-        } if body is not None else {}
+        msg_values = {}
+        if body is not None:
+            msg_values["body"] = (
+                # keep html if already Markup, otherwise escape
+                escape(body) + Markup("<span class='o-mail-Message-edited'/>")
+                if body or not message._filter_empty()
+                else ""
+            )
         if attachment_ids:
             msg_values.update(
                 self._process_attachments_for_post([], attachment_ids, {
@@ -4545,7 +4550,7 @@ class MailThread(models.AbstractModel):
             "recipients": Store.many(message.partner_ids, fields=["name", "write_date"]),
             "write_date": message.write_date,
         }
-        if "body" in msg_values:
+        if body is not None:
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res["translationValue"] = False
