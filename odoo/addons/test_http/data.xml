@@ -47,18 +47,23 @@
             <field name="galaxy_id" ref="test_http.milky_way"/>
             <field name="glyph_attach" type="base64" file="test_http/static/src/img/gizeh.png"/>
             <field name="glyph_inline" type="base64" file="test_http/static/src/img/gizeh.png"/>
+            <field name="last_use_date">2020-03-15</field>
         </record>
 
         <record id="abydos" model="test_http.stargate">
             <field name="name">Abydos</field>
             <field name="address">r7fwcu</field>
             <field name="galaxy_id" ref="test_http.milky_way"/>
+            <field name="availability">0.91</field>
+            <field name="last_use_date">2020-03-04</field>
         </record>
 
         <record id="dakara" model="test_http.stargate">
             <field name="name">Dakara</field>
             <field name="address">gs38x4</field>
             <field name="galaxy_id" ref="test_http.milky_way"/>
+            <field name="availability">0.95</field>
+            <field name="last_use_date">2020-01-04</field>
         </record>
 
         <record id="lantea" model="test_http.stargate">
@@ -66,6 +71,7 @@
             <field name="address">u6iz7d</field>
             <field name="galaxy_id" ref="test_http.pegasus"/>
             <field name="has_galaxy_crystal" eval="True"/>
+            <field name="last_use_date">2020-01-08</field>
         </record>
 
         <record id="athos" model="test_http.stargate">

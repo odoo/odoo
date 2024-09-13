@@ -70,4 +70,49 @@
             </form>
         </field>
     </record>
+
+    <record id="test_http_stargate_pivot" model="ir.ui.view">
+        <field name="model">test_http.stargate</field>
+        <field name="arch" type="xml">
+            <pivot string="Stargate">
+                <field name="galaxy_id" type="row"/>
+                <field name="has_galaxy_crystal" type="col"/>
+                <field name="availability" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="test_http_stargate_graph" model="ir.ui.view">
+        <field name="model">test_http.stargate</field>
+        <field name="arch" type="xml">
+            <graph string="Stargate">
+                <field name="galaxy_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="test_http_stargate_activity" model="ir.ui.view">
+        <field name="model">test_http.stargate</field>
+        <field name="arch" type="xml">
+            <activity string="Stargate">
+                <field name="galaxy_id"/>
+            </activity>
+        </field>
+    </record>
+
+    <record id="test_http_stargate_calendar" model="ir.ui.view">
+        <field name="model">test_http.stargate</field>
+        <field name="arch" type="xml">
+            <calendar string="Stargate" create="0" date_start="last_use_date">
+                <field name="galaxy_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_window_stargate" model="ir.actions.act_window">
+        <field name="name">Stargate</field>
+        <field name="res_model">test_http.stargate</field>
+        <field name="view_mode">list,form,pivot,graph,activity,calendar</field>
+    </record>
+
 </odoo>
