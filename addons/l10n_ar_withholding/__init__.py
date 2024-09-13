@@ -29,7 +29,7 @@ def _l10n_ar_withholding_post_init(env):
             company_chart_template._deref_account_tags(template_code, data['account.tax'])
             company_chart_template._pre_reload_data(company, {}, data)
             company_chart_template._load_data(data)
-            company.l10n_ar_tax_base_account_id = env.ref('account.%i_base_tax_account' % company.id)
+            company.l10n_account_withholding_tax_base_account_id = env.ref('account.%i_base_tax_account' % company.id)
 
             if env.ref('base.module_l10n_ar_withholding').demo:
                 env['account.chart.template']._post_load_demo_data(company)

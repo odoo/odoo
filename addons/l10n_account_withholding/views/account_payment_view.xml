@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <notebook name="payment_notebook" position="inside">
+                <page string="Withholding Lines" invisible="not l10n_account_withholding_line_ids">
+                    <group>
+                        <field name="l10n_account_withholding_line_ids" nolabel="1" colspan="2" readonly="True">
+                            <list>
+                                <field name="move_name" column_invisible="True"/>
+                                <field name="tax_line_id" string="Tax"/>
+                                <field name="name" string="Withholding Number" required="1"/>
+                                <field name="amount_currency" readonly="0" required="1" string="Amount" sum="Total"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

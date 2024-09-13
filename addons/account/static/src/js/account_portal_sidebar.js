@@ -69,3 +69,5 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
         this._printIframeContent(href);
     },
 });
+
+export default publicWidget.registry.AccountPortalSidebar;
