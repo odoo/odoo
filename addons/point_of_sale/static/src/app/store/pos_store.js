@@ -717,8 +717,8 @@ export class PosStore extends Reactive {
         if (!values.product_id.isCombo() && vals.price_unit === undefined) {
             values.price_unit = values.product_id.get_price(order.pricelist_id, values.qty);
         }
-
-        if (values.price_extra) {
+        const isScannedProduct = opts.code && opts.code.type === "product";
+        if (values.price_extra && !isScannedProduct) {
             const price = values.product_id.get_price(
                 order.pricelist_id,
                 values.qty,
