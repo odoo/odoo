@@ -9,6 +9,7 @@ import {
     loadImageInfo,
     applyModifications,
 } from "@web_editor/js/editor/image_processing";
+import weUtils from "@web_editor/js/common/utils";
 
 /**
  * This class provides layout methods for interacting with the ImageGallery
@@ -502,17 +503,17 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                         }).appendTo($container);
                         const imgEl = $img[0];
                         imagePromises.push(new Promise(resolve => {
-                            loadImageInfo(imgEl).then(() => {
-                                if (imgEl.dataset.mimetype && ![
+                            const editableEl = imgEl.closest(".o_editable");
+                            loadImageInfo(imgEl, this.options.wysiwyg._getRecordInfo(editableEl)).then(() => {
+                                this.imageData = weUtils.getImageData(imgEl,);
+                                if (this.imageData.mimetype && ![
                                     "image/gif",
                                     "image/svg+xml",
                                     "image/webp",
-                                ].includes(imgEl.dataset.mimetype)) {
+                                ].includes(this.imageData.mimetype)) {
                                     // Convert to webp but keep original width.
-                                    imgEl.dataset.mimetype = "image/webp";
-                                    applyModifications(imgEl, {
-                                        mimetype: "image/webp",
-                                    }).then(src => {
+                                    this.imageData.mimetype = "image/webp";
+                                    applyModifications(this.imageData).then(src => {
                                         imgEl.src = src;
                                         imgEl.classList.add("o_modified_image_to_save");
                                         resolve();

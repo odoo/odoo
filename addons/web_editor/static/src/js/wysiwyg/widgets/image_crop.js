@@ -2,6 +2,7 @@
 
 import {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} from "@web_editor/js/editor/image_processing";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import {
     Component,
     useRef,
@@ -13,6 +14,7 @@ import {
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
+import weUtils from "@web_editor/js/common/utils";
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
@@ -21,6 +23,7 @@ export class ImageCrop extends Component {
         activeOnStart: { type: Boolean, optional: true },
         media: { optional: true },
         mimetype: { type: String, optional: true },
+        getRecordInfo: { type: Function },
     };
     static defaultProps = {
         activeOnStart: false,
@@ -79,6 +82,8 @@ export class ImageCrop extends Component {
             this.elRef.el.ownerDocument.removeEventListener('keydown', this._onDocumentKeydown, {capture: true});
         }
         this.media.setAttribute('src', this.initialSrc);
+        // Update the registry as the img src changes
+        weUtils.updateImageDataRegistry(this.initialSrc, this.imageData);
         this.$media.trigger('image_cropper_destroyed');
         this.state.active = false;
     }
@@ -139,21 +144,23 @@ export class ImageCrop extends Component {
         this.document = this.media.ownerDocument;
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         const src = this.media.getAttribute('src');
-        const data = {...this.media.dataset};
         this.initialSrc = src;
-        this.aspectRatio = data.aspectRatio || "0/0";
-        const mimetype = data.mimetype ||
+        if (!registry.category("image.data").get(src, undefined)) {
+            const editableEl = this.media.closest(".o_editable");
+            await loadImageInfo(this.media, props.getRecordInfo(editableEl));
+        }
+        this.imageData = weUtils.getImageData(this.media);
+        this.aspectRatio = this.imageData.aspect_ratio || "0/0";
+        const mimetype = this.imageData.mimetype ||
                 src.endsWith('.png') ? 'image/png' :
                 src.endsWith('.webp') ? 'image/webp' :
                 'image/jpeg';
         this.mimetype = this.props.mimetype || mimetype;
-
-        await loadImageInfo(this.media);
-        const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.media.dataset.originalSrc);
+        const isIllustration = /^\/web_editor\/shape\/illustration\//.test(this.imageData.original_src);
         this.uncroppable = false;
-        if (this.media.dataset.originalSrc && !isIllustration) {
-            this.originalSrc = this.media.dataset.originalSrc;
-            this.originalId = this.media.dataset.originalId;
+        if (this.imageData.original_src && !isIllustration) {
+            this.originalSrc = this.imageData.original_src;
+            this.originalId = this.imageData.original_id;
         } else {
             // Couldn't find an attachment: not croppable.
             this.uncroppable = true;
@@ -198,7 +205,7 @@ export class ImageCrop extends Component {
 
         // We need to remove the d-none class for the cropper library to work.
         this.elRef.el.classList.remove('d-none');
-        await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.media.dataset);
+        await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.imageData);
 
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onDocumentKeydown = this._onDocumentKeydown.bind(this);
@@ -221,16 +228,16 @@ export class ImageCrop extends Component {
         this.media.classList.add('o_modified_image_to_save');
 
         [...cropperDataFields, 'aspectRatio'].forEach(attr => {
-            delete this.media.dataset[attr];
+            delete this.imageData[weUtils.convertCamelToSnakeString(attr)];
             const value = this._getAttributeValue(attr);
             if (value) {
-                this.media.dataset[attr] = value;
+                this.imageData[weUtils.convertCamelToSnakeString(attr)] = value;
             }
         });
-        delete this.media.dataset.resizeWidth;
-        this.initialSrc = await applyModifications(this.media, {forceModification: true, mimetype: this.mimetype});
+        delete this.imageData.resize_width;
+        this.initialSrc = await applyModifications(this.imageData, {forceModification: true, mimetype: this.mimetype});
         const cropped = this.aspectRatio !== "0/0";
-        this.media.classList.toggle('o_we_image_cropped', cropped);
+        this.imageData.is_cropped = cropped;
         if(refreshOptions){
             this.$media.trigger('image_cropped');
         }

@@ -215,7 +215,7 @@ class HTML_Editor(http.Controller):
         context.pop('allowed_company_ids', None)
         request.update_env(context=context)
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', verify_mimetype=True):
         """Create and return a new attachment."""
         IrAttachment = request.env['ir.attachment']
 
@@ -247,15 +247,16 @@ class HTML_Editor(http.Controller):
                 'type': 'url',
                 'url': url,
             })
-            # The code issues a HEAD request to retrieve headers from the URL.
-            # This approach is beneficial when the URL doesn't conclude with an
-            # image extension. By verifying the MIME type, the code ensures that
-            # only supported image types are incorporated into the data.
-            response = requests.head(url, timeout=10)
-            if response.status_code == 200:
-                mime_type = response.headers['content-type']
-                if mime_type in SUPPORTED_IMAGE_MIMETYPES:
-                    attachment_data['mimetype'] = mime_type
+            if verify_mimetype:
+                # The code issues a HEAD request to retrieve headers from the URL.
+                # This approach is beneficial when the URL doesn't conclude with an
+                # image extension. By verifying the MIME type, the code ensures that
+                # only supported image types are incorporated into the data.
+                response = requests.head(url, timeout=10)
+                if response.status_code == 200:
+                    mime_type = response.headers['content-type']
+                    if mime_type in SUPPORTED_IMAGE_MIMETYPES:
+                        attachment_data['mimetype'] = mime_type
         else:
             raise UserError(_("You need to specify either data or url to create an attachment."))
 
@@ -278,12 +279,91 @@ class HTML_Editor(http.Controller):
 
         return attachment
 
-    @http.route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='json', auth='user', website=True)
-    def get_image_info(self, src=''):
-        """This route is used to determine the information of an attachment so that
-        it can be used as a base to modify it again (crop/optimization/filters).
+    def _get_image_data_res_info(self, res_model, res_id, res_field='', res_type='', new_attachment_id=None, src='', src_before_hover=''):
         """
-        attachment = None
+        Returns the information needed to identify the 'html_editor.image.data'
+        record to update if 'new_attachment_id' is set (if the image is being
+        saved). Otherwise, returns the information needed to identify a
+        'html_editor.image.data' record linked to an image.
+
+        Args:
+            res_model (str): The name of the model of the editable element
+                             closest to the image.
+            res_id (int): The id of the editable element closest to the image.
+            (optional) res_field (str): The name of the field of the editable
+                                        element closest to the image.
+            (optional) res_type (str): The type of the editable element closest
+                                       to the image.
+            (optional) new_attachment_id (int): The id of the attachment created
+                                                if the image is being saved.
+            (optional) src (str): The source of the image if it is not being
+                                  saved.
+            (optional) src_before_hover (str): The src of the image before an
+                                               hover effect was applied.
+
+        Returns:
+            dict: A dictionary that contains the information needed to identify
+                  the wanted 'html_editor.image.data' record.
+        """
+        image_data_res_model = res_model if res_type == 'image' else 'ir.attachment'
+        image_data_res_field = res_field if res_type == 'image' else 'datas'
+        save_modified_image = bool(new_attachment_id)
+        if save_modified_image:
+            image_data_res_id = res_id if res_type == 'image' else new_attachment_id
+        else:
+            image_data_res_id = res_id
+            if res_type != 'image':
+                # The image is not a field. Search for a potential id of an
+                # attachment linked to a modified image.
+                resIdRegex = r'/(?:web/image|unsplash/[^/]*?)/(\d+|[^\s/]+)'
+                matched_src = re.search(resIdRegex, src) or re.search(resIdRegex, src_before_hover)
+                image_data_res_id = matched_src and matched_src.group(1)
+            if isinstance(image_data_res_id, str) and image_data_res_id.isdigit():
+                image_data_res_id = int(image_data_res_id)
+        return {
+            'image_data_res_model': image_data_res_model,
+            'image_data_res_id': image_data_res_id,
+            'image_data_res_field': image_data_res_field,
+        }
+
+    @http.route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='json', auth='user', website=True)
+    def get_image_info(self, res_model='', res_id=None, res_field='', res_type='', search_image_data=True, src='', src_before_hover=''):
+        """Returns the image data (mimetype, image options etc...) of a modified
+        image. If the image has never been modified, it returns the mimetype,
+        the image source and the id of the original attachment linked to the
+        image so that it can be used as a base to modify it (crop/optimization/
+        filters).
+
+        Args:
+            (optional) res_model (str): The name of the model of the editable
+                                        element closest to the image.
+            (optional) res_id (int): The id of the editable element closest to
+                                     the image.
+            (optional) res_field (str): The name of the field of the editable
+                                        element closest to the image.
+            (optional) res_type (str): The type of the editable element closest
+                                       to the image.
+            (optional) search_image_data (bool) : If a 'html_editor.image.data'
+                                                  record has to be searched.
+            (optional) src (str): The src of the image.
+            (optional) src_before_hover (str): The src of the image before an
+                                               hover effect was applied.
+
+        Returns:
+            dict: A dictionary of the image data.
+        """
+        image_data_res_info = self._get_image_data_res_info(res_model=res_model, res_id=res_id, res_field=res_field, res_type=res_type, src=src, src_before_hover=src_before_hover)
+        image_data_res_id = image_data_res_info['image_data_res_id']
+        if isinstance(image_data_res_id, int) and search_image_data:
+            # image_data_res_id could be a string (e.g. xmlid). In this case, do
+            # not search for an image.data record as the image has never been
+            # modified.
+            image_data = request.env['html_editor.image.data']._search_and_get_image_data(image_data_res_info['image_data_res_model'], image_data_res_info['image_data_res_id'], image_data_res_info['image_data_res_field'])
+            if len(image_data):
+                return image_data
+        # If no image data is linked to the image, it means that it has never
+        # been modified. Search for the original attachment.
+        original_attachment = None
         if src.startswith('/web/image'):
             with contextlib.suppress(werkzeug.exceptions.NotFound, MissingError):
                 _, args = request.env['ir.http']._match(src)
@@ -293,23 +373,26 @@ class HTML_Editor(http.Controller):
                     res_id=args.get('id'),
                 )
                 if record._name == 'ir.attachment':
-                    attachment = record
-        if not attachment:
+                    original_attachment = record
+        if not original_attachment:
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
-            attachment = request.env['ir.attachment'].search([
+            original_attachment = request.env['ir.attachment'].search([
                 '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
                 ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
             ], limit=1)
-        if not attachment:
-            return {
-                'attachment': False,
-                'original': False,
-            }
-        return {
-            'attachment': attachment.read(['id'])[0],
-            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
-        }
+        if original_attachment:
+            original_attachment_info = original_attachment.read(['id', 'image_src', 'mimetype'])[0]
+            # The "redirect" check is for when it is a redirect image attachment
+            # due to an external URL upload.
+            if original_attachment_info['image_src'] and not re.search(r'/web/image/\d+-redirect/', original_attachment_info['image_src']):
+                return {
+                    'original_src': original_attachment_info['image_src'],
+                    'mimetype': original_attachment_info['mimetype'],
+                    'mimetype_before_format_conversion': original_attachment_info['mimetype'],
+                    'original_id': original_attachment_info['id'],
+                }
+        return False
 
     @http.route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='json', auth='user', website=True)
     def video_url_data(self, video_url, autoplay=False, loop=False,
@@ -354,12 +437,60 @@ class HTML_Editor(http.Controller):
         attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
-    @http.route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="json", auth="user", website=True)
-    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None):
+    @http.route([
+                '/web_editor/modify_image/',
+                '/web_editor/modify_image/<model("ir.attachment"):attachment>',
+                '/html_editor/modify_image/<model("ir.attachment"):attachment>',
+                ], type="json", auth="user", website=True)
+    def modify_image(self, attachment=None, res_model=None, res_id=None, res_field=None, res_type=None, name=None, data=None, mimetype=None, alt_data=None, saved_image_data=None):
         """
-        Creates a modified copy of an attachment and returns its image_src to be
-        inserted into the DOM.
+        Creates a modified copy of an attachment, updates (or creates) the
+        data record linked to the image and returns its image_src to be inserted
+        into the DOM.
+
+        Args:
+            (optional) attachment (ir.attachment): The original attachment of
+                                                   the modified image.
+            (optional) res_model (str): The name of the model of the editable
+                                        element closest to the image.
+            (optional) res_id (int): The id of the editable element closest to
+                                     the image.
+            (optional) res_field (str): The name of the field of the editable
+                                        element closest to the image.
+            (optional) res_type (str): The type of the editable element closest
+                                       to the image.
+            (optional) name (str): The name of the copied attachment.
+            (optional) data (str): The raw base64 data of the modified image.
+            (optional) mimetype (str): The current mimetype of the modified
+                                       image.
+            (optional) alt_data (str): Alternative sizes and format for reports.
+            (optional) saved_image_data (dict): The data of the modified image.
+
+        Returns:
+            str: The new image source to be inserted on the DOM.
         """
+        if not attachment:
+            # Create an original attachment first.
+            if res_type != 'image':
+                # Default image used in a view: create an "url" attachment
+                attachment = self._attachment_create(url=saved_image_data['original_src'], verify_mimetype=False)
+            else:
+                # Default image field or image field modified from the backend:
+                # create a "data" attachment.
+                mimetype_original = saved_image_data['mimetype_before_format_conversion']
+                name_original = '%s-%s%s' % (
+                    datetime.now().strftime('%Y%m%d%H%M%S'),
+                    str(uuid.uuid4())[:6],
+                    SUPPORTED_IMAGE_MIMETYPES[mimetype_original],
+                )
+                attachment = self._attachment_create(
+                    name=name_original,
+                    data=b64decode(request.env[res_model].browse(res_id)[res_field]),
+                    res_id=res_id,
+                    res_model=res_model,
+                )
+            saved_image_data['original_id'] = attachment.id
+
         fields = {
             'original_id': attachment.id,
             'datas': data,
@@ -413,6 +544,15 @@ class HTML_Editor(http.Controller):
                 url_fragments = attachment.url.split('/')
                 url_fragments.insert(-1, str(attachment.id))
                 attachment.url = '/'.join(url_fragments)
+
+        # Update the image.data record
+        saved_image_data['image_checksum'] = attachment.checksum
+        image_data_res_info = self._get_image_data_res_info(res_model=res_model, res_id=res_id, res_field=res_field, res_type=res_type, new_attachment_id=attachment.id)
+        image_data_res_model = image_data_res_info['image_data_res_model']
+        image_data_res_field = image_data_res_info['image_data_res_field']
+        image_data_res_id = image_data_res_info['image_data_res_id']
+        request.env['html_editor.image.data']._search_and_update_image_data(image_data_res_model, image_data_res_id, image_data_res_field, saved_image_data)
+
         if attachment.public:
             return attachment.image_src
         attachment.generate_access_token()

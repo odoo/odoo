@@ -5,9 +5,10 @@ import {
     isProtected,
     isProtecting,
 } from "@html_editor/utils/dom_info";
-import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
+import { backgroundImageCssToParts, backgroundImagePartsToCss, getBgImageURL, getImageData, updateImageDataRegistry } from "@html_editor/utils/image";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { rightPos } from "@html_editor/utils/position";
 
@@ -130,6 +131,13 @@ export class MediaPlugin extends Plugin {
         }
     }
 
+    destroy() {
+        // Remove the "image.data" entries from the registry
+        const imageData = registry.category("image.data").getEntries();
+        imageData.forEach((imageDataEntry) => registry.category("image.data").remove(imageDataEntry[0]));
+        super.destroy();
+    }
+
     onSaveMediaDialog(element, { node, restoreSelection }) {
         restoreSelection();
         if (!element) {
@@ -164,13 +172,13 @@ export class MediaPlugin extends Plugin {
         const restoreSelection = () => {
             this.shared.setSelection(selection);
         };
-        const { resModel, resId, field, type } = this.recordInfo;
+        const { resModel, resId, resField, type } = this.recordInfo;
         this.services.dialog.add(MediaDialog, {
             resModel,
             resId,
             useMediaLibrary: !!(
-                field &&
-                ((resModel === "ir.ui.view" && field === "arch") || type === "html")
+                resField &&
+                ((resModel === "ir.ui.view" && resField === "arch") || type === "html")
             ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
             media: params.node,
             save: (element) => {
@@ -187,7 +195,7 @@ export class MediaPlugin extends Plugin {
 
     async savePendingImages() {
         const editableEl = this.editable;
-        const { resModel, resId } = this.recordInfo;
+        const { resModel, resId, resField, type } = this.recordInfo;
         // When saving a webp, o_b64_image_to_save is turned into
         // o_modified_image_to_save by saveB64Image to request the saving
         // of the pre-converted webp resizes and all the equivalent jpgs.
@@ -200,7 +208,7 @@ export class MediaPlugin extends Plugin {
                     // the correct "resModel" and "resId" parameters.
                     return;
                 }
-                await this.saveB64Image(el, resModel, resId);
+                await this.saveB64Image(el, resModel, resId, resField, type);
             }
         );
         const modifiedProms = [...editableEl.querySelectorAll(".o_modified_image_to_save")].map(
@@ -212,7 +220,7 @@ export class MediaPlugin extends Plugin {
                     // with the correct "resModel" and "resId" parameters.
                     return;
                 }
-                await this.saveModifiedImage(el, resModel, resId);
+                await this.saveModifiedImage(el, resModel, resId, resField, type);
             }
         );
         const proms = [...b64Proms, ...modifiedProms];
@@ -223,9 +231,9 @@ export class MediaPlugin extends Plugin {
         return hasChange;
     }
 
-    createAttachment({ el, imageData, resModel, resId }) {
+    createAttachment({ fileName, imageData, resModel, resId }) {
         return rpc("/html_editor/attachment/add_data", {
-            name: el.dataset.fileName || "",
+            name: fileName || "",
             data: imageData,
             is_image: true,
             res_model: resModel,
@@ -241,8 +249,11 @@ export class MediaPlugin extends Plugin {
      * @param {Element} el
      * @param {string} resModel
      * @param {number} resId
+     * @param {string} resField
+     * @param {string} type
      */
-    async saveB64Image(el, resModel, resId) {
+    async saveB64Image(el, resModel, resId, resField, type) {
+        const imageOptions = getImageData(el);
         const imageData = el.getAttribute("src").split("base64,")[1];
         if (!imageData) {
             // Checks if the image is in base64 format for RPC call. Relying
@@ -251,8 +262,9 @@ export class MediaPlugin extends Plugin {
             el.classList.remove("o_b64_image_to_save");
             return;
         }
+        const fileName = imageOptions.file_name;
         const attachment = await this.createAttachment({
-            el,
+            fileName,
             imageData,
             resId,
             resModel,
@@ -261,11 +273,11 @@ export class MediaPlugin extends Plugin {
             return;
         }
         if (attachment.mimetype === "image/webp") {
-            el.classList.add("o_modified_image_to_save");
-            el.dataset.originalId = attachment.id;
-            el.dataset.mimetype = attachment.mimetype;
-            el.dataset.fileName = attachment.name;
-            return this.saveModifiedImage(el, resModel, resId);
+            imageOptions.original_id = attachment.id;
+            imageOptions.mimetype = attachment.mimetype;
+            imageOptions.file_name = attachment.name;
+            updateImageDataRegistry(el.getAttribute("src"), imageOptions);
+            return this.saveModifiedImage(el, resModel, resId, resField, type);
         } else {
             let src = attachment.image_src;
             if (!attachment.public) {
@@ -292,18 +304,20 @@ export class MediaPlugin extends Plugin {
      * @param {string} resModel
      * @param {number} resId
      */
-    async saveModifiedImage(el, resModel, resId) {
+    async saveModifiedImage(el, resModel, resId, resField, type) {
         const isBackground = !el.matches("img");
+        const imgSrc = isBackground ? getBgImageURL(el) : el.getAttribute("src");
+        const imageData = registry.category("image.data").get(imgSrc, {});
         // Modifying an image always creates a copy of the original, even if
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.
         let altData = undefined;
         const isImageField = !!el.closest("[data-oe-type=image]");
-        if (el.dataset.mimetype === "image/webp" && isImageField) {
+        if (imageData.mimetype === "image/webp" && isImageField) {
             // Generate alternate sizes and format for reports.
             altData = {};
             const image = document.createElement("img");
-            image.src = isBackground ? el.dataset.bgSrc : el.getAttribute("src");
+            image.src = imgSrc;
             await new Promise((resolve) => image.addEventListener("load", resolve));
             const originalSize = Math.max(image.width, image.height);
             const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
@@ -336,17 +350,21 @@ export class MediaPlugin extends Plugin {
                 }
             }
         }
+        const originalAttachmentId = imageData.original_id ? encodeURIComponent(imageData.original_id) : "";
         const newAttachmentSrc = await rpc(
-            `/html_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
+            `/html_editor/modify_image/${originalAttachmentId}`,
             {
                 res_model: resModel,
                 res_id: parseInt(resId),
-                data: (isBackground ? el.dataset.bgSrc : el.getAttribute("src")).split(",")[1],
+                res_field: resField,
+                data: imgSrc.split(',')[1],
                 alt_data: altData,
                 mimetype: isBackground
-                    ? el.dataset.mimetype
+                    ? imageData.mimetype
                     : el.getAttribute("src").split(":")[1].split(";")[0],
-                name: el.dataset.fileName ? el.dataset.fileName : null,
+                name: imageData.file_name ? imageData.file_name : null,
+                saved_image_data: imageData,
+                res_type: type,
             }
         );
         el.classList.remove("o_modified_image_to_save");
@@ -355,7 +373,6 @@ export class MediaPlugin extends Plugin {
             parts.url = `url('${newAttachmentSrc}')`;
             const combined = backgroundImagePartsToCss(parts);
             el.style["background-image"] = combined;
-            delete el.dataset.bgSrc;
         } else {
             el.setAttribute("src", newAttachmentSrc);
         }

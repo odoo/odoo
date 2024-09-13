@@ -593,7 +593,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             txt: "<p class='test_target'><br></p>",
         });
         serverData.models["ir.attachment"] = wysiwygData({})["ir.attachment"];
-        const imageRecord = serverData.models["ir.attachment"].records[0];
         // Method to get the html of a cropped image.
         // Use `data-src` instead of `src` when the SRC is an URL that would
         // make a call to the server.
@@ -602,14 +601,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
                 <p>
                     <img
                         class="img img-fluid o_we_custom_image o_we_image_cropped${isModified ? ' o_modified_image_to_save' : ''}"
-                        data-original-id="${imageRecord.id}"
-                        data-original-src="${imageRecord.image_src}"
-                        data-mimetype="image/png"
-                        data-width="50"
-                        data-height="50"
-                        data-scale-x="1"
-                        data-scale-y="1"
-                        data-aspect-ratio="0/0"
                         ${src.startsWith("/web") ? 'data-src="' : 'src="'}${src}"
                     >
                     <br>
@@ -636,7 +627,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             ) {
                 assert.ok(false, "write should only be called through sendBeacon");
             } else if (
-                route === `/web_editor/modify_image/${imageRecord.id}`
+                route === `/web_editor/modify_image/`
             ) {
                 if (modifyImageCount === 0) {
                     assert.equal(args.res_model, 'partner');

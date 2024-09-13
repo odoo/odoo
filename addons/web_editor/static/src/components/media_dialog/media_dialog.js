@@ -3,6 +3,8 @@ import { useService, useChildRef } from '@web/core/utils/hooks';
 import { Mutex } from "@web/core/utils/concurrency";
 import { Dialog } from '@web/core/dialog/dialog';
 import { Notebook } from '@web/core/notebook/notebook';
+import { registry } from "@web/core/registry";
+import weUtils from "@web_editor/js/common/utils";
 import { ImageSelector } from './image_selector';
 import { DocumentSelector } from './document_selector';
 import { IconSelector } from './icon_selector';
@@ -177,33 +179,27 @@ export class MediaDialog extends Component {
                     element.setAttribute('style', style);
                 }
                 if (this.state.activeTab === TABS.IMAGES.id) {
-                    if (this.props.media.dataset.shape) {
-                        element.dataset.shape = this.props.media.dataset.shape;
+                    const oldImageData = weUtils.getImageData(this.props.media);
+                    const newImageData = {};
+                    const optionsToSave = ["shape", "shape_colors", "shape_flip", "shape_rotate",
+                        "hover_effect", "hover_effect_color", "hover_effect_stroke_width",
+                        "hover_effect_intensity", "shape_animation_speed"];
+                    for (const option of optionsToSave) {
+                        if (oldImageData[option]) {
+                            newImageData[option] = oldImageData[option];
+                            if (weUtils.isDatasetImageOption(option)) {
+                                // Options to put in the dataset
+                                element.dataset[weUtils.convertSnakeToCamelString(option)] = oldImageData[option];
+                            }
+                        }
                     }
-                    if (this.props.media.dataset.shapeColors) {
-                        element.dataset.shapeColors = this.props.media.dataset.shapeColors;
-                    }
-                    if (this.props.media.dataset.shapeFlip) {
-                        element.dataset.shapeFlip = this.props.media.dataset.shapeFlip;
-                    }
-                    if (this.props.media.dataset.shapeRotate) {
-                        element.dataset.shapeRotate = this.props.media.dataset.shapeRotate;
-                    }
-                    if (this.props.media.dataset.hoverEffect) {
-                        element.dataset.hoverEffect = this.props.media.dataset.hoverEffect;
-                    }
-                    if (this.props.media.dataset.hoverEffectColor) {
-                        element.dataset.hoverEffectColor = this.props.media.dataset.hoverEffectColor;
-                    }
-                    if (this.props.media.dataset.hoverEffectStrokeWidth) {
-                        element.dataset.hoverEffectStrokeWidth = this.props.media.dataset.hoverEffectStrokeWidth;
-                    }
-                    if (this.props.media.dataset.hoverEffectIntensity) {
-                        element.dataset.hoverEffectIntensity = this.props.media.dataset.hoverEffectIntensity;
-                    }
-                    if (this.props.media.dataset.shapeAnimationSpeed) {
-                        element.dataset.shapeAnimationSpeed = this.props.media.dataset.shapeAnimationSpeed;
-                    }
+                    // Update the "pre.image.data" registry with options that
+                    // have to be kept from the old image.
+                    registry.category("pre.image.data").add(element.getAttribute("src"), newImageData, {force: true});
+                    // Update the new image src entry of the "image.data"
+                    // registry with an empty object to mark the image as a
+                    // replaced one.
+                    weUtils.updateImageDataRegistry(element.getAttribute("src"), {});
                 }
             }
             for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {

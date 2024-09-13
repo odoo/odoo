@@ -1,6 +1,7 @@
 import { ImageCropPlugin } from "@html_editor/main/media/image_crop_plugin";
 import { MediaPlugin } from "@html_editor/main/media/media_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { getImageData } from "@html_editor/utils/image";
 
 export class ProjectSharingMediaPlugin extends MediaPlugin {
     static resources = (p) => {
@@ -10,11 +11,12 @@ export class ProjectSharingMediaPlugin extends MediaPlugin {
         return resources;
     };
     async createAttachment({ el, imageData, resId }) {
+        const imageOptions = getImageData(el);
         const response = JSON.parse(
             await this.services.http.post(
                 "/project_sharing/attachment/add_image",
                 {
-                    name: el.dataset.fileName || "",
+                    name: imageOptions.file_name || "",
                     data: imageData,
                     res_id: resId,
                     access_token: "",

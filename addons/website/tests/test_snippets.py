@@ -84,6 +84,10 @@ class TestSnippets(HttpCase):
 
     def test_10_parallax(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_parallax', login='admin')
+        # Ensure that a 'html_editor.image.data' record has correctly been
+        # created with the correct filter value.
+        image_data = self.env['html_editor.image.data'].search([])._get_image_data()
+        self.assertEqual(image_data['gl_filter'], 'blur')
 
     def test_11_snippet_popup_display_on_click(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_display_on_click', login='admin')

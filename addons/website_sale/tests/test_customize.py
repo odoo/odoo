@@ -406,3 +406,10 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         })
 
         self.start_tour("/", 'tour_shop_multi_checkbox_single_value', login="admin")
+
+    def test_13_shop_editor_set_product_template_image(self):
+        self.start_tour("/", 'shop_editor_set_product_template_image', login="admin")
+        # Ensure that an image data record has been created with the correct
+        # image options.
+        image_data = self.env['html_editor.image.data'].search([])._get_image_data()
+        self.assertEqual(image_data['gl_filter'], 'blur')

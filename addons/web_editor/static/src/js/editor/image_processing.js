@@ -1,24 +1,14 @@
 /** @odoo-module **/
 
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
+import weUtils from "@web_editor/js/common/utils";
 import {getAffineApproximation, getProjective} from "@web_editor/js/editor/perspective_utils";
 
 // Fields returned by cropperjs 'getData' method, also need to be passed when
 // initializing the cropper to reuse the previous crop.
 export const cropperDataFields = ['x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY'];
-const modifierFields = [
-    'filter',
-    'quality',
-    'mimetype',
-    'glFilter',
-    'originalId',
-    'originalSrc',
-    'resizeWidth',
-    'aspectRatio',
-    "bgSrc",
-    "mimetypeBeforeConversion",
-];
 export const isGif = (mimetype) => mimetype === 'image/gif';
 
 // webgl color filters
@@ -172,7 +162,7 @@ const glFilters = {
         ]);
     },
 
-    custom: (filter, cv, filterOptions) => {
+    custom: (filter, cv, filter_options) => {
         const options = Object.assign({
             blend: 'normal',
             filterColor: '',
@@ -182,7 +172,7 @@ const glFilters = {
             contrast: '0',
             brightness: '0',
             sepia: '0',
-        }, JSON.parse(filterOptions || "{}"));
+        }, JSON.parse(filter_options || "{}"));
         const filters = [];
         if (options.filterColor) {
             const ctx = cv.getContext('2d');
@@ -197,47 +187,49 @@ const glFilters = {
     },
 };
 /**
- * Applies data-attributes modifications to an img tag and returns a dataURL
+ * Applies image data modifications to an img tag and returns a dataURL
  * containing the result. This function does not modify the original image.
  *
- * @param {HTMLImageElement} img the image to which modifications are applied
- * @returns {string} dataURL of the image with the applied modifications
+ * @param {Object} imageData data (stored in the db) to apply to the image.
+ * @param {Object} dataOptions additional information about the options to apply
+ * e.g. perspective, aspect ratio etc... (not stored in the db).
+ * @returns {string} dataURL of the image with the applied modifications.
  */
-export async function applyModifications(img, dataOptions = {}) {
+export async function applyModifications(imageData = {}, dataOptions = {}) {
     const data = Object.assign({
-        glFilter: '',
+        gl_filter: '',
         filter: '#0000',
         quality: '75',
         forceModification: false,
-    }, img.dataset, dataOptions);
+    }, imageData, dataOptions);
     let {
         width,
         height,
-        resizeWidth,
+        resize_width,
         quality,
         filter,
         mimetype,
-        originalSrc,
-        glFilter,
-        filterOptions,
+        original_src,
+        gl_filter,
+        filter_options,
         forceModification,
         perspective,
         svgAspectRatio,
         imgAspectRatio,
     } = data;
-    [width, height, resizeWidth] = [width, height, resizeWidth].map(s => parseFloat(s));
+    [width, height, resize_width] = [width, height, resize_width].map(s => parseFloat(s));
     quality = parseInt(quality);
 
     // Skip modifications (required to add shapes on animated GIFs).
     if (isGif(mimetype) && !forceModification) {
-        return await _loadImageDataURL(originalSrc);
+        return await _loadImageDataURL(original_src);
     }
 
     // Crop
     const container = document.createElement('div');
-    const original = await loadImage(originalSrc);
+    const original = await loadImage(original_src);
     // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
-    originalSrc = original.getAttribute('src');
+    original_src = original.getAttribute('src');
     container.appendChild(original);
     await activateCropper(original, 0, data);
     let croppedImg = $(original).cropper('getCroppedCanvas', {width, height});
@@ -255,7 +247,7 @@ export async function applyModifications(img, dataOptions = {}) {
 
     // Width
     const result = document.createElement('canvas');
-    result.width = resizeWidth || croppedImg.width;
+    result.width = resize_width || croppedImg.width;
     result.height = perspective ? result.width / svgAspectRatio : croppedImg.height * result.width / croppedImg.width;
     const ctx = result.getContext('2d');
     ctx.imageSmoothingQuality = "high";
@@ -323,13 +315,13 @@ export async function applyModifications(img, dataOptions = {}) {
     }
 
     // GL filter
-    if (glFilter) {
+    if (gl_filter) {
         const glf = new window.WebGLImageFilter();
         const cv = document.createElement('canvas');
         cv.width = result.width;
         cv.height = result.height;
         applyAll = _applyAll.bind(null, result);
-        glFilters[glFilter](glf, cv, filterOptions);
+        glFilters[gl_filter](glf, cv, filter_options);
         const filtered = glf.apply(result);
         ctx.drawImage(filtered, 0, 0, filtered.width, filtered.height, 0, 0, result.width, result.height);
     }
@@ -341,11 +333,11 @@ export async function applyModifications(img, dataOptions = {}) {
     // Quality
     const dataURL = result.toDataURL(mimetype, quality / 100);
     const newSize = getDataURLBinarySize(dataURL);
-    const originalSize = _getImageSizeFromCache(originalSrc);
-    const isChanged = !!perspective || !!glFilter ||
+    const originalSize = _getImageSizeFromCache(original_src);
+    const isChanged = !!perspective || !!gl_filter ||
         original.width !== result.width || original.height !== result.height ||
         original.width !== croppedImg.width || original.height !== croppedImg.height;
-    return (isChanged || originalSize >= newSize) ? dataURL : await _loadImageDataURL(originalSrc);
+    return (isChanged || originalSize >= newSize) ? dataURL : await _loadImageDataURL(original_src);
 }
 
 /**
@@ -462,18 +454,21 @@ export async function activateCropper(image, aspectRatio, dataset) {
     return new Promise(resolve => image.addEventListener('ready', resolve, {once: true}));
 }
 /**
- * Marks an <img> with its attachment data (originalId, originalSrc, mimetype)
+ * Loads the image data (filter, shape, mimetype etc...).
  *
- * @param {HTMLImageElement} img the image whose attachment data should be found
+ * @param {HTMLImageElement} img the image whose data should be found.
+ * @param {Object} recordInfo information linked to the closest editable element
+ * of the image.
  * @param {string} [attachmentSrc=''] specifies the URL of the corresponding
  * attachment if it can't be found in the 'src' attribute.
  */
-export async function loadImageInfo(img, attachmentSrc = '') {
-    const src = attachmentSrc || img.getAttribute('src');
-    // If there is a marked originalSrc, the data is already loaded.
-    // If the image does not have the "mimetypeBeforeConversion" attribute, it
-    // has to be added.
-    if ((img.dataset.originalSrc && img.dataset.mimetypeBeforeConversion) || !src) {
+export async function loadImageInfo(img, recordInfo, attachmentSrc = "") {
+    const imgSrc = img.getAttribute("src");
+    const src = attachmentSrc || imgSrc;
+    let imageData = registry.category("image.data").get(src, undefined);
+    const isImageReplaced = imageData && !imageData.mimetype;
+    if (!src || (imageData && !isImageReplaced)) {
+        // The image options have already been loaded
         return;
     }
     // In order to be robust to absolute, relative and protocol relative URLs,
@@ -489,8 +484,15 @@ export async function loadImageInfo(img, attachmentSrc = '') {
 
     const srcUrl = new URL(src, docHref);
     const relativeSrc = srcUrl.pathname;
-
-    const {original} = await rpc('/web_editor/get_image_info', {src: relativeSrc});
+    imageData = await rpc("/web_editor/get_image_info", {
+        res_model: recordInfo.resModel,
+        res_id: recordInfo.resId,
+        res_field: recordInfo.resField,
+        res_type: recordInfo.type,
+        search_image_data: !isImageReplaced,
+        src: relativeSrc,
+        src_before_hover: img.dataset.originalSrcBeforeHover,
+    });
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
@@ -500,19 +502,36 @@ export async function loadImageInfo(img, attachmentSrc = '') {
     // setup their website domain. That means they can have an absolute URL that
     // looks like "https://mycompany.odoo.com/web/image/123" that leads to a
     // "local" image even if the domain name is now "mycompany.be".
-    //
-    // The "redirect" check is for when it is a redirect image attachment due to
-    // an external URL upload.
-    if (original && original.image_src && !/\/web\/image\/\d+-redirect\//.test(original.image_src)) {
-        if (!img.dataset.mimetype) {
-            // The mimetype has to be added only if it is not already present as
-            // we want to avoid to reset a mimetype set by the user.
-            img.dataset.mimetype = original.mimetype;
+    if (imageData) {
+        weUtils.updateImageDataRegistry(imgSrc, imageData);
+        if (img.dataset.originalSrcBeforeHover) {
+            // Also linked the image data to the source before an hover effect
+            // was applied.
+            weUtils.updateImageDataRegistry(img.dataset.originalSrcBeforeHover, imageData);
         }
-        img.dataset.originalId = original.id;
-        img.dataset.originalSrc = original.image_src;
-        img.dataset.mimetypeBeforeConversion = original.mimetype;
+        return;
     }
+    // No image.data or original attachment has been found (e.g; image field
+    // where the image comes from the backend and that never has been modified).
+    await fetch(src).then((result) => {
+        let imageMimetype = result.headers.get("content-type");
+        if (imageMimetype.startsWith("image/svg+xml")) {
+            // If the fetched source is a svg, "content-type" is set to
+            // "image/svg+xml; charset=utf-8". Set the mimetype to
+            // "image/svg+xml".
+            imageMimetype = "image/svg+xml";
+        }
+        const imageData = {
+            // If the data are fetchable, use the current source as the original
+            // src.
+            original_src: src,
+            mimetype: imageMimetype,
+            mimetype_before_format_conversion: imageMimetype,
+        };
+        weUtils.updateImageDataRegistry(imgSrc, imageData);
+    }).catch(() => {
+        weUtils.updateImageDataRegistry(imgSrc, {});
+    });
 }
 
 /**
@@ -599,7 +618,6 @@ export function getDataURLBinarySize(dataURL) {
     return dataURL.split(',')[1].length / 4 * 3;
 }
 
-export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
 
 export default {
     applyModifications,
@@ -607,7 +625,6 @@ export default {
     activateCropper,
     loadImageInfo,
     loadImage,
-    removeOnImageChangeAttrs,
     isImageSupportedForProcessing,
     isImageSupportedForStyle,
     createDataURL,

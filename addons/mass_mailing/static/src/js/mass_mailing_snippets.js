@@ -57,9 +57,9 @@ options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
         const dataURL = await this._super(...arguments);
         const image = await loadImage(dataURL);
         const canvas = document.createElement("canvas");
-        const imgFilename = (img.dataset.originalSrc.split("/").pop()).split(".")[0];
-        img.dataset.fileName = `${imgFilename}.png`;
-        img.dataset.mimetype = "image/png";
+        const imgFilename = (this.imageData.original_src.split("/").pop()).split(".")[0];
+        this.imageData.file_name = `${imgFilename}.png`;
+        this.imageData.mimetype = "image/png";
         canvas.width = image.width;
         canvas.height = image.height;
         canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
