@@ -10,7 +10,6 @@ import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_icon/centered_icon";
-import { ReprintReceiptButton } from "@point_of_sale/app/screens/ticket_screen/reprint_receipt_button/reprint_receipt_button";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
@@ -23,6 +22,7 @@ import {
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
+import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 
 const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
@@ -36,7 +36,6 @@ export class TicketScreen extends Component {
         Orderline,
         OrderWidget,
         CenteredIcon,
-        ReprintReceiptButton,
         SearchBar,
         Numpad,
         BackButton,
@@ -61,6 +60,9 @@ export class TicketScreen extends Component {
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
         this.numberBuffer = useService("number_buffer");
+        this.doPrint = useTrackedAsync((_selectedSyncedOrder) =>
+            this.pos.printReceipt(_selectedSyncedOrder)
+        );
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
