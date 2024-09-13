@@ -1378,18 +1378,18 @@ export class PosStore extends Reactive {
         const baseUrl = this.session._base_url;
         return order.export_for_printing(baseUrl, headerData);
     }
-    async printReceipt() {
-        const isPrinted = await this.printer.print(
+    async printReceipt(order = this.get_order()) {
+        await this.printer.print(
             OrderReceipt,
             {
-                data: this.orderExportForPrinting(this.get_order()),
+                data: this.orderExportForPrinting(order),
                 formatCurrency: this.env.utils.formatCurrency,
             },
             { webPrintFallback: true }
         );
-        if (isPrinted) {
-            this.get_order()._printed = true;
-        }
+        const nbrPrint = order.nb_print;
+        await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+        return true;
     }
     getOrderChanges(skipped = false, order = this.get_order()) {
         return getOrderChanges(order, skipped, this.orderPreparationCategories);
@@ -1516,8 +1516,12 @@ export class PosStore extends Reactive {
         this.dialog.add(FormViewDialog, {
             resModel: "pos.order",
             resId: order.id,
-            onRecordSaved: (record) => {
-                this.data.read("pos.order", [record.evalContext.id]);
+            onRecordSaved: async (record) => {
+                await this.data.read("pos.order", [record.evalContext.id]);
+                await this.data.read(
+                    "pos.payment",
+                    order.payment_ids.map((p) => p.id)
+                );
                 this.action.doAction({
                     type: "ir.actions.act_window_close",
                 });

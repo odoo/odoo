@@ -76,10 +76,6 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.selectFilter("Paid"),
             TicketScreen.nthRowContains(2, "-0005"),
             TicketScreen.selectOrder("-0005"),
-            TicketScreen.clickControlButton("Print Receipt"),
-            TicketScreen.receiptTotalIs("8.00"),
-            ReceiptScreen.clickBack(),
-            { ...ProductScreen.back(), isActive: ["mobile"] },
             // Pay the order that was in PaymentScreen.
             TicketScreen.selectFilter("Payment"),
             TicketScreen.selectOrder("-0004"),
@@ -101,11 +97,6 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Dialog.confirm(),
             PartnerList.clickPartner("Partner Test 3"),
             TicketScreen.invoicePrinted(),
-            { ...ProductScreen.back(), isActive: ["mobile"] },
-            // Reprint receipt
-            TicketScreen.clickControlButton("Print Receipt"),
-            ReceiptScreen.isShown(),
-            ReceiptScreen.clickBack(),
             TicketScreen.back(),
             // When going back, the ticket screen should be in its previous state.
             TicketScreen.filterIs("Paid"),

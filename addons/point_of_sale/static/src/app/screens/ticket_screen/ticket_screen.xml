@@ -161,7 +161,9 @@
                                     <InvoiceButton
                                         onInvoiceOrder.bind="onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
-                                    <ReprintReceiptButton order="_selectedSyncedOrder" />
+                                    <button class="control-button btn btn-light btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => doPrint.call(_selectedSyncedOrder)">
+                                        <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
+                                    </button>
                                 </div>
                                 <div class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
