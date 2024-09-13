@@ -566,7 +566,7 @@ class PurchaseOrderLine(models.Model):
 
         res = {
             'display_type': self.display_type or 'product',
-            'name': self.name,
+            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,

@@ -705,6 +705,63 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(840.0, po_line.price_unit_discounted, "1680.0 * 0.5 = 840.0")
         self.assertEqual(2520.0, po_line.price_subtotal, "840.0 * 3 = 2520.0")
 
+    def test_invoice_line_name_has_product_name(self):
+        """ Testing that when invoicing a sales order, the invoice line name ALWAYS contains the product name. """
+        # Create a purchase order with different descriptions
+        po = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+        })
+        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        pol_prod_no_redundancy = PurchaseOrderLine.create({
+            'name': "just a description",
+            'product_id': self.product_deliver.id,
+            'product_qty': 1,
+            'product_uom': self.product_deliver.uom_id.id,
+            'price_unit': self.product_deliver.list_price,
+            'order_id': po.id,
+            'taxes_id': False,
+        })
+        pol_prod_same = PurchaseOrderLine.create({
+            'name': self.product_deliver.display_name,
+            'product_id': self.product_deliver.id,
+            'product_qty': 1,
+            'product_uom': self.product_deliver.uom_id.id,
+            'price_unit': self.product_deliver.list_price,
+            'order_id': po.id,
+            'taxes_id': False,
+        })
+        pol_prod_product_in_name = PurchaseOrderLine.create({
+            'name': f"{self.product_deliver.display_name} with more description",
+            'product_id': self.product_deliver.id,
+            'product_qty': 1,
+            'product_uom': self.product_deliver.uom_id.id,
+            'price_unit': self.product_deliver.list_price,
+            'order_id': po.id,
+            'taxes_id': False,
+        })
+        pol_prod_name_in_product = PurchaseOrderLine.create({
+            'name': "Switch",
+            'product_id': self.product_deliver.id,
+            'product_qty': 1,
+            'product_uom': self.product_deliver.uom_id.id,
+            'price_unit': self.product_deliver.list_price,
+            'order_id': po.id,
+            'taxes_id': False,
+        })
+
+        # Invoice the purchase order
+        po.button_confirm()
+        po.order_line.qty_received = 4
+        po.action_create_invoice()
+        inv = po.invoice_ids
+
+        # Check the invoice line names
+        self.assertEqual(inv.invoice_line_ids[0].name, f"{pol_prod_no_redundancy.product_id.display_name} {pol_prod_no_redundancy.name}", "When the description doesn't contain the product name, it should be added to the invoice line name")
+        self.assertEqual(inv.invoice_line_ids[1].name, f"{pol_prod_same.name}", "When the description is the product name, the invoice line name should only be the description")
+        self.assertEqual(inv.invoice_line_ids[2].name, f"{pol_prod_product_in_name.name}", "When description contains the product name, the invoice line name should only be the description")
+        self.assertEqual(inv.invoice_line_ids[3].name, f"{pol_prod_name_in_product.product_id.display_name} {pol_prod_name_in_product.name}", "When the product name contains the description, the invoice line name should be the product name and the description")
+
+
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
 
