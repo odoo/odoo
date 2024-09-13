@@ -2847,12 +2847,16 @@ we-select.o_grid we-toggler {
 
 // Add snippets dialog iframe.
 .o_add_snippets_preview {
-    overflow-y: auto;
-    width: 30%;
-    height: 30%;
-    background-color: unset;
-    scrollbar-gutter: stable both-edges;
+    overflow: hidden;
 
+    > body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 30%;
+        height: 30%;
+        background-color: unset;
+        scrollbar-gutter: stable both-edges;
+    }
     .o_snippets_preview_row {
         transform: scale(0.3);
         transform-origin: top left;

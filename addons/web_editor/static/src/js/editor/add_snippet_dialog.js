@@ -67,10 +67,10 @@ export class AddSnippetDialog extends Component {
                 // Make sure empty preview iframe is loaded.
                 // This event is never triggered on Chrome.
                 await new Promise(resolve => {
-                    this.iframeDocumentEl.body.onload = resolve;
+                    this.iframeDocument.body.onload = resolve;
                 });
             }
-            this.iframeDocumentEl.body.classList.add("o_add_snippets_preview");
+            this.iframeDocument.documentElement.classList.add("o_add_snippets_preview");
             await this.insertStyle().then(() => {
                 this.iframeRef.el.classList.add("show");
             });
@@ -85,7 +85,7 @@ export class AddSnippetDialog extends Component {
         );
     }
 
-    get iframeDocumentEl() {
+    get iframeDocument() {
         return this.iframeRef.el.contentDocument;
     }
     /**
@@ -140,8 +140,8 @@ export class AddSnippetDialog extends Component {
             return;
         }
 
-        this.iframeDocumentEl.body.scrollTop = 0;
-        this.iframeDocumentEl.body.innerHTML = "";
+        this.iframeDocument.body.scrollTop = 0;
+        this.iframeDocument.body.innerHTML = "";
         const rowEl = document.createElement("div");
         rowEl.classList.add("row", "g-0", "o_snippets_preview_row");
         const leftColEl = document.createElement("div");
@@ -150,7 +150,7 @@ export class AddSnippetDialog extends Component {
         const rightColEl = document.createElement("div");
         rightColEl.classList.add("col-lg-6");
         rowEl.appendChild(rightColEl);
-        this.iframeDocumentEl.body.appendChild(rowEl);
+        this.iframeDocument.body.appendChild(rowEl);
 
         for (const snippet of snippetsToDisplay) {
             // Create cloned snippet.
@@ -169,7 +169,7 @@ export class AddSnippetDialog extends Component {
                     clonedSnippetEl = originalSnippet.baseBody.cloneNode(true);
                 }
             }
-            if (!clonedSnippetEl) {  
+            if (!clonedSnippetEl) {
                 clonedSnippetEl = snippet.baseBody.cloneNode(true);
             }
             clonedSnippetEl.classList.remove("oe_snippet_body");
@@ -277,7 +277,7 @@ export class AddSnippetDialog extends Component {
         const linkPromises = Array.from(cssLinkEls).map((cssLinkEl) => {
             return new Promise((resolve) => {
                 const clonedLinkEl = cssLinkEl.cloneNode(true);
-                this.iframeDocumentEl.head.appendChild(clonedLinkEl);
+                this.iframeDocument.head.appendChild(clonedLinkEl);
                 clonedLinkEl.onload = () => resolve();
             });
         });
@@ -288,7 +288,7 @@ export class AddSnippetDialog extends Component {
         const mainEl = pagePreviewIframeEl.contentDocument.body.querySelector("#wrapwrap > main");
         const mainBgColor = mainEl && getComputedStyle(mainEl).backgroundColor;
         if (mainBgColor !== "rgba(0, 0, 0, 0)") {
-            this.iframeDocumentEl.body.style.setProperty("--body-bg", mainBgColor);
+            this.iframeDocument.body.style.setProperty("--body-bg", mainBgColor);
         }
         await Promise.all(linkPromises);
     }
