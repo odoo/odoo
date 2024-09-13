@@ -964,6 +964,9 @@ export class HierarchyModel extends Model {
                 (childResId) => !excludeResIds.includes(childResId)
             );
         }
+        if (!childrenResIds.length) {
+            return [];
+        }
         const { records } = await this.orm.webSearchRead(
             this.resModel,
             [["id", "in", childrenResIds]],
