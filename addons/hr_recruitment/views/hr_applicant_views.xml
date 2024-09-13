@@ -82,14 +82,6 @@
                             <span class="o_stat_text">Employee</span>
                         </div>
                     </button>
-                    <button name="action_open_similar_candidates"
-                            class="oe_stat_button"
-                            icon="fa-pencil"
-                            type="object"
-                            context="{'active_test': False}"
-                            invisible="similar_candidates_count == 0">
-                        <field name="similar_candidates_count" widget="statinfo" string="Similar Candidates"/>
-                    </button>
                     <button name="action_open_other_applications"
                             class="oe_stat_button"
                             icon="fa-pencil"
@@ -269,6 +261,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Candidate" name="candidate" domain="[]" context="{'group_by': 'candidate_id'}"/>
                     <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
                     <filter string="Hiring Date" name="hired_date" context="{'group_by': 'date_closed'}"/>
@@ -310,7 +303,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="candidate_id" placeholder="e.g. John Doe"/>
+                    <field name="candidate_id" options="{'no_create_edit': True}" placeholder="e.g. John Doe"/>
                     <field name="job_id" options="{'no_open': True}"/>
                     <field name="company_id" invisible="1"/>
                 </group>
