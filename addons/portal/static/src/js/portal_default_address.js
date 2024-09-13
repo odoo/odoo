@@ -7,10 +7,12 @@ publicWidget.registry.portalAddress = publicWidget.Widget.extend({
     selector: '#address_checkout_billing, #address_checkout_shipping',
     events: {
         'click .js_set_default': '_changePortalAddress',
+        'click .js_archive': '_archivePortalAddress',
+
     },
 
     /**
-     * Set the billing or shipping address on the order and update the corresponding card.
+     * Set the billing or shipping address by default
      *
      * @private
      * @param {Event} ev
@@ -30,10 +32,29 @@ publicWidget.registry.portalAddress = publicWidget.Widget.extend({
         card.classList.remove('js_change_billing', 'js_change_delivery');
         card.classList.add('bg-primary', 'border', 'border-primary');
         this._toggleCardButtons(card, false);
-
         await rpc('/address/update_address', {
-            address_type: setDefaultButton.dataset.mode,
+            address_type: setDefaultButton.dataset.addressType,
             partner_id: setDefaultButton.dataset.partnerId,
+            action: 'set_default',
+        });
+
+        location.reload();
+    },
+
+    /**
+     * Archive the address
+     *
+     * @private
+     * @param {Event} ev
+     * @return {void}
+     */
+    async _archivePortalAddress(ev) {
+        ev.preventDefault();
+        const setDefaultButton = ev.currentTarget;
+        await rpc('/address/update_address', {
+            address_type: setDefaultButton.dataset.addressType,
+            partner_id: setDefaultButton.dataset.partnerId,
+            action: 'archive',
         });
 
         location.reload();

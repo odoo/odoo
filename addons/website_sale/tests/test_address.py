@@ -59,9 +59,9 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
 
         with MockRequest(self.env, website=self.website, sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
+            self.default_address_values.update({'parent_id': p.id})
             self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
             self.assertFalse(self._get_last_address(p).website_id, "New shipping address should not have a website set on it (no specific_user_account).")
-
             self.website.specific_user_account = True
 
             self.WebsiteSaleController.shop_address_submit(**self.default_address_values)
@@ -324,11 +324,9 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             [so.amount_untaxed, so.amount_tax, so.amount_total],
             [90.91, 9.09, 100.0]
         )
-
         env = api.Environment(self.env.cr, self.website.user_id.id, {})
         with MockRequest(self.env, website=self.website.with_env(env), sale_order_id=so.id) as req:
             req.httprequest.method = "POST"
-
             self.WebsiteSaleController.shop_address_submit(**be_address_POST)
             self.assertEqual(
                 so.fiscal_position_id,
@@ -476,8 +474,8 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
         so = self._create_so(partner_id=user_partner.id)
         self.assertNotEqual(so.partner_shipping_id, shipping)
         self.assertNotEqual(so.partner_invoice_id, invoicing)
-        self.assertFalse(colleague._can_be_edited_by_current_customer('billing', order_sudo=so))
-        self.assertFalse(colleague._can_be_edited_by_current_customer('delivery', order_sudo=so))
+        self.assertFalse(colleague._can_be_edited_by_current_partner(address_type='billing', order_sudo=so))
+        self.assertFalse(colleague._can_be_edited_by_current_partner(address_type='delivery', order_sudo=so))
 
         env = api.Environment(self.env.cr, user.id, {})
         # change also website env for `sale_get_order` to not change order partner_id

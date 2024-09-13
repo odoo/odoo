@@ -32,10 +32,10 @@ class L10nPEWebsiteSale(WebsiteSale):
 
     def _prepare_address_form_values(self, partner_sudo, address_type, **kwargs):
         rendering_values = super()._prepare_address_form_values(
-            partner_sudo, address_type=address_type, **kwargs
+            partner_sudo, address_type, **kwargs
         )
         if request.website.sudo().company_id.country_id.code != 'PE':
-            return rendering_values
+            return partner_sudo, rendering_values
 
         if address_type == 'billing':
             can_edit_vat = rendering_values['can_edit_vat']

@@ -746,7 +746,7 @@
             <div t-if="request.params.get('error')" class="alert alert-warning" role="alert" groups="account.group_delivery_invoice_address">
                 <h4 class="alert-heading">You are not allowed to delete this address!</h4>
                 <p>
-                    You cannot archive contacts linked to an active user.You first need to archive their associated user.Linked active users
+                    You cannot archive contacts linked to an active user.You first need to archive their associated user.
                 </p>
             </div>
             <h5 class="mt-4">Billing address</h5>
@@ -769,7 +769,7 @@
                         </div>
                     </t>
                     <div class="col-lg-4 mb-3" style="min-height: 200px">
-                        <a role="button" href="/portal/address?address_type=other&amp;portal_address=True" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 mx-auto rounded text-decoration-none" style="border: 1px dashed">
+                        <a role="button" href="/portal/address?address_type=invoice&amp;portal_address=True" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 mx-auto rounded text-decoration-none" style="border: 1px dashed">
                             <i class="fa fa-plus fa-2x mb-2"/>Add Address
                         </a>
                     </div>
@@ -795,7 +795,7 @@
                         </div>
                     </t>
                     <div class="col-lg-4 mb-3" style="min-height: 200px">
-                        <a role="button" href="/portal/address?address_type=other&amp;portal_address=True" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 mx-auto rounded text-decoration-none" style="border: 1px dashed">
+                        <a role="button" href="/portal/address?address_type=delivery&amp;portal_address=True" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 mx-auto rounded text-decoration-none" style="border: 1px dashed">
                             <i class="fa fa-plus fa-2x mb-2"/>Add Address
                         </a>
                     </div>
@@ -806,10 +806,10 @@
 
     <template id="address_card">
         <t t-set="partner" t-value="address"/>
-        <t t-set="mode" t-value="is_invoice and 'invoice' or 'delivery'"/>
+        <t t-set="addressType" t-value="is_invoice and 'invoice' or 'delivery'"/>
         <div t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or is_invoice and 'js_change_billing' or 'js_change_delivery'}"
-             t-att-data-mode="mode"
-             t-att-data-partner-id="partner.id">
+            t-att-data-address-type="addressType"
+            t-att-data-partner-id="partner.id">
             <div class="card-body d-flex flex-column justify-content-between">
                 <div>
                     <div class="d-flex align-items-start">
@@ -834,11 +834,12 @@
                     </a>
                     <span id="delete-button" t-att-hidden="partner.type == 'contact'" t-att-style="'display: none;' if selected else ''">
                         <span class="mx-2">|</span>
-                        <a t-attf-href="/archive/address/#{partner.id}"
-                            class="btn btn-link text-danger p-0"
+                        <a  class="btn btn-link text-danger p-0 js_archive"
                             role="button"
                             title="Archive this address"
-                            aria-label="Archive this address">
+                            aria-label="Archive this address"
+                            t-att-data-partner-id="partner.id"
+                            >
                             Delete
                         </a>
                     </span>
@@ -848,8 +849,9 @@
                            role="button"
                            title="Default this address"
                            aria-label="Default this address"
-                           t-att-data-mode="mode"
-                           t-att-data-partner-id="partner.id">
+                           t-att-data-partner-id="partner.id"
+                           t-att-data-address-type="addressType"
+                           >
                             Set as default
                         </a>
                     </span>
@@ -949,7 +951,7 @@
                                                         id="o_vat"
                                                         name="vat"
                                                         t-att-value="partner_sudo.vat"
-                                                        t-att-disabled="'1' if vat_warning or not has_invoice else None"
+                                                        t-att-disabled="'1' if vat_warning or has_invoice else None"
                                                         class="form-control"
                                                     />
                                                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">
@@ -991,7 +993,7 @@
                                         <div class="w-100"/>
                                         <div id="div_country" class="col-lg-6 mb-2">
                                             <label class="col-form-label" for="o_country_id">Country</label>
-                                            <select id="o_country_id" name="country_id" class="form-select" t-att-disabled="not has_invoice">
+                                            <select id="o_country_id" name="country_id" class="form-select" t-att-disabled="has_invoice">
                                                 <option value="">Country...</option>
                                                 <t t-foreach="countries" t-as="c">
                                                     <option t-att-value="c.id" t-att-selected="c.id == int(country_id) if country_id else c.id == partner_sudo.country_id.id" t-att-code="c.code">
@@ -1003,7 +1005,7 @@
                                         <div id="div_state" class="col-lg-6 mb-2"
                                                 t-att-style="not country_states and 'display: none'">
                                             <label class="col-form-label" for="o_state_id">State / Province</label>
-                                            <select id="o_state_id" name="state_id" class="form-select" t-att-disabled="not has_invoice">
+                                            <select id="o_state_id" name="state_id" class="form-select" t-att-disabled="has_invoice">
                                                 <option value="">State / Province...</option>
                                                 <t t-foreach="country_states" t-as="s">
                                                     <option t-att-value="s.id" t-att-selected="s.id == (int(state_id) if state_id else partner_sudo.state_id.id)">

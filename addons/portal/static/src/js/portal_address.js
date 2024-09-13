@@ -176,7 +176,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
                 new FormData(this.addressForm),
             )
             if (result.successUrl) {
-                window.location = '/' + result.successUrl;
+                window.location = result.successUrl;
             } else {
                 // Highlight missing/invalid form values
                 document.querySelectorAll('.is-invalid').forEach(element => {

@@ -40,11 +40,10 @@ websiteSaleAddress.include({
             const spinner = document.createElement('span');
             spinner.classList.add('fa', 'fa-cog', 'fa-spin');
             submitButton.appendChild(spinner);
-
             const result = await this.http.post(
                 '/shop/address/submit',
                 new FormData(this.addressForm),
-            )
+            );
             if (result.successUrl) {
                 window.location = result.successUrl;
             } else {

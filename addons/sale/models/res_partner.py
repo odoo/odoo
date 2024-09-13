@@ -71,9 +71,11 @@ class ResPartner(models.Model):
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
 
-    def can_edit_info(self):
+    def _can_edit_info(self):
         """ this method allows user to change address information. """
-        return not self._has_invoice([('partner_id', '=', self.id)])
+        # arj fix
+        res = super()._can_edit_info()
+        return res and not self._has_invoice([('partner_id', '=', self.id)])
 
     def action_view_sale_order(self):
         action = self.env['ir.actions.act_window']._for_xml_id('sale.act_res_partner_2_sale_order')

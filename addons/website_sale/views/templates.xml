@@ -2284,12 +2284,12 @@
             >
                 <!-- We don't allow public users to have multiple delivery addresses. -->
                 <t t-if="is_invoice">
-                    <t t-set="new_address_href" t-valuef="/portal/address?address_type=billing"/>
+                    <t t-set="new_address_href" t-valuef="/portal/address?address_type=billing&amp;parent_id={{not order._is_anonymous_cart() and order.partner_id.commercial_partner_id.id}}"/>
                 </t>
                 <t t-else="">
                     <t
                         t-set="new_address_href"
-                        t-valuef="/portal/address?address_type=delivery&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
+                        t-valuef="/portal/address?address_type=delivery&amp;parent_id={{not order._is_anonymous_cart() and order.partner_id.commercial_partner_id.id}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
                     />
                 </t>
                 <a
@@ -2316,7 +2316,7 @@
         >
             <div class="card-body d-flex flex-column align-items-start">
                 <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
-                <t t-if="contact._can_be_edited_by_current_customer(address_type, order_sudo=website_sale_order)">
+                <t t-if="contact._can_be_edited_by_current_partner(address_type=address_type, order_sudo=website_sale_order)">
                     <t t-set="new_address_href" t-value="'/portal/address?address_type=' + address_type"/>
                     <a
                         t-att-href="new_address_href + '&amp;partner_id=' + str(contact.id)"
@@ -2514,7 +2514,7 @@
                                         <div class="w-100"/>
                                         <div id="div_country" class="col-lg-6 mb-2">
                                             <label class="col-form-label" for="o_country_id">Country</label>
-                                            <select id="o_country_id" name="country_id" class="form-select" t-att-disabled="not has_invoice">
+                                            <select id="o_country_id" name="country_id" class="form-select">
                                                 <option value="">Country...</option>
                                                 <t t-foreach="countries" t-as="c">
                                                     <option t-att-value="c.id" t-att-selected="c.id == country.id" t-att-code="c.code">
@@ -2526,7 +2526,7 @@
                                         <div id="div_state" class="col-lg-6 mb-2"
                                              t-att-style="not country_states and 'display: none'">
                                             <label class="col-form-label" for="o_state_id">State / Province</label>
-                                            <select id="o_state_id" name="state_id" class="form-select" t-att-disabled="not has_invoice">
+                                            <select id="o_state_id" name="state_id" class="form-select" t-att-disabled="has_invoice">
                                                 <option value="">State / Province...</option>
                                                 <t t-foreach="country_states" t-as="s">
                                                     <option t-att-value="s.id" t-att-selected="s.id == state_id">
@@ -2538,6 +2538,7 @@
                                     </div>
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <input type="hidden" name="address_type" t-att-value="address_type"/>
+                                    <input type="hidden" name="parent_id" t-att-value="parent_id"/>
                                     <input
                                         type="hidden"
                                         name="use_delivery_as_billing"
