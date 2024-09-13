@@ -4,6 +4,9 @@
     $input-font-size: 40%;
 
     .o_configurator_screen {
+        // ==== Variables
+        --ConfiguratorPreview-height: MIN(70vh, 560px);
+        --ConfiguratorSmallPreview-height: MIN(60vh, 500px);
 
         // ==== Animations
         @keyframes configuratorFadeIn{
@@ -12,11 +15,11 @@
         }
 
         @keyframes theme_screenshot_scroll {
-            to { transform: translate3d(0, -24%, 0)}
+            to { transform: translate3d(0, calc((100% - var(--ConfiguratorPreview-height)) * -1), 0)}
         }
 
         @keyframes theme_screenshot_scroll_small {
-            to { transform: translate3d(0, -31.5%, 0)}
+            to { transform: translate3d(0, calc((100% - var(--ConfiguratorSmallPreview-height)) * -1), 0)}
         }
 
         // ==== General Components
@@ -336,18 +339,21 @@
             }
 
             .theme_preview {
-                padding-top: 65%;
+                @include media-breakpoint-down(lg) {
+                    --ConfiguratorPreview-height: 300px;
+                    --ConfiguratorSmallPreview-height: var(--ConfiguratorPreview-height);
+                }
+
+                height: var(--ConfiguratorPreview-height);
                 box-shadow: $box-shadow-sm;
 
                 @include media-breakpoint-up(lg) {
-                    padding-top: 200%;
-
                     &:hover {
                         transform: translate3d(0,-10px,0);
                     }
 
                     &.small {
-                        padding-top: 180%;
+                        height: var(--ConfiguratorSmallPreview-height);
                     }
                 }
 
