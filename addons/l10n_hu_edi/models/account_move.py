@@ -882,7 +882,7 @@ class AccountMove(models.Model):
 
                     advance_invoices = line._get_downpayment_lines().mapped('move_id').filtered(lambda m: m.state == 'posted')
                     reconciled_moves = advance_invoices._get_reconciled_amls().move_id
-                    last_reconciled_payment = reconciled_moves.filtered(lambda m: m.payment_id or m.statement_line_id).sorted('date', reverse=True)[:1]
+                    last_reconciled_payment = reconciled_moves.filtered(lambda m: m.origin_payment_id or m.statement_line_id).sorted('date', reverse=True)[:1]
 
                     if last_reconciled_payment:
                         line_values.update({

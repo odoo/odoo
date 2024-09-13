@@ -34,8 +34,8 @@
                         <div class="col-6" t-if="o.amount">
                             Payment Amount: <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">50 USD</span>
                          </div>
-                        <div class="col-6" t-if="o.ref">
-                            Memo: <span t-field="o.ref">Sample Memo</span>
+                        <div class="col-6" t-if="o.memo">
+                            Memo: <span t-field="o.memo">Sample Memo</span>
                          </div>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                                     <t t-set="payment" t-value="par[2].move_id"/>
                                     <td><span t-field="payment.date">2023-01-05</span></td>
                                     <td><span t-field="payment.name">PAY001</span></td>
-                                    <td><span t-field="payment.ref">Payment Ref</span></td>
+                                    <td><span t-field="payment.memo">Payment Ref</span></td>
                                     <t t-set="amountPayment" t-value="-payment.amount_total"/>
                                     <t t-set="amountInvoice" t-value="-par[1]"/>
                                     <t t-set="currencyPayment" t-value="payment.currency_id"/>

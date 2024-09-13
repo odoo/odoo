@@ -29,8 +29,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'pcg_766',
                 'expense_currency_exchange_account_id': 'pcg_666',
                 'account_journal_suspense_account_id': 'pcg_471',
-                'account_journal_payment_debit_account_id': 'pcg_472',
-                'account_journal_payment_credit_account_id': 'pcg_473',
                 'account_journal_early_pay_discount_loss_account_id': 'pcg_665',
                 'account_journal_early_pay_discount_gain_account_id': 'pcg_765',
                 'deferred_expense_account_id': 'pcg_486',

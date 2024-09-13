@@ -31,8 +31,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'a26291',
                 'account_journal_early_pay_discount_loss_account_id': 'a8299',
                 'account_journal_early_pay_discount_gain_account_id': 'a8199',
-                'account_journal_payment_debit_account_id': 'a26292',
-                'account_journal_payment_credit_account_id': 'a26293',
                 'default_cash_difference_income_account_id': 'a8199',
                 'default_cash_difference_expense_account_id': 'a8299',
                 'account_sale_tax_id': 'VAT_S_G_21_LV',

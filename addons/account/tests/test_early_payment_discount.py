@@ -154,7 +154,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
 
         self.assertTrue(payments.is_reconciled)
         self.assertEqual(
-            payments.line_ids.sorted('balance').mapped('amount_currency'),
+            payments.move_id.line_ids.sorted('balance').mapped('amount_currency'),
             [-1000.0, 100.0, 900.0],
         )
 
@@ -186,7 +186,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -1552.55, 'tax_tag_invert': False},
             {'amount_currency': -150.0, 'tax_tag_invert': True},
             {'amount_currency': -22.5, 'tax_tag_invert': True},
@@ -222,7 +222,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ._create_payments()
 
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -51.80, 'tax_tag_invert': False},
             {'amount_currency': -5.00, 'tax_tag_invert': True},
             {'amount_currency': -0.75, 'tax_tag_invert': True},
@@ -246,7 +246,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -1552.5, 'tax_tag_invert': False},
             {'amount_currency': -150.0, 'tax_tag_invert': True},
             {'amount_currency': -22.5, 'tax_tag_invert': True},
@@ -270,7 +270,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -1725.0, 'tax_tag_invert': False},
             {'amount_currency': 22.5, 'tax_tag_invert': False},
             {'amount_currency': 150.0, 'tax_tag_invert': False},
@@ -298,7 +298,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         })._create_payments()
 
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -2835.0, 'tax_tag_invert': False},
             {'amount_currency': -200.0, 'tax_tag_invert': False},
             {'amount_currency': -100.0, 'tax_tag_invert': True},
@@ -333,7 +333,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'payment_date': '2019-01-01', 'group_payment': True
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -3000.0},
             {'amount_currency': 300.0},
             {'amount_currency': 2700},
@@ -366,7 +366,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'payment_date': '2019-01-01', 'group_payment': True
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -3150.0},
             {'amount_currency': 300.0},
             {'amount_currency': 2850},
@@ -399,7 +399,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'payment_date': '2019-01-01', 'group_payment': True
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -3135.0},
             {'amount_currency': 300.0},
             {'amount_currency': 2835.0},
@@ -432,7 +432,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'payment_date': '2019-01-01', 'group_payment': True
         })._create_payments()
         self.assertTrue(payments.is_reconciled)
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -3135.0},
             {'amount_currency': 200.0},
             {'amount_currency': 2935.0},
@@ -542,7 +542,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             .create({'payment_date': '2019-01-01'})\
             ._create_payments()
 
-        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+        self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
             # pylint: disable=bad-whitespace
             {'amount_currency': -980.0, 'tax_ids': [],                  'tax_tag_ids': [],              'tax_tag_invert': False},
             {'amount_currency': -20.0,  'tax_ids': intracomm_tax.ids,   'tax_tag_ids': tax_tags[3].ids, 'tax_tag_invert': True},
@@ -808,7 +808,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'payment_date': '2019-01-01', 'group_payment': False
         })._create_payments()
         self.assertTrue(all(payments.mapped('is_reconciled')))
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -2000.0},
             {'amount_currency': -1000.0},
             {'amount_currency': 200.0},
@@ -848,7 +848,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             'payment_date': '2019-01-01', 'group_payment': False
         })._create_payments()
         self.assertTrue(all(payments.mapped('is_reconciled')))
-        self.assertRecordValues(payments.line_ids.sorted('balance'), [
+        self.assertRecordValues(payments.move_id.line_ids.sorted('balance'), [
             {'amount_currency': -2000.0},
             {'amount_currency': -1000.0},
             {'amount_currency': 1000.0},

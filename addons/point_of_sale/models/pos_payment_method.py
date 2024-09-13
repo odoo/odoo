@@ -22,8 +22,7 @@ class PosPaymentMethod(models.Model):
     outstanding_account_id = fields.Many2one('account.account',
         string='Outstanding Account',
         ondelete='restrict',
-        help='Leave empty to use the default account from the company setting.\n'
-             'Account used as outstanding account when creating accounting payment records for bank payments.')
+        help='Account used as outstanding account when creating accounting payment records for bank payments.')
     receivable_account_id = fields.Many2one('account.account',
         string='Intermediary Account',
         ondelete='restrict',

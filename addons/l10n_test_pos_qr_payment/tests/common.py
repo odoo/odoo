@@ -31,7 +31,7 @@ class TestPosQrCommon(AccountTestInvoicingHttpCommon):
 
         cls.company = cls.company_data['company']
         cls.pos_receivable_bank = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Bank'})
-        cls.outstanding_bank = cls.copy_account(cls.company.account_journal_payment_debit_account_id, {'name': 'Outstanding Bank'})
+        cls.outstanding_bank = cls.copy_account(cls.inbound_payment_method_line.payment_account_id, {'name': 'Outstanding Bank'})
         cls.bank_pm = cls.env['pos.payment.method'].create({
             'name': 'Bank',
             'journal_id': cls.company_data['default_journal_bank'].id,

@@ -207,4 +207,6 @@ class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWD
             f"Invoice payment is in '{invoice.payment_state}' status while it should be '{in_payment_state}'.")
 
         self.assertEqual(booth.state, 'unavailable')
+        self.assertFalse(booth.is_paid)  # it is still pending reconciliation
+        invoice._invoice_paid_hook()
         self.assertTrue(booth.is_paid)

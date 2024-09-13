@@ -628,7 +628,7 @@ class PosSession(models.Model):
     def _get_diff_vals(self, payment_method_id, diff_amount):
         payment_method = self.env['pos.payment.method'].browse(payment_method_id)
         diff_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
-        source_account = payment_method.outstanding_account_id or self.company_id.account_journal_payment_debit_account_id
+        source_account = payment_method.outstanding_account_id
         destination_account = self.env['account.account']
 
         if (diff_compare_to_zero > 0):
@@ -1060,7 +1060,7 @@ class PosSession(models.Model):
         return data
 
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
-        outstanding_account = payment_method.outstanding_account_id or self.company_id.account_journal_payment_debit_account_id
+        outstanding_account = payment_method.outstanding_account_id
         destination_account = self._get_receivable_account(payment_method)
 
         if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
@@ -1071,25 +1071,26 @@ class PosSession(models.Model):
             'amount': abs(amounts['amount']),
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
-            'destination_account_id':  destination_account.id,
-            'ref': _('Combine %(payment_method)s POS payments from %(session)s', payment_method=payment_method.name, session=self.name),
+            'destination_account_id': destination_account.id,
+            'memo': _('Combine %(payment_method)s POS payments from %(session)s', payment_method=payment_method.name, session=self.name),
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
             'company_id': self.company_id.id,
         })
+        account_payment.action_post()
 
         diff_amount_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
         if diff_amount_compare_to_zero != 0:
             self._apply_diff_on_account_payment_move(account_payment, payment_method, diff_amount)
 
-        account_payment.action_post()
-        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id)
+        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == self._get_receivable_account(payment_method))
 
     def _apply_diff_on_account_payment_move(self, account_payment, payment_method, diff_amount):
         source_vals, dest_vals = self._get_diff_vals(payment_method.id, diff_amount)
         outstanding_line = account_payment.move_id.line_ids.filtered(lambda line: line.account_id.id == source_vals['account_id'])
         new_balance = outstanding_line.balance + self._amount_converter(diff_amount, self.stop_at, False)
         new_balance_compare_to_zero = self.currency_id.compare_amounts(new_balance, 0)
+        account_payment.move_id.button_draft()
         account_payment.move_id.write({
             'line_ids': [
                 Command.create(dest_vals),
@@ -1099,12 +1100,13 @@ class PosSession(models.Model):
                 })
             ]
         })
+        account_payment.move_id.action_post()
 
     def _create_split_account_payment(self, payment, amounts):
         payment_method = payment.payment_method_id
         if not payment_method.journal_id:
             return self.env['account.move.line']
-        outstanding_account = payment_method.outstanding_account_id or self.company_id.account_journal_payment_debit_account_id
+        outstanding_account = payment_method.outstanding_account_id
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
         destination_account = accounting_partner.property_account_receivable_id
 
@@ -1118,12 +1120,12 @@ class PosSession(models.Model):
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
             'destination_account_id': destination_account.id,
-            'ref': _('%(payment_method)s POS payment of %(partner)s in %(session)s', payment_method=payment_method.name, partner=payment.partner_id.display_name, session=self.name),
+            'memo': _('%(payment_method)s POS payment of %(partner)s in %(session)s', payment_method=payment_method.name, partner=payment.partner_id.display_name, session=self.name),
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
         })
         account_payment.action_post()
-        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == account_payment.destination_account_id)
+        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == accounting_partner.property_account_receivable_id)
 
     def _create_cash_statement_lines_and_cash_move_lines(self, data):
         # Create the split and combine cash statement lines and account move lines.
