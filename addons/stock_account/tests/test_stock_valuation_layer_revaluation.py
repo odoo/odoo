@@ -11,7 +11,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationLayerRevaluation, cls).setUpClass()
-        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
+        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.income_account, cls.stock_journal = _create_accounting_data(cls.env)
         cls.product1.write({
             'property_account_expense_id': cls.expense_account.id,
         })
