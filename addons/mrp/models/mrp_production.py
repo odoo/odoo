@@ -272,6 +272,9 @@ class MrpProduction(models.Model):
         string='Date Category', store=False,
         search='_search_date_category', readonly=True
     )
+    is_pre_production_picking_split = fields.Boolean(
+        string="Pre-production Picking Split",
+        help="Indicates whether the pre-production picking for this Manufacturing Order (MO) is split or not.", default=False)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -494,13 +497,13 @@ class MrpProduction(models.Model):
                 filtered_picking_ids = order.picking_ids.filtered(
                     lambda picking: picking.origin == order.name or any(
                         order in move.move_dest_ids.raw_material_production_id or
-                        order in move.move_orig_ids.production_id
+                        order in move.move_orig_ids.production_id or
+                        order in move.production_ids
                         for move in picking.move_ids
                     )
                 )
                 # Unlink unrelated pickings from current MO, including canceled pre-pickings before MO split
-                pickings_to_unlink = order.picking_ids - filtered_picking_ids
-                order.picking_ids = [(3, picking.id, False) for picking in pickings_to_unlink]
+                order.picking_ids = [(3, picking.id, False) for picking in (order.picking_ids - filtered_picking_ids)]
             order.delivery_count = len(order.picking_ids)
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
@@ -1823,6 +1826,8 @@ class MrpProduction(models.Model):
 
         # Create the backorders.
         for production in self:
+            if production.is_pre_production_picking_split and not self.env.context.get("is_split_pre_picking"):
+                production.write({'is_pre_production_picking_split': False})
             initial_qty_by_production[production] = production.product_qty
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
@@ -1833,7 +1838,8 @@ class MrpProduction(models.Model):
             backorder_qtys = amounts[production][1:]
             production.with_context(skip_compute_move_raw_ids=True).product_qty = amounts[production][0]
 
-            next_seq = max(production.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
+            next_seq = 1 if self.env.context.get('is_split_production') and production.backorder_sequence == 1 else \
+                    max(production.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
 
             for qty_to_backorder in backorder_qtys:
                 next_seq += 1
@@ -2024,6 +2030,8 @@ class MrpProduction(models.Model):
                     workorders_to_cancel += workorder
         workorders_to_cancel.action_cancel()
         backorders._action_confirm_mo_backorders()
+        for production in self:
+            production.picking_ids.move_ids.production_ids = production.picking_ids.move_ids.move_dest_ids.raw_material_production_id
 
         return self.env['mrp.production'].browse(production_ids)
 

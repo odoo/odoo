@@ -219,6 +219,9 @@ class StockMove(models.Model):
         'Manual Consumption', compute='_compute_manual_consumption', store=True, readonly=False,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
+    # This field was added to maintain a link between stock moves and (MOs), even after pickings are canceled.
+    production_ids = fields.Many2many('mrp.production', string="Move associated to this MO order",
+        help="Stores the Manufacturing Orders (MOs) associated with this move, even after the pickings related to this move are canceled.")
 
     @api.depends('product_id')
     def _compute_manual_consumption(self):
@@ -758,9 +761,12 @@ class StockMove(models.Model):
         # it will merge its post-pickings with the first. So due to that Canceling the second MO's post-picking
         # would also cancel the first MO (also vice-versa), which is not desired.
         # We need to ensure that each split MO proceeds independently.
-        if (
-            self.move_dest_ids.raw_material_production_id.mrp_production_backorder_count > 1 or
-            self.move_orig_ids.production_id.mrp_production_backorder_count > 1
-        ):
+        if self.env.context.get('is_split_pre_picking') or self.move_orig_ids.production_id.mrp_production_backorder_count > 1:
             return False
         return super()._search_picking_for_assignation()
+
+    def _search_picking_for_assignation_domain(self):
+        domain = super()._search_picking_for_assignation_domain()
+        if self.move_dest_ids.raw_material_production_id.is_pre_production_picking_split:
+            domain.append(('origin', '=', self.origin))
+        return domain
