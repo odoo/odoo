@@ -116,6 +116,28 @@
         ]"/>
     </record>
 
+    <!-- Invoice to ADHOC with month ago invoice date -->
+    <record id="demo_sup_invoice_9" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="(DateTime.now()- relativedelta(months=1)).strftime('%Y-%m-01')"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 230000.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
+    <!-- Invoice to partner mipyme with month ago invoice date -->
+    <record id="demo_sup_invoice_10" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
+        <field name="partner_id" ref="l10n_ar.res_partner_mipyme"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="(DateTime.now()- relativedelta(months=1)).strftime('%Y-%m-01')"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 230000.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
     <!-- Liquido Producto document type -->
     <record id="demo_liquido_producto_1" model="account.move" context="{'allowed_company_ids': [ref('base.company_ri')]}">
         <field name="l10n_latam_document_type_id" ref="l10n_ar.dc_liq_cd_sp_a"/>
@@ -217,12 +239,18 @@
     <record id="demo_sup_invoice_8" model="account.move">
         <field name="l10n_latam_document_number">0001-00000335</field>
     </record>
+    <record id="demo_sup_invoice_9" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000001</field>
+    </record>
+    <record id="demo_sup_invoice_10" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000001</field>
+    </record>
     <record id="demo_despacho_1" model="account.move">
         <field name="l10n_latam_document_number">16052IC04000605L</field>
     </record>
 
     <function model="account.move" name="action_post">
-        <value eval="[ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_despacho_1'), ref('demo_liquido_producto_1')]"/>
+        <value eval="[ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_sup_invoice_9'), ref('demo_sup_invoice_10'), ref('demo_despacho_1'), ref('demo_liquido_producto_1')]"/>
     </function>
 
 </odoo>
