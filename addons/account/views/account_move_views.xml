@@ -471,7 +471,7 @@
             <field name="name">account.move.list</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <list string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
+                <list string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)"  multi_edit="1">
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
