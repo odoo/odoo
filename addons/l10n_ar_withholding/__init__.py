@@ -9,7 +9,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-def _l10n_ar_withholding_post_init(env):
+def _l10n_ar_wth_post_init(env):
     """ Existing companies that have the Argentinean Chart of Accounts set """
     template_codes = ['ar_ri', 'ar_ex', 'ar_base']
     ar_companies = env['res.company'].search([('chart_template', 'in', template_codes)])

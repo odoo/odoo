@@ -3,6 +3,7 @@ import logging
 
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError
+from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -10,7 +11,9 @@ _logger = logging.getLogger(__name__)
 class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
-    l10n_ar_withholding_ids = fields.One2many('l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings")
+    l10n_ar_withholding_ids = fields.One2many(
+        'l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings",
+        compute="_compute_l10n_ar_withholding_ids", readonly=False, store=True)
     l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=True, help="Net amount after withholdings")
     l10n_ar_adjustment_warning = fields.Boolean(compute="_compute_l10n_ar_adjustment_warning")
 
@@ -25,7 +28,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard_register -= wizard
         wizard_register.l10n_ar_adjustment_warning = False
 
-    @api.depends('l10n_ar_withholding_ids.amount', 'amount')
+    @api.depends('amount')
     def _compute_l10n_ar_net_amount(self):
         for rec in self:
             rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
@@ -45,6 +48,7 @@ class AccountPaymentRegister(models.TransientModel):
                     raise UserError(_('Please enter withholding number for tax %s') % line.tax_id.name)
             dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
             balance = self.company_currency_id.round(line.amount * conversion_rate)
+            # create withholding amount applied move line only if amount != 0
             payment_vals['write_off_line_vals'].append({
                     'currency_id': self.currency_id.id,
                     'name': line.name,
@@ -63,7 +67,7 @@ class AccountPaymentRegister(models.TransientModel):
             cc_base_amount = self.company_currency_id.round(base_amount * conversion_rate)
             payment_vals['write_off_line_vals'].append({
                 'currency_id': self.currency_id.id,
-                'name': _('Base Ret: ') + nice_base_label,
+                'name': nice_base_label,
                 'tax_ids': [Command.set(withholding_lines.mapped('tax_id').ids)],
                 'account_id': account_id,
                 'balance': cc_base_amount,
@@ -71,7 +75,7 @@ class AccountPaymentRegister(models.TransientModel):
             })
             payment_vals['write_off_line_vals'].append({
                 'currency_id': self.currency_id.id,  # Counterpart 0 operation
-                'name': _('Base Ret Cont: ') + nice_base_label,
+                'name': nice_base_label,
                 'account_id': account_id,
                 'balance': -cc_base_amount,
                 'amount_currency': -base_amount,
@@ -89,3 +93,19 @@ class AccountPaymentRegister(models.TransientModel):
                 self.payment_date,
             )
         return 1.0
+
+    @api.depends('partner_id', 'payment_date')
+    def _compute_l10n_ar_withholding_ids(self):
+        """ Compute (AR) withholding on payments. """
+        date = fields.Date.from_string(self.payment_date) or datetime.date.today()
+        partner_taxes = self.env['l10n_ar.partner.tax'].search([
+            *self.env['l10n_ar.partner.tax']._check_company_domain(self.company_id),
+            '|', ('from_date', '>=', date), ('from_date', '=', False),
+            '|', ('to_date', '<=', date), ('to_date', '=', False),
+            ('partner_id', '=', self.partner_id.commercial_partner_id.id),
+            ('tax_id.l10n_ar_withholding_payment_type', '=', self.partner_type)
+        ])
+        self.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id}) for x in partner_taxes]
+
+    def action_create_payments(self):
+        return super().action_create_payments()

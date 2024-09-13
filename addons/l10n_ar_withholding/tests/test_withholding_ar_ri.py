@@ -2,6 +2,7 @@
 from odoo.addons.l10n_ar.tests.common import TestAr
 from odoo.tests import tagged
 from odoo import Command
+from datetime import datetime
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -37,6 +38,14 @@ class TestL10nArWithholdingArRi(TestAr):
         cls.tax_21 = cls.env.ref('account.%s_ri_tax_vat_21_ventas' % cls.env.company.id)
 
         cls.other_currency = cls.setup_other_currency('USD', rounding=0.001, rates=[('2023-01-01', 0.01), ('2023-05-01', 0.005)])
+        cls.tax_wth_earnings_incurred_scale_test_5 = cls.env.ref('account.%i_ri_tax_withholding_earnings_incurred_group_110_insc' % cls.env.company.id)
+        cls.tax_wth_earnings_incurred_test_6 = cls.env.ref('account.%i_ri_tax_withholding_earnings_incurred_group_35_insc' % cls.env.company.id)
+        cls.earnings_withholding_sequence = cls.env['ir.sequence'].create({
+            'implementation': 'standard',
+            'name': 'tax wth test',
+            'padding': 1,
+            'number_increment': 1,
+        })
 
     def in_invoice_wht(self, l10n_latam_document_number):
         in_invoice_wht = self.env['account.move'].create({
@@ -65,6 +74,38 @@ class TestL10nArWithholdingArRi(TestAr):
         })
         in_invoice_wht.action_post()
         return in_invoice_wht
+
+    def in_invoice_3_wht(self):
+        invoice = self.env['account.move'].create({
+            "ref": "Invoice from partner Adhoc service",
+            "partner_id": self.res_partner_adhoc.id,
+            "move_type": "in_invoice",
+            "invoice_line_ids": [(0, 0, {
+                'product_id': self.service_iva_21.id,
+                'price_unit': 30000.0,
+                'quantity': 1
+            })],
+            "invoice_date": datetime.today(),
+            "l10n_latam_document_number": '1-1',
+        })
+        invoice.action_post()
+        return invoice
+
+    def in_invoice_4_wht(self):
+        invoice = self.env['account.move'].create({
+            "ref": "Invoice from partner Adhoc service",
+            "partner_id": self.res_partner_adhoc.id,
+            "move_type": "in_invoice",
+            "invoice_line_ids": [(0, 0, {
+                'product_id': self.service_iva_21.id,
+                'price_unit': 40000.0,
+                'quantity': 1
+            })],
+            "invoice_date": datetime.today(),
+            "l10n_latam_document_number": '1-2',
+        })
+        invoice.action_post()
+        return invoice
 
     def new_payment_register(self, move_ids, taxes):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move_ids.ids).create({'payment_date': '2023-01-01'})
@@ -174,3 +215,69 @@ class TestL10nArWithholdingArRi(TestAr):
         self.assertEqual(-0.605, line_2.amount_currency)
         self.assertEqual(-60.5, line_2.balance)
         self.assertEqual(6.05, payment.currency_id.round(sum(payment.l10n_ar_withholding_ids.mapped('amount_currency')) * -1  + payment.amount))
+
+    def test_05_earnings_withholding_applied_with_scale(self):
+        """Two payments with same withholding tax (with tax type 'Earnings Scale'). Verify withholding amount."""
+        invoice = self.in_invoice_3_wht()
+        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': invoice.company_id.id,
+            'tax_id': self.tax_wth_earnings_incurred_scale_test_5.id
+        })
+        taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
+        wizard = self.new_payment_register(invoice, taxes)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1600)
+        wizard.action_create_payments()
+        invoice2 = self.in_invoice_4_wht()
+        taxes = [{'id': invoice2.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice2.amount_untaxed}]
+        wizard = self.new_payment_register(invoice2, taxes)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 7480)
+        wizard.action_create_payments()
+
+    def test_06_earnings_withholding_applied(self):
+        """Two payments with same withholding tax (with tax type 'Earnings'). Verify withholding amount."""
+        invoice = self.in_invoice_3_wht()
+        self.tax_wth_earnings_incurred_test_6.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': invoice.company_id.id,
+            'tax_id': self.tax_wth_earnings_incurred_test_6.id
+        })
+        taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
+        wizard = self.new_payment_register(invoice, taxes)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1327.8)
+        wizard.action_create_payments()
+        invoice2 = self.in_invoice_4_wht()
+        taxes = [{'id': invoice2.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice2.amount_untaxed}]
+        wizard = self.new_payment_register(invoice2, taxes)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 2400)
+        wizard.action_create_payments()
+
+    def test_07_earnings_partial_payment_withholding_applied_with_scale(self):
+        """Partial payment with withholding tax (with tax type 'Earnings Scale'). Verify withholding amount."""
+        invoice = self.in_invoice_3_wht()
+        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': invoice.company_id.id,
+            'tax_id': self.tax_wth_earnings_incurred_scale_test_5.id
+        })
+        taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
+        wizard = self.new_payment_register(invoice, taxes)
+        wizard.amount -= 2420
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1360)
+
+    def test_08_earnings_withholding_applied_with_scale_and_minimun_withholdable_amount_set(self):
+        """Payment with withholding tax type 'Earnings Scale' and minimun withholdable amount set. Verify withholding amount."""
+        invoice = self.in_invoice_3_wht()
+        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_minimum_threshold = 2000
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': invoice.company_id.id,
+            'tax_id': self.tax_wth_earnings_incurred_scale_test_5.id
+        })
+        taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
+        wizard = self.new_payment_register(invoice, taxes)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 0.0)
