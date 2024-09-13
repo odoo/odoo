@@ -1478,3 +1478,46 @@ test("Keep the state of the branch when we open another branch in the same level
         "Claude\nJean",
     ]);
 });
+
+test("Avoid fetching subnodes if those subnodes are already in the view", async () => {
+    Employee._records.push({ id: 5, name: "Jean", parent_id: 2, child_ids: [] });
+
+    onRpc("web_search_read", () => {
+        expect.step("get child data");
+    });
+    onRpc("read_group", () => {
+        expect.step("fetch descendants");
+    });
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        arch: Employee._views["hierarchy,false"],
+        searchViewArch: `
+            <search>
+                <filter name="test_filter" domain="[['id', 'in', [1, 2, 3, 4, 5]]]"/>
+            </search>
+        `,
+    });
+    await enableFilters(["test_filter"]);
+    expect(".o_hierarchy_row").toHaveCount(1);
+    expect(".o_hierarchy_node").toHaveCount(5);
+    expect(queryAllTexts(".o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+        "Louis\nJosephine",
+        "Jean\nGeorges",
+    ]);
+    await contains(".o_hierarchy_node_button.btn-primary:eq(0)").click();
+    expect.verifySteps([]);
+    expect(".o_hierarchy_row").toHaveCount(2);
+    expect(queryAllTexts(".o_hierarchy_row:first-child .o_hierarchy_node_content")).toEqual([
+        "Albert",
+        "Louis\nJosephine",
+        "Jean\nGeorges",
+    ]);
+    expect(queryAllTexts(".o_hierarchy_row:last-child .o_hierarchy_node_content")).toEqual([
+        "Georges\nAlbert",
+        "Josephine\nAlbert",
+    ]);
+});
