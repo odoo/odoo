@@ -3414,6 +3414,9 @@ class AccountMoveLine(models.Model):
                 group_line['amount_currency'] = False
         return res
 
+    def _get_journal_items_full_name(self, name, display_name):
+        return name if not display_name or display_name in name else f"{display_name} {name}"
+
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------
