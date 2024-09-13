@@ -15,23 +15,25 @@ export class ButtonBox extends Component {
     };
 
     setup() {
-        const ui = useService("ui");
-        onWillRender(() => {
-            const maxVisibleButtons = [3, 4, 5, 7, 4, 5, 8][ui.size] || 8;
-            const allVisibleButtons = Object.entries(this.props.slots)
-                .filter(([_, slot]) => this.isSlotVisible(slot))
-                .map(([slotName]) => slotName);
-            if (allVisibleButtons.length <= maxVisibleButtons) {
-                this.visibleButtons = allVisibleButtons;
-                this.additionalButtons = [];
-                this.isFull = allVisibleButtons.length === maxVisibleButtons;
-            } else {
-                // -1 for "More" dropdown
-                this.visibleButtons = allVisibleButtons.slice(0, maxVisibleButtons - 1);
-                this.additionalButtons = allVisibleButtons.slice(maxVisibleButtons - 1);
-                this.isFull = true;
-            }
-        });
+        this.ui = useService("ui");
+        onWillRender(this.computeDisplayedButtons);
+    }
+
+    computeDisplayedButtons() {
+        const maxVisibleButtons = [3, 4, 5, 7, 4, 5, 8][this.ui.size] || 8;
+        const allVisibleButtons = Object.entries(this.props.slots)
+            .filter(([_, slot]) => this.isSlotVisible(slot))
+            .map(([slotName]) => slotName);
+        if (allVisibleButtons.length <= maxVisibleButtons) {
+            this.visibleButtons = allVisibleButtons;
+            this.additionalButtons = [];
+            this.isFull = allVisibleButtons.length === maxVisibleButtons;
+        } else {
+            // -1 for "More" dropdown
+            this.visibleButtons = allVisibleButtons.slice(0, maxVisibleButtons - 1);
+            this.additionalButtons = allVisibleButtons.slice(maxVisibleButtons - 1);
+            this.isFull = true;
+        }
     }
 
     isSlotVisible(slot) {
