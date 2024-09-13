@@ -148,6 +148,7 @@
         <t t-if="isTree(node.value)">
             <TreeEditor t-props="props"
                 update="(value) => this.updateLeafValue(node, value)"
+                slots="{}"
                 isSubTree="true"
                 tree="node.value"
                 resModel="getResModel(node)"
