@@ -14,3 +14,9 @@ class PosSession(models.Model):
         data = super()._load_pos_data_models(config_id)
         data += ['sale.order', 'sale.order.line']
         return data
+
+    def _load_pos_data(self, data):
+        data = super()._load_pos_data(data)
+        data['data'][0]['_sale_order_tree_view_id'] = self.env.ref('pos_sale.view_order_tree_inherit_pos_sale').id
+        data['data'][0]['_sale_order_kanban_view_id'] = self.env.ref('pos_sale.view_order_kanban_inherit_pos_sale').id
+        return data

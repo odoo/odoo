@@ -45,9 +45,22 @@ class SaleOrder(models.Model):
     @api.depends('order_line', 'amount_total', 'order_line.invoice_lines.parent_state', 'order_line.invoice_lines.price_total', 'order_line.pos_order_line_ids')
     def _compute_amount_unpaid(self):
         for sale_order in self:
-            total_invoice_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('invoice_lines').filtered(lambda l: l.parent_state != 'cancel').mapped('price_total'))
+            total_invoice_paid = 0
+            for line in sale_order.order_line.filtered(lambda l: not l.display_type).mapped('invoice_lines').filtered(lambda l: l.parent_state != 'cancel'):
+                if line.is_refund:
+                    total_invoice_paid -= line.price_total
+                else:
+                    total_invoice_paid += line.price_total
             total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
             sale_order.amount_unpaid = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
+
+    @api.depends()
+    def _compute_amount_to_invoice(self):
+        super()._compute_amount_to_invoice()
+
+        for order in self:
+            pos_order_lines_total_paid = sum(order.pos_order_line_ids.mapped('price_subtotal_incl'))
+            order.amount_to_invoice -= pos_order_lines_total_paid
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
@@ -68,13 +81,15 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
         for sale_line in self:
-            sale_line.qty_delivered += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids if sale_line.product_id.type != 'service'], 0)
+            if not sale_line.is_downpayment:
+                sale_line.qty_delivered += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids if sale_line.product_id.type != 'service'], 0)
 
     @api.depends('pos_order_line_ids.qty')
     def _compute_qty_invoiced(self):
         super()._compute_qty_invoiced()
         for sale_line in self:
-            sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
+            if not sale_line.is_downpayment:
+                sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
 
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]

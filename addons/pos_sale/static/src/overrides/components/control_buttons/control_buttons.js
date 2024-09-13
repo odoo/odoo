@@ -8,15 +8,19 @@ patch(ControlButtons.prototype, {
     onClickQuotation() {
         this.dialog.add(SelectCreateDialog, {
             resModel: "sale.order",
-            noCreate: true,
             multiSelect: false,
+            noCreate: true,
             domain: [
                 ["state", "!=", "cancel"],
-                ["invoice_status", "!=", "invoiced"],
+                ["amount_unpaid", ">", 0],
             ],
             onSelected: async (resIds) => {
-                await this.pos.onClickSaleOrder(resIds[0]);
+                return await this.pos.onClickSaleOrder(resIds[0]);
             },
+            size: "xl",
+            listViewId: this.pos.session._sale_order_tree_view_id,
+            kanbanViewId: this.pos.session._sale_order_kanban_view_id,
+            closeIfSelectCancel: false,
         });
     },
 });
