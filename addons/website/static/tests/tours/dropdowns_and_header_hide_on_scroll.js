@@ -26,7 +26,7 @@ const scrollDownToMediaList = function () {
         trigger: ":iframe #wrapwrap .s_media_list",
         run() {
             // Scroll down to the media list snippet.
-            this.anchor.scrollIntoView(true);
+            this.anchor.scrollIntoView({ behavior: "instant" });
         },
     };
 };
