@@ -71,6 +71,9 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
             ProductScreen.addOrderline("Letter Tray", "1", "10"),
             ProductScreen.clickPayButton(),
 
+            // check that ship later button is present
+            { trigger: ".payment-buttons button:contains('Ship Later')" },
+
             PaymentScreen.enterPaymentLineAmount("Bank", "99"),
             // trying to put 99 as an amount should throw an error. We thus confirm the dialog.
             Dialog.confirm(),

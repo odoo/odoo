@@ -117,7 +117,7 @@
                     <i class="fa me-2" t-attf-class="{{ currentOrder.is_to_invoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" /> 
                 </button>
             </div>
-            <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer" class="d-flex flex-column gap-2 w-100">
+            <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later" class="d-flex flex-column gap-2 w-100">
                 <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button btn btn-light btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.get_tip() }"
                     t-on-click="addTip">
                     <span t-attf-class="{{currentOrder.get_tip() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-heart me-2" />Tip</span>

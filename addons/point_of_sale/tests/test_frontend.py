@@ -676,7 +676,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'split_transactions': False,
             'company_id': self.env.company.id,
         })
-        self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)]})
+        self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)], 'ship_later': True})
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="pos_user")
 
