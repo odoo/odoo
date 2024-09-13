@@ -9,7 +9,7 @@
                 <field name="email_normalized" invisible="1"/>
                 <field name="partner_phone_sanitized" invisible="1"/>
                 <header>
-                    <button string="Create Employee" name="create_employee_from_candidate" type="object" data-hotkey="q" groups="hr_recruitment.group_hr_recruitment_user"
+                    <button string="Create Employee" name="create_employee_from_candidate" type="object" data-hotkey="q" groups="hr.group_hr_user"
                             class="o_create_employee" invisible="employee_id or not active"/>
                 </header>
                 <sheet>
@@ -35,7 +35,7 @@
                         </button>
                         <button name="action_open_similar_candidates"
                                 class="oe_stat_button"
-                                icon="fa-pencil"
+                                icon="fa-users"
                                 type="object"
                                 context="{'active_test': False}"
                                 invisible="similar_candidates_count == 0">

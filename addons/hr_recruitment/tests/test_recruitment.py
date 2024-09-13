@@ -41,9 +41,9 @@ class TestRecruitment(TransactionCase):
                 'email_from': 'laure.poiret@aol.ru',
             },
         ])
-        self.assertEqual(dup1.similar_candidates_count, 1)
-        self.assertEqual(dup2.similar_candidates_count, 1)
-        self.assertEqual(no_dup.similar_candidates_count, 0)
+        self.assertEqual(dup1.candidate_id.similar_candidates_count, 1)
+        self.assertEqual(dup2.candidate_id.similar_candidates_count, 1)
+        self.assertEqual(no_dup.candidate_id.similar_candidates_count, 0)
 
     def test_similar_candidates_count(self):
         """ Test that we find same candidates based on simmilar mail,
@@ -90,11 +90,11 @@ class TestRecruitment(TransactionCase):
                 }).id,
             },
         ])
-        self.assertEqual(A.similar_candidates_count, 2)  # C, D
-        self.assertEqual(B.similar_candidates_count, 1)  # D, F
-        self.assertEqual(C.similar_candidates_count, 1)  # A, D
-        self.assertEqual(D.similar_candidates_count, 2)  # A, B, C
-        self.assertEqual(E.similar_candidates_count, 0)  # Should not match with G
+        self.assertEqual(A.candidate_id.similar_candidates_count, 2)  # C, D
+        self.assertEqual(B.candidate_id.similar_candidates_count, 1)  # D, F
+        self.assertEqual(C.candidate_id.similar_candidates_count, 1)  # A, D
+        self.assertEqual(D.candidate_id.similar_candidates_count, 2)  # A, B, C
+        self.assertEqual(E.candidate_id.similar_candidates_count, 0)  # Should not match with G
 
     def test_application_no_partner_duplicate(self):
         """ Test that when applying, the existing partner
