@@ -19,6 +19,9 @@ const RatingPopupComposer = publicWidget.Widget.extend({
     custom_events: {
         reload_rating_popup_composer: '_onReloadRatingPopupComposer',
     },
+    assetLibs: [
+        'portal_rating.assets_portal_rating_xml',
+    ],
 
     willStart: function (parent) {
         const def = this._super.apply(this, arguments);
