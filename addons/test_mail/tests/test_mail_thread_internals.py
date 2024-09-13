@@ -95,7 +95,7 @@ class TestAPI(MailCommon, TestRecipients):
         )
         self.assertEqual(message.body, expected)
         ticket_record._message_update_content(message, "Hello <R&D/>")
-        self.assertEqual(message.body, Markup("<p>Hello &lt;R&amp;D/&gt;</p>"))
+        self.assertEqual(message.body, Markup('<p>Hello &lt;R&amp;D/&gt;<span class="o-mail-Message-edited"></span></p>'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
@@ -119,6 +119,12 @@ class TestAPI(MailCommon, TestRecipients):
         self.assertEqual(message.body, "<p>Initial Body</p>")
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
+        # clear the content when having attachments should show edit label
+        ticket_record._message_update_content(
+            message, "",
+        )
+        self.assertEqual(message.attachment_ids, attachments)
+        self.assertEqual(message.body, Markup('<span class="o-mail-Message-edited"></span>'))
         # update the content with new attachments
         new_attachments = self.env['ir.attachment'].create(
             self._generate_attachments_data(2, 'mail.compose.message', 0)
@@ -130,7 +136,7 @@ class TestAPI(MailCommon, TestRecipients):
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
         self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
         self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
-        self.assertEqual(message.body, "<p>New Body</p>")
+        self.assertEqual(message.body, Markup('<p>New Body</p><span class="o-mail-Message-edited"></span>'))
 
         # void attachments
         ticket_record._message_update_content(
@@ -139,7 +145,7 @@ class TestAPI(MailCommon, TestRecipients):
         )
         self.assertFalse(message.attachment_ids)
         self.assertFalse((attachments + new_attachments).exists())
-        self.assertEqual(message.body, "<p>Another Body, void attachments</p>")
+        self.assertEqual(message.body, Markup('<p>Another Body, void attachments</p><span class="o-mail-Message-edited"></span>'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')

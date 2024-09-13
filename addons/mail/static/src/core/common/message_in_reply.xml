@@ -14,6 +14,7 @@
                         <span class="o-mail-MessageInReply-message ms-1 text-break">
                             <t t-if="!props.message.parentMessage.isBodyEmpty">
                                 <t t-out="props.message.parentMessage.body"/>
+                                <em t-if="props.message.parentMessage.edited" class="smaller fw-bold text-500"> (edited)</em>
                             </t>
                             <t t-elif="props.message.parentMessage.attachment_ids.length > 0">
                                 <span class="me-2 fst-italic">Click to see the attachments</span>
