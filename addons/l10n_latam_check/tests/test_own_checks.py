@@ -16,7 +16,7 @@ class TestOwnChecks(L10nLatamCheckTest):
             payment_form.journal_id = self.bank_journal
             payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines(
                 'outbound').filtered(lambda x: x.code == 'own_checks')[0]
-            payment_form.ref = 'Deferred check'
+            payment_form.memo = 'Deferred check'
             with payment_form.l10n_latam_new_check_ids.new() as check1:
                 check1.name = '00000001'
                 check1.payment_date = fields.Date.add(fields.Date.today(), months=1)
@@ -49,7 +49,7 @@ class TestOwnChecks(L10nLatamCheckTest):
             payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines(
                 'outbound').filtered(lambda x: x.code == 'own_checks')[0]
 
-            payment_form.ref = 'Deferred check'
+            payment_form.memo = 'Deferred check'
             with payment_form.l10n_latam_new_check_ids.new() as check1:
                 check1.name = '00000003'
                 check1.payment_date = fields.Date.add(fields.Date.today(), months=1)

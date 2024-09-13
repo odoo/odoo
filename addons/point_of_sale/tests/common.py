@@ -173,7 +173,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.pos_receivable_account = cls.company.account_default_pos_receivable_account_id
         cls.pos_receivable_cash = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Cash'})
         cls.pos_receivable_bank = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable Bank'})
-        cls.outstanding_bank = cls.copy_account(cls.company.account_journal_payment_debit_account_id, {'name': 'Outstanding Bank'})
+        cls.outstanding_bank = cls.copy_account(cls.inbound_payment_method_line.payment_account_id, {'name': 'Outstanding Bank'})
         cls.c1_receivable = cls.copy_account(cls.receivable_account, {'name': 'Customer 1 Receivable'})
         cls.other_receivable_account = cls.env['account.account'].create({
             'name': 'Other Receivable',

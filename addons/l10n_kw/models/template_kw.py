@@ -35,8 +35,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'kw_account_100102',
                 'account_journal_early_pay_discount_loss_account_id': 'kw_account_501107',
                 'account_journal_early_pay_discount_gain_account_id': 'kw_account_400304',
-                'account_journal_payment_debit_account_id': 'kw_account_100103',
-                'account_journal_payment_credit_account_id': 'kw_account_100104',
                 'default_cash_difference_income_account_id': 'kw_account_400302',
                 'default_cash_difference_expense_account_id': 'kw_account_500909',
                 'deferred_expense_account_id': 'kw_account_100416',

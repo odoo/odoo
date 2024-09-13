@@ -71,20 +71,16 @@ class AccountPayment(models.Model):
                 )
             # checks being moved
             if rec._is_latam_check_payment(check_subtype='move_check'):
-                if any(check.payment_id.state != 'posted' for check in rec.l10n_latam_move_check_ids):
+                if any(check.payment_id.state != 'in_process' for check in rec.l10n_latam_move_check_ids):
                     msgs.append(
-                        _('Selected checks "%s" are not posted', rec.l10n_latam_move_check_ids.filtered(lambda x: x.payment_id.state != 'posted').mapped('display_name'))
+                        _('Selected checks "%s" are not posted', rec.l10n_latam_move_check_ids.filtered(lambda x: x.payment_id.state != 'in_process').mapped('display_name'))
                     )
-                elif (
-                    (rec.payment_type == 'outbound' and any(check.current_journal_id != rec.journal_id for check in rec.l10n_latam_move_check_ids)) or
-                    (rec.payment_type == 'inbound' and rec.is_internal_transfer and
-                    any(check.current_journal_id != rec.destination_journal_id for check in rec.l10n_latam_move_check_ids))
-                ):
+                elif rec.payment_type == 'outbound' and any(check.current_journal_id != rec.journal_id for check in rec.l10n_latam_move_check_ids):
                     # check outbound payment and transfer or inbound transfer
                     msgs.append(_(
                         'Some checks are not anymore in journal, it seems it has been moved by another payment.')
                     )
-                elif rec.payment_type == 'inbound' and not rec.is_internal_transfer and any(rec.l10n_latam_move_check_ids.mapped('current_journal_id')):
+                elif rec.payment_type == 'inbound' and any(rec.l10n_latam_move_check_ids.mapped('current_journal_id')):
                     msgs.append(
                         _("Some checks are already in hand and can't be received again. Checks: %s",
                           ', '.join(rec.l10n_latam_move_check_ids.mapped('display_name')))
@@ -194,7 +190,7 @@ class AccountPayment(models.Model):
             check.outstanding_line_id.move_id.unlink()
 
     @api.depends(
-        'payment_method_line_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id', 'company_id',
+        'payment_method_line_id', 'state', 'date', 'amount', 'currency_id', 'company_id',
         'l10n_latam_move_check_ids.issuer_vat', 'l10n_latam_move_check_ids.bank_id', 'l10n_latam_move_check_ids.payment_id.date',
         'l10n_latam_new_check_ids.amount', 'l10n_latam_new_check_ids.name',
     )
@@ -218,7 +214,7 @@ class AccountPayment(models.Model):
                         ('bank_id', '=', check.bank_id.id),
                         ('issuer_vat', '=', check.issuer_vat),
                         ('name', '=', check.name),
-                        ('payment_id.state', '=', 'posted'),
+                        ('payment_id.state', '=', 'in_process'),
                         ('id', '!=', check._origin.id)], limit=1)
                 if same_checks:
                     msgs.append(
@@ -227,17 +223,6 @@ class AccountPayment(models.Model):
                           ", ".join(same_checks.mapped('display_name')))
                     )
             rec.l10n_latam_check_warning_msg = msgs and '* %s' % '\n* '.join(msgs) or False
-
-    @api.depends('is_internal_transfer')
-    def _compute_payment_method_line_fields(self):
-        """ Add is_internal_transfer as a trigger to re-compute """
-        return super()._compute_payment_method_line_fields()
-
-    def _get_payment_method_codes_to_exclude(self):
-        res = super()._get_payment_method_codes_to_exclude()
-        if self.is_internal_transfer:
-            res.append('new_third_party_checks')
-        return res
 
     @api.model
     def _get_trigger_fields_to_synchronize(self):
@@ -268,31 +253,3 @@ class AccountPayment(models.Model):
                 'name': document_name + ' - ' + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
             })
         return res
-
-    def _create_paired_internal_transfer_payment(self):
-        """
-        Two modifications when only when transferring from a third party checks journal:
-        1. When a paired transfer is created, the default odoo behavior is to use on the paired transfer the first
-        available payment method. If we are transferring to another third party checks journal, then set as payment
-        method on the paired transfer 'in_third_party_checks' or 'out_third_party_checks'
-        2. On the paired transfer set the l10n_latam_check_id field, this field is needed for the
-        operation_ids and also for some warnings and constrains.
-        """
-        third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code in [
-            'in_third_party_checks',
-            'out_third_party_checks'
-        ])
-        for rec in third_party_checks:
-            dest_payment_method_code = 'in_third_party_checks' if rec.payment_type == 'outbound' else 'out_third_party_checks'
-            dest_payment_method = rec.destination_journal_id.inbound_payment_method_line_ids.filtered(
-                lambda x: x.code == dest_payment_method_code)
-            if dest_payment_method:
-                super(AccountPayment, rec.with_context(
-                    default_payment_method_line_id=dest_payment_method.id,
-                    default_l10n_latam_move_check_ids=rec.l10n_latam_move_check_ids.ids,
-                ))._create_paired_internal_transfer_payment()
-            else:
-                super(AccountPayment, rec.with_context(
-                    default_l10n_latam_move_check_ids=rec.l10n_latam_move_check_ids.ids,
-                ))._create_paired_internal_transfer_payment()
-        super(AccountPayment, self - third_party_checks)._create_paired_internal_transfer_payment()

@@ -20,6 +20,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         cls.payment_method_line_check = bank_journal.outbound_payment_method_line_ids\
             .filtered(lambda l: l.code == 'check_printing')
+        cls.payment_method_line_check.payment_account_id = cls.inbound_payment_method_line.payment_account_id
 
     def test_in_invoice_check_manual_sequencing(self):
         ''' Test the check generation for vendor bills. '''

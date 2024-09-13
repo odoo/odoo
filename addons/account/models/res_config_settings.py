@@ -68,27 +68,6 @@ class ResConfigSettings(models.TransientModel):
         help='Bank Transactions are posted immediately after import or synchronization. '
              'Their counterparty is the bank suspense account.\n'
              'Reconciliation replaces the latter by the definitive account(s).')
-    account_journal_payment_debit_account_id = fields.Many2one(
-        comodel_name='account.account',
-        string='Outstanding Receipts',
-        readonly=False,
-        check_company=True,
-        related='company_id.account_journal_payment_debit_account_id',
-        domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
-        help='Incoming payments are posted on an Outstanding Receipts Account. '
-             'In the bank reconciliation widget, they appear as blue lines.\n'
-             'Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable '
-             'Account.')
-    account_journal_payment_credit_account_id = fields.Many2one(
-        comodel_name='account.account',
-        string='Outstanding Payments',
-        readonly=False,
-        check_company=True,
-        related='company_id.account_journal_payment_credit_account_id',
-        domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
-        help='Outgoing Payments are posted on an Outstanding Payments Account. '
-             'In the bank reconciliation widget, they appear as blue lines.\n'
-             'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
     transfer_account_id = fields.Many2one('account.account', string="Internal Transfer",
         related='company_id.transfer_account_id', readonly=False,
         check_company=True,

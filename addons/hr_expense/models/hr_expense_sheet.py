@@ -630,7 +630,7 @@ class HrExpenseSheet(models.Model):
             record_ids = self.account_move_ids
         else:
             res_model = 'account.payment'
-            record_ids = self.account_move_ids.mapped('payment_id')
+            record_ids = self.account_move_ids.origin_payment_id
 
         action = {'type': 'ir.actions.act_window', 'res_model': res_model}
         if len(self.account_move_ids) == 1:
@@ -744,11 +744,6 @@ class HrExpenseSheet(models.Model):
             - Expense paid by he employee's own account -> As it should be reimbursed to them, it creates a vendor bill.
         """
         self = self.with_context(clean_context(self.env.context))  # remove default_*
-        skip_context = {
-            'skip_invoice_sync': True,
-            'skip_invoice_line_sync': True,
-            'skip_account_move_synchronization': True,
-        }
         own_account_sheets = self.filtered(lambda sheet: sheet.payment_mode == 'own_account')
         company_account_sheets = self - own_account_sheets
 
@@ -757,10 +752,17 @@ class HrExpenseSheet(models.Model):
         moves_sudo = self.env['account.move'].sudo().create([sheet._prepare_bills_vals() for sheet in own_account_sheets])
         for move_sudo in moves_sudo:
             move_sudo._message_set_main_attachment_id(move_sudo.attachment_ids, force=True, filter_xml=False)
-        payments_sudo = self.env['account.payment'].with_context(**skip_context).sudo().create([
-            expense._prepare_payments_vals() for expense in company_account_sheets.expense_line_ids
-        ])
-        moves_sudo |= payments_sudo.move_id
+        if company_account_sheets:
+            move_vals_list, payment_vals_list = zip(*[
+                expense._prepare_payments_vals()
+                for expense in company_account_sheets.expense_line_ids
+            ])
+            payments_sudo = self.env['account.payment'].sudo().create(payment_vals_list)
+            moves_sudo = self.env['account.move'].sudo().create(move_vals_list)
+            for payment, move in zip(payments_sudo, moves_sudo):
+                payment.write({'move_id': move.id, 'state': 'in_process'})
+                move.origin_payment_id = payment
+            moves_sudo |= payments_sudo.move_id
 
         # returning the move with the super user flag set back as it was at the origin of the call
         return moves_sudo.sudo(self.env.su)
@@ -857,8 +859,14 @@ class HrExpenseSheet(models.Model):
             journal = self.payment_method_line_id.journal_id
             account_dest = (
                 self.payment_method_line_id.payment_account_id
-                or journal.company_id.account_journal_payment_credit_account_id
+                or journal.company_id.expense_outstanding_account_id
             )
+            if not account_dest:
+                raise UserError(_(
+                    "The payment method %(method)s needs an account, "
+                    "or a default outstanding account must be defined in the settings.",
+                    method=self.payment_method_line_id.display_name,
+                ))
         else:
             if not self.employee_id.sudo().work_contact_id:
                 raise UserError(_("No work contact found for the employee %s, please configure one.", self.employee_id.name))

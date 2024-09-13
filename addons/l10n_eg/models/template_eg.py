@@ -30,8 +30,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_suspense_account_id': 'egy_account_201001',
                 'account_journal_early_pay_discount_loss_account_id': 'egy_account_400079',
                 'account_journal_early_pay_discount_gain_account_id': 'egy_account_500014',
-                'account_journal_payment_debit_account_id': 'egy_account_101004',
-                'account_journal_payment_credit_account_id': 'egy_account_105003',
                 'default_cash_difference_income_account_id': 'egy_account_999002',
                 'default_cash_difference_expense_account_id': 'egy_account_999001',
                 'account_sale_tax_id': 'eg_standard_sale_14',

@@ -731,20 +731,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'code_digits': code_digits,
                 'account_type': 'asset_current',
             },
-            'account_journal_payment_debit_account_id': {
-                'name': _("Outstanding Receipts"),
-                'prefix': bank_prefix,
-                'code_digits': code_digits,
-                'account_type': 'asset_current',
-                'reconcile': True,
-            },
-            'account_journal_payment_credit_account_id': {
-                'name': _("Outstanding Payments"),
-                'prefix': bank_prefix,
-                'code_digits': code_digits,
-                'account_type': 'asset_current',
-                'reconcile': True,
-            },
             'account_journal_early_pay_discount_loss_account_id': {
                 'name': _("Cash Discount Loss"),
                 'code': '999998',

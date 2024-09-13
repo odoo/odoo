@@ -213,7 +213,7 @@ class TestAccountPayment(AccountPaymentCommon):
             self.assertRecordValues(payment_method_line, [{'journal_id': copy_journal.id}])
 
             # Test duplication of the provider.
-            payment_method_line.payment_account_id = self.env.company.account_journal_payment_debit_account_id
+            payment_method_line.payment_account_id = self.inbound_payment_method_line.payment_account_id
             copy_provider = self.provider.copy()
             self.assertRecordValues(copy_provider, [{'journal_id': False}])
             copy_provider.state = 'test'

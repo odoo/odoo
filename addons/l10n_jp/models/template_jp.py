@@ -32,8 +32,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'l10n_jp_425700',
                 'expense_currency_exchange_account_id': 'l10n_jp_513500',
                 'account_journal_suspense_account_id': 'l10n_jp_123900',
-                'account_journal_payment_credit_account_id': 'l10n_jp_123700',
-                'account_journal_payment_debit_account_id': 'l10n_jp_123800',
                 'default_cash_difference_expense_account_id': 'l10n_jp_510100',
                 'default_cash_difference_income_account_id': 'l10n_jp_999002',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_jp_510200',

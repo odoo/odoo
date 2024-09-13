@@ -47,9 +47,12 @@
                     <div role="alert" class="alert alert-warning" invisible="not missing_account_partners">
                         <span class="fw-bold">Payments related to partners with no bank account specified will be skipped. <button class="oe_link p-0 align-baseline" type="object" name="action_open_missing_account_partners">View Partner(s)</button></span>
                     </div>
-                    <div role="alert" class="alert alert-warning" invisible="not duplicate_move_ids">
+                    <div role="alert" class="alert alert-warning" invisible="not duplicate_payment_ids">
                         <span>This payment has the same partner, amount and date as </span>
-                        <field name="duplicate_move_ids" widget="x2many_buttons" string="Duplicated Payments"/>
+                        <field name="duplicate_payment_ids" widget="x2many_buttons" string="Duplicated Payments"/>
+                    </div>
+                    <div role="alert" invisible="not actionable_errors">
+                        <field name="actionable_errors" widget="actionable_errors"/>
                     </div>
                     <group>
                         <group name="group1">
@@ -64,8 +67,8 @@
                                    context="{'display_account_trust': True, 'default_partner_id': partner_id}"/>
                             <field name="group_payment"
                                    invisible="not can_group_payments"/>
-                            <label for="payment_difference" invisible="payment_difference == 0.0 or early_payment_discount_mode or not can_edit_wizard or can_group_payments and not group_payment"/>
-                            <div invisible="payment_difference == 0.0 or early_payment_discount_mode or not can_edit_wizard or can_group_payments and not group_payment">
+                            <label for="payment_difference" invisible="not show_payment_difference"/>
+                            <div invisible="not show_payment_difference">
                                 <field name="payment_difference"/>
                                 <field name="payment_difference_handling" widget="radio" nolabel="1" invisible="is_register_payment_on_draft"/>
                                 <div class="o_inner_group grid col-lg-12 p-0"

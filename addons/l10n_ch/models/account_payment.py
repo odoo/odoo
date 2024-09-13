@@ -10,7 +10,7 @@ class AccountPayment(models.Model):
 
     l10n_ch_reference_warning_msg = fields.Char(compute='_compute_l10n_ch_reference_warning_msg')
 
-    @api.onchange('partner_id', 'ref', 'payment_type')
+    @api.onchange('partner_id', 'memo', 'payment_type')
     def _compute_l10n_ch_reference_warning_msg(self):
         for payment in self:
             if payment.payment_type == 'outbound' and\

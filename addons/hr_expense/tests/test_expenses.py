@@ -156,7 +156,7 @@ class TestExpenses(TestExpenseCommon):
         default_account_payable_id = self.company_data['default_account_payable'].id
         product_b_account_id = self.product_b.property_account_expense_id.id
         product_c_account_id = self.product_c.property_account_expense_id.id
-        company_payment_account_id = self.company_data['company'].account_journal_payment_credit_account_id.id
+        company_payment_account_id = self.outbound_payment_method_line.payment_account_id.id
         # One payment per expense
         self.assertRecordValues(expense_sheets.account_move_ids.line_ids.sorted(lambda line: (line.move_id.expense_sheet_id, line)), [
             # own_account expense sheet move
@@ -211,14 +211,17 @@ class TestExpenses(TestExpenseCommon):
             (self.analytic_account_1 | self.analytic_account_2).unlink()
 
         # Unlinking moves
-        (payment_1 | payment_2).action_draft()
+        (payment_1 | payment_2).move_id.button_draft()
         self.assertRecordValues(expense_sheet_by_employee, [{'payment_state': 'not_paid', 'state': 'post'}])
         expense_sheet_by_employee.account_move_ids.button_draft()
         expense_sheet_by_employee.account_move_ids.unlink()
 
         with self.assertRaises(UserError, msg="For company-paid expenses report, deleting payments is an all-or-nothing situation"):
-            expense_sheet_by_company.account_move_ids[:-1].payment_id.unlink()
-        expense_sheet_by_company.account_move_ids.payment_id.unlink()
+            expense_sheet_by_company.account_move_ids[:-1].button_draft()
+            expense_sheet_by_company.account_move_ids[:-1].unlink()
+        expense_sheet_by_company.account_move_ids.origin_payment_id.unlink()
+        expense_sheet_by_company.account_move_ids.button_draft()
+        expense_sheet_by_company.account_move_ids.unlink()
 
         self.assertRecordValues(expense_sheets.sorted('payment_mode'), [
             {'payment_mode': 'company_account', 'state': 'approve', 'payment_state': 'not_paid', 'account_move_ids': []},
@@ -273,8 +276,8 @@ class TestExpenses(TestExpenseCommon):
             'move date should be the same as the expense date'
         )
         self.assertEqual(expense_sheet.state, 'done', 'sheet should be marked as done')
-        self.assertTrue(90 == move_twelve_january.amount_total == move_twelve_january.payment_id.amount)
-        self.assertTrue(350 == move_first_january.amount_total == move_first_january.payment_id.amount)
+        self.assertTrue(90 == move_twelve_january.amount_total == move_twelve_january.origin_payment_id.amount)
+        self.assertTrue(350 == move_first_january.amount_total == move_first_january.origin_payment_id.amount)
         self.assertEqual(440, expense_sheet.total_amount)
         self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
 
@@ -504,7 +507,7 @@ class TestExpenses(TestExpenseCommon):
             {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 1520.00, 'currency_id': foreign_currency_2.id},
             {'amount_total_in_currency_signed': 1000.00, 'amount_total_signed': 3000.00, 'currency_id': foreign_currency_2.id},
         ])
-        self.assertRecordValues(expenses_sheet_currencies_mix.account_move_ids.payment_id.sorted('id'), [
+        self.assertRecordValues(expenses_sheet_currencies_mix.account_move_ids.origin_payment_id.sorted('id'), [
             {'amount': 1000.00, 'payment_type': 'outbound', 'currency_id': foreign_currency_1.id},
             {'amount': 1000.00, 'payment_type': 'outbound', 'currency_id': foreign_currency_2.id},
             {'amount': 1000.00, 'payment_type': 'outbound', 'currency_id': foreign_currency_2.id},
@@ -955,7 +958,8 @@ class TestExpenses(TestExpenseCommon):
             'name': 'Check',
             'payment_method_id': check_method.id,
             'journal_id': self.company_data['default_journal_bank'].id,
-            })
+            'payment_account_id': self.inbound_payment_method_line.payment_account_id.id,
+        })
 
         expense_sheet = self.env['hr.expense.sheet'].create({
             'name': 'Sheet test',
@@ -977,7 +981,7 @@ class TestExpenses(TestExpenseCommon):
         expense_sheet.action_submit_sheet()
         expense_sheet.action_approve_expense_sheets()
         expense_sheet.action_sheet_move_post()
-        self.assertRecordValues(expense_sheet.account_move_ids.payment_id, [{'payment_method_line_id': new_payment_method_line.id}])
+        self.assertRecordValues(expense_sheet.account_move_ids.origin_payment_id, [{'payment_method_line_id': new_payment_method_line.id}])
 
     def test_expense_vendor(self):
         """ This test will do a basic flow when a vendor is set on the expense """
@@ -1036,12 +1040,12 @@ class TestExpenses(TestExpenseCommon):
         sheet.action_submit_sheet()
         sheet.action_approve_expense_sheets()
         sheet.action_sheet_move_post()
-        payment = sheet.account_move_ids.payment_id
+        payment = sheet.account_move_ids.origin_payment_id
 
         with self.assertRaises(UserError, msg="Cannot edit payment amount after linking to an expense"):
             payment.write({'amount': 500})
 
-        payment.write({'is_move_sent': True})
+        payment.write({'is_sent': True})
 
     def test_corner_case_expense_reported_cannot_be_zero(self):
         """
