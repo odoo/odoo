@@ -84,7 +84,7 @@ class TestLotValuation(TestStockValuationCommon):
 
     def test_real_time_valuation(self):
         """ Test account move lines contains lot """
-        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.stock_journal = _create_accounting_data(self.env)
+        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.income_account, self.stock_journal = _create_accounting_data(self.env)
         self.product1.categ_id.write({
             'property_stock_account_input_categ_id': self.stock_input_account.id,
             'property_stock_account_output_categ_id': self.stock_output_account.id,
