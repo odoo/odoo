@@ -148,6 +148,7 @@ class HrCandidate(models.Model):
                     WHERE c.id != sub.id
                      AND ((coalesce(c.email_normalized, '') <> '' AND sub.email_normalized = c.email_normalized)
                        OR (coalesce(c.partner_phone_sanitized, '') <> '' AND c.partner_phone_sanitized = sub.partner_phone_sanitized))
+                      AND c.company_id = sub.company_id
                 ) AS similar_candidates
             FROM hr_candidate AS c
             WHERE id IN %(ids)s
@@ -172,6 +173,7 @@ class HrCandidate(models.Model):
             domain = expression.OR([domain, [('email_normalized', '=', self.email_normalized)]])
         if self.partner_phone_sanitized:
             domain = expression.OR([domain, [('partner_phone_sanitized', '=', self.partner_phone_sanitized)]])
+        domain = expression.AND([domain, [('company_id', '=', self.company_id.id)]])
         return domain
 
     def _compute_attachment_count(self):

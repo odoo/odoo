@@ -51,8 +51,6 @@ class Applicant(models.Model):
     emp_is_active = fields.Boolean(related="candidate_id.emp_is_active")
     employee_name = fields.Char(related="candidate_id.employee_name")
 
-    similar_candidates_count = fields.Integer(related="candidate_id.similar_candidates_count")
-
     probability = fields.Float("Probability")
     create_date = fields.Datetime("Applied on", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
@@ -133,7 +131,14 @@ class Applicant(models.Model):
     @api.depends('candidate_id')
     def _compute_other_applications_count(self):
         for applicant in self:
-            applicant.other_applications_count = max(len(applicant.candidate_id.applicant_ids) - 1, 0)
+            same_candidate_applications = max(len(applicant.candidate_id.applicant_ids) - 1, 0)
+            if applicant.candidate_id:
+                domain = applicant.candidate_id._get_similar_candidates_domain()
+                similar_candidates = self.env['hr.candidate'].with_context(active_test=False).search(domain) - applicant.candidate_id
+                similar_candidate_applications = sum(len(candidate.applicant_ids) for candidate in similar_candidates)
+                applicant.other_applications_count = similar_candidate_applications + same_candidate_applications
+            else:
+                applicant.other_applications_count = same_candidate_applications
 
     @api.depends('date_open', 'date_closed')
     def _compute_day(self):
@@ -487,21 +492,23 @@ class Applicant(models.Model):
 
     def action_open_other_applications(self):
         self.ensure_one()
+        similar_candidates = (
+            self.env["hr.candidate"]
+            .with_context(active_test=False)
+            .search(self.candidate_id._get_similar_candidates_domain())
+            - self.candidate_id
+        )
         return {
             'name': _('Other Applications'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.applicant',
             'view_mode': 'list,kanban,form,pivot,graph,calendar,activity',
-            'domain': [('id', 'in', (self.candidate_id.applicant_ids - self).ids)],
+            'domain': [('id', 'in', (self.candidate_id.applicant_ids - self + similar_candidates.applicant_ids).ids)],
             'context': {
                 'active_test': False,
                 'search_default_stage': 1,
             },
         }
-
-    def action_open_similar_candidates(self):
-        self.ensure_one()
-        return self.candidate_id.action_open_similar_candidates()
 
     def _track_template(self, changes):
         res = super(Applicant, self)._track_template(changes)
