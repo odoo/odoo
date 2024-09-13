@@ -526,8 +526,12 @@ class TestLeadAssign(TestLeadAssignCommon):
             'assignment_max': 30,
         })
 
-        sales_team_4_m1.lead_month_count = 30
-        sales_team_4_m1.lead_day_count = 2
+        with self.env.protecting(  # Avoid warning because fields are cannot write normally.
+            (sales_team_4_m1._fields['lead_day_count'], sales_team_4_m1._fields['lead_month_count']),
+            sales_team_4_m1,
+        ):
+            sales_team_4_m1.lead_month_count = 30
+            sales_team_4_m1.lead_day_count = 2
         leads.team_id = sales_team_4.id
 
         members_data = sales_team_4._assign_and_convert_leads()

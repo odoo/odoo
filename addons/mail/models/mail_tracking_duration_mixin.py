@@ -27,10 +27,10 @@ class MailTrackingDurationMixin(models.AbstractModel):
                 tracked_field = fields.Many2one('tracked.model', tracking=True)
         """
 
-        field = self.env['ir.model.fields'].sudo().search_fetch([
+        field = self.env['ir.model.fields'].sudo().search([
             ('model', '=', self._name),
             ('name', '=', self._track_duration_field),
-        ], ['id'], limit=1)
+        ], limit=1)
 
         if (
             self._track_duration_field not in self._track_get_fields()

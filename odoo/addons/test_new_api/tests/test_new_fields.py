@@ -4102,7 +4102,7 @@ class TestSelectionUpdates(TransactionCase):
         related_record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
         with self.assertQueryCount(2):  # defaults (readonly related field), INSERT
             record = self.env[self.MODEL_RELATED].create({'selection_id': related_record.id})
-        with self.assertQueryCount(0):
+        with self.assertQueryCount(0), mute_logger('odoo.models'):
             record.related_selection = 'bar'
 
     def test_selection_related(self):

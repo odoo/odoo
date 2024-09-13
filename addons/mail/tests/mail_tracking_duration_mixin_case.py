@@ -67,7 +67,7 @@ class MailTrackingDurationMixinCase(MailCommon):
             records (recordset): all the records that need to be asserted
             record_to_tracking_dic (list): A list of tuples mapping records to their respective tracking dictionaries.
         """
-        records._compute_duration_tracking()
+        records.invalidate_recordset(['duration_tracking'])
         for record, tracking_dic in record_to_tracking_dic:
             self.assertDictEqual(dict(tracking_dic), record.duration_tracking)
 

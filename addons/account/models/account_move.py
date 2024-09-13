@@ -1532,7 +1532,7 @@ class AccountMove(models.Model):
         for move in self.with_context(active_test=False):
             move.display_inactive_currency_warning = move.state == 'draft' and move.currency_id and not move.currency_id.active
 
-    @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
+    @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
         foreign_vat_records = self.filtered(lambda r: r.fiscal_position_id.foreign_vat)
         for fiscal_position_id, record_group in groupby(foreign_vat_records, key=lambda r: r.fiscal_position_id):
@@ -2222,7 +2222,16 @@ class AccountMove(models.Model):
         a different country than the one allowed by the fiscal country or the fiscal position.
         This contrains ensure such account.move cannot be kept, as they could generate inconsistencies in the reports.
         """
-        self._compute_tax_country_id() # We need to ensure this field has been computed, as we use it in our check
+
+        # Because `tax_country_id` depends `fiscal_position_id`, when one dependency of `fiscal_position_id` change
+        # `tax_country_id` will be invalidated and `fiscal_position_id` is mark as recompute and when we will access to
+        # `tax_country_id`, the ORM protects `tax_country_id` and call `_compute_tax_country_id` which
+        # needs `fiscal_position_id` -> `_compute_field_value` (ORM) -> `_validate_taxes_country` but
+        # `tax_country_id` is still protected then `record.tax_country_id` record False
+        # It is a limitation of the ORM. To avoid the situation but still keeping the check,
+        # recall `_compute_tax_country_id` on protected records (but this time `fiscal_position_id` will be already computed)
+        self.env.protected(self._fields['tax_country_id'])._compute_tax_country_id()
+
         for record in self:
             amls = record.line_ids
             impacted_countries = amls.tax_ids.country_id | amls.tax_line_id.country_id
@@ -2598,7 +2607,8 @@ class AccountMove(models.Model):
         inv_existing_before = existing()
         needed_before = needed()
         dirty_recs_before, dirty_fname = dirty()
-        dirty_recs_before[dirty_fname] = False
+        with self.env.protecting([dirty_recs_before._fields[dirty_fname]], dirty_recs_before):  # to avoid calling write
+            dirty_recs_before[dirty_fname] = False
         yield
         dirty_recs_after, dirty_fname = dirty()
         if not dirty_recs_after:  # TODO improve filter
