@@ -290,7 +290,11 @@ export class ImagePlugin extends Plugin {
         }
     }
 
-    onSelectionChange() {
+    onSelectionChange(selectionData) {
+        const { anchorNode, focusNode } = selectionData.documentSelection;
+        if (!anchorNode && !focusNode) {
+            return;
+        }
         this.closeImageTransformation();
     }
 
@@ -349,12 +353,15 @@ export class ImagePlugin extends Plugin {
         if (registry.category("main_components").contains("ImageTransformation")) {
             return;
         }
+        Promise.resolve().then(() => {
+            this.document.getSelection()?.removeAllRanges();
+        });
         registry.category("main_components").add("ImageTransformation", {
             Component: ImageTransformation,
             props: {
                 image,
                 document: this.document,
-                destroy: this.closeImageTransformation,
+                destroy: () => this.closeImageTransformation(),
                 onChange: () => this.dispatch("ADD_STEP"),
             },
         });
