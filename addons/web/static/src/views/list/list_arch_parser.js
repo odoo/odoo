@@ -193,6 +193,8 @@ export class ListArchParser {
                     ? exprToBoolean(xmlDoc.getAttribute("open_form_view") || "")
                     : false;
 
+                treeAttr.canImportRecords = exprToBoolean(xmlDoc.getAttribute("import"), true);
+
                 const limitAttr = node.getAttribute("limit");
                 treeAttr.limit = limitAttr && parseInt(limitAttr, 10);
 

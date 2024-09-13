@@ -8,6 +8,10 @@ const componentRegistry = registry.category("main_components");
 
 let id = 1;
 export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = () => true) {
+    useCustomDropzone(targetRef, Dropzone, { extraClass, onDrop }, isDropzoneEnabled);
+}
+
+export function useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponentProps, isDropzoneEnabled = () => true) {
     const dropzoneId = `web.dropzone_${id++}`;
     let dragCount = 0;
     let hasTarget = false;
@@ -28,8 +32,11 @@ export function useDropzone(targetRef, onDrop, extraClass, isDropzoneEnabled = (
         const hasDropzone = componentRegistry.contains(dropzoneId);
         if (shouldDisplayDropzone && !hasDropzone) {
             componentRegistry.add(dropzoneId, {
-                Component: Dropzone,
-                props: { extraClass, onDrop, ref: targetRef },
+                Component: dropzoneComponent,
+                props: {
+                    ref: targetRef,
+                    ...dropzoneComponentProps
+                },
             });
         }
         if (!shouldDisplayDropzone && hasDropzone) {
