@@ -712,6 +712,10 @@ class Website(models.Model):
                 'view_id': view.id,
                 'track': True,
             }
+            # To link the page with the menus having the same URL as the the page
+            menuItem = request.env['website.menu'].sudo().search([('url', '=', page_url)]);
+            if menuItem.exists():
+                default_page_values.update({'menu_ids': menuItem.ids});
             if page_values:
                 default_page_values.update(page_values)
             page = self.env['website.page'].create(default_page_values)
