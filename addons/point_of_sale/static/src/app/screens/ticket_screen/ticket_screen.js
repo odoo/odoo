@@ -631,7 +631,7 @@ export class TicketScreen extends Component {
                 modelField: "tracking_number",
             },
             RECEIPT_NUMBER: {
-                repr: (order) => order.name,
+                repr: (order) => order.pos_reference,
                 displayName: _t("Receipt Number"),
                 modelField: "pos_reference",
             },

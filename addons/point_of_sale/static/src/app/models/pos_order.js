@@ -103,7 +103,7 @@ export class PosOrder extends Base {
             rounding_applied: this.get_rounding_applied(),
             tax_details: this.get_tax_details(),
             change: this.amount_return,
-            name: this.name,
+            name: this.pos_reference,
             invoice_id: null, //TODO
             cashier: this.employee_id?.name || this.user_id?.name,
             date: formatDateTime(parseUTCString(this.date_order)),
@@ -171,7 +171,7 @@ export class PosOrder extends Base {
                     cancelled: changes["cancelled"],
                     table_name: this.table_id?.name,
                     floor_name: this.table_id?.floor_id?.name,
-                    name: this.name || "unknown order",
+                    name: this.pos_reference || "unknown order",
                     time: {
                         hours,
                         minutes,
