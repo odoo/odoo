@@ -899,6 +899,7 @@ class AccountReconcileModel(models.Model):
             return self.env['res.partner']
 
         for partner_mapping in self.partner_mapping_line_ids:
+<<<<<<< 16.0
             match_payment_ref = True
             if partner_mapping.payment_ref_regex:
                 match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if st_line.payment_ref else False
@@ -909,6 +910,17 @@ class AccountReconcileModel(models.Model):
                     tools.html2plaintext(st_line.narration or '').rstrip(),
                     flags=re.DOTALL, # Ignore '/n' set by online sync.
                 )
+||||||| c28c04997cba48bbcc3cd02934390066a37a61ad
+            match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
+            match_narration = re.match(partner_mapping.narration_regex, tools.html2plaintext(st_line.narration or '').rstrip()) if partner_mapping.narration_regex else True
+=======
+            match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
+            match_narration = re.match(
+                partner_mapping.narration_regex,
+                tools.html2plaintext(st_line.narration or '').rstrip(),
+                flags=re.DOTALL   # Ignore '/n' set by online sync.
+            ) if partner_mapping.narration_regex else True
+>>>>>>> 115309fb59a73f7941fae4ebe70d679ca3ca145c
 
             if match_payment_ref and match_narration:
                 return partner_mapping.partner_id

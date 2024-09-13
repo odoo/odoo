@@ -797,8 +797,82 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             }
         """
 
+<<<<<<< 16.0
         # Same check with json data into the narration field.
         self.assertEqual(st_line._retrieve_partner(), self.partner_1)
+||||||| c28c04997cba48bbcc3cd02934390066a37a61ad
+            self._check_statement_matching(rule, {
+                self.bank_line_1.id: match_result,
+                self.bank_line_2.id: no_match_result,
+            }, self.bank_st)
+
+    def test_partner_name_in_communication(self):
+        self.invoice_line_1.partner_id.write({'name': "Archibald Haddock"})
+        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK-Archibald'})
+        self.bank_line_2.write({'partner_id': None})
+        self.rule_1.write({'match_partner': False})
+
+        # bank_line_1 should match, as its communication contains the invoice's partner name
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+
+    def test_partner_name_with_regexp_chars(self):
+        self.invoice_line_1.partner_id.write({'name': "Archibald + Haddock"})
+        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK+Archibald'})
+        self.bank_line_2.write({'partner_id': None})
+        self.rule_1.write({'match_partner': False})
+
+        # The query should still work
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+=======
+            self._check_statement_matching(rule, {
+                self.bank_line_1.id: match_result,
+                self.bank_line_2.id: no_match_result,
+            }, self.bank_st)
+
+            # More complex matching to match something from bank sync data.
+            # Note: the indentation is done with multiple \n to mimic the bank sync behavior. Keep them for this test!
+            rule.partner_mapping_line_ids.write({'narration_regex': ".*coincoin.*"})
+            self.bank_line_1.write({'narration': """
+                {
+                    "informations": "coincoin turlututu tsoin tsoin",
+                }
+            """})
+
+            self._check_statement_matching(rule, {
+                self.bank_line_1.id: match_result,
+                self.bank_line_2.id: no_match_result,
+            }, self.bank_st)
+
+    def test_partner_name_in_communication(self):
+        self.invoice_line_1.partner_id.write({'name': "Archibald Haddock"})
+        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK-Archibald'})
+        self.bank_line_2.write({'partner_id': None})
+        self.rule_1.write({'match_partner': False})
+
+        # bank_line_1 should match, as its communication contains the invoice's partner name
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+
+    def test_partner_name_with_regexp_chars(self):
+        self.invoice_line_1.partner_id.write({'name': "Archibald + Haddock"})
+        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK+Archibald'})
+        self.bank_line_2.write({'partner_id': None})
+        self.rule_1.write({'match_partner': False})
+
+        # The query should still work
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+>>>>>>> 115309fb59a73f7941fae4ebe70d679ca3ca145c
 
     def test_match_multi_currencies(self):
         ''' Ensure the matching of candidates is made using the right statement line currency.
