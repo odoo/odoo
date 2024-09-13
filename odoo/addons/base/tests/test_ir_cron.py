@@ -524,3 +524,25 @@ class TestIrCron(TransactionCase, CronMixinCase):
         # Test acquire job on already processed jobs
         job = self.env['ir.cron']._acquire_one_job(self.cr, self.cron.id)
         self.assertEqual(job, None, "No error should be thrown, job should just be none")
+
+    def test_cron_deactivate(self):
+        default_progress_values = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
+
+        def mocked_run(self):
+            self.env['ir.cron']._notify_progress(done=1, remaining=0, deactivate=True)
+
+        self.cron._trigger()
+        self.env.flush_all()
+        self.registry.enter_test_mode(self.cr)
+        try:
+            with patch.object(self.registry['ir.actions.server'], 'run', mocked_run):
+                self.registry['ir.cron']._process_job(
+                    self.registry.db_name,
+                    self.registry.cursor(),
+                    {**self.cron.read(load=None)[0], **default_progress_values}
+                )
+        finally:
+            self.registry.leave_test_mode()
+
+        self.env.invalidate_all()
+        self.assertFalse(self.cron.active)
