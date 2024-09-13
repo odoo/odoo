@@ -2888,6 +2888,7 @@ class AccountMove(models.Model):
             for move, vals in zip(moves, vals_list):
                 if 'tax_totals' in vals:
                     move.tax_totals = vals['tax_totals']
+            moves.is_manually_modified = False
         return moves
 
     def write(self, vals):
@@ -2896,8 +2897,6 @@ class AccountMove(models.Model):
         self._sanitize_vals(vals)
 
         for move in self:
-            if 'is_manually_modified' not in vals and not self.env.context.get('skip_is_manually_modified'):
-                move.is_manually_modified = True
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])
             if move.inalterable_hash and violated_fields:
                 raise UserError(_(
@@ -2954,6 +2953,9 @@ class AccountMove(models.Model):
         container = {'records': self | stolen_moves}
         with self.env.protecting(self._get_protected_vals(vals, self)), self._check_balanced(container):
             with self._sync_dynamic_lines(container):
+                if 'is_manually_modified' not in vals and not self.env.context.get('skip_is_manually_modified'):
+                    vals['is_manually_modified'] = True
+
                 res = super(AccountMove, self.with_context(
                     skip_account_move_synchronization=True,
                 )).write(vals)
@@ -4656,6 +4658,19 @@ class AccountMove(models.Model):
             references = [move.invoice_origin] if move.invoice_origin else []
             move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=timeout)
         return self
+
+    def _autopost_bill(self):
+        # Verify if the bill should be autoposted, if so, post it
+        self.ensure_one()
+        if (
+            self.company_id.autopost_bills
+            and self.partner_id
+            and self.is_purchase_document(include_receipts=True)
+            and self.partner_id.autopost_bills == 'always'
+            and not self.abnormal_amount_warning
+            and not self.restrict_mode_hash_table
+        ):
+            self.action_post()
 
     def _show_autopost_bills_wizard(self):
         if (
