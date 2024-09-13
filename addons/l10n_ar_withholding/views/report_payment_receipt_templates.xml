@@ -13,7 +13,7 @@
                         </thead>
                         <tbody>
                             <t t-foreach="o.l10n_ar_withholding_ids" t-as="line">
-                                <t t-set="withholding_base" t-value="o.line_ids.filtered(lambda x: line.tax_line_id.id in x.tax_ids.ids)"/>
+                                <t t-set="withholding_base" t-value="o.line_ids.filtered(lambda x: line.tax_line_id.id in x.tax_ids.ids and line.balance != 0.0)"/>
                                 <tr>
                                     <td>
                                         <span t-field='line.tax_line_id.name'/>
