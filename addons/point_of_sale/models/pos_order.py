@@ -107,7 +107,10 @@ class PosOrder(models.Model):
         if not existing_order:
             if order.get('state'):
                 order['state'] = 'draft'
-            pos_order = self.create(order)
+            pos_order = self.create({
+                **{key: value for key, value in order.items() if key != 'name'},
+                'pos_reference': order.get('name')
+            })
             pos_order = pos_order.with_company(pos_order.company_id)
         else:
             pos_order = self.env['pos.order'].browse(order.get('id'))
@@ -466,7 +469,7 @@ class PosOrder(models.Model):
     @api.model
     def _complete_values_from_session(self, session, values):
         if values.get('state') and values['state'] == 'paid' and not values.get('name'):
-            values['name'] = self._compute_order_name()
+            values['name'] = self._compute_order_name(session)
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         values.setdefault('fiscal_position_id', session.config_id.default_fiscal_position_id.id)
         values.setdefault('company_id', session.config_id.company_id.id)
@@ -481,11 +484,12 @@ class PosOrder(models.Model):
                         country=order.partner_id.country_id or self.env.company.country_id)
         return super(PosOrder, self).write(vals)
 
-    def _compute_order_name(self):
+    def _compute_order_name(self, session=None):
+        session = session or self.session_id
         if self.refunded_order_id.exists():
             return self.refunded_order_id.name + _(' REFUND')
         else:
-            return self.session_id.config_id.sequence_id._next()
+            return session.config_id.sequence_id._next()
 
     def action_stock_picking(self):
         self.ensure_one()
