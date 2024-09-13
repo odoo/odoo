@@ -566,6 +566,20 @@ class ProcurementGroup(models.Model):
         return domain
 
     @api.model
+    def _get_push_rule(self, product_id, location_dest_id, values):
+        """ Find a push rule for the location_dest_id, with a fallback to the parent locations if none could be found.
+        """
+        found_rule = self.env['stock.rule']
+        location = location_dest_id
+        while (not found_rule) and location:
+            domain = [('location_src_id', '=', location.id), ('action', 'in', ('push', 'pull_push'))]
+            if values.get('domain'):
+                domain = expression.AND([domain, values['domain']])
+            found_rule = self._search_rule(values.get('route_ids'), values.get('product_packaging_id'), product_id, values.get('warehouse_id'), domain)
+            location = location.location_id
+        return found_rule
+
+    @api.model
     def _get_moves_to_assign_domain(self, company_id):
         moves_domain = [
             ('state', 'in', ['confirmed', 'partially_available']),
