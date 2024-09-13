@@ -5,7 +5,6 @@ from . import controllers
 from . import models
 from . import report
 from . import wizard
-from . import populate
 
 from odoo.tools.sql import create_index
 

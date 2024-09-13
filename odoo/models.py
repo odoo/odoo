@@ -58,7 +58,7 @@ from .tools import (
     clean_context, config, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
     frozendict, get_lang, lazy_classproperty, OrderedSet,
-    ormcache, partition, populate, Query, split_every, unique,
+    ormcache, partition, Query, split_every, unique,
     SQL, sql,
 )
 from .tools.lru import LRU
@@ -7134,90 +7134,6 @@ class BaseModel(metaclass=MetaModel):
             complete path to access it (eg: module/path/to/image.png).
         """
         return False
-
-    def _populate_factories(self):
-        """ Generates a factory for the different fields of the model.
-
-        ``factory`` is a generator of values (dict of field values).
-
-        Factory skeleton::
-
-            def generator(iterator, field_name, model_name):
-                for counter, values in enumerate(iterator):
-                    # values.update(dict())
-                    yield values
-
-        See :mod:`odoo.tools.populate` for population tools and applications.
-
-        :returns: list of pairs(field_name, factory) where `factory` is a generator function.
-        :rtype: list(tuple(str, generator))
-
-        .. note::
-
-            It is the responsibility of the generator to handle the field_name correctly.
-            The generator could generate values for multiple fields together. In this case,
-            the field_name should be more a "field_group" (should be begin by a "_"), covering
-            the different fields updated by the generator (e.g. "_address" for a generator
-            updating multiple address fields).
-        """
-        return []
-
-    @property
-    def _populate_sizes(self):
-        """ Return a dict mapping symbolic sizes (``'small'``, ``'medium'``, ``'large'``) to integers,
-        giving the minimal number of records that :meth:`_populate` should create.
-
-        The default population sizes are:
-
-        * ``small`` : 10
-        * ``medium`` : 100
-        * ``large`` : 1000
-        """
-        return {
-            'small': 10,  # minimal representative set
-            'medium': 100,  # average database load
-            'large': 1000, # maxi database load
-        }
-
-    @property
-    def _populate_dependencies(self):
-        """ Return the list of models which have to be populated before the current one.
-
-        :rtype: list
-        """
-        return []
-
-    def _populate(self, size):
-        """ Create records to populate this model.
-
-        :param str size: symbolic size for the number of records: ``'small'``, ``'medium'`` or ``'large'``
-        """
-        batch_size = 1000
-        min_size = self._populate_sizes[size]
-
-        record_count = 0
-        create_values = []
-        complete = False
-        field_generators = self._populate_factories()
-        if not field_generators:
-            return self.browse() # maybe create an automatic generator?
-
-        records_batches = []
-        generator = populate.chain_factories(field_generators, self._name)
-        while record_count <= min_size or not complete:
-            values = next(generator)
-            complete = values.pop('__complete')
-            create_values.append(values)
-            record_count += 1
-            if len(create_values) >= batch_size:
-                _logger.info('Batch: %s/%s', record_count, min_size)
-                records_batches.append(self.create(create_values))
-                self.env.cr.commit()
-                create_values = []
-
-        if create_values:
-            records_batches.append(self.create(create_values))
-        return self.concat(*records_batches)
 
 
 collections.abc.Set.register(BaseModel)
