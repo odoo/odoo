@@ -645,7 +645,37 @@ class Environment(Mapping):
             If ``raise_if_not_found`` is ``False`` and there are multiple
             ``xml_ids`` as input, then it won't be possible to determine which
             specific records weren't found by only looking at the recordset.
+
+        .. warning::
+            | ``raise_if_not_found`` is now a keyword-only argument.
+            | Its use as a non-keyword argument is **deprecated** but it's still working.
+
+            For example::
+
+                self.env.ref('base.us', 'base.x', False)
+                DeprecationWarning: Since 18.0, raise_if_not_found is a keyword-only argument
+                res.country(233)
+
+                self.env.ref('base.us', 'base.x', raise_if_not_found=False)
+                res.country(233)
+
+                self.env.ref('base.us', 'base.x')
+                ValueError: External ID not found in the system: base.x
+
+                self.env.ref('base.us', 'base.x', True)
+                DeprecationWarning: Since 18.0, raise_if_not_found is a keyword-only argument
+                ValueError: External ID not found in the system: base.x
+
+                self.env.ref('base.us', 'base.x', raise_if_not_found=True)
+                ValueError: External ID not found in the system: base.x
+
         """
+
+        # Avoid breaking the API when raise_if_not_found was given as a pure boolean non-keyword arg
+        if len(xml_ids) > 1 and raise_if_not_found is True and isinstance(xml_ids[-1], bool):
+            warnings.warn("Since 18.0, raise_if_not_found is a keyword-only argument", DeprecationWarning)
+            raise_if_not_found = xml_ids[-1]
+            xml_ids = xml_ids[:-1]
 
         id_xmlid = {}
         res_ids = []
