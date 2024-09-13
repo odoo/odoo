@@ -155,7 +155,7 @@ test("rendering with PWA installation request", async () => {
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            if (key === "pwa.installationState") {
+            if (key === "pwaService.installationState") {
                 step("getItem " + key);
                 // in this test, installation has not yet proceeded
                 return null;
@@ -174,7 +174,7 @@ test("rendering with PWA installation request", async () => {
     // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
-    await assertSteps(["getItem pwa.installationState"]);
+    await assertSteps(["getItem pwaService.installationState"]);
     await contains(".o-mail-MessagingMenu-counter");
     await contains(".o-mail-MessagingMenu-counter", { text: "1" });
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -198,7 +198,7 @@ test("installation of the PWA request can be dismissed", async () => {
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            if (key === "pwa.installationState") {
+            if (key === "pwaService.installationState") {
                 step("getItem " + key);
                 // in this test, installation has not yet proceeded
                 return null;
@@ -206,7 +206,7 @@ test("installation of the PWA request can be dismissed", async () => {
             return super.getItem(key);
         },
         setItem(key, value) {
-            if (key === "pwa.installationState") {
+            if (key === "pwaService.installationState") {
                 step("installationState value:  " + value);
             }
             return super.setItem(key, value);
@@ -221,11 +221,11 @@ test("installation of the PWA request can be dismissed", async () => {
     // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
-    await assertSteps(["getItem pwa.installationState"]);
+    await assertSteps(["getItem pwaService.installationState"]);
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem .oi-close");
     await assertSteps([
-        "getItem pwa.installationState",
+        "getItem pwaService.installationState",
         'installationState value:  {"/odoo":"dismissed"}',
     ]);
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -238,7 +238,7 @@ test("rendering with PWA installation request (dismissed)", async () => {
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            if (key === "pwa.installationState") {
+            if (key === "pwaService.installationState") {
                 step("getItem " + key);
                 // in this test, installation has been previously dismissed by the user
                 return `{"/odoo":"dismissed"}`;
@@ -250,7 +250,7 @@ test("rendering with PWA installation request (dismissed)", async () => {
     // This event must be triggered to initialize the pwa service properly
     // as if it was run by a browser supporting PWA (never triggered in a test otherwise).
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
-    await assertSteps(["getItem pwa.installationState"]);
+    await assertSteps(["getItem pwaService.installationState"]);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -263,7 +263,7 @@ test("rendering with PWA installation request (already running as PWA)", async (
     });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
-            if (key === "pwa.installationState") {
+            if (key === "pwaService.installationState") {
                 step("getItem " + key);
                 // in this test, we remove any value that could contain localStorage so the service would be allowed to prompt
                 return null;
@@ -274,7 +274,7 @@ test("rendering with PWA installation request (already running as PWA)", async (
     await start();
     // The 'beforeinstallprompt' event is not triggered here, since the
     // browser wouldn't trigger it when the app is already launched
-    await assertSteps(["getItem pwa.installationState"]);
+    await assertSteps(["getItem pwaService.installationState"]);
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
