@@ -44,7 +44,7 @@ test("PWA installation process", async () => {
     });
     patchWithCleanup(browser.localStorage, {
         setItem(key, value) {
-            if (key === "pwa.installationState") {
+            if (key === "pwaService.installationState") {
                 expect.step(value);
                 return null;
             }
