@@ -197,8 +197,9 @@ export class EditMenuDialog extends Component {
                     },
                     'children': [],
                 };
-                this.map.set(newMenu.fields['id'], newMenu);
                 this.state.rootMenu.children.push(newMenu);
+                // this.state.rootMenu.children.at(-1) to forces a rerender
+                this.map.set(newMenu.fields["id"], this.state.rootMenu.children.at(-1));
             },
         });
     }
