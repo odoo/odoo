@@ -12,7 +12,7 @@
                                 <span class="fs-3 fw-bolder">Payment Successful</span>
                                 <div class="fs-4 fw-bold d-flex justify-content-center align-items-center gap-2">
                                     <span t-esc="orderAmountPlusTip" />
-                                    <span class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.pos.get_order())">Edit payment</span>
+                                    <span t-if="this.currentOrder.nb_print === 0" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.pos.get_order())">Edit payment</span>
                                 </div>
                             </div>
                             <hr />

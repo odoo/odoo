@@ -16,6 +16,5 @@ export class BillScreen extends Component {
     }
     async print() {
         await this.pos.printReceipt();
-        this.pos.get_order()._printed = false;
     }
 }

@@ -150,7 +150,7 @@
                         <div class="clearfix"/>
                     </page>
                     <page string="Payments" name="payments">
-                        <field name="payment_ids" colspan="4" nolabel="1" readonly="state in ['invoiced', 'done']">
+                        <field name="payment_ids" colspan="4" nolabel="1" readonly="state in ['invoiced', 'done'] or nb_print > 0">
                             <list string="Payments" create="1" editable="bottom">
                                 <field name="currency_id" column_invisible="True" />
                                 <field name="payment_date"/>
