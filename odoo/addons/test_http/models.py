@@ -10,6 +10,7 @@ PEGASUS_REGIONS = ['M4R', 'P3Y', 'M6R']
 class Stargate(models.Model):
     _name = 'test_http.stargate'
     _description = 'Stargate'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(required=True, store=True, compute='_compute_name', readonly=False)
     address = fields.Char(required=True)
@@ -21,7 +22,8 @@ class Stargate(models.Model):
     glyph_related = fields.Image('Glyph 128', related='glyph_attach', max_width=128, max_height=128)
     glyph_compute = fields.Image(compute='_compute_glyph_compute')
     galaxy_picture = fields.Image(related='galaxy_id.picture', attachment=True, store=False)
-
+    availability = fields.Float(default=0.99, aggregator="avg")
+    last_use_date = fields.Date()
 
     _sql_constraints = [
         ('address_length', 'CHECK(LENGTH(address) = 6)', "Local addresses have 6 glyphs"),
