@@ -1,8 +1,4 @@
 .o-mail-DiscussSidebar-item {
-    &:hover {
-        background-color: mix($o-gray-200, $o-gray-300);
-    }
-    &.o-active {
-        background-color: $o-gray-300;
-    }
+    --mail-DiscussSidebar-itemActiveBgColor: #{mix($white, $o-action, 90%)};
+    --mail-DiscussSidebar-itemActiveOutlineColor: #{$gray-400};
 }

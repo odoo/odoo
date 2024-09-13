@@ -892,8 +892,8 @@ test("channel - states: the active category item should be visible even if the c
     pyEnv["discuss.channel"].create({ name: "channel1" });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarChannel", { text: "channel1" });
-    await contains("div.o-active", { text: "channel1" });
+    await click("button", { text: "channel1" });
+    await contains(".o-mail-DiscussSidebarChannel-container", { text: "channel1" });
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
     await contains("button", { text: "channel1" });
@@ -1047,7 +1047,7 @@ test("chat - states: the active category item should be visible even if the cate
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
-    await click(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
+    await click("button", { text: "Mitchell Admin" });
     await contains("div.o-active", { text: "Mitchell Admin" });
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");

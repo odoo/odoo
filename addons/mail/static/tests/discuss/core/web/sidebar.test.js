@@ -72,10 +72,7 @@ test("unknown channel can be displayed and interacted with", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
-    await contains(
-        ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel.o-active",
-        { text: "Not So Secret" }
-    );
+    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Not So Secret" });
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message", { text: "Hello" });

@@ -19,10 +19,36 @@ export const discussSidebarChannelIndicatorsRegistry = registry.category(
     "mail.discuss_sidebar_channel_indicators"
 );
 
+export class DiscussSidebarSubchannel extends Component {
+    static template = "mail.DiscussSidebarSubchannel";
+    static props = ["thread", "isFirst?"];
+    static components = { Dropdown };
+
+    setup() {
+        super.setup();
+        this.store = useState(useService("mail.store"));
+        this.hover = useHover(["root", "floating*"], {
+            onHover: () => (this.floating.isOpen = true),
+            onAway: () => (this.floating.isOpen = false),
+        });
+        this.floating = useDropdownState();
+    }
+
+    get thread() {
+        return this.props.thread;
+    }
+
+    /** @param {MouseEvent} ev */
+    openThread(ev, thread) {
+        markEventHandled(ev, "sidebar.openThread");
+        thread.setAsDiscussThread();
+    }
+}
+
 export class DiscussSidebarChannel extends Component {
     static template = "mail.DiscussSidebarChannel";
     static props = ["thread"];
-    static components = { CountryFlag, Dropdown, ImStatus, ThreadIcon };
+    static components = { CountryFlag, DiscussSidebarSubchannel, Dropdown, ImStatus, ThreadIcon };
 
     setup() {
         super.setup();
@@ -40,11 +66,25 @@ export class DiscussSidebarChannel extends Component {
             "bg-inherit": this.thread.notEq(this.store.discuss.thread),
             "o-active": this.thread.eq(this.store.discuss.thread),
             "o-unread": this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
+            "border-bottom-0 rounded-bottom-0": this.bordered,
             "opacity-50": this.thread.isMuted,
-            "position-relative justify-content-center mx-2 o-compact":
+            "position-relative justify-content-center o-compact mt-0":
                 this.store.discuss.isSidebarCompact,
-            "mx-2": !this.store.discuss.isSidebarCompact,
         };
+    }
+
+    get attClassContainer() {
+        return {
+            "border border-dark rounded-2 o-bordered": this.bordered,
+            "o-compact": this.store.discuss.isSidebarCompact,
+        };
+    }
+
+    get bordered() {
+        return (
+            this.store.discuss.isSidebarCompact &&
+            Boolean(this.env.filteredThreads?.(this.thread.sub_channel_ids)?.length)
+        );
     }
 
     get indicators() {
@@ -211,7 +251,8 @@ export class DiscussSidebarCategories extends Component {
         return threads.filter(
             (thread) =>
                 thread.displayInSidebar &&
-                (!this.state.quickSearchVal ||
+                (thread.parent_channel_id ||
+                    !this.state.quickSearchVal ||
                     cleanTerm(thread.displayName).includes(cleanTerm(this.state.quickSearchVal)))
         );
     }
