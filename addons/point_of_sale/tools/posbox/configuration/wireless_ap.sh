@@ -77,5 +77,6 @@ else
 	killall nginx
 	service nginx restart
 	service dnsmasq stop
+	ip addr del 10.11.12.1/24 dev wlan0 # remove the static ip
 	service odoo restart # As this file is executed on boot, this line is responsible for restarting odoo service on reboot
 fi

@@ -288,12 +288,14 @@ def get_ssid():
 
 @cache
 def get_odoo_server_url():
-    if platform.system() == 'Linux':
-        ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
-        if not ap:
-            return False
+    """Get the URL of the linked Odoo database.
+    If the IoT Box is in access point mode, it will return ``None`` to avoid
+    connecting to the server.
 
-    return get_conf('remote_server')
+    :return: The URL of the linked Odoo database.
+    :rtype: str or None
+    """
+    return None if access_point() else get_conf('remote_server')
 
 
 def get_token():
