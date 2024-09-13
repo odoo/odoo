@@ -71,8 +71,17 @@
                             <setting id="stock_move_email" company_dependent="1" string="Email Confirmation" help="Send an automatic confirmation email when Delivery Orders are done">
                                 <field name="stock_move_email_validation"/>
                             </setting>
-                            <setting id="stock_sms" company_dependent="1" help="Send an automatic confirmation SMS Text Message when Delivery Orders are done">
-                                <field name="module_stock_sms"/>
+                            <setting id="stock_text_confirmation" company_dependent="1" help="Send an automatic confirmation Text Message when Delivery Orders are done" string="Text Confirmation">
+                                <field name="text_confirmation"/>
+                                <div class="content-group" id="module_install_warning" invisible="not text_confirmation">
+                                    <field name="confirmation_type" required="text_confirmation"/>
+                                    <div class="mt16 text-warning" id="module_install_warning_sms" invisible="confirmation_type != 'sms'">
+                                        <strong>Save</strong> this page and come back here to set up the feature.
+                                    </div>
+                                    <div class="mt16 text-warning" id="module_install_warning_whatsapp" invisible="confirmation_type != 'whatsapp'">
+                                        <strong>Save</strong> this page and come back here to set up the feature.
+                                    </div>
+                                </div>
                             </setting>
                             <setting id="signature_delivery_orders" help="Require a signature on your delivery orders">
                                 <field name="group_stock_sign_delivery"/>

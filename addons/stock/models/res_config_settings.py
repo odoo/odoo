@@ -31,7 +31,8 @@ class ResConfigSettings(models.TransientModel):
     module_stock_barcode = fields.Boolean("Barcode Scanner")
     module_stock_barcode_barcodelookup = fields.Boolean("Stock Barcode Database")
     stock_move_email_validation = fields.Boolean(related='company_id.stock_move_email_validation', readonly=False)
-    module_stock_sms = fields.Boolean("SMS Confirmation")
+    module_stock_sms = fields.Boolean("SMS Confirmation", compute='_compute_stock_confirmation_modules', store=True)
+    module_stock_whatsapp = fields.Boolean("Whatsapp Confirmation", compute='_compute_stock_confirmation_modules', store=True)
     module_delivery = fields.Boolean("Delivery Methods")
     module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_fedex = fields.Boolean("FedEx Connector")
@@ -54,6 +55,17 @@ class ResConfigSettings(models.TransientModel):
         "Separator", config_parameter='stock.barcode_separator',
         help="Character(s) used to separate data contained within an aggregate barcode (i.e. a barcode containing multiple barcode encodings)")
     module_stock_fleet = fields.Boolean("Dispatch Management System")
+    text_confirmation = fields.Boolean(related='company_id.text_confirmation', string='Text Validation with stock move', readonly=False)
+    confirmation_type = fields.Selection(related='company_id.confirmation_type', string='Text Validation type', readonly=False)
+
+    @api.depends('confirmation_type')
+    def _compute_stock_confirmation_modules(self):
+        for setting in self:
+            if setting.company_id.text_confirmation:
+                if setting.confirmation_type == 'sms':
+                    setting.module_stock_sms = True
+                else:
+                    setting.module_stock_whatsapp = True
 
     @api.onchange('group_stock_multi_locations')
     def _onchange_group_stock_multi_locations(self):
