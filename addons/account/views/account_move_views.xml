@@ -513,7 +513,7 @@
                       expand="context.get('expand', False)"
                       sample="1">
                     <header>
-                        <button name="action_register_payment" type="object" string="Pay"
+                        <button name="action_force_register_payment" type="object" string="Pay"
                             groups="account.group_account_user"
                             invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund','in_receipt')"/>
                     </header>
@@ -1940,7 +1940,7 @@ if records:
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="binding_model_id" ref="account.model_account_move" />
             <field name="state">code</field>
-            <field name="binding_view_types">list,form</field>
+            <field name="binding_view_types">form</field>
             <field name="code">
 if records:
     action = records.action_force_register_payment()
