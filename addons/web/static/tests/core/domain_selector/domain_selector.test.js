@@ -2134,6 +2134,22 @@ test(`any operator (edit) test getDefaultPath`, async () => {
     expect(getCurrentPath(1)).toBe("Stage");
 });
 
+test(`any operator with include archived`, async () => {
+    Partner._fields.active = fields.Boolean({
+        string: "Active",
+        searchable: true,
+    });
+    await makeDomainSelector({
+        readonly: false,
+        isDebugMode: true,
+        domain: `[("product_id", "any", [("name", "=", "Mancester City")])]`,
+    });
+    expect(SELECTORS.condition).toHaveCount(2);
+    expect('.form-switch label:contains("Include archived")').toHaveCount(1, {
+        message: "Sub TreeEditor shouldn't add another checkbox",
+    });
+});
+
 test(`any operator (edit) test defaultValue => defaultCondition`, async () => {
     Product._fields.country_id = fields.Many2one({
         string: "Country",
