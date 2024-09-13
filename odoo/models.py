@@ -4520,6 +4520,10 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields.get(fname)
             if not field:
                 raise ValueError("Invalid field %r on model %r" % (fname, self._name))
+
+            if not field.store and not field.inverse:
+                _logger.warning("Write on non store or inverse field: %r", field)
+
             field_values.append((field, value))
             if field.inverse:
                 if field.type in ('one2many', 'many2many'):
