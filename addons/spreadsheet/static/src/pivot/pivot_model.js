@@ -15,6 +15,7 @@ const { DEFAULT_LOCALE } = constants;
  * @typedef {import("@odoo/o-spreadsheet").PivotTableColumn} PivotTableColumn
  * @typedef {import("@odoo/o-spreadsheet").PivotTableRow} PivotTableRow
  * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
+ * @typedef {import("@odoo/o-spreadsheet").PivotMeasure} PivotMeasure
  */
 
 export const NO_RECORD_AT_THIS_POSITION = "__NO_RECORD_AT_THIS_POSITION__";
@@ -52,13 +53,33 @@ export class OdooPivotModel extends PivotModel {
      */
     setup(params, services) {
         /** This is necessary to ensure the compatibility with the PivotModel from web */
-        const p = params.definition.getDefinitionForPivotModel(params.metaData.fields);
+        const p = params.definition.getDefinitionForPivotModel(params.fields);
         p.searchParams = {
             ...p.searchParams,
             ...params.searchParams,
         };
         super.setup(p);
         this.definition = params.definition;
+    }
+
+    /**
+     * Update the parts of the pivot measures that do not impact data fetching
+     * (do not update fieldName or aggregate).
+     * @param {PivotMeasure[]} measures
+     */
+    updateMeasures(measures) {
+        for (const measure of this.definition.measures) {
+            const updatedMeasure = measures.find((m) => m.id === measure.id);
+            if (
+                !updatedMeasure ||
+                updatedMeasure.fieldName !== measure.fieldName ||
+                updatedMeasure.aggregator !== measure.aggregator
+            ) {
+                throw new Error("Measures fieldName or aggregator cannot be updated");
+            }
+        }
+        this.definition.measures = measures;
+        this.resetTableStructure();
     }
 
     getDefinition() {
@@ -170,6 +191,10 @@ export class OdooPivotModel extends PivotModel {
         return domains ? domains[0] : Domain.FALSE.toList();
     }
 
+    resetTableStructure() {
+        this._tableStructure = undefined;
+    }
+
     getTableStructure() {
         if (this._tableStructure === undefined) {
             // lazy build the structure
@@ -193,11 +218,12 @@ export class OdooPivotModel extends PivotModel {
         );
         const visitTree = (tree) => {
             const { values, labels } = tree.root;
-            if (values[groupByIndex] && !valuesUniqueness.has(values[groupByIndex])) {
-                valuesUniqueness.add(values[groupByIndex]);
+            const value = values[groupByIndex];
+            if (value !== undefined && !valuesUniqueness.has(value)) {
+                valuesUniqueness.add(value);
                 valuesWithLabels.push({
-                    value: values[groupByIndex],
-                    label: labels[groupByIndex],
+                    value: value,
+                    label: labels[groupByIndex].toString(),
                 });
             }
             [...tree.directSubTrees.values()].forEach((subTree) => {

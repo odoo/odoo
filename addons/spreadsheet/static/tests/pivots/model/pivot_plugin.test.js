@@ -19,6 +19,7 @@ import {
     getCellFormula,
     getCellValue,
     getEvaluatedCell,
+    getFormattedValueGrid,
 } from "@spreadsheet/../tests/helpers/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
@@ -26,6 +27,7 @@ import {
     addGlobalFilter,
     setCellContent,
     updatePivot,
+    updatePivotMeasureDisplay,
 } from "@spreadsheet/../tests/helpers/commands";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
@@ -179,6 +181,22 @@ test("rename pivot with incorrect id is refused", async () => {
         name: "name",
     });
     expect(result.reasons).toEqual([CommandResult.PivotIdNotFound]);
+});
+
+test("Renaming a pivot does not retrigger RPCs", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: function (route, { model, method, kwargs }) {
+            switch (method) {
+                case "read_group":
+                    expect.step("read_group");
+                    break;
+            }
+        },
+    });
+    expect.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
+    updatePivot(model, pivotId, { name: "name" });
+    await animationFrame();
+    expect.verifySteps([]);
 });
 
 test("Undo/Redo for RENAME_PIVOT", async function () {
@@ -1202,7 +1220,7 @@ test("field matching is removed when filter is deleted", async function () {
         type: "many2one",
     };
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual(matching);
-    expect(model.getters.getPivot(pivotId).getComputedDomain()).toEqual([
+    expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([
         ["product_id", "in", [41]],
     ]);
     model.dispatch("REMOVE_GLOBAL_FILTER", {
@@ -1211,15 +1229,15 @@ test("field matching is removed when filter is deleted", async function () {
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toBe(undefined, {
         message: "it should have removed the pivot and its fieldMatching and datasource altogether",
     });
-    expect(model.getters.getPivot(pivotId).getComputedDomain()).toEqual([]);
+    expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([]);
     model.dispatch("REQUEST_UNDO");
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toEqual(matching);
-    expect(model.getters.getPivot(pivotId).getComputedDomain()).toEqual([
+    expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([
         ["product_id", "in", [41]],
     ]);
     model.dispatch("REQUEST_REDO");
     expect(model.getters.getPivotFieldMatching(pivotId, filter.id)).toBe(undefined);
-    expect(model.getters.getPivot(pivotId).getComputedDomain()).toEqual([]);
+    expect(model.getters.getPivot(pivotId).getDomainWithGlobalFilters()).toEqual([]);
 });
 
 test("Load pivot spreadsheet with models that cannot be accessed", async function () {
@@ -1681,4 +1699,69 @@ test("changing granularity of group by", async () => {
     ]);
     await animationFrame();
     expect.verifySteps(["date:day"]);
+});
+
+test("pivot.getPossibleFieldValues does not ignore falsy values", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="product_id" type="col"/>
+                    <field name="bar" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+    });
+    const pivot = model.getters.getPivot(model.getters.getPivotIds()[0]);
+    const barField = pivot.definition.rows[0];
+    expect(pivot.getPossibleFieldValues(barField)).toEqual([
+        { value: false, label: "No" },
+        { value: true, label: "Yes" },
+    ]);
+});
+
+test("Can change display type of a measure", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="product_id" type="col"/>
+                    <field name="bar" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+    });
+    // prettier-ignore
+    expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
+        A1: "",       B1: "xphone",       C1: "xpad",         D1: "Total",
+        A2: "",       B2: "Probability",  C2: "Probability",  D2: "Probability",
+        A3: "No",     B3: "",             C3: "15.00",        D3: "15.00",
+        A4: "Yes",    B4: "10.00",        C4: "106.00",       D4: "116.00",
+        A5: "Total",  B5: "10.00",        C5: "121.00",       D5: "131.00",
+    });
+
+    const pivotId = model.getters.getPivotIds()[0];
+    updatePivotMeasureDisplay(model, pivotId, "probability:avg", { type: "%_of_grand_total" });
+    await waitForDataLoaded(model);
+
+    // prettier-ignore
+    expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
+        A1: "",       B1: "xphone",       C1: "xpad",         D1: "Total",
+        A2: "",       B2: "Probability",  C2: "Probability",  D2: "Probability",
+        A3: "No",     B3: "0.00%",        C3: "11.45%",       D3: "11.45%",
+        A4: "Yes",    B4: "7.63%",        C4: "80.92%",       D4: "88.55%",
+        A5: "Total",  B5: "7.63%",        C5: "92.37%",       D5: "100.00%",
+    });
+
+    updatePivotMeasureDisplay(model, pivotId, "probability:avg", {
+        type: "%_of",
+        fieldNameWithGranularity: "bar",
+        value: "(previous)",
+    });
+    await waitForDataLoaded(model);
+
+    // prettier-ignore
+    expect(getFormattedValueGrid(model, "A1:D5")).toEqual({
+        A1: "",       B1: "xphone",       C1: "xpad",         D1: "Total",
+        A2: "",       B2: "Probability",  C2: "Probability",  D2: "Probability",
+        A3: "No",     B3: "",             C3: "100.00%",      D3: "100.00%",
+        A4: "Yes",    B4: "",             C4: "706.67%",      D4: "773.33%",
+        A5: "Total",  B5: "",             C5: "",             D5: "",
+    });
 });
