@@ -8,10 +8,12 @@
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
-                    <field name="type" invisible="1" />
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
+                    <field name="type" invisible="1"/>
+                    <div class="d-flex justify-content-between">
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Cash" class="oe_inline"/></h1>
+                        </div>
                         <field name="image" class="oe_avatar" widget='image'/>
                     </div>
                     <group name="Payment methods">
