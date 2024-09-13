@@ -347,6 +347,102 @@ registerWebsitePreviewTour('edit_menus', {
         trigger: ':iframe .top_menu .nav-item:contains("Home") li:contains("Contact us")',
         run: "press ArrowDown",
     },
+    ...clickOnSave(),
+    // Nest and re-arrange menu items for a newly created menu
+    {
+        content: "Open site menu",
+        trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        run: "click",
+    },
+    {
+        content: "Click on Edit Menu",
+        trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        run: "click",
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+        run: "click",
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: "edit new_menu",
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: "edit #",
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)',
+        run: "click",
+    },
+    {
+        content: "Check if new menu(new_menu) is added",
+        trigger: '.oe_menu_editor li:contains("new_menu")',
+    },
+    {
+        content: "Trigger link dialog (click 'Add Menu Item')",
+        trigger: '.modal-body a:eq(0)',
+        run: "click",
+    },
+    {
+        content: "Write a label for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(0)',
+        run: "edit new_nested_menu",
+    },
+    {
+        content: "Write a url for the new menu item",
+        trigger: '.modal-dialog .o_website_dialog input:eq(1)',
+        run: "edit #",
+    },
+    {
+        content: "Confirm the new menu entry",
+        trigger: '.modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(ok)',
+        run: "click",
+    },
+    {
+        content: "Check if new menu(new_nested_menu) is added",
+        trigger: '.oe_menu_editor li:contains("new_nested_menu")',
+    },
+    {
+        content: "Nest 'new_nested_menu' under 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("new_nested_menu") .fa-bars',
+        run: "drag_and_drop .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+    {
+        content: "Drag 'Modnar !!' below 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("Modnar !!") .fa-bars',
+        async run(helpers) {
+            await helpers.drag_and_drop('.oe_menu_editor li:contains("new_menu") .fa-bars', {
+                position: "bottom",
+            });
+        },
+    },
+    {
+        content: "Nest 'Modnar !!' under 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("Modnar !!") .fa-bars',
+        run: "drag_and_drop .oe_menu_editor li:contains('new_menu') .form-control",
+    },
+    {
+        content: "Check if 'nested_menu' and 'Modnar !!' is nested under 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("new_menu") > ul > li:contains("Modnar !!") + li:contains("nested_menu")',
+    },
+    {
+        content: "Move 'Modnar !!' below 'new_nested_menu' inside the 'new_menu'",
+        trigger: '.oe_menu_editor  li:contains("new_menu") > ul > li:contains("Modnar !!") .fa-bars',
+        async run(helpers) {
+            await helpers.drag_and_drop(".oe_menu_editor  li:contains('new_menu') > ul > li:contains('new_nested_menu') .fa-bars", {
+                position: "bottom",
+            });
+        },
+    },
+    {
+        content: "Check if 'Modnar !!' is now below 'new_nested_menu' in 'new_menu'",
+        trigger: '.oe_menu_editor li:contains("new_menu") > ul > li:last-child:contains("Modnar !!")',
+    },
 ]);
 
 registerWebsitePreviewTour(
