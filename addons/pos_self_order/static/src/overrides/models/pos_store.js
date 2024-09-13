@@ -25,7 +25,7 @@ patch(PosStore.prototype, {
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
-        if (this.name.startsWith("Self-Order")) {
+        if (this.pos_reference?.startsWith("Self-Order")) {
             this.tracking_number = "S" + this.tracking_number;
         }
     },
