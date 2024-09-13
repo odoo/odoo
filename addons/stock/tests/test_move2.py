@@ -2901,6 +2901,39 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_line[0].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
         self.assertEqual(move_line[1].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
 
+    def test_pick_ship_from_subloc(self):
+        """ Checks that if a picking is sent to a sublocation of its original destination during the pick->ship route,
+        it will still trigger the push rule from the sublocation as well to continue the route.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+        subloc = self.env['stock.location'].create({
+            'name': 'Fancy Spot',
+            'location_id': warehouse.wh_output_stock_loc_id.id,
+            'usage': 'internal',
+        })
+
+        # Create first move from Stock -> Output
+        pick_move = self.env['stock.move'].create({
+            'name': 'pick',
+            'picking_type_id': warehouse.pick_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 1
+        })
+        pick_move._action_confirm()
+        self.assertEqual(pick_move.location_dest_id, warehouse.wh_output_stock_loc_id)
+
+        # Change destination of picking to sublocation of Output & Validate the picking
+        pick_move.write({'quantity': 1, 'picked': True})
+        pick_move.picking_id.location_dest_id = subloc
+        pick_move.picking_id._action_done()
+
+        # Output -> Customer rule should trigger, creating the next step
+        self.assertEqual(pick_move.location_dest_id, subloc)
+        self.assertEqual(len(pick_move.move_dest_ids), 1)
+        self.assertEqual(pick_move.move_dest_ids.location_id, subloc)
+
     def test_push_rule_on_move_1(self):
         """ Create a route with a push rule, force it on a move, check that it is applied.
         """

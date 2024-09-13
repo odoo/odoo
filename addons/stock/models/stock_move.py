@@ -1006,15 +1006,18 @@ Please change the quantity done or the rounding precision of your unit of measur
 
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
-            domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
             if move.location_dest_id.company_id == self.env.company:
-                rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
+                rule = self.env['procurement.group']._get_push_rule(move.product_id, move.location_dest_id, {
+                    'route_ids': move.route_ids, 'product_packaging_id': move.product_packaging_id, 'warehouse_id': warehouse_id
+                })
             else:
                 procurement_group = self.env['procurement.group'].sudo()
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
-                rule = procurement_group._search_rule(move.route_ids, move.product_packaging_id, move.product_id, False, domain)
+                rule = procurement_group._get_push_rule(move.product_id, move.location_dest_id, {
+                    'route_ids': move.route_ids, 'product_packaging_id': move.product_packaging_id, 'warehouse_id': False
+                })
             # Make sure it is not returning the return
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                 new_move = rule._run_push(move)
