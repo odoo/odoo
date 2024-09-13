@@ -1095,7 +1095,9 @@ export class Order extends PosModel {
             this.init_from_JSON(options.json);
             const linesById = Object.fromEntries(this.orderlines.map((l) => [l.id || l.cid, l]));
             for (const line of this.orderlines) {
-                line.combo_line_ids = line.combo_line_ids?.map((id) => linesById[id]);
+                line.combo_line_ids = line.combo_line_ids
+                    ?.filter((id) => linesById[id])
+                    .map((id) => linesById[id]);
                 const combo_parent_id = linesById[line.combo_parent_id];
 
                 if (combo_parent_id) {
