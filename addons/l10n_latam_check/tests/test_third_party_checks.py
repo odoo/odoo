@@ -112,9 +112,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             'l10n_latam_move_check_ids': [Command.set([check.id])],
             'payment_type': 'inbound',
             'journal_id': self.rejected_check_journal.id,
-            'is_internal_transfer': True,
             'payment_method_line_id': self.rejected_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'in_third_party_checks').id,
-            'destination_journal_id': bank_journal.id,
         }
         bank_rejection = self.env['account.payment'].create(vals)
         bank_rejection.action_post()

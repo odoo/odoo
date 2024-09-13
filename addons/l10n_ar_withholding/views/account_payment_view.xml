@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="l10n_latam_check.view_account_payment_form_inherited" />
         <field name="arch" type="xml">
             <page name="latam_checks_page" position="after">
-                <page name="withholdings_page" string="Withholdings" invisible="is_internal_transfer or country_code != 'AR'">
+                <page name="withholdings_page" string="Withholdings" invisible="country_code != 'AR'">
                     <field name="l10n_ar_withholding_ids" nolabel="1" colspan="2" readonly="True">
                         <list>
                             <field name="move_name" column_invisible="True"/>

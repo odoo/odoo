@@ -216,15 +216,6 @@ class TestAccountAccount(TestAccountMergeCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             account.reconcile = False
 
-    def test_toggle_reconcile_outstanding_account(self):
-        ''' Test the feature when the user sets an account as not reconcilable when a journal
-        is configured with this account as the payment credit or debit account.
-        Since such an account should be reconcilable by nature, a ValidationError is raised.'''
-        with self.assertRaises(ValidationError), self.cr.savepoint():
-            self.company_data['default_journal_bank'].company_id.account_journal_payment_debit_account_id.reconcile = False
-        with self.assertRaises(ValidationError), self.cr.savepoint():
-            self.company_data['default_journal_bank'].company_id.account_journal_payment_credit_account_id.reconcile = False
-
     def test_remove_account_from_account_group(self):
         """Test if an account is well removed from account group"""
         group = self.env['account.group'].create({

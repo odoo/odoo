@@ -39,13 +39,15 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         })
 
     def _create_payment(self, date, **kwargs):
-        return self.env['account.payment'].create({
+        payment = self.env['account.payment'].create({
             'partner_id': self.partner_a.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
             **kwargs,
             'date': date,
         })
+        payment.action_post()
+        return payment
 
     def _set_lock_date(self, lock_date):
         self.env.company.fiscalyear_lock_date = fields.Date.from_string(lock_date)
@@ -208,7 +210,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
         )
         payment = self._create_payment('2016-02-01', amount=invoice.amount_total)
-        (invoice + payment.move_id).action_post()
+        invoice.action_post()
 
         self._set_lock_date('2017-01-03')
 
@@ -276,7 +278,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 payment = self._create_payment('2023-01-30', amount=invoice.amount_total)
 
                 self.env.company.sudo().sale_lock_date = fields.Date.to_date('2023-02-01')
-                (invoice + payment.move_id).action_post()
+                invoice.action_post()
                 self.assertEqual(invoice.date.isoformat(), '2023-02-28')
                 self.assertEqual(payment.move_id.date.isoformat(), '2023-01-30')
 

@@ -226,7 +226,7 @@ class AccountAccount(models.Model):
             JOIN res_company company ON company.id = journal.company_id
             JOIN account_payment_method_line apml ON apml.journal_id = journal.id
             JOIN account_payment_method apm on apm.id = apml.payment_method_id
-            JOIN account_account account ON account.id = COALESCE(apml.payment_account_id, company.account_journal_payment_debit_account_id)
+            JOIN account_account account ON account.id = apml.payment_account_id
             WHERE journal.currency_id IS NOT NULL
             AND journal.currency_id != company.currency_id
             AND account.currency_id != journal.currency_id
@@ -242,7 +242,7 @@ class AccountAccount(models.Model):
             JOIN res_company company ON company.id = journal.company_id
             JOIN account_payment_method_line apml ON apml.journal_id = journal.id
             JOIN account_payment_method apm on apm.id = apml.payment_method_id
-            JOIN account_account account ON account.id = COALESCE(apml.payment_account_id, company.account_journal_payment_credit_account_id)
+            JOIN account_account account ON account.id = apml.payment_account_id
             WHERE journal.currency_id IS NOT NULL
             AND journal.currency_id != company.currency_id
             AND account.currency_id != journal.currency_id
@@ -302,7 +302,6 @@ class AccountAccount(models.Model):
             return
 
         self.env['account.journal'].flush_model(['company_id', 'default_account_id'])
-        self.env['res.company'].flush_model(['account_journal_payment_credit_account_id', 'account_journal_payment_debit_account_id'])
         self.env['account.payment.method.line'].flush_model(['journal_id', 'payment_account_id'])
 
         self._cr.execute('''
@@ -311,12 +310,6 @@ class AccountAccount(models.Model):
             JOIN res_company company on journal.company_id = company.id
             LEFT JOIN account_payment_method_line apml ON journal.id = apml.journal_id
             WHERE (
-                company.account_journal_payment_credit_account_id IN %(accounts)s
-                AND company.account_journal_payment_credit_account_id != journal.default_account_id
-                ) OR (
-                company.account_journal_payment_debit_account_id in %(accounts)s
-                AND company.account_journal_payment_debit_account_id != journal.default_account_id
-                ) OR (
                 apml.payment_account_id IN %(accounts)s
                 AND apml.payment_account_id != journal.default_account_id
             )

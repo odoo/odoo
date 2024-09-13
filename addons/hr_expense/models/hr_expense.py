@@ -920,23 +920,30 @@ class HrExpense(models.Model):
             'currency_id': self.currency_id.id,
             'partner_id': self.vendor_id.id,
         })
-        return {
-            **self.sheet_id._prepare_move_vals(),
-            'date': self.date,  # Overidden from self.sheet_id._prepare_move_vals() so we can use the expense date for the account move date
-            'ref': self.name,
+        payment_vals = {
+            'date': self.date,
+            'memo': self.name,
             'journal_id': journal.id,
-            'move_type': 'entry',
             'amount': self.total_amount_currency,
             'payment_type': 'outbound',
             'partner_type': 'supplier',
             'partner_id': self.vendor_id.id,
+            'currency_id': self.currency_id.id,
             'payment_method_line_id': payment_method_line.id,
+        }
+        move_vals = {
+            **self.sheet_id._prepare_move_vals(),
+            'ref': self.name,
+            'date': self.date,  # Overidden from self.sheet_id._prepare_move_vals() so we can use the expense date for the account move date
+            'journal_id': journal.id,
+            'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
                 for attachment in self.message_main_attachment_id]
         }
+        return move_vals, payment_vals
 
     def _get_base_account(self):
         """

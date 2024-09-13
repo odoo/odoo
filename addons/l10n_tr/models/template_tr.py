@@ -28,8 +28,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': 'tr646',
                 'expense_currency_exchange_account_id': 'tr656',
                 'account_journal_suspense_account_id': 'tr102999',
-                'account_journal_payment_debit_account_id': 'tr102997',
-                'account_journal_payment_credit_account_id': 'tr102998',
                 'account_sale_tax_id': 'tr_s_20',
                 'account_purchase_tax_id': 'tr_p_20',
             },

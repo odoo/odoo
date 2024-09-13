@@ -1036,7 +1036,7 @@ class AccountJournal(models.Model):
         self.ensure_one()
         account_ids = set()
         for line in self.inbound_payment_method_line_ids:
-            account_ids.add(line.payment_account_id.id or self.company_id.account_journal_payment_debit_account_id.id)
+            account_ids.add(line.payment_account_id.id)
         return self.env['account.account'].browse(account_ids)
 
     def _get_journal_outbound_outstanding_payment_accounts(self):
@@ -1046,7 +1046,7 @@ class AccountJournal(models.Model):
         self.ensure_one()
         account_ids = set()
         for line in self.outbound_payment_method_line_ids:
-            account_ids.add(line.payment_account_id.id or self.company_id.account_journal_payment_credit_account_id.id)
+            account_ids.add(line.payment_account_id.id)
         return self.env['account.account'].browse(account_ids)
 
     def _get_available_payment_method_lines(self, payment_type):

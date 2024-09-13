@@ -50,6 +50,7 @@ PAYMENT_STATE_SELECTION = [
         ('paid', 'Paid'),
         ('partial', 'Partially Paid'),
         ('reversed', 'Reversed'),
+        ('blocked', 'Blocked'),
         ('invoicing_legacy', 'Invoicing App Legacy'),
 ]
 
@@ -193,13 +194,21 @@ class AccountMove(models.Model):
     )
 
     # === Payment fields === #
-    payment_id = fields.Many2one(
+    origin_payment_id = fields.Many2one(  # the payment this is the journal entry of
         comodel_name='account.payment',
         string="Payment",
         index='btree_not_null',
         copy=False,
         check_company=True,
     )
+    matched_payment_ids = fields.Many2many(  # the payments linked to this invoice
+        string="Matched Payments",
+        comodel_name='account.payment',
+        relation='account_move__account_payment',
+        column1='invoice_id',
+        column2='payment_id',
+    )
+    payment_count = fields.Integer(compute='_compute_payment_count')
 
     # === Statement fields === #
     statement_line_id = fields.Many2one(
@@ -787,7 +796,7 @@ class AccountMove(models.Model):
             if move.journal_id.company_id not in move.company_id.parent_ids:
                 move.company_id = (move.journal_id.company_id or self.env.company)._accessible_branches()[:1]
 
-    @api.depends('move_type', 'payment_id', 'statement_line_id')
+    @api.depends('move_type', 'origin_payment_id', 'statement_line_id')
     def _compute_journal_id(self):
         for move in self.filtered(lambda r: r.journal_id.type not in r._get_valid_journal_types()):
             move.journal_id = move._search_default_journal()
@@ -797,7 +806,7 @@ class AccountMove(models.Model):
             return ['sale']
         elif self.is_purchase_document(include_receipts=True):
             return ['purchase']
-        elif self.payment_id or self.statement_line_id or self.env.context.get('is_payment') or self.env.context.get('is_statement_line'):
+        elif self.origin_payment_id or self.statement_line_id or self.env.context.get('is_payment') or self.env.context.get('is_statement_line'):
             return ['bank', 'cash', 'credit']
         return ['general']
 
@@ -845,7 +854,7 @@ class AccountMove(models.Model):
                 ('type', '=', journal_type),
             ])
 
-    @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'payment_id')
+    @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'origin_payment_id')
     def _compute_name(self):
         self = self.sorted(lambda m: (m.date, m.ref or '', m._origin.id))
 
@@ -1021,10 +1030,10 @@ class AccountMove(models.Model):
                 invoice.direction_sign = -1
 
     @api.depends(
-        'line_ids.matched_debit_ids.debit_move_id.move_id.payment_id.is_matched',
+        'line_ids.matched_debit_ids.debit_move_id.move_id.origin_payment_id.is_matched',
         'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual',
         'line_ids.matched_debit_ids.debit_move_id.move_id.line_ids.amount_residual_currency',
-        'line_ids.matched_credit_ids.credit_move_id.move_id.payment_id.is_matched',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.origin_payment_id.is_matched',
         'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual',
         'line_ids.matched_credit_ids.credit_move_id.move_id.line_ids.amount_residual_currency',
         'line_ids.balance',
@@ -1079,7 +1088,7 @@ class AccountMove(models.Model):
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
 
-    @api.depends('amount_residual', 'move_type', 'state', 'company_id')
+    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'matched_payment_ids')
     def _compute_payment_state(self):
         stored_ids = tuple(self.ids)
         if stored_ids:
@@ -1098,7 +1107,7 @@ class AccountMove(models.Model):
                         account.account_type AS source_line_account_type,
                         ARRAY_AGG(counterpart_move.move_type) AS counterpart_move_types,
                         COALESCE(BOOL_AND(COALESCE(pay.is_matched, FALSE))
-                            FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched,
+                            FILTER (WHERE counterpart_move.origin_payment_id IS NOT NULL), TRUE) AS all_payments_matched,
                         BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment,
                         BOOL_OR(COALESCE(BOOL(counterpart_move.statement_line_id), FALSE)) as has_st_line
                     FROM account_partial_reconcile part
@@ -1106,7 +1115,7 @@ class AccountMove(models.Model):
                     JOIN account_account account ON account.id = source_line.account_id
                     JOIN account_move_line counterpart_line ON counterpart_line.id = part.%s
                     JOIN account_move counterpart_move ON counterpart_move.id = counterpart_line.move_id
-                    LEFT JOIN account_payment pay ON pay.id = counterpart_move.payment_id
+                    LEFT JOIN account_payment pay ON pay.id = counterpart_move.origin_payment_id
                     WHERE source_line.move_id IN %s AND counterpart_line.move_id != source_line.move_id
                     GROUP BY source_line.id, source_line.move_id, account.account_type
                 ''', SQL.identifier(source_field), SQL.identifier(counterpart_field), stored_ids))
@@ -1134,7 +1143,7 @@ class AccountMove(models.Model):
             if payment_state_matters:
                 reconciliation_vals = [x for x in reconciliation_vals if x['source_line_account_type'] in ('asset_receivable', 'liability_payable')]
 
-            new_pmt_state = 'not_paid'
+            new_pmt_state = 'not_paid' if invoice.payment_state != 'blocked' else 'blocked'
             if invoice.state == 'posted':
 
                 # Posted invoice/expense entry.
@@ -1165,16 +1174,21 @@ class AccountMove(models.Model):
                                             and reverse_move_types == {'entry'})
                             if in_reverse or out_reverse or misc_reverse:
                                 new_pmt_state = 'reversed'
-
+                    elif invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'in_process'):
+                        new_pmt_state = invoice._get_invoice_in_payment_state()
                     elif reconciliation_vals:
                         new_pmt_state = 'partial'
-
             invoice.payment_state = new_pmt_state
 
     @api.depends('payment_state', 'state')
     def _compute_status_in_payment(self):
         for move in self:
             move.status_in_payment = move.state if move.state in ('draft', 'cancel') else move.payment_state
+
+    @api.depends('matched_payment_ids')
+    def _compute_payment_count(self):
+        for invoice in self:
+            invoice.payment_count = len(invoice.matched_payment_ids)
 
     @api.depends('invoice_payment_term_id', 'invoice_date', 'currency_id', 'amount_total_in_currency_signed', 'invoice_date_due')
     def _compute_needed_terms(self):
@@ -2399,7 +2413,6 @@ class AccountMove(models.Model):
             return
 
         self_sudo = self.sudo()
-        self_sudo.payment_id._synchronize_from_moves(changed_fields)
         self_sudo.statement_line_id._synchronize_from_moves(changed_fields)
 
     # -------------------------------------------------------------------------
@@ -3150,7 +3163,7 @@ class AccountMove(models.Model):
             return "WHERE FALSE", {}
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
         param = {'journal_id': self.journal_id.id}
-        is_payment = self.payment_id or self.env.context.get('is_payment')
+        is_payment = self.origin_payment_id or self.env.context.get('is_payment')
 
         if not relaxed:
             domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False))]
@@ -3158,7 +3171,7 @@ class AccountMove(models.Model):
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
             if self.journal_id.payment_sequence:
-                domain += [('payment_id', '!=' if is_payment else '=', False)]
+                domain += [('origin_payment_id', '!=' if is_payment else '=', False)]
             reference_move_name = self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
             if not reference_move_name:
                 reference_move_name = self.sudo().search(domain, order='date asc', limit=1).name
@@ -3196,9 +3209,9 @@ class AccountMove(models.Model):
                 where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
         elif self.journal_id.payment_sequence:
             if is_payment:
-                where_string += " AND payment_id IS NOT NULL "
+                where_string += " AND origin_payment_id IS NOT NULL "
             else:
-                where_string += " AND payment_id IS NULL "
+                where_string += " AND origin_payment_id IS NULL "
 
         return where_string, param
 
@@ -3225,7 +3238,7 @@ class AccountMove(models.Model):
             starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, self.date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
-        if self.journal_id.payment_sequence and self.payment_id or self.env.context.get('is_payment'):
+        if self.journal_id.payment_sequence and self.origin_payment_id or self.env.context.get('is_payment'):
             starting_sequence = "P" + starting_sequence
         return starting_sequence
 
@@ -4258,7 +4271,7 @@ class AccountMove(models.Model):
 
     def _get_reconciled_payments(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
-        return self._get_reconciled_amls().move_id.payment_id
+        return self._get_reconciled_amls().move_id.origin_payment_id
 
     def _get_reconciled_statement_lines(self):
         """Helper used to retrieve the reconciled statement lines on this journal entry"""
@@ -4686,15 +4699,18 @@ class AccountMove(models.Model):
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------
 
+    def open_payments(self):
+        return self.matched_payment_ids._get_records_action(name=_("Payments"))
+
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
 
     def action_open_business_doc(self):
         self.ensure_one()
-        if self.payment_id:
+        if self.origin_payment_id:
             name = _("Payment")
             res_model = 'account.payment'
-            res_id = self.payment_id.id
+            res_id = self.origin_payment_id.id
         elif self.statement_line_id:
             name = _("Bank Transaction")
             res_model = 'account.bank.statement.line'
@@ -4759,7 +4775,7 @@ class AccountMove(models.Model):
         return self.action_force_register_payment()
 
     def action_force_register_payment(self):
-        if any(m.payment_state not in ('not_paid', 'partial') for m in self):
+        if any(m.payment_state not in ('not_paid', 'partial', 'in_payment') for m in self):
             raise UserError(_("You can only register payments for (partially) unpaid documents."))
         if any(m.move_type == 'entry' for m in self):
             raise UserError(_("You cannot register payments for miscellaneous entries."))
@@ -4830,17 +4846,13 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        moves_with_payments = self.filtered('payment_id')
-        if moves_with_payments:
-            moves_with_payments.payment_id.action_post()
-        other_moves = self - moves_with_payments
         # Disabled by default to avoid breaking automated action flow
         if (
             not self.env.context.get('disable_abnormal_invoice_detection', True)
-            and other_moves.filtered(lambda m: m.abnormal_amount_warning or m.abnormal_date_warning)
+            and self.filtered(lambda m: m.abnormal_amount_warning or m.abnormal_date_warning)
         ):
             wizard = self.env['validate.account.move'].create({
-                'move_ids': [Command.set(other_moves.ids)],
+                'move_ids': [Command.set(self.ids)],
             })
             return {
                 'name': _("Confirm Entries"),
@@ -4850,9 +4862,9 @@ class AccountMove(models.Model):
                 'view_mode': 'form',
                 'target': 'new',
             }
-        if other_moves:
-            other_moves._post(soft=False)
-        if autopost_bills_wizard := other_moves._show_autopost_bills_wizard():
+        if self:
+            self._post(soft=False)
+        if autopost_bills_wizard := self._show_autopost_bills_wizard():
             return autopost_bills_wizard
         return False
 
@@ -4949,6 +4961,16 @@ class AccountMove(models.Model):
             raise UserError(_("Only draft journal entries can be cancelled."))
 
         self.write({'auto_post': 'no', 'state': 'cancel'})
+
+    def action_toggle_block_payment(self):
+        self.ensure_one()
+        if self.payment_state == 'blocked':
+            self.payment_state = 'not_paid'
+            self.env.add_to_compute(self._fields['payment_state'], self)
+        else:
+            if self.payment_state in ('paid', 'in_payment'):
+                raise UserError(_("You can't block a paid invoice."))
+            self.payment_state = 'blocked'
 
     def action_activate_currency(self):
         self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})
@@ -5701,8 +5723,8 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         if not self.is_invoice(include_receipts=True):
-            if self.payment_id and 'state' in init_values:
-                self.payment_id._message_track(['state'], {self.payment_id.id: init_values})
+            if self.origin_payment_id and 'state' in init_values:
+                self.origin_payment_id._message_track(['state'], {self.origin_payment_id.id: init_values})
             return super()._track_subtype(init_values)
 
         if 'payment_state' in init_values and self.payment_state == 'paid':

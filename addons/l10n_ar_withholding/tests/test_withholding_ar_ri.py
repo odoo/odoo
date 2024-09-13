@@ -121,7 +121,7 @@ class TestL10nArWithholdingArRi(TestAr):
         self.assertEqual(wizard.currency_id.round(sum(wizard.l10n_ar_withholding_ids.mapped('amount'))) + wizard.l10n_ar_net_amount, wizard.amount)
         action = wizard.action_create_payments()
         payment = self.env['account.payment'].browse(action['res_id'])
-        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+        self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
             # Liquidity line:
             {'debit': 0.0, 'credit': 1110.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -1110.0, 'reconciled': False},
             # base line:
@@ -152,7 +152,7 @@ class TestL10nArWithholdingArRi(TestAr):
         self.assertEqual(wizard_2.currency_id.round(sum(wizard_2.l10n_ar_withholding_ids.mapped('amount'))) + wizard_2.l10n_ar_net_amount, wizard_2.amount)
         action = wizard_2.action_create_payments()
         payment_2 = self.env['account.payment'].browse(action['res_id'])
-        self.assertRecordValues(payment_1.line_ids.sorted('balance'), [
+        self.assertRecordValues(payment_1.move_id.line_ids.sorted('balance'), [
             # Liquidity line:
             {'debit': 0.0, 'credit': 555.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': -555.0, 'reconciled': False},
             # base line:
@@ -166,7 +166,7 @@ class TestL10nArWithholdingArRi(TestAr):
         ])
         self.assertEqual(605, payment_1.currency_id.round(sum(payment_1.l10n_ar_withholding_ids.mapped('amount_currency')) * -1  + payment_1.amount))
 
-        self.assertRecordValues(payment_2.line_ids.sorted('balance'), [
+        self.assertRecordValues(payment_2.move_id.line_ids.sorted('balance'), [
             # Liquidity line:
             {'debit': 0.0, 'credit': 555.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': -555.0, 'reconciled': False},
             # base line:

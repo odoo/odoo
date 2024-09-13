@@ -148,6 +148,7 @@ class AccountPaymentRegister(models.TransientModel):
     writeoff_is_exchange_account = fields.Boolean(
         compute='_compute_writeoff_is_exchange_account',
     )
+    show_payment_difference = fields.Boolean(compute='_compute_show_payment_difference')
 
     # == Display purpose fields ==
     show_partner_bank_account = fields.Boolean(
@@ -155,8 +156,9 @@ class AccountPaymentRegister(models.TransientModel):
     require_partner_bank_account = fields.Boolean(
         compute='_compute_show_require_partner_bank') # used to know whether the field `partner_bank_id` should be required
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
-    duplicate_move_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicate_moves')
+    duplicate_payment_ids = fields.Many2many(comodel_name='account.payment', compute='_compute_duplicate_moves')
     is_register_payment_on_draft = fields.Boolean(compute='_compute_is_register_payment_on_draft')
+    actionable_errors = fields.Json(compute='_compute_actionable_errors')
 
     # == trust check ==
     untrusted_bank_ids = fields.Many2many('res.partner.bank', compute='_compute_trust_values')
@@ -305,6 +307,17 @@ class AccountPaymentRegister(models.TransientModel):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('early_payment_discount_mode', 'can_edit_wizard', 'can_group_payments', 'group_payment', 'payment_method_line_id')
+    def _compute_show_payment_difference(self):
+        for wizard in self:
+            wizard.show_payment_difference = (
+                wizard.payment_difference != 0.0
+                and not wizard.early_payment_discount_mode
+                and wizard.can_edit_wizard
+                and (not wizard.can_group_payments or wizard.group_payment)
+                and wizard.payment_method_line_id.payment_account_id
+            )
 
     @api.depends('line_ids')
     def _compute_batches(self):
@@ -545,6 +558,19 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.show_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
             wizard.require_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
+
+    @api.depends('line_ids')
+    def _compute_actionable_errors(self):
+        for wizard in self:
+            actionable_errors = {}
+            if unpaid_matched_payments := wizard.line_ids.move_id.matched_payment_ids.filtered(lambda p: p.state == 'in_process'):
+                actionable_errors['unpaid_matched_payments'] = {
+                    'message': self.env._("There are payments in progress. Make sure you don't pay twice."),
+                    'action_text': self.env._("Check them"),
+                    'action': unpaid_matched_payments._get_records_action(name=self.env._("Payments")),
+                    'level': 'danger',
+                }
+            wizard.actionable_errors = actionable_errors
 
     def _convert_to_wizard_currency(self, installments):
         self.ensure_one()
@@ -836,9 +862,9 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_duplicate_moves(self):
         for wizard in self:
             if wizard.can_edit_wizard:
-                wizard.duplicate_move_ids = self._fetch_duplicate_reference()
+                wizard.duplicate_payment_ids = self._fetch_duplicate_reference().get(0, self.env['account.payment'])
             else:
-                wizard.duplicate_move_ids = self.env['account.move']
+                wizard.duplicate_payment_ids = self.env['account.payment']
 
     @api.depends('line_ids')
     def _compute_is_register_payment_on_draft(self):
@@ -854,60 +880,14 @@ class AccountPaymentRegister(models.TransientModel):
          outstanding counterpart can be matched, or
         - Are in the suspense account
         """
-        # Update tables involved in the query
-        self.env['account.move.line'].flush_model(('move_id', 'payment_id', 'balance', 'account_id', 'company_id', 'date', 'partner_id'))
-
-        all_journals = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))])
-        if self.payment_type == 'inbound':
-            outstanding_account_ids = all_journals.inbound_payment_method_line_ids.payment_account_id.ids + self.company_id.account_journal_payment_debit_account_id.ids
-        else:
-            outstanding_account_ids = all_journals.outbound_payment_method_line_ids.payment_account_id.ids + self.company_id.account_journal_payment_credit_account_id.ids
-        suspense_account_ids = all_journals.suspense_account_id.ids
-
-        place_holders = {
-            'move_id': 0,
-            'payment_type': self.payment_type,
-            'balance': self.amount if self.payment_type == 'outbound' else -self.amount,
-            'account_id': self.line_ids[0].account_id.id,
-            'company_id': self.company_id.id or None,
-            'date': self.payment_date or None,
-            'partner_id': self.partner_id.id,
-        }
-        move_table_and_alias = SQL('''
-            (VALUES (%(move_id)s::int4, %(payment_type)s::varchar, %(balance)s::numeric, %(account_id)s::int4,
-                     %(company_id)s::int4, %(date)s::date, %(partner_id)s::int4)
-            ) AS move_line(move_id, payment_type, balance, account_id, company_id, date, partner_id)
-        ''', **place_holders)
-
-        query = SQL(
-            """
-            SELECT
-                   array_agg(dup_move_line.move_id) AS duplicate_move_ids
-              FROM %(move_table_and_alias)s
-              JOIN account_move_line AS dup_move_line
-                ON move_line.move_id != dup_move_line.move_id
-               AND move_line.partner_id = dup_move_line.partner_id
-               AND move_line.company_id = dup_move_line.company_id
-               AND move_line.date = dup_move_line.date
-               AND dup_move_line.parent_state = ANY(%(matching_states)s)
-               AND (
-                   move_line.account_id = dup_move_line.account_id
-                   OR dup_move_line.account_id = ANY(%(account_ids)s)
-               )
-               AND NOT dup_move_line.reconciled
-             WHERE move_line.balance = dup_move_line.balance
-               AND (
-                   move_line.payment_type = 'inbound' AND dup_move_line.balance < 0.0
-                   OR move_line.payment_type = 'outbound' AND dup_move_line.balance > 0.0
-               )
-        """,
-            move_table_and_alias=move_table_and_alias,
-            matching_states=list(matching_states),
-            account_ids=suspense_account_ids + outstanding_account_ids,
-        )
-        result = self.env.execute_query(query)[0][0]
-        return self.env['account.move'].browse(result)
-
+        dummy = self.env['account.payment'].new({
+            "company_id": self.company_id,
+            "partner_id": self.partner_id,
+            "date": self.payment_date,
+            "amount": self.amount,
+            "payment_type": self.payment_type,
+        })
+        return dummy._fetch_duplicate_reference(matching_states)
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -974,7 +954,7 @@ class AccountPaymentRegister(models.TransientModel):
             'amount': self.amount,
             'payment_type': self.payment_type,
             'partner_type': self.partner_type,
-            'ref': self.communication,
+            'memo': self.communication,
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'currency_id': self.currency_id.id,
@@ -1047,7 +1027,7 @@ class AccountPaymentRegister(models.TransientModel):
             'amount': batch_values['source_amount_currency'],
             'payment_type': batch_values['payment_type'],
             'partner_type': batch_values['partner_type'],
-            'ref': self._get_communication(batch_result['lines']),
+            'memo': self._get_communication(batch_result['lines']),
             'journal_id': self.journal_id.id,
             'company_id': self.company_id.id,
             'currency_id': batch_values['source_currency_id'],
@@ -1179,7 +1159,7 @@ class AccountPaymentRegister(models.TransientModel):
         ]
         for vals in to_process:
             payment = vals['payment']
-            payment_lines = payment.line_ids.filtered_domain(domain)
+            payment_lines = payment.move_id.line_ids.filtered_domain(domain)
             lines = vals['to_reconcile']
             extra_context = {'forced_rate_from_register_payment': vals['rate']} if 'rate' in vals else {}
 
@@ -1192,6 +1172,7 @@ class AccountPaymentRegister(models.TransientModel):
                         ('parent_state', '=', 'posted'),
                     ])\
                     .reconcile()
+            lines.move_id.matched_payment_ids += payment
 
     def _create_payments(self):
         self.ensure_one()

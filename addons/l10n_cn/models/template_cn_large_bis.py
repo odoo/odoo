@@ -28,8 +28,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_sale_tax_id': 'l10n_cn_tax_large_bis_sales_excluded_13',
                 'account_purchase_tax_id': 'l10n_cn_tax_large_bis_purchase_excluded_13',
                 'account_journal_suspense_account_id': 'l10n_cn_large_bis_100201',
-                'account_journal_payment_debit_account_id': 'l10n_cn_large_bis_100202',
-                'account_journal_payment_credit_account_id': 'l10n_cn_large_bis_100203',
                 'default_cash_difference_income_account_id': 'l10n_cn_large_bis_999200',
                 'default_cash_difference_expense_account_id': 'l10n_cn_large_bis_999100',
             },

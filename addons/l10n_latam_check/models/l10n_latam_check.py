@@ -129,7 +129,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
     def _get_last_operation(self):
         self.ensure_one()
         return (self.payment_id + self.operation_ids).filtered(
-                lambda x: x.state == 'posted').sorted(key=lambda payment: (payment.date, payment._origin.id))[-1:]
+                lambda x: x.state == 'in_process').sorted(key=lambda payment: (payment.date, payment._origin.id))[-1:]
 
     @api.depends('payment_id.state', 'operation_ids.state')
     def _compute_current_journal(self):
@@ -138,9 +138,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
             if not last_operation:
                 rec.current_journal_id = False
                 continue
-            if last_operation.is_internal_transfer and last_operation.payment_type == 'outbound':
-                rec.current_journal_id = last_operation.paired_internal_transfer_payment_id.journal_id
-            elif last_operation.payment_type == 'inbound':
+            if last_operation.payment_type == 'inbound':
                 rec.current_journal_id = last_operation.journal_id
             else:
                 rec.current_journal_id = False
@@ -219,5 +217,5 @@ class l10nLatamAccountPaymentCheck(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_payment_is_draft(self):
-        if any(check.payment_id.state == 'posted' for check in self):
-            raise UserError("Can't delete a check if payment is posted!")
+        if any(check.payment_id.state == 'in_process' for check in self):
+            raise UserError("Can't delete a check if payment is In Process!")

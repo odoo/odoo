@@ -55,7 +55,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
             checks = self.env['l10n_latam.check'].browse(self._context.get('active_ids', []))
             if checks.filtered(lambda x: x.payment_method_line_id.code != 'new_third_party_checks'):
                 raise 'You have select some payments that are not checks. Please call this action from the Third Party Checks menu'
-            elif not all(check.payment_id.state == 'posted' for check in checks):
+            elif not all(check.payment_id.state == 'in_process' for check in checks):
                 raise UserError(_("All the selected checks must be posted"))
             currency_ids = checks.mapped('currency_id')
             if any(x != currency_ids[0] for x in currency_ids):
@@ -76,12 +76,10 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
                         'date': self.payment_date,
                         'amount': sum(checks.mapped('amount')),
                         'payment_type': 'outbound',
-                        'ref': self.communication,
+                        'memo': self.communication,
                         'journal_id': self.journal_id.id,
                         'currency_id': currency_id.id,
-                        'is_internal_transfer': True,
                         'payment_method_line_id': pay_method_line.id,
-                        'destination_journal_id': self.destination_journal_id.id,
                         'l10n_latam_move_check_ids': [Command.link(x.id) for x in checks]
                     }
 

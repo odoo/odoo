@@ -210,7 +210,7 @@ class TestExpensesStates(TestExpenseCommon):
         ])
 
         # STEP 8: ER Done (fully paid) -> Reset to draft payment (Reverts to post state)
-        payment.action_draft()
+        payment.move_id.button_draft()
         self.assertRecordValues(self.expense_states_employee_sheet.expense_line_ids, [
             {'state': 'approved'},
         ])
@@ -239,7 +239,7 @@ class TestExpensesStates(TestExpenseCommon):
         ])
 
         self.expense_states_company_sheet.account_move_ids.action_post()
-        self.expense_states_company_sheet.account_move_ids.payment_id.action_draft()
+        self.expense_states_company_sheet.account_move_ids.button_draft()
         self.assertRecordValues(self.expense_states_company_sheet.expense_line_ids, [
             {'state': 'approved'},
         ])
@@ -262,7 +262,7 @@ class TestExpensesStates(TestExpenseCommon):
             {'state': 'cancel'},
         ])
         self.expense_states_company_sheet.account_move_ids.button_draft()
-        self.expense_states_company_sheet.account_move_ids.payment_id.action_cancel()
+        self.expense_states_company_sheet.account_move_ids.button_cancel()
         self.assertRecordValues(self.expense_states_company_sheet.expense_line_ids, [
             {'state': 'done'},
         ])
@@ -277,6 +277,7 @@ class TestExpensesStates(TestExpenseCommon):
         self.expense_states_company_sheet.account_move_ids.button_draft()
 
         # STEP 3: ER draft & paid -> Delete move (Back to approve state)
+        self.expense_states_company_sheet.account_move_ids.origin_payment_id.unlink()
         self.expense_states_company_sheet.account_move_ids.unlink()
         self.assertRecordValues(self.expense_states_company_sheet.expense_line_ids, [
             {'state': 'approved'},

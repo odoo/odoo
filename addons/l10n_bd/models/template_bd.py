@@ -24,8 +24,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'cash_account_code_prefix': '10010',
                 'account_default_pos_receivable_account_id': 'l10n_bd_100202',
                 'account_journal_suspense_account_id': 'l10n_bd_100102',
-                'account_journal_payment_debit_account_id': 'l10n_bd_100103',
-                'account_journal_payment_credit_account_id': 'l10n_bd_100104',
                 'default_cash_difference_income_account_id': 'l10n_bd_400302',
                 'default_cash_difference_expense_account_id': 'l10n_bd_500909',
                 'income_currency_exchange_account_id': 'l10n_bd_400301',

@@ -20,6 +20,4 @@ class AccountChartTemplate(models.AbstractModel):
         super()._setup_utility_bank_accounts(template_code, company, template_data)
         if template_code in ["de_skr03", "de_skr04"]:
             company.account_journal_suspense_account_id.tag_ids = self.env.ref('l10n_de.tag_de_asset_bs_B_II_4')
-            company.account_journal_payment_debit_account_id.tag_ids = self.env.ref('l10n_de.tag_de_asset_bs_B_II_4')
-            company.account_journal_payment_credit_account_id.tag_ids = self.env.ref('l10n_de.tag_de_asset_bs_B_II_4')
             company.transfer_account_id.tag_ids = self.env.ref('l10n_de.tag_de_asset_bs_B_IV')

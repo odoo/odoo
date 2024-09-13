@@ -726,14 +726,24 @@
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_register_payment" id="account_invoice_payment_btn"
                                 type="object" class="oe_highlight"
-                                invisible="state != 'posted' or payment_state not in ('not_paid', 'partial') or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or invoice_has_outstanding"
+                                invisible="(
+                                    state != 'posted'
+                                    or payment_state not in ('not_paid', 'partial', 'in_payment')
+                                    or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
+                                    or invoice_has_outstanding
+                                )"
                                 context="{'dont_redirect_to_payments': True, 'display_account_trust': True}"
                                 string="Pay" data-hotkey="g"
                                 groups="account.group_account_invoice"/>
                         <!-- Register Payment (only invoices / receipts, with outstanding payments) -->
                         <button name="action_register_payment" id="account_invoice_payment_secondary_btn"
                                 type="object"
-                                invisible="state != 'posted' or payment_state not in ('not_paid', 'partial') or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') or not invoice_has_outstanding"
+                                invisible="(
+                                    state != 'posted'
+                                    or payment_state not in ('not_paid', 'partial', 'in_payment')
+                                    or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
+                                    or not invoice_has_outstanding
+                                )"
                                 context="{'dont_redirect_to_payments': True, 'display_account_trust': True}"
                                 string="Pay" data-hotkey="g"
                                 groups="account.group_account_invoice"/>
@@ -842,10 +852,17 @@
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    invisible="move_type != 'entry' or not id or not payment_id">
+                                    invisible="move_type != 'entry' or not id or not origin_payment_id">
                                     <div class="o_stat_info">
                                         <span class="o_stat_text">1 Payment</span>
                                     </div>
+                            </button>
+                            <button name="open_payments"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object"
+                                    invisible="not matched_payment_ids">
+                                    <field name="payment_count" string="Payments" widget="statinfo"/>
                             </button>
                             <button name="open_reconcile_view"
                                     class="oe_stat_button"
@@ -877,6 +894,9 @@
                         <widget name="web_ribbon" title="Reversed"
                                 bg_color="text-bg-danger"
                                 invisible="payment_state != 'reversed'"/>
+                        <widget name="web_ribbon" title="Blocked"
+                                bg_color="text-bg-danger"
+                                invisible="payment_state != 'blocked' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
                          <widget name="web_ribbon" text="Invoicing App Legacy"
                                 bg_color="text-bg-info"
                                 invisible="payment_state != 'invoicing_legacy'"
@@ -912,7 +932,7 @@
                         <field name="display_inactive_currency_warning" invisible="1"/>
                         <field name="statement_line_id" invisible="1"/>
                         <field name="statement_id" invisible="1"/>
-                        <field name="payment_id" invisible="1"/>
+                        <field name="origin_payment_id" invisible="1"/>
                         <field name="tax_country_id" invisible="1"/>
                         <field name="tax_calculation_rounding_method" invisible="1"/>
                         <field name="tax_cash_basis_created_move_ids" invisible="1"/>
@@ -1553,11 +1573,6 @@
                     <filter name="not_secured" string="Not Secured" domain="[('secured', '=', False), ('state', '=', 'posted')]"
                             groups="account.group_account_secured,base.group_no_one"/>
                     <separator/>
-                    <filter name="sent"
-                            string="Sent"
-                            domain="[('is_move_sent', '=', True)]"
-                            invisible="context.get('default_move_type') in ('in_invoice', 'in_refund', 'in_receipt')"
-                    />
                     <filter name="not_sent"
                             string="Not Sent"
                             domain="[('is_move_sent', '=', False)]"
@@ -1576,16 +1591,14 @@
                     <filter string="To Check" name="to_check" domain="[('checked', '=', False), ('state', '!=', 'draft')]"/>
                     <separator/>
                     <!-- not_paid & partial -->
-                    <filter name="open" string="Unpaid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
+                    <filter name="open" string="To pay" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
                     <!-- in_payment & paid -->
-                    <filter name="closed" string="Paid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('in_payment', 'paid'))]"/>
-                    <!-- reversed -->
-                    <filter name="reversed" string="Reversed" domain="[('state', '=', 'posted'), ('payment_state', '=', 'reversed')]"/>
+                    <filter name="in_payment" string="In payment" domain="[('state', '=', 'posted'), ('payment_state', '=', 'in_payment')]"/>
                     <!-- overdue -->
                     <filter name="late" string="Overdue" domain="[
                         ('invoice_date_due', '&lt;', time.strftime('%Y-%m-%d')),
                         ('state', '=', 'posted'),
-                        ('payment_state', 'in', ('not_paid', 'partial'))
+                        ('payment_state', 'in', ('not_paid', 'partial', 'in_payment'))
                     ]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
@@ -1948,6 +1961,18 @@ if records:
             <field name="code">
 if records:
     action = records.action_force_register_payment()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_move_block_payment">
+            <field name="name">(Un)Block Payment</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="binding_view_types">form</field>
+            <field name="code">
+                records.action_toggle_block_payment()
             </field>
         </record>
 

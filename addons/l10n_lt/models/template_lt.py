@@ -42,8 +42,6 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code == "lt":
             bank_tags = self.env.ref('l10n_lt.account_account_tag_b_4')
             company.account_journal_suspense_account_id.tag_ids |= bank_tags
-            company.account_journal_payment_debit_account_id.tag_ids |= bank_tags
-            company.account_journal_payment_credit_account_id.tag_ids |= bank_tags
             company.transfer_account_id.tag_ids |= bank_tags
 
             other_operating_results_tags = self.env.ref('l10n_lt.account_account_tag_6_other_operating_results')

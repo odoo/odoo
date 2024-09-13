@@ -126,10 +126,10 @@ class AccountPayment(models.Model):
             ('check_number', self.check_number),
         ]
 
-        if self.ref:
+        if self.memo:
             result += [
                 ('sep', ': '),
-                ('memo', self.ref),
+                ('memo', self.memo),
             ]
 
         return result
@@ -144,15 +144,15 @@ class AccountPayment(models.Model):
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
-        self = self.filtered(lambda r: r.payment_method_line_id.code == 'check_printing' and r.state != 'reconciled')
+        valid_payments = self.filtered(lambda r: r.payment_method_line_id.code == 'check_printing' and r.state != 'paid')
 
-        if len(self) == 0:
+        if len(valid_payments) == 0:
             raise UserError(_("Payments to print as a checks must have 'Check' selected as payment method and "
                               "not have already been reconciled"))
-        if any(payment.journal_id != self[0].journal_id for payment in self):
+        if any(payment.journal_id != valid_payments[0].journal_id for payment in valid_payments):
             raise UserError(_("In order to print multiple checks at once, they must belong to the same bank journal."))
 
-        if not self[0].journal_id.check_manual_sequencing:
+        if not valid_payments[0].journal_id.check_manual_sequencing:
             # The wizard asks for the number printed on the first pre-printed check
             # so payments are attributed the number of the check the'll be printed on.
             self.env.cr.execute("""
@@ -176,16 +176,13 @@ class AccountPayment(models.Model):
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {
-                    'payment_ids': self.ids,
+                    'payment_ids': valid_payments.ids,
                     'default_next_check_number': next_check_number,
                 }
             }
         else:
-            self.filtered(lambda r: r.state == 'draft').action_post()
-            return self.do_print_checks()
-
-    def action_unmark_sent(self):
-        self.write({'is_move_sent': False})
+            valid_payments.filtered(lambda r: r.state == 'draft').action_post()
+            return valid_payments.do_print_checks()
 
     def action_void_check(self):
         self.action_draft()
@@ -201,7 +198,7 @@ class AccountPayment(models.Model):
         if not report_action:
             msg = _("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again.")
             raise RedirectWarning(msg, redirect_action.id, _('Go to the configuration panel'))
-        self.write({'is_move_sent': True})
+        self.write({'is_sent': 'True'})
         return report_action.report_action(self)
 
     #######################
@@ -222,7 +219,7 @@ class AccountPayment(models.Model):
             'state': self.state,
             'amount': formatLang(self.env, self.amount, currency_obj=self.currency_id) if i == 0 else 'VOID',
             'amount_in_word': self._check_fill_line(self.check_amount_in_words) if i == 0 else 'VOID',
-            'memo': self.ref,
+            'memo': self.memo,
             'stub_cropped': not multi_stub and len(self.move_id._get_reconciled_invoices()) > INV_LINES_PER_STUB,
             # If the payment does not reference an invoice, there is no stub line to display
             'stub_lines': p,
@@ -268,7 +265,7 @@ class AccountPayment(models.Model):
             }
 
         # Decode the reconciliation to keep only invoices.
-        term_lines = self.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
+        term_lines = self.move_id.line_ids.filtered(lambda line: line.account_id.account_type in ('asset_receivable', 'liability_payable'))
         invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id)\
             .filtered(lambda x: x.is_outbound() or x.move_type == 'in_receipt')
         invoices = invoices.sorted(lambda x: x.invoice_date_due or x.date)

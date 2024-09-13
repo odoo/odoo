@@ -27,7 +27,7 @@ class AccountPaymentRegister(models.TransientModel):
         for payment, vals in zip(payments, to_process):
             expenses = vals['batch']['lines'].expense_id
             if expenses:
-                payment.line_ids.write({'expense_id': expenses[0].id})
+                payment.move_id.line_ids.write({'expense_id': expenses[0].id})
         return payments
 
     def _reconcile_payments(self, to_process, edit_mode=False):

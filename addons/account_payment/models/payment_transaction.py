@@ -163,7 +163,7 @@ class PaymentTransaction(models.Model):
             'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
-            'ref': reference,
+            'memo': reference,
             'write_off_line_vals': [],
             **extra_create_values,
         }
@@ -199,7 +199,7 @@ class PaymentTransaction(models.Model):
         if invoices:
             invoices.filtered(lambda inv: inv.state == 'draft').action_post()
 
-            (payment.line_ids + invoices.line_ids).filtered(
+            (payment.move_id.line_ids + invoices.line_ids).filtered(
                 lambda line: line.account_id == payment.destination_account_id
                 and not line.reconciled
             ).reconcile()

@@ -24,6 +24,10 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         cls.currency = cls.sale_order.currency_id
         cls.partner = cls.sale_order.partner_invoice_id
 
+        cls.provider.journal_id.inbound_payment_method_line_ids.filtered(lambda l:
+            l.payment_provider_id == cls.provider
+        ).payment_account_id = cls.inbound_payment_method_line.payment_account_id
+
     def test_11_so_payment_link(self):
         # test customized /payment/pay route with sale_order_id param
         self.amount = self.sale_order.amount_total
@@ -72,7 +76,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         tx_sudo._post_process()
         self.assertEqual(self.sale_order.state, 'sale')
         self.assertTrue(tx_sudo.payment_id)
-        self.assertEqual(tx_sudo.payment_id.state, 'posted')
+        self.assertEqual(tx_sudo.payment_id.state, 'in_process')
 
     def test_so_payment_link_with_different_partner_invoice(self):
         # test customized /payment/pay route with sale_order_id param

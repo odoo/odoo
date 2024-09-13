@@ -1943,13 +1943,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
         })
-        pay1_liquidity_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
-        pay1_rec_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
-        pay1.write({'line_ids': [
+        pay1.action_post()
+        pay1_liquidity_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
+        pay1_rec_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        pay1.move_id.button_draft()
+        pay1.move_id.write({'line_ids': [
             Command.update(pay1_liquidity_line.id, {'debit': 36511.34}),
             Command.update(pay1_rec_line.id, {'credit': 36511.34}),
         ]})
-        pay1.action_post()
+        pay1.move_id.action_post()
 
         pay2 = self.env['account.payment'].create({
             'partner_type': 'customer',
@@ -1960,7 +1962,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'currency_id': foreign_curr.id,
         })
         pay2.action_post()
-        pay2_rec_line = pay2.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        pay2_rec_line = pay2.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         # 1st reconciliation refund1 + inv1
         self.assert_invoice_outstanding_to_reconcile_widget(refund1, {
@@ -2244,9 +2246,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'currency_id': foreign_curr.id,
         })
-        pay1_liquidity_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
-        pay1_rec_line = pay1.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
-        pay1.write({'line_ids': [
+        pay1.action_post()
+        pay1_liquidity_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type != 'asset_receivable')
+        pay1_rec_line = pay1.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        pay1.move_id.button_draft()
+        pay1.move_id.write({'line_ids': [
             Command.update(pay1_liquidity_line.id, {'debit': 36511.34}),
             Command.update(pay1_rec_line.id, {'credit': 36511.34}),
         ]})
@@ -2261,7 +2265,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'currency_id': foreign_curr.id,
         })
         pay2.action_post()
-        pay2_rec_line = pay2.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        pay2_rec_line = pay2.move_id.line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
 
         self.assertRecordValues(refund1_rec_line + inv1_rec_line + inv2_rec_line + pay1_rec_line + pay2_rec_line, [
             {'amount_residual': -1385.92,   'amount_residual_currency': -1385.92},

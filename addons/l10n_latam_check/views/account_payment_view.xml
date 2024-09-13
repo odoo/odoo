@@ -25,8 +25,6 @@
                                 domain="
                                     [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', journal_id), ('company_id', '=', company_id)]
                                         if payment_type == 'outbound' else
-                                    [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', destination_journal_id), ('company_id', '=', company_id)]
-                                        if is_internal_transfer else
                                     [('payment_method_code', '=', 'new_third_party_checks'), ('current_journal_id', '=', False), ('company_id', '=', company_id)]" options="{'no_create': True}"
                                     nolabel="1" colspan="2" readonly="state != 'draft'">
                                 <list name="existing_checks">

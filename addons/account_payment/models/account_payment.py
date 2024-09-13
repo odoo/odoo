@@ -204,7 +204,7 @@ class AccountPayment(models.Model):
             'provider_id': self.payment_token_id.provider_id.id,
             'payment_method_id': self.payment_token_id.payment_method_id.id,
             'reference': self.env['payment.transaction']._compute_reference(
-                self.payment_token_id.provider_id.code, prefix=self.ref
+                self.payment_token_id.provider_id.code, prefix=self.memo
             ),
             'amount': self.amount,
             'currency_id': self.currency_id.id,

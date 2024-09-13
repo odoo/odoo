@@ -164,7 +164,7 @@ class AccountMoveLine(models.Model):
     payment_id = fields.Many2one(
         comodel_name='account.payment',
         string="Originator Payment",
-        related='move_id.payment_id', store=True,
+        related='move_id.origin_payment_id', store=True,
         auto_join=True,
         index='btree_not_null',
         help="The payment that created this entry")
@@ -1883,7 +1883,7 @@ class AccountMoveLine(models.Model):
         """
 
         def is_payment(aml):
-            return aml.move_id.payment_id or aml.move_id.statement_line_id
+            return aml.move_id.origin_payment_id or aml.move_id.statement_line_id
 
         def get_odoo_rate(aml, other_aml, currency):
             if forced_rate := self._context.get('forced_rate_from_register_payment'):

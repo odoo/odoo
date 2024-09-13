@@ -84,6 +84,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         cls.bank_payment_method = env['pos.payment.method'].create({
             'name': 'Bank',
             'journal_id': cls.bank_journal.id,
+            'outstanding_account_id': cls.inbound_payment_method_line.payment_account_id.id,
         })
         env['pos.config'].search([]).unlink()
         cls.main_pos_config = env['pos.config'].create({
