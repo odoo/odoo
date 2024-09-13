@@ -39,10 +39,8 @@ class SaleOrderTemplateLine(models.Model):
 
     name = fields.Text(
         string="Description",
-        compute='_compute_name',
-        store=True, readonly=False, precompute=True,
-        required=True,
-        translate=True)
+        translate=True,
+    )
 
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
@@ -62,13 +60,6 @@ class SaleOrderTemplateLine(models.Model):
         ('line_note', "Note")], default=False)
 
     #=== COMPUTE METHODS ===#
-
-    @api.depends('product_id')
-    def _compute_name(self):
-        for option in self:
-            if not option.product_id:
-                continue
-            option.name = option.product_id.get_product_multiline_description_sale()
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):
@@ -103,11 +94,13 @@ class SaleOrderTemplateLine(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        return {
+        vals = {
             'display_type': self.display_type,
-            'name': self.name,
             'product_id': self.product_id.id,
             'product_uom_qty': self.product_uom_qty,
             'product_uom': self.product_uom_id.id,
             'sequence': self.sequence,
         }
+        if self.name:
+            vals['name'] = self.name
+        return vals
