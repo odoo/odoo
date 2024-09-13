@@ -1055,3 +1055,27 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(sol_prod_deliver.qty_invoiced, 5.0)
         self.assertEqual(sol_prod_deliver.amount_to_invoice, 0.0)
         self.assertEqual(sol_prod_deliver.amount_invoiced, sol_prod_deliver.price_total / 2)
+
+    def test_invoice_line_name_has_product_name(self):
+        """ Testing that when invoicing a sales order, the invoice line name ALWAYS contains the product name. """
+        so = self.sale_order
+
+        # Use only invoicable on order products
+        so.order_line[1].product_id = so.order_line[0].product_id
+        so.order_line[3].product_id = so.order_line[2].product_id
+
+        # Adapt the SOL names to test the different cases
+        so.order_line[0].name = "just a description"
+        so.order_line[1].name = so.order_line[1].product_id.display_name
+        so.order_line[2].name = f"{so.order_line[2].product_id.display_name} with more description"
+        so.order_line[3].name = "product"
+
+        # Invoice the sale order
+        so.action_confirm()
+        inv = self.sale_order._create_invoices()
+
+        # Check the invoice line names
+        self.assertEqual(inv.invoice_line_ids[0].name, f"{so.order_line[0].product_id.display_name} {so.order_line[0].name}", "When the description doesn't contain the product name, it should be added to the invoice line name")
+        self.assertEqual(inv.invoice_line_ids[1].name, f"{so.order_line[1].name}", "When the description is the product name, the invoice line name should only be the description")
+        self.assertEqual(inv.invoice_line_ids[2].name, f"{so.order_line[2].name}", "When description contains the product name, the invoice line name should only be the description")
+        self.assertEqual(inv.invoice_line_ids[3].name, f"{so.order_line[3].product_id.display_name} {so.order_line[3].name}", "When the product name contains the description, the invoice line name should contain the product name and the description")
