@@ -65,7 +65,7 @@
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing)">
+                                    <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited)">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">
                                             <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
@@ -90,6 +90,7 @@
                                                         <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
                                                         <t t-elif="state.showTranslation" t-out="message.translationValue"/>
                                                         <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
+                                                        <em t-if="message.edited" class="smaller fw-bold text-500"> (edited)</em>
                                                         <p class="fst-italic text-muted small" t-if="state.showTranslation">
                                                             <t t-if="message.translationSource" t-esc="translatedFromText"/>
                                                         </p>
@@ -97,7 +98,6 @@
                                                             <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
                                                             <t t-if="message.translationErrors" t-esc="translationFailureText"/>
                                                         </p>
-                                                        <!-- <small t-if="message.editDate" class="o-mail-Message-edited fst-italic text-muted" t-att-class="{ 'ms-2': !message.isBodyEmpty }" t-att-title="message.editDatetimeHuge">(edited)</small> --> <!-- DISABLED because new messages sent by email are wrongly flagged as (edited) -->
                                                         <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
                                                     </t>
                                                 </div>
