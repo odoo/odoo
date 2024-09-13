@@ -440,6 +440,9 @@ class ir_cron(models.Model):
                         status = CompletionStatus.FULLY_DONE
                     else:
                         status = CompletionStatus.PARTIALLY_DONE
+
+                    if status == CompletionStatus.FULLY_DONE and progress.deactivate:
+                        job['active'] = False
                 finally:
                     progress.timed_out_counter = 0
                     timed_out_counter = 0
@@ -459,7 +462,7 @@ class ir_cron(models.Model):
         the time delta reaches ``MIN_DELTA_BEFORE_DEACTIVATION``.
 
         On ``'fully done'`` and ``'partially done'``, the counter and
-        failure date are reset. ``active`` is always left unmodified.
+        failure date are reset.
 
         On ``'failed'`` the counter is increased and the first failure
         date is set if the counter was 0. In case both thresholds are
@@ -723,12 +726,13 @@ class ir_cron(models.Model):
         }])
         return self.with_context(ir_cron_progress_id=progress.id), progress
 
-    def _notify_progress(self, *, done, remaining):
+    def _notify_progress(self, *, done, remaining, deactivate=False):
         """
         Log the progress of the cron job.
 
         :param int done: the number of tasks already processed
         :param int remaining: the number of tasks left to process
+        :param bool deactivate: whether the cron will be deactivated
         """
         if not (progress_id := self.env.context.get('ir_cron_progress_id')):
             return
@@ -737,6 +741,7 @@ class ir_cron(models.Model):
         self.env['ir.cron.progress'].browse(progress_id).write({
             'remaining': remaining,
             'done': done,
+            'deactivate': deactivate,
         })
 
 
@@ -762,6 +767,7 @@ class ir_cron_progress(models.Model):
     cron_id = fields.Many2one("ir.cron", required=True, index=True, ondelete='cascade')
     remaining = fields.Integer(default=0)
     done = fields.Integer(default=0)
+    deactivate = fields.Boolean()
     timed_out_counter = fields.Integer(default=0)
 
     @api.autovacuum
