@@ -50,7 +50,7 @@ class AccountTax(models.Model):
             quantity = base_line['quantity']
             product = base_line['product']
             uom = base_line['uom']
-            taxes = base_line['taxes']
+            taxes = base_line['taxes_data']
 
             final_price_unit = price_unit * (1 - (discount / 100))
 
