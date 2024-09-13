@@ -40,7 +40,10 @@ class Browser:
             '--no-first-run',
         ]
         self.fullscreen_args = ['--start-fullscreen']
-        self.chromium_additional_args = self.kiosk_args if kiosk else []
+        self.chromium_additional_args = [
+            '--bwsi',  # Use Chromium without signing in
+            *(self.kiosk_args if kiosk else [])
+        ]
 
     def _set_environment(self, env):
         """
