@@ -169,6 +169,43 @@ const odooQuarterAdapter = {
     },
 };
 
+const odooDayOfWeekAdapter = {
+    normalizeServerValue(groupBy, field, readGroupResult) {
+        /**
+         * 0: First day of the week in the locale.
+         */
+        return Number(readGroupResult[groupBy]) + 1;
+    },
+    increment(normalizedValue, step) {
+        return (normalizedValue + step) % 7;
+    },
+};
+
+const odooHourNumberAdapter = {
+    normalizeServerValue(groupBy, field, readGroupResult) {
+        return Number(readGroupResult[groupBy]);
+    },
+    increment(normalizedValue, step) {
+        return (normalizedValue + step) % 24;
+    },
+};
+const odooMinuteNumberAdapter = {
+    normalizeServerValue(groupBy, field, readGroupResult) {
+        return Number(readGroupResult[groupBy]);
+    },
+    increment(normalizedValue, step) {
+        return (normalizedValue + step) % 60;
+    },
+};
+const odooSecondNumberAdapter = {
+    normalizeServerValue(groupBy, field, readGroupResult) {
+        return Number(readGroupResult[groupBy]);
+    },
+    increment(normalizedValue, step) {
+        return (normalizedValue + step) % 60;
+    },
+};
+
 /**
  * Decorate adapter functions to handle the empty value "false"
  */
@@ -235,6 +272,10 @@ extendSpreadsheetAdapter("day", odooDayAdapter);
 extendSpreadsheetAdapter("iso_week_number", odooNumberDateAdapter);
 extendSpreadsheetAdapter("month_number", odooNumberDateAdapter);
 extendSpreadsheetAdapter("quarter_number", odooNumberDateAdapter);
+extendSpreadsheetAdapter("day_of_week", odooDayOfWeekAdapter);
+extendSpreadsheetAdapter("hour_number", odooHourNumberAdapter);
+extendSpreadsheetAdapter("minute_number", odooMinuteNumberAdapter);
+extendSpreadsheetAdapter("second_number", odooSecondNumberAdapter);
 
 /**
  * When grouping by a time field, return

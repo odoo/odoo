@@ -527,22 +527,26 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
 
 const MEASURES_TYPES = ["integer", "float", "monetary"];
 
+const granularities = [
+    "year",
+    "quarter_number",
+    "quarter",
+    "month_number",
+    "month",
+    "iso_week_number",
+    "week",
+    "day_of_month",
+    "day",
+    "day_of_week",
+];
+
 pivotRegistry.add("ODOO", {
     ui: OdooPivot,
     definition: OdooPivotRuntimeDefinition,
     externalData: true,
     onIterationEndEvaluation: () => {},
-    granularities: [
-        "year",
-        "quarter_number",
-        "quarter",
-        "month_number",
-        "month",
-        "iso_week_number",
-        "week",
-        "day_of_month",
-        "day",
-    ],
+    dateGranularities: [...granularities],
+    datetimeGranularities: [...granularities, "hour_number", "minute_number", "second_number"],
     isMeasureCandidate: (field) =>
         ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
         field.name !== "id" &&
