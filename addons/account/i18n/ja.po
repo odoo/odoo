@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-14 16:15+0000\n"
+"POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -6797,6 +6797,8 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+" "
+"line_code.expression_label形式の式。これにより、(_carryover_*ラベルの付いた式で)親行と異なる場合に、この式のキャリーオーバーの対象を設定することができます。"
 
 #. module: account
 msgid ""
@@ -7037,7 +7039,7 @@ msgstr "成長率比較"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "HALF-UP"
-msgstr "五入"
+msgstr "切上げ"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -9511,7 +9513,7 @@ msgstr "支払タイプが出金の場合の金額フィールドの負の値"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "ネストされた税グループは使用できません。"
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -11736,7 +11738,7 @@ msgstr "非ゼロ値最小貨幣(例えば、0.05)を表します。"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Request Cancel"
-msgstr "キャンセル要求"
+msgstr "取消要求"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__require_partner_bank_account
@@ -15359,6 +15361,13 @@ msgid "Unit of Measure"
 msgstr "単位"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/template_generic_coa.py:0
+#, python-format
+msgid "United States of America (Generic)"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Unmark as Sent"
 msgstr "送信済としてマークを解除"
@@ -15974,7 +15983,7 @@ msgstr "チェックを入れると、この式の値を表示する際に0値�
 msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
-msgstr ""
+msgstr "キャリーオーバーの対象となる式を指定する場合、その式のラベルは_applied_carryover_で始まる必要があります。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16701,7 +16710,7 @@ msgstr "簿外取引がある明細に税が使用できません"
 msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
-msgstr ""
+msgstr "carryover_targetフィールドは、_carryover_で始まるラベルを持たない式では使用できません。"
 
 #. module: account
 #. odoo-python
