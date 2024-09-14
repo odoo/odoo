@@ -533,7 +533,18 @@ class GettextAlias(object):
 
     def _get_translation(self, source, module=None):
         try:
-            frame = inspect.currentframe().f_back.f_back
+            frame = inspect.currentframe()
+            translation_file = inspect.getfile(frame)
+            while (source_file := inspect.getfile(frame)) == translation_file:
+                frame = frame.f_back
+            while True:
+                frame_locals = frame.f_locals
+                if "self" in frame_locals or "context" in frame_locals or "context" in frame_locals.get("kwargs", {}):
+                    break
+                frame_back = frame.f_back
+                if inspect.getfile(frame_back) != source_file:
+                    break
+                frame = frame_back
             lang = self._get_lang(frame)
             if lang and lang != 'en_US':
                 if not module:
