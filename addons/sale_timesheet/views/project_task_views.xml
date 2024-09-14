@@ -133,7 +133,7 @@
         <field name="inherit_id" ref="project.view_project_kanban"/>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+            <xpath expr="//div[@name='card_menu_view']" position="inside">
                 <div t-if="record.allow_billable.raw_value and record.sale_order_id.raw_value and record.pricing_type.raw_value != 'task_rate'"
                     role="menuitem"
                     groups="sales_team.group_sale_salesman_all_leads">

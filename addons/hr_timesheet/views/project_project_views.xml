@@ -70,13 +70,13 @@
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="priority">24</field>
             <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="allow_timesheets" invisible="1"/>
-                    <field name="remaining_hours" invisible="1"/>
-                    <field name="encode_uom_in_days" invisible="1"/>
-                    <field name="allocated_hours" invisible="1"/>
-                </field>
-                <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+                <xpath expr="//templates" position="before">
+                    <field name="allow_timesheets"/>
+                    <field name="remaining_hours"/>
+                    <field name="encode_uom_in_days"/>
+                    <field name="allocated_hours"/>
+                </xpath>
+                <xpath expr="//div[@name='card_menu_view']" position="inside">
                     <div role="menuitem" t-if="record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
                         <a name="action_project_timesheets" type="object">Timesheets</a>
                     </div>
@@ -87,8 +87,8 @@
                     <t t-set="title" t-value="'Days Remaining'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Time Remaining'" t-else=""/>
                     <div t-if="record.allow_timesheets.raw_value and record.allocated_hours.raw_value &gt; 0"
-                        t-attf-class="oe_kanban_align badge border {{ badgeColor }}" t-att-title="title" groups="hr_timesheet.group_hr_timesheet_user">
-                        <field name="remaining_hours" widget="timesheet_uom"/>
+                        t-attf-class="me-1 ms-1 oe_kanban_align badge border {{ badgeColor }}" t-att-title="title" groups="hr_timesheet.group_hr_timesheet_user">
+                        <field name="remaining_hours" widget="timesheet_uom" class="p-0"/>
                     </div>
                 </xpath>
             </field>
