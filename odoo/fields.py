@@ -1479,7 +1479,7 @@ class Boolean(Field[bool]):
         return bool(value)
 
     def convert_to_export(self, value, record):
-        return value
+        return bool(value)
 
 
 class Integer(Field[int]):
@@ -1713,6 +1713,11 @@ class Monetary(Field[float]):
 
     def convert_to_write(self, value, record):
         return value
+
+    def convert_to_export(self, value, record):
+        if value or value == 0.0:
+            return value
+        return ''
 
 
 class _String(Field[str | typing.Literal[False]]):
