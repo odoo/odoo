@@ -234,7 +234,7 @@ test("Export dialog: interacting with export templates", async () => {
     onRpc("/web/export/namelist", async (request) => {
         const { params } = await request.json();
         if (params.export_id === 1) {
-            return Promise.resolve([{ name: "activity_ids", label: "Activities" }]);
+            return Promise.resolve([{ id: "activity_ids", string: "Activities" }]);
         }
         return Promise.resolve([]);
     });
@@ -343,7 +343,7 @@ test("Export dialog: interacting with export templates in debug", async () => {
     onRpc("/web/export/namelist", async (request) => {
         const { params } = await request.json();
         if (params.export_id === 1) {
-            return Promise.resolve([{ name: "activity_ids", label: "Activities" }]);
+            return Promise.resolve([{ id: "activity_ids", string: "Activities" }]);
         }
         return Promise.resolve([]);
     });
