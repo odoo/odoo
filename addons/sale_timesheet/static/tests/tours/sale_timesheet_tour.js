@@ -252,7 +252,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Go back to the kanban view the project created',
     run: "click",
 }, {
-    trigger: '.oe_kanban_global_click :contains("Project for Freeman")',
+    trigger: '.o_kanban_record:contains("Project for Freeman")',
     content: 'Open the project',
     run: "click",
 }, {
