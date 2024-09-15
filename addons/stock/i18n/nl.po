@@ -3,9 +3,9 @@
 # 	* stock
 # 
 # Translators:
-# Manon Rondou, 2024
 # Wil Odoo, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,9 @@ msgid ""
 "\n"
 "Transfers %(transfer_list)s: You need to supply a Lot/Serial number for products %(product_list)s."
 msgstr ""
+"\n"
+"\n"
+"Transfers %(transfer_list)s: Je moet een partij/serienummer ingeven voor de producten %(product_list)s."
 
 #. module: stock
 #. odoo-python
@@ -37,6 +40,8 @@ msgid ""
 "\n"
 "(%(serial_number)s) exists in location %(location)s"
 msgstr ""
+"\n"
+"(%(serial_number)s) bestaat op locatie %(location)s"
 
 #. module: stock
 #. odoo-python
@@ -46,6 +51,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"De gedane hoeveelheid voor het product %(product)s komt niet overeen met de afrondingsprecisie gedefinieerd op de maateenheid %(unit)s.\n"
+"Wijzig de gedane hoeveelheid of de afrondingsprecisie van je maateenheid."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -76,7 +84,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid " - Product: %(product)s, Lot/Serial Number: %(lot)s"
-msgstr ""
+msgstr " - Product: %(product)s, Partij/Serienummer: %(lot)s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__cyclic_inventory_frequency
@@ -107,6 +115,8 @@ msgid ""
 "%(operations)s have default source or destination locations within warehouse"
 " %(warehouse)s, therefore you cannot archive it."
 msgstr ""
+"%(operations)s  hebben standaard bron- of bestemmingslocaties binnen "
+"magazijn %(warehouse)s,  je kunt ze dan ook niet archiveren."
 
 #. module: stock
 #. odoo-python
@@ -116,6 +126,9 @@ msgid ""
 "(%(product_uom_category)s) - Move UoM is %(move_uom)s "
 "(%(move_uom_category)s)"
 msgstr ""
+"%(product_name)s --> Maateenheid product is %(product_uom)s "
+"(%(product_uom_category)s) - Maateenheid verplaatsing is %(move_uom)s "
+"(%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -429,6 +442,8 @@ msgid ""
 "<br/>\n"
 "                Want to speed up operations?"
 msgstr ""
+"<br/>\n"
+"                Wil je de operaties versnellen?"
 
 #. module: stock
 #. odoo-python
@@ -550,27 +565,27 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Back Orders</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Backorders</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Te laat</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Operaties</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Wachten</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Scannable Package Contents</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Scanbare verpakkingsinhoud</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -615,12 +630,12 @@ msgstr "<span class=\"o_stat_text\">Min:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Boekingen</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Next Transfer</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Volgende Transfer</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -686,7 +701,7 @@ msgstr "<span><strong>Leveranciersadres</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor:</strong></span>"
-msgstr ""
+msgstr "<span><strong>VLeverancier:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -697,12 +712,12 @@ msgstr "<span><strong>Magazijnadres:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Magazijn:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "<span>OBTRETU</span>"
-msgstr ""
+msgstr "<span>OBTRETU</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
@@ -1433,6 +1448,8 @@ msgstr "Beschikbare hoeveelheid"
 msgid ""
 "Available quantity should be set to zero before changing inventory tracking"
 msgstr ""
+"De beschikbare hoeveelheid moet op nul worden gezet voordat je de "
+"voorraadtracering verandert"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
@@ -1723,6 +1740,8 @@ msgid ""
 "Changing the Lot/Serial number for move lines with different products is not"
 " allowed."
 msgstr ""
+"Je kan het partij/serienummer niet wijzigen voor boekingsregels met "
+"verschillende producten."
 
 #. module: stock
 #. odoo-python
@@ -1759,6 +1778,8 @@ msgid ""
 "Character(s) used to separate data contained within an aggregate barcode "
 "(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
+"Teken(s) gebruikt om gegevens in een geaggregeerde barcode te scheiden "
+"(d.w.z. een barcode met meerdere barcodecoderingen)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1781,6 +1802,8 @@ msgstr "Controleer het bestaan van verpakkingbewerkingen op de picking"
 msgid ""
 "Check this box if you want to generate shipping label in this operation."
 msgstr ""
+"Vink dit vakje aan als je tijdens deze operatie een verzendlabel wilt "
+"genereren."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -6786,7 +6809,7 @@ msgstr "Product aanvullen"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Mixin om product aan te vullen"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
@@ -6832,7 +6855,7 @@ msgstr "Productvarianten"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Product barcode"
-msgstr ""
+msgstr "Barcode product"
 
 #. module: stock
 #. odoo-python
@@ -9830,7 +9853,7 @@ msgstr "Traceerbaarheidsrapport"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Voorraad bijhouden"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry

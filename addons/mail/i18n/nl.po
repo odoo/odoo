@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +100,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
-msgstr ""
+msgstr "%(model_name)s.%(field_path)s lijkt geen geldig pad te zijn"
 
 #. module: mail
 #. odoo-javascript
@@ -115,13 +115,10 @@ msgid ""
 "%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
 "someone, and grab their attention.%(new_line)sType "
 "%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command."
+"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
+"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
+"message."
 msgstr ""
-"%(new_line)s%(new_line)sTyp %(bold_start)s@gebruikersnaam %(bold_end)som "
-"iemand te vermelden en diens aandacht te trekken. %(new_line)sTyp "
-"%(bold_start)s#channel%(bold_end)s om een kanaal te vermelden. "
-"%(new_line)sTyp %(bold_start)s/command %(bold_end)som een opdracht uit te "
-"voeren."
 
 #. module: mail
 #. odoo-javascript
@@ -257,13 +254,13 @@ msgstr "%s (kopie)"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
+#: code:addons/mail/static/src/core/public_web/out_of_focus_service_patch.js:0
 msgid "%s Message"
 msgstr "%s Bericht"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
+#: code:addons/mail/static/src/core/public_web/out_of_focus_service_patch.js:0
 msgid "%s Messages"
 msgstr "%s Berichten"
 
@@ -1254,13 +1251,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread_blacklist.py:0
 msgid "Are you sure you want to unblacklist this Email Address?"
-msgstr "Ben je zeker dat je dit e-mailadres op de blacklist wilt zetten?"
+msgstr ""
+"Ben je zeker dat je dit e-mailadres van de blacklist wilt verwijderen?"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Are you sure you want to unblacklist this email address?"
 msgstr ""
+"Ben je zeker dat je dit e-mailadres van de blacklist wilt verwijderen?"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
@@ -1915,7 +1914,7 @@ msgstr "Kanaallid"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__channel_notifications
 msgid "Channel Notifications"
-msgstr ""
+msgstr "Kanaalmeldingen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_type
@@ -1938,7 +1937,7 @@ msgstr "Kanaalleden kunnen geen openbare gebruikers bevatten."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
 msgid "Channel notification settings"
-msgstr ""
+msgstr "Instellingen kanaalmeldingen"
 
 #. module: mail
 #. odoo-javascript
@@ -1975,7 +1974,7 @@ msgstr "Chat"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Chat Hub Options"
-msgstr ""
+msgstr "Opties Chat Hub"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__channel_type
@@ -2055,7 +2054,7 @@ msgstr "Chatvenster sluiten"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Close Chat Window (ESC)"
-msgstr ""
+msgstr "Chatvenster sluiten (ESC)"
 
 #. module: mail
 #. odoo-javascript
@@ -2067,7 +2066,7 @@ msgstr "Zoeken Sluiten"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Close all conversations"
-msgstr ""
+msgstr "Alle gesprekken sluiten"
 
 #. module: mail
 #. odoo-javascript
@@ -2958,6 +2957,8 @@ msgstr "Bespreken: kanaallid dempen opheffen"
 #: model:ir.actions.server,name:mail.ir_cron_discuss_users_settings_unmute_ir_actions_server
 msgid "Discuss: users settings unmute"
 msgstr ""
+"Chat: gebruikersinstellingen unmuten\n"
+" "
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel
@@ -3621,7 +3622,7 @@ msgstr "Kan de SFU-server niet laden en valt terug naar peer-to-peer"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
 msgid "Failed to post the message. Click to retry"
-msgstr ""
+msgstr "Kon het bericht niet posten. Klik om het opnieuw te proberen."
 
 #. module: mail
 #. odoo-python
@@ -4224,7 +4225,7 @@ msgstr "Verberg vastgezette berichten"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Hide all conversations"
-msgstr ""
+msgstr "Alle gesprekken verbergen"
 
 #. module: mail
 #. odoo-javascript
@@ -4483,6 +4484,8 @@ msgid ""
 "If set, the user will not receive notifications from all the channels until "
 "this date."
 msgstr ""
+"De gebruiker ontvangt indien ingesteld geen enkele melding van de kanalen "
+"tot deze datum."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -4710,7 +4713,7 @@ msgstr "Ongeldig"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Invalid domain “%(domain)s” (type “%(domain_type)s”)"
-msgstr ""
+msgstr "Ongeldig domein “%(domain)s” (type “%(domain_type)s”)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
@@ -4722,7 +4725,7 @@ msgstr "Foutief e-mailadres"
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Invalid email address “%s”"
-msgstr ""
+msgstr "Ongeldig e-mailadres “%s”"
 
 #. module: mail
 #. odoo-python
@@ -5738,7 +5741,7 @@ msgstr "Relaties samenvoegen wizard"
 #. odoo-python
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
 msgid "Merged with the following partners: %s"
-msgstr ""
+msgstr "Samengevoegd met de volgende relaties: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -5827,7 +5830,7 @@ msgstr "Bericht type"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__new_message_separator
 msgid "Message id before which the separator should be displayed"
-msgstr ""
+msgstr "Bericht-id waarvoor het scheidingsteken moet worden weergegeven"
 
 #. module: mail
 #. odoo-javascript
@@ -6061,6 +6064,8 @@ msgstr "Meldingen dempen tot"
 msgid ""
 "Muting a server prevents unread indicators and notifications from appearing."
 msgstr ""
+"Het muten van een server zorgt ervoor dat ongelezen indicatoren en meldingen"
+" niet worden weergegeven."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
@@ -6127,7 +6132,7 @@ msgstr "Nieuw bericht"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__new_message_separator
 msgid "New Message Separator"
-msgstr ""
+msgstr "Nieuw scheidingsteken berichten"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_char
@@ -6502,7 +6507,7 @@ msgstr "Notificaties geblokkeerd"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Notify everyone"
-msgstr ""
+msgstr "Iedereen melden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction_counter
@@ -7156,13 +7161,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_view.xml:0
 msgid "Pop out"
-msgstr ""
+msgstr "Pop-out"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter.xml:0
 msgid "Pop out Attachments"
-msgstr ""
+msgstr "Pop-out Bijlagen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__port
@@ -7334,13 +7339,13 @@ msgstr "Pushmeldingen"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Push to Talk"
-msgstr ""
+msgstr "Druk om te spreken"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
 msgid "Push to talk"
-msgstr ""
+msgstr "Druk om te spreken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__push_to_talk_key
@@ -7614,7 +7619,7 @@ msgstr "Volgers verwijderen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "Remove address from blacklist"
-msgstr ""
+msgstr "Verwijder het adres van de blacklist"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
@@ -8785,7 +8790,7 @@ msgstr "Systeemmelding"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Tab to select"
-msgstr ""
+msgstr "Druk op Tab om te selecteren"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
@@ -8868,6 +8873,8 @@ msgid ""
 "Template rendering should only be called with a list of IDs. Received "
 "“%(res_ids)s” instead."
 msgstr ""
+"Sjabloonweergave mag alleen woorden aangeroepen met een lijst van ID's. "
+"“%(res_ids)s” ontvangen in de plaats."
 
 #. module: mail
 #. odoo-python
@@ -9155,6 +9162,9 @@ msgid ""
 "\n"
 "(Document type: %(type)s, Operation: %(operation)s)"
 msgstr ""
+"De gevraagde bewerking kan niet worden voltooid vanwege beveiligingsbeperkingen. Neem contact op met je systeembeheerder.\n"
+"\n"
+"(Document type: %(type)s, Bewerking: %(operation)s)"
 
 #. module: mail
 #. odoo-python
@@ -9301,6 +9311,8 @@ msgstr "Dit record heeft een activiteit met uitzondering."
 msgid ""
 "This setting will be applied to all channels using the default category."
 msgstr ""
+"Deze instelling wordt toegepast op alle kanalen die de standaardcategorie "
+"gebruiken."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__channel_notifications
@@ -9308,6 +9320,8 @@ msgid ""
 "This setting will only be applied to channels. Mentions only if not "
 "specified."
 msgstr ""
+"Deze instelling wordt alleen toegepast op kanalen. Indien niet "
+"gespecificeerd, alleen vermeldingen."
 
 #. module: mail
 #. odoo-python
@@ -9345,7 +9359,7 @@ msgstr "Thread afbeelding"
 #: code:addons/mail/static/src/core/common/chat_bubble.xml:0
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Thread image"
-msgstr ""
+msgstr "Afbeelding thread"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
@@ -9861,6 +9875,8 @@ msgid ""
 "Use default from user settings if not specified. This setting will only be "
 "applied to channels."
 msgstr ""
+"Gebruik de standaardinstellingen van de gebruiker indien niet "
+"gespecificeerd. Deze instelling wordt alleen toegepast op kanalen."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10492,7 +10508,7 @@ msgstr "Je bent toegewezen aan de"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "You have been invited to #%s"
 msgstr "Je bent uitgenodigd voor #%s"
 
@@ -10788,7 +10804,7 @@ msgstr "down ICE:"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "e.g \"Asked to receive our next newsletters\""
-msgstr ""
+msgstr "bijv. “Wenst onze volgende nieuwsbrieven te ontvangen”"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form

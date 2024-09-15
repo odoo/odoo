@@ -180,6 +180,8 @@ msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded "
 "Tags."
 msgstr ""
+"De vervoerder %s kan niet hetzelfde label in zowel Must Have labels als "
+"Uitgesloten labels hebben."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -190,7 +192,7 @@ msgstr "Vervoerdersomschrijving"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Choose a pick-up point"
-msgstr ""
+msgstr "Kies een ophaalpunt"
 
 #. module: delivery
 #. odoo-javascript
@@ -443,6 +445,8 @@ msgid ""
 "Filling this form allows you to make the shipping method available according"
 " to the content of the order or its destination."
 msgstr ""
+"Vul dit formulier in om de verzendmethode aan te passen naargelang de inhoud"
+" van de bestelling of de bestemming."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -509,6 +513,8 @@ msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
 msgstr ""
+"De methode is niet beschikbaar als het totale volume van de bestelling "
+"groter is dan dit volume."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
@@ -516,6 +522,8 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr ""
+"De methode is niet beschikbaar als het totale gewicht van de bestelling "
+"groter is dan dit gewicht."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -595,7 +603,7 @@ msgstr "Beheer aflever postcode prefixes"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Map view"
-msgstr ""
+msgstr "Kaartweergave"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -615,7 +623,7 @@ msgstr "Marge op tarief"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "Max Volume"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
@@ -630,7 +638,7 @@ msgstr "Maximumwaarde"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "Must Have labels"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -647,7 +655,7 @@ msgstr "Nieuwe providers"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr ""
+msgstr "Er zijn geen afhaalpunten beschikbaar voor dit afleveradres."
 
 #. module: delivery
 #. odoo-javascript
@@ -666,7 +674,7 @@ msgstr "Niet beschikbaar voor huidige order"
 #: code:addons/delivery/static/src/js/location_selector/location/location.xml:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "Opening hours"
-msgstr ""
+msgstr "Openingsuren"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -681,7 +689,7 @@ msgstr "Order"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "Gegevens afhaallocatie"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -869,6 +877,8 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"De methode is NIET beschikbaar als er minstens een product van de bestelling"
+" over een van deze labels beschikt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -876,6 +886,8 @@ msgid ""
 "The method is available only if at least one product of the order has one of"
 " these tags."
 msgstr ""
+"De methode is alleen beschikbaar als er minstens een product van de "
+"bestelling over een van deze labels beschikt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -904,7 +916,7 @@ msgstr "De verzendkosten zijn gratis omdat je orderbedrag hoger is dan %.2f."
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.xml:0
 msgid "There was an error loading the map"
-msgstr ""
+msgstr "Er is een fout opgetreden bij het laden van de kaart"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -928,6 +940,9 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
+"Deze optie voegt een link toe waarmee de klant zijn pakket gemakkelijk kan "
+"volgen in het portaal. Gebruik <shipmenttrackingnumber> als plaatshouder in "
+"je URL."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -942,7 +957,7 @@ msgstr "Totaal gewicht van de bestelling"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "Traceerlink"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1041,3 +1056,4 @@ msgstr "Bijv. UPS Express"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 msgstr ""
+"bijv. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"

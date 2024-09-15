@@ -613,6 +613,8 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
+"<span>De werknemer heeft een andere tijdzone dan de jouwe! Hier worden datums en tijden weergegeven in de tijdzone van de werknemer</span>\n"
+"                    ("
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -960,7 +962,7 @@ msgstr "Verloftoewijzingen"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approval"
-msgstr ""
+msgstr "Verloftoewijzing tweede goedkeuring"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
@@ -976,18 +978,21 @@ msgid ""
 "Allocation must be \"To Approve\" or \"Second Approval\" in order to "
 "validate it."
 msgstr ""
+"De toewijzing moet 'Goed te keuren' of 'Tweede goedkeuring' zijn om zijn om "
+"deze te valideren."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
+"Toewijzing moet bevestigd zijn ('Goed te keuren') om het te goed te keuren."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s"
-msgstr ""
+msgstr "Type toewijzing %(leave_type)s: %(amount).2f %(unit)s %(target)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
@@ -1001,12 +1006,16 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
+"Toewijzing moet bevestigd, een tweede goedkeuring of goedgekeurd zijn om "
+"deze te kunnen afwijzen."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
 msgstr ""
+"De status va de toewijzing moet 'Geweigerd' zijn om te worden gereset naar "
+"'Goed te keuren'."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1212,6 +1221,8 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
+"De automatische verdeling van verlofuren tijdens het genereren van batches is niet mogelijk bij overlappende verlofuren. Conflicterende verlofuren:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1554,7 +1565,7 @@ msgstr "Omslagafbeelding"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Create Allocations"
-msgstr ""
+msgstr "Toewijzingen aanmaken"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
@@ -2059,31 +2070,31 @@ msgstr "Toekomstige activiteiten"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
-msgstr ""
+msgstr "Verlof genereren"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr ""
+msgstr "Genereer verloftoewijzingen voor meerdere werknemers"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr ""
+msgstr "Verlof genereren voor verschillende werknemers"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "Generated Allocations"
-msgstr ""
+msgstr "Toewijzingen genereren"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid "Generated Time Off"
-msgstr ""
+msgstr "Verlof genereren"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2302,7 +2313,7 @@ msgstr "Is een volger"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_name_custom
 msgid "Is Name Custom"
-msgstr ""
+msgstr "Is een aangepaste naam"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__is_officer
@@ -2497,7 +2508,7 @@ msgstr "Markeer als concept"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "Mark as ready to approve"
-msgstr ""
+msgstr "Markeer als gereed ter goedkeuring"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
@@ -2610,7 +2621,7 @@ msgstr "Ochtend"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_allocation_generate_multi_wizard
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_leave_generate_multi_wizard
 msgid "Multiple Requests"
-msgstr ""
+msgstr "Meerdere aanvragen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__my_activity_date_deadline
@@ -3060,7 +3071,7 @@ msgstr "Afdrukken"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to cancel an approved time off"
-msgstr ""
+msgstr "Geef een reden op voor het annuleren van een goedgekeurd verlof"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -3070,7 +3081,7 @@ msgstr "Openbaar"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__include_public_holidays_in_duration
 msgid "Public Holiday Included"
-msgstr ""
+msgstr "Feestdagen inbegrepen"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3086,6 +3097,8 @@ msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
 msgstr ""
+"Feestdagen moeten worden meegerekend in de vakantieduur bij het aanvragen "
+"van verlof"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3331,7 +3344,7 @@ msgstr "Tweede maand weergave"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Second approval request for %(allocation_type)s"
-msgstr ""
+msgstr "Tweede goedkeuringsverzoek voor %(allocation_type)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3703,6 +3716,9 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
+"De status is 'Goed te keuren', wanneer een verloftoewijzing wordt aangemaakt.\n"
+"De status is 'Geweigerd', wanneer een verloftoewijzing wordt geweigerd door de manager.\n"
+"De status is 'Goedgekeurd', wanneer een verloftoewijzing wordt goedgekeurd door de manager."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
@@ -3788,6 +3804,9 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If time off type need second validation)"
 msgstr ""
+"Deze velden worden automatisch ingevuld door de gebruiker die de toewijzing "
+"goedkeurt op het tweede niveau (indien het type verlof een tweede "
+"goedkeuring vereist)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -4459,7 +4478,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "You are not allowed to request time off on a Mandatory Day"
-msgstr ""
+msgstr "Je mag geen verlof nemen op een verplichte dag."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4530,6 +4549,10 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
+"Je kunt de instelling 'Feestdag inbegrepen' niet wijzigen omdat een of meer "
+"verlofdagen voor dat                         verloftype overlappen met "
+"feestdagen. Deze wijzinging zou het saldo van de betrokken werknemers "
+"beïnvloeden."
 
 #. module: hr_holidays
 #. odoo-python

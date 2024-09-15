@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:25+0000\n"
 "PO-Revision-Date: 2024-07-16 11:42+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                            Show me how to obtain the X API key and X API secret"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                            أرني كيفية الحصول على مفتاح الواجهة البرمجية لـ X وسر الواجهة البرمجية لـ X "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -48,17 +51,17 @@ msgstr "<strong>اسم التطبيق: </strong> اختر اسماً فريدا�
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Description: </strong> Odoo X Integration"
-msgstr ""
+msgstr "<strong>الوصف: </strong> تكامل أودو مع X "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo X Integration"
-msgstr ""
+msgstr "<strong>الاسم: </strong> تكامل أودو مع X "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Use Case: </strong> Embedding Posts in a website"
-msgstr ""
+msgstr "<strong>حالة استخدام: </strong> تضمين المنشورات في موقع إلكتروني "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -79,6 +82,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "posts are protected."
 msgstr ""
+"بيانات الاعتماد المطلوبة للمصادقة مفقودة أو غير صحيحة. قد تكون المنشورات "
+"محمية."
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -131,7 +136,7 @@ msgstr "خطأ HTTP: هناك مشكلة في التهيئة "
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "How to configure the X API access"
-msgstr ""
+msgstr "كيفية تهيئة وصول مفتاح الواجهة البرمجية لـ X "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -142,7 +147,7 @@ msgstr "المُعرف"
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "Internet connection refused: We failed to reach a X server."
-msgstr ""
+msgstr "تم رفض الاتصال بالإنترنت: لم نتمكن من من الوصول إلى خادم X. "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
@@ -170,6 +175,7 @@ msgid ""
 "Once connected, and if not already done, complete the X portal access "
 "process on"
 msgstr ""
+"عندما تكون متصلاً، وإذا لم تنتهِ بعد، قم بإكمال عملية الوصول إلى بوابة X في "
 
 #. module: website_twitter
 #. odoo-python
@@ -178,12 +184,15 @@ msgid ""
 "Please set a X screen name to load favorites from, in the Website Settings "
 "(it does not have to be yours)"
 msgstr ""
+"الرجاء وضع اسم ظهور في تطبيق X لتحميل المفضلات منه في إعدادات الموقع "
+"الإلكتروني (ليس بالضرورة أن يكون لك) "
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/controllers/main.py:0
 msgid "Please set the X API Key and Secret in the Website Settings."
 msgstr ""
+"يرجى وضع مفتاح الواجهة البرمجية لـ X وسره في إعدادات الموقع الإلكتروني. "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
@@ -215,12 +224,14 @@ msgid ""
 "Screen Name of the X Account from which you want to load favorites.It does "
 "not have to match the API Key/Secret."
 msgstr ""
+"اسم ظهور حساب X الذي ترغب في تحميل المفضلات منه لا يتطابق مع مفتاح الواجهة "
+"البرمجية/سر X. "
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "The X servers are up, but overloaded with requests. Try again later."
-msgstr ""
+msgstr "خوادم X تعمل، لكنها محملة بالكثير من الطلبات. حاول مرة أخرى لاحقاً. "
 
 #. module: website_twitter
 #. odoo-python
@@ -229,6 +240,8 @@ msgid ""
 "The X servers are up, but the request could not be serviced due to some "
 "failure within our stack. Try again later."
 msgstr ""
+"خوادم X تعمل، لكن تعذّر تنفيذ الطلب بسبب مشكلة في بياناتنا. حاول مرة أخرى "
+"لاحقاً. "
 
 #. module: website_twitter
 #. odoo-python
@@ -237,6 +250,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your X API Key and Secret."
 msgstr ""
+"تم فهم الطلب، لكن تم رفضه أو قد يكون الوصول ممنوع. يرجى التحقق من مفتاح "
+"الواجهة البرمجية لـ X ورمزها السري. "
 
 #. module: website_twitter
 #. odoo-python
@@ -268,7 +283,7 @@ msgstr "الموقع الإلكتروني لـ X "
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X API Credentials"
-msgstr ""
+msgstr "بيانات اعتماد الواجهة البرمجية لـ X "
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
@@ -283,28 +298,30 @@ msgstr "سر الواجهة البرمجية لـ X "
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
 msgid "X API key"
-msgstr ""
+msgstr "مفتاح الواجهة البرمجية لـ X "
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "X API key you can get it from https://apps.twitter.com/"
 msgstr ""
+"يمكنك الحصول على مفتاح الواجهة البرمجية لـ X من https://apps.twitter.com/ "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "X API secret"
-msgstr ""
+msgstr "سر الواجهة البرمجية لـ X "
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "X API secret you can get it from https://apps.twitter.com/"
 msgstr ""
+"يمكنك الحصول على سر الواجهة البرمجية لـ X من https://apps.twitter.com/ "
 
 #. module: website_twitter
 #. odoo-javascript
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 msgid "X Configuration"
-msgstr ""
+msgstr "تهيئة X "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
@@ -314,12 +331,12 @@ msgstr "معرّف X "
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X Portal"
-msgstr ""
+msgstr "بوابة X "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X Roller"
-msgstr ""
+msgstr "شريط تمرير X "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
@@ -331,12 +348,13 @@ msgstr "شريط تمرير X "
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "X authorization error! Please double-check your X API Key and Secret!"
 msgstr ""
+"خطأ في تفويض X! يرجى التحقق مجدداً من مفتاح وسر الواجهة البرمجية لـ X! "
 
 #. module: website_twitter
 #. odoo-python
 #: code:addons/website_twitter/models/res_config_settings.py:0
 msgid "X is down or being upgraded."
-msgstr ""
+msgstr "X معطل أو قيد التحديث. "
 
 #. module: website_twitter
 #. odoo-python
@@ -345,16 +363,18 @@ msgid ""
 "X seems broken. Please retry later. You may consider posting an issue on X "
 "forums to get help."
 msgstr ""
+"يبدو أن X معطل. يرجى المحاولة مرة أخرى لاحقاً. ربما عليك كتابة منشور عن "
+"مشكلتك على منتديات X للحصول على المساعدة. "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
 msgid "X server uri"
-msgstr ""
+msgstr "معرف الموارد الموحد لخادم X "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "X tutorial"
-msgstr ""
+msgstr "درس توضيحي لـ X "
 
 #. module: website_twitter
 #. odoo-python
@@ -363,17 +383,19 @@ msgid ""
 "X user @%(username)s has less than 12 favorite posts. Please add more or "
 "choose a different screen name."
 msgstr ""
+"مستخدم X @%(username)s لديه أقل من 12 منشور مفضل. الرجاء إضافة المزيد أو "
+"اختيار اسم ظهور مختلف. "
 
 #. module: website_twitter
 #. odoo-javascript
 #: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 msgid "X's user"
-msgstr ""
+msgstr "مستخدم X "
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 msgid "X: Fetch new favorites"
-msgstr ""
+msgstr "X: البحث عن مفضلات جديدة "
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

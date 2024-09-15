@@ -1,55 +1,57 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_hr_recruitment
-#
+# 
 # Translators:
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2022
-# abc Def <hdogan1974@gmail.com>, 2022
-# Buket Şeker <buket_skr@hotmail.com>, 2022
-# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
-# Murat Durmuş <muratd@projetgrup.com>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
-# Martin Trigaux, 2022
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2022
-# Murat Kaplan <muratk@projetgrup.com>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
-# Halil, 2023
-#
+# Tugay Hatıl <tugayh@projetgrup.com>, 2024
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
+# Ediz Duman <neps1192@gmail.com>, 2024
+# abc Def <hdogan1974@gmail.com>, 2024
+# Umur Akın <umura@projetgrup.com>, 2024
+# Özlem Atalay <ozlema@eskayazilim.com.tr>, 2024
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2024
+# Buket Şeker <buket_skr@hotmail.com>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Levent Karakaş <levent@mektup.at>, 2024
+# Halil, 2024
+# Martin Trigaux, 2024
+# Murat Durmuş <muratd@projetgrup.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~17.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Halil, 2023\n"
+"POT-Creation-Date: 2024-07-15 18:11+0000\n"
+"PO-Revision-Date: 2024-07-16 11:42+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
-"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "%s open positions"
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid " In case of issue, contact %(contact_infos)s"
 msgstr ""
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "%s's Application"
-msgstr "%s'nın Uygulaması"
+msgstr "%s'nin Uygulaması"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. ' için sonuçlar gösteriliyor"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
-msgid "+1 (650) 691-3277"
+msgid "+1 (650) 555-0187"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -78,7 +80,9 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" aria-label=\"Employment type\"/>"
+msgid ""
+"<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
+"aria-label=\"Employment type\"/>"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -187,8 +191,10 @@ msgstr "<span class=\"text-muted small\">Yer</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: 0.8rem\">The resume is optional if you have a Linkedin profile</span>"
-msgstr "<span class=\"text-muted\" style=\"margin-left: 200px; font-size: 0.8rem\">Linkedin profiliniz varsa özgeçmiş isteğe bağlıdır</span>"
+msgid ""
+"<span class=\"text-muted small\">Provide either a resume file or a linkedin "
+"profile</span>"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -198,7 +204,7 @@ msgstr "Tam zamanlı bir pozisyon <br/> Cazip maaş paketi."
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "About Us"
-msgstr ""
+msgstr "Hakkımızda"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -238,6 +244,14 @@ msgstr "Tüm Ofisler"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_employment_type
 msgid "All Types"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"An application already exists for %(value)s. Duplicates might be rejected. "
+"%(recruiter_contact)s"
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -315,6 +329,12 @@ msgid "Contact us"
 msgstr "Bize Ulaşın"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "Copied"
+msgstr "Kopyalanan"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Countries Filter"
 msgstr "Ülkeler Filtresi"
@@ -326,7 +346,9 @@ msgstr "Kullanıcılarımıza günlük bazda yardımcı olacak içerikler oluşt
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
-msgid "Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
+msgid ""
+"Create new job pages from the <strong>+ <i>New</i></strong> top-right "
+"button."
 msgstr ""
 
 #. module: website_hr_recruitment
@@ -349,12 +371,17 @@ msgstr "Departmanlar Filtresi"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Discover our products."
 msgstr "Ürünlerimizi keşfedin."
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_department__display_name
+msgid "Display Name"
+msgstr "Görünüm Adı"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -394,8 +421,13 @@ msgstr "Online içerik yazma tecrübesi"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
+msgid "Facebook"
+msgstr "Facebook"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "Follow us"
-msgstr ""
+msgstr "Bizi takip et"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -410,7 +442,9 @@ msgstr "Google Adwords tecrübesi"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Great team of smart people, in a friendly and open culture"
-msgstr "Arkadaş canlısı ve açık bir kültürde akıllı insanlardan oluşan harika bir takım"
+msgstr ""
+"Arkadaş canlısı ve açık bir kültürde akıllı insanlardan oluşan harika bir "
+"takım"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -420,7 +454,7 @@ msgstr "Son derece yaratıcı ve özerk"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Home"
-msgstr ""
+msgstr "Ana Sayfa"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -485,6 +519,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/website.py:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
+#: model:website.menu,name:website_hr_recruitment.website_menu_jobs
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
 msgid "Jobs"
@@ -499,6 +534,17 @@ msgstr "İş İlanları Sayfası"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Lead the entire sales cycle"
 msgstr "Tüm satış döngüsünü yönet"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "LinkedIn Profile"
+msgstr "LinkedIn Profili"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -528,17 +574,20 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr "Kötü yöneticiler, kullanılacak kötü araçlar, katı çalışma saatleri yok"
+msgstr ""
+"Kötü yöneticiler, kullanılacak kötü araçlar, katı çalışma saatleri yok"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "No results found for '"
-msgstr ""
+msgstr "' için sonuç bulunamadı"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "No waste of time in enterprise processes, real responsibilities and autonomy"
-msgstr "Kurumsal süreçlerde, gerçek sorumluluklarda ve özerklikte zaman kaybı yok"
+msgid ""
+"No waste of time in enterprise processes, real responsibilities and autonomy"
+msgstr ""
+"Kurumsal süreçlerde, gerçek sorumluluklarda ve özerklikte zaman kaybı yok"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
@@ -553,12 +602,14 @@ msgstr "Ofis Filtresi"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Optional introduction, or any question you might have about the job…"
-msgstr "İsteğe bağlı giriş veya işle ilgili aklınıza takılabilecek herhangi bir soru..."
+msgstr ""
+"İsteğe bağlı giriş veya işle ilgili aklınıza takılabilecek herhangi bir "
+"soru..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
 msgid "Others"
-msgstr ""
+msgstr "Diğerleri"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -576,6 +627,14 @@ msgid "Perfect written English"
 msgstr "Mükemmel yazılı İngilizce"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_description
+msgid ""
+"Perform assigned responsibilities, collaborate with team members, and adhere to company policies.\n"
+"        Strong communication, problem-solving, and work ethic required.\n"
+"        Adaptability, initiative, and willingness to learn are valued."
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Perks"
 msgstr "Avantajlar"
@@ -586,19 +645,26 @@ msgid "Personal Evolution"
 msgstr "Kişisel Gelişim"
 
 #. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Phone Number"
+msgstr "Telefon Numarası"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
 msgstr "Meslektaşlarınızla herhangi bir spor yapın, <br/>fatura kapanmış."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Process Details"
 msgstr "Süreç Detayları"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Products"
-msgstr ""
+msgstr "Ürünler"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_search_view_inherit
@@ -610,7 +676,7 @@ msgstr "Yayınlandı"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__published_date
 msgid "Published Date"
-msgstr ""
+msgstr "Yayın Tarihi"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -623,10 +689,11 @@ msgid "Real responsibilities and challenges in a fast evolving company"
 msgstr "Hızla gelişen bir şirkette gerçek sorumluluklar ve meydan okumalar"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_countries
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_offices
 msgid "Remote"
-msgstr ""
+msgstr "Uzak"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -635,8 +702,8 @@ msgstr "Sorumluluklar"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_id
-msgid "Restrict publishing to this website."
-msgstr "Bu web sitesinde yayınlamayı kısıtlayın."
+msgid "Restrict to a specific website."
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
@@ -651,7 +718,7 @@ msgstr "SEO en iyileştirildi"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Search Bar"
-msgstr ""
+msgstr "Arama çubuğu"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__seo_name
@@ -661,7 +728,20 @@ msgstr "Seo adı"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_published
 msgid "Set if the application is published on the website of the company."
-msgstr "Uygulamanın şirketin web sitesinde yayınlanıp yayınlanmayacağını belirleyin."
+msgstr ""
+"Uygulamanın şirketin web sitesinde yayınlanıp yayınlanmayacağını belirleyin."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "Share Job"
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Short Introduction"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -692,6 +772,24 @@ msgstr "Teknik Uzmanlık"
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Web sitesi aracılığıyla belgeye erişmek için tam URL."
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
+msgid "The job link has been copied to the clipboard."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
+msgid "The job offer has been closed."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
+msgid "The profile that you gave us doesn't seems like a linkedin profile"
+msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -786,22 +884,46 @@ msgid "What's great in the job?"
 msgstr "İşte harika olan nedir?"
 
 #. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_description
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid ""
-"You can customize this sample job description with a short overview of\n"
-"        the job position, defining specific terms and benefits. Keep it simple\n"
-"        an clear."
+"You already applied to another position recently. You can continue if it's "
+"not a mistake."
+msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/controllers/main.py:0
+msgid ""
+"You applied for this position less than 6 months ago, and have been "
+"rejected. Please don't reapply unless you have a good reason."
 msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_form_inherit_website
-msgid "You can write here a short description of your Job Description that will be displayed on the main Jobs' list page."
-msgstr "Burada, ana İşler listesi sayfasında görüntülenecek olan İş Tanımınızın kısa bir açıklamasını yazabilirsiniz."
+msgid ""
+"You can write here a short description of your Job Description that will be "
+"displayed on the main Jobs' list page."
+msgstr ""
+"Burada, ana İşler listesi sayfasında görüntülenecek olan İş Tanımınızın kısa"
+" bir açıklamasını yazabilirsiniz."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your <b>contact</b> information is:"
 msgstr ""
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Your Email"
+msgstr "E-Posta Adresiniz"
+
+#. module: website_hr_recruitment
+#. odoo-javascript
+#: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
+msgid "Your Name"
+msgstr "Adınız"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -823,7 +945,17 @@ msgstr "örneğin https://www.linkedin.com/in/fpodoo/"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "info@yourcompany.example.com"
+msgstr "info@yourcompany.example.com"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
+msgid "job URL"
 msgstr ""
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open positions"
+msgstr "açık pozisyonlar"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_recruitment_source_kanban_inherit_website

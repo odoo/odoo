@@ -186,7 +186,7 @@ msgstr "#{task.stage_id.name}"
 #. odoo-javascript
 #: code:addons/project/static/src/views/widget/subtask_counter.js:0
 msgid "%(closedCount)s sub-tasks closed out of %(totalCount)s"
-msgstr ""
+msgstr "%(closedCount)s subtaken van de %(totalCount)s afgerond"
 
 #. module: project
 #. odoo-python
@@ -711,12 +711,13 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created and is not part of any project."
 msgstr ""
+"Er is een nieuwe taak aangemaakt die geen deel uitmaakt van een project."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "Er is een nieuwe taak aangemaakt in het project \"%(project_name)s\"."
 
 #. module: project
 #. odoo-python
@@ -1020,6 +1021,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read-only mode."
 msgstr ""
+"Iedereen heeft via deze link toegang tot het project in alleen lezen-modus."
 
 #. module: project
 #. odoo-javascript
@@ -1039,13 +1041,13 @@ msgstr "Architectuur"
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 msgid "Archive Account"
-msgstr ""
+msgstr "Account Archiven"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "Archive Accounts"
-msgstr ""
+msgstr "Accounts Archiven"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -1377,7 +1379,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr ""
+msgstr "Kies een van de volgende toegangsmodi voor je medewerkers:"
 
 #. module: project
 #. odoo-javascript
@@ -1564,7 +1566,7 @@ msgstr "Omslagafbeelding"
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
 msgstr ""
-"Maak <b>activiteiten</b> om taken voor uzelf in te stellen of om "
+"Maak <b>activiteiten</b> om taken voor jezelf in te stellen of om "
 "vergaderingen te plannen."
 
 #. module: project
@@ -2020,7 +2022,7 @@ msgstr "Schermnaam"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Display the sub-task in your pipeline"
-msgstr ""
+msgstr "De subtaak in je pijplijn weergeven"
 
 #. module: project
 #. odoo-python
@@ -2073,7 +2075,7 @@ msgstr "Bewerken"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
 msgid "Edit with limited access"
-msgstr ""
+msgstr "Bewerken met beperkte toegang"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2081,6 +2083,8 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
 msgstr ""
+"Bewerken met beperkte toegang: medewerkers kunnen taken die ze volgen in de "
+"Kanban-weergave bekijken en bewerken."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2088,6 +2092,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Bewerken: medewerkers kunnen alle taken in de Kanban-weergave bekijken en "
+"bewerken. Bovendien kunnen ze kiezen welke taken ze willen volgen."
 
 #. module: project
 #. odoo-javascript
@@ -2382,7 +2388,7 @@ msgstr "Hallo"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hide the sub-task in your pipeline"
-msgstr ""
+msgstr "De subtaak in je pijplijn verbergen"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -3711,7 +3717,7 @@ msgstr "Gedeeld project"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "Wizard project delen met medewerkers"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
@@ -3792,7 +3798,7 @@ msgstr "Omschrijving van het project..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "Project gedeeld met je medewerkers."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3875,7 +3881,7 @@ msgstr "Eigenschappen"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Public Link"
-msgstr ""
+msgstr "Openbare Link"
 
 #. module: project
 #. odoo-javascript
@@ -3997,7 +4003,7 @@ msgstr "Alleen lezen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read-only: collaborators can view tasks but cannot edit them."
-msgstr ""
+msgstr "Alleen-lezen: medewerkers kunnen taken bekijken maar niet bewerken."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -4006,6 +4012,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Alleen-lezen: medewerkers kunnen taken bekijken maar niet bewerken.\n"
+"Bewerken met beperkte toegang: medewerkers kunnen taken die ze volgen in de Kanban-weergave bekijken en bewerken.\n"
+"Bewerken: medewerkers kunnen alle taken in de Kanban-weergave bekijken en bewerken. Bovendien kunnen ze kiezen welke taken ze willen volgen."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4075,7 +4084,7 @@ msgstr "Gerelateerde documentmodel"
 #. odoo-javascript
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
-msgstr ""
+msgstr "Medewerker verwijderen"
 
 #. module: project
 #. odoo-javascript
@@ -4188,7 +4197,7 @@ msgstr "Ongelukkig gezicht"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 msgid "Save the task to be able to drag images in description"
-msgstr ""
+msgstr "Sla de taak op om afbeeldingen in de beschrijving te slepen"
 
 #. module: project
 #. odoo-javascript
@@ -4264,7 +4273,7 @@ msgstr "Zoeken in status"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search%(left)s Tasks%(right)s"
-msgstr ""
+msgstr "Zoek%(left)s Taken%(right)s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4276,7 +4285,7 @@ msgstr "Veiligheidstoken"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Select an assignee from the menu"
-msgstr ""
+msgstr "Selecteer een toegewezen persoon in het menu"
 
 #. module: project
 #. odoo-javascript
@@ -4293,7 +4302,7 @@ msgstr "Verzend e-mail"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__send_invitation
 msgid "Send Invitation"
-msgstr ""
+msgstr "Uitnodiging versturen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -4379,7 +4388,7 @@ msgstr "Project delen"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__show_display_in_project
 msgid "Show Display In Project"
-msgstr ""
+msgstr "Scherm weergeven in Project"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4414,6 +4423,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Sommige van de geselecteerde analytische accounts zijn gekoppeld aan een project:\n"
+"%(accountList)s\n"
+"\n"
+"De optie om timesheets voor hun respectieve projecten te registreren verdwijnt als je deze accounts archiveert.\n"
+"\n"
+"Wil je doorgaan?"
 
 #. module: project
 #. odoo-python
@@ -4959,7 +4974,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr ""
+msgstr "De taakomschrijving was op dat moment leeg."
 
 #. module: project
 #. odoo-python
@@ -5040,6 +5055,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Deze analytische account is gekoppeld aan de volgende projecten:\n"
+"%(projectList)s\n"
+"\n"
+"De optie om timesheets voor hun respectieve projecten te registreren verdwijnt als je deze accounts archiveert.\n"
+"\n"
+"Wil je doorgaan?"
 
 #. module: project
 #. odoo-javascript
@@ -5048,6 +5069,8 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"Deze volger is momenteel een projectmedewerker. Zijn portaaltoegang tot het "
+"project wordt ingetrokken als je hem verwijdert. Wil je toch doorgaan?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5105,7 +5128,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This task has sub-tasks, so it can't be private."
-msgstr ""
+msgstr "Deze taak heeft subtaken en kan niet privé zijn."
 
 #. module: project
 #. odoo-javascript
@@ -5932,7 +5955,7 @@ msgstr "status om de taak als voltooid te markeren."
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 msgid "state.message"
-msgstr ""
+msgstr "status.bericht"
 
 #. module: project
 #. odoo-javascript

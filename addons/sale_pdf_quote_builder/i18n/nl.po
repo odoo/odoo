@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:24+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "<i class=\"fa fa-arrow-right\"/> Watch Video"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Bekijk de Video"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -42,6 +42,9 @@ msgid ""
 "                        the sale order while <strong>Product documents</strong> are filled with data\n"
 "                        from the sale order line."
 msgstr ""
+"<strong>Kop- en voettekstdocumenten</strong> worden gevuld met gegevens (pad) van\n"
+"                        de verkooporder, terwijl <strong>Productdocumenten</strong> worden gevuld met gegevens\n"
+"                        van de verkooporderregel."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
@@ -55,6 +58,14 @@ msgid ""
 "Inside quote: The document will be included in the pdf of the quotation \n"
 "and sales order between the header pages and the quote table. "
 msgstr ""
+"Hiermee kan je het document delen met je klanten binnen een verkoop.\n"
+"Laat het leeg als je dit document niet wilt delen met klanten.\n"
+"Voor een offerte: het document wordt verzonden naar de klanten en is op elk moment toegankelijk voor hen.\n"
+"Deze optie kan bijvoorbeeld handig zijn om bestanden met productbeschrijvingen te delen.\n"
+"oor een bevestigde order: het document wordt verzonden naar de klanten en is toegankelijk voor hen.\n"
+"Deze optie kan handig zijn voor het delen van gebuikershandleidingen of digitale inhoud die via E-commerce is gekocht. \n"
+"Binnen de offerte: het document wordt opgenomen in de pdf van de offerte \n"
+"en in de verkooporder tussen de voorbladen en de offertetabel."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -77,21 +88,21 @@ msgstr "Configuratie instellingen"
 #: code:addons/sale_pdf_quote_builder/models/sale_order_template.py:0
 #: code:addons/sale_pdf_quote_builder/wizards/res_config_settings.py:0
 msgid "Configure Dynamic Fields"
-msgstr ""
+msgstr "Configureer dynamische velden"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure dynamic fields"
-msgstr ""
+msgstr "Configureer dynamische velden"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Configure the path to fill the form fields."
-msgstr ""
+msgstr "Configureer het pad voor het vullen van de formuliervelden."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__create_uid
@@ -131,12 +142,12 @@ msgstr "Voettekst pagina's"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field"
-msgstr ""
+msgstr "Formulierveld"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__form_field
 msgid "Form Field Name as seen in the PF form"
-msgstr ""
+msgstr "Naam van het formulierveld zoals aangegeven in het PF-formulier"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
@@ -148,7 +159,7 @@ msgstr "Koptekst pagina's"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_quote_builder_dynamic_fields_wizard_line__document_type__header_footer
 msgid "Header/Footer"
-msgstr ""
+msgstr "Kop/Voettekst"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__id
@@ -168,6 +179,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"Ongeldige formulierveldnaam %(field_name)s. Een formulierveldnaam in een "
+"kop- of voettekst kan niet beginnen met \"sol_id_\"."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -176,6 +189,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"Ongeldige formulierveldnaam %(field_name)s. Deze mag alleen alfanumerieke "
+"tekens, koppeltekens of onderstrepingstekens bevatten."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -184,6 +199,8 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"Ongeldig pad %(path)s. Het mag alleen alfanumerieke tekens, koppeltekens, "
+"onderstrepingen of punten bevatten."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -213,6 +230,8 @@ msgid ""
 "Make your quote attractive by adding header, product descriptions and footer"
 " to your quote."
 msgstr ""
+"Maak je offerte aantrekkelijk door kopteksten, productbeschrijvingen en "
+"voetteksten toe te voegen aan je offerte."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -224,6 +243,7 @@ msgstr "Nee"
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard_line__path
 msgid "Odoo path to get the expected value to fill the PDF."
 msgstr ""
+"Odoo-pad om de verwachte waarde te krijgen voor het invullen van de pdf."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -249,7 +269,7 @@ msgstr "Pad"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Preview Sample Quote"
-msgstr ""
+msgstr "Voorbeeld van offerte weergeven"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
@@ -275,7 +295,7 @@ msgstr "Rapport actie"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Verkoop: zichtbaar op"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
@@ -294,18 +314,20 @@ msgstr "Naam koptekst verkoop"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard
 msgid "Sale PDF Quote Builder Dynamic Fields Configurator Wizard"
-msgstr ""
+msgstr "Verkoop pdf-offertebouwer configuratiewizard met dynamische velden"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_quote_builder_dynamic_fields_wizard_line
 msgid "SalePdfQuoteBuilderDynamicFieldsWizardLine transient representation"
 msgstr ""
+"Tijdelijke weergave verkoop pdf-offertebouwer configuratiewizard met "
+"dynamische velden"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/wizards/dynamic_fields_wizard.py:0
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
-msgstr ""
+msgstr "Het veld %(field_name)s bestaat niet in model %(model_name)s"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -319,6 +341,14 @@ msgid ""
 "                            Data of the quotation (customer name, quotation reference, ... ) are injected in<br/>\n"
 "                            documents using pdf form fields. (see"
 msgstr ""
+"De offerte wordt gemaakt door het samenvoegen van voorpagina's, productbeschrijvingen,<br/>\n"
+"                            en voettekstpagina's. <br/>\n"
+"                            Om productdocumenten toe te voegen:<br/>\n"
+"                            1. gebruik de knop “productdocumenten” vanuit een productformulier<br/>\n"
+"                            2. upload een pdf van het product<br/>\n"
+"                            3. zet de zichtbaarheid op 'Binnen offertes'<br/>\n"
+"                            Gegevens van de offerte (klantnaam, referentie van de offerte, ... ) worden ingevoerd in<br/>\n"
+"                            documenten met behulp van pdf-formuliervelden. (zie"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.dynamic_fields_wizard
@@ -341,7 +371,7 @@ msgstr "Wizard"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_quote_builder_dynamic_fields_wizard__wizard_line_ids
 msgid "Wizard Line"
-msgstr ""
+msgstr "Wizardregel"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -357,4 +387,4 @@ msgstr "documentatie"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "for detailed explanations)"
-msgstr ""
+msgstr "voor gedetailleerde uitleg)"

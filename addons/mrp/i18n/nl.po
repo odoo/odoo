@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +64,7 @@ msgstr "# Stuklijst Waar gebruikt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Ready Work Orders"
-msgstr ""
+msgstr "# Werkorders die gereed zijn"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
@@ -87,7 +87,7 @@ msgstr "%(producible_qty)s Klaar"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "%(product_name)s (new) %(number_of_boms)s"
-msgstr ""
+msgstr "%(product_name)s (nieuw) %(number_of_boms)s"
 
 #. module: mrp
 #. odoo-python
@@ -256,12 +256,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Te laat</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Wachten</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -381,7 +381,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span>&amp;nbsp;(minutes)</span>"
-msgstr ""
+msgstr "<span>&amp;nbsp;(minuten)</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1085,7 +1085,7 @@ msgstr "Blok"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
 msgid "Block WC"
-msgstr ""
+msgstr "Blok WC"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -1917,12 +1917,12 @@ msgstr "Uitstel waarschuwingsdatum"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Delayed Productions"
-msgstr ""
+msgstr "Uitgestelde producties"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Delegate part of the production process to subcontractors"
-msgstr ""
+msgstr "Een deel van het productieproces delegeren aan onderaannemers"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
@@ -2912,6 +2912,8 @@ msgid ""
 "Leave hidden if document only accessible on product form.\n"
 "Select Bill of Materials to visualise this document as a product attachment when this product is in a bill of material."
 msgstr ""
+"Verborgen laten als het document alleen toegankelijk is op het productformulier.\n"
+"Selecteer stuklijst om dit document weer te geven als een productbijlage als dit product zich in een stuklijst bevindt."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
@@ -3020,13 +3022,13 @@ msgstr "Productieorder backorder"
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_cancelled
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_cancelled
 msgid "MO Cancelled"
-msgstr ""
+msgstr "Productieorder geannuleerd"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_confirmed
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_confirmed
 msgid "MO Confirmed"
-msgstr ""
+msgstr "Productieorder bevestigd"
 
 #. module: mrp
 #. odoo-javascript
@@ -3045,7 +3047,7 @@ msgstr "Kosten stuklijst"
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_done
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_done
 msgid "MO Done"
-msgstr ""
+msgstr "Productieorder voltooid"
 
 #. module: mrp
 #. odoo-python
@@ -3073,7 +3075,7 @@ msgstr "Productieorder in behandeling"
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_progress
 msgid "MO Progress"
-msgstr ""
+msgstr "Productieorder in behandeling"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -3089,12 +3091,12 @@ msgstr "PO klaar"
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_to_close
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_to_close
 msgid "MO To Close"
-msgstr ""
+msgstr "Te sluiten productieorder"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_document__attached_on_mrp
 msgid "MRP : Visible at"
-msgstr ""
+msgstr "MRP: Zichtbaar op"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
@@ -4129,7 +4131,7 @@ msgstr "Labels afdrukken"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
 msgid "Print Work Order"
-msgstr ""
+msgstr "Werkorder afdrukken"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -4312,7 +4314,7 @@ msgstr "Product aanvullen"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Mixin om product aan te vullen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_tmpl_id
@@ -4960,7 +4962,7 @@ msgstr "Toon kolom stuklijst"
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__show_bom
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__show_bom
 msgid "Show Bom"
-msgstr ""
+msgstr "Bekijk stuklijst"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
@@ -5728,7 +5730,7 @@ msgstr "Te starten"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "To Manufacture"
-msgstr ""
+msgstr "Te produceren"
 
 #. module: mrp
 #. odoo-python
@@ -6105,6 +6107,8 @@ msgid ""
 "View and allocate production quantities to customer orders or other "
 "manufacturing orders"
 msgstr ""
+"Productiehoeveelheden bekijken en toewijzen aan klantorders of andere "
+"productieorders"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
@@ -6793,7 +6797,7 @@ msgstr "dagen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "days before"
-msgstr ""
+msgstr "dagen voor"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit

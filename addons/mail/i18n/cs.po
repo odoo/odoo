@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
+# Tereza Mokrá, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 10:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Jiří Podhorecký <jirka.p@volny.cz>, 2024\n"
+"Last-Translator: Tereza Mokrá, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +104,9 @@ msgid ""
 "%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
 "someone, and grab their attention.%(new_line)sType "
 "%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command."
+"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
+"%(bold_start)s:shortcut%(bold_end)s to insert a canned response in your "
+"message."
 msgstr ""
 
 #. module: mail
@@ -225,13 +228,13 @@ msgstr "%s (kopie)"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
+#: code:addons/mail/static/src/core/public_web/out_of_focus_service_patch.js:0
 msgid "%s Message"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/out_of_focus_service_patch.js:0
+#: code:addons/mail/static/src/core/public_web/out_of_focus_service_patch.js:0
 msgid "%s Messages"
 msgstr ""
 
@@ -722,7 +725,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_plan
 msgid "Activity Plan"
-msgstr ""
+msgstr "Plán aktivit"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_plan_action
@@ -1056,7 +1059,7 @@ msgstr "Vše"
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__custom_notifications__all
 #: model:ir.model.fields.selection,name:mail.selection__res_users_settings__channel_notifications__all
 msgid "All Messages"
-msgstr ""
+msgstr "Všechny zprávy"
 
 #. module: mail
 #. odoo-python
@@ -1629,7 +1632,7 @@ msgstr "Může upravovat tělo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
 msgid "Can Resend"
-msgstr ""
+msgstr "Lze znovu odeslat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2285,7 +2288,7 @@ msgstr "Vytvořit"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__next_activity
 msgid "Create Activity"
-msgstr ""
+msgstr "Vytvořit aktivitu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__create_date
@@ -2667,7 +2670,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__other
 msgid "Default user"
-msgstr ""
+msgstr "Výchozí uživatel"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__priority
@@ -2781,7 +2784,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/discuss_app_model.js:0
 msgid "Direct messages"
-msgstr ""
+msgstr "Přímé zprávy"
 
 #. module: mail
 #. odoo-javascript
@@ -4659,7 +4662,7 @@ msgstr "Pozvat sledujícího"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 msgid "Invite a User"
-msgstr ""
+msgstr "Pozvat uživatele"
 
 #. module: mail
 #. odoo-javascript
@@ -4677,7 +4680,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite to Group Chat"
-msgstr ""
+msgstr "Pozvat do skupinového chatu"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -5481,7 +5484,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 msgid "Member List"
-msgstr ""
+msgstr "Seznam členů"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_member_ids
@@ -6123,6 +6126,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "No user found that is not already a member of this channel."
 msgstr ""
+"Nebyl nalezen žádný uživatel, který by ještě nebyl členem tohoto kanálu."
 
 #. module: mail
 #. odoo-javascript
@@ -6772,7 +6776,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Permanently delete this template"
-msgstr ""
+msgstr "Trvale smazat tuto šablonu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
@@ -7520,7 +7524,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
 msgid "Reset Template"
-msgstr ""
+msgstr "Obnovit šablonu"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -7576,7 +7580,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Review All Templates"
-msgstr ""
+msgstr "Přehled všech šablon"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
@@ -8165,7 +8169,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Show Attachments"
-msgstr ""
+msgstr "Zobrazit přílohy"
 
 #. module: mail
 #. odoo-javascript
@@ -8334,7 +8338,7 @@ msgstr "Zahajte konverzaci"
 #: code:addons/mail/static/src/core/web/discuss_patch.xml:0
 #: code:addons/mail/static/src/discuss/core/web/messaging_menu_patch.xml:0
 msgid "Start a meeting"
-msgstr ""
+msgstr "Zahájit schůzku"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -8958,7 +8962,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 msgid "This conversation doesn't have any attachments."
-msgstr ""
+msgstr "Tato konverzace neobsahuje žádné přílohy. "
 
 #. module: mail
 #. odoo-javascript
@@ -9306,7 +9310,7 @@ msgstr "Typ výjimečné aktivity na záznamu."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Type the name of a person"
-msgstr ""
+msgstr "Zadejte jméno osoby"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__uri
@@ -10170,7 +10174,7 @@ msgstr "Byl jste přiřazen k"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/discuss_core_common_service.js:0
+#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
 msgid "You have been invited to #%s"
 msgstr ""
 

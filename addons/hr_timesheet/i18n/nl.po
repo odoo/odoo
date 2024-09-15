@@ -112,7 +112,7 @@ msgstr "<span class=\"o_stat_text\">Urenstaten</span>"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span class=\"text-nowrap\">Time Spent on Sub-tasks:</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">Tijd besteed aan subtaken:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -171,7 +171,7 @@ msgstr "<span>Werknemer</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Time Spent</span>"
-msgstr ""
+msgstr "<span>Bestede tijd</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -186,12 +186,12 @@ msgstr "<strong>Voortgang:</strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Time Remaining: </strong>"
-msgstr ""
+msgstr "<strong>Resterende tijd: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Time recorded on sub-tasks: </strong>"
-msgstr ""
+msgstr "<strong>Tijd geregistreerd op subtaken: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -206,7 +206,7 @@ msgstr "<strong>Totaal aantal uren: </strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Total Time Spent: </strong>"
-msgstr ""
+msgstr "<strong>Totaal bestede tijd: </strong>"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -654,7 +654,7 @@ msgstr "Nieuwste"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "No Parent Task"
-msgstr ""
+msgstr "Geen bovenliggende taak"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -798,7 +798,7 @@ msgstr "Zoek naar werknemer"
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Parent Task"
-msgstr ""
+msgstr "Zoek in bovenliggende taken"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -856,7 +856,7 @@ msgstr "Subtaak:"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Time Spent"
-msgstr ""
+msgstr "Bestede tijd subtaken"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1002,7 +1002,7 @@ msgstr "Resterende tijd"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours_percentage
 msgid "Time Remaining Percentage"
-msgstr ""
+msgstr "Percentesterende tijd"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
@@ -1028,12 +1028,12 @@ msgstr "Bestede tijd"
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__subtask_effective_hours
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Time Spent on Sub-Tasks"
-msgstr ""
+msgstr "Tijd besteed aan subtaken"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time Spent on Sub-tasks"
-msgstr ""
+msgstr "Tijd besteed aan subtaken"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
@@ -1245,7 +1245,7 @@ msgstr "Totaal toegewezen tijd"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 msgid "Total Days Spent"
-msgstr ""
+msgstr "Totaal bestede dagen"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1254,7 +1254,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Time Spent"
-msgstr ""
+msgstr "Totaal bestede tijd"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1359,6 +1359,9 @@ msgid ""
 "analytic account.<br/> Please change this account, or reactivate the current"
 " one to timesheet on the project."
 msgstr ""
+"Je kunt geen urenstaten op dit project registreren omdat dit is gekoppeld "
+"aan een inactieve analytische rekening.<br/> Verander de analytische "
+"rekening of heractiveer de huidige."
 
 #. module: hr_timesheet
 #. odoo-python
