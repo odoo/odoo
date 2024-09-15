@@ -41,14 +41,14 @@
         <xpath expr="//kanban" position="inside">
             <field name="website_url" invisible="1"/>
         </xpath>
-        <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="replace">
+        <xpath expr="//div[@name='card_primary_left']" position="replace">
             <div class="col-6 text-primary" t-if="record.website_id.value" groups="website.group_multi_website">
                 <i class="fa fa-globe me-1" title="Website"/>
                 <field name="website_id"/>
             </div>
         </xpath>
-        <xpath expr="//div[hasclass('o_kanban_card_content')]" position="after">
-            <div class="border-top mt-2 pt-2">
+        <xpath expr="//div[@name='card_content']" position="after">
+            <div class="d-flex border-top mt-2 pt-2">
                 <field name="is_published" widget="boolean_toggle"/>
                 <t t-if="record.is_published.raw_value">Published</t>
                 <t t-else="">Not Published</t>

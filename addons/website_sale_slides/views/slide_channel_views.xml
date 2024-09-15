@@ -51,7 +51,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='info_avg_rating']" position="after">
                 <div class="d-flex" invisible="enroll != 'payment'">
-                    <span class="me-auto"><label for="product_sale_revenues" class="mb0">Sales</label></span>
+                    <label for="product_sale_revenues" class="mb0 me-auto">Sales</label>
                     <field name="product_sale_revenues" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="currency_id" invisible="True"/>
                 </div>
