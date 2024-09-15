@@ -472,16 +472,13 @@ class TestCalendar(TestResourceCommon):
         time = self.calendar_jean.plan_days(0, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=True)
         self.assertEqual(time, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz))
 
-        # very small planning returns False in this case
-        # TODO: decide if this behaviour is alright
+        # handle fractional argument
         time = self.calendar_jean.plan_days(0.0002, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=True)
-        self.assertEqual(time, False)
+        self.assertEqual(time, datetime_tz(2018, 4, 10, 8, 0, 5, 760000, tzinfo=self.jean.tz))
 
-        # huge planning
-        # TODO: Same as above
-        # NOTE: Maybe allow to set a max limit to the method
+        # large planning
         time = self.calendar_jean.plan_days(3000, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=False)
-        self.assertEqual(time, False)
+        self.assertEqual(time, datetime_tz(2029, 10, 8, 16, 0, 0, tzinfo=self.jean.tz))
 
     def test_closest_time(self):
         # Calendar:
