@@ -242,100 +242,68 @@
             <field name="name">slide.channel.view.kanban</field>
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
-                <kanban string="eLearning Overview" class="o_emphasize_colors o_kanban_dashboard o_slide_kanban o_slide_channel_kanban" edit="false" sample="1">
-                    <field name="color"/>
-                    <field name="enroll"/>
+                <kanban highlight_color="color" string="eLearning Overview" class="o_emphasize_colors o_slide_kanban o_slide_channel_kanban" edit="false" sample="1">
                     <field name="website_published"/>
                     <templates>
                         <t t-name="kanban-menu">
                             <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
-                                <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                                <field name="color" widget="kanban_color_picker"/>
                             </div>
                             <div class="o_kanban_slides_card_manage_pane">
                                 <t t-if="widget.deletable">
                                     <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                 </t>
-                                <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                <a role="menuitem" type="open" class="dropdown-item">Edit</a>
                                 <a role="menuitem" name="action_channel_enroll" class="dropdown-item" type="object">Add Attendees</a>
                                 <a role="menuitem" name="action_channel_invite" class="dropdown-item" type="object">Invite</a>
                             </div>
                         </t>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                                <div class="ribbon ribbon-top-right"
-                                    invisible="active">
-                                    <field name="active" invisible="1"/>
-                                    <span class="text-bg-danger">Archived</span>
+                        <t t-name="kanban-card">
+                            <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                            <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published or not active"/>
+                            <field name="name" class="fw-bold fs-4 me-auto ms-1"/>
+                            <field t-if="record.tag_ids" name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}" class="mb-4 w-75 ms-1"/>
+                            <div class="row g-0 mb16 mt-1 ms-2 me-2">
+                                <div name="card_primary_left" class="col-6">
+                                    <button class="btn btn-primary" name="open_website_url" type="object">View course</button>
                                 </div>
-                                <div class="ribbon ribbon-top-right"
-                                    invisible="not website_published or not active">
-                                    <field name="website_published" invisible="1"/>
-                                    <span class="text-bg-success">Published</span>
-                                </div>
-                                <div class="o_kanban_card_header">
-                                    <div class="o_kanban_card_header_title mb16">
-                                        <div class="o_primary">
-                                            <a type="edit" class="me-auto">
-                                                <span><field name="name" class="o_primary"/></span>
-                                            </a>
-                                        </div>
-                                        <div t-if="record.tag_ids" class="w-75">
-                                            <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
-                                        </div>
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <label for="total_views" class="mb0 me-auto">Views</label>
+                                        <field name="total_views"/>
+                                    </div>
+                                    <div class="d-flex" name="info_total_slides">
+                                        <label for="total_slides" class="mb0 me-auto">Contents</label>
+                                        <field name="total_slides"/>
+                                    </div>
+                                    <div class="d-flex" name="info_total_time">
+                                        <label for="total_time" class="mb0 me-auto">Duration</label>
+                                        <field name="total_time" widget="float_time"/>
+                                    </div>
+                                    <div class="d-flex" name="info_avg_rating" t-if="record.rating_count.raw_value">
+                                        <a name="action_view_ratings" type="object" class="me-auto"><field name="rating_count"/> Reviews</a>
+                                        <span><field name="rating_avg_stars"/> / 5</span>
                                     </div>
                                 </div>
-                                <div class="container o_kanban_card_content mt1">
-                                    <div class="row mb16">
-                                        <div class="col-6 o_kanban_primary_left">
-                                            <button class="btn btn-primary" name="open_website_url" type="object">View course</button>
-                                        </div>
-                                        <div class="col-6 o_kanban_primary_right">
-                                            <div class="d-flex">
-                                                <span class="me-auto"><label for="total_views" class="mb0">Views</label></span>
-                                                <field name="total_views"/>
-                                            </div>
-                                            <div class="d-flex" name="info_total_slides">
-                                                <span class="me-auto"><label for="total_slides" class="mb0">Contents</label></span>
-                                                <field name="total_slides"/>
-                                            </div>
-                                            <div class="d-flex" name="info_total_time">
-                                                <span class="me-auto"><label for="total_time" class="mb0">Duration</label></span>
-                                                <field name="total_time" widget="float_time"/>
-                                            </div>
-                                            <div class="d-flex" name="info_avg_rating" t-if="record.rating_count.raw_value">
-                                                <a name="action_view_ratings" type="object" class="me-auto"><field name="rating_count"/> Reviews</a>
-                                                <span><field name="rating_avg_stars"/> / 5</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mt3 o_kanban_card_attendees_buttons">
-                                        <div class="col-3 border-end">
-                                            <a name="action_redirect_to_invited_members" type="object" class="d-flex flex-column align-items-center">
-                                                <field name="members_invited_count" class="fw-bold"/>
-                                                <span class="text-muted">Invited</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-3 border-end">
-                                            <a name="action_redirect_to_engaged_members" type="object" class="d-flex flex-column align-items-center">
-                                                <field name="members_engaged_count" class="fw-bold"/>
-                                                <span class="text-muted">Ongoing</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-3 border-end">
-                                            <a name="action_redirect_to_completed_members" type="object" class="d-flex flex-column align-items-center">
-                                                <field name="members_completed_count" class="fw-bold"/>
-                                                <span name="done_members_count_label" class="text-muted">Finished</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-3">
-                                            <a name="action_redirect_to_members" type="object" class="d-flex flex-column align-items-center">
-                                                <field name="members_all_count" class="fw-bold"/>
-                                                <span class="text-muted">Total</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                             </div>
+                            </div>
+                            <div name="card_content" class="row mt3">
+                                <a name="action_redirect_to_invited_members" type="object" class="d-flex flex-column align-items-center col-3 border-end">
+                                    <field name="members_invited_count" class="fw-bold"/>
+                                    <span class="text-muted">Invited</span>
+                                </a>
+                                <a name="action_redirect_to_engaged_members" type="object" class="d-flex flex-column align-items-center col-3 border-end">
+                                    <field name="members_engaged_count" class="fw-bold"/>
+                                    <span class="text-muted">Ongoing</span>
+                                </a>
+                                <a name="action_redirect_to_completed_members" type="object" class="d-flex flex-column align-items-center col-3 border-end">
+                                    <field name="members_completed_count" class="fw-bold"/>
+                                    <span name="done_members_count_label" class="text-muted">Finished</span>
+                                </a>
+                                <a name="action_redirect_to_members" type="object" class="d-flex flex-column align-items-center col-3">
+                                    <field name="members_all_count" class="fw-bold"/>
+                                    <span class="text-muted">Total</span>
+                                </a>
+                            </div>
                         </t>
                     </templates>
                 </kanban>
