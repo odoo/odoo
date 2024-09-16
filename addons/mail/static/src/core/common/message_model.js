@@ -119,7 +119,14 @@ export class Message extends Record {
      * @type {() => {} | undefined}
      */
     postFailRedo = undefined;
-    reactions = Record.many("MessageReactions", { inverse: "message" });
+    reactions = Record.many("MessageReactions", {
+        inverse: "message",
+        /**
+         * @param {import("models").MessageReactions} r1
+         * @param {import("models").MessageReactions} r2
+         */
+        sort: (r1, r2) => r1.sequence - r2.sequence,
+    });
     notifications = Record.many("Notification", { inverse: "message" });
     recipients = Record.many("Persona");
     thread = Record.one("Thread");

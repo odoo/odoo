@@ -26,6 +26,7 @@ export class MailMessageReaction extends models.ServerModel {
             const data = {
                 content: content,
                 count: reactionGroup.length,
+                sequence: Math.min(reactionGroup.map((reaction) => reaction.id)),
                 personas: mailDataHelpers.Store.many_ids(guests).concat(
                     mailDataHelpers.Store.many_ids(partners)
                 ),

@@ -1816,6 +1816,34 @@ test("Click on view reactions shows the reactions on the message", async () => {
     await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
 });
 
+test("Reactions are ordered by id", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+        reaction_ids: [
+            pyEnv["mail.message.reaction"].create({
+                content: "🔰",
+                partner_id: serverState.partnerId,
+            }),
+            pyEnv["mail.message.reaction"].create({
+                content: "🔢",
+                partner_id: serverState.partnerId,
+            }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageReaction:eq(0)", { text: "🔰" });
+    await contains(".o-mail-MessageReaction:eq(1)", { text: "🔢" });
+});
+
 test("discuss - bigger font size when there is only emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
