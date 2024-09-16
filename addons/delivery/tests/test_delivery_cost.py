@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
-from odoo.fields import Command
+from freezegun import freeze_time
+
+from odoo import Command
 from odoo.tests import Form, tagged
 from odoo.tools import float_compare
 
@@ -507,12 +508,12 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             'currency_id': currency_bells.id,
         })
 
-        self.env['res.currency.rate'].with_company(nook_inc).create({
-            'name': datetime.date(2000, 1, 1),
-            'currency_id': currency_bells.id,
-            'company_rate': 0.5,
-            'inverse_company_rate': 2,
-        })
+        with freeze_time('2000-01-01'):  # Make sure the rate is in the past
+            self.env['res.currency.rate'].with_company(nook_inc).create({
+                'currency_id': currency_bells.id,
+                'company_rate': 0.5,
+                'inverse_company_rate': 2,
+            })
 
         # Company less shipping method
         product_delivery_rule = self.env['product.product'].with_company(nook_inc).create({
