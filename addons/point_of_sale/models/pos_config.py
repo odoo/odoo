@@ -392,8 +392,6 @@ class PosConfig(models.Model):
             IrSequence = self.env['ir.sequence'].sudo()
             val = {
                 'name': _('POS Order %s', vals['name']),
-                'padding': 4,
-                'prefix': "%s/" % vals['name'],
                 'code': "pos.order",
                 'company_id': vals.get('company_id', False),
             }
