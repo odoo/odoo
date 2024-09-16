@@ -46,6 +46,68 @@ class TestBasic(common.TransactionCase):
 
         self.assertRecordValues(r, [{'dummy': 42}])
 
+    def test_assertRecordValues_float_formatting(self):
+        # ensure diff configuration is the default
+        self.patch(self, 'maxDiff', 80 * 8)
+
+        Records = self.env['test_testing_utilities.wide']
+        names = sorted(Records._fields.keys() - {'id', 'display_name'})
+
+        d = {
+            n: float(k)
+            for k, n in enumerate(names)
+        }
+
+        values = [{**d, "name": float(i), "price_total": float(i)} for i in range(200)]
+        values[63]['quantity'] = False
+        records = Records.create(values)
+        values[63]['price_total'] = 42.0
+
+        with self.assertRaises(AssertionError) as cm:
+            self.assertRecordValues(records, values)
+
+        self.maxDiff = None
+        self.assertEqual(str(cm.exception), """\
+Lists differ: [{'ac[24051 chars]al': 42.0, 'price_unit': 11.0, 'product_id': 1[51872 chars]8.0}] != [{'ac[24051 chars]al': 63.0, 'price_unit': 11.0, 'product_id': 1[51872 chars]8.0}]
+
+First differing element 63:
+{'acc[193 chars]al': 42.0, 'price_unit': 11.0, 'product_id': 1[127 chars]18.0}
+{'acc[193 chars]al': 63.0, 'price_unit': 11.0, 'product_id': 1[127 chars]18.0}
+
+--- expected
++++ records
+@@ -1205,7 +1205,7 @@
+   'name': 63.0,
+   'partner_id': 8.0,
+   'price_subtotal': 9.0,
+-  'price_total': 42.0,
++  'price_total': 63.0,
+   'price_unit': 11.0,
+   'product_id': 12.0,
+   'product_uom_id': 13.0,
+""")
+
+        vs = {
+            k: v for k, v in values[63].items()
+            if k in ("discount", "price_subtotal", "price_total", "quantity")
+        }
+        # if the default ndiff fits into the default diff limits keep that as is
+        with self.assertRaises(AssertionError) as cm:
+            self.assertRecordValues(records[63], [vs])
+        self.assertEqual(str(cm.exception), """\
+Lists differ: [{'discount': 6.0, 'price_subtotal': 9.0, 'price_total': 42.0, 'quantity': 0.0}] != [{'discount': 6.0, 'price_subtotal': 9.0, 'price_total': 63.0, 'quantity': 0.0}]
+
+First differing element 0:
+{'discount': 6.0, 'price_subtotal': 9.0, 'price_total': 42.0, 'quantity': 0.0}
+{'discount': 6.0, 'price_subtotal': 9.0, 'price_total': 63.0, 'quantity': 0.0}
+
+- [{'discount': 6.0, 'price_subtotal': 9.0, 'price_total': 42.0, 'quantity': 0.0}]
+?                                                          ^^
+
++ [{'discount': 6.0, 'price_subtotal': 9.0, 'price_total': 63.0, 'quantity': 0.0}]
+?                                                          ^^
+""")
+
     def test_assertRaises_rollbacks(self):
         """Checks that a "correctly" executing assertRaises (where the expected
         exception has been raised and caught) will properly rollback.
