@@ -23,6 +23,7 @@ import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
+import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 
 const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
@@ -62,6 +63,7 @@ export class TicketScreen extends Component {
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
         this.numberBuffer = useService("number_buffer");
+        this.fetchSyncedOrders = useTrackedAsync(() => this._fetchSyncedOrders());
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
@@ -88,7 +90,7 @@ export class TicketScreen extends Component {
         this.state.filter = selectedFilter;
 
         if (this.state.filter == "SYNCED") {
-            await this._fetchSyncedOrders();
+            await this.fetchSyncedOrders.call();
         }
     }
     getNumpadButtons() {
@@ -165,13 +167,13 @@ export class TicketScreen extends Component {
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {
             this.state.page += 1;
-            await this._fetchSyncedOrders();
+            await this.fetchSyncedOrders.call();
         }
     }
     async onPrevPage() {
         if (this.state.page > 1) {
             this.state.page -= 1;
-            await this._fetchSyncedOrders();
+            await this.fetchSyncedOrders.call();
         }
     }
     async onInvoiceOrder(orderId) {
@@ -254,7 +256,7 @@ export class TicketScreen extends Component {
             }
         }
 
-        if (!order || !this.getHasItemsToRefund()) {
+        if (!order || !this.getHasItemsToRefund(order)) {
             return;
         }
 
@@ -491,20 +493,19 @@ export class TicketScreen extends Component {
             return `${this.state.page}/${this.getNbrPages()}`;
         }
     }
-    getHasItemsToRefund() {
-        const order = this.getSelectedOrder();
+    getHasItemsToRefund(order) {
         if (!order) {
             return false;
         }
         if (this._doesOrderHaveSoleItem(order)) {
             return true;
         }
-        const total = Object.values(order.uiState.lineToRefund).reduce((acc, val) => {
-            acc += val.qty;
-            return acc;
-        }, 0);
 
-        return !this.pos.isProductQtyZero(total);
+        const hasItemsToRefund = Object.values(order.uiState.lineToRefund).some(
+            (line) => !this.pos.isProductQtyZero(Number(line.qty))
+        );
+
+        return hasItemsToRefund;
     }
     switchPane() {
         this.pos.switchPaneTicketScreen();
@@ -582,7 +583,7 @@ export class TicketScreen extends Component {
         );
 
         lineToRefund[orderline.uuid] = newToRefundDetail;
-        return newToRefundDetail;
+        return lineToRefund[orderline.uuid];
     }
     /**
      * Select the lines from lineToRefund, as they can come from different orders.
