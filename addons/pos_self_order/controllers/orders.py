@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 from datetime import timedelta
 from odoo import http, fields
 from odoo.http import request
@@ -14,9 +13,6 @@ class PosSelfOrderController(http.Controller):
         pos_session = pos_config.current_session_id
 
         # Create the order
-        ir_sequence_session = pos_config.env['ir.sequence'].with_context(company_id=pos_config.company_id.id).next_by_code(f'pos.order_{pos_session.id}')
-        sequence_number = re.findall(r'\d+', ir_sequence_session)[0]
-        order_reference = self._generate_unique_id(pos_session.id, pos_config.id, sequence_number, device_type)
         fiscal_position = (
             pos_config.takeaway_fp_id
             if is_takeaway
@@ -26,9 +22,12 @@ class PosSelfOrderController(http.Controller):
         if 'picking_type_id' in order:
             del order['picking_type_id']
 
-        order['name'] = order_reference
+        next_sequence = pos_config.sequence_id._next()
+        order_reference = self._generate_unique_id(pos_session.id, pos_config.id, next_sequence, device_type)
+        current_year = fields.Date.today().year
+        order['name'] = f"Self-Order {current_year}-{pos_config.id}-{next_sequence}"
         order['pos_reference'] = order_reference
-        order['sequence_number'] = sequence_number
+        order['sequence_number'] = next_sequence
         order['user_id'] = request.session.uid
         order['date_order'] = str(fields.Datetime.now())
         order['fiscal_position_id'] = fiscal_position.id if fiscal_position else False

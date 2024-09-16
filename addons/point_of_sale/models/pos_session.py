@@ -151,6 +151,7 @@ class PosSession(models.Model):
         fields = self._load_pos_data_fields(self.config_id.id)
         data = self.search_read(domain, fields, load=False, limit=1)
         data[0]['_partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
+        data[0]['_next_order_sequence'] = self.config_id.sequence_id._next()
         data[0]['_server_version'] = exp_version()
         data[0]['_base_url'] = self.get_base_url()
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
@@ -338,18 +339,6 @@ class PosSession(models.Model):
         else:
             sessions = super().create(vals_list)
         sessions.action_pos_session_open()
-
-        date_string = fields.Date.today().isoformat()
-        ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
-        if not ir_sequence:
-            self.env['ir.sequence'].sudo().create({
-                'name': _("PoS Order"),
-                'padding': 0,
-                'code': f'pos.order_{date_string}',
-                'number_next': 1,
-                'number_increment': 1,
-                'company_id': self.env.company.id,
-            })
 
         return sessions
 

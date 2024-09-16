@@ -126,6 +126,7 @@ export class PosStore extends Reactive {
         this.selectedCategory = null;
         this.searchProductWord = "";
         this.mainProductVariant = {};
+        this.localOrderSequence = 1;
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;
         });
@@ -138,6 +139,15 @@ export class PosStore extends Reactive {
             await this.connectToProxy();
         }
         this.closeOtherTabs();
+    }
+
+    get nextOrderSequence() {
+        let sequence = this.session._next_order_sequence;
+        if (this.data.network.offline) {
+            sequence = `${sequence}-${this.localOrderSequence}`;
+            this.localOrderSequence++;
+        }
+        return sequence;
     }
 
     get firstScreen() {
@@ -942,7 +952,6 @@ export class PosStore extends Reactive {
             access_token: uuidv4(),
             ticket_code: random5Chars(),
             fiscal_position_id: fiscalPosition,
-            name: _t("Order %s", uniqId),
             pos_reference: uniqId,
             ...data,
         });
@@ -1060,9 +1069,14 @@ export class PosStore extends Reactive {
                 order.recomputeOrderData();
             }
 
-            const serializedOrder = orders.map((order) =>
-                order.serialize({ orm: true, clear: true })
-            );
+            const year = DateTime.now().year;
+            const serializedOrder = orders.map((order) => {
+                if (!order.name) {
+                    order.name = `Order ${year}-${this.config.id}-${this.nextOrderSequence}`;
+                    order.sequence_number = this.session._next_order_sequence;
+                }
+                return order.serialize({ orm: true, clear: true });
+            });
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
             });
@@ -1089,7 +1103,7 @@ export class PosStore extends Reactive {
 
             this.postSyncAllOrders(newData["pos.order"]);
 
-            if (data["pos.session"].length > 0) {
+            if (data["pos.session"].length > 0 && this.models["pos.session"].length > 1) {
                 // Replace the original session by the rescue one. And the rescue one will have
                 // a higher id than the original one since it's the last one created.
                 const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
