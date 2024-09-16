@@ -1,21 +1,22 @@
 import {
     convertCSSColorToRgba,
+    convertHslToRgb,
     convertRgbaToCSSColor,
     convertRgbToHsl,
-    convertHslToRgb,
 } from "@web/core/utils/colors";
 import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
-import { throttleForAnimation, debounce } from "@web/core/utils/timing";
+import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 
 import {
     Component,
-    useRef,
-    onWillStart,
     onMounted,
-    onWillUpdateProps,
     onWillDestroy,
+    onWillStart,
+    onWillUpdateProps,
+    useRef,
 } from "@odoo/owl";
+import { ensureJQuery } from "../ensure_jquery";
 
 export class Colorpicker extends Component {
     static template = "web.Colorpicker";
@@ -44,8 +45,9 @@ export class Colorpicker extends Component {
     elRef = useRef("el");
 
     setup() {
-        onWillStart(() => {
+        onWillStart(async () => {
             this.init();
+            await ensureJQuery();
         });
         onMounted(async () => {
             if (!this.elRef.el) {
