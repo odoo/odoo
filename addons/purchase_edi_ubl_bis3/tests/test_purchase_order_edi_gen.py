@@ -12,6 +12,7 @@ class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
     def test_purchase_order_download_edi(self):
         self.env.company.vat = 'BE0477472701'
         self.partner_a.vat = 'NL123456782B90'
+        self.product_a.default_code = 'AAA'
 
         po = self.env['purchase.order'].create({
             'name': 'My PO',

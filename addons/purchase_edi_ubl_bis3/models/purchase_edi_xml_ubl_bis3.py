@@ -296,6 +296,10 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         if supplier_info.product_name:
             line_item_node['cbc:Name']['_text'] = supplier_info.product_name
 
+        line_item_node['cac:BuyersItemIdentification'] = {
+            'cbc:ID': {'_text': product.default_code or product.id},
+        }
+
         # When generating purchase order (PO) we are not considered as the seller of the sale but
         # buyer. The `SellersItemIdentification` is therefore the PO's partner product ID.
         line_item_node['cac:SellersItemIdentification'] = {

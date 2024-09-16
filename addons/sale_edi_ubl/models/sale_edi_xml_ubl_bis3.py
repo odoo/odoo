@@ -331,6 +331,29 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
     # Order EDI Import
     # -------------------------------------------------------------------------
 
+    def _retrieve_line_vals(self, record, tree, document_type=False, qty_factor=1):
+        """Override of `account.edi.xml.ubl_bis3` to set/update a customer product reference."""
+        line_vals = super()._retrieve_line_vals(
+            record, tree, document_type=document_type, qty_factor=qty_factor
+        )
+        if not line_vals.get('product_id'):
+            # Set customer product reference on order line
+            line_vals['edi_customer_product_ref'] = self._find_value(
+                './cac:Item/cac:BuyersItemIdentification/cbc:ID', tree
+            )
+        return line_vals
+
+    def _import_product(self, partner, **product_vals):
+        """Override of `account.edi.xml.ubl_bis3` to search for the product from customer product
+        reference."""
+        product = super()._import_product(partner, **product_vals)
+        if not product:
+            # Find product related to customer product reference
+            return self.env['customer.product.reference'].sudo().find_product_matching_reference(
+                partner, product_vals['edi_customer_product_ref']
+            )
+        return product
+
     def _retrieve_order_vals(self, order, tree):
         """ Fill order details by extracting details from xml tree.
         param order: Order to fill details from xml tree.
@@ -345,6 +368,8 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         )
         if partner:
             order_vals['partner_id'] = partner.id
+            # Need to set partner before in order to find products from previous order
+            order.partner_id = partner.id
         order_vals['client_order_ref'] = tree.findtext('./{*}ID')
         order_vals['origin'] = tree.findtext('./{*}QuotationDocumentReference/{*}ID')
 
@@ -392,4 +417,5 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             **super()._get_product_xpaths(),
             'variant_barcode': './cac:Item/cac:StandardItemIdentification/cbc:ExtendedID',
             'variant_default_code': './cac:Item/cac:SellersItemIdentification/cbc:ExtendedID',
+            'edi_customer_product_ref': './cac:Item/cac:BuyersItemIdentification/cbc:ID',
         }

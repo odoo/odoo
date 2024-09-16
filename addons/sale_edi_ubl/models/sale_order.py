@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import _, api, models, Command
 
 
@@ -57,3 +59,17 @@ class SaleOrder(models.Model):
             'price_unit': price_unit,
             'tax_ids': [Command.set(tax_ids)],
         } for name, quantity, price_unit, tax_ids in lines_vals]
+
+    def _action_confirm(self):
+        """Override of `sale` to set/update `customer_product_ref_ids` on product."""
+        res = super()._action_confirm()
+        for line in self.order_line:
+            if not line.edi_customer_product_ref:
+                continue
+            self.env['customer.product.reference'].sudo().create_or_update_product_reference(
+                line.order_id.partner_id,
+                line.product_id,
+                line.edi_customer_product_ref,
+            )
+
+        return res
