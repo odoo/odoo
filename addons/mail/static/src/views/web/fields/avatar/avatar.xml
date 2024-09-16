@@ -3,7 +3,8 @@
 
     <t t-name="mail.Avatar">
         <div class="o-mail-Avatar o_avatar d-flex align-items-center">
-            <img t-attf-class="rounded {{props.noSpacing ? '' : 'me-2'}}"
+            <img t-if="props.resModel and props.resId"
+                t-attf-class="rounded {{props.noSpacing ? '' : 'me-2'}}"
                 t-attf-src="/web/image/{{props.resModel}}/{{props.resId}}/avatar_128"
                 t-on-click.stop.prevent="onClickAvatar"
             />

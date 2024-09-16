@@ -1,0 +1,14 @@
+<odoo>
+    <record id="stock_picking_to_batch_form_inherit_stock_transport" model="ir.ui.view">
+        <field name="name">stock.picking.to.batch.form.inherit.stock.transport</field>
+        <field name="model">stock.picking.to.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_to_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/group/group/field[@name='is_create_draft']" position="after">
+                <field name="dock_id" groups="stock.group_stock_multi_locations"/>
+                <field name="vehicle_id" placeholder="Third Party Provider"/>
+                <field name="vehicle_category_id" placeholder="semi-truck"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

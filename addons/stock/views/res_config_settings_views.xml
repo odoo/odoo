@@ -68,6 +68,12 @@
                             <setting id="stock_fleet" help="Transport management: organize packs in your fleet, or carriers.">
                                 <field name="module_stock_fleet"/>
                             </setting>
+                            <setting id="delivery" help="Compute shipping costs" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer. Apply shipping connector from delivery methods.">
+                                <field name="module_delivery"/>
+                            </setting>
+                            <setting id="transport" help="Transport management: organize packs in your fleet, or carriers.">
+                                <field name="module_stock_transport"/>
+                            </setting>
                             <setting id="stock_move_email" company_dependent="1" string="Email Confirmation" help="Send an automatic confirmation email when Delivery Orders are done">
                                 <field name="stock_move_email_validation"/>
                             </setting>

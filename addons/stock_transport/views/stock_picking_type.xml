@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_picking_type_kanban_inherit_stock_transport" model="ir.ui.view">
+            <field name="name">stock.picking.type.kanban.inherit.stock.transport</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[hasclass('col-6') and hasclass('o_kanban_card_manage_section') and hasclass('o_kanban_manage_new')]" position="inside">
+                        <div role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
+                            <a name="action_batch" type="object" context="{'open_view':'form'}">Prepare Batches</a>
+                        </div>
+                    </xpath>
+                    <xpath expr="//div[hasclass('col-6') and hasclass('o_kanban_card_manage_section') and hasclass('o_kanban_manage_new')]" position="after">
+                        <t t-if="record.code.raw_value == 'incoming' or record.code.raw_value == 'outgoing'">
+                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                <h5 role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
+                                    <a>Transport Management</a>
+                                </h5>
+                                <div role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
+                                    <a name="action_batch" type="object" context="{'open_view':'tree,form'}">Manage Batches</a>
+                                </div>
+                                <div role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
+                                    <a name="action_batch" type="object" context="{'open_view':'gantt'}">Dock Dispatching</a>
+                                </div>
+                                <div role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
+                                    <a name="action_batch" type="object" context="{'open_view':'kanban,form'}">Batches by Route</a>
+                                </div>
+                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                    <a name="action_batch" type="object" context="{'open_view':'calendar'}">Calendar</a>
+                                </div>
+                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                    <a name="action_batch" type="object" context="{'open_view':'pivot'}">Statistics</a>
+                                </div>
+                            </div>
+                        </t>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

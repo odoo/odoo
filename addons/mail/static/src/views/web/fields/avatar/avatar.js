@@ -6,18 +6,20 @@ import { Component } from "@odoo/owl";
 export class Avatar extends Component {
     static template = "mail.Avatar";
     static props = {
-        resModel: { type: String },
-        resId: { type: Number },
-        displayName: { type: String },
+        resModel: { type: String, optional: true },
+        resId: { type: Number, optional: true },
+        displayName: { type: String, optional: true },
         noSpacing: { type: Boolean, optional: true },
     };
 
     setup() {
-        this.avatarCard = usePopover(AvatarCardPopover);
+        if (this.props.resModel === "res.users") {
+            this.avatarCard = usePopover(AvatarCardPopover);
+        }
     }
 
     onClickAvatar(ev) {
-        if (this.env.isSmall || !this.props.resId) {
+        if (this.env.isSmall || !this.props.resId || this.props.resModel !== "res.users") {
             return;
         }
         const target = ev.currentTarget;
