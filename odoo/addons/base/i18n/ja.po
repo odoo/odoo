@@ -19478,11 +19478,12 @@ msgid ""
 "%(country_code)s: the code of the country"
 msgstr ""
 "この国に属する住所に使用する表示形式。\n"
-"アドレスのすべてのフィールドでpythonスタイルの文字列パターンを使用できます(たとえば、'%(street)s'を使用してフィールド'street'を表示します)\n"
-"%(state_name)s:州の名前\n"
-"%(state_code )s:州のコード\n"
-"%(country_name)s:国の名前\n"
-"%(country_code)s:国のコード"
+"\n"
+"アドレスのすべてのフィールドでpythonスタイルの文字列パターンを使用できます(たとえば、'%(street)s' を使用してフィールド '町名番地' を表示します)\n"
+"%(state_name)s:州/都道府県の名前\n"
+"%(state_code)s:州/都道府県のコード\n"
+"%(country_name)s:国名\n"
+"%(country_code)s:国コード"
 
 #. module: base
 #. odoo-python
@@ -29276,7 +29277,7 @@ msgstr "Odooは生成されたPDFをマージできません。"
 msgid ""
 "Odoo is unable to merge the generated PDFs because of {num_errors} corrupted"
 " file(s)"
-msgstr ""
+msgstr "破損したファイル {num_errors} があるため、Odooは生成されたPDFをマージできません。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -38424,7 +38425,7 @@ msgstr "リードのWebチャットセッションを表示する"
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "View Problematic Record(s)"
-msgstr ""
+msgstr "問題のあるレコードを表示"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
