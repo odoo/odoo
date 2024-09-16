@@ -27,8 +27,9 @@ options.registry.Timeline = options.Class.extend({
      */
     timelineCard(previewMode, widgetValue, params) {
         const timelineRowEl = this.$target[0].closest(".s_timeline_row");
-        timelineRowEl.classList.toggle("flex-md-row-reverse");
-        timelineRowEl.classList.toggle("flex-md-row");
-        this.$target[0].classList.toggle("text-md-end");
+        const timelineCardEls = timelineRowEl.querySelectorAll(".s_timeline_card");
+        const firstContentEl = timelineRowEl.querySelector(".s_timeline_content");
+        timelineRowEl.append(firstContentEl);
+        timelineCardEls.forEach(card => card.classList.toggle("text-md-end"));
     },
 });
