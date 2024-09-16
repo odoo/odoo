@@ -474,7 +474,10 @@
             </small>
         </div>
         <div t-attf-class="mb-1 #{error.get('vat') and 'o_has_error' or ''} col-xl-6">
-            <label class="col-form-label label-optional" for="vat">VAT Number</label>
+            <label class="col-form-label label-optional" for="vat">
+                <t t-if="res_company.country_id.vat_label" t-out="res_company.country_id.vat_label"/>
+                <t t-else="">Tax ID</t>
+            </label>
             <!-- The <input> use "disabled" attribute to avoid sending an unauthorized value on form submit.
                  The user might not have rights to change company_name but should still be able to see it.
             -->
