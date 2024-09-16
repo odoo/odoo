@@ -5,6 +5,7 @@ import logging
 from http import HTTPStatus
 from urllib.parse import urlencode
 
+import psycopg2.errors
 from werkzeug.exceptions import BadRequest
 
 import odoo
@@ -178,14 +179,14 @@ class Home(http.Controller):
         return "User-agent: *\nDisallow: /\n"
 
     # for /json, the route should work in a browser, therefore type=http
-    @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
+    @http.route('/json/<path:subpath>', auth='bearer', type='http', readonly=True)
     def web_json(self, subpath, **kwargs):
         return request.redirect(
             f'/json/18.0/{subpath}?{urlencode(kwargs)}',
             HTTPStatus.TEMPORARY_REDIRECT
         )
 
-    @http.route('/json/18.0/<path:subpath>', auth='user', type='http', readonly=True)
+    @http.route('/json/18.0/<path:subpath>', auth='bearer', type='http', readonly=True)
     def web_json_18_0(self, subpath, view_type=None, limit=0, offset=0):
         if not request.env.user.has_group('base.group_allow_export'):
             raise AccessError(_("You need export permissions to use the /json route"))
@@ -210,8 +211,12 @@ class Home(http.Controller):
 
         for active_id, action, record_id in get_action_triples_():
             if action.sudo().path in allowed_server_action_paths:
-                action = request.env['ir.actions.act_window'].new(
-                    action.sudo(False).run())
+                try:
+                    action = request.env['ir.actions.act_window'].new(
+                        action.sudo(False).run())
+                except psycopg2.errors.ReadOnlySqlTransaction as e:
+                    # never retry on RO connection, just leave
+                    raise AccessError() from e
             if action._name != 'ir.actions.act_window':
                 e = f"{action._name} are not supported server-side"
                 raise BadRequest(e)

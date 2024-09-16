@@ -476,7 +476,8 @@ class Users(models.Model):
           - { 'uid': 32, 'auth_method': 'webauthn',      'mfa': 'skip'    }
         :rtype: dict
         """
-        assert credential['type'] == 'password' and credential['password']
+        if not (credential['type'] == 'password' and credential['password']):
+            raise AccessDenied()
         self.env.cr.execute(
             "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
             [self.env.user.id]
