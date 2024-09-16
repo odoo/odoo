@@ -957,6 +957,10 @@ export class PosStore extends Reactive {
         };
     }
 
+    getOrderIdsToDelete() {
+        return [...this.pendingOrder.delete];
+    }
+
     removePendingOrder(order) {
         this.pendingOrder["create"].delete(order.id);
         this.pendingOrder["write"].delete(order.id);
@@ -975,6 +979,11 @@ export class PosStore extends Reactive {
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         try {
+            const orderIdsToDelete = this.getOrderIdsToDelete();
+            if (orderIdsToDelete.length > 0) {
+                await this.deleteOrders([], orderIdsToDelete);
+            }
+
             const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
             const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
 
