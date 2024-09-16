@@ -4214,6 +4214,7 @@ class _RelationalMulti(_Relational):
                         line = browse(command[1])
                         if validate:
                             line.update(command[2])
+                            line.invalidate_recordset([fname for fname in command[2]])
                         else:
                             line._update_cache(command[2], validate=False)
                         ids.add(line.id)
