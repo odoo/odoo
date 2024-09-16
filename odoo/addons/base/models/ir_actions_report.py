@@ -9,7 +9,7 @@ from odoo.exceptions import UserError, AccessError, RedirectWarning
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path, ustr
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
-from odoo.http import request
+from odoo.http import request, root
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
 import io
@@ -526,10 +526,12 @@ class IrActionsReport(models.Model):
         temporary_files = []
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
-        if request and request.db:
+        temp_session = None
+        if request and request.db and request.session.sid:
+            temp_session = root.session_store.create_temporary_session(request.env, request.session, _trace_disable=True)
             base_url = self._get_report_url()
             domain = urlparse(base_url).hostname
-            cookie = f'session_id={request.session.sid}; HttpOnly; domain={domain}; path=/;'
+            cookie = f'session_id={temp_session.sid}; HttpOnly; domain={domain}; path=/;'
             cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
             temporary_files.append(cookie_jar_file_path)
             with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
@@ -610,6 +612,9 @@ class IrActionsReport(models.Model):
                 os.unlink(temporary_file)
             except (OSError, IOError):
                 _logger.error('Error when trying to remove file %s' % temporary_file)
+        # Manual cleanup for the temporary session
+        if temp_session:
+            root.session_store.delete(temp_session)
 
         return pdf_content
 

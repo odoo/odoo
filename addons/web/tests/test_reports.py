@@ -52,7 +52,7 @@ class TestReports(odoo.tests.HttpCase):
         admin = self.env.ref('base.user_admin')
         report = report.with_user(admin)
         with MockRequest(report.env) as mock_request:
-            mock_request.session.sid = self.authenticate(admin.login, admin.login).sid
+            mock_request.session = self.authenticate(admin.login, admin.login)
             report.with_context(force_report_rendering=True)._render_qweb_pdf(report.id, [partner_id])
 
         self.assertEqual(

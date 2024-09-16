@@ -995,6 +995,33 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
             with contextlib.suppress(OSError):
                 os.unlink(fn)
 
+    def create_temporary_session(self, env, session, **kwargs):
+        """
+            Allows to work with modified data from an existing session for a limited time.
+            The temporary session will be deleted as soon as possible via the next garbage
+            collector if not previously done manually.
+            The temporary session is directly active, i.e. it exists on the filesystem and
+            will be correctly found by other transactions.
+
+            :param env: environment to access user information
+            :param session: session to copy
+            :param kwargs: data to be placed in the temporary session
+
+            :return: temporary session created
+        """
+        assert isinstance(session, self.session_class)
+        # A new sid is required to avoid being able to usurp the newly created session.
+        sid = self.generate_key()
+        data = dict(session)
+        data.update(**kwargs, session_token=env.user._compute_session_token(sid))
+        temp_session = self.session_class(data, sid, False)
+        self.save(temp_session)
+        # Edit 'access' and 'modified' times of the file to the oldest Unix epoch start (0 seconds).
+        # This will cause the ``os.path.getmtime`` method to find this old "date"
+        # and so the file will be garbage collected during the next session vaccum.
+        os.utime(self.get_session_filename(sid), (0, 0))
+        return temp_session
+
 
 class Session(collections.abc.MutableMapping):
     """ Structure containing data persisted across requests. """
