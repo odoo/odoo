@@ -58,6 +58,6 @@ class AccountTax(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
-            'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected',
+            'id', 'name', 'price_include', 'include_base_amount', 'is_base_affected', 'total_tax_factor',
             'amount_type', 'children_tax_ids', 'amount', 'company_id', 'id', 'sequence', 'tax_group_id',
         ]

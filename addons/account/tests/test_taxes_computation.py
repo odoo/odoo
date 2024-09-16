@@ -1,4 +1,3 @@
-from odoo import Command
 from odoo.addons.account.tests.common import TestTaxCommon
 from odoo.tests import tagged
 
@@ -618,6 +617,13 @@ class TestTaxesComputation(TestTaxCommon):
         tax4 = self.division_tax(9)
         tax5 = self.division_tax(15)
 
+        # Same of tax4/tax5 except the amount is based on 32% of the base amount.
+        tax4_32 = self.division_tax(9)
+        tax5_32 = self.division_tax(15)
+        (tax4_32 + tax5_32).invoice_repartition_line_ids\
+            .filtered(lambda x: x.repartition_type == 'tax')\
+            .factor_percent = 32
+
         self.assert_taxes_computation(
             tax1 + tax2 + tax3 + tax4 + tax5,
             32.33,
@@ -634,8 +640,24 @@ class TestTaxesComputation(TestTaxCommon):
             },
             rounding_method='round_globally',
         )
+        self.assert_taxes_computation(
+            tax1 + tax2 + tax3 + tax4_32 + tax5_32,
+            836.7,
+            {
+                'total_included': 1000.0,
+                'total_excluded': 836.7,
+                'taxes_data': (
+                    (836.7, 50.0),
+                    (836.7, 30.0),
+                    (836.7, 6.5),
+                    (836.7, 28.8),
+                    (836.7, 48.0),
+                ),
+            },
+            rounding_method='round_globally',
+        )
 
-        (tax1 + tax2 + tax3 + tax4 + tax5).price_include_override = 'tax_included'
+        (tax1 + tax2 + tax3 + tax4 + tax5 + tax4_32 + tax5_32).price_include_override = 'tax_included'
         self.assert_taxes_computation(
             tax1 + tax2 + tax3 + tax4 + tax5,
             48.0,
@@ -652,33 +674,21 @@ class TestTaxesComputation(TestTaxCommon):
             },
             rounding_method='round_globally',
         )
-        self._run_js_tests()
-
-    def test_division_taxes_for_l10n_au_differed_gst(self):
-        tax = self.division_tax(
-            amount=100,
-            price_include_override='tax_included',
-            invoice_repartition_line_ids=[
-                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
-            ],
-            refund_repartition_line_ids=[
-                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
-                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
-            ],
-        )
         self.assert_taxes_computation(
-            tax,
-            100.0,
+            tax1 + tax2 + tax3 + tax4_32 + tax5_32,
+            1000.0,
             {
-                'total_included': 100.0,
-                'total_excluded': 0.0,
+                'total_included': 1000.0,
+                'total_excluded': 836.7,
                 'taxes_data': (
-                    (0.0, 100.0),
+                    (836.7, 50.0),
+                    (836.7, 30.0),
+                    (836.7, 6.5),
+                    (836.7, 28.8),
+                    (836.7, 48.0),
                 ),
             },
+            rounding_method='round_globally',
         )
         self._run_js_tests()
 
