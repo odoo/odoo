@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+from freezegun import freeze_time
+
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
@@ -184,3 +187,52 @@ class StockMoveLine(TestStockCommon):
             (move_line1 | move_line2).lot_id = self.lot
         with self.assertRaises(UserError):
             (move_line1 | move_line2).quant_id = quant_productA
+
+    def test_move_line_date(self):
+        # we need to freezetime due to write time being too fast for date changes to be observed
+        with freeze_time() as freeze:
+            move = self.env['stock.move'].create({
+                'name': 'test_move_line_date',
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+                'product_id': self.productA.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 10.0,
+            })
+            move.quantity = 1
+            ml = move.move_line_ids
+            self.assertFalse(ml.picked, "Move line shouldn't be 'picked' yet")
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            create_date = ml.date
+            ml.quantity = 2
+            self.assertFalse(ml.picked, "Move line shouldn't be 'picked' yet")
+            self.assertEqual(ml.date, create_date, "Increasing a quantity that isn't 'picked' shouldn't update its date")
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            ml.picked = True
+            update_date_1 = ml.date
+            self.assertTrue(update_date_1 > create_date, "Marking a ml as 'picked' should update its date")
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            ml.quantity = 3
+            update_date_2 = ml.date
+            self.assertTrue(update_date_2 > update_date_1, "Increasing a ml's quantity should update its date")
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            ml.product_uom_id = self.uom_dozen
+            update_date_3 = ml.date
+            self.assertTrue(update_date_3 > update_date_2, "Increasing a ml's quantity (via UoM type) should update its date")
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            ml.quantity = 2
+            self.assertEqual(update_date_3, ml.date, "Decreasing a ml's quantity shouldn't update its date")
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            ml.write({
+                'product_uom_id': self.uom_unit.id,
+                'quantity': 24
+            })
+            # 2 dozen = 24 units
+            self.assertEqual(update_date_3, ml.date, "Quantity change check for date should take into account UoM conversion")
+            freeze.tick(delta=datetime.timedelta(seconds=2))
+            ml.write({
+                'product_uom_id': self.uom_dozen.id,
+                'quantity': 3
+            })
+            # 36 units > 24 units
+            self.assertTrue(ml.date > update_date_3, "Quantity change check for date should take into account UoM conversion")
