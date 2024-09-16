@@ -329,6 +329,59 @@
                 <xpath expr="//div/span" position="replace" class="ps-0"/>
             </field>
         </record>
+
+        <record id="timesheets_by_project_pivot_view" model="ir.ui.view">
+            <field name="name">timesheet.by.project.pivot.view</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <pivot sample="1">
+                    <field name="project_id" type="row"/>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="amount" string="Timesheet Costs"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="timesheets_by_project_graph_view" model="ir.ui.view">
+            <field name="name">timesheets.by.project.graph.view</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <graph sample="1" js_class="hr_timesheet_graphview">
+                    <field name="project_id" type="row"/>
+                    <field name="amount" string="Timesheet Costs"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="timesheets_by_task_pivot_view" model="ir.ui.view">
+            <field name="name">timesheet.by.task.pivot.view</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <pivot sample="1">
+                    <field name="project_id" type="row"/>
+                    <field name="task_id" type="row"/>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="amount" string="Timesheet Costs"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="timesheets_by_task_graph_view" model="ir.ui.view">
+            <field name="name">timesheets.by.task.graph.view</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <graph sample="1" js_class="hr_timesheet_graphview">
+                    <field name="project_id" type="row"/>
+                    <field name="task_id" type="row"/>
+                    <field name="amount" string="Timesheet Costs"/>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </graph>
+            </field>
+        </record>
+
         <!--
             Actions
         -->
@@ -559,6 +612,141 @@
             <field name="sequence" eval="10"/>
             <field name="view_id" ref="hr_timesheet_line_form"/>
             <field name="act_window_id" ref="act_hr_timesheet_line_by_project"/>
+        </record>
+
+        <record id="timesheet_action_by_employee" model="ir.actions.act_window">
+            <field name="name">Timesheets By Employee</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="path">timesheets-by-employee</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p>
+                <p>
+                    Analyze the projects and tasks on which your employees spend their time.<br/>
+                    Evaluate which part is billable and what costs it represents.
+                </p>
+            </field>
+        </record>
+
+        <record id="timesheet_action_by_employee_pivot" model="ir.actions.act_window.view">
+            <field name="view_mode">pivot</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="view_hr_timesheet_line_pivot"/>
+            <field name="act_window_id" ref="timesheet_action_by_employee"/>
+        </record>
+
+        <record id="timesheet_action_by_employee_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="sequence" eval="20"/>
+            <field name="view_id" ref="view_hr_timesheet_line_graph_by_employee"/>
+            <field name="act_window_id" ref="timesheet_action_by_employee"/>
+        </record>
+
+        <record id="timesheet_action_by_employee_list" model="ir.actions.act_window.view">
+            <field name="view_mode">list</field>
+            <field name="sequence" eval="30"/>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+            <field name="act_window_id" ref="timesheet_action_by_employee"/>
+        </record>
+
+        <record id="timesheet_action_by_employee_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="50"/>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+            <field name="act_window_id" ref="timesheet_action_by_employee"/>
+        </record>
+
+        <record id="timesheet_action_by_project" model="ir.actions.act_window">
+            <field name="name">Timesheets By Project</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="path">timesheets-by-project</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p>
+                <p>
+                    Analyze the projects and tasks on which your employees spend their time.<br/>
+                    Evaluate which part is billable and what costs it represents.
+                </p>
+            </field>
+        </record>
+
+        <record id="timesheet_action_by_project_pivot" model="ir.actions.act_window.view">
+            <field name="view_mode">pivot</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="timesheets_by_project_pivot_view"/>
+            <field name="act_window_id" ref="timesheet_action_by_project"/>
+        </record>
+
+        <record id="timesheet_action_by_project_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="sequence" eval="20"/>
+            <field name="view_id" ref="timesheets_by_project_graph_view"/>
+            <field name="act_window_id" ref="timesheet_action_by_project"/>
+        </record>
+
+        <record id="timesheet_action_by_project_list" model="ir.actions.act_window.view">
+            <field name="view_mode">list</field>
+            <field name="sequence" eval="30"/>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+            <field name="act_window_id" ref="timesheet_action_by_project"/>
+        </record>
+
+        <record id="timesheet_action_by_project_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="50"/>
+            <field name="view_id" ref="timesheet_view_form_user"/>
+            <field name="act_window_id" ref="timesheet_action_by_project"/>
+        </record>
+
+        <record id="timesheet_action_by_task" model="ir.actions.act_window">
+            <field name="name">Timesheets By Task</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="path">timesheets-by-task</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p>
+                <p>
+                    Analyze the projects and tasks on which your employees spend their time.<br/>
+                    Evaluate which part is billable and what costs it represents.
+                </p>
+            </field>
+        </record>
+
+        <record id="timesheet_action_by_task_pivot" model="ir.actions.act_window.view">
+            <field name="view_mode">pivot</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="timesheets_by_task_pivot_view"/>
+            <field name="act_window_id" ref="timesheet_action_by_task"/>
+        </record>
+
+        <record id="timesheet_action_by_task_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="sequence" eval="20"/>
+            <field name="view_id" ref="timesheets_by_task_graph_view"/>
+            <field name="act_window_id" ref="timesheet_action_by_task"/>
+        </record>
+
+        <record id="timesheet_action_by_task_list" model="ir.actions.act_window.view">
+            <field name="view_mode">list</field>
+            <field name="sequence" eval="30"/>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+            <field name="act_window_id" ref="timesheet_action_by_task"/>
+        </record>
+
+        <record id="timesheet_action_by_task_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="50"/>
+            <field name="view_id" ref="timesheet_view_form_user"/>
+            <field name="act_window_id" ref="timesheet_action_by_task"/>
         </record>
     </data>
 </odoo>
