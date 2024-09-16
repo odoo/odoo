@@ -25,7 +25,8 @@ from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning
-from odoo.http import request
+from odoo.service import security
+from odoo.http import request, root
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
 from odoo.tools.misc import find_in_path
@@ -527,12 +528,23 @@ class IrActionsReport(models.Model):
 
         files_command_args = []
         temporary_files = []
+        temp_session = None
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         if request and request.db:
+            # Create a temporary session which will not create device logs
+            temp_session = root.session_store.new()
+            temp_session.update({
+                **request.session,
+                '_trace_disable': True,
+            })
+            if temp_session.uid:
+                temp_session.session_token = security.compute_session_token(temp_session, self.env)
+            root.session_store.save(temp_session)
+
             base_url = self._get_report_url()
             domain = urlparse(base_url).hostname
-            cookie = f'session_id={request.session.sid}; HttpOnly; domain={domain}; path=/;'
+            cookie = f'session_id={temp_session.sid}; HttpOnly; domain={domain}; path=/;'
             cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
             temporary_files.append(cookie_jar_file_path)
             with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
@@ -608,6 +620,10 @@ class IrActionsReport(models.Model):
 
         with open(pdf_report_path, 'rb') as pdf_document:
             pdf_content = pdf_document.read()
+
+        # Manual cleanup of the temporary session
+        if temp_session:
+            root.session_store.delete(temp_session)
 
         # Manual cleanup of the temporary files
         for temporary_file in temporary_files:
