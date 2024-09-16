@@ -11,7 +11,7 @@ import { debounce, Deferred } from "@bus/workers/websocket_worker_utils";
 /**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' | 'stop' | 'start'} WorkerAction
+ * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' | 'stop' | 'start' | 'readyState'} WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -153,6 +153,8 @@ export class WebsocketWorker {
                 return this._forceUpdateChannels();
             case "initialize_connection":
                 return this._initializeConnection(client, data);
+            case "readyState":
+                return client.postMessage({ type: "readyState", data: this.websocket?.readyState })
         }
     }
 

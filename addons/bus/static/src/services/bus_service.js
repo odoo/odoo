@@ -9,6 +9,22 @@ import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
 const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification"]);
+
+/**
+ * Enum representing the websocket states
+ * For simplicity the state values match {@link WebSocket.readyState}
+ * WebSocket.CLOSING is ignored because the worker does not trigger a related event for it.
+ */
+const busStates = Object.freeze({
+    CONNECTING: WebSocket.CONNECTING,
+    CONNECTED: WebSocket.OPEN,
+    DISCONNECTED: WebSocket.CLOSED,
+});
+/**
+ * Possible state values of the WebSocket connection. It can have the values of {@link busStates}, 
+ * @typedef {busStates[keyof busStates]} BusState 
+ */
+
 /**
  * Communicate with a SharedWorker in order to provide a single websocket
  * connection shared across multiple tabs.
@@ -17,6 +33,7 @@ const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification"]);
  *  @emits disconnect
  *  @emits reconnect
  *  @emits reconnecting
+ *  @emits statechange
  */
 export const busService = {
     dependencies: ["bus.parameters", "localization", "multi_tab", "notification"],
@@ -31,6 +48,7 @@ export const busService = {
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
         const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
         const connectionInitializedDeferred = new Deferred();
+        let state;
 
         /**
          * Send a message to the worker.
@@ -74,6 +92,8 @@ export const busService = {
                 case "initialized": {
                     isInitialized = true;
                     connectionInitializedDeferred.resolve();
+                    // initialize state by requesting WebSocket.readyState from worker
+                    send("readyState");
                     break;
                 }
                 case "outdated": {
@@ -188,6 +208,29 @@ export const busService = {
         });
         browser.addEventListener("offline", () => send("stop"));
 
+        /**
+         * Updates the state variable and
+         * triggers a "statechange" event on the bus
+         * 
+         * @emits statechange
+         * @param {BusState} newState 
+         */
+        function updateState(newState) {
+            state = newState;
+            bus.trigger("statechange", newState);
+        }
+        bus.addEventListener("connect", updateState.bind(null, busStates.CONNECTED));
+        bus.addEventListener("reconnect", updateState.bind(null, busStates.CONNECTED));
+        bus.addEventListener("reconnecting", updateState.bind(null, busStates.CONNECTING));
+        bus.addEventListener("disconnect", updateState.bind(null, busStates.DISCONNECTED));
+        
+        bus.addEventListener("readyState", ({ detail: readyState}) => {
+            if (readyState == WebSocket.CLOSING) {
+                return; // state should settle soon
+            }
+            updateState(readyState);
+        });
+
         return {
             addEventListener: bus.addEventListener.bind(bus),
             addChannel: async (channel) => {
@@ -247,6 +290,18 @@ export const busService = {
                 subscribeFnToWrapper.delete(callback);
             },
             startedAt,
+            
+            /**
+             * The connection state of the worker's websocket
+             * It can have the values described in {@link BusState} 
+             * @readonly
+             * @returns {BusState | undefined}
+             */
+            get state() {
+                return state;
+            },
+            ...busStates,
+            
         };
     },
     /** Overriden to provide logs in tests. Use subscribe() in production. */
