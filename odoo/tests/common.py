@@ -9,6 +9,7 @@ from __future__ import annotations
 import base64
 import concurrent.futures
 import contextlib
+import difflib
 import importlib
 import inspect
 import itertools
@@ -17,6 +18,7 @@ import logging
 import os
 import pathlib
 import platform
+import pprint
 import re
 import shutil
 import signal
@@ -617,8 +619,13 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         for vs in expected_values:
             r = {}
             for f in field_names:
-                if records._fields[f].type in ('one2many', 'many2many'):
+                t = records._fields[f].type
+                if t in ('one2many', 'many2many'):
                     r[f] = sorted(vs[f])
+                elif t == 'float':
+                    r[f] = float(vs[f])
+                elif t == 'integer':
+                    r[f] = int(vs[f])
                 elif vs[f] is None:
                     r[f] = False
                 else:
@@ -636,15 +643,29 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                     case 'one2many' | 'many2many':
                         record_value = sorted(record_value.ids)
                     case 'float' if digits := field.get_digits(record.env):
-                        record_value = Approx(record_value, digits[1])
+                        record_value = Approx(record_value, digits[1], decorate=False)
                     case 'monetary' if currency_field_name := field.get_currency_field(record):
                         # don't round if there's no currency set
                         if c := record[currency_field_name]:
-                            record_value = Approx(record_value, c)
+                            record_value = Approx(record_value, c, decorate=False)
                 r[field_name] = record_value
             record_reformatted.append(r)
 
-        self.assertEqual(expected_reformatted, record_reformatted)
+        try:
+            self.assertSequenceEqual(expected_reformatted, record_reformatted, seq_type=list)
+            return
+        except AssertionError as e:
+            standardMsg, _, diffMsg = str(e).rpartition('\n')
+            if 'self.maxDiff' not in diffMsg:
+                raise
+            # move out of handler to avoid exception chaining
+
+        diffMsg = "".join(difflib.unified_diff(
+            pprint.pformat(expected_reformatted).splitlines(keepends=True),
+            pprint.pformat(record_reformatted).splitlines(keepends=True),
+            fromfile="expected", tofile="records",
+        ))
+        self.fail(self._formatMessage(None, standardMsg + '\n' + diffMsg))
 
     # turns out this thing may not be quite as useful as we thought...
     def assertItemsEqual(self, a, b, msg=None):
@@ -749,8 +770,9 @@ class Approx:  # noqa: PLW1641
     Most of the time, :meth:`TestCase.assertAlmostEqual` is more useful, but it
     doesn't work for all helpers.
     """
-    def __init__(self, value: float, rounding: int | float | odoo.addons.base.models.res_currency.Currency, /) -> None:  # noqa: PYI041
+    def __init__(self, value: float, rounding: int | float | odoo.addons.base.models.res_currency.Currency, /, decorate: bool) -> None:  # noqa: PYI041
         self.value = value
+        self.decorate = decorate
         if isinstance(rounding, int):
             self.cmp = partial(float_compare, precision_digits=rounding)
         elif isinstance(rounding, float):
@@ -759,7 +781,9 @@ class Approx:  # noqa: PLW1641
             self.cmp = rounding.compare_amounts
 
     def __repr__(self) -> str:
-        return f"~{self.value!r}"
+        if self.decorate:
+            return f"~{self.value!r}"
+        return repr(self.value)
 
     def __eq__(self, other: object) -> bool | NotImplemented:
         if not isinstance(other, (float, int)):
