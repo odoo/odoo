@@ -142,14 +142,18 @@ class Forum(models.Model):
     @api.depends('description')
     def _compute_teaser(self):
         for forum in self:
+            forum.teaser = forum._generate_teaser()
+    
+    def _generate_teaser(self):
+        for forum in self:
             if forum.description:
                 desc = forum.description.replace('\n', ' ')
                 if len(forum.description) > 180:
-                    forum.teaser = desc[:180] + '...'
+                    return desc[:180] + '...'
                 else:
-                    forum.teaser = forum.description
+                    return forum.description
             else:
-                forum.teaser = ""
+                return ""
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
