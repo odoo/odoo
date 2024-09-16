@@ -34,7 +34,10 @@ export const BUILTINS = {
     },
 
     context_today() {
-        return PyDate.today();
+        const d = new Date();
+        // include getTimezoneOffset so tests can set timezone by patch getTimezoneOffset
+        const t = PyDateTime.now().add(PyTimeDelta.create({minutes: -d.getTimezoneOffset()}));
+        return new PyDate(t.year, t.month, t.day);
     },
 
     get current_date() {
