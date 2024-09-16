@@ -153,7 +153,8 @@ class AccountEdiCommon(models.AbstractModel):
         customer = invoice.commercial_partner_id
 
         # add Norway, Iceland, Liechtenstein
-        european_economic_area = self.env.ref('base.europe').country_ids.mapped('code') + ['NO', 'IS', 'LI']
+        europe_country_group = self.env.ref('base.europe', raise_if_not_found=False)
+        european_economic_area = europe_country_group and europe_country_group.country_ids.mapped('code') + ['NO', 'IS', 'LI']
 
         if customer.country_id.code == 'ES' and customer.zip:
             if customer.zip[:2] in ('35', '38'):  # Canary
@@ -170,7 +171,7 @@ class AccountEdiCommon(models.AbstractModel):
             else:
                 return create_dict(tax_category_code='S')  # standard VAT
 
-        if supplier.country_id.code in european_economic_area and supplier.vat:
+        if european_economic_area and supplier.country_id.code in european_economic_area and supplier.vat:
             if tax.amount != 0:
                 # otherwise, the validator will complain because G and K code should be used with 0% tax
                 return create_dict(tax_category_code='S')
