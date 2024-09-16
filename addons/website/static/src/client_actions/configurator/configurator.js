@@ -15,6 +15,7 @@ import {
     Component,
     onMounted,
     reactive,
+    useEffect,
     useEnv,
     useRef,
     useState,
@@ -23,6 +24,7 @@ import {
     useExternalListener,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 
 export const ROUTES = {
     descriptionScreen: 2,
@@ -90,6 +92,32 @@ export const PALETTE_NAMES = [
 // from CSS and added in each palette.
 export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
+const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
+
+/**
+ * Returns a list of maximum "resultNbrMax" themes that depends on the wanted
+ * industry and the color palette.
+ *
+ * @param {Object} orm - The orm used for the server call.
+ * @param {Object} state - The state that contains the wanted industry and color
+ * palette.
+ * @param {Number} resultNbrMax - The number of different wanted themes.
+ * @returns {Promise<Array>} A list of objects that contains the different
+ * theme names and their related text svgs (as result of a Promise). The length
+ * of the list is at most 'resultNbrMax'.
+ */
+async function getRecommendedThemes(orm, state, resultNbrMax = MAX_NBR_DISPLAY_MAIN_THEMES) {
+    return orm.call("website",
+        "configurator_recommended_themes",
+        [],
+        {
+            "industry_id": state.selectedIndustry.id,
+            "palette": state.selectedPalette,
+            "result_nbr_max": resultNbrMax,
+        },
+    );
+}
+
 //------------------------------------------------------------------------------
 // Components
 //------------------------------------------------------------------------------
@@ -124,11 +152,11 @@ export class IndustrySelectionAutoComplete extends AutoComplete {
         return {
             ...super.dropdownOptions,
             position: "bottom-fit",
-        }
+        };
     }
 
     get ulDropdownClass() {
-        return `${super.ulDropdownClass} custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown`
+        return `${super.ulDropdownClass} custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown`;
     }
 }
 
@@ -432,14 +460,7 @@ export class FeaturesSelectionScreen extends ApplyConfiguratorScreen {
         if (!industryId) {
             return this.props.navigate(ROUTES.descriptionScreen);
         }
-        const themes = await this.orm.call('website',
-            'configurator_recommended_themes',
-            [],
-            {
-                'industry_id': industryId,
-                'palette': this.state.selectedPalette,
-            },
-        );
+        const themes = await getRecommendedThemes(this.orm, this.state);
 
         if (!themes.length) {
             await this.applyConfigurator('theme_default');
@@ -457,39 +478,95 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
 
         this.uiService = useService('ui');
         this.orm = useService('orm');
-        this.state = useStore();
+        this.maxNbrDisplayExtraThemes = 100;
+        const env = useEnv();
+        env.store["extraThemesLoaded"] = false;
+        env.store["extraThemes"] = [];
+        this.state = useState(env.store);
         this.themeSVGPreviews = [useRef('ThemePreview1'), useRef('ThemePreview2'), useRef('ThemePreview3')];
-        const proms = [];
+        this.extraThemesButtonRef = useRef("extraThemesButton");
+        this.extraThemeSVGPreviews = [];
+        for (let i = 0; i < this.maxNbrDisplayExtraThemes; i++) {
+            this.extraThemeSVGPreviews.push(useRef(`ExtraThemePreview${i}`));
+        }
 
-        onMounted(async () => {
-            // Add a loading effect during the loading of the images inside the
-            // svgs.
-            this.uiService.block({delay: 400});
-            this.state.themes.forEach((theme, idx) => {
-                // Transform the text svg into a svg element.
-                const svgEl = new DOMParser().parseFromString(theme.svg, 'image/svg+xml').documentElement;
-                for (const imgEl of svgEl.querySelectorAll('image')) {
-                    proms.push(new Promise((resolve, reject) => {
-                        imgEl.addEventListener('load', () => {
-                            resolve(imgEl);
-                        }, {once: true});
-                        imgEl.addEventListener('error', () => {
-                            reject(imgEl);
-                        }, {once: true});
-                    }));
-                }
-                this.themeSVGPreviews[idx].el.appendChild(svgEl);
-            });
-            // When all the images inside the svgs are loaded then remove the
-            // loading effect.
-            Promise.allSettled(proms).then(() => {
-                this.uiService.unblock();
-            });
+        onMounted(() => {
+            this.blockUiDuringImageLoading(this.state.themes, this.themeSVGPreviews);
+        });
+
+        useEffect(
+            () => this.blockUiDuringImageLoading(this.state.extraThemes, this.extraThemeSVGPreviews),
+            () => [this.state.extraThemes]
+        );
+    }
+
+    /**
+     * The button should be shown if we never tried to load the extra themes and
+     * if they are enough main themes already displayed. If this last condition
+     * is not fulfilled, there is no need to display the button as no more will
+     * be displayed.
+     */
+    get showViewMoreThemesButton() {
+        return !this.state.extraThemesLoaded
+            && this.state.themes.length === MAX_NBR_DISPLAY_MAIN_THEMES;
+    }
+
+    /**
+     * Transforms text svgs into svg elements and adds a loading effect that
+     * blocks the UI during the loading of the images inside those svg elements.
+     *
+     * @param {Array<Object>} themes - The text svgs.
+     * @param {Array} themeSVGPreviews - A reference to the svg elements.
+     */
+    blockUiDuringImageLoading(themes, themeSVGPreviews) {
+        if (!themes.length) {
+            // There is no svg to transform
+            return;
+        }
+        const proms = [];
+        this.uiService.block({delay: 700});
+        themes.forEach((theme, idx) => {
+            const svgEl = new DOMParser().parseFromString(theme.svg, "image/svg+xml").documentElement;
+            for (const imgEl of svgEl.querySelectorAll("image")) {
+                proms.push(new Promise((resolve, reject) => {
+                    imgEl.addEventListener("load", () => {
+                        resolve(imgEl);
+                    }, {once: true});
+                    imgEl.addEventListener("error", () => {
+                        reject(imgEl);
+                    }, {once: true});
+                }));
+            }
+            themeSVGPreviews[idx].el.appendChild(svgEl);
+        });
+        // When all the images inside the svgs are loaded then remove the
+        // loading effect.
+        Promise.allSettled(proms).then(() => {
+            this.uiService.unblock();
         });
     }
 
     async chooseTheme(themeName) {
         await this.applyConfigurator(themeName);
+    }
+
+    async getMoreThemes() {
+        const removeLoadingEffect = addButtonLoadingEffect(this.extraThemesButtonRef.el);
+        const themes = await getRecommendedThemes(
+            this.orm,
+            this.state,
+            this.maxNbrDisplayExtraThemes
+        );
+        // Filter the extra themes to not propose a theme that is already
+        // present in the main themes.
+        const mainThemeNames = this.state.themes.map((theme) => theme.name);
+        this.state.extraThemes = themes.filter((extraTheme) => !mainThemeNames.includes(extraTheme.name));
+        this.state.extraThemesLoaded = true;
+        removeLoadingEffect();
+    }
+
+    getExtraThemeName(idx) {
+        return this.state.extraThemes.length > idx && this.state.extraThemes[idx].name;
     }
 }
 
@@ -617,7 +694,7 @@ export class Store {
     }
 
     updateRecommendedThemes(themes) {
-        this.themes = themes.slice(0, 3);
+        this.themes = themes.slice(0, MAX_NBR_DISPLAY_MAIN_THEMES);
     }
 }
 
@@ -740,10 +817,7 @@ export class Configurator extends Component {
         if (localState) {
             let themes = [];
             if (localState.selectedIndustry && localState.selectedPalette) {
-                themes = await this.orm.call('website', 'configurator_recommended_themes', [], {
-                    'industry_id': localState.selectedIndustry.id,
-                    'palette': localState.selectedPalette,
-                });
+                themes = await getRecommendedThemes(this.orm, localState);
             }
             return Object.assign(r, {...localState, palettes, themes});
         }
