@@ -6,7 +6,7 @@
         <div class="ticket-screen screen h-100 bg-100">
             <div class="screen-full-width d-flex w-100 h-100">
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-200 overflow-y-auto">
-                    <div t-attf-class="controls {{getNbrPages() ? 'd-grid' : 'd-flex'}} d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 bg-300">
+                    <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 bg-300">
                         <div class="buttons d-flex gap-2">
                             <button class="discard btn btn-lg btn-light text-nowrap" t-on-click="() => this.closeTicketScreen()">
                                 <i class="oi oi-chevron-left"/>
@@ -22,7 +22,7 @@
                             placeholder.translate="Search Orders..."
                             onSearch.bind="onSearch"
                             onFilterSelected.bind="onFilterSelected" />
-                        <div t-if="getNbrPages()" class="item d-flex align-items-center justify-content-end">
+                        <div class="item d-flex align-items-center justify-content-end">
                             <span class="page me-2"><t t-esc="getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
                                 <button class="previous btn btn-light btn-lg" t-on-click="() => this.onPrevPage()">
@@ -117,8 +117,7 @@
                     </div>
                 </div>
                 <!-- Hide the cart pane if no orders to list after having a search term -->
-                <t t-set="_shouldHideCart" t-value="_filteredOrderList.length === 0 and !this.state.search.searchTerm" />
-                <div t-if="(!ui.isSmall || pos.ticket_screen_mobile_pane === 'right') and !_shouldHideCart" class="leftpane d-flex flex-column flex-grow-1 gap-2 w-100 h-100 h-lg-100 bg-200 p-2">
+                <div t-if="(!ui.isSmall || pos.ticket_screen_mobile_pane === 'right')" class="leftpane d-flex flex-column flex-grow-1 gap-2 w-100 h-100 h-lg-100 bg-200 p-2">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <t t-if="_selectedSyncedOrder?.get_orderlines()?.length" > 
