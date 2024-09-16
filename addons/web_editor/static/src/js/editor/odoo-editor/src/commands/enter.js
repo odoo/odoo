@@ -17,6 +17,7 @@ import {
     isVisibleTextNode,
     nodeSize,
     getTraversedNodes,
+    setSelection,
 } from '../utils/utils.js';
 
 Text.prototype.oEnter = function (offset) {
@@ -185,6 +186,11 @@ HTMLPreElement.prototype.oEnter = function (offset) {
         this.insertBefore(lineBreak, this.childNodes[offset]);
         setCursorEnd(lineBreak);
     } else {
+        if (this.parentElement.nodeName === 'LI') {
+            setSelection(this.parentElement, childNodeIndex(this) + 1);
+            HTMLLIElement.prototype.oEnter.call(this.parentElement, ...arguments);
+            return;
+        }
         const node = document.createElement('p');
         this.parentNode.insertBefore(node, this.nextSibling);
         fillEmpty(node);
