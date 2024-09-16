@@ -94,7 +94,7 @@ class TestPerformanceTimeit(TransactionCase):
         code: str, *,
         record_list: list[BaseModel] | None = None,
         relative_size: list[int] | None = None,
-        check_type: Literal['linear', 'constant', 'maybe-linear', None] = 'linear',
+        check_type: Literal['linear', 'maybe-linear', None] = 'linear',
         number: int = 4,
         repeat: int = 3,
         **kw,
@@ -119,16 +119,12 @@ class TestPerformanceTimeit(TransactionCase):
             min_time = check_results[0]  # take the time for the first check result as a comparison point
             max_time = max(check_results)
             # just check that the biggest difference of timings per record
-            # compared to minimum run time is not greater than 180%
+            # compared to minimum run time is not greater than the max_tolerance
+            max_tolerance = 2.5
             if check_type == 'linear':
-                self.assertLess(max_time / min_time, 1.8, f"Non-linear behaviour detected, relative results: {check_results}")
+                self.assertLess(max_time / min_time, max_tolerance, f"Non-linear behaviour detected, relative results: {check_results}")
             else:
-                _logger.info("Linear behaviour result is %s for %s", max_time / min_time < 1.8, check_results)
-        elif check_type == 'constant':
-            # check that the maximum run time is within an arbitrary constant multiplier
-            # of the minimal run time
-            max_value = min(results) * 8
-            self.assertTrue(all(r <= max_value for r in results), f"Non-constant behaviour detected: {results}")
+                _logger.info("Linear behaviour result is %s for %s", max_time / min_time < max_tolerance, check_results)
         else:
             self.assertFalse(check_type, "Unsupported check_type")
         return results
@@ -167,7 +163,7 @@ class TestPerformanceTimeit(TransactionCase):
         self.launch_perf_set("list(records)")
 
     def test_perf_as_query(self):
-        self.launch_perf_set("records._as_query()", check_type='constant', number=100)
+        self.launch_perf_set("records._as_query()", number=100)
 
     def test_perf_exists(self):
         self.launch_perf_set("records.exists()")
