@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
         help="Category used in the Point of Sale.")
     public_description = fields.Html(
         string="Product Description",
+        translate=True
     )
 
     @api.ondelete(at_uninstall=False)
