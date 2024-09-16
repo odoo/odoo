@@ -13,9 +13,10 @@
     <t t-name="mail.ActionPanel.content">
         <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex align-items-baseline gap-1 bg-inherit" t-att-class="{ 'px-1': env.inChatWindow, 'px-2': !env.inChatWindow }">
             <button t-if="env.closeActionPanel" class="btn p-1 opacity-75 opacity-100-hover text-muted" title="Close panel" t-on-click.stop="env.closeActionPanel">
-                <i class="oi oi-arrow-left fa-lg fa-fw"/>
+                <i class="oi oi-arrow-left fa-fw"/>
             </button>
-            <p t-if="props.title" class="fs-6 fw-bold text-uppercase m-0 text-muted flex-grow-1" t-esc="props.title"/>
+            <i t-if="props.icon" class="me-1 text-muted" t-att-class="props.icon"/>
+            <p t-if="props.title" class="fw-bold text-uppercase m-0 text-muted flex-grow-1 smaller" t-esc="props.title"/>
         </div>
         <div class="px-1 d-flex flex-column flex-grow-1 bg-inherit">
             <t t-slot="default"/>

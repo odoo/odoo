@@ -83,7 +83,7 @@
     top: -10000px;
 }
 
-.o-mail-Composer-compactContainer {
+.o-mail-Composer-focusBorderedStyle {
     --border-opacity: 0.75;
 
     &.o-mobile:not(:focus-within) {
@@ -91,7 +91,7 @@
     }
 
     &:has(textarea:focus) {
-        --border-opacity: 0.35;
+        --border-opacity: 0.25;
         border-color: rgba($o-action, var(--border-opacity)) !important;
     }
 }

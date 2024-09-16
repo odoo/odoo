@@ -11,7 +11,7 @@
                     'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
-                    'p-3': normal,
+                    'p-3 mt-1': normal,
                     'o-hasSelfAvatar': !env.inChatWindow and thread,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
@@ -31,15 +31,16 @@
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended }">
                 <div class="d-flex bg-view flex-grow-1 border"
                     t-att-class="{
-                        'o-mail-Composer-compactContainer m-1 shadow-sm border-secondary': compact and !props.composer.message,
-                        'o-mobile rounded-3': isMobileOS,
-                        'rounded-3' : normal,
-                        'rounded-3 align-self-stretch' : extended,
+                        'm-1 shadow-sm': compact and !props.composer.message,
+                        'o-mobile': isMobileOS,
+                        'rounded' : normal or extended or isMobileOS or (compact and !props.composer.message),
+                        'border-secondary o-mail-Composer-focusBorderedStyle' : normal or (compact and !props.composer.message),
+                        'align-self-stretch' : extended,
                         'flex-column': extended or props.composer.message,
                     }"
                 >
                     <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-Composer-input o-mail-Composer-inputStyle form-control bg-view border-0 rounded-3 shadow-none overflow-auto"
+                        <textarea class="o-mail-Composer-input o-mail-Composer-inputStyle form-control bg-view border-0 shadow-none overflow-auto"
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
@@ -67,7 +68,7 @@
                         t-att-class="{
                             'ms-1': compact and ui.isSmall,
                             'mx-1': compact and !ui.isSmall,
-                            'ms-3': normal,
+                            'ms-3 rounded-end-3': normal,
                             'mx-3 border-top p-1': extended,
                             'border-top': extended or props.composer.message,
                             'rounded': !props.composer.message,

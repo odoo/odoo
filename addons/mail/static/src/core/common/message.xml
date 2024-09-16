@@ -76,7 +76,7 @@
                                                     'o-orange border border-warning': message.bubbleColor === 'orange',
                                                     }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                                 <MessageInReply t-if="message.parentMessage" message="message" onClick="props.onParentMessageClick"/>
-                                                <div class="position-relative text-break o-mail-Message-body" t-att-class="{
+                                                <div class="position-relative text-break o-mail-Message-body small" t-att-class="{
                                                             'p-1': message.is_note,
                                                             'fs-1': !state.isEditing and !env.inChatter and message.onlyEmojis,
                                                             'mb-0 py-2': !message.is_note,
@@ -153,7 +153,7 @@
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }"/>
-                    <button t-else="" class="btn px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
+                    <button t-else="" class="btn btn-sm px-1 py-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }">
@@ -180,7 +180,7 @@
 
 
 <t t-name="mail.Message.expandAction">
-    <button class="btn rounded-0" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
+    <button class="btn btn-sm rounded-0" t-att-title="expandText" t-on-click="openMobileActions" t-att-class="{
         'o-mail-Message-openActionMobile opacity-25 p-2 mt-n2 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
         'me-n2': isMobileOS and !mobileExpanded and isAlignedRight,
         'ms-n2': isMobileOS and !mobileExpanded and !isAlignedRight,

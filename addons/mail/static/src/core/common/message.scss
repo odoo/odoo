@@ -119,6 +119,7 @@
 }
 
 .o-mail-Message-actions {
+    --btn-active-border-color: transparent;
     z-index: $o-mail-NavigableList-zIndex - 3;
 
     &.o-expanded {
@@ -126,7 +127,7 @@
     }
 
     button:hover, .focus {
-        background-color: mix($o-gray-100, $o-gray-200) !important;
+        background-color: var(--mail-Message-quickActionHover, $gray-200) !important;
     }
 }
 

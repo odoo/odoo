@@ -13,6 +13,7 @@ export class ActionPanel extends Component {
     static components = { ResizablePanel };
     static props = {
         title: { type: String, optional: true },
+        icon: { type: String, optional: true },
         resizable: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
         initialWidth: { type: Number, optional: true },
