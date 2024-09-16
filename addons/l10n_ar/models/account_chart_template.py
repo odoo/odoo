@@ -43,3 +43,18 @@ class AccountChartTemplate(models.AbstractModel):
             company.account_purchase_tax_id = self.env['account.tax']
 
         return res
+
+    def try_loading(self, template_code, company, install_demo=False):
+        # During company creation load template code corresponding to the AFIP Responsibility
+        if not company:
+            return
+        if isinstance(company, int):
+            company = self.env['res.company'].browse([company])
+        if company.country_code == 'AR' and not company.chart_template:
+            match = {
+                self.env.ref('l10n_ar.res_RM'): 'ar_base',
+                self.env.ref('l10n_ar.res_IVAE'): 'ar_ex',
+                self.env.ref('l10n_ar.res_IVARI'): 'ar_ri',
+            }
+            template_code = match.get(company.l10n_ar_afip_responsibility_type_id, template_code)
+        return super().try_loading(template_code, company, install_demo)
