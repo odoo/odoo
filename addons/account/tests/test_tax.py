@@ -66,20 +66,20 @@ class TestTax(TestTaxCommon):
         tax_price_excluded = self.percent_tax(21.0, **common_values)
         tax_price_included = self.percent_tax(21.0, price_include_override='tax_included', **common_values)
 
-        for tax, price_unit in ((tax_price_included, 121.0), (tax_price_excluded, 100.0)):
+        for tax in (tax_price_included, tax_price_excluded):
             for sign in (1, -1):
                 with self.subTest(sign=sign, price_include_override=tax.price_include_override):
                     self._check_compute_all_results(
                         tax,
                         {
-                            'total_included': sign * 121.0,
+                            'total_included': sign * 100.0,
                             'total_excluded': sign * 100.0,
                             'taxes': (
                                 (sign * 100.0, sign * 21.0),
                                 (sign * 100.0, -sign * 21.0),
                             ),
                         },
-                        sign * price_unit,
+                        sign * 100.0,
                     )
 
     def test_tax_repartition_lines_dispatch_amount_1(self):
@@ -111,7 +111,7 @@ class TestTax(TestTaxCommon):
                 self._check_compute_all_results(
                     tax,
                     {
-                        'total_included': sign * 1.03,
+                        'total_included': sign * 1.09,
                         'total_excluded': sign * 1.0,
                         'taxes': (
                             (sign * 1.0, sign * 0.01),
@@ -154,7 +154,7 @@ class TestTax(TestTaxCommon):
                 self._check_compute_all_results(
                     tax,
                     {
-                        'total_included': sign * 1.03,
+                        'total_included': sign * 1.0,
                         'total_excluded': sign * 1.0,
                         'taxes': (
                             (sign * 1.0, sign * 0.02),
@@ -190,4 +190,35 @@ class TestTax(TestTaxCommon):
         self.assertListEqual(
             [x[0] for x in self.env["account.tax"].name_search("Ten \"tix\"")],
             ten_fixed_tax_tix.ids,
+        )
+
+    def test_repartition_line_in(self):
+        tax = self.env['account.tax'].create({
+            'name': 'tax20',
+            'amount_type': 'percent',
+            'amount': 20,
+            'type_tax_use': 'none',
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        })
+        self.env.company.country_id = self.env.ref('base.in')
+        self._check_compute_all_results(
+            tax,
+            {
+                'total_included': 1000,
+                'total_excluded': 1000,
+                'taxes': (
+                    (1000, 200.0),
+                    (1000, -200.0),
+                ),
+            },
+            1000.0,
         )
