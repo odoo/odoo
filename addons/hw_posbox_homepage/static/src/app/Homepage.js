@@ -95,17 +95,17 @@ export class Homepage extends Component {
             </div>
             <SingleData name="'Name'" value="this.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">
-					<ServerDialog />
+					<ServerDialog t-if="this.store.isLinux" />
 				</t>
 			</SingleData>
             <SingleData t-if="this.store.advanced" name="'Version'" value="this.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
-                    <UpdateDialog />
+                    <UpdateDialog t-if="this.store.isLinux" />
                 </t>
             </SingleData>
             <SingleData t-if="this.store.advanced" name="'IP address'" value="this.data.ip" icon="'fa-globe'" />
             <SingleData t-if="this.store.advanced" name="'MAC address'" value="this.data.mac.toUpperCase()" icon="'fa-address-card'" />
-            <SingleData name="'Internet Status'" value="this.data.network_status"  icon="'fa-wifi'">
+            <SingleData t-if="this.store.isLinux" name="'Internet Status'" value="this.data.network_status"  icon="'fa-wifi'">
                 <t t-set-slot="button">
                     <WifiDialog />
                 </t>
