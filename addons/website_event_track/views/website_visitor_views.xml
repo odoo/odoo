@@ -28,4 +28,21 @@
             </xpath>
         </field>
     </record>
+
+    <record id="website_event_track_visitor_view_kanban" model="ir.ui.view">
+        <field name="name">website.visitor.view.kanban.inherit.event</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('w_visitor_kanban_stats')]" position="inside">
+                <div id="o_event_registration_count">
+                    Event Track
+                    <a type="action" name="website_event_track.event_track_action_from_visitor">
+                        <field name="event_track_wishlisted_count"/>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
 </data></odoo>
