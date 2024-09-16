@@ -734,6 +734,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'debit': 0,
         }])
 
+<<<<<<< 18.0
     def test_tax_repartition_lines_dispatch_amount_1(self):
         """ Ensure the tax amount is well dispatched to the repartition lines and the rounding errors are well managed.
         The 5% tax is applied on 1 so the total tax amount should be 0.05.
@@ -791,3 +792,84 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             invoice.line_ids.filtered('tax_line_id').sorted('balance'),
             [{'balance': -0.03}] + [{'balance': -0.01}] * 2 + [{'balance': 0.01}] * 5,
         )
+||||||| 528926b7a223881018569277ef15bf6bab9316e9
+=======
+    def test_is_base_affected(self):
+        include_base_amount_true_tax = self.env['account.tax'].create({
+            'name': 'Test 5 set affect Base of Subsequent Taxes',
+            'amount_type': 'percent',
+            'amount': 5,
+            'include_base_amount': True,
+            'sequence': 1,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, self.base_tag_pos.ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, self.base_tag_neg.ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
+                }),
+            ],
+        })
+
+        # No Base Affected by Previous Taxes
+        is_base_affected_false_tax = include_base_amount_true_tax.copy({
+            'name': 'Test 10 Not set Base Affected by Previous Taxes',
+            'amount': 10,
+            'is_base_affected': False,
+            'sequence': 3,
+        })
+        invoice = self._create_invoice([
+            (100, include_base_amount_true_tax + is_base_affected_false_tax),
+        ])
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [
+            {
+                'tax_ids': [],
+                'tax_tag_ids': self.tax_tag_pos.ids,
+                'tax_base_amount': 100,
+                'balance': -5,
+            },
+            {
+                'tax_ids': [],
+                'tax_tag_ids': self.tax_tag_pos.ids,
+                'tax_base_amount': 100,
+                'balance': -10,
+            },
+        ])
+
+        # No Base Affected by Previous Taxes
+        is_base_affected_true_tax = include_base_amount_true_tax.copy({
+            'name': 'Test 10 set Base Affected by Previous Taxes',
+            'amount': 10,
+            'is_base_affected': True,
+            'sequence': 2,
+        })
+        invoice = self._create_invoice([
+            (100, include_base_amount_true_tax + is_base_affected_true_tax),
+        ])
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [
+            {
+                'tax_ids': is_base_affected_true_tax.ids,
+                'tax_tag_ids': self.tax_tag_pos.ids + self.base_tag_pos.ids,
+                'tax_base_amount': 100,
+                'balance': -5,
+            },
+            {
+                'tax_ids': [],
+                'tax_tag_ids': self.tax_tag_pos.ids,
+                'tax_base_amount': 105,
+                'balance': -10.5,
+            },
+        ])
+>>>>>>> c15d9f50f8c597ef37e041dee78d0017bf5b9519

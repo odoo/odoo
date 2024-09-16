@@ -647,7 +647,839 @@ class AccountTax(models.Model):
     # TAXES COMPUTATION
     # -------------------------------------------------------------------------
 
+<<<<<<< 18.0
     def _eval_taxes_computation_prepare_product_fields(self):
+||||||| 528926b7a223881018569277ef15bf6bab9316e9
+    def _prepare_dict_for_taxes_computation(self):
+        """ Convert the current tax to a python dictionary. Since the taxes computation is made js-side too, this
+        way, we ensure a common representation of the taxes.
+
+        :return: A dictionary representing the raw values of the tax used during the taxes computation.
+        """
+        self.ensure_one()
+        tax_data = {
+            'id': self.id,
+            'name': self.name,
+            'amount_type': self.amount_type,
+            'sequence': self.sequence,
+            'amount': self.amount,
+            'tax_exigibility': self.tax_exigibility,
+            'price_include': self.price_include,
+            'include_base_amount': self.include_base_amount,
+            'is_base_affected': self.is_base_affected,
+            '_letter': None,
+            '_children_tax_ids': [
+                {
+                    **tax_data,
+                    'group_id': self.id,
+                }
+                for tax_data in self.children_tax_ids._convert_to_dict_for_taxes_computation()
+            ] if self.amount_type == 'group' else [],
+        }
+        if self.amount_type != 'group':
+            for tax_rep_field in ('refund_repartition_line_ids', 'invoice_repartition_line_ids'):
+                repartition_lines = self[tax_rep_field].filtered(lambda x: x.repartition_type == 'tax')
+                tax_data[f"_{tax_rep_field}"] = [
+                    {
+                        'factor': tax_rep.factor,
+                    }
+                    for tax_rep in repartition_lines
+                ]
+                tax_data['_factor'] = sum(repartition_lines.mapped('factor'))
+            for tax_rep_field, tax_data_key in (
+                ('refund_repartition_line_ids', '_refund_base_tag_ids'),
+                ('invoice_repartition_line_ids', '_invoice_base_tag_ids'),
+            ):
+                tax_data[tax_data_key] = self[tax_rep_field].filtered(lambda x: x.repartition_type == "base").tag_ids.ids
+        return tax_data
+
+    def _convert_to_dict_for_taxes_computation(self):
+        """ Convert the current taxes to a list of dict.
+        Since a lot of method here are copy-pasted in account_tax.js, we want to keep exactly the same method in both
+        python and javascript.
+
+        :return: A list of dictionaries, each one representing the taxes.
+        """
+        return [tax._prepare_dict_for_taxes_computation() for tax in self]
+
+    @api.model
+    def _prepare_taxes_batches(self, taxes_data):
+        """ Group the taxes passed as parameter by nature because some taxes must be computed all together
+        like price-included percent or division taxes.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param taxes_data:  A list of dictionaries, each one corresponding to one tax.
+        :return:            A list of dictionaries, each one containing:
+            * taxes: A subset of 'taxes_data'.
+            * amount_type: The 'amount_type' all taxes in the batch.
+            * include_base_amount: Does the batch affects the base of the others.
+            * price_include: Are all taxes in the batch price included.
+        """
+        batches = []
+
+        current_batch = None
+        is_base_affected = None
+        for tax_data in reversed(taxes_data):
+            if current_batch is not None:
+                same_batch = (
+                    tax_data['amount_type'] == current_batch['amount_type']
+                    and tax_data['price_include'] == current_batch['price_include']
+                    and (
+                        (
+                            tax_data['include_base_amount']
+                            and tax_data['include_base_amount'] == current_batch['include_base_amount']
+                            and not is_base_affected
+                        )
+                        or (
+                            tax_data['include_base_amount'] == current_batch['include_base_amount']
+                            and not tax_data['include_base_amount']
+                        )
+                    )
+                )
+                if not same_batch:
+                    batches.append(current_batch)
+                    current_batch = None
+
+            if current_batch is None:
+                current_batch = {
+                    'taxes': [],
+                    'extra_base_for_tax': [],
+                    'extra_base_for_base': [],
+                    'amount_type': tax_data['amount_type'],
+                    'include_base_amount': tax_data['include_base_amount'],
+                    'price_include': tax_data['price_include'],
+                    '_original_price_include': tax_data['_original_price_include'],
+                    'is_tax_computed': False,
+                    'is_base_computed': False,
+                }
+
+            is_base_affected = tax_data['is_base_affected']
+            current_batch['taxes'].append(tax_data)
+
+        if current_batch is not None:
+            batches.append(current_batch)
+
+        for index, batch in enumerate(batches):
+            batch_indexes = [tax_data['index'] for tax_data in batch['taxes']]
+            batch['index'] = index
+            batch['taxes'] = list(reversed(batch['taxes']))
+            for tax_data in batch['taxes']:
+                tax_data['batch_indexes'] = batch_indexes
+            self._precompute_taxes_batch(batch)
+
+        return batches
+
+    @api.model
+    def _precompute_taxes_batch(self, batch):
+        """ Hook to precompute some values for the batch in advance. The taxes are evaluated one by one but some
+        need to have some data for the whole batch: the division taxes or multiple price-included percent taxes for example.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param batch: The batch of taxes to precompute.
+        """
+        taxes_data = batch['taxes']
+        amount_type = batch['amount_type']
+
+        if amount_type == 'fixed':
+            for tax_data in taxes_data:
+                tax_data['evaluation_context']['quantity_multiplicator'] = tax_data['amount'] * tax_data['_factor']
+
+        elif amount_type == 'percent':
+            total_percentage = sum(tax_data['amount'] * tax_data['_factor'] for tax_data in taxes_data) / 100.0
+            for tax_data in taxes_data:
+                percentage = tax_data['amount'] / 100.0
+                tax_data['evaluation_context']['incl_base_multiplicator'] = 1 / (1 + total_percentage) if total_percentage != -1 else 0.0
+                tax_data['evaluation_context']['excl_tax_multiplicator'] = percentage
+
+        elif amount_type == 'division':
+            total_percentage = sum(tax_data['amount'] * tax_data['_factor'] for tax_data in taxes_data) / 100.0
+            incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
+            for tax_data in taxes_data:
+                percentage = tax_data['amount'] / 100.0
+                tax_data['evaluation_context']['incl_base_multiplicator'] = incl_base_multiplicator
+                tax_data['evaluation_context']['excl_tax_multiplicator'] = percentage / incl_base_multiplicator
+
+    @api.model
+    def _process_as_fixed_tax_amount_batch(self, batch):
+        """ Prepare the computation of fixed amounts at the very beginning of the taxes computation.
+        The amounts computed can't depend of any others taxes.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param batch: A batch of taxes that could be computed by this method.
+        """
+        return batch['amount_type'] == 'fixed'
+
+    @api.model
+    def _propagate_extra_taxes_base(self, batches_before, batch, batches_after, special_mode=False):
+        """ In some cases, depending the computation order of taxes, the special_mode or the configuration
+        of taxes (price included, affect base of subsequent taxes, etc), some taxes need to affect the base and
+        the tax amount of the others. That's the purpose of this method: adding which tax need to be added as
+        an 'extra_base' to the others.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param batches_before:  The batches 'before' the current batch.
+                                When this method is called by the descending computation, the 'batches_before' are the batches that are
+                                not already traveled.
+        :param batch:           The batch that needs to propagate its base.
+        :param batches_after:   The batches 'after' the current batch.
+                                When this method is called by the descending computation, the 'batches_after' are the batches that are
+                                already traveled.
+        :param special_mode:    The special mode of the taxes computation: False, 'total_excluded' or 'total_included'.
+        """
+        def add_extra_base(other_batch, tax_data, sign):
+            if not other_batch.get('tax_order_added'):
+                other_batch['extra_base_for_tax'].append((sign, tax_data['index']))
+            other_batch['extra_base_for_base'].append((sign, tax_data['index']))
+
+        for tax_data in batch['taxes']:
+            if batch['_original_price_include']:
+
+                # Suppose:
+                # 1.
+                # t1: price-excluded fixed tax of 1, include_base_amount
+                # t2: price-included 10% tax
+                # On a price unit of 120, t1 is computed first since the tax amount affects the price unit.
+                # Then, t2 can be computed on 120 + 1 = 121.
+                # However, since t1 is not price-included, its base amount is computed by removing first the tax amount of t2.
+                # 2.
+                # t1: price-included fixed tax of 1
+                # t2: price-included 10% tax
+                # On a price unit of 122, base amount of t2 is computed as 122 - 1 = 121
+                if special_mode in (False, 'total_included'):
+                    if not batch['include_base_amount']:
+                        for other_batch in batches_after:
+                            if other_batch['_original_price_include']:
+                                add_extra_base(other_batch, tax_data, -1)
+                    for other_batch in batches_before:
+                        add_extra_base(other_batch, tax_data, -1)
+
+                # Suppose:
+                # 1.
+                # t1: price-included 10% tax
+                # t2: price-excluded 10% tax
+                # If the price unit is 121, the base amount of t1 is computed as 121 / 1.1 = 110
+                # With special_mode = 'total_excluded', 110 is provided as price unit.
+                # To compute the base amount of t2, we need to add back the tax amount of t1.
+                # 2.
+                # t1: price-included fixed tax of 1, include_base_amount
+                # t2: price-included 10% tax
+                # On a price unit of 121, with t1 being include_base_amount, the base amount of t2 is 121
+                # With special_mode = 'total_excluded' 109 is provided as price unit.
+                # To compute the base amount of t2, we need to add the tax amount of t1 first
+                else:  # special_mode == 'total_excluded'
+                    for other_batch in batches_after:
+                        if not other_batch['_original_price_include'] or batch['include_base_amount']:
+                            add_extra_base(other_batch, tax_data, 1)
+
+            elif not batch['_original_price_include']:
+
+                # Case of a tax affecting the base of the subsequent ones, no price included taxes.
+                if special_mode in (False, 'total_excluded'):
+                    if batch['include_base_amount']:
+                        for other_batch in batches_after:
+                            add_extra_base(other_batch, tax_data, 1)
+
+                # Suppose:
+                # 1.
+                # t1: price-excluded 10% tax, include base amount
+                # t2: price-excluded 10% tax
+                # On a price unit of 100,
+                # The tax of t1 is 100 * 1.1 = 110.
+                # The tax of t2 is 110 * 1.1 = 121.
+                # With special_mode = 'total_included', 121 is provided as price unit.
+                # The tax amount of t2 is computed like a price-included tax: 121 / 1.1 = 110.
+                # Since t1 is 'include base amount', t2 has already been subtracted from the price unit.
+                # 2.
+                # t1: price-excluded fixed tax of 1
+                # t2: price-excluded 10% tax
+                # On a price unit of 110, the tax of t2 is 110 * 1.1 = 121
+                # With special_mode = 'total_included', 122 is provided as price unit.
+                # The base amount of t2 should be computed by removing the tax amount of t1 first
+                else:  # special_mode == 'total_included'
+                    if not batch['include_base_amount']:
+                        for other_batch in batches_after:
+                            add_extra_base(other_batch, tax_data, -1)
+                    for other_batch in batches_before:
+                        add_extra_base(other_batch, tax_data, -1)
+
+    @api.model
+    def _prepare_taxes_computation(
+        self,
+        taxes_data,
+        force_price_include=None,
+        is_refund=False,
+        include_caba_tags=False,
+        special_mode=False,
+    ):
+        """ Prepare the taxes passed as parameter for the evaluation part. It pre-compute some values,
+        specify in which orders the taxes need to be evaluated and take care about taxes affecting the base
+        of the others.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param taxes_data:          A list of dictionaries, each one corresponding to one tax.
+        :param force_price_include: If provided, forces all taxes to act as price_included=force_price_include.
+                                    This parameter is DEPRECATED. Use "special_mode='total_included'" instead.
+        :param is_refund:           It comes from a refund document or not.
+        :param include_caba_tags:   Include the tags for the cash basis or not.
+        :param special_mode:        Indicate a special mode for the taxes computation.
+                            * total_excluded: The initial base of computation excludes all price-included taxes.
+                            Suppose a tax of 21% price included. Giving 100 with special_mode = 'total_excluded'
+                            will give you the same as 121 without any special_mode.
+                            * total_included: The initial base of computation is the total with taxes.
+                            Suppose a tax of 21% price excluded. Giving 121 with special_mode = 'total_included'
+                            will give you the same as 100 without any special_mode.
+                            Note: You can only expect accurate symmetrical taxes computation with not rounded price_unit
+                            as input and 'round_globally' computation. Otherwise, it's not guaranteed.
+        :return: A dict containing:
+            'taxes_data':           A list of dictionaries, ordered and containing the pre-computed values to eval the taxes.
+            'eval_order_indexes':   A list of tuple <key, index> where key is 'tax' or 'base'.
+                                    This say in which order 'taxes_data' needs to be evaluated.
+        """
+        # Backward-compatibility in stable version:
+        if not special_mode and force_price_include:
+            special_mode = 'total_included'
+
+        # Flatten the taxes and order them.
+        sorted_taxes_data = sorted(
+            taxes_data,
+            key=lambda tax_data: (tax_data['sequence'], tax_data['id']),
+        )
+        flatten_taxes_data = []
+        for tax_data in sorted_taxes_data:
+            if tax_data['amount_type'] == 'group':
+                flatten_taxes_data.extend(sorted(
+                    tax_data['_children_tax_ids'],
+                    key=lambda tax_data: (tax_data['sequence'], tax_data['id']),
+                ))
+            else:
+                flatten_taxes_data.append(tax_data)
+
+        expanded_taxes_data = []
+        for index, tax_data in enumerate(flatten_taxes_data):
+            if special_mode == 'total_included':
+                price_include = True
+            elif special_mode == 'total_excluded':
+                price_include = False
+            else:
+                price_include = tax_data['price_include']
+            expanded_taxes_data.append({
+                **tax_data,
+                'price_include': price_include,
+                '_original_price_include': tax_data['price_include'],
+                'index': index,
+                'evaluation_context': {'special_mode': special_mode},
+            })
+
+        # Group the taxes by batch of computation.
+        descending_batches = self._prepare_taxes_batches(expanded_taxes_data)
+        ascending_batches = list(reversed(descending_batches))
+        eval_order_indexes = []
+
+        # Define the order in which the taxes must be evaluated.
+        # Fixed taxes are computed directly because they could affect the base of a price included batch right after.
+        for i, batch in enumerate(descending_batches):
+            if self._process_as_fixed_tax_amount_batch(batch):
+                batch['tax_order_added'] = True
+                for tax_data in batch['taxes']:
+                    eval_order_indexes.append(('tax', tax_data['index']))
+                self._propagate_extra_taxes_base(
+                    descending_batches[i + 1:],
+                    batch,
+                    descending_batches[:i],
+                    special_mode=special_mode,
+                )
+
+        # Then, let's travel the batches in the reverse order and process the price-included taxes.
+        for i, batch in enumerate(descending_batches):
+            if not batch.get('tax_order_added') and batch['price_include']:
+                batch['tax_order_added'] = True
+                for tax_data in batch['taxes']:
+                    eval_order_indexes.append(('tax', tax_data['index']))
+                self._propagate_extra_taxes_base(
+                    descending_batches[i + 1:],
+                    batch,
+                    descending_batches[:i],
+                    special_mode=special_mode,
+                )
+
+        # Then, let's travel the batches in the normal order and process the price-excluded taxes.
+        for i, batch in enumerate(ascending_batches):
+            if not batch.get('tax_order_added') and not batch['price_include']:
+                batch['tax_order_added'] = True
+                for tax_data in batch['taxes']:
+                    eval_order_indexes.append(('tax', tax_data['index']))
+                self._propagate_extra_taxes_base(
+                    ascending_batches[:i],
+                    batch,
+                    ascending_batches[i + 1:],
+                    special_mode=special_mode,
+                )
+
+        # Mark the base to be computed in the descending order. The order doesn't matter for no special mode or 'total_excluded' but
+        # it must be in the reverse order when special_mode is 'total_included'.
+        for batch in descending_batches:
+            for tax_data in batch['taxes']:
+                eval_order_indexes.append(('base', tax_data['index']))
+
+        # Compute the subsequent taxes / tags.
+        for i, batch in enumerate(ascending_batches):
+            subsequent_tax_ids = []
+            subsequent_tag_ids = set()
+            base_tags_field = '_refund_base_tag_ids' if is_refund else '_invoice_base_tag_ids'
+            if batch['include_base_amount']:
+                for next_batch in ascending_batches[i + 1:]:
+                    for next_tax_data in next_batch['taxes']:
+                        subsequent_tax_ids.append(next_tax_data['id'])
+                        if include_caba_tags or next_tax_data['tax_exigibility'] != 'on_payment':
+                            for tag_id in next_tax_data[base_tags_field]:
+                                subsequent_tag_ids.add(tag_id)
+
+            for tax_data in batch['taxes']:
+                tax_data.update({
+                    'tax_ids': subsequent_tax_ids,
+                    'tag_ids': list(subsequent_tag_ids),
+                    'extra_base_for_base': batch['extra_base_for_base'],
+                    'extra_base_for_tax': batch['extra_base_for_tax'],
+                })
+
+        return {
+            'taxes_data': expanded_taxes_data,
+            'eval_order_indexes': eval_order_indexes,
+        }
+
+    # -------------------------------------------------------------------------
+    # EVAL TAXES COMPUTATION
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _eval_taxes_computation_prepare_product_fields(self, taxes_data):
+=======
+    def _prepare_dict_for_taxes_computation(self):
+        """ Convert the current tax to a python dictionary. Since the taxes computation is made js-side too, this
+        way, we ensure a common representation of the taxes.
+
+        :return: A dictionary representing the raw values of the tax used during the taxes computation.
+        """
+        self.ensure_one()
+        tax_data = {
+            'id': self.id,
+            'name': self.name,
+            'amount_type': self.amount_type,
+            'sequence': self.sequence,
+            'amount': self.amount,
+            'tax_exigibility': self.tax_exigibility,
+            'price_include': self.price_include,
+            'include_base_amount': self.include_base_amount,
+            'is_base_affected': self.is_base_affected,
+            '_letter': None,
+            '_children_tax_ids': [
+                {
+                    **tax_data,
+                    'group_id': self.id,
+                }
+                for tax_data in self.children_tax_ids._convert_to_dict_for_taxes_computation()
+            ] if self.amount_type == 'group' else [],
+        }
+        if self.amount_type != 'group':
+            for tax_rep_field in ('refund_repartition_line_ids', 'invoice_repartition_line_ids'):
+                repartition_lines = self[tax_rep_field].filtered(lambda x: x.repartition_type == 'tax')
+                tax_data[f"_{tax_rep_field}"] = [
+                    {
+                        'factor': tax_rep.factor,
+                    }
+                    for tax_rep in repartition_lines
+                ]
+                tax_data['_factor'] = sum(repartition_lines.mapped('factor'))
+            for tax_rep_field, tax_data_key in (
+                ('refund_repartition_line_ids', '_refund_base_tag_ids'),
+                ('invoice_repartition_line_ids', '_invoice_base_tag_ids'),
+            ):
+                tax_data[tax_data_key] = self[tax_rep_field].filtered(lambda x: x.repartition_type == "base").tag_ids.ids
+        return tax_data
+
+    def _convert_to_dict_for_taxes_computation(self):
+        """ Convert the current taxes to a list of dict.
+        Since a lot of method here are copy-pasted in account_tax.js, we want to keep exactly the same method in both
+        python and javascript.
+
+        :return: A list of dictionaries, each one representing the taxes.
+        """
+        return [tax._prepare_dict_for_taxes_computation() for tax in self]
+
+    @api.model
+    def _prepare_taxes_batches(self, taxes_data):
+        """ Group the taxes passed as parameter by nature because some taxes must be computed all together
+        like price-included percent or division taxes.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param taxes_data:  A list of dictionaries, each one corresponding to one tax.
+        :return:            A list of dictionaries, each one containing:
+            * taxes: A subset of 'taxes_data'.
+            * amount_type: The 'amount_type' all taxes in the batch.
+            * include_base_amount: Does the batch affects the base of the others.
+            * price_include: Are all taxes in the batch price included.
+        """
+        batches = []
+
+        current_batch = None
+        is_base_affected = None
+        for tax_data in reversed(taxes_data):
+            if current_batch is not None:
+                same_batch = (
+                    tax_data['amount_type'] == current_batch['amount_type']
+                    and tax_data['price_include'] == current_batch['price_include']
+                    and (
+                        (
+                            tax_data['include_base_amount']
+                            and tax_data['include_base_amount'] == current_batch['include_base_amount']
+                            and not is_base_affected
+                        )
+                        or (
+                            tax_data['include_base_amount'] == current_batch['include_base_amount']
+                            and not tax_data['include_base_amount']
+                        )
+                    )
+                )
+                if not same_batch:
+                    batches.append(current_batch)
+                    current_batch = None
+
+            if current_batch is None:
+                current_batch = {
+                    'taxes': [],
+                    'extra_base_for_tax': [],
+                    'extra_base_for_base': [],
+                    'amount_type': tax_data['amount_type'],
+                    'include_base_amount': tax_data['include_base_amount'],
+                    'price_include': tax_data['price_include'],
+                    '_original_price_include': tax_data['_original_price_include'],
+                    'is_tax_computed': False,
+                    'is_base_computed': False,
+                }
+
+            is_base_affected = tax_data['is_base_affected']
+            current_batch['taxes'].append(tax_data)
+
+        if current_batch is not None:
+            batches.append(current_batch)
+
+        for index, batch in enumerate(batches):
+            batch_indexes = [tax_data['index'] for tax_data in batch['taxes']]
+            batch['index'] = index
+            batch['taxes'] = list(reversed(batch['taxes']))
+            for tax_data in batch['taxes']:
+                tax_data['batch_indexes'] = batch_indexes
+            self._precompute_taxes_batch(batch)
+
+        return batches
+
+    @api.model
+    def _precompute_taxes_batch(self, batch):
+        """ Hook to precompute some values for the batch in advance. The taxes are evaluated one by one but some
+        need to have some data for the whole batch: the division taxes or multiple price-included percent taxes for example.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param batch: The batch of taxes to precompute.
+        """
+        taxes_data = batch['taxes']
+        amount_type = batch['amount_type']
+
+        if amount_type == 'fixed':
+            for tax_data in taxes_data:
+                tax_data['evaluation_context']['quantity_multiplicator'] = tax_data['amount'] * tax_data['_factor']
+
+        elif amount_type == 'percent':
+            total_percentage = sum(tax_data['amount'] * tax_data['_factor'] for tax_data in taxes_data) / 100.0
+            for tax_data in taxes_data:
+                percentage = tax_data['amount'] / 100.0
+                tax_data['evaluation_context']['incl_base_multiplicator'] = 1 / (1 + total_percentage) if total_percentage != -1 else 0.0
+                tax_data['evaluation_context']['excl_tax_multiplicator'] = percentage
+
+        elif amount_type == 'division':
+            total_percentage = sum(tax_data['amount'] * tax_data['_factor'] for tax_data in taxes_data) / 100.0
+            incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
+            for tax_data in taxes_data:
+                percentage = tax_data['amount'] / 100.0
+                tax_data['evaluation_context']['incl_base_multiplicator'] = incl_base_multiplicator
+                tax_data['evaluation_context']['excl_tax_multiplicator'] = percentage / incl_base_multiplicator
+
+    @api.model
+    def _process_as_fixed_tax_amount_batch(self, batch):
+        """ Prepare the computation of fixed amounts at the very beginning of the taxes computation.
+        The amounts computed can't depend of any others taxes.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param batch: A batch of taxes that could be computed by this method.
+        """
+        return batch['amount_type'] == 'fixed'
+
+    @api.model
+    def _propagate_extra_taxes_base(self, batches_before, batch, batches_after, special_mode=False):
+        """ In some cases, depending the computation order of taxes, the special_mode or the configuration
+        of taxes (price included, affect base of subsequent taxes, etc), some taxes need to affect the base and
+        the tax amount of the others. That's the purpose of this method: adding which tax need to be added as
+        an 'extra_base' to the others.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param batches_before:  The batches 'before' the current batch.
+                                When this method is called by the descending computation, the 'batches_before' are the batches that are
+                                not already traveled.
+        :param batch:           The batch that needs to propagate its base.
+        :param batches_after:   The batches 'after' the current batch.
+                                When this method is called by the descending computation, the 'batches_after' are the batches that are
+                                already traveled.
+        :param special_mode:    The special mode of the taxes computation: False, 'total_excluded' or 'total_included'.
+        """
+        def add_extra_base(other_batch, tax_data, sign):
+            if not other_batch.get('tax_order_added'):
+                other_batch['extra_base_for_tax'].append((sign, tax_data['index']))
+            other_batch['extra_base_for_base'].append((sign, tax_data['index']))
+
+        for tax_data in batch['taxes']:
+            if batch['_original_price_include']:
+
+                # Suppose:
+                # 1.
+                # t1: price-excluded fixed tax of 1, include_base_amount
+                # t2: price-included 10% tax
+                # On a price unit of 120, t1 is computed first since the tax amount affects the price unit.
+                # Then, t2 can be computed on 120 + 1 = 121.
+                # However, since t1 is not price-included, its base amount is computed by removing first the tax amount of t2.
+                # 2.
+                # t1: price-included fixed tax of 1
+                # t2: price-included 10% tax
+                # On a price unit of 122, base amount of t2 is computed as 122 - 1 = 121
+                if special_mode in (False, 'total_included'):
+                    if not batch['include_base_amount']:
+                        for other_batch in batches_after:
+                            if other_batch['_original_price_include']:
+                                add_extra_base(other_batch, tax_data, -1)
+                    for other_batch in batches_before:
+                        add_extra_base(other_batch, tax_data, -1)
+
+                # Suppose:
+                # 1.
+                # t1: price-included 10% tax
+                # t2: price-excluded 10% tax
+                # If the price unit is 121, the base amount of t1 is computed as 121 / 1.1 = 110
+                # With special_mode = 'total_excluded', 110 is provided as price unit.
+                # To compute the base amount of t2, we need to add back the tax amount of t1.
+                # 2.
+                # t1: price-included fixed tax of 1, include_base_amount
+                # t2: price-included 10% tax
+                # On a price unit of 121, with t1 being include_base_amount, the base amount of t2 is 121
+                # With special_mode = 'total_excluded' 109 is provided as price unit.
+                # To compute the base amount of t2, we need to add the tax amount of t1 first
+                else:  # special_mode == 'total_excluded'
+                    for other_batch in batches_after:
+                        if not other_batch['_original_price_include'] or batch['include_base_amount']:
+                            add_extra_base(other_batch, tax_data, 1)
+
+            elif not batch['_original_price_include']:
+
+                # Case of a tax affecting the base of the subsequent ones, no price included taxes.
+                if special_mode in (False, 'total_excluded'):
+                    if batch['include_base_amount']:
+                        for other_batch in batches_after:
+                            add_extra_base(other_batch, tax_data, 1)
+
+                # Suppose:
+                # 1.
+                # t1: price-excluded 10% tax, include base amount
+                # t2: price-excluded 10% tax
+                # On a price unit of 100,
+                # The tax of t1 is 100 * 1.1 = 110.
+                # The tax of t2 is 110 * 1.1 = 121.
+                # With special_mode = 'total_included', 121 is provided as price unit.
+                # The tax amount of t2 is computed like a price-included tax: 121 / 1.1 = 110.
+                # Since t1 is 'include base amount', t2 has already been subtracted from the price unit.
+                # 2.
+                # t1: price-excluded fixed tax of 1
+                # t2: price-excluded 10% tax
+                # On a price unit of 110, the tax of t2 is 110 * 1.1 = 121
+                # With special_mode = 'total_included', 122 is provided as price unit.
+                # The base amount of t2 should be computed by removing the tax amount of t1 first
+                else:  # special_mode == 'total_included'
+                    if not batch['include_base_amount']:
+                        for other_batch in batches_after:
+                            add_extra_base(other_batch, tax_data, -1)
+                    for other_batch in batches_before:
+                        add_extra_base(other_batch, tax_data, -1)
+
+    @api.model
+    def _prepare_taxes_computation(
+        self,
+        taxes_data,
+        force_price_include=None,
+        is_refund=False,
+        include_caba_tags=False,
+        special_mode=False,
+    ):
+        """ Prepare the taxes passed as parameter for the evaluation part. It pre-compute some values,
+        specify in which orders the taxes need to be evaluated and take care about taxes affecting the base
+        of the others.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param taxes_data:          A list of dictionaries, each one corresponding to one tax.
+        :param force_price_include: If provided, forces all taxes to act as price_included=force_price_include.
+                                    This parameter is DEPRECATED. Use "special_mode='total_included'" instead.
+        :param is_refund:           It comes from a refund document or not.
+        :param include_caba_tags:   Include the tags for the cash basis or not.
+        :param special_mode:        Indicate a special mode for the taxes computation.
+                            * total_excluded: The initial base of computation excludes all price-included taxes.
+                            Suppose a tax of 21% price included. Giving 100 with special_mode = 'total_excluded'
+                            will give you the same as 121 without any special_mode.
+                            * total_included: The initial base of computation is the total with taxes.
+                            Suppose a tax of 21% price excluded. Giving 121 with special_mode = 'total_included'
+                            will give you the same as 100 without any special_mode.
+                            Note: You can only expect accurate symmetrical taxes computation with not rounded price_unit
+                            as input and 'round_globally' computation. Otherwise, it's not guaranteed.
+        :return: A dict containing:
+            'taxes_data':           A list of dictionaries, ordered and containing the pre-computed values to eval the taxes.
+            'eval_order_indexes':   A list of tuple <key, index> where key is 'tax' or 'base'.
+                                    This say in which order 'taxes_data' needs to be evaluated.
+        """
+        # Backward-compatibility in stable version:
+        if not special_mode and force_price_include:
+            special_mode = 'total_included'
+
+        # Flatten the taxes and order them.
+        sorted_taxes_data = sorted(
+            taxes_data,
+            key=lambda tax_data: (tax_data['sequence'], tax_data['id']),
+        )
+        flatten_taxes_data = []
+        for tax_data in sorted_taxes_data:
+            if tax_data['amount_type'] == 'group':
+                flatten_taxes_data.extend(sorted(
+                    tax_data['_children_tax_ids'],
+                    key=lambda tax_data: (tax_data['sequence'], tax_data['id']),
+                ))
+            else:
+                flatten_taxes_data.append(tax_data)
+
+        expanded_taxes_data = []
+        for index, tax_data in enumerate(flatten_taxes_data):
+            if special_mode == 'total_included':
+                price_include = True
+            elif special_mode == 'total_excluded':
+                price_include = False
+            else:
+                price_include = tax_data['price_include']
+            expanded_taxes_data.append({
+                **tax_data,
+                'price_include': price_include,
+                '_original_price_include': tax_data['price_include'],
+                'index': index,
+                'evaluation_context': {'special_mode': special_mode},
+            })
+
+        # Group the taxes by batch of computation.
+        descending_batches = self._prepare_taxes_batches(expanded_taxes_data)
+        ascending_batches = list(reversed(descending_batches))
+        eval_order_indexes = []
+
+        # Define the order in which the taxes must be evaluated.
+        # Fixed taxes are computed directly because they could affect the base of a price included batch right after.
+        for i, batch in enumerate(descending_batches):
+            if self._process_as_fixed_tax_amount_batch(batch):
+                batch['tax_order_added'] = True
+                for tax_data in batch['taxes']:
+                    eval_order_indexes.append(('tax', tax_data['index']))
+                self._propagate_extra_taxes_base(
+                    descending_batches[i + 1:],
+                    batch,
+                    descending_batches[:i],
+                    special_mode=special_mode,
+                )
+
+        # Then, let's travel the batches in the reverse order and process the price-included taxes.
+        for i, batch in enumerate(descending_batches):
+            if not batch.get('tax_order_added') and batch['price_include']:
+                batch['tax_order_added'] = True
+                for tax_data in batch['taxes']:
+                    eval_order_indexes.append(('tax', tax_data['index']))
+                self._propagate_extra_taxes_base(
+                    descending_batches[i + 1:],
+                    batch,
+                    descending_batches[:i],
+                    special_mode=special_mode,
+                )
+
+        # Then, let's travel the batches in the normal order and process the price-excluded taxes.
+        for i, batch in enumerate(ascending_batches):
+            if not batch.get('tax_order_added') and not batch['price_include']:
+                batch['tax_order_added'] = True
+                for tax_data in batch['taxes']:
+                    eval_order_indexes.append(('tax', tax_data['index']))
+                self._propagate_extra_taxes_base(
+                    ascending_batches[:i],
+                    batch,
+                    ascending_batches[i + 1:],
+                    special_mode=special_mode,
+                )
+
+        # Mark the base to be computed in the descending order. The order doesn't matter for no special mode or 'total_excluded' but
+        # it must be in the reverse order when special_mode is 'total_included'.
+        for batch in descending_batches:
+            for tax_data in batch['taxes']:
+                eval_order_indexes.append(('base', tax_data['index']))
+
+        # Compute the subsequent taxes / tags.
+        for i, batch in enumerate(ascending_batches):
+            subsequent_tax_ids = []
+            subsequent_tag_ids = set()
+            base_tags_field = '_refund_base_tag_ids' if is_refund else '_invoice_base_tag_ids'
+            if batch['include_base_amount']:
+                for next_batch in ascending_batches[i + 1:]:
+                    for next_tax_data in next_batch['taxes']:
+                        if not next_tax_data['is_base_affected']:
+                            continue
+                        subsequent_tax_ids.append(next_tax_data['id'])
+                        if include_caba_tags or next_tax_data['tax_exigibility'] != 'on_payment':
+                            for tag_id in next_tax_data[base_tags_field]:
+                                subsequent_tag_ids.add(tag_id)
+
+            for tax_data in batch['taxes']:
+                tax_data.update({
+                    'tax_ids': subsequent_tax_ids,
+                    'tag_ids': list(subsequent_tag_ids),
+                    'extra_base_for_base': batch['extra_base_for_base'],
+                    'extra_base_for_tax': batch['extra_base_for_tax'],
+                })
+
+        return {
+            'taxes_data': expanded_taxes_data,
+            'eval_order_indexes': eval_order_indexes,
+        }
+
+    # -------------------------------------------------------------------------
+    # EVAL TAXES COMPUTATION
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _eval_taxes_computation_prepare_product_fields(self, taxes_data):
+>>>>>>> c15d9f50f8c597ef37e041dee78d0017bf5b9519
         """ Get the fields to create the evaluation context from the product for the taxes computation.
 
         This method is not there in the javascript code.
