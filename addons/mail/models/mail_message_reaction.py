@@ -32,6 +32,7 @@ class MailMessageReaction(models.Model):
             data = {
                 "content": content,
                 "count": len(reactions),
+                "sequence": min(reactions.ids),
                 "personas": Store.many_ids(reactions.guest_id)
                 + Store.many_ids(reactions.partner_id),
                 "message": Store.one_id(message_id),

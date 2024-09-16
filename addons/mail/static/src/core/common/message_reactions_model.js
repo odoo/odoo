@@ -16,6 +16,8 @@ export class MessageReactions extends Record {
     content;
     /** @type {number} */
     count;
+    /** @type {number} */
+    sequence;
     personas = Record.many("Persona");
     message = Record.one("Message");
 
