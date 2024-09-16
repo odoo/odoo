@@ -127,6 +127,7 @@ class WebsiteSale(main.WebsiteSale):
         if 'error' in reward_status:
             request.session['error_promo_code'] = reward_status['error']
             return False
+        order._update_programs_and_rewards()
         return True
 
     @route()
