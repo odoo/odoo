@@ -16,7 +16,7 @@ class IrEmbeddedActions(models.Model):
     parent_res_id = fields.Integer(string="Active Parent Id")
     parent_res_model = fields.Char(string='Active Parent Model', required=True)
     # It is required to have either action_id or python_method
-    action_id = fields.Many2one('ir.actions.act_window', string="Action", ondelete="cascade")
+    action_id = fields.Many2one('ir.actions.actions', string="Action", ondelete="cascade")
     python_method = fields.Char(help="Python method returning an action")
 
     user_id = fields.Many2one('res.users', string="User", help="User specific embedded action. If empty, shared embedded action", ondelete="cascade")
@@ -50,7 +50,7 @@ class IrEmbeddedActions(models.Model):
         # The name by default is computed based on the triggered action if a action_id is defined.
         for vals in vals_list:
             if "name" not in vals:
-                vals["name"] = self.env["ir.actions.act_window"].browse(vals["action_id"]).name
+                vals["name"] = self.env["ir.actions.actions"].browse(vals["action_id"]).name
         return super().create(vals_list)
 
     # The record is deletable if it hasn't been created from a xml record (i.e. is not a default embedded action)
