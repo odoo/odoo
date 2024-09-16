@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, _, api, Command
@@ -50,9 +51,7 @@ class MrpWipAccounting(models.TransientModel):
             if default:
                 res['journal_id'] = default[1]
         if 'reference' in fields_list:
-            res['reference'] = _('Manufacturing WIP - %(orders_list)s', orders_list=productions and format_list(self.env, productions.mapped('name')) or _("Manual Entry"))
-        if 'line_ids' in fields_list:
-            res['line_ids'] = self._get_line_vals(productions)
+            res['reference'] = _("Manufacturing WIP - %(orders_list)s", orders_list=productions and format_list(self.env, productions.mapped('name')) or _("Manual Entry"))
         if 'mo_ids' in fields_list:
             res['mo_ids'] = [Command.set(productions.ids)]
         return res
@@ -60,10 +59,12 @@ class MrpWipAccounting(models.TransientModel):
     date = fields.Date("Date", default=fields.Datetime.now)
     reversal_date = fields.Date(
         "Reversal Date", compute="_compute_reversal_date", required=True,
-        readonly=False, store=True, precompute=True)
+        store=True, readonly=False)
     journal_id = fields.Many2one('account.journal', "Journal", required=True)
     reference = fields.Char("Reference")
-    line_ids = fields.One2many('mrp.account.wip.accounting.line', 'wip_accounting_id', "WIP accounting lines")
+    line_ids = fields.One2many(
+        'mrp.account.wip.accounting.line', 'wip_accounting_id', "WIP accounting lines",
+        compute="_compute_line_ids", store=True, readonly=False)
     mo_ids = fields.Many2many('mrp.production')
 
     def _get_overhead_account(self):
@@ -75,14 +76,16 @@ class MrpWipAccounting(models.TransientModel):
             return cop_acc[1]
         return self.env['ir.property']._get_default_property('property_stock_account_input_categ_id', 'product.category')[1]
 
-    def _get_line_vals(self, productions=False):
+    def _get_line_vals(self, productions=False, date=False):
         if not productions:
             productions = self.env['mrp.production']
+        if not date:
+            date = datetime.now().replace(hour=23, minute=59, second=59)
         compo_value = sum(
             ml.quantity_product_uom * (ml.product_id.lot_valuated and ml.lot_id and ml.lot_id.standard_price or ml.product_id.standard_price)
-            for ml in productions.move_raw_ids.move_line_ids.filtered(lambda ml: ml.picked and ml.quantity)
+            for ml in productions.move_raw_ids.move_line_ids.filtered(lambda ml: ml.picked and ml.quantity and ml.date <= date)
         )
-        overhead_value = productions.workorder_ids._cal_cost()
+        overhead_value = productions.workorder_ids._cal_cost(date)
         sval_acc = self.env['ir.property']._get_default_property('property_stock_valuation_account_id', 'product.category')[1]
         sval_acc = sval_acc[1] if sval_acc else False
         return [
@@ -110,6 +113,13 @@ class MrpWipAccounting(models.TransientModel):
                 wizard.reversal_date = wizard.date + relativedelta(days=1)
             else:
                 wizard.reversal_date = wizard.reversal_date
+
+    @api.depends('date')
+    def _compute_line_ids(self):
+        for wizard in self:
+            # don't update lines when manual (i.e. no applicable MOs) entry
+            if not wizard.line_ids or wizard.mo_ids:
+                wizard.line_ids = [Command.clear()] + wizard._get_line_vals(wizard.mo_ids, datetime.combine(wizard.date, time.max))
 
     def confirm(self):
         self.ensure_one()

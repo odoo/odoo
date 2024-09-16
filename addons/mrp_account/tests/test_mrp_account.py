@@ -423,20 +423,38 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         previous_wip_ids += wip_entries3.ids
 
         # Done MO should be ignored
-        mo.button_mark_done()
+        mo2.button_mark_done()
         wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}))
         wizard.save().confirm()
-        wip_entries4 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo2.name), ('id', 'not in', previous_wip_ids)])
+        wip_entries4 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', previous_wip_ids)])
         self.assertEqual(len(wip_entries4), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal, for 1 MO")
-        self.assertTrue(mo.name not in wip_entries4[0].ref, "Done MO should be completely disregarded by wizard")
+        self.assertTrue(mo2.name not in wip_entries4[0].ref, "Done MO should be completely disregarded by wizard")
         self.assertEqual(wip_entries4[0].wip_production_count, 1, "Only WIP MOs should be linked to entry")
         self.assertEqual(len(wip_entries4.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
-        total_component_price = self.product_B.standard_price * sum(mo2.move_raw_ids.mapped('quantity'))
+        total_component_price = self.product_B.standard_price * sum(mo.move_raw_ids.mapped('quantity'))
         self.assertRecordValues(wip_entries4.line_ids, [
-            {'account_id': self.default_sv_account_id,                                     'debit': total_component_price, 'credit': 0.0},
-            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                   'credit': 0.0},
-            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                   'credit': total_component_price},
-            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                   'credit': total_component_price},
-            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                   'credit': 0.0},
-            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': total_component_price, 'credit': 0.0},
+            {'account_id': self.default_sv_account_id,                                     'debit': total_component_price,         'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 100.0,                         'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                           'credit': 100.0 + total_component_price},
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                           'credit': total_component_price},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                           'credit': 100.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 100.0 + total_component_price, 'credit': 0.0},
+        ])
+        previous_wip_ids += wip_entries4.ids
+
+        # WO time completed + components consumed, but WIP date is for before they were done => nothing to debit/credit
+        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
+        wizard.date = now - timedelta(days=2)
+        wizard.save().confirm()
+        wip_entries5 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', previous_wip_ids)])
+        self.assertEqual(len(wip_entries5), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal")
+        self.assertEqual(wip_entries5[0].wip_production_count, 1, "WIP MOs should be linked to entry")
+        self.assertEqual(len(wip_entries5.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
+        self.assertRecordValues(wip_entries5.line_ids, [
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.default_sv_account_id,                                     'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0, 'credit': 0.0},
         ])
