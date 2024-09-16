@@ -360,8 +360,9 @@
                     <t t-else="">
                         <td>
                             <span t-out="amount_by_group['tax_group_name']">Tax 15%</span>
-                            <span> on </span>
-                            <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_base_amount']">27.00</span>
+                            <span t-if="not amount_by_group['hide_base_amount']" class="text-nowrap"> on
+                                <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
+                            </span>
                         </td>
                         <td class="text-end o_price_total">
                             <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']">4.05</span>
