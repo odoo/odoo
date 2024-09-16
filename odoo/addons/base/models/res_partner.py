@@ -470,7 +470,7 @@ class Partner(models.Model):
         companies = self.env['res.company'].search_fetch([('partner_id', 'in', partners.ids)], ['partner_id'])
         for company in companies:
             if company != company.partner_id.company_id:
-                raise (_('The company assigned to this partner does not match the company this partner represents.'))
+                raise ValidationError(_('The company assigned to this partner does not match the company this partner represents.'))
 
     def copy_data(self, default=None):
         default = dict(default or {})
