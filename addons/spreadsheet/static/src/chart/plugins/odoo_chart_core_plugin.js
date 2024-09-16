@@ -4,6 +4,7 @@ import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { Domain } from "@web/core/domain";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {Object} Chart
@@ -11,6 +12,12 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
  *
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  */
+
+const CHART_PLACEHOLDER_DISPLAY_NAME = {
+    odoo_bar: _t("Odoo Bar Chart"),
+    odoo_line: _t("Odoo Line Chart"),
+    odoo_pie: _t("Odoo Pie Chart"),
+};
 
 export class OdooChartCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
@@ -108,9 +115,9 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
      * @returns {string}
      */
     getOdooChartDisplayName(chartId) {
-        return `(#${this.getOdooChartIds().indexOf(chartId) + 1}) ${
-            this.getters.getChart(chartId).title.text
-        }`;
+        const { title, type } = this.getters.getChart(chartId);
+        const name = title.text || CHART_PLACEHOLDER_DISPLAY_NAME[type];
+        return `(#${this.getOdooChartIds().indexOf(chartId) + 1}) ${name}`;
     }
 
     /**
