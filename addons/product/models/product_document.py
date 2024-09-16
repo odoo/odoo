@@ -32,6 +32,15 @@ class ProductDocument(models.Model):
                     attachment.url
                 ))
 
+    @api.onchange('datas')
+    def _onchange_datas(self):
+        for attachment in self:
+            attachment_name = attachment.ir_attachment_id.name
+            if attachment.datas and not attachment_name.endswith('pdf'):
+                raise ValidationError(_(
+                    "Please upload a pdf File.\n\n Invalid file: %s", attachment_name
+                ))
+
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
