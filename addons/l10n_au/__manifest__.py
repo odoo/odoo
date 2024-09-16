@@ -20,7 +20,9 @@ Also:
     'depends': ['account'],
     'auto_install': ['account'],
     'data': [
-        'data/account_tax_report_data.xml',
+        'data/tax_report/section_1.xml',
+        'data/tax_report/section_2.xml',
+        'data/tax_report/account_tax_report_data.xml',
         'data/account_tax_template_data.xml',
         'data/res_currency_data.xml',
         'views/menuitems.xml',

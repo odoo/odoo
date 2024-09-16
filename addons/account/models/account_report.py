@@ -762,7 +762,7 @@ class AccountReportExpression(models.Model):
                     totals_by_code[line_code].add(total_name)
 
             if expression.subformula:
-                if_other_expr_match = re.match(r'if_other_expr_(above|below)\((?P<line_code>.+)[.](?P<expr_label>.+),.+\)', expression.subformula)
+                if_other_expr_match = re.match(r'if_other_expr_(above|below|equals)\((?P<line_code>.+)[.](?P<expr_label>.+),.+\)', expression.subformula)
                 if if_other_expr_match:
                     totals_by_code[if_other_expr_match['line_code']].add(if_other_expr_match['expr_label'])
 
