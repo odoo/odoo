@@ -304,7 +304,7 @@ class AccountMove(models.Model):
                 'ReceiverTransactionReference': receiver_transaction_reference,
                 'FileReference': self.ref[:20] if self.ref else False,
                 'FileDate': fields.Date.context_today(self),
-                'ItemDescription': line.product_id.display_name or line.name,
+                'ItemDescription': line.name,
                 'Quantity': line.quantity,
                 'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
                 'UnitPriceWithoutTax': line.currency_id.round(price_before_discount / line.quantity if line.quantity else 0.),
