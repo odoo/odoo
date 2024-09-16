@@ -4,8 +4,8 @@ import ActivityRenderer from '@mail/js/views/activity/activity_renderer';
 import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import testUtils from 'web.test_utils';
-
-import { legacyExtraNextTick, patchWithCleanup, click } from "@web/../tests/helpers/utils";
+import { click, insertText } from "@web/../tests/utils";
+import { legacyExtraNextTick, patchWithCleanup} from "@web/../tests/helpers/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from '@web/session';
 
@@ -87,7 +87,7 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
     const mailTestActivityIds = pyEnv['mail.test.activity'].search([]);
     const mailActivityTypeIds = pyEnv['mail.activity.type'].search([]);
 
-    const { env, openView } = await start({
+    const { click , env, openView } = await start({
         serverData,
     });
     await openView({
@@ -534,7 +534,7 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
         }
     }
 
-    const { webClient } = await start({ serverData, mockRPC });
+    const { webClient , click } = await start({ serverData, mockRPC });
 
     // open an activity view (with default search arch)
     await doAction(webClient, {
@@ -639,6 +639,38 @@ QUnit.test("Activity view: luxon in renderingContext", async function (assert) {
         views: [[false, "activity"]],
     });
     assert.containsN(document.body, ".luxon", 2);
+});
+
+QUnit.test('update activity view after creating multiple activities', async function (assert) {
+    assert.expect(9);
+    pyEnv['mail.test.activity'].create({ name: 'MailTestActivity 3' });
+    Object.assign(serverData.views, {
+        'mail.test.activity,false,list': '<tree string="MailTestActivity"><field name="name"/><field name="activity_ids" widget="list_activity"/></tree>',
+        'mail.activity,false,form': '<form><field name="activity_type_id"/></form>'
+    });
+
+    const { openView } = await start({
+        mockRPC(route, args) {
+            if (args.method === 'name_search') {
+                args.kwargs.name = "MailTestActivity";
+            }
+        },
+        serverData,
+    });
+    await openView({
+        res_model: 'mail.test.activity',
+        views: [[false, 'activity']],
+    });
+
+    await click("table tfoot tr .o_record_selector");
+    await click(".o_list_renderer table tbody tr:nth-child(2) td:nth-child(2) .o_ActivityButtonView")
+    await click(".o-main-components-container .o_PopoverManager .o_ActivityListView .o_ActivityListView_addActivityButton");
+    await insertText('.o_field_many2one_selection .o_input_dropdown .dropdown input[id=activity_type_id]', "test1");
+    await click(".o_field_many2one_selection .o_input_dropdown .dropdown input[id=activity_type_id]");
+    await click('.o-autocomplete--dropdown-menu li:nth-child(1) .dropdown-item');
+    await click(".modal-footer .o_cp_buttons .o_form_buttons_edit .btn-primary");
+    await click(".modal-footer .o_form_button_cancel");
+    await click("table tbody tr:nth-child(1) td:nth-child(6) .o_mail_activity .o_activity_btn .o_closest_deadline");
 });
 
 });
