@@ -1442,18 +1442,24 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         partner_0 = self.users[0].partner_id.id
         partner_1 = self.users[1].partner_id.id
         partner_2 = self.users[2].partner_id.id
+        reactions_0 = last_message.sudo().reaction_ids.filtered(lambda r: r.content == "👍")
+        reactions_1 = last_message.sudo().reaction_ids.filtered(lambda r: r.content == "😁")
+        reactions_2 = last_message.sudo().reaction_ids.filtered(lambda r: r.content == "😊")
+        reactions_3 = last_message.sudo().reaction_ids.filtered(lambda r: r.content == "😏")
         if channel == self.channel_general:
             return [
                 {
                     "content": "👍",
                     "count": 1,
                     "message": last_message.id,
+                    "sequence": min(reactions_0.ids),
                     "personas": [{"id": partner_2, "type": "partner"}],
                 },
                 {
                     "content": "😁",
                     "count": 2,
                     "message": last_message.id,
+                    "sequence": min(reactions_1.ids),
                     "personas": [
                         {"id": partner_2, "type": "partner"},
                         {"id": partner_1, "type": "partner"},
@@ -1463,6 +1469,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "content": "😊",
                     "count": 3,
                     "message": last_message.id,
+                    "sequence": min(reactions_2.ids),
                     "personas": [
                         {"id": partner_2, "type": "partner"},
                         {"id": partner_1, "type": "partner"},
@@ -1476,12 +1483,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "content": "😁",
                     "count": 1,
                     "message": last_message.id,
+                    "sequence": min(reactions_1.ids),
                     "personas": [{"id": partner_2, "type": "partner"}],
                 },
                 {
                     "content": "😊",
                     "count": 3,
                     "message": last_message.id,
+                    "sequence": min(reactions_2.ids),
                     "personas": [
                         {"id": partner_2, "type": "partner"},
                         {"id": partner_1, "type": "partner"},
@@ -1492,6 +1501,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "content": "😏",
                     "count": 2,
                     "message": last_message.id,
+                    "sequence": min(reactions_3.ids),
                     "personas": [
                         {"id": partner_1, "type": "partner"},
                         {"id": partner_0, "type": "partner"},
