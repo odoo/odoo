@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-
 from odoo.tests.common import HttpCase
 from odoo.tests import tagged
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleDelivery(HttpCase):
@@ -22,8 +22,8 @@ class TestWebsiteSaleDelivery(HttpCase):
         })
 
         self.env['product.product'].create({
-            'name': 'Acoustic Bloc Screens',
-            'list_price': 2950.0,
+            'name': "Plumbus",
+            'list_price': 100.0,
             'website_published': True,
         })
 
@@ -67,6 +67,25 @@ class TestWebsiteSaleDelivery(HttpCase):
             'code': '123456',
         })
 
+        self.ewallet_program = self.env['loyalty.program'].create({
+            'name': "eWallet",
+            'program_type': 'ewallet',
+            'applies_on': 'future',
+            'trigger': 'auto',
+            'reward_ids': [Command.create({
+                'description': "Pay with eWallet",
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 1,
+            })],
+        })
+
+        self.ewallet = self.env['loyalty.card'].create({
+            'program_id': self.ewallet_program.id,
+            'points': 6e66,
+            'code': 'infinite-money-glitch',
+        })
+
         self.product_delivery_normal1 = self.env['product.product'].create({
             'name': 'Normal Delivery Charges',
             'invoice_policy': 'order',
@@ -104,42 +123,22 @@ class TestWebsiteSaleDelivery(HttpCase):
         self.start_tour("/", 'shop_sale_loyalty_delivery', login='admin')
 
     def test_shipping_discount(self):
-        self.env['product.product'].create({
-            'name': 'Plumbus',
-            'list_price': 100.0,
-            'website_published': True,
-        })
+        """
+        Check display of shipping discount promotion on checkout,
+        combined with another reward (eWallet).
+        """
         self.env['loyalty.program'].create({
-            'name': 'Buy 3 get free shipping up to 75$',
+            'name': "Buy 3, get up to $75 discount on shipping",
             'program_type': 'promotion',
             'applies_on': 'current',
             'trigger': 'auto',
             'rule_ids': [(0, 0, {
-                'minimum_amount': 300.0
+                'minimum_qty': 3.0,
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'shipping',
-                'discount_max_amount': 75.0
+                'discount_max_amount': 75.0,
             })],
         })
-        product_paid_delivery = self.env['product.product'].create({
-            'name': 'free shipping (Max 75$)',
-            'invoice_policy': 'order',
-            'type': 'service',
-        })
-        delivery_with_rule = self.env['delivery.carrier'].create({
-            'name': 'delivery with rule',
-            'delivery_type': 'base_on_rule',
-            'price_rule_ids': [Command.create({
-                'variable': 'quantity',
-                'operator': '>=',
-                'max_value': 3,
-                'list_base_price': 100,
-            })],
-
-            'website_published': True,
-            'product_id': product_paid_delivery.id,
-        })
-        admin_user = self.env.ref('base.user_admin')
-        admin_user.partner_id.write({'property_delivery_carrier_id': delivery_with_rule.id})
+        self.normal_delivery.fixed_price = 100
         self.start_tour("/", 'check_shipping_discount', login="admin")
