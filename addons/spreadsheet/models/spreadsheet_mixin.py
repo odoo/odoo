@@ -23,6 +23,7 @@ class SpreadsheetMixin(models.AbstractModel):
         default=lambda self: self._empty_spreadsheet_data_base64(),
     )
     spreadsheet_data = fields.Text(compute='_compute_spreadsheet_data', inverse='_inverse_spreadsheet_data')
+    spreadsheet_file_name = fields.Char(compute='_compute_spreadsheet_file_name')
     thumbnail = fields.Binary()
 
     @api.constrains("spreadsheet_binary_data")
@@ -82,6 +83,11 @@ class SpreadsheetMixin(models.AbstractModel):
                 spreadsheet.spreadsheet_binary_data = False
             else:
                 spreadsheet.spreadsheet_binary_data = base64.b64encode(spreadsheet.spreadsheet_data.encode())
+
+    @api.depends('display_name')
+    def _compute_spreadsheet_file_name(self):
+        for spreadsheet in self:
+            spreadsheet.spreadsheet_file_name = f"{spreadsheet.display_name}.osheet.json"
 
     @api.onchange('spreadsheet_binary_data')
     def _onchange_data_(self):
