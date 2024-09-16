@@ -4573,7 +4573,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_be_hr_payroll_sd_worx',
             'mrp_landed_costs',
             'website_sale',
-            'sale_ebay',
             'documents_project_sale',
             'industry_fsm_sale_report',
             'industry_fsm_sale',

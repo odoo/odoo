@@ -242,7 +242,6 @@ class CrmTeam(models.Model):
         default_teams = [
             self.env.ref('sales_team.salesteam_website_sales'),
             self.env.ref('sales_team.pos_sales_team'),
-            self.env.ref('sales_team.ebay_sales_team')
         ]
         for team in self:
             if team in default_teams:
