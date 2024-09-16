@@ -17,7 +17,7 @@
                 <i class="fa fa-fw fa-unlock"/>
             </button>
         </xpath>
-        <xpath expr="//Dropdown//div[contains(@class, 'pos-burger-menu-items')]" position="inside">
+        <xpath expr="//Dropdown//div[hasclass('pos-burger-menu-items')]" position="inside">
             <DropdownItem t-if="pos.config.module_pos_hr and ui.isSmall" onSelected="() => this.pos.showLoginScreen()">
                 Lock
             </DropdownItem>

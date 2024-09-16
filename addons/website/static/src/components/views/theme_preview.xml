@@ -68,7 +68,7 @@
         <xpath expr="//t[@t-else]/Breadcrumbs" position="replace">
             <t t-call="website.ThemePreviewKanban.ControlPanel.BreadCrumbs"/>
         </xpath>
-        <xpath expr="//div[contains(@class,'o_control_panel_navigation')]" position="replace">
+        <xpath expr="//div[hasclass('o_control_panel_navigation')]" position="replace">
             <a class="btn btn-secondary align-self-center" t-on-click="this.close" aria-label="Close" data-tooltip="Close">
                 <i class="fa fa-times" role="img" aria-label="close"/>
             </a>
