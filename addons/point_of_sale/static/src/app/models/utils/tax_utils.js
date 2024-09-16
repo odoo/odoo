@@ -41,7 +41,7 @@ export const getTaxesValues = (
     currency,
     special_mode = null
 ) => {
-    const results = accountTaxHelpers.evaluate_taxes_computation(taxes, priceUnit, quantity, {
+    const results = accountTaxHelpers.get_tax_details(taxes, priceUnit, quantity, {
         precision_rounding: currency.rounding,
         rounding_method: company.tax_calculation_rounding_method,
         product: accountTaxHelpers.eval_taxes_computation_prepare_product_values(

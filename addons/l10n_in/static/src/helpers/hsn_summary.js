@@ -26,7 +26,7 @@ patch(accountTaxHelpers, {
             const final_price_unit = price_unit * (1 - discount / 100);
 
             // Compute the taxes.
-            const taxes_computation = this.evaluate_taxes_computation(taxes, final_price_unit, quantity, {
+            const taxes_computation = this.get_tax_details(taxes, final_price_unit, quantity, {
                 precision_rounding: 0.01,
                 rounding_method: "round_per_line",
                 product: product,
