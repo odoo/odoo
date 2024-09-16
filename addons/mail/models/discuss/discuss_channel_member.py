@@ -28,6 +28,7 @@ class ChannelMember(models.Model):
     is_self = fields.Boolean(compute="_compute_is_self", search="_search_is_self")
     # channel
     channel_id = fields.Many2one("discuss.channel", "Channel", ondelete="cascade", required=True, auto_join=True)
+    is_channel_admin = fields.Boolean("Is admin of the channel", groups="base.group_system")
     # state
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched', index="btree_not_null")
@@ -62,9 +63,11 @@ class ChannelMember(models.Model):
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         self.is_self = False
         for member in self:
-            if current_partner and member.partner_id == current_partner:
+            # sudo: discuss.channel.member - reading partner to check if it's self is considered acceptable
+            if current_partner and member.sudo().partner_id == current_partner:
                 member.is_self = True
-            if current_guest and member.guest_id == current_guest:
+            # sudo: discuss.channel.member - reading guest to check if it's self is considered acceptable
+            if current_guest and member.sudo().guest_id == current_guest:
                 member.is_self = True
 
     def _search_is_self(self, operator, operand):
@@ -184,6 +187,41 @@ class ChannelMember(models.Model):
     def unlink(self):
         # sudo: discuss.channel.rtc.session - cascade unlink of sessions for self member
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
+        # if the only owner of the current channel is removed
+        for member in self.filtered(
+            # sudo: discuss.channel.member - reading is_channel_admin to check if the member is the only admin is considered acceptable
+            lambda m: m == m.channel_id.channel_member_ids.sudo().filtered("is_channel_admin")
+        ):
+            # the member with the lowest id is set as owner
+            self.env["discuss.channel"].flush_model()
+            self.env["discuss.channel.member"].flush_model()
+            self.env["res.users"].flush_model()
+            self.env["res.partner"].flush_model()
+            self.env.cr.execute(
+                """
+                WITH non_admin_members AS (
+                        SELECT cm.id
+                        FROM discuss_channel_member cm
+                        JOIN res_partner rp ON cm.partner_id = rp.id
+                        WHERE cm.is_channel_admin = FALSE
+                            AND EXISTS (
+                                SELECT 1
+                                FROM res_users ru
+                                WHERE ru.partner_id = rp.id
+                            )
+                    )
+                UPDATE discuss_channel_member
+                SET is_channel_admin = TRUE
+                WHERE id = (
+                    SELECT id
+                    FROM non_admin_members
+                    WHERE channel_id = %(channel_id)s
+                    ORDER BY id
+                    LIMIT 1
+                )
+            """,
+                {"channel_id": member.channel_id.id},
+            )
         return super().unlink()
 
     def _bus_channel(self):
@@ -220,6 +258,7 @@ class ChannelMember(models.Model):
         if fields is None:
             fields = {
                 "channel": [],
+                "is_channel_admin": True,
                 "create_date": True,
                 "fetched_message_id": True,
                 "persona": None,
@@ -237,7 +276,7 @@ class ChannelMember(models.Model):
                 [
                     field
                     for field in fields
-                    if field not in ["channel", "fetched_message_id", "seen_message_id", "persona"]
+                    if field not in ["channel", "fetched_message_id", "seen_message_id", "persona", "is_channel_admin"]
                 ],
                 load=False,
             )[0]
@@ -259,6 +298,9 @@ class ChannelMember(models.Model):
                 data["seen_message_id"] = Store.one(member.seen_message_id, only_id=True)
             if "message_unread_counter" in fields:
                 data["message_unread_counter_bus_id"] = bus_last_id
+            if "is_channel_admin" in fields:
+                # sudo: discuss.channel.member - reading is_channel_admin is considered acceptable
+                data["is_channel_admin"] = member.sudo().is_channel_admin
             store.add(member, data)
 
     def _get_store_partner_fields(self, fields):

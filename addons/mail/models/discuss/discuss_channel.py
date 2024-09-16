@@ -221,7 +221,14 @@ class Channel(models.Model):
                 if cmd[0] != 0:
                     raise ValidationError(_('Invalid value when creating a channel with memberships, only 0 is allowed.'))
                 for field_name in cmd[2]:
-                    if field_name not in ["partner_id", "guest_id", "unpin_dt", "last_interest_dt", "fold_state"]:
+                    if field_name not in [
+                        "is_channel_admin",
+                        "partner_id",
+                        "guest_id",
+                        "unpin_dt",
+                        "last_interest_dt",
+                        "fold_state",
+                    ]:
                         raise ValidationError(
                             _(
                                 "Invalid field “%(field_name)s” when creating a channel with members.",
@@ -235,9 +242,10 @@ class Channel(models.Model):
             # is_pinned + ensure they have rights to see channel
             if not self.env.context.get('install_mode') and not self.env.user._is_public():
                 partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
-            vals['channel_member_ids'] = membership_ids_cmd + [
-                (0, 0, {'partner_id': pid})
-                for pid in partner_ids_to_add if pid not in membership_pids
+            vals["channel_member_ids"] = membership_ids_cmd + [
+                (0, 0, {"partner_id": pid, "is_channel_admin": pid == self.env.user.partner_id.id})
+                for pid in partner_ids_to_add
+                if pid not in membership_pids
             ]
 
             # clean vals
@@ -309,7 +317,11 @@ class Channel(models.Model):
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
         return dict(
-            (channel.id, (channel.group_ids.users.partner_id - channel.channel_partner_ids).ids)
+            # sudo: discuss.channel - reading members of the group for subscribe is acceptable
+            (
+                channel.id,
+                (channel.group_ids.users.partner_id - channel.sudo().channel_partner_ids).ids,
+            )
             for channel in self
         )
 
@@ -349,13 +361,24 @@ class Channel(models.Model):
         all_new_members = self.env["discuss.channel.member"]
         for channel in self:
             members_to_create = []
-            existing_members = self.env['discuss.channel.member'].search(expression.AND([
-                [('channel_id', '=', channel.id)],
-                expression.OR([
-                    [('partner_id', 'in', partners.ids)],
-                    [('guest_id', 'in', guests.ids)]
-                ])
-            ]))
+            # sudo: discuss.channel.member - checking existing members when adding member is acceptable
+            existing_members = (
+                self.env["discuss.channel.member"]
+                .sudo()
+                .search(
+                    expression.AND(
+                        [
+                            [("channel_id", "=", channel.id)],
+                            expression.OR(
+                                [
+                                    [("partner_id", "in", partners.ids)],
+                                    [("guest_id", "in", guests.ids)],
+                                ]
+                            ),
+                        ]
+                    )
+                )
+            )
             members_to_create += [{
                 'partner_id': partner.id,
                 'channel_id': channel.id,
@@ -829,7 +852,12 @@ class Channel(models.Model):
                     )
                ORDER BY discuss_channel_member.id ASC
         """, {'channel_ids': tuple(self.ids), 'current_partner_id': current_partner.id or None, 'current_guest_id': current_guest.id or None})
-        all_needed_members = self.env['discuss.channel.member'].browse([m['id'] for m in self.env.cr.dictfetchall()])
+        # sudo: discuss.channel.member - reading members when formatting channel is acceptable
+        all_needed_members = (
+            self.env["discuss.channel.member"]
+            .sudo()
+            .browse([m["id"] for m in self.env.cr.dictfetchall()])
+        )
         all_needed_members._to_store(Store())  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['discuss.channel.member'])
@@ -1057,12 +1085,22 @@ class Channel(models.Model):
             :rtype: dict
         """
         partners_to = set(partners_to)
-        channel = self.create({
-            'channel_member_ids': [Command.create({'partner_id': partner_id}) for partner_id in partners_to],
-            'channel_type': 'group',
-            'default_display_mode': default_display_mode,
-            'name': name,
-        })
+        channel = self.create(
+            {
+                "channel_member_ids": [
+                    Command.create(
+                        {
+                            "partner_id": partner_id,
+                            "is_channel_admin": partner_id == self.env.user.partner_id.id,
+                        }
+                    )
+                    for partner_id in partners_to
+                ],
+                "channel_type": "group",
+                "default_display_mode": default_display_mode,
+                "name": name,
+            }
+        )
         channel._broadcast(channel.channel_member_ids.partner_id.ids)
         return channel
 

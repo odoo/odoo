@@ -250,7 +250,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     },
                 )["discuss.channel"][0]["id"]
             )
-        self.guest = self.channel_livechat_2.channel_member_ids.guest_id.sudo()
+        self.guest = self.channel_livechat_2.sudo().channel_member_ids.guest_id.sudo()
         self.make_jsonrpc_request("/mail/message/post", {
             "post_data": {
                 "body": "test",
@@ -271,11 +271,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         message_0.toggle_message_starred()
         self.env.company.sudo().name = 'YourCompany'
         # add folded channel
-        members = self.channel_chat_1.channel_member_ids
+        members_sudo = self.env["discuss.channel.member"].sudo()
+        members = members_sudo.search([("channel_id", "=", self.channel_chat_1.id)])
         member = members.with_user(self.users[0]).filtered(lambda m: m.is_self)
         member.fold_state = "open"
         # add call invitation
-        members = self.channel_channel_group_1.channel_member_ids
+        members = members_sudo.search([("channel_id", "=", self.channel_channel_group_1.id)])
         member_0 = members.with_user(self.users[0]).filtered(lambda m: m.is_self)
         member_2 = members.with_user(self.users[2]).filtered(lambda m: m.is_self)
         self.channel_channel_group_1_invited_member = member_0
@@ -551,7 +552,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     def _expected_result_for_channel(self, channel):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        members = channel.channel_member_ids
+        members = (
+            self.env["discuss.channel.member"].sudo().search([("channel_id", "=", channel.id)])
+        )
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
         member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
@@ -921,7 +924,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {}
 
     def _expected_result_for_channel_member(self, channel, partner=None, guest=None):
-        members = channel.channel_member_ids
+        members = (
+            self.env["discuss.channel.member"].sudo().search([("channel_id", "=", channel.id)])
+        )
         member_0 = members.filtered(lambda m: m.partner_id == self.users[0].partner_id)
         member_0_last_interest_dt = fields.Datetime.to_string(member_0.last_interest_dt)
         member_0_last_seen_dt = fields.Datetime.to_string(member_0.last_seen_dt)
@@ -942,6 +947,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "is_channel_admin": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -956,6 +962,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": last_message.id,
                 "id": member_0.id,
+                "is_channel_admin": True,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -970,6 +977,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": last_message.id,
                 "id": member_0.id,
+                "is_channel_admin": True,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -984,6 +992,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": last_message.id,
                 "id": member_0.id,
+                "is_channel_admin": True,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1004,6 +1013,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": last_message.id,
                 "id": member_0.id,
+                "is_channel_admin": True,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1018,6 +1028,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "is_channel_admin": True,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1033,6 +1044,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_12.id,
+                "is_channel_admin": False,
                 "persona": {"id": self.users[12].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1042,6 +1054,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "is_channel_admin": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1057,6 +1070,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_14.id,
+                "is_channel_admin": False,
                 "persona": {"id": self.users[14].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1066,6 +1080,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "is_channel_admin": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1081,6 +1096,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_15.id,
+                "is_channel_admin": False,
                 "persona": {"id": self.users[15].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1090,6 +1106,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "is_channel_admin": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1105,6 +1122,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_2.id,
+                "is_channel_admin": False,
                 "persona": {"id": self.users[2].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1114,6 +1132,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
+                "is_channel_admin": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1129,6 +1148,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": False,
                 "fetched_message_id": False,
                 "id": member_3.id,
+                "is_channel_admin": False,
                 "persona": {"id": self.users[3].partner_id.id, "type": "partner"},
                 "seen_message_id": False,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1139,6 +1159,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "is_bot": False,
+                "is_channel_admin": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1155,6 +1176,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": last_message.id,
                 "id": member_1.id,
                 "is_bot": False,
+                "is_channel_admin": False,
                 "persona": {"id": self.users[1].partner_id.id, "type": "partner"},
                 "seen_message_id": last_message.id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1165,6 +1187,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": False,
                 "id": member_0.id,
                 "is_bot": False,
+                "is_channel_admin": False,
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1181,6 +1204,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "fetched_message_id": last_message.id,
                 "id": member_g.id,
                 "is_bot": False,
+                "is_channel_admin": False,
                 "persona": {"id": guest.id, "type": "guest"},
                 "seen_message_id": last_message.id,
                 "thread": {"id": channel.id, "model": "discuss.channel"},
@@ -1201,7 +1225,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         user_9 = self.users[9]
         user_12 = self.users[12]
         user_13 = self.users[13]
-        members = channel.channel_member_ids
+        members = (
+            self.env["discuss.channel.member"].sudo().search([("channel_id", "=", channel.id)])
+        )
         member_g = members.filtered(lambda m: m.guest_id)
         guest = member_g.guest_id
         if channel == self.channel_general:
@@ -1644,7 +1670,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         return {}
 
     def _expected_result_for_rtc_session(self, channel, user):
-        members = channel.channel_member_ids
+        members = (
+            self.env["discuss.channel.member"].sudo().search([("channel_id", "=", channel.id)])
+        )
         member_2 = members.filtered(lambda m: m.partner_id == self.users[2].partner_id)
         if channel == self.channel_channel_group_1 and user == self.users[2]:
             return {

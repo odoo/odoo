@@ -24,6 +24,8 @@ export class ChannelMember extends Record {
     create_date;
     /** @type {number} */
     id;
+    /** @type {boolean} */
+    is_channel_admin;
     /** @type {luxon.DateTime} */
     last_interest_dt = Record.attr(undefined, { type: "datetime" });
     /** @type {luxon.DateTime} */

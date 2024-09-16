@@ -67,10 +67,11 @@
                                         string="Auto Subscribe Groups" readonly="not is_editable"/>
                                 </group>
                             </page>
-                            <page string="Members" name="members">
+                            <page string="Members" name="members" groups="base.group_system">
                                 <field name="channel_type" invisible="1"/>
                                 <field name="channel_member_ids" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'">
                                     <list string="Members" editable="bottom">
+                                        <field name="is_channel_admin" string="Channel Admin"/>
                                         <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
                                         <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
                                     </list>

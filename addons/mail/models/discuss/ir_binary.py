@@ -19,6 +19,7 @@ class IrBinary(models.AbstractModel):
                     domain.append(("channel_member_ids", "any", [("partner_id", "=", current_partner.id)]))
                 else:
                     domain.append(("channel_member_ids", "any", [("guest_id", "=", current_guest.id)]))
-                if self.env["discuss.channel"].search_count(domain, limit=1):
+                # sudo: discuss.channel - checking existence of common channel to display avatar
+                if self.env["discuss.channel"].sudo().search_count(domain, limit=1):
                     return record.sudo()
         return super()._find_record_check_access(record, access_token, field)

@@ -36,7 +36,12 @@ class DiscussChannel(models.Model):
         # anonymous user whatever the participants. Otherwise keep only share
         # partners (no user or portal user) to link to the lead.
         customers = self.env['res.partner']
-        for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
+        # sudo: disucss.channel - reading channel_partner_ids is allowed when converting visitor
+        for customer in (
+            self.with_context(active_test=False)
+            .sudo()
+            .channel_partner_ids.filtered(lambda p: p != partner and p.partner_share)
+        ):
             if customer.is_public:
                 customers = self.env['res.partner']
                 break

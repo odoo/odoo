@@ -57,7 +57,7 @@ class TestChannelInternals(MailCommon, HttpCase):
 
         def get_add_member_bus():
             message = self.env["mail.message"].search([], order="id desc", limit=1)
-            member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
+            member = self.env["discuss.channel.member"].sudo().search([], order="id desc", limit=1)
             return (
                 [
                     (self.cr.dbname, "res.partner", self.test_partner.id),
@@ -150,6 +150,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,
+                                    "is_channel_admin": False,
                                     "last_seen_dt": False,
                                     "persona": {"id": self.test_partner.id, "type": "partner"},
                                     "seen_message_id": False,
@@ -179,7 +180,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             channel.add_members(self.test_partner.ids)
 
         def get_add_member_again_bus():
-            member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
+            member = self.env["discuss.channel.member"].sudo().search([], order="id desc", limit=1)
             return (
                 [
                     (self.cr.dbname, "res.partner", self.env.user.partner_id.id),
@@ -194,6 +195,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
                                     "id": member.id,
+                                    "is_channel_admin": False,
                                     "last_seen_dt": False,
                                     "persona": {"id": self.test_partner.id, "type": "partner"},
                                     "seen_message_id": False,
@@ -222,7 +224,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         with self.assertBus(get_params=get_add_member_again_bus):
             channel.add_members(self.test_partner.ids)
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
-        self.assertEqual(channel.channel_partner_ids, self.test_partner)
+        self.assertEqual(channel.sudo().channel_partner_ids, self.test_partner)
 
         self.env['discuss.channel.member'].sudo().search([
             ('partner_id', 'in', self.test_partner.ids),
@@ -493,13 +495,17 @@ class TestChannelInternals(MailCommon, HttpCase):
         (private_group | self.test_channel).invalidate_recordset(['channel_partner_ids'])
         self.assertEqual(group_restricted_channel.channel_partner_ids, test_partner)
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
-        self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(
+            private_group.sudo().channel_partner_ids, self.user_employee.partner_id | test_partner
+        )
 
         # Unsubscribe deleted user from the private channels, but not from public channels and not from group
         test_user.unlink()
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
-        self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(
+            private_group.sudo().channel_partner_ids, self.user_employee.partner_id | test_partner
+        )
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
