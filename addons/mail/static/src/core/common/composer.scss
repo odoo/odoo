@@ -7,7 +7,7 @@
     grid-template-rows: auto 1fr auto;
 
     &.o-hasSelfAvatar {
-        grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
+        grid-template-columns: 0px 1fr;
     }
 
     .o-mail-Composer-sidebarMain {
@@ -32,6 +32,10 @@
     }
 }
 
+.o-mail-Composer-actionsStyle {
+    margin-top: 3px;
+}
+
 .o-mail-Composer-actions button {
     opacity: 75%;
     @media (hover: hover) {
@@ -48,13 +52,13 @@
 }
 
 .o-mail-Composer-inputStyle {
-    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
-    padding-bottom: 10px;
+    padding-top: map-get($spacers, 2); // carefully crafted to have the text in the middle in chat window
+    padding-bottom: map-get($spacers, 2);
     padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
     padding-right: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
     line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
 
-    .o-mail-Composer.o-editing & {
+    .o-mail-Composer.o-editing &, .o-mail-Composer.o-compact & {
         padding-left: map-get($spacers, 2);
         padding-right: map-get($spacers, 2);
     }
@@ -62,7 +66,7 @@
 
 .o-mail-Composer-input {
     font-family: "text-emoji", $font-family-base;
-    max-height: 100px;
+    max-height: 300px;
     resize: none;
 
     .o-extended & {
@@ -75,7 +79,7 @@
 }
 
 .o-mail-Composer-avatar {
-    --Avatar-size: #{$o-mail-Avatar-size};
+    --Avatar-size: 28px;
 }
 
 .o-mail-Composer-fake {

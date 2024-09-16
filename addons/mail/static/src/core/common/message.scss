@@ -42,8 +42,8 @@
 }
 
 .o-mail-Message-avatarContainer {
-    width: $o-mail-Avatar-size;
-    height: $o-mail-Avatar-size;
+    width: 28px;
+    aspect-ratio: 1;
 
     &.o-inChatWindow {
         width: $o-mail-Avatar-sizeSmall;
@@ -128,6 +128,10 @@
     button:hover, .focus {
         background-color: mix($o-gray-100, $o-gray-200) !important;
     }
+}
+
+.o-mail-Message-header:not(.o-isNote) {
+    margin-bottom: map-get($spacers, 1) / 2;
 }
 
 .o-mail-Message-moreMenu {

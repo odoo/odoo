@@ -7,15 +7,11 @@ patch(Composer, {
 });
 
 patch(Composer.prototype, {
-    setup() {
-        super.setup();
-        this.state.recording = false;
-    },
     get isSendButtonDisabled() {
-        return this.state.recording || super.isSendButtonDisabled;
+        return this.recordingState.recording || super.isSendButtonDisabled;
     },
     onKeydown(ev) {
-        if (ev.key === "Enter" && this.state.recording) {
+        if (ev.key === "Enter" && this.recordingState.recording) {
             ev.preventDefault();
             return;
         }
