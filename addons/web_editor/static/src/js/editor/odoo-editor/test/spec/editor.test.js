@@ -3692,6 +3692,13 @@ X[]
                         contentAfter: '<pre><p>abc</p><p>def</p></pre><p>[]<br></p>',
                     });
                 });
+                it('should insert a new list item after the pre inside a list item', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<ul><li><pre>abc[]</pre></li></ul>',
+                        stepFunction: insertParagraphBreak,
+                        contentAfter: '<ul><li><pre>abc</pre></li><li>[]<br></li></ul>',
+                    });
+                });
             });
             describe('Blockquote', () => {
                 it('should insert a new line within the blockquote', async () => {
