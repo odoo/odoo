@@ -206,7 +206,7 @@ export const accountTaxHelpers = {
         return null;
     },
 
-    evaluate_taxes_computation(
+    get_tax_details(
         taxes,
         price_unit,
         quantity,
@@ -394,7 +394,7 @@ export const accountTaxHelpers = {
         }
 
         // Find the price unit without tax.
-        let taxes_computation = this.evaluate_taxes_computation(original_taxes, price_unit, 1.0, {
+        let taxes_computation = this.get_tax_details(original_taxes, price_unit, 1.0, {
             rounding_method: "round_globally",
             product: product,
             round_price_include: false,
@@ -402,7 +402,7 @@ export const accountTaxHelpers = {
         price_unit = taxes_computation.total_excluded;
 
         // Find the new price unit after applying the price included taxes.
-        taxes_computation = this.evaluate_taxes_computation(new_taxes, price_unit, 1.0, {
+        taxes_computation = this.get_tax_details(new_taxes, price_unit, 1.0, {
             rounding_method: "round_globally",
             product: product,
             special_mode: "total_excluded",
