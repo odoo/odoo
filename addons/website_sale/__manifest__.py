@@ -22,6 +22,7 @@
         'data/product_snippet_template_data.xml',
         'data/digest_data.xml',
         'data/ir_cron_data.xml',
+        'data/tour.xml',
 
         # Reports
         'report/sale_report_views.xml',

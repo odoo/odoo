@@ -11,7 +11,6 @@ import { markup } from "@odoo/owl";
 
 registerWebsitePreviewTour("test_01_admin_shop_tour", {
     url: '/shop',
-    sequence: 130,
 },
 () => [
 {
