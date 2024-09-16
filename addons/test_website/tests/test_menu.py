@@ -39,5 +39,5 @@ class TestWebsiteMenu(HttpCase):
         for record in records:
             record_url = f"{controller_url}{record.id}"
             tree = html.fromstring(self.url_open(record_url).content)
-            menu_link_el = tree.xpath(".//*[@id='top_menu']//a[@href='%s' and contains(@class, 'active')]" % record_url)
+            menu_link_el = tree.xpath(".//*[@id='top_menu']//a[@href='%s' and hasclass('active')]" % record_url)
             self.assertEqual(len(menu_link_el), 1, "The menu link related to the current record should be active")
