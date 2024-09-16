@@ -76,11 +76,13 @@ class TestIrCron(TransactionCase, CronMixinCase):
         cls.partner = cls.env['res.partner'].create(cls._get_partner_data(cls.env))
 
     def setUp(self):
+        super().setUp()
         self.partner.write(self._get_partner_data(self.env))
         self.cron.write(self._get_cron_data(self.env))
-        self.env['ir.cron.trigger'].search(
-            [('cron_id', '=', self.cron.id)]
-        ).unlink()
+
+        domain = [('cron_id', '=', self.cron.id)]
+        self.env['ir.cron.trigger'].search(domain).unlink()
+        self.env['ir.cron.progress'].search(domain).unlink()
 
     def test_cron_direct_trigger(self):
         self.cron.code = textwrap.dedent(f"""\
