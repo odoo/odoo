@@ -282,6 +282,19 @@ export class TourHelpers {
     }
 
     /**
+     * Navigate to {@link url}.
+     *
+     * @param {string} url
+     * @example
+     *  run: "goToUrl /shop", // Go to /shop
+     */
+    goToUrl(url) {
+        const linkEl = document.createElement("a");
+        linkEl.href = url;
+        linkEl.click();
+    }
+
+    /**
      * Get Node for **{@link Selector}**
      * @param {Selector} selector
      * @returns {Node}
