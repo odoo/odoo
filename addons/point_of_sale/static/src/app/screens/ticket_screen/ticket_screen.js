@@ -398,7 +398,7 @@ export class TicketScreen extends Component {
             return _t("Paid");
         } else {
             const screen = order.get_screen_data();
-            return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name]).text;
+            return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
         }
     }
     /**
