@@ -990,6 +990,10 @@ class Website(models.Model):
                 'view_id': view.id,
                 'track': True,
             }
+            # To link the page with the menus having the same URL as the the page
+            menuItem = request.env['website.menu'].sudo().search([('url', '=', page_url)])
+            if menuItem.exists():
+                default_page_values.update({'menu_ids': menuItem.ids})
             if page_values:
                 default_page_values.update(page_values)
             page = self.env['website.page'].create(default_page_values)
@@ -1097,11 +1101,7 @@ class Website(models.Model):
             url = 'website_url' in record and record.website_url or record.url
             search_criteria.append((url, website.website_domain()))
 
-        # Search the URL in every relevant field
-        html_fields_attributes = self._get_html_fields_attributes() + [
-            ('website.menu', 'website_menu', 'url', False),
-        ]
-        for model, _table, column, _translate in html_fields_attributes:
+        for model, _table, column, _translate in self._get_html_fields_attributes():
             Model = self.env[model]
             if not Model.has_access('read'):
                 continue
