@@ -62,7 +62,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
         });
         assert.containsOnce(target, ".o_field_x2many_buttons", "should have rendered a x2many_buttons field");
-        assert.strictEqual(target.querySelectorAll(".o_field_x2many_buttons button").length, 2, "buttons should be rendered");
+        assert.strictEqual(target.querySelectorAll(".o_field_x2many_buttons a").length, 2, "buttons should be rendered");
     });
 
     QUnit.test("component rendering: exactly 3 records on field", async function (assert) {
@@ -76,7 +76,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
         });
         assert.containsOnce(target, ".o_field_x2many_buttons", "should have rendered a x2many_buttons field");
-        assert.strictEqual(target.querySelectorAll(".o_field_x2many_buttons button").length, 3, "buttons should be rendered");
+        assert.strictEqual(target.querySelectorAll(".o_field_x2many_buttons a").length, 3, "buttons should be rendered");
     });
 
     QUnit.test("component rendering: more than 3 records on field", async function (assert) {
@@ -90,7 +90,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
         });
         assert.containsOnce(target, ".o_field_x2many_buttons", "should have rendered a x2many_buttons field");
-        const buttons = target.querySelectorAll(".o_field_x2many_buttons button");
+        const buttons = target.querySelectorAll(".o_field_x2many_buttons a");
         assert.strictEqual(buttons.length, 4, "buttons should be rendered");
         assert.strictEqual(buttons[3].innerText, "... (View all)", "The 4th button should be the view all one");
     });
@@ -133,7 +133,7 @@ QUnit.module("Fields", (hooks) => {
 
         await editInput(target, "[name='ref'] input", "new ref");
         assert.strictEqual(target.querySelector("[name='ref'] input").value, "new ref", "should have edited the input");
-        await click(target.querySelector(".o_field_x2many_buttons button"));
+        await click(target.querySelector(".o_field_x2many_buttons a"));
         assert.strictEqual(target.querySelector("[name='ref'] input").value, "b1", "should have discarded the input");
         assert.verifySteps(["action_open_business_doc"])
     });
@@ -151,24 +151,19 @@ QUnit.module("Fields", (hooks) => {
         patchWithCleanup(form.env.services.action, {
             doAction(action) {
                 assert.deepEqual(action, {
-                    domain: [["id", "in", [1,2,3,4,5]]],
-                    name: "Duplicated Bills",
-                    res_model: "account.move",
-                    type: "ir.actions.act_window",
-                    views: [
-                        [false, "list"],
-                        [false, "form"],
-                    ],
-                    context: {
-                        form_view_ref: "account.view_duplicated_moves_tree_js",
-                    }
+                    params:{
+                        ids: [1, 2, 3, 4, 5],
+                        name: "Duplicated Bills",
+                    },
+                    tag: "action_open_journal_entries",
+                    type: "ir.actions.client",
                 });
             }
         });
         const x2mbuttons = target.querySelector(".o_field_x2many_buttons");
         await editInput(target, "[name='ref'] input", "new ref");
         assert.strictEqual(target.querySelector("[name='ref'] input").value, "new ref", "should have edited the input");
-        await click(x2mbuttons.querySelectorAll("button")[3]);
+        await click(x2mbuttons.querySelectorAll("a")[3]);
         assert.strictEqual(target.querySelector("[name='ref'] input").value, "b6", "should have discarded the input");
     });
 });
