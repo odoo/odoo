@@ -131,6 +131,10 @@ export class PosOrder extends Base {
         this.amount_tax = this.get_total_tax();
         this.amount_total = this.get_total_with_tax();
         this.amount_return = this.get_change();
+        this.lines.forEach((line) => {
+            line.price_subtotal = line.get_price_without_tax();
+            line.price_subtotal_incl = line.get_price_with_tax();
+        });
     }
 
     // NOTE args added [unwatchedPrinter]
