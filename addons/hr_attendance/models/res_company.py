@@ -32,8 +32,8 @@ class ResCompany(models.Model):
     attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
     attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
     attendance_overtime_validation = fields.Selection([
-        ('no_validation', 'No Validation'),
-        ('by_manager', 'By Manager'),
+        ('no_validation', 'Automatically Approved'),
+        ('by_manager', 'Approved by Manager'),
     ], string='Extra Hours Validation', default='no_validation')
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
