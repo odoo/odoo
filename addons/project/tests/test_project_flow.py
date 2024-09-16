@@ -438,13 +438,17 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         ])
         for project in projects:
             groups = project._notify_get_recipients_groups()
-            portal_customer_group = next((g for g in groups if g[0] == 'portal_customer'), False)
-            if portal_customer_group:
-                self.assertEqual(
-                    portal_customer_group[2]['has_button_access'],
-                    project.name == 'public project',
-                    "Only the public project should have its name clickable in the email sent to the customer when an email is sent via a email template set in the project stage for instance."
-                )
+            groups_per_key = {g[0]: g for g in groups}
+            for key, group in groups_per_key.items():
+                has_button_access = group[2]['has_button_access']
+                if key in ['portal', 'portal_customer']:
+                    self.assertEqual(
+                        has_button_access,
+                        project.name == 'public project',
+                        "Only the public project should have its name clickable in the email sent to the customer when an email is sent via a email template set in the project stage for instance."
+                    )
+                elif key == 'user':
+                    self.assertTrue(has_button_access)
 
     def test_private_task_search_tag(self):
         task = self.env['project.task'].create({
