@@ -239,4 +239,13 @@ export const stepUtils = {
             trigger: `iframe[is-ready=true]:iframe html`,
         };
     },
+
+    goToUrl(url) {
+        return {
+            isActive: ["auto"],
+            content: `Navigate to ${url}`,
+            trigger: "body",
+            run: `goToUrl ${url}`,
+        };
+    },
 };
