@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 from odoo.tests import common, Form
 from odoo.tools import float_compare
 
@@ -452,6 +453,7 @@ class TestDeliveryCost(common.TransactionCase):
         })
 
         self.env['res.currency.rate'].with_company(nook_inc).create({
+            'name': datetime.date(2000, 1, 1),
             'currency_id': currency_bells.id,
             'company_rate': 0.5,
             'inverse_company_rate': 2,
