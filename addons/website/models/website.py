@@ -480,7 +480,7 @@ class Website(models.Model):
         return r
 
     @api.model
-    def configurator_recommended_themes(self, industry_id, palette):
+    def configurator_recommended_themes(self, industry_id, palette, result_nbr_max=3):
         Module = request.env['ir.module.module']
         domain = Module.get_themes_domain()
         domain = AND([[('name', '!=', 'theme_default')], domain])
@@ -488,7 +488,10 @@ class Website(models.Model):
         client_themes_img = {t: get_manifest(t).get('images_preview_theme', {}) for t in client_themes if get_manifest(t)}
         themes_suggested = self._website_api_rpc(
             '/api/website/2/configurator/recommended_themes/%s' % (industry_id if industry_id > 0 else ''),
-            {'client_themes': client_themes_img}
+            {
+                'client_themes': client_themes_img,
+                'result_nbr_max': result_nbr_max,
+            }
         )
         process_svg = self.env['website.configurator.feature']._process_svg
         for theme in themes_suggested:
