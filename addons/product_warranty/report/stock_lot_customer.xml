@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="warranty_stock_lot_customer_report_view_list" model="ir.ui.view">
+        <field name="name">stock.lot.report.view.list.inherit</field>
+        <field name="model">stock.lot.report</field>
+        <field name="inherit_id" ref="stock.stock_lot_customer_report_view_list"/>
+        <field name="arch" type="xml">
+            <field name="delivery_date" position="after">
+                <field name="warranty_end_date"/>
+            </field>
+            <field name="address" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+    <record id="search_customer_lot_filter" model="ir.ui.view">
+        <field name="name">Customer Lots Filter</field>
+        <field name="model">stock.lot.report</field>
+        <field name="inherit_id" ref="stock.search_customer_lot_filter"/>
+        <field name="arch" type="xml">
+            <filter name="delivery_date" position="before">
+                <filter string="Under Warranty" name="under_warranty"
+                    domain="[('warranty_end_date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter string="Warranty Date" name="warranty_end_date" date="warranty_end_date"/>
+            </filter>
+            <filter name="group_by_delivery_date" position="after">
+                <filter name="group_by_warranty_end_date" string="Warranty date" domain="[]" context="{'group_by': 'warranty_end_date'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>
