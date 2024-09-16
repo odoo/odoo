@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.tr.nilvera</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="integration" position="inside">
+                <field name="country_code" invisible="True"/>
+                <setting id="nilvera_settings" string="Nilvera Electronic Document Invoicing" help="Configure Nilvera settings" invisible="country_code != 'TR'">
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label string="Environment" for="l10n_tr_nilvera_environment" class="col-lg-6 o_light_label"/>
+                            <field name="l10n_tr_nilvera_environment"/>
+                        </div>
+                        <div class="row">
+                            <label string="API KEY" for="l10n_tr_nilvera_api_key" class="col-lg-6 o_light_label" />
+                            <field name="l10n_tr_nilvera_api_key"/>
+                        </div>
+                        <div class="row">
+                            <label string="Incoming Invoices Journal"
+                                   for="l10n_tr_nilvera_purchase_journal_id"
+                                   class="col-lg-6 o_light_label"/>
+                            <field name="l10n_tr_nilvera_purchase_journal_id"/>
+                        </div>
+                        <div class="mt16" invisible="not l10n_tr_nilvera_api_key">
+                            <a href="https://portal.nilvera.com/" target="_new">
+                                <i title="Go to Nilvera portal" role="img" aria-label="Go to Nilvera portal" class="fa fa-external-link-square fa-fw"/>
+                                Nilvera portal
+                            </a>
+                            <button name="nilvera_ping" type="object" class="btn-link">
+                                <i title="Test connection" role="img" aria-label="Test connection" class="fa fa-plug fa-fw"/>
+                                Test connection
+                            </button>
+                        </div>
+                    </div>
+                </setting>
+            </block>
+        </field>
+    </record>
+
+</odoo>
