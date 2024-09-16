@@ -1050,6 +1050,10 @@ export class PosStore extends Reactive {
         };
     }
 
+    getOrderIdsToDelete() {
+        return [...this.pendingOrder.delete];
+    }
+
     removePendingOrder(order) {
         this.pendingOrder["create"].delete(order.id);
         this.pendingOrder["write"].delete(order.id);
@@ -1077,14 +1081,16 @@ export class PosStore extends Reactive {
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         try {
-            const { orderToCreate, orderToUpdate, orderToDelele } = this.getPendingOrder();
+            const orderIdsToDelete = this.getOrderIdsToDelete();
+            if (orderIdsToDelete.length > 0) {
+                await this.deleteOrders([], orderIdsToDelete);
+            }
+
+            const { orderToCreate, orderToUpdate } = this.getPendingOrder();
             const orders = [...orderToCreate, ...orderToUpdate];
             const context = this.getSyncAllOrdersContext(orders, options);
             this.preSyncAllOrders(orders);
 
-            if (orderToDelele.length) {
-                await this.deleteOrders([], orderToDelele);
-            }
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
             // for a specific table
