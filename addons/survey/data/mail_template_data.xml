@@ -20,7 +20,7 @@
         </t>
         <div style="margin: 16px 0px 16px 0px;">
             <a t-att-href="(object.get_start_url())"
-                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                t-attf-style="background-color: {{user.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                 <t t-if="object.survey_id.certification">
                     Start Certification
                 </t>

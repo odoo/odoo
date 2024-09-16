@@ -12,13 +12,13 @@
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Hello,
         <br/><br/>
-        <span style="font-weight: bold;" t-out="object.user_id.name"/> has requested to activate the <span style="font-weight: bold;" t-out="object.module_id.shortdesc"/> module. This module is included in your subscription. It has <span style="color: #875A7B; font-weight: bold;">no extra cost</span>, but an administrator role is required to activate it.
+        <span style="font-weight: bold;" t-out="object.user_id.name"/> has requested to activate the <span style="font-weight: bold;" t-out="object.module_id.shortdesc"/> module. This module is included in your subscription. It has <span t-attf-style="color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; font-weight: bold;">no extra cost</span>, but an administrator role is required to activate it.
         <br/><br/>
         <blockquote>
             <t t-out="object.body_html"/>
         </blockquote>
         <br/><br/>
-        <a style="background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px" t-attf-href="/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}">Review Request</a>
+        <a t-attf-style="background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px" t-attf-href="/odoo/{{ object.module_id.id }}/action-base_install_request.action_base_module_install_review?menu_id={{ ctx['menu_id'] }}">Review Request</a>
         <br/><br/>
         Thanks,
         <t t-if="not is_html_empty(object.user_id.signature)">
