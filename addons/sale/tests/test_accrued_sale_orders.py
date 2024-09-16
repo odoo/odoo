@@ -105,6 +105,7 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
         invoices.invoice_date = self.wizard.date
         invoices.action_post()
         with self.assertRaises(UserError):
+            self.env['account.move.line']._invalidate_cache()
             self.wizard.create_entries()
         self.assertTrue(self.wizard.display_amount)
 
