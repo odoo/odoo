@@ -44,7 +44,7 @@
                 <table name="invoices"
                        t-if="values['display_invoices']"
                        class="table table-sm">
-                    <t t-set="invoices" t-value="o.reconciled_invoice_ids"/>
+                    <t t-set="invoices" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
                     <!-- Check if invoices include different currencies -->
                     <t t-foreach="invoices" t-as="inv">
                         <t t-if="any(inv.currency_id != par[2].currency_id for par in inv._get_reconciled_invoices_partials()[0])" t-set="otherCurrency" t-value="True"/>
