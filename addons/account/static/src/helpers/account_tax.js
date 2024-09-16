@@ -297,6 +297,9 @@ export const accountTaxHelpers = {
             if (batch.include_base_amount) {
                 for (const next_batch of ascending_batches.toSpliced(0, i + 1)) {
                     for (const next_tax_data of next_batch.taxes) {
+                        if (!next_tax_data.is_base_affected) {
+                            continue;
+                        }
                         subsequent_tax_ids.push(next_tax_data.id);
                         if (include_caba_tags || next_tax_data.tax_exigibility !== "on_payment") {
                             for (const tag_id of next_tax_data[base_tags_field]) {
