@@ -878,6 +878,11 @@ export class PosStore extends Reactive {
      * @param order
      */
     removeOrder(order, removeFromServer = true) {
+        // Can't remove a finalized order that has not been sent to the server
+        if (order.finalized && typeof order.id !== "number") {
+            return false;
+        }
+
         if (this.isOpenOrderShareable() || removeFromServer) {
             if (typeof order.id === "number" && !order.finalized) {
                 this.addPendingOrder([order.id], true);
@@ -1009,13 +1014,17 @@ export class PosStore extends Reactive {
                 (order.lines.length > 0 ||
                     order.payment_ids.some((p) => p.payment_method_id.type === "pay_later"))
         );
-        const orderToUpdate = this.models["pos.order"].filter((order) =>
-            this.pendingOrder.write.has(order.id)
+        const orderToUpdate = this.models["pos.order"].readMany(
+            Array.from(this.pendingOrder.write)
+        );
+        const orderToDelete = this.models["pos.order"].readMany(
+            Array.from(this.pendingOrder.delete)
         );
 
         return {
             orderToCreate,
             orderToUpdate,
+            orderToDelete,
             paidOrdersNotSent,
         };
     }
@@ -1039,14 +1048,15 @@ export class PosStore extends Reactive {
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         try {
-            const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
+            const { orderToCreate, orderToUpdate, paidOrdersNotSent, orderToDelete } =
+                this.getPendingOrder();
             const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
 
             this.preSyncAllOrders(orders);
             const context = this.getSyncAllOrdersContext(orders, options);
 
-            if (this.pendingOrder.delete.size) {
-                await this.deleteOrders([], Array.from(this.pendingOrder.delete));
+            if (orderToDelete.length > 0) {
+                await this.deleteOrders([], orderToDelete);
             }
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
