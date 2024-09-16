@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from collections import defaultdict
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models
 
 
 class HrWorkEntry(models.Model):
@@ -75,6 +77,27 @@ class HrWorkEntry(models.Model):
         leave_sudo = self.leave_id.sudo()
         if leave_sudo:
             leave_sudo.action_refuse()
+
+    @api.model
+    def _get_leaves_duration_between_two_dates(self, employee_id, date_from, date_to):
+        date_from += relativedelta(hour=0, minute=0, second=0)
+        date_to += relativedelta(hour=23, minute=59, second=59)
+        leaves_work_entries = self.env['hr.work.entry'].search([
+            ('employee_id', '=', employee_id.id),
+            ('date_start', '>=', date_from),
+            ('date_stop', '<=', date_to),
+            ('state', '!=', 'cancelled'),
+            ('leave_id', '!=', False),
+            ('leave_state', '=', 'validate'),
+        ])
+        entries_by_leave_type = defaultdict(lambda: self.env['hr.work.entry'])
+        for work_entry in leaves_work_entries:
+            entries_by_leave_type[work_entry.leave_id.holiday_status_id] |= work_entry
+
+        durations_by_leave_type = {}
+        for leave_type, work_entries in entries_by_leave_type.items():
+            durations_by_leave_type[leave_type] = sum(work_entries.mapped('duration'))
+        return durations_by_leave_type
 
 
 class HrWorkEntryType(models.Model):
