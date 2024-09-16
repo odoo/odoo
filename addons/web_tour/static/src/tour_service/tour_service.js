@@ -72,7 +72,7 @@ export const tourService = {
             description: _t("Onboarding"),
             callback: async () => {
                 tourState.clear();
-                await orm.call("res.users", "switch_tour_enabled");
+                toursEnabled = await orm.call("res.users", "switch_tour_enabled", [!toursEnabled]);
                 browser.location.reload();
             },
             isChecked: toursEnabled,
@@ -136,8 +136,7 @@ export const tourService = {
                 : getTourFromRegistry(tourName);
 
             if (!session.is_public && !toursEnabled && options.mode === "manual") {
-                const result = await orm.call("res.users", "switch_tour_enabled", [!toursEnabled]);
-                toursEnabled = result;
+                toursEnabled = await orm.call("res.users", "switch_tour_enabled", [!toursEnabled]);
             }
 
             const defaultOptions = {
