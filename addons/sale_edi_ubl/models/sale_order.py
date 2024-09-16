@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import _, api, models, Command
 
 
@@ -57,3 +59,17 @@ class SaleOrder(models.Model):
             'price_unit': price_unit,
             'tax_ids': [Command.set(tax_ids)],
         } for name, quantity, price_unit, tax_ids in lines_vals]
+
+    # Action
+
+    def _action_confirm(self):
+        res = super()._action_confirm()
+        for line in self.order_line:
+            if not line.edi_customer_product_ref:
+                continue
+            line.product_id._edi_set_customer_product_ref(
+                line.order_id.partner_id,
+                line.edi_customer_product_ref,
+            )
+
+        return res

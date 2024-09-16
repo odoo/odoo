@@ -751,7 +751,7 @@ class AccountEdiCommon(models.AbstractModel):
         # delivered_qty (mandatory)
         delivered_qty = 1
         product_vals = {k: self._find_value(v, tree) for k, v in xpath_dict['product'].items()}
-        product = self._import_product(**product_vals)
+        product = self._import_product(record.partner_id, **product_vals)
         product_uom = self.env['uom.uom']
         quantity_node = tree.find(xpath_dict['delivered_qty'])
         if quantity_node is not None:
@@ -840,7 +840,7 @@ class AccountEdiCommon(models.AbstractModel):
             'charges': charges,  # see `_retrieve_line_charges`
         }
 
-    def _import_product(self, **product_vals):
+    def _import_product(self, parnter, **product_vals):
         return self.env['product.product']._retrieve_product(**product_vals)
 
     def _retrieve_fixed_tax(self, company_id, fixed_tax_vals):

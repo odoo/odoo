@@ -303,3 +303,10 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             'variant_barcode': './cac:Item/cac:StandardItemIdentification/cbc:ExtendedID',
             'variant_default_code': './cac:Item/cac:SellersItemIdentification/cbc:ExtendedID',
         }
+
+    def _get_product_xpaths(self):
+        # Override account.edi.xml.ubl_bis3
+        return {
+            **super()._get_product_xpaths(),
+            'buyer_product_code': './cac:Item/cac:BuyersItemIdentification/cbc:ID',
+        }
