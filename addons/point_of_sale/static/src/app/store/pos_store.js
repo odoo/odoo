@@ -130,6 +130,7 @@ export class PosStore extends Reactive {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
+        this.syncingOrders = new Set();
         await this.initServerData();
         if (this.useProxy()) {
             await this.connectToProxy();
@@ -979,14 +980,17 @@ export class PosStore extends Reactive {
     async preSyncAllOrders(orders) {}
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
+        const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
+        let orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
+
+        // Filter out orders that are already being synced
+        orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+
         try {
             const orderIdsToDelete = this.getOrderIdsToDelete();
             if (orderIdsToDelete.length > 0) {
                 await this.deleteOrders([], orderIdsToDelete);
             }
-
-            const { orderToCreate, orderToUpdate, paidOrdersNotSent } = this.getPendingOrder();
-            const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
 
             await this.preSyncAllOrders(orders);
             const context = this.getSyncAllOrdersContext(orders, options);
@@ -997,6 +1001,9 @@ export class PosStore extends Reactive {
             if (orders.length === 0 && !context.force) {
                 return;
             }
+
+            // Add order IDs to the syncing set
+            orders.forEach((order) => this.syncingOrders.add(order.id));
 
             // Re-compute all taxes, prices and other information needed for the backend
             for (const order of orders) {
@@ -1060,6 +1067,8 @@ export class PosStore extends Reactive {
 
             console.warn("Offline mode active, order will be synced later");
             return error;
+        } finally {
+            orders.forEach((order) => this.syncingOrders.delete(order.id));
         }
     }
 
