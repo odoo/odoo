@@ -1,5 +1,5 @@
 import { Component } from "@odoo/owl";
-import { AccordionItem } from "@pos_hr/app/generic_components/accordion_item/accordion_item";
+import { AccordionItem } from "@point_of_sale/app/generic_components/accordion_item/accordion_item";
 
 export class PaymentMethodBreakdown extends Component {
     static components = { AccordionItem };
