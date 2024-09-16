@@ -374,7 +374,7 @@
                       </t>
                       <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                     </div>
-                    <div class="mb-3 col-6" t-if="sale_order.validity_date">
+                    <div class="mb-3 col-6" t-if="sale_order.validity_date and sale_order.state in ['draft', 'sent']">
                         <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
                     </div>
                 </div>
