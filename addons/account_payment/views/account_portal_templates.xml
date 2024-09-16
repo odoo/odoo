@@ -141,7 +141,7 @@
                             <div t-if="company_mismatch">
                                 <t t-call="payment.company_mismatch_warning"/>
                             </div>
-                            <div t-elif="amount_custom or amount_overdue or amount_next_installment" id="o_payment_installments_modal">
+                            <div t-elif="(amount_custom or amount_overdue or amount_next_installment) and not show_epd" id="o_payment_installments_modal">
                                 <div class="btn-group w-100" id="o_payment_tabs" role="tablist">
                                     <button class="btn btn-outline-primary o_btn_payment_tab active"
                                         id="o_payment_installments_tab"
@@ -224,6 +224,9 @@
                                 </div>
                             </div>
                             <t t-elif="amount > 0">
+                                <div t-if="show_epd" class="alert alert-success">
+                                    Early Payment Discount of <span t-out="early_payment_discount" t-options="{'widget': 'monetary', 'display_currency': currency}"/> has been applied.
+                                </div>
                                 <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
                                     <t t-call="payment.summary_item">
                                         <t t-set="name" t-value="'amount_full'"/>

@@ -164,8 +164,28 @@ class PaymentTransaction(models.Model):
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
             'ref': reference,
+            'write_off_line_vals': [],
             **extra_create_values,
         }
+        if self.invoice_ids and self.invoice_ids._is_eligible_for_early_payment_discount(self.currency_id, fields.Date.context_today(self)):
+            installment = self.invoice_ids.get_next_installment_due()
+            if installment and installment['type'] == 'early_payment_discount':
+                aml = installment['line']
+                epd_aml_values_list = []
+                epd_aml_values_list.append({
+                    'aml': aml,
+                    'amount_currency': -aml.amount_residual_currency,
+                    'balance': -aml.balance,
+                })
+                open_balance = self.currency_id._convert(self.invoice_ids.amount_residual - self.amount, aml.company_currency_id, self.company_id, self.create_date)
+                early_payment_values = self.env['account.move']\
+                    ._get_invoice_counterpart_amls_for_early_payment_discount(epd_aml_values_list, open_balance)
+                for aml_values_list in early_payment_values.values():
+                    if (aml_values_list):
+                        aml_vl = aml_values_list[0]
+                        aml_vl['partner_id'] = self.partner_id.id
+                        payment_values['write_off_line_vals'] += [aml_vl]
+
         payment = self.env['account.payment'].create(payment_values)
         payment.action_post()
 
