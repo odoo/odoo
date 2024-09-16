@@ -38,3 +38,7 @@ class ValidateSpreadsheetMixinData(TransactionCase):
             'spreadsheet_data': json.dumps(data)
         })
         self.assertTrue(spreadsheet.exists())
+
+    def test_spreadsheet_file_name(self):
+        spreadsheet = self.env['spreadsheet.test'].create({})
+        self.assertEqual(spreadsheet.spreadsheet_file_name, f"{spreadsheet.display_name}.osheet.json")
