@@ -20,11 +20,9 @@ class GoogleAuth(http.Controller):
             raise BadRequest()
 
         if kw.get('code'):
-            base_url = request.httprequest.url_root.strip('/') or request.env.user.get_base_url()
             access_token, refresh_token, ttl = request.env['google.service']._get_google_tokens(
                 kw['code'],
                 service,
-                redirect_uri=f'{base_url}/google_account/authentication'
             )
             service_field = 'res_users_settings_id'
             if service_field in request.env.user:

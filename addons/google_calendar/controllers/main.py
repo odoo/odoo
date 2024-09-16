@@ -5,7 +5,6 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.calendar.controllers.main import CalendarController
-from odoo.addons.google_account.models.google_service import _get_client_secret
 
 
 class GoogleCalendarController(CalendarController):
@@ -23,10 +22,10 @@ class GoogleCalendarController(CalendarController):
             base_url = request.httprequest.url_root.strip('/')
             GoogleCal = GoogleCalendarService(request.env['google.service'].with_context(base_url=base_url))
 
-            # Checking that admin have already configured Google API for google synchronization !
-            client_id = request.env['google.service']._get_client_id('calendar')
+            has_setup_credentials = request.env['google.service']._has_setup_credentials()
+            has_external_credentials_provider = not has_setup_credentials and request.env['google.service']._has_external_credentials_provider()
 
-            if not client_id or client_id == '':
+            if not has_setup_credentials and not has_external_credentials_provider:
                 action_id = ''
                 if GoogleCal._can_authorize_google(request.env.user):
                     action_id = request.env.ref('base_setup.action_general_configuration').id
@@ -63,8 +62,7 @@ class GoogleCalendarController(CalendarController):
     @http.route()
     def check_calendar_credentials(self):
         res = super().check_calendar_credentials()
-        client_id = request.env['google.service']._get_client_id('calendar')
-        ICP_sudo = request.env['ir.config_parameter'].sudo()
-        client_secret = _get_client_secret(ICP_sudo, 'calendar')
-        res['google_calendar'] = bool(client_id and client_secret)
+        has_setup_credentials = request.env['google.service']._has_setup_credentials()
+        has_external_credentials = request.env['google.service']._has_external_credentials_provider()
+        res['google_calendar'] = bool(has_setup_credentials or has_external_credentials)
         return res
