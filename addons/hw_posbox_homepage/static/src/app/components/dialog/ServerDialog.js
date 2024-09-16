@@ -21,7 +21,7 @@ export class ServerDialog extends Component {
 
     async connectToServer() {
         try {
-            if (!this.form.token && !this.form.iotname) {
+            if (!this.form.token) {
                 return;
             }
 
@@ -70,7 +70,7 @@ export class ServerDialog extends Component {
                     If you change the IoT Box Name, your IoT Box will need a reboot.
                 </div>
                 <div class="mt-3">
-                    <div class="input-group-sm mb-3">
+                    <div class="input-group-sm mb-3" t-if="this.store.isLinux">
                         <label for="iotname">IoT Name</label>
                         <input name="iotname" type="text" class="form-control" t-model="this.form.iotname" />
                         <small t-if="!this.form.iotname" class="text-danger">Please enter a correct name</small>
