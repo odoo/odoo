@@ -28,7 +28,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@id='batch_delivery_data']" position="after">
                 <group>
-                    <field name="dock_id" invisible="picking_type_code == 'outgoing' and not dock_id" readonly="picking_type_code == 'outgoing'" groups="stock.group_stock_multi_locations"/>
+                    <field name="dock_id" groups="stock.group_stock_multi_locations"/>
                     <field name="vehicle_id" placeholder="Third Party Provider"/>
                     <field name="vehicle_category_id" placeholder="semi-truck"/>
                     <label for='used_weight_percentage' string="Weight" invisible="not vehicle_category_id or not vehicle_weight_capacity"/>
@@ -84,6 +84,7 @@
                 <field name="driver_id"/>
             </field>
             <xpath expr="//filter[@name='state']" position="after">
+                <filter name="group_by_vehicle_id" string="Vehicle" context="{'group_by':'vehicle_id'}"/>
                 <filter name="group_by_vehicle_category_id" string="Vehicle Category" context="{'group_by':'vehicle_category_id'}"/>
                 <filter name="group_by_scheduled_date" string="Scheduled Date" context="{'group_by':'scheduled_date'}"/>
                 <filter name="group_by_picking_type_id" string="Operation Type" context="{'group_by':'picking_type_id'}"/>
