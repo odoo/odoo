@@ -193,7 +193,7 @@
 
 <t t-name="website.Configurator.ThemeSelectionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
-        <div class="o_configurator_odoo_logo mt-4 ms-5" style="height: 31px; width: 99px;"/>
+        <div class="o_configurator_odoo_logo flex-shrink-0 mt-4 ms-5" style="height: 31px; width: 99px;"/>
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
             <div class="m-auto w-100 w-md-75 w-xl-100">
                 <div class="o_configurator_typing_text text-center mt-4 mb-lg-4">Choose your favorite <b>Theme</b>
@@ -231,6 +231,29 @@
                             </t>
                         </div>
                     </div>
+                    <t t-if="showViewMoreThemesButton">
+                        <p style="text-align: center;">
+                            <button class="btn btn-primary btn-lg px-4 py-2 center-block" t-on-click="getMoreThemes" t-ref="extraThemesButton">View more themes</button>
+                        </p>
+                    </t>
+                    <t t-elif="state.extraThemes.length" t-foreach="[...Array(Math.ceil(state.extraThemes.length/3)).keys()]" t-as="nbrExtraRow" t-key="nbrExtraRow">
+                        <div class="row pb-4 pt-5">
+                            <t t-foreach="[...Array(3).keys()]" t-as="nbrExtraCol" t-key="nbrExtraCol">
+                                <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
+                                    <t t-set="extraThemeId" t-value="nbrExtraRow * 3 + nbrExtraCol"/>
+                                    <t t-set="extraThemeName" t-value="getExtraThemeName(extraThemeId)"/>
+                                    <t t-if="extraThemeName">
+                                        <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
+                                            <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                            <!-- Force LTR to prevent SVG issues in RTL languages -->
+                                            <div class="theme_svg_container rounded overflow-hidden" t-ref="ExtraThemePreview{{extraThemeId}}" dir="ltr"/>
+                                            <div class="button_area" t-on-click="() => this.chooseTheme(extraThemeName)"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
                 </div>
             </div>
         </div>
