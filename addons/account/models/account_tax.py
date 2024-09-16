@@ -982,6 +982,8 @@ class AccountTax(models.Model):
             if batch['include_base_amount']:
                 for next_batch in ascending_batches[i + 1:]:
                     for next_tax_data in next_batch['taxes']:
+                        if not next_tax_data['is_base_affected']:
+                            continue
                         subsequent_tax_ids.append(next_tax_data['id'])
                         if include_caba_tags or next_tax_data['tax_exigibility'] != 'on_payment':
                             for tag_id in next_tax_data[base_tags_field]:
