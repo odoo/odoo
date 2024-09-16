@@ -58,7 +58,7 @@
                     <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
                 </field>
                 <field name="stage_id" position="after">
-                    <field name="project_id" string="Project" invisible="context.get('default_project_id')"/>
+                    <field name="project_id" string="Project"/>
                 </field>
                 <field name="partner_id" position="after">
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -68,7 +68,7 @@
                     <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
                 </filter>
                 <filter name="stage" position="after">
-                    <filter string="Project" name="project" context="{'group_by': 'project_id'}" invisible="context.get('default_project_id')"/>
+                    <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
                 </filter>
             </field>
         </record>
