@@ -51,6 +51,12 @@ class TestHttp(http.Controller):
         assert request.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
+    @http.route('/test_http/greeting-bearer', type='http', auth='bearer', readonly=_readonly)
+    def greeting_bearer(self, readonly=True):
+        assert request.env.user, "ORM should be initialized"
+        assert request.env.cr.readonly == str2bool(readonly)
+        return f"Tek'ma'te; user={request.env.user.login}"
+
     @http.route('/test_http/wsgi_environ', type='http', auth='none')
     def wsgi_environ(self):
         environ = {

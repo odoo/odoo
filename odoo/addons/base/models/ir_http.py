@@ -202,6 +202,44 @@ class IrHttp(models.AbstractModel):
         return [request.env['ir.model.data']._xmlid_to_res_model_res_id('base.public_user')[1]]
 
     @classmethod
+    def _auth_method_bearer(cls):
+        headers = request.httprequest.headers
+
+        def get_http_authorization_bearer_token():
+            # werkzeug<2.3 doesn't expose `authorization.token` (for bearer authentication)
+            # check header directly
+            header = headers.get("Authorization")
+            if header and (m := re.match(r"^bearer\s+(.+)$", header, re.IGNORECASE)):
+                return m.group(1)
+            return None
+
+        def check_sec_headers():
+            """Protection against CSRF attacks.
+            Modern browsers automatically add Sec- headers that we can check to protect against CSRF.
+            https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-User
+            """
+            return (
+                headers.get("Sec-Fetch-Dest") == "document"
+                and headers.get("Sec-Fetch-Mode") == "navigate"
+                and headers.get("Sec-Fetch-Site") in ('none', 'same-origin')
+                and headers.get("Sec-Fetch-User") == "?1"
+            )
+
+        if token := get_http_authorization_bearer_token():
+            # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
+            uid = request.env['res.users.apikeys']._check_credentials(scope='rpc', key=token)
+            if not uid:
+                raise werkzeug.exceptions.Unauthorized("Invalid apikey")
+            if request.env.uid and request.env.uid != uid:
+                raise AccessDenied("Session user does not match the used apikey")
+            request.update_env(user=uid)
+        elif not request.env.uid:
+            raise werkzeug.exceptions.Unauthorized('User not authenticated, use the "Authorization" header')
+        elif not check_sec_headers():
+            raise AccessDenied("Missing \"Authorization\" or Sec-headers for interactive usage")
+        cls._auth_method_user()
+
+    @classmethod
     def _auth_method_user(cls):
         if request.env.uid in [None] + cls._get_public_users():
             raise http.SessionExpiredException("Session expired")

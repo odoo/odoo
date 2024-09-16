@@ -680,6 +680,12 @@ def route(route=None, **routing):
 
         * ``'user'``: The user must be authenticated and the current
           request will be executed using the rights of the user.
+        * ``'bearer'``: The user is authenticated using an "Authorization"
+          request header, using the Bearer scheme with an API token.
+          The request will be executed with the permissions of the
+          corresponding user. If the header is missing, the request
+          must belong to an authentication session, as for the "user"
+          authentication method.
         * ``'public'``: The user may or may not be authenticated. If he
           isn't, the current request will be executed using the shared
           Public user.
