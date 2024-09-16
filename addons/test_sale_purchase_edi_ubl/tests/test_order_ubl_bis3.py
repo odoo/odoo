@@ -307,3 +307,25 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
         po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
         # Should have same payment term as PO
         self.assertEqual(po.payment_term_id, payment_term)
+
+    def test_edi_learning_from_previous_so(self):
+        po_line_vals = [{
+            'product_id': self.displace_prdct.id,
+            'product_qty': 1.0,
+        }]
+        xml_attachment = self.get_purchase_xml(po_line_vals)
+        # Archive product for SO import
+        self.displace_prdct.active = False
+        so = self.env['sale.order'].with_context(
+            default_partner_id=self.env.user.partner_id.id,
+        )._create_records_from_attachments(xml_attachment)
+        # Set different product on the SO
+        so.order_line[0].product_id = self.place_prdct.id
+        so.action_confirm()
+        # Again create SO with same PO file
+        new_so = self.env['sale.order'].with_context(
+            default_partner_id=self.env.user.partner_id.id,
+        )._create_records_from_attachments(xml_attachment)
+
+        # New SO should set product from previous SO
+        self.assertEqual(new_so.order_line[0].product_id, self.place_prdct)
