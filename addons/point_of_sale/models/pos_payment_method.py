@@ -8,14 +8,29 @@ class PosPaymentMethod(models.Model):
     _order = "sequence, id"
     _inherit = ['pos.load.mixin']
 
-    def _get_payment_terminal_selection(self):
-        return []
+    POS_PAYMENT_TERMINALS = [
+        ('adyen', 'Adyen'),
+        ('mercado_pago', 'Mercado Pago'),
+        ('paytm', 'PayTM'),
+        ('razorpay', 'Razorpay'),
+        ('six', 'SIX'),
+        ('stripe', 'Stripe'),
+        ('viva_wallet', 'Viva Wallet'),
+        ('ingenico', 'Ingenico'),
+        ('worldline', 'Worldline'),
+        ('iot_six', 'SIX IoT'),
+    ]
 
     def _get_payment_method_type(self):
-        selection = [('none', 'None required'), ('terminal', 'Terminal')]
+        selection = [('none', 'None required'), ('terminal', 'Terminal'), ('online', 'Online')]
         if self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
             selection.append(('qr_code', 'Bank App (QR Code)'))
         return selection
+
+    def _get_default_journal(self):
+        return self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', '=', 'bank')], limit=1)
 
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
     sequence = fields.Integer(copy=False)
@@ -35,6 +50,7 @@ class PosPaymentMethod(models.Model):
         string='Journal',
         domain=['|', '&', ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False), ('type', '=', 'bank')],
         ondelete='restrict',
+        default=_get_default_journal,
         help='Leave empty to use the receivable account of customer.\n'
              'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
              'For cash journal, we directly write to the default account in the journal via statement lines.\n'
@@ -47,7 +63,9 @@ class PosPaymentMethod(models.Model):
     open_session_ids = fields.Many2many('pos.session', string='Pos Sessions', compute='_compute_open_session_ids', help='Open PoS sessions that are using this payment method.')
     config_ids = fields.Many2many('pos.config', string='Point of Sale')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    use_payment_terminal = fields.Selection(selection=lambda self: self._get_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
+    use_payment_terminal = fields.Selection(
+        POS_PAYMENT_TERMINALS,
+        string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
     # used to hide use_payment_terminal when no payment interfaces are installed
     hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal')
     active = fields.Boolean(default=True)
@@ -61,6 +79,8 @@ class PosPaymentMethod(models.Model):
         help='Type of QR-code to be generated for this payment method.',
     )
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
+    module_id = fields.Many2one('ir.module.module', compute='_compute_module_id')
+    is_terminal_installed = fields.Boolean(compute='_compute_is_terminal_installed')
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -72,9 +92,8 @@ class PosPaymentMethod(models.Model):
 
     @api.depends('type', 'payment_method_type')
     def _compute_hide_use_payment_terminal(self):
-        no_terminals = not bool(self._fields['use_payment_terminal'].selection(self))
         for payment_method in self:
-            payment_method.hide_use_payment_terminal = no_terminals or payment_method.type in ('cash', 'pay_later') or payment_method.payment_method_type != 'terminal'
+            payment_method.hide_use_payment_terminal = payment_method.type in ('cash', 'pay_later') or payment_method.payment_method_type != 'terminal'
 
     @api.depends('payment_method_type')
     def _compute_hide_qr_code_method(self):
@@ -118,6 +137,22 @@ class PosPaymentMethod(models.Model):
     def _compute_is_cash_count(self):
         for pm in self:
             pm.is_cash_count = pm.type == 'cash'
+
+    @api.depends('use_payment_terminal')
+    def _compute_module_id(self):
+        for record in self:
+            search_name = f'pos_{record.use_payment_terminal}'
+            if record.use_payment_terminal in ('ingenico', 'worldline'):
+                search_name = 'pos_iot'
+            record.module_id = self.env['ir.module.module'].search([('name', '=', search_name)])
+
+    @api.depends('module_id')
+    def _compute_is_terminal_installed(self):
+        for record in self:
+            if not record.use_payment_terminal or record.module_id.state == 'installed':
+                record.is_terminal_installed = True
+            else:
+                record.is_terminal_installed = False
 
     def _is_write_forbidden(self, fields):
         whitelisted_fields = {'sequence'}
@@ -215,3 +250,17 @@ class PosPaymentMethod(models.Model):
 
         return payment_bank.with_context(is_online_qr=True).build_qr_code_base64(
             float(amount), free_communication, structured_communication, currency, debtor_partner, self.qr_code_method, silent_errors=False)
+
+    def button_immediate_install(self):
+        """ Install the module and reload the page.
+        Note: `self.ensure_one()`
+        :return: The action to reload the page.
+        :rtype: dict
+        """
+        self.ensure_one()
+        if self.module_id and self.module_id.state != 'installed':
+            self.module_id.button_immediate_install()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }

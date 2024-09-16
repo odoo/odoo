@@ -54,7 +54,7 @@
                                 <span>Please note that the kiosk only works with Adyen &amp; Stripe terminals</span>
                             </div>
                             <setting id="payment_methods_new" string="Payment Methods" help="Payment methods available" documentation="/applications/sales/point_of_sale/payment_methods.html">
-                                <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" readonly="pos_has_active_session" required="pos_company_has_template" options="{'no_create': True}" />
+                                <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" readonly="pos_has_active_session" required="pos_company_has_template" options="{'no_quick_create': True}" context="{'default_config_ids': [pos_config_id]}"/>
                                 <div>
                                     <button name="%(action_payment_methods_tree)d" icon="oi-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
                                 </div>
@@ -309,31 +309,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </setting>
-                        </block>
-
-                        <block title="Payment Terminals" help="Those settings are common to all PoS." id="pos_payment_terminals_section">
-                            <setting id="adyen_payment_terminal_setting" title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method." string="Adyen" help="Accept payments with an Adyen payment terminal"
-                                     documentation="/applications/sales/point_of_sale/payment_methods/terminals/adyen.html">
-                                <field name="module_pos_adyen"/>
-                            </setting>
-                            <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
-                                <field name="module_pos_stripe"/>
-                            </setting>
-                            <setting title="The transactions are processed by Six. Set the IP address of the terminal on the related payment method." string="Six" documentation="/applications/sales/point_of_sale/payment_methods/terminals/six.html" help="Accept payments with a Six payment terminal">
-                                <field name="module_pos_six"/>
-                            </setting>
-                            <setting title="The transactions are processed by Viva Wallet on terminal or tap on phone." string="Viva Wallet" help="Accept payments with Viva Wallet on a terminal or tap on phone">
-                                <field name="module_pos_viva_wallet"/>
-                            </setting>
-                            <setting title="The transactions are processed by PayTM. Set your PayTM credentials on the related payment method." string="PayTM" help="Accept payments with a PayTM payment terminal">
-                                <field name="module_pos_paytm"/>
-                            </setting>
-                            <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal">
-                                <field name="module_pos_razorpay"/>
-                            </setting>
-                            <setting title="The transactions are processed by Mercado Pago on terminal" string="Mercado Pago" help="Accept payments with Mercado Pago on a terminal">
-                                <field name="module_pos_mercado_pago"/>
                             </setting>
                         </block>
 

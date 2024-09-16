@@ -77,7 +77,7 @@ export class ConfirmationPage extends Component {
         this.confirmedOrder = order;
 
         const paymentMethods = this.selfOrder.models["pos.payment.method"].filter(
-            (p) => p.is_online_payment
+            (p) => p.payment_method_type === "online"
         );
 
         if (

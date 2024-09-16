@@ -50,9 +50,6 @@ class PosPaymentMethod(models.Model):
         whitelisted_fields = {'viva_wallet_bearer_token', 'viva_wallet_webhook_verification_key', 'viva_wallet_latest_response'}
         return super(PosPaymentMethod, self)._is_write_forbidden(fields - whitelisted_fields)
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [('viva_wallet', 'Viva Wallet')]
-
     def _bearer_token(self, session):
         self.ensure_one()
 
@@ -161,25 +158,23 @@ class PosPaymentMethod(models.Model):
         return self._call_viva_wallet(endpoint, 'delete')
 
     def write(self, vals):
-        record = super().write(vals)
-
-        if vals.get('viva_wallet_merchant_id') and vals.get('viva_wallet_api_key'):
-            self.viva_wallet_webhook_verification_key = self._get_verification_key(
-                self._viva_wallet_webhook_get_endpoint(),
-                self.viva_wallet_merchant_id,
-                self.viva_wallet_api_key
-                )
-            if not self.viva_wallet_webhook_verification_key:
-                raise UserError(_("Can't update payment method. Please check the data and update it."))
-
-        return record
+        res = super().write(vals)
+        for record in self:
+            if record.use_payment_terminal == 'viva_wallet' and vals.get('viva_wallet_merchant_id') and vals.get('viva_wallet_api_key'):
+                record.viva_wallet_webhook_verification_key = self._get_verification_key(
+                    self._viva_wallet_webhook_get_endpoint(),
+                    self.viva_wallet_merchant_id,
+                    self.viva_wallet_api_key
+                    )
+                if not self.viva_wallet_webhook_verification_key:
+                    raise UserError(_("Can't update payment method. Please check the data and update it."))
+        return res
 
 
     def create(self, vals):
         records = super().create(vals)
-
         for record in records:
-            if record.viva_wallet_merchant_id and record.viva_wallet_api_key:
+            if record.use_payment_terminal == 'viva_wallet' and record.viva_wallet_merchant_id and record.viva_wallet_api_key:
                 record.viva_wallet_webhook_verification_key = record._get_verification_key(
                     record._viva_wallet_webhook_get_endpoint(),
                     record.viva_wallet_merchant_id,
@@ -187,7 +182,6 @@ class PosPaymentMethod(models.Model):
                 )
                 if not record.viva_wallet_webhook_verification_key:
                     raise UserError(_("Can't create payment method. Please check the data and update it."))
-
         return records
 
     def get_latest_viva_wallet_status(self):
@@ -197,6 +191,20 @@ class PosPaymentMethod(models.Model):
         self.ensure_one()
         latest_response = self.sudo().viva_wallet_latest_response
         return latest_response
+
+    @api.onchange('use_payment_terminal')
+    def _onchange_use_payment_terminal(self):
+        super()._onchange_use_payment_terminal()
+        if self.use_payment_terminal == 'viva_wallet' and not self.viva_wallet_api_key:
+            existing_payment_method = self.search([('use_payment_terminal', '=', 'viva_wallet'), ('viva_wallet_api_key', '!=', False)], limit=1)
+            if existing_payment_method:
+                self.update({
+                    'viva_wallet_merchant_id': existing_payment_method.viva_wallet_merchant_id,
+                    'viva_wallet_api_key': existing_payment_method.viva_wallet_api_key,
+                    'viva_wallet_client_id': existing_payment_method.viva_wallet_client_id,
+                    'viva_wallet_client_secret': existing_payment_method.viva_wallet_client_secret,
+                    'viva_wallet_bearer_token': existing_payment_method.viva_wallet_bearer_token,
+                })
 
     @api.constrains('use_payment_terminal')
     def _check_viva_wallet_credentials(self):

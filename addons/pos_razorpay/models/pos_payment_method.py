@@ -12,9 +12,6 @@ class PosPaymentMethod(models.Model):
     razorpay_api_key = fields.Char(string='Razorpay API Key', help='Used when connecting to Razorpay: https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/')
     razorpay_test_mode = fields.Boolean(string='Razorpay Test Mode', default=False, help='Turn it on when in Test Mode')
 
-    def _get_payment_terminal_selection(self):
-        return super()._get_payment_terminal_selection() + [('razorpay', 'Razorpay')]
-
     def razorpay_make_payment_request(self, data):
         razorpay = RazorpayPosRequest(self)
         body = razorpay._razorpay_get_payment_request_body(payment_mode=True)
@@ -79,3 +76,15 @@ class PosPaymentMethod(models.Model):
     def _check_razorpay_terminal(self):
         if any(record.use_payment_terminal == 'razorpay' and record.company_id.currency_id.name != 'INR' for record in self):
             raise UserError(_('This Payment Terminal is only valid for INR Currency'))
+
+    @api.onchange('use_payment_terminal')
+    def _onchange_use_payment_terminal(self):
+        super()._onchange_use_payment_terminal()
+        if self.use_payment_terminal == 'razorpay' and not self.razorpay_api_key:
+            existing_payment_method = self.search([('use_payment_terminal', '=', 'razorpay'), ('razorpay_api_key', '!=', False)], limit=1)
+            if existing_payment_method:
+                self.update({
+                    'razorpay_allowed_payment_modes': existing_payment_method.razorpay_allowed_payment_modes,
+                    'razorpay_username': existing_payment_method.razorpay_username,
+                    'razorpay_api_key': existing_payment_method.razorpay_api_key,
+                })

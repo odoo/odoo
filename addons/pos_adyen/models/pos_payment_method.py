@@ -17,9 +17,6 @@ UNPREDICTABLE_ADYEN_DATA = object() # sentinel
 class PosPaymentMethod(models.Model):
     _inherit = 'pos.payment.method'
 
-    def _get_payment_terminal_selection(self):
-        return super(PosPaymentMethod, self)._get_payment_terminal_selection() + [('adyen', 'Adyen')]
-
     # Adyen
     adyen_api_key = fields.Char(string="Adyen API key", help='Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description', copy=False, groups='base.group_erp_manager')
     adyen_terminal_identifier = fields.Char(help='[Terminal model]-[Serial number], for example: P400Plus-123456789', copy=False)
@@ -51,6 +48,14 @@ class PosPaymentMethod(models.Model):
                                              terminal=payment_method.adyen_terminal_identifier,
                                              company=existing_payment_method.company_id.name,
                                              payment_method=existing_payment_method.display_name))
+
+    @api.onchange('use_payment_terminal')
+    def _onchange_use_payment_terminal(self):
+        super()._onchange_use_payment_terminal()
+        if self.use_payment_terminal == 'adyen' and not self.adyen_api_key:
+            existing_payment_method = self.search([('use_payment_terminal', '=', 'adyen'), ('adyen_api_key', '!=', False)], limit=1)
+            if existing_payment_method:
+                self.adyen_api_key = existing_payment_method.adyen_api_key
 
     def _get_adyen_endpoints(self):
         return {
