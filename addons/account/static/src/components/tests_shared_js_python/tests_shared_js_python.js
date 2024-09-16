@@ -28,7 +28,7 @@ export class TestsSharedJsPython extends Component {
                 round_price_include: false,
             };
             const results = {
-                results: accountTaxHelpers.evaluate_taxes_computation(
+                results: accountTaxHelpers.get_tax_details(
                     params.taxes,
                     params.price_unit,
                     params.quantity,
@@ -36,13 +36,13 @@ export class TestsSharedJsPython extends Component {
                 )
             };
             if (params.rounding_method === "round_globally") {
-                results.total_excluded_results = accountTaxHelpers.evaluate_taxes_computation(
+                results.total_excluded_results = accountTaxHelpers.get_tax_details(
                     params.taxes,
                     results.results.total_excluded / params.quantity,
                     params.quantity,
                     {...kwargs, special_mode: "total_excluded"}
                 );
-                results.total_included_results = accountTaxHelpers.evaluate_taxes_computation(
+                results.total_included_results = accountTaxHelpers.get_tax_details(
                     params.taxes,
                     results.results.total_included / params.quantity,
                     params.quantity,
