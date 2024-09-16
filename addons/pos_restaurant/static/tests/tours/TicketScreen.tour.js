@@ -65,3 +65,21 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             ProductScreen.orderIsEmpty(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("OrderNumberConflictTour", {
+    test: true,
+    steps: () =>
+        [
+            FloorScreen.clickTable("3"),
+            ProductScreen.isShown(),
+            ProductScreen.addOrderline("Coca-Cola", "1", "3"),
+            FloorScreen.backToFloor(),
+            Chrome.clickMenuButton(),
+            Chrome.clickTicketButton(),
+            TicketScreen.nthColumnContains(6, 2, "Order"),
+            TicketScreen.nthColumnContains(6, 3, "01"),
+            TicketScreen.nthColumnContains(7, 2, "Self-Order"),
+            TicketScreen.nthColumnContains(7, 3, "S"),
+            TicketScreen.nthColumnContains(7, 3, "01")
+        ].flat(),
+});

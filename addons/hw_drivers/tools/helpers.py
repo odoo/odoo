@@ -288,12 +288,14 @@ def get_ssid():
 
 @cache
 def get_odoo_server_url():
-    if platform.system() == 'Linux':
-        ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
-        if not ap:
-            return False
+    """Get the URL of the linked Odoo database.
+    If the IoT Box is in access point mode, it will return ``None`` to avoid
+    connecting to the server.
 
-    return get_conf('remote_server')
+    :return: The URL of the linked Odoo database.
+    :rtype: str or None
+    """
+    return None if access_point() else get_conf('remote_server')
 
 
 def get_token():
@@ -602,7 +604,7 @@ def migrate_old_config_files_to_new_config_file():
         enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
         remote_server = read_file_first_line('odoo-remote-server.conf')
         token = read_file_first_line('token')
-        subject = read_file_first_line('subject')
+        subject = read_file_first_line('odoo-subject.conf')
 
         update_conf({
             'iotbox_version': iotbox_version,
@@ -633,4 +635,4 @@ def migrate_old_config_files_to_new_config_file():
         unlink_file('odoo-enterprise-code.conf')
         unlink_file('odoo-remote-server.conf')
         unlink_file('token')
-        unlink_file('subject')
+        unlink_file('odoo-subject.conf')

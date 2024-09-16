@@ -155,3 +155,21 @@ class TestAutomation(TransactionCaseWithUserDemo):
         }
         server_action.with_context(context).run()
         self.assertEqual(partner.name, 'Reset Name', 'The automatic action must not be performed')
+
+    def test_create_automation_rule_for_valid_model(self):
+        """
+        Automation rules cannot be created for models that have no fields.
+        """
+        model_field = self.env['base.automation']._fields['model_id']
+        base_model = self.env['base']
+
+        # Verify that the base model is abstract and has _auto set to False
+        self.assertTrue(base_model._abstract, "The base model should be abstract")
+        self.assertFalse(base_model._auto, "The base model should have _auto set to False")
+
+        # check whether the field hase domain attribute
+        self.assertTrue(model_field.domain)
+        domain = model_field.domain
+
+        allowed_models = self.env['ir.model'].search(domain)
+        self.assertTrue(base_model._name not in allowed_models.mapped('model'), "The base model should not be in the allowed models")
