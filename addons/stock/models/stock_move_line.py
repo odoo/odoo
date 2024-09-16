@@ -52,7 +52,9 @@ class StockMoveLine(models.Model):
         ondelete='restrict', required=False, check_company=True,
         domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]",
         help="If set, the operations are packed into this package")
-    date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
+    date = fields.Datetime(
+        'Date', default=fields.Datetime.now, required=True,
+        help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.")
     scheduled_date = fields.Datetime('Scheduled Date', related='move_id.date')
     owner_id = fields.Many2one(
         'res.partner', 'From Owner',
@@ -467,6 +469,22 @@ class StockMoveLine(models.Model):
                 # Log a note
                 if ml.picking_id:
                     ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
+
+        # update the date when it seems like (additional) quantities are "done" and the date hasn't been manually updated
+        if 'date' not in vals and ('product_uom_id' in vals or 'quantity' in vals or vals.get('picked', False)):
+            updated_ml_ids = set()
+            for ml in self:
+                if ml.state in ['draft', 'cancel', 'done']:
+                    continue
+                if vals.get('picked', False) and not ml.picked:
+                    updated_ml_ids.add(ml.id)
+                    continue
+                if ('quantity' in vals or 'product_uom_id' in vals) and ml.picked:
+                    new_qty = updates.get('product_uom_id', ml.product_uom_id)._compute_quantity(vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
+                    old_qty = ml.product_uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id, rounding_method='HALF-UP')
+                    if float_compare(old_qty, new_qty, precision_rounding=ml.product_uom_id.rounding) < 0:
+                        updated_ml_ids.add(ml.id)
+            self.env['stock.move.line'].browse(updated_ml_ids).date = fields.Datetime.now()
 
         res = super(StockMoveLine, self).write(vals)
 
