@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { getLocalWeekNumber, is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { renderToString } from "@web/core/utils/render";
@@ -70,7 +69,7 @@ export class CalendarCommonRenderer extends Component {
     get options() {
         return {
             allDaySlot: true,
-            allDayContent: _t(""),
+            allDayContent: "",
             dayHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
