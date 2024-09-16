@@ -348,7 +348,8 @@ export class PaymentScreen extends Component {
                 );
 
                 if (printResult && this.pos.config.iface_print_skip_screen) {
-                    this.currentOrder.set_screen_data({ name: "ReceiptScreen" });
+                    this.currentOrder.uiState.screen_data["value"] = "";
+                    this.currentOrder.uiState.locked = true;
                     this.pos.add_new_order();
                     nextScreen = "ProductScreen";
                 }
