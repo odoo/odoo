@@ -126,6 +126,11 @@ export class Composer extends Component {
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {
             execBeforeUnmount: true,
         });
+        /** stored cancel or save edit texts, as to not re-render them while clicking on inner-actions */
+        this._CANCEL_OR_SAVE_EDIT_TEXT = {
+            mobile: null,
+            desktop: [null, null],
+        };
         useExternalListener(window, "beforeunload", this.saveContent.bind(this));
         if (this.props.dropzoneRef) {
             useDropzone(
@@ -229,7 +234,11 @@ export class Composer extends Component {
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {
         if (this.ui.isSmall) {
-            return markup(
+            if (this._CANCEL_OR_SAVE_EDIT_TEXT.mobile) {
+                // prevent re-render while clicking on inner-buttons
+                return this._CANCEL_OR_SAVE_EDIT_TEXT.mobile;
+            }
+            this._CANCEL_OR_SAVE_EDIT_TEXT.mobile = markup(
                 sprintf(
                     escape(
                         _t(
@@ -249,29 +258,37 @@ export class Composer extends Component {
                     }
                 )
             );
+            return this._CANCEL_OR_SAVE_EDIT_TEXT.mobile;
         } else {
-            const translation1 = _t(
-                "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+            const translations = [
+                _t(
+                    "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+                ),
+                _t(
+                    "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
+                ),
+            ];
+            const params = {
+                open_samp: "<samp>",
+                close_samp: "</samp>",
+                open_em: "<em>",
+                close_em: "</em>",
+                open_cancel: `<a role="button" href="#" data-type="${escape(
+                    EDIT_CLICK_TYPE.CANCEL
+                )}">`,
+                close_cancel: "</a>",
+                open_save: `<a role="button" href="#" data-type="${escape(EDIT_CLICK_TYPE.SAVE)}">`,
+                close_save: "</a>",
+            };
+            const version = this.props.mode === "extended" ? 0 : 1;
+            if (this._CANCEL_OR_SAVE_EDIT_TEXT.desktop[version]) {
+                // prevent re-render while clicking on inner-buttons
+                return this._CANCEL_OR_SAVE_EDIT_TEXT.desktop[version];
+            }
+            this._CANCEL_OR_SAVE_EDIT_TEXT.desktop[version] = markup(
+                sprintf(escape(translations[version]), params)
             );
-            const translation2 = _t(
-                "%(open_samp)sEscape%(close_samp)s %(open_em)sto %(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
-            );
-            return markup(
-                sprintf(escape(this.props.mode === "extended" ? translation1 : translation2), {
-                    open_samp: "<samp>",
-                    close_samp: "</samp>",
-                    open_em: "<em>",
-                    close_em: "</em>",
-                    open_cancel: `<a role="button" href="#" data-type="${escape(
-                        EDIT_CLICK_TYPE.CANCEL
-                    )}">`,
-                    close_cancel: "</a>",
-                    open_save: `<a role="button" href="#" data-type="${escape(
-                        EDIT_CLICK_TYPE.SAVE
-                    )}">`,
-                    close_save: "</a>",
-                })
-            );
+            return this._CANCEL_OR_SAVE_EDIT_TEXT.desktop[0];
         }
     }
 

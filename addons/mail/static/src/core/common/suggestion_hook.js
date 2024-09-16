@@ -23,7 +23,7 @@ class UseSuggestion {
                     await this.suggestionService.fetchSuggestions(this.search, {
                         thread: this.thread,
                     });
-                    if (status(comp) === "destroyed") {
+                    if (status(comp) === "destroyed" || !this.composer.exists()) {
                         return;
                     }
                     this.update();
@@ -43,7 +43,9 @@ class UseSuggestion {
         );
         useEffect(
             () => {
-                this.detect();
+                if (this.composer.exists()) {
+                    this.detect();
+                }
             },
             () => [this.composer.selection.start, this.composer.selection.end, this.composer.text]
         );
