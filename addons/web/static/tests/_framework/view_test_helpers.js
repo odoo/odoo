@@ -126,7 +126,10 @@ export async function clickCancel(options) {
  * @param {SelectorOptions} [options]
  */
 export async function clickFieldDropdown(fieldName, options) {
-    await contains(buildSelector(`[name='${fieldName}'] .dropdown input`, options)).click();
+    const selector = getMockEnv().isSmall
+        ? `[name='${fieldName}'] input`
+        : `[name='${fieldName}'] .dropdown input`;
+    await contains(buildSelector(selector, options)).click();
 }
 
 /**
@@ -135,6 +138,10 @@ export async function clickFieldDropdown(fieldName, options) {
  * @param {SelectorOptions} [options]
  */
 export async function clickFieldDropdownItem(fieldName, itemContent, options) {
+    if (getMockEnv().isSmall) {
+        await contains(`.o_kanban_record:contains('${itemContent}')`).click();
+        return;
+    }
     const dropdowns = queryAll(
         buildSelector(`[name='${fieldName}'] .dropdown .dropdown-menu`, options)
     );
