@@ -272,6 +272,15 @@ class TestDevice(TestHttpBase):
         self.assertNotIn('191.0.1.41', device_chrome.linked_ip_addresses)
         self.assertIn('191.0.1.41', device_firefox.linked_ip_addresses)
 
+    def test_detection_no_trace_mechanism(self):
+        session = self.authenticate(self.user_admin.login, self.user_admin.login)
+        session._trace_disable = True
+        odoo.http.root.session_store.save(session)
+        self.hit('2024-01-01 08:00:00', '/test_http/greeting-user-rw')
+        devices, logs = self.get_devices_logs(self.user_admin)
+        self.assertEqual(len(devices), 0)
+        self.assertEqual(len(logs), 0)
+
     # --------------------
     # DELETION
     # --------------------
