@@ -441,6 +441,7 @@ class AccountMove(models.Model):
         required=True,
         compute='_compute_currency_id', inverse='_inverse_currency_id', store=True, readonly=False, precompute=True,
     )
+    currency_code = fields.Char(related='currency_id.name', string="Currency code")
     invoice_currency_rate = fields.Float(
         string='Currency Rate',
         compute='_compute_invoice_currency_rate', store=True, precompute=True,
