@@ -196,6 +196,7 @@ export class PosStore extends Reactive {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this;
+        this.syncingOrders = new Set();
         await this.initServerData();
         if (this.useProxy()) {
             await this.connectToProxy();
@@ -1256,8 +1257,19 @@ export class PosStore extends Reactive {
         if (!orders || !orders.length) {
             return Promise.resolve([]);
         }
+
+        // Filter out orders that are already being synced
+        const ordersToSync = orders.filter((order) => !this.syncingOrders.has(order.id));
+
+        if (!ordersToSync.length) {
+            return Promise.resolve([]);
+        }
+
+        // Add these order IDs to the syncing set
+        ordersToSync.forEach((order) => this.syncingOrders.add(order.id));
+
         options = options || {};
-        for (const order of orders) {
+        for (const order of ordersToSync) {
             order.to_invoice = options.to_invoice || false;
         }
 
@@ -1265,9 +1277,9 @@ export class PosStore extends Reactive {
             const serverIds = await this.data.call(
                 "pos.order",
                 "create_from_ui",
-                [orders, options.draft || false],
+                [ordersToSync, options.draft || false],
                 {
-                    context: this._getCreateOrderContext(orders, options),
+                    context: this._getCreateOrderContext(ordersToSync, options),
                 }
             );
 
@@ -1289,7 +1301,7 @@ export class PosStore extends Reactive {
             this.failed = false;
             return serverIds;
         } catch (error) {
-            console.warn("Failed to send orders:", orders);
+            console.warn("Failed to send orders:", ordersToSync);
             if (error.code === 200) {
                 // Business Logic Error, not a connection problem
                 // Hide error if already shown before ...
@@ -1299,6 +1311,8 @@ export class PosStore extends Reactive {
                 }
             }
             throw error;
+        } finally {
+            ordersToSync.forEach((order) => this.syncingOrders.delete(order.id));
         }
     }
 
