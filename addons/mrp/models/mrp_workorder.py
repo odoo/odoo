@@ -561,10 +561,17 @@ class MrpWorkorder(models.Model):
         vals['leave_id'] = leave.id
         self.write(vals)
 
-    def _cal_cost(self):
+    def _cal_cost(self, date=False):
+        """Returns total cost of time spent on workorder.
+
+        :param date datetime: Only calculate for time_ids that ended before this date
+        """
         total = 0
         for wo in self:
-            duration = sum(wo.time_ids.mapped('duration'))
+            if date:
+                duration = sum(wo.time_ids.filtered(lambda t: t.date_end <= date).mapped('duration'))
+            else:
+                duration = sum(wo.time_ids.mapped('duration'))
             total += (duration / 60.0) * wo.workcenter_id.costs_hour
         return total
 
