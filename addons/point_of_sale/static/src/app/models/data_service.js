@@ -167,8 +167,8 @@ export class PosData extends Reactive {
         }
 
         const preLoadData = await this.preLoadData(data);
-
-        const results = this.models.loadData(preLoadData, [], true);
+        const missing = await this.missingRecursive(preLoadData);
+        const results = this.models.loadData(missing, [], true);
         for (const [model, data] of Object.entries(results)) {
             for (const record of data) {
                 if (record.raw.JSONuiState) {
