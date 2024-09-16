@@ -1,4 +1,4 @@
-import { Component, useState, useRef, onMounted } from "@odoo/owl";
+import { Component, useState, useRef, useEffect, onMounted } from "@odoo/owl";
 
 export class AccordionItem extends Component {
     static template = "pos_hr.AccordionItem";
@@ -20,6 +20,12 @@ export class AccordionItem extends Component {
         onMounted(() => {
             this.contentHeight = this.calculateFullHeight();
         });
+        useEffect(
+            () => {
+                this.contentHeight = this.calculateFullHeight();
+            },
+            () => [this.props.slots.content]
+        );
     }
 
     toggle() {

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup">
         <Dialog title.translate="Product information">
-            <ProductInfoBanner product="props.product" info="props.info"/>
+            <ProductInfoBanner t-if="!props.product.isConfigurable()" product="props.product" info="props.info"/>
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start" t-if="!isVariant and props.info.productInfo.warehouses.length > 0">
                 <h3 class="section-title">
                     Inventory
