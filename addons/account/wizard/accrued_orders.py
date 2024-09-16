@@ -174,7 +174,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                         l.qty_to_invoice,
                         0,
                         precision_rounding=l.product_uom.rounding,
-                    ) == 1
+                    ) != 0
                 )
                 for order_line in lines:
                     if is_purchase:
