@@ -13,7 +13,7 @@ class TestGlobalRouteRulesInstallation(common.TransactionCase):
             ('picking_type_id.name', '=', 'Repairs'),
         ])
         self.assertTrue(rule, "Stock rule was not created")
-        self.assertEqual(rule.procure_method, 'mts_else_mto', "Procure method is incorrect")
+        self.assertEqual(rule.procure_method, 'make_to_order', "Procure method is incorrect")
         self.assertEqual(rule.company_id.id, self.company.id, "Company ID is incorrect")
         self.assertEqual(rule.action, 'pull', "Action is incorrect")
         self.assertEqual(rule.auto, 'manual', "Auto is incorrect")

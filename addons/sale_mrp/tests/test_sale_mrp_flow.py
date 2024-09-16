@@ -298,7 +298,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         order.action_confirm()
 
         # Verify buttons are working as expected
-        self.assertEqual(order.mrp_production_count, 1, "User should see the closest manufacture order in the smart button")
+        self.assertEqual(order.mrp_production_count, 2, "Mo for product A + child mo for product B")
 
         # ===============================================================================
         #  Sales order of 10 Dozen product A should create production order

@@ -67,7 +67,7 @@ class StockWarehouse(models.Model):
             'repair_mto_pull_id': {
                 'depends': ['repair_type_id'],
                 'create_values': {
-                    'procure_method': 'mts_else_mto',
+                    'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
