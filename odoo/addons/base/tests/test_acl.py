@@ -9,19 +9,30 @@ from odoo.tests.common import TransactionCase
 from odoo.tools.misc import mute_logger
 from odoo import Command
 
-# test group that demo user should not have
-GROUP_SYSTEM = 'base.group_system'
-
 
 class TestACL(TransactionCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestACL, self).setUp()
-        self.erp_system_group = self.env.ref(GROUP_SYSTEM)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.TEST_GROUP = 'base.base_test_group'
+        cls.test_group = cls.env['res.groups'].create({
+            'name': 'test with implied user',
+            'implied_ids': [Command.link(cls.env.ref('base.group_user').id)]
+        })
+        cls.env["ir.model.data"].create({
+            "module": "base",
+            "name": "base_test_group",
+            "model": "res.groups",
+            "res_id": cls.test_group.id,
+        })
 
     def _set_field_groups(self, model, field_name, groups):
         field = model._fields[field_name]
         self.patch(field, 'groups', groups)
+        self.env.invalidate_all()
+        self.env.registry.clear_cache('templates')
 
     def test_field_visibility_restriction(self):
         """Check that model-level ``groups`` parameter effectively restricts access to that
@@ -29,35 +40,28 @@ class TestACL(TransactionCaseWithUserDemo):
         currency = self.env['res.currency'].with_user(self.user_demo)
 
         # Add a view that adds a label for the field we are going to check
-        extension = self.env["ir.ui.view"].create({
+        primary = self.env["ir.ui.view"].create({
             "name": "Add separate label for decimal_places",
             "model": "res.currency",
-            "inherit_id": self.env.ref("base.view_currency_form").id,
-            "arch": """
-                <data>
-                    <field name="decimal_places" position="attributes">
-                        <attribute name="nolabel">1</attribute>
-                    </field>
-                    <field name="decimal_places" position="before">
+            "type": "form",
+            "priority": 1,
+            "arch": """<form>
+                <group>
+                    <group string="Price Accuracy">
+                        <field name="rounding"/>
                         <label for="decimal_places"/>
-                    </field>
-                </data>
-            """,
+                        <field name="decimal_places" nolabel="1"/>
+                    </group>
+                </group>
+            </form>""",
         })
-        currency = currency.with_context(check_view_ids=extension.ids)
 
         # Verify the test environment first
         original_fields = currency.fields_get([])
-        with self.debug_mode():
-            # <group groups="base.group_no_one">
-            #     <group string="Price Accuracy">
-            #         <field name="rounding"/>
-            #         <field name="decimal_places"/>
-            #     </group>
-            form_view = currency.get_view(False, 'form')
+        form_view = currency.get_view(primary.id, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
-        has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
-        self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
+        has_group_test = self.user_demo.has_group(self.TEST_GROUP)
+        self.assertFalse(has_group_test, "`demo` user should not belong to the restricted group before the test")
         self.assertIn('decimal_places', original_fields, "'decimal_places' field must be properly visible before the test")
         self.assertNotEqual(view_arch.xpath("//field[@name='decimal_places'][@nolabel='1']"), [],
                              "Field 'decimal_places' must be found in view definition before the test")
@@ -65,10 +69,10 @@ class TestACL(TransactionCaseWithUserDemo):
                              "Label for 'decimal_places' must be found in view definition before the test")
 
         # restrict access to the field and check it's gone
-        self._set_field_groups(currency, 'decimal_places', GROUP_SYSTEM)
+        self._set_field_groups(currency, 'decimal_places', self.TEST_GROUP)
 
         fields = currency.fields_get([])
-        form_view = currency.get_view(False, 'form')
+        form_view = currency.get_view(primary.id, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertNotIn('decimal_places', fields, "'decimal_places' field should be gone")
         self.assertEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
@@ -77,13 +81,12 @@ class TestACL(TransactionCaseWithUserDemo):
                           "Label for 'decimal_places' must not be found in view definition")
 
         # Make demo user a member of the restricted group and check that the field is back
-        self.erp_system_group.users += self.user_demo
-        has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
+        self.test_group.users += self.user_demo
+        has_group_test = self.user_demo.has_group(self.TEST_GROUP)
         fields = currency.fields_get([])
-        with self.debug_mode():
-            form_view = currency.get_view(False, 'form')
+        form_view = currency.get_view(primary.id, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
-        self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
+        self.assertTrue(has_group_test, "`demo` user should now belong to the restricted group")
         self.assertIn('decimal_places', fields, "'decimal_places' field must be properly visible again")
         self.assertNotEqual(view_arch.xpath("//field[@name='decimal_places']"), [],
                              "Field 'decimal_places' must be found in view definition again")
@@ -96,13 +99,13 @@ class TestACL(TransactionCaseWithUserDemo):
         partner = self.env['res.partner'].browse(1).with_user(self.user_demo)
 
         # Verify the test environment first
-        has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
-        self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group")
+        has_group_test = self.user_demo.has_group(self.TEST_GROUP)
+        self.assertFalse(has_group_test, "`demo` user should not belong to the restricted group")
         self.assertTrue(partner.read(['bank_ids']))
         self.assertTrue(partner.write({'bank_ids': []}))
 
         # Now restrict access to the field and check it's forbidden
-        self._set_field_groups(partner, 'bank_ids', GROUP_SYSTEM)
+        self._set_field_groups(partner, 'bank_ids', self.TEST_GROUP)
 
         with self.assertRaises(AccessError):
             partner.search_fetch([], ['bank_ids'])
@@ -114,9 +117,9 @@ class TestACL(TransactionCaseWithUserDemo):
             partner.write({'bank_ids': []})
 
         # Add the restricted group, and check that it works again
-        self.erp_system_group.users += self.user_demo
-        has_group_system = self.user_demo.has_group(GROUP_SYSTEM)
-        self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
+        self.test_group.users += self.user_demo
+        has_group_test = self.user_demo.has_group(self.TEST_GROUP)
+        self.assertTrue(has_group_test, "`demo` user should now belong to the restricted group")
         self.assertTrue(partner.read(['bank_ids']))
         self.assertTrue(partner.write({'bank_ids': []}))
 
@@ -125,9 +128,8 @@ class TestACL(TransactionCaseWithUserDemo):
         """Test access to records having restricted fields"""
         # Invalidate cache to avoid restricted value to be available
         # in the cache
-        self.env.invalidate_all()
         partner = self.env['res.partner'].with_user(self.user_demo)
-        self._set_field_groups(partner, 'email', GROUP_SYSTEM)
+        self._set_field_groups(partner, 'email', self.TEST_GROUP)
 
         # accessing fields must no raise exceptions...
         partner = partner.search([], limit=1)
@@ -146,11 +148,11 @@ class TestACL(TransactionCaseWithUserDemo):
         company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
 
-        # demo not part of the group_system, create edit and delete must be False
+        # demo not part of the group_test, create edit and delete must be False
         for method in methods:
             self.assertEqual(view_arch.get(method), 'False')
 
-        # demo part of the group_system, create edit and delete must not be specified
+        # demo part of the group_test, create edit and delete must not be specified
         company = self.env['res.company'].with_user(self.env.ref("base.user_admin"))
         company_view = company.get_view(False, 'form')
         view_arch = etree.fromstring(company_view['arch'])
@@ -178,13 +180,14 @@ class TestACL(TransactionCaseWithUserDemo):
             self.assertEqual(field_node[0].get('can_' + method), 'True')
 
     def test_get_views_fields(self):
-        """ Tests fields restricted to group_system are not passed when calling `get_views` as demo
+        """ Tests fields restricted to group_test are not passed when calling `get_views` as demo
         but the same fields are well passed when calling `get_views` as admin"""
         Partner = self.env['res.partner']
-        self._set_field_groups(Partner, 'email', GROUP_SYSTEM)
+        self._set_field_groups(Partner, 'email', self.TEST_GROUP)
         views = Partner.with_user(self.user_demo).get_views([(False, 'form')])
         self.assertFalse('email' in views['models']['res.partner']["fields"])
-        views = Partner.with_user(self.env.ref("base.user_admin")).get_views([(False, 'form')])
+        self.user_demo.groups_id = [Command.link(self.test_group.id)]
+        views = Partner.with_user(self.user_demo).get_views([(False, 'form')])
         self.assertTrue('email' in views['models']['res.partner']["fields"])
 
 
