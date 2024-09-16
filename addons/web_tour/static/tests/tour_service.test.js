@@ -1338,7 +1338,6 @@ test("check tooltip position", async () => {
 
 test("check rainbowManMessage", async () => {
     registry.category("web_tour.tours").add("rainbow_tour", {
-        rainbowManMessage: "Congratulations !",
         steps: () => [
             {
                 trigger: ".button0",
@@ -1368,7 +1367,10 @@ test("check rainbowManMessage", async () => {
         static props = ["*"];
     }
     await mountWithCleanup(Root);
-    await getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
+    await getService("tour_service").startTour("rainbow_tour", {
+        mode: "manual",
+        rainbowManMessage: "Congratulations !",
+    });
     await contains(".button0").click();
     await contains(".button1").click();
     await contains(".button2").click();
