@@ -24,13 +24,13 @@
                                 t-on-pointerup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
-                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
-                                t-att-data-tooltip-info="makeTooltip(column)"
                                 data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
                                 <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
-                                    <div t-att-class="{'d-flex': true, 'flex-row-reverse': shouldReverseHeader(column)}">
+                                    <div t-att-class="{'d-flex': true, 'flex-row-reverse': shouldReverseHeader(column)}"
+                                        t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
+                                        t-att-data-tooltip-info="makeTooltip(column)">
                                         <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
                                               t-esc="column.label"/>
                                         <i t-att-class="getSortableIconClass(column)"/>
