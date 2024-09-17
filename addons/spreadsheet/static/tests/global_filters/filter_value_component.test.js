@@ -1,6 +1,9 @@
-import { makeMockEnv, contains } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { describe, expect, test, getFixture, mountOnFixture } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
+import { click } from "@odoo/hoot-dom";
+
 import { Model } from "@odoo/o-spreadsheet";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import {
@@ -10,6 +13,7 @@ import {
 } from "@spreadsheet/../tests/helpers/commands";
 import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
 import { getTemplate } from "@web/core/templates";
+import { user } from "@web/core/user";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
@@ -64,4 +68,49 @@ test("text filter with range", async function () {
     await contains("select").select("0");
     expect(select.value).toBe("0", { message: "value is selected" });
     expect(model.getters.getGlobalFilterValue("42")).toBe("0", { message: "value is set" });
+});
+
+test("relational filter with domain", async function () {
+    onRpc("partner", "name_search", ({ kwargs }) => {
+        expect.step("name_search");
+        expect(kwargs.args).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
+    });
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "relation",
+        label: "My Filter",
+        modelName: "partner",
+        domainOfAllowedValues: [["display_name", "=", "Bob"]],
+    });
+    await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
+    click(".o_multi_record_selector input");
+    await animationFrame();
+    expect.verifySteps(["name_search"]);
+});
+
+test("relational filter with a contextual domain", async function () {
+    onRpc("partner", "name_search", ({ kwargs }) => {
+        expect.step("name_search");
+        expect(kwargs.args).toEqual([
+            "&",
+            ["user_ids", "in", [user.userId]],
+            "!",
+            ["id", "in", []],
+        ]);
+    });
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "relation",
+        label: "My Filter",
+        modelName: "partner",
+        domainOfAllowedValues: '[["user_ids", "in", [uid]]]',
+    });
+    await mountFilterValueComponent(env, { model, filter: model.getters.getGlobalFilter("42") });
+    click(".o_multi_record_selector input");
+    await animationFrame();
+    expect.verifySteps(["name_search"]);
 });

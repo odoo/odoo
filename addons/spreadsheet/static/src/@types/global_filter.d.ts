@@ -1,4 +1,5 @@
 import { Range, RangeData } from "@odoo/o-spreadsheet";
+import { DomainListRepr } from "@web/core/domain";
 
 declare module "@spreadsheet" {
     export type RangeType = "fixedPeriod" | "relative" | "from_to";
@@ -65,6 +66,7 @@ declare module "@spreadsheet" {
         modelName: string;
         includeChildren: boolean;
         defaultValue?: "current_user" | number[];
+        domainOfAllowedValues?: DomainListRepr | string;
     }
 
     export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter;
