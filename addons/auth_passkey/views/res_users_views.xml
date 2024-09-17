@@ -9,29 +9,16 @@
                 <group string="Passkeys">
                     <field colspan="4" name="auth_passkey_key_ids" string="">
                         <kanban create="false" can_open="false">
-                            <field name="name"/>
-                                <templates>
-                                    <t t-name="kanban-menu">
-                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-                                    </t>
-                                    <t t-name="kanban-box">
-                                        <div class="oe_kanban_card">
-                                            <div class="oe_kanban_details">
-                                                <div class="o_kanban_record_top">
-                                                    <div class="o_kanban_record_headings">
-                                                        <strong class="o_kanban_record_title">
-                                                            <field name="name"/>
-                                                        </strong>
-                                                    </div>
-                                                </div>
-                                                <ul>
-                                                    <li>Created: <field name="create_date"/></li>
-                                                    <li>Last used: <field name="write_date"/></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </t>
-                                </templates>
+                            <templates>
+                                <t t-name="kanban-menu">
+                                    <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                </t>
+                                <t t-name="kanban-card">
+                                    <field name="name" class="fw-bold fs-5"/>
+                                    <small>Created: <field name="create_date"/></small>
+                                    <small>Last used: <field name="write_date"/></small>
+                                </t>
+                            </templates>
                         </kanban>
                     </field>
                 </group>
@@ -55,28 +42,15 @@
                         </div>
                         <field colspan="4" name="auth_passkey_key_ids">
                             <kanban create="false" can_open="false">
-                                <field name="name"/>
                                 <templates>
                                     <t t-name="kanban-menu">
                                         <a role="menuitem" type="object" name="action_rename_passkey" class="dropdown-item">Rename</a>
                                         <a role="menuitem" type="object" name="action_delete_passkey" class="dropdown-item">Delete</a>
                                     </t>
-                                    <t t-name="kanban-box">
-                                        <div class="oe_kanban_card">
-                                            <div class="oe_kanban_details">
-                                                <div class="o_kanban_record_top">
-                                                    <div class="o_kanban_record_headings">
-                                                        <strong class="o_kanban_record_title">
-                                                            <field name="name"/>
-                                                        </strong>
-                                                    </div>
-                                                </div>
-                                                <ul>
-                                                    <li>Created: <field name="create_date"/></li>
-                                                    <li>Last used: <field name="write_date"/></li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                    <t t-name="kanban-card">
+                                        <field name="name" class="fw-bold fs-5"/>
+                                        <small>Created: <field name="create_date"/></small>
+                                        <small>Last used: <field name="write_date"/></small>
                                     </t>
                                 </templates>
                             </kanban>
