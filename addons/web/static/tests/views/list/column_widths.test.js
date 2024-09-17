@@ -147,7 +147,7 @@ test(`width computation: no record, lot of fields`, async () => {
                 <field name="currency_id"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 119, 119, 91, 119, 91, 91, 145, 119, 130]);
+    expect(getColumnWidths()).toEqual([40, 29, 89, 80, 89, 102, 89, 154, 114, 100]);
 });
 
 test(`width computation: no record, few fields`, async () => {
@@ -162,7 +162,7 @@ test(`width computation: no record, few fields`, async () => {
                 <field name="int_field"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 145, 458, 156]);
+    expect(getColumnWidths()).toEqual([40, 109, 559, 91]);
 });
 
 test(`width computation: no record, all fields with a max width`, async () => {
@@ -177,7 +177,7 @@ test(`width computation: no record, all fields with a max width`, async () => {
                 <field name="qux"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 250, 250, 261]);
+    expect(getColumnWidths()).toEqual([40, 262, 233, 266]);
 });
 
 test(`width computation: no record, sample data`, async () => {
@@ -194,7 +194,7 @@ test(`width computation: no record, sample data`, async () => {
                 <field name="int_field"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 146, 153, 153, 153, 157]);
+    expect(getColumnWidths()).toEqual([40, 109, 186, 186, 186, 91]);
 });
 
 test(`width computation: with records, lot of fields`, async () => {
@@ -214,7 +214,7 @@ test(`width computation: with records, lot of fields`, async () => {
                 <field name="currency_id"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 119, 119, 91, 119, 91, 91, 145, 119, 130]);
+    expect(getColumnWidths()).toEqual([40, 29, 89, 80, 89, 102, 89, 154, 114, 100]);
 });
 
 test(`width computation: with records, lot of fields, grouped`, async () => {
@@ -237,7 +237,7 @@ test(`width computation: with records, lot of fields, grouped`, async () => {
         groupBy: ["int_field"],
     });
     expect(`.o_resize`).toHaveCount(9);
-    expect(getColumnWidths()).toEqual([40, 119, 119, 91, 119, 91, 91, 145, 119, 45]);
+    expect(getColumnWidths()).toEqual([40, 29, 89, 80, 89, 102, 89, 154, 114, 45]);
 });
 
 test(`width computation: with records, few fields`, async () => {
@@ -251,7 +251,7 @@ test(`width computation: with records, few fields`, async () => {
                 <field name="int_field"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 145, 458, 156]);
+    expect(getColumnWidths()).toEqual([40, 109, 559, 91]);
 });
 
 test(`width computation: with records, no relative fields`, async () => {
@@ -266,7 +266,7 @@ test(`width computation: with records, no relative fields`, async () => {
                 <field name="date"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 201, 201, 201, 158]);
+    expect(getColumnWidths()).toEqual([40, 201, 172, 194, 192]);
 });
 
 test(`width computation: with records, very long text field`, async () => {
@@ -288,7 +288,7 @@ test(`width computation: with records, very long text field`, async () => {
                 <field name="qux"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 119, 538, 102]);
+    expect(getColumnWidths()).toEqual([40, 29, 618, 113]);
 });
 
 test(`width computation: with records, lot of fields, long texts`, async () => {
@@ -312,7 +312,7 @@ test(`width computation: with records, lot of fields, long texts`, async () => {
                 <field name="currency_id"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 119, 119, 91, 91, 91, 119, 145, 119, 130]);
+    expect(getColumnWidths()).toEqual([40, 29, 89, 80, 102, 89, 89, 154, 114, 100]);
 });
 
 test(`width computation: editable list, overflowing table`, async () => {
@@ -354,7 +354,7 @@ test(`width computation: editable list, overflowing table`, async () => {
     expect(`table`).toHaveRect(queryRect`.o_list_renderer`, {
         message: "Table should not be stretched by its content",
     });
-    expect(getColumnWidths()).toEqual([40, 119, 641]);
+    expect(getColumnWidths()).toEqual([40, 89, 671]);
 });
 
 test(`width computation: with records, few fields, long texts`, async () => {
@@ -373,7 +373,7 @@ test(`width computation: with records, few fields, long texts`, async () => {
                 <field name="text"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 119, 309, 332]);
+    expect(getColumnWidths()).toEqual([40, 29, 354, 377]);
 });
 
 test(`width computation: list with handle field`, async () => {
@@ -446,7 +446,7 @@ test(`width computation: list with width attribute in arch`, async () => {
                 <field name="currency_id"/>
             </tree>`,
     });
-    expect(getColumnWidths()).toEqual([40, 61, 72, 145, 481]);
+    expect(getColumnWidths()).toEqual([40, 61, 72, 102, 524]);
 });
 
 test(`width computation: width attribute in arch and overflowing table`, async () => {
@@ -469,7 +469,7 @@ test(`width computation: width attribute in arch and overflowing table`, async (
             </tree>
         `,
     });
-    expect(getColumnWidths()).toEqual([40, 145, 210, 405]);
+    expect(getColumnWidths()).toEqual([40, 154, 210, 396]);
 });
 
 test(`width computation: no record, nameless and stringless buttons`, async () => {
@@ -505,7 +505,7 @@ test(`width computation: no record, datetime field with date widget`, async () =
             </tree>
         `,
     });
-    expect(getColumnWidths()).toEqual([40, 91, 669]);
+    expect(getColumnWidths()).toEqual([40, 89, 671]);
 });
 
 test(`width computation: x2many`, async () => {
@@ -715,7 +715,7 @@ test(`width computation: button columns don't have a max width`, async () => {
     expect(tableWidth).toBeLessThan(800);
     columnWidths = getColumnWidths();
     // indices 0 and 1 because selectors aren't displayed on small screens
-    expect(columnWidths[0]).toBe(130);
+    expect(columnWidths[0]).toBe(100);
     expect(columnWidths[1]).toBeGreaterThan(330);
 });
 
@@ -1125,20 +1125,20 @@ test(`freeze widths: toggle optional fields`, async () => {
         `,
     });
 
-    expect(getColumnWidths()).toEqual([40, 91, 491, 145, 32]);
+    expect(getColumnWidths()).toEqual([40, 89, 484, 154, 32]);
 
     await contains(".o_optional_columns_dropdown_toggle").click();
     await contains(".dropdown-item input:eq(0)").click();
-    expect(getColumnWidths()).toEqual([40, 91, 345, 146, 146, 32]);
+    expect(getColumnWidths()).toEqual([40, 89, 381, 102, 155, 32]);
 
     await contains(".dropdown-item input:eq(1)").click();
-    expect(getColumnWidths()).toEqual([40, 91, 491, 145, 32]);
+    expect(getColumnWidths()).toEqual([40, 89, 536, 102, 32]);
 
     await contains(".dropdown-item input:eq(2)").click();
-    expect(getColumnWidths()).toEqual([40, 91, 119, 91, 426, 32]);
+    expect(getColumnWidths()).toEqual([40, 89, 89, 102, 447, 32]);
 
     await contains(".dropdown-item input:eq(1)").click();
-    expect(getColumnWidths()).toEqual([40, 91, 120, 91, 146, 279, 32]);
+    expect(getColumnWidths()).toEqual([40, 89, 89, 103, 155, 291, 32]);
 });
 
 test(`freeze widths: x2many, add first record`, async () => {
@@ -1235,16 +1235,16 @@ test(`freeze widths: x2many, toggle optional field`, async () => {
             </form>`,
     });
 
-    expect(getColumnWidths()).toEqual([102, 634, 32]);
+    expect(getColumnWidths()).toEqual([100, 636, 32]);
 
     // create a record to store the current widths, but discard it directly to keep
     // the list empty (otherwise, the browser automatically computes the optimal widths)
     await contains(".o_field_x2many_list_row_add a").click();
-    expect(getColumnWidths()).toEqual([102, 634, 32]);
+    expect(getColumnWidths()).toEqual([100, 636, 32]);
 
     await contains(".o_optional_columns_dropdown_toggle").click();
     await contains(".dropdown-item input").click();
-    expect(getColumnWidths()).toEqual([102, 488, 146, 32]);
+    expect(getColumnWidths()).toEqual([100, 555, 80, 32]);
 });
 
 // manually resize columns
