@@ -796,6 +796,14 @@ export class Orderline extends PosModel {
     isPartOfCombo() {
         return Boolean(this.combo_parent_id || this.combo_line_ids?.length);
     }
+    getComboTotalPrice() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithTax, 0);
+    }
+    getComboTotalPriceWithoutTax() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithoutTax, 0);
+    }
     getPriceString() {
         return this.get_discount_str() === "100"
             ? // free if the discount is 100

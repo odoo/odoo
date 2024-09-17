@@ -2167,6 +2167,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.current_session_id.close_session_from_ui()
 
     def test_cheapest_product_reward_pos_combo(self):
+        self.env['product.product'].create({
+            "name": "Expensive product",
+            "lst_price": 1000,
+            "available_in_pos": True,
+        })
+        self.env['product.product'].create({
+            "name": "Cheap product",
+            "lst_price": 1,
+            "available_in_pos": True,
+        })
         setup_pos_combo_items(self)
         self.office_combo.write({'lst_price': 50})
         self.env['loyalty.program'].search([]).write({'active': False})
