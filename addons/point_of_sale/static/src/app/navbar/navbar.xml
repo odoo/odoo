@@ -6,7 +6,7 @@
             <div class="pos-leftheader d-flex align-items-center overflow-hidden">
                 <OrderTabs orders="getOrderTabs()"/>
             </div>
-            <div t-if="!ui.isSmall"  class="pos-centerheader d-flex justify-content-center overflow-hidden">
+            <div t-if="!ui.isSmall" class="pos-centerheader d-flex justify-content-center overflow-hidden">
                 <img class="pos-logo pos-logo mw-100" height="42" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
             </div>
             <div class="pos-rightheader d-flex justify-content-end overflow-hidden"
