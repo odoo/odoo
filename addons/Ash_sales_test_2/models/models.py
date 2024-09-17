@@ -14,7 +14,12 @@ class SaleOrder(models.Model):
         ('released', 'Released'),
         ('unreleased', 'Unreleased')
     ], string="Is Released", default='unpicked')
-    
+
+    pick_status = fields.Selection([
+        ('picked', 'Picked'),
+        ('packed', 'Packed'),
+        ('none', 'None')
+    ], string="Pick Status", default='none')
     # New fields
     consignment_number = fields.Char(string="Consignment Number")
     carrier = fields.Char(string="Carrier")
