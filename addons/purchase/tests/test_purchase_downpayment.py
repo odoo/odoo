@@ -42,7 +42,6 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         generated_bill.button_cancel()
         generated_bill.unlink()
         final_bill.invoice_date = fields.Date.from_string('2019-01-02')
-        final_bill.action_post()
         self.assertFalse(final_bill.line_ids.purchase_line_id)
 
         self.env['account.move'].flush_model()

@@ -65,10 +65,7 @@ class AccountMove(models.Model):
 
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id')
-        for line in po_lines.filtered(lambda l: not l.display_type):
-            self.invoice_line_ids += self.env['account.move.line'].new(
-                line._prepare_account_move_line(self)
-            )
+        self._add_purchase_order_lines(po_lines)
 
         # Compute invoice_origin.
         origins = set(self.invoice_line_ids.mapped('purchase_line_id.order_id.name'))
@@ -138,7 +135,18 @@ class AccountMove(models.Model):
                 move.purchase_order_name = False
 
     def action_purchase_matching(self):
-        return self.partner_id.action_open_purchase_matching()
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Purchase Matching"),
+            'res_model': 'purchase.bill.line.match',
+            'domain': [
+                ('partner_id', '=', self.partner_id.id),
+                ('company_id', 'in', self.env.company.ids),
+                ('account_move_id', 'in', [self.id, False]),
+            ],
+            'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'list')],
+        }
 
     def action_view_source_purchase_orders(self):
         self.ensure_one()
@@ -182,6 +190,17 @@ class AccountMove(models.Model):
                 message = _("This vendor bill has been modified from: ") + Markup(',').join(refs)
                 move.message_post(body=message)
         return res
+
+    def _add_purchase_order_lines(self, purchase_order_lines):
+        """ Creates new invoice lines from purchase order lines """
+        self.ensure_one()
+        new_line_ids = self.env['account.move.line']
+
+        for po_line in purchase_order_lines:
+            new_line_values = po_line._prepare_account_move_line(self)
+            new_line_ids += self.env['account.move.line'].new(new_line_values)
+
+        self.invoice_line_ids += new_line_ids
 
     def _find_matching_subset_po_lines(self, po_lines_with_amount, goal_total, timeout):
         """Finds the purchase order lines adding up to the goal amount.
