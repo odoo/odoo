@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 /**
  * The purpose of this tour is to check the custom snippets flow:
@@ -26,7 +26,7 @@ registerWebsitePreviewTour('test_custom_snippet', {
     edition: true,
     test: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_banner',
         name: 'Banner',
         groupName: "Intro",

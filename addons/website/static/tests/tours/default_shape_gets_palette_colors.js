@@ -4,7 +4,7 @@ import { queryFirst } from "@odoo/hoot-dom";
 import {
     changeOption,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -13,7 +13,7 @@ registerWebsitePreviewTour("default_shape_gets_palette_colors", {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",

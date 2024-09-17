@@ -3,7 +3,7 @@
 import {
     changeOption,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
@@ -14,7 +14,7 @@ registerWebsitePreviewTour('snippet_editor_panel_options', {
     url: '/',
     edition: true,
 }, () => [
-...dragNDrop({
+...insertSnippet({
     id: 's_text_image',
     name: 'Text - Image',
     groupName: "Content",
@@ -86,7 +86,7 @@ registerWebsitePreviewTour('snippet_editor_panel_options', {
 },
 // Test keeping the text selection when adding columns to a snippet with none.
 goBackToBlocks(),
-...dragNDrop({
+...insertSnippet({
     id: 's_text_block',
     name: 'Text',
     groupName: "Text",

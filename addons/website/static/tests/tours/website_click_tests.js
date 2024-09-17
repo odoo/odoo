@@ -4,7 +4,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
@@ -37,7 +37,7 @@ registerWebsitePreviewTour('website_click_tour', {
         run: "click",
     },
     goBackToBlocks(),
-    ...dragNDrop(cover),
+    ...insertSnippet(cover),
     ...clickOnSnippet(cover),
     ...clickOnSave(),
 ]);

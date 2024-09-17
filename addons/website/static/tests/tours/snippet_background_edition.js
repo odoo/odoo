@@ -7,7 +7,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -106,7 +106,7 @@ registerWebsitePreviewTour('snippet_background_edition', {
     test: true,
 },
 () => [
-...dragNDrop(snippets[0]),
+...insertSnippet(snippets[0]),
 ...clickOnSnippet(snippets[0]),
 
 // Set background image and save.

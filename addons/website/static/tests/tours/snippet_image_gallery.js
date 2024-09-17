@@ -5,7 +5,7 @@ import {
     changeOption,
     clickOnSave,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -14,7 +14,7 @@ registerWebsitePreviewTour('snippet_image_gallery', {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({id: 's_images_wall', name: 'Images Wall', groupName: "Images"}),
+    ...insertSnippet({id: 's_images_wall', name: 'Images Wall', groupName: "Images"}),
     ...clickOnSave(),
     {
         content: 'Click on an image of the Image Wall',
@@ -32,7 +32,7 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_image_gallery",
         name: "Image Gallery",
         groupName: "Images",
@@ -79,7 +79,7 @@ registerWebsitePreviewTour("snippet_image_gallery_reorder", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_image_gallery",
         name: "Image Gallery",
         groupName: "Images",
@@ -136,7 +136,7 @@ registerWebsitePreviewTour("snippet_image_gallery_thumbnail_update", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_image_gallery",
         name: "Image Gallery",
         groupName: "Images",

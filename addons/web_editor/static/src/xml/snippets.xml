@@ -183,7 +183,7 @@
                                     <t t-if="snippet.disabled">
                                         <img src="/web_editor/static/src/img/snippet_disabled.svg" class="o_snippet_undroppable"/>
                                     </t>
-                                    <div class="oe_snippet_thumbnail" t-att-class="{ 'o_we_already_dragging': snippet.renaming }" t-att-data-snippet="snippet.baseBody.dataset.snippet">
+                                    <div class="oe_snippet_thumbnail" t-att-class="{ 'o_we_ongoing_insertion': snippet.renaming }" t-att-data-snippet="snippet.baseBody.dataset.snippet">
                                         <div class="oe_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
                                         <t t-if="snippet.isCustom and snippet.renaming">
                                             <we-input class="o_we_user_value_widget w-100 mx-1">

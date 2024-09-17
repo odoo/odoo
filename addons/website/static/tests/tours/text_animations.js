@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import {
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -10,7 +10,7 @@ registerWebsitePreviewTour("text_animations", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_cover",
         name: "Cover",
         groupName: "Intro",

@@ -3,7 +3,7 @@
 import {
     changeOption,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -12,7 +12,7 @@ registerWebsitePreviewTour('snippet_countdown', {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({id: "s_countdown", name: "Countdown", groupName: "Content"}),
+    ...insertSnippet({id: "s_countdown", name: "Countdown", groupName: "Content"}),
     ...clickOnSnippet({id: 's_countdown', name: 'Countdown'}),
     changeOption('countdown', 'we-select:has([data-end-action]) we-toggler', 'end action'),
     changeOption('countdown', 'we-button[data-end-action="message"]', 'end action'),

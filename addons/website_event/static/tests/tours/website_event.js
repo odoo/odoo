@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import {
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -49,7 +49,7 @@ registerWebsitePreviewTour("website_event_tour", {
     tooltipPosition: "right",
     run: "click",
 },
-...dragNDrop({
+...insertSnippet({
     id: "s_image_text",
     name: "Image - Text",
     groupName: "Content",

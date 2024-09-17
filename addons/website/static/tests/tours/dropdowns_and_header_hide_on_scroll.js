@@ -4,7 +4,7 @@ import {
     clickOnSave,
     changeOption,
     checkIfVisibleOnScreen,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
     selectHeader,
 } from "@website/js/tours/tour_utils";
@@ -36,7 +36,7 @@ registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({id: "s_media_list", name: "Media List", groupName: "Content"}),
+    ...insertSnippet({id: "s_media_list", name: "Media List", groupName: "Content"}),
     selectHeader(),
     changeOption("undefined", 'we-select[data-variable="header-scroll-effect"]'),
     changeOption("undefined", 'we-button[data-name="header_effect_fixed_opt"]'),

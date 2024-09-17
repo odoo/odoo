@@ -19,7 +19,7 @@ registerWebsitePreviewTour('website_start_cloned_snippet', {
             trigger: ".o_website_preview.editor_enable.editor_has_snippets",
         },
         {
-            trigger: `#oe_snippets .oe_snippet[name="${countdownSnippet.name}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+            trigger: `#oe_snippets .oe_snippet[name="${countdownSnippet.name}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
             run: "drag_and_drop :iframe #wrapwrap #wrap",
         },
         ...clickOnSnippet(countdownSnippet),

@@ -3,7 +3,7 @@
 import {
     changeOption,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -21,7 +21,7 @@ registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     edition: true,
 }, () => [
     // Base case: remove both columns from text - image
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -44,7 +44,7 @@ registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     },
 
     // Cover: test that parallax, bg-filter and shape are not treated as content
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_cover',
         name: 'Cover',
         groupName: "Intro",
