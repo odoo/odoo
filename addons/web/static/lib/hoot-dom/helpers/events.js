@@ -22,6 +22,7 @@ import {
     setDimensions,
     toSelector,
 } from "./dom";
+import { animationFrame } from "./time";
 
 /**
  * @typedef {Target | Promise<Target>} AsyncTarget
@@ -1635,17 +1636,6 @@ const mapKeyboardEvent = (eventInit) => ({
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
-
-/**
- * Returns a promise resolved after the next animation frame, typically allowing
- * Owl components to render.
- *
- * @returns {Promise<void>}
- */
-export async function animationFrame() {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    await new Promise(setTimeout);
-}
 
 /**
  * Ensures that the given {@link AsyncTarget} is checked.

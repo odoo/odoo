@@ -23,7 +23,7 @@ import {
     waitUntil,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
-import { getParentFrame } from "../../../hoot-dom/helpers/dom";
+import { getParentFrame } from "@web/../lib/hoot-dom/helpers/dom";
 import { parseUrl, waitForIframes } from "../local_helpers";
 
 /**
