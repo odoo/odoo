@@ -4582,6 +4582,172 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(op_2.blocked_by_workorder_ids, op_1)
         self.assertEqual(op_3.blocked_by_workorder_ids, op_2)
 
+    def _prepare_report_values(self, qty_final=5, qty_base_1=4, qty_base_2=1, mto=False, bom_2=False, extra_component=False, extra_operation=False):
+        grp_multi_step_rule = self.env.ref('stock.group_adv_location')
+        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
+        manufacture_route = self.env.ref('mrp.route_warehouse0_manufacture')
+        routes = [Command.link(manufacture_route.id)]
+        if mto:
+            mto_route = self.env.ref('stock.route_warehouse0_mto')
+            mto_route.active = True
+            routes.append(Command.link(mto_route.id))
+        product_to_build = self.env['product.product'].create({
+            'name': 'Young Tom',
+            'type': 'consu',
+            'is_storable': True,
+            'standard_price': 10.0,
+            'route_ids': routes
+        })
+        product_to_use_1 = self.env['product.product'].create({
+            'name': 'Botox',
+            'type': 'consu',
+            'is_storable': True,
+            'standard_price': 15.0,
+            'route_ids': routes
+        })
+        product_to_use_2 = self.env['product.product'].create({
+            'name': 'Old Tom',
+            'type': 'consu',
+            'is_storable': True,
+            'standard_price': 20.0,
+        })
+        workcenter_1 = self.env['mrp.workcenter'].create({
+            'name': 'wc1',
+            'default_capacity': 1,
+            'time_efficiency': 100,
+            'costs_hour': 10,
+        })
+        bom_1 = self.env['mrp.bom'].create({
+            'product_id': product_to_build.id,
+            'product_tmpl_id': product_to_build.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'Test', 'workcenter_id': workcenter_1.id, 'time_cycle': 60, 'sequence': 1}),
+            ]})
+        if bom_2:
+            self.env['mrp.bom'].create({
+                'product_id': product_to_use_2.id,
+                'product_tmpl_id': product_to_use_2.product_tmpl_id.id,
+                'product_uom_id': self.uom_unit.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'bom_line_ids': [
+                    (0, 0, {'product_id': product_to_use_1.id, 'product_qty': 1}),
+                ],
+                'operation_ids': [
+                    (0, 0, {'name': 'Component assembly', 'workcenter_id': workcenter_1.id, 'time_cycle': 60, 'sequence': 1}),
+                ]})
+        if mto:
+            replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_use_2.product_tmpl_id.id).create({
+                'product_id': product_to_use_2.id,
+                'product_tmpl_id': product_to_use_2.product_tmpl_id.id,
+                'quantity': 1,
+                'route_id': manufacture_route.id,
+            })
+            replenish_wizard.launch_replenishment()
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_to_build
+        mo_form.bom_id = bom_1
+        mo_form.product_qty = qty_final
+        if extra_component:
+            with mo_form.move_raw_ids.new() as line:
+                line.product_id = product_to_use_1
+                line.product_uom_qty = 5
+        if extra_operation:
+            with mo_form.workorder_ids.new() as line:
+                line.name = "drilling"
+                line.workcenter_id = workcenter_1
+                line.duration_expected = 60
+        mo = mo_form.save()
+        return mo
+
+    def _verify_report_main_decorators(self, mo, sum_real_cost=False, sum_mo_cost=False, comp_real_cost=False,
+                                       comp_mo_cost=False, op_real_cost=False, op_mo_cost=False, extra_component=False, add_comp_real_cost=False):
+        data = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        summary = data['data']['summary']
+        components = data['data']['components']
+        operations = data['data']['operations']
+        self.assertEqual(summary['mo_cost_decorator'], sum_mo_cost)
+        self.assertEqual(summary['real_cost_decorator'], sum_real_cost)
+        component = components[0]
+        self.assertEqual(component['summary']['mo_cost_decorator'], comp_mo_cost)
+        self.assertEqual(component['summary']['real_cost_decorator'], comp_real_cost)
+        if extra_component:
+            component = components[1]
+            self.assertEqual(component['summary']['mo_cost_decorator'], add_comp_real_cost)
+            self.assertEqual(component['summary']['real_cost_decorator'], comp_real_cost)
+        self.assertEqual(operations['summary']['mo_cost_decorator'], op_mo_cost)
+        self.assertEqual(operations['summary']['real_cost_decorator'], op_real_cost)
+
+    def test_mo_overview_base_decorators(self):
+        # Base test for decorators colors of the report
+        # Here no colors are expected except when the mo is started. The components are not consumed yet so a few colors are expected.
+        mo = self._prepare_report_values()
+        self._verify_report_main_decorators(mo)
+        mo.action_confirm()
+        self._verify_report_main_decorators(mo)
+        mo.action_start()
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='success')
+        mo.button_mark_done()
+        self._verify_report_main_decorators(mo)
+
+    def test_mo_overview_component_bom(self):
+        # Test for decorators colors of the report with a component having a bom (without MTO)
+        # No changes expected with the base scenario
+        # Here no colors are expected except when the mo is started. The components are not consumed yet so a few colors are expected.
+        mo = self._prepare_report_values(bom_2=True)
+        self._verify_report_main_decorators(mo)
+        mo.action_confirm()
+        self._verify_report_main_decorators(mo)
+        mo.action_start()
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='success')
+        mo.button_mark_done()
+        self._verify_report_main_decorators(mo)
+
+    def test_mo_overview_component_bom_mto(self):
+        # Test for decorators colors of the report with a component having a bom (with MTO)
+        # Colors are expected when the MO is confirmed as the BoM does not take the component MO cost into account
+        mo = self._prepare_report_values(mto=True, bom_2=True)
+        self._verify_report_main_decorators(mo)
+        mo.action_confirm()
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger')
+        mo.action_start()
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='success')
+        mo.button_mark_done()
+        self._verify_report_main_decorators(mo)
+
+    def test_mo_overview_added_component(self):
+        # Test for decorators colors of the report with an added component (not on the BoM)
+        # Colors should be mostly red as the component add an extra cost to the MO
+        mo = self._prepare_report_values(extra_component=True)
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', extra_component=True, add_comp_real_cost='danger')
+        mo.action_confirm()
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', extra_component=True, add_comp_real_cost='danger')
+        mo.action_start()
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='success', extra_component=True, add_comp_real_cost='danger')
+        mo.button_mark_done()
+        self._verify_report_main_decorators(mo, op_real_cost='success', sum_real_cost='success', extra_component=True)
+
+    def test_mo_overview_added_operation(self):
+        # Test for decorators colors of the report with an added operation (not on the BoM)
+        # Colors should be mostly red as soon as time has been timesheeted
+        mo = self._prepare_report_values(extra_operation=True)
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', op_mo_cost='danger')
+        mo.action_confirm()
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', op_mo_cost='danger')
+        mo.action_start()
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='success')
+        mo.workorder_ids[0].duration = 500
+        self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='danger')
+        mo.button_mark_done()
+        self._verify_report_main_decorators(mo, op_real_cost='danger', sum_real_cost='danger')
+
+
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
     def test_mrp_order_product_catalog(self):
