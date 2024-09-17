@@ -21,11 +21,11 @@
                         </tr>
                         <tr t-if="o.date_approve">
                             <td>Order Date:</td>
-                            <td><t t-out="o.date_approve"/></td>
+                            <td><t t-out="o.date_approve" t-options="{'widget': 'date'}"/></td>
                         </tr>
                         <tr t-if="o.date_order">
                             <td>Order Deadline:</td>
-                            <td><t t-out="o.date_order"/></td>
+                            <td><t t-out="o.date_order" t-options="{'widget': 'date'}"/></td>
                         </tr>
                         <tr t-if="o.incoterm_id">
                             <td>Incoterm:</td>

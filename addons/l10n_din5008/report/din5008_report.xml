@@ -197,15 +197,15 @@
                             </tr>
                             <tr t-if="o.invoice_date">
                                 <td>Invoice Date</td>
-                                <td><t t-out="o.invoice_date"/></td>
+                                <td><t t-out="o.invoice_date" t-options="{'widget': 'date'}"/></td>
                             </tr>
                             <tr t-if="o.invoice_date_due">
                                 <td>Invoice Date Due</td>
-                                <td><t t-out="o.invoice_date_due"/></td>
+                                <td><t t-out="o.invoice_date_due" t-options="{'widget': 'date'}"/></td>
                             </tr>
                             <tr t-if="o.delivery_date">
                                 <td>Delivery Date</td>
-                                <td><t t-out="o.delivery_date"/></td>
+                                <td><t t-out="o.delivery_date" t-options="{'widget': 'date'}"/></td>
                             </tr>
                             <tr t-if="o.invoice_origin">
                                 <td>Source</td>
