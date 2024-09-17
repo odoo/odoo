@@ -465,7 +465,7 @@ class AccountMoveLine(models.Model):
 
                 sub.base_line_id,
                 sub.tax_line_id,
-                sub.display_type,
+                sub.display_type = 'rounding' AS is_rounding_line,
                 sub.src_line_id,
 
                 sub.tax_id,
