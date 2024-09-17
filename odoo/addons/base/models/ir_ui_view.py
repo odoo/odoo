@@ -985,10 +985,6 @@ actual arch.
         group_definitions = self.env['res.groups']._get_group_definitions()
 
         user_group_ids = self.env.user._get_group_ids()
-        # The 'base.group_no_one' is not actually involved by any other group because it is session dependent.
-        group_no_one_id = group_definitions.get_id('base.group_no_one')
-        if group_no_one_id in user_group_ids and not (request and request.session.debug):
-            user_group_ids = [g for g in user_group_ids if g != group_no_one_id]
 
         # check the read/visibility access
         @functools.cache
@@ -1022,7 +1018,6 @@ actual arch.
                 node.getparent().remove(node)
 
         # check the create and write access
-        base_model = tree.get('model_access_rights')
         for node in tree.xpath('//*[@model_access_rights]'):
             model = self.env[node.attrib.pop('model_access_rights')]
             if node.tag == 'field':
@@ -1031,7 +1026,6 @@ actual arch.
                 node.set('can_create', str(bool(can_create)))
                 node.set('can_write', str(bool(can_write)))
             else:
-                is_base_model = base_model == model._name
                 for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                     if not node.get(action) and not model.has_access(operation):
                         node.set(action, 'False')
@@ -1044,6 +1038,42 @@ actual arch.
                             if not node.get(action) and not group_by_model.has_access(operation):
                                 node.set(action, 'False')
 
+        return tree
+
+    def _postprocess_debug_to_cache(self, tree):
+        """ Transform attribute groups="base.group_no_one" into a specific
+        attribute "__debug__" to ease the special treatment of this case.
+
+        This feature is temporary because the behavior will be moved and
+        processed in javascript soon. The management of 'base.group_no_one' is
+        not consistent from the start. It is a magic group that historically
+        was added or removed depending on the url used. 'base.group_no_one'
+        should not to be considered as a security group but as a display
+        feature.
+
+        Typically the templates do not match the intent when attribute 'groups'
+        contains 'base.group_no_one' and other groups. In every case we could
+        spot, we want an "and" and not an "or" for the condition on groups::
+
+            <filter name="not_secured" string="Not Secured" ... groups="account.group_account_secured,base.group_no_one"/>
+            or
+            <menuitem ... name="Configuration" ... groups="base.group_system,base.group_no_one"/>
+        """
+        for node in tree.xpath("//*[@groups]"):
+            if 'base.group_no_one' in node.attrib.get('groups'):
+                groups = node.attrib['groups'].split(',')
+                node.attrib['__debug__'] = str('base.group_no_one' in groups)
+                node.attrib['groups'] = ','.join(
+                    group for group in groups if not group.endswith('base.group_no_one')
+                )
+
+    def _postprocess_debug(self, tree):
+        """ Apply debug mode by making nodes invisible. """
+        is_debug = self.env.user.has_group('base.group_no_one')
+        for node in tree.xpath('//*[@__debug__]'):
+            debug = node.attrib.pop('__debug__') == 'True'
+            if debug != is_debug:
+                node.attrib['invisible'] = '1'
         return tree
 
     def _postprocess_view(self, node, model_name, editable=True, node_info=None, **options):
@@ -1084,6 +1114,8 @@ actual arch.
         }
 
         is_compute_warning_info = options.get('is_compute_warning_info')
+
+        self._postprocess_debug_to_cache(root)
 
         # use a stack to recursively traverse the tree
         stack = [(root, view_groups, editable)]
@@ -2745,6 +2777,7 @@ class Base(models.AbstractModel):
 
         node = etree.fromstring(result['arch'])
         node = self.env['ir.ui.view']._postprocess_access_rights(node)
+        node = self.env['ir.ui.view']._postprocess_debug(node)
         result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         return result
