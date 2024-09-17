@@ -12,11 +12,11 @@
                             </tr>
                             <tr t-if="doc.date_order">
                                 <td>Quotation Date:</td>
-                                <td><t t-out="doc.date_order"/></td>
+                                <td><t t-out="doc.date_order" t-options="{'widget': 'date'}"/></td>
                             </tr>
                             <tr t-if="doc.validity_date">
                                 <td>Expiration:</td>
-                                <td><t t-out="doc.validity_date"/></td>
+                                <td><t t-out="doc.validity_date" t-options="{'widget': 'date'}"/></td>
                             </tr>
                         </t>
                         <t t-else="">
@@ -26,7 +26,7 @@
                             </tr>
                             <tr t-if="doc.date_order">
                                 <td>Order Date:</td>
-                                <td><t t-out="doc.date_order"/></td>
+                                <td><t t-out="doc.date_order" t-options="{'widget': 'date'}"/></td>
                             </tr>
                         </t>
                         <tr t-if="doc.client_order_ref">
