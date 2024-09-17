@@ -39,7 +39,7 @@ class TestEventFlow(EventCase):
         self.assertEqual(event.date_begin, specific_datetimes['date_begin'])
         self.assertEqual(event.date_end, specific_datetimes['date_end'])
 
-    @mute_logger('odoo.addons.event.models.event_mail')
+    @mute_logger('odoo.addons.event.models.event_mail_registration')
     def test_event_missed_mail_template(self):
         """ Check that error on mail sending is ignored if corresponding mail template was deleted """
         test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
