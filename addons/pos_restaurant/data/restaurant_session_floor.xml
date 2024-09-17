@@ -20,6 +20,7 @@
 
         <!-- Closed Session 3 -->
         <record id="pos_closed_session_3" model="pos.session" forcecreate="False">
+            <field name="name">OpenSession/0004</field>
             <field name="config_id" ref="pos_config_main_restaurant" />
             <field name="user_id" ref="base.user_admin" />
             <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -92,6 +93,7 @@
         <!-- Closed Session 4 -->
 
         <record id="pos_closed_session_4" model="pos.session" forcecreate="False">
+            <field name="name">OpenSession/0005</field>
             <field name="config_id" ref="pos_config_main_restaurant" />
             <field name="user_id" ref="base.user_admin" />
             <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -480,6 +482,7 @@
         </record>
 
         <record id="pos_open_session_2" model="pos.session" forcecreate="False">
+            <field name="name">OpenSession/0003</field>
             <field name="config_id" ref="pos_config_main_restaurant" />
             <field name="user_id" ref="base.user_admin" />
         </record>

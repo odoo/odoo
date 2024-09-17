@@ -104,6 +104,10 @@ export class PosOrder extends Base {
         return dateTime.isValid ? dateTime.toFormat("HH:mm") : false;
     }
 
+
+    get originalSplittedOrder() {
+        return this.models["pos.order"].find((o) => o.uuid === this.uiState.splittedOrderUuid);
+    }
     getEmailItems() {
         return [_t("the receipt")].concat(this.isToInvoice() ? [_t("the invoice")] : []);
     }
@@ -410,6 +414,7 @@ export class PosOrder extends Base {
                     };
                 }
                 line.setHasChange(false);
+                line.saved_quantity = line.get_quantity();
             }
         });
 
@@ -757,10 +762,9 @@ export class PosOrder extends Base {
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
-                        orderLine.getUnitDisplayPriceBeforeDiscount() *
-                        (orderLine.getDiscount() / 100) *
-                        orderLine.getQuantity();
-                    if (orderLine.displayDiscountPolicy() === "without_discount") {
+                        orderLine.getAllPrices().priceWithTaxBeforeDiscount -
+                        orderLine.getAllPrices().priceWithTax;
+                    if (orderLine.display_discount_policy() === "without_discount") {
                         sum +=
                             (orderLine.getTaxedlstUnitPrice() -
                                 orderLine.getUnitDisplayPriceBeforeDiscount()) *
@@ -794,6 +798,10 @@ export class PosOrder extends Base {
     }
 
     getTaxDetails() {
+        return this.getTaxDetailsOfLines(this.lines);
+    }
+
+    getTaxDetailsOfLines(lines) {
         const taxDetails = {};
         for (const line of this.lines) {
             for (const taxData of line.allPrices.taxesData) {

@@ -458,7 +458,11 @@ export class PosData extends Reactive {
                 this.synchronizeServerDataInIndexedDB({ [model]: [baseData] });
             }
 
-            return result || true;
+            if (result === null || result === undefined) {
+                // if request does not return something, we consider it went well
+                return true;
+            }
+            return result;
         } catch (error) {
             let throwErr = true;
             const uuids = this.network.unsyncData.map((d) => d.uuid);
