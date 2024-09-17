@@ -2130,28 +2130,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         self.main_pos_config.current_session_id.close_session_from_ui()
 
-    def test_cheapest_product_reward_pos_combo(self):
-        setup_product_combo_items(self)
-        self.office_combo.write({'lst_price': 50})
-        self.env['loyalty.program'].search([]).write({'active': False})
-        self.env['loyalty.program'].create({
-            'name': 'Auto Promo Program - Cheapest Product',
-            'program_type': 'promotion',
-            'trigger': 'auto',
-            'rule_ids': [(0, 0, {
-                'minimum_qty': 2,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'discount',
-                'discount': 10,
-                'discount_mode': 'percent',
-                'discount_applicability': 'cheapest',
-            })]
-        })
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboCheapestRewardProgram', login="pos_user")
-
     def test_customer_loyalty_points_displayed(self):
         """
         Verify that the loyalty points of a customer are well displayed.
@@ -2176,6 +2154,38 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "CustomerLoyaltyPointsDisplayed", login="pos_user")
+
+    def test_cheapest_product_reward_pos_combo(self):
+        self.env['product.product'].create({
+            "name": "Expensive product",
+            "lst_price": 1000,
+            "available_in_pos": True,
+        })
+        self.env['product.product'].create({
+            "name": "Cheap product",
+            "lst_price": 1,
+            "available_in_pos": True,
+        })
+        setup_product_combo_items(self)
+        self.office_combo.write({'lst_price': 50})
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'Auto Promo Program - Cheapest Product',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+            })]
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboCheapestRewardProgram', login="pos_user")
 
     def test_apply_reward_on_product_scan(self):
         """
