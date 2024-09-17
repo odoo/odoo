@@ -1725,3 +1725,44 @@ describe("single cell selection", () => {
         );
     });
 });
+
+describe("deselecting table", () => {
+    test("deselect table using keyboard if it is fully selected", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<p>[abc</p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td>]<br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        expectContentToBe(
+            el,
+            `<p>[abc</p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                        <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
+                    </tbody>
+                </table>`
+        );
+
+        press(["Shift", "ArrowUp"]);
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<p>[abc]</p>
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+    });
+});
