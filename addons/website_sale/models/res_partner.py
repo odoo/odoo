@@ -51,21 +51,10 @@ class ResPartner(models.Model):
 
     def _can_be_edited_by_current_partner(self, **kwargs):
         self.ensure_one()
-        address_type = kwargs.get('address_type')
         if sale_order := kwargs.get('order_sudo'):
-            children_partner_ids = self.env['res.partner']._search([
+            children_partner_ids = self.env['res.partner'].search([
                 ('id', 'child_of', sale_order.partner_id.commercial_partner_id.id),
                 ('type', 'in', ('invoice', 'delivery', 'other')),
             ])
-            if (
-                self == sale_order.partner_id
-                or self.id in children_partner_ids
-            ):
-                # address belongs to the customer
-                if address_type == 'billing':
-                    # All addresses are editable as billing
-                    return True
-                if address_type == 'delivery' and self.type == 'delivery':
-                    # Only delivery addresses are editable as delivery
-                    return True
+            return self == sale_order.partner_id or self.id in children_partner_ids.ids
         return super()._can_be_edited_by_current_partner(**kwargs)

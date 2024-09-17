@@ -1074,8 +1074,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return not use_location
         return True
 
-    @route()
-    def portal_address(self, partner_id=None, address_type='other', template='portal.portal_my_details', **query_params):
+    @route('/portal/address')
+    def portal_address(self,
+                       partner_id=None,
+                       address_type='other',
+                       template='portal.portal_my_details',
+                       **query_params
+        ):
         """ Display the address form.
 
         A partner and/or an address type can be given through the query string params to specify
@@ -1098,7 +1103,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             use_delivery_as_billing = (
                 order_sudo.partner_shipping_id == order_sudo.partner_invoice_id
             )
-        address_template = 'portal.portal_my_details'
         if not query_params.get('portal_address'):
             # ecommerce flow
             if redirection := self._check_cart(order_sudo):
@@ -1109,17 +1113,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             partner_id=partner_id, address_type=address_type, template=template, order_sudo=order_sudo, **query_params
         )
 
-    def _check_partner_edit_rights(self, partner_id=None, address_type=None, **_kwargs):
-        order_sudo = _kwargs.get('order_sudo')
-        is_anonymous_cart = order_sudo and order_sudo._is_anonymous_cart()
-        print("CHECK EDIT FROM website_Sale", partner_id)
-        if is_anonymous_cart:
-            print("ANONYMOUNS CART !!")
-        res = super()._check_partner_edit_rights(partner_id=partner_id, address_type=address_type, **_kwargs)
-        print("SUPER CHECK from website_sale", res)
-        return res
-
-    def _prepare_address_form_values(self, partner_sudo, address_type, **_kwargs):
+    def _prepare_address_form_values(self, partner_sudo, address_type, callback='', **_kwargs):
         """ Prepare and return the values to use to render the address form.
         It returns the sudoed partner editing the form and the values used in the form.
 
@@ -1134,20 +1128,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The checkout page values.
         :rtype: dict
         """
-        val = super()._prepare_address_form_values(partner_sudo, address_type, **_kwargs)
         use_delivery_as_billing = _kwargs.get('use_delivery_as_billing')
+        val = super()._prepare_address_form_values(partner_sudo, address_type, **_kwargs)
         order_sudo = _kwargs.get('order_sudo')
-        is_anonymous_cart = order_sudo and order_sudo._is_anonymous_cart()
-        parent_id = None
-        country_sudo = None
-        can_edit_vat = False
-        ResCountrySudo = request.env['res.country'].sudo()
         if order_sudo and not _kwargs.get('portal_address'):
-            parent_id = order_sudo.partner_id.commercial_partner_id.id
+            is_anonymous_cart = order_sudo._is_anonymous_cart()
             can_edit_vat = (
-                address_type == 'billing' or use_delivery_as_billing
-                and (not partner_sudo or partner_sudo.can_edit_vat())
+                    address_type == 'billing' or use_delivery_as_billing
+                    and (not partner_sudo or partner_sudo.can_edit_vat())
             )
+            ResCountrySudo = request.env['res.country'].sudo()
             country_sudo = partner_sudo.country_id
             if not country_sudo:
                 if is_anonymous_cart:
@@ -1160,44 +1150,26 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 else:
                     country_sudo = order_sudo.partner_id.country_id
 
-        state_id = partner_sudo.state_id.id
-
-        address_fields = country_sudo and country_sudo.get_address_fields() or ['city', 'zip']
-        # print("PREPARE FORM VALUES: _kwargs", _kwargs)
-        return {
-            'website_sale_order': order_sudo,
-            'partner_sudo': partner_sudo,  # If set, customer is editing an existing address
-            'partner_id': partner_sudo.id,
-            'address_type': address_type,  # 'billing' or 'delivery'
-            'can_edit_vat': can_edit_vat,
-            'only_services': order_sudo.only_services,
-            'is_anonymous_cart': is_anonymous_cart,
-            # 'use_same': order_sudo._is_anonymous_cart(),
-            'parent_id': parent_id,
-            # 'use_same': use_same,
-            'use_delivery_as_billing': order_sudo._is_anonymous_cart(),
-            # 'callback': callback,
-            'discard_url': is_anonymous_cart and '/shop/cart' or '/shop/checkout',
-            'country': country_sudo,
-            'countries': ResCountrySudo.search([]),
-            'state_id': state_id,
-            'country_states': country_sudo and country_sudo.state_ids,
-            'zip_before_city': (
-                'zip' in address_fields
-                and address_fields.index('zip') < address_fields.index('city')
-            ),
-            'show_vat': (
-                (address_type == 'billing' or use_delivery_as_billing)
-                and (
-                    is_anonymous_cart  # Allow inputting VAT on the new main address.
-                    or (
-                        partner_sudo == order_sudo.partner_id
-                        and (can_edit_vat or partner_sudo.vat)
-                    )  # On the main partner only, if the VAT was set.
-                )
-            ),
-            'vat_label': request.env._("VAT"),
-        }
+            val.update({
+                'website_sale_order': order_sudo,
+                'only_services': order_sudo.only_services,
+                'is_anonymous_cart': is_anonymous_cart,
+                'use_delivery_as_billing': order_sudo._is_anonymous_cart(),
+                'callback': callback,
+                'discard_url': is_anonymous_cart and '/shop/cart' or '/shop/checkout',
+                'country': country_sudo,
+                'show_vat': (
+                    address_type == 'billing'
+                    and (
+                        is_anonymous_cart  # Allow inputting VAT on the new main address.
+                        or (
+                            partner_sudo == order_sudo.partner_id
+                            and (can_edit_vat or partner_sudo.vat)
+                        )  # On the main partner only, if the VAT was set.
+                    )
+                ),
+            })
+        return val
 
     @route('/shop/address/submit', type='http', methods=['POST'], auth='public', website=True, sitemap=False)
     def shop_address_submit(self, partner_id=None, address_type='billing', use_delivery_as_billing=None, callback=None, required_fields=None, **form_data):
@@ -1219,7 +1191,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: str
         """
         order_sudo = request.website.sale_get_order()
-        print("PARTNER_ID AT SUBMIT: ", partner_id, use_same, callback, address_type, form_data)
         if redirection := self._check_cart(order_sudo):
             return redirection
         is_anonymous_cart = order_sudo._is_anonymous_cart()
@@ -1232,13 +1203,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             address_type=address_type,
             **form_data)
         is_new_address = False
-        self._complete_address_values(partner_sudo, address_values, address_type, use_same, order_sudo)
+        self._complete_address_values(partner_sudo, address_values, address_type, use_delivery_as_billing, order_sudo)
         # arj todo: crap... when we write on the public user...
         if partner_sudo != request.website.user_id.sudo().partner_id:
+            if partner_sudo.id == address_values.get('parent_id', 0):
+                address_values.pop('parent_id')
             partner_sudo.write(address_values)
-        # else:
-        #     breakpoint()
-        if is_anonymous_cart:
+        is_anonymous_cart = order_sudo._is_anonymous_cart()
+        if not partner_id:
             is_new_address = True
         partner_id = partner_sudo.id
         partner_fnames = set()
@@ -1255,14 +1227,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if use_delivery_as_billing:
                 partner_fnames.add('partner_invoice_id')
 
-        # if not partner_id or not partner_sudo:
-        #     breakpoint()
         order_sudo._update_address(partner_id, partner_fnames)
 
         if is_anonymous_cart:
             # Unsubscribe the public partner if the cart was previously anonymous.
             order_sudo.message_unsubscribe(order_sudo.website_id.partner_id.ids)
-
         if is_new_address or order_sudo.only_services:
             callback = callback or '/shop/checkout?try_skip_step=true'
         else:
@@ -1274,6 +1243,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _check_partner_edit_rights(self, partner_id=None, address_type=None, **kwargs):
         order_sudo = request.website.sale_get_order()
+        if not kwargs.get('order_sudo'):
+            kwargs['order_sudo'] = order_sudo
         if order_sudo and not order_sudo._is_anonymous_cart() and partner_id == order_sudo.partner_id.id:
             kwargs['parent_id'] = order_sudo.partner_id.parent_id.id or order_sudo.partner_id.id
         return super()._check_partner_edit_rights(partner_id=partner_id, address_type=address_type, **kwargs)
@@ -1529,7 +1500,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ):
             partner_fnames.add('partner_shipping_id')
 
-        partner_sudo._update_default_address(address_type, **kw)
+        partner_sudo._update_default_address(address_type=address_type)
         order_sudo._update_address(partner_id, partner_fnames)
 
     @route(['/shop/confirm_order'], type='http', auth="public", website=True, sitemap=False)
@@ -1752,7 +1723,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: None if both the cart and its addresses are valid; otherwise, a redirection to the
                  appropriate page.
         """
-        print("CHECKS.....")
         if redirection := self._check_cart(order_sudo):
             return redirection
 
@@ -1804,9 +1774,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect('/portal/address?address_type=billing')
         # Check that the billing address is complete.
         invoice_partner_sudo = order_sudo.partner_invoice_id
-        if not invoice_partner_sudo:
-            print("NO invoice_partner_sudo")
-        print("BILLING OK", self._check_billing_address(invoice_partner_sudo))
+        # if not invoice_partner_sudo:
+        #     print("NO invoice_partner_sudo")
+        # print("BILLING OK", self._check_billing_address(invoice_partner_sudo))
         if not self._check_billing_address(invoice_partner_sudo):
             # breakpoint()
             return request.redirect(

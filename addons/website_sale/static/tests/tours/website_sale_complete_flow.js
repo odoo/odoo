@@ -91,7 +91,7 @@
     },
     {
         content: "Add a billing address",
-        trigger: '.all_billing a[href^="/shop/address"]:contains("Add address")',
+        trigger: '.all_billing a[href^="/portal/address"]:contains("Add address")',
         run: "click",
     },
     {

@@ -769,7 +769,7 @@
                         </div>
                     </t>
                     <div class="col-lg-4 mb-3" style="min-height: 200px">
-                        <a role="button" href="/portal/address?address_type=invoice&amp;portal_address=True" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 mx-auto rounded text-decoration-none" style="border: 1px dashed">
+                        <a role="button" t-attf-href="/portal/address?address_type=invoice&amp;portal_address=True&amp;parent_id={{user_id.partner_id.id}}" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 mx-auto rounded text-decoration-none" style="border: 1px dashed">
                             <i class="fa fa-plus fa-2x mb-2"/>Add Address
                         </a>
                     </div>
@@ -795,7 +795,7 @@
                         </div>
                     </t>
                     <div class="col-lg-4 mb-3" style="min-height: 200px">
-                        <a role="button" href="/portal/address?address_type=delivery&amp;portal_address=True" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 mx-auto rounded text-decoration-none" style="border: 1px dashed">
+                        <a role="button" t-attf-href="/portal/address?address_type=delivery&amp;portal_address=True&amp;parent_id={{user_id.partner_id.id}}" class="d-flex flex-column align-items-center justify-content-center h-100 p-4 mx-auto rounded text-decoration-none" style="border: 1px dashed">
                             <i class="fa fa-plus fa-2x mb-2"/>Add Address
                         </a>
                     </div>
@@ -1027,6 +1027,7 @@
                                     </div>
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <input type="hidden" name="address_type" t-att-value="address_type"/>
+                                    <input type="hidden" name="parent_id" t-att-value="parent_id"/>
                                     <t t-if="partner_id">
                                         <input type="hidden" name="partner_id" t-att-value="partner_id"/>
                                     </t>

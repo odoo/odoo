@@ -18,10 +18,9 @@ class L10nECWebsiteSale(WebsiteSale):
 
     def _prepare_address_form_values(self, partner_sudo, address_type, **kwargs):
         use_delivery_as_billing = kwargs.get('use_delivery_as_billing')
-        partner_sudo, rendering_values = super()._prepare_address_form_values(
+        rendering_values = super()._prepare_address_form_values(
             partner_sudo,
             address_type,
-            use_delivery_as_billing=use_delivery_as_billing,
             **kwargs,
         )
         if (

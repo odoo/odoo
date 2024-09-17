@@ -35,7 +35,7 @@ class L10nPEWebsiteSale(WebsiteSale):
             partner_sudo, address_type, **kwargs
         )
         if request.website.sudo().company_id.country_id.code != 'PE':
-            return partner_sudo, rendering_values
+            return rendering_values
 
         if address_type == 'billing':
             can_edit_vat = rendering_values['can_edit_vat']

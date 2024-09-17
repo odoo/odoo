@@ -37,8 +37,7 @@ class ResPartner(models.Model):
         return self.id in children_partner_ids or self.id == commercial_partner_id
 
     def _update_default_address(self, address_type):
-        """ Update the current address as the default one in his address type.
-        """
+        """ Update the current address as the default one in his address type. """
         self.ensure_one()
         address_type = 'invoice' if address_type == 'invoice' or address_type == 'billing' else 'delivery'
         default_field = 'is_default_billing_address' if address_type == 'invoice' else 'is_default_shipping_address'
@@ -50,9 +49,8 @@ class ResPartner(models.Model):
         all_partners.filtered(lambda p: p.type == address_type).write({'type': 'other'})
         all_partners.write({default_field: False})
 
-        if self.type == 'contact':
-            self.write({default_field: True})
-        else:
-            self.write({default_field: True, 'type': address_type})
+        self.write({default_field: True})
+        if self.type != 'contact':
+            self.write({'type': address_type})
 
         return self.address_get([address_type])

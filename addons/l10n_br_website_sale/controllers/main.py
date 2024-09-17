@@ -36,7 +36,7 @@ class L10nBRWebsiteSale(WebsiteSale):
         return mandatory_fields
 
     def _prepare_address_form_values(self, partner_sudo, address_type, **kwargs):
-        partner_sudo, rendering_values = super()._prepare_address_form_values(
+        rendering_values = super()._prepare_address_form_values(
             partner_sudo, address_type, **kwargs
         )
         if address_type == 'billing' and request.website.sudo().company_id.account_fiscal_country_id.code == 'BR':

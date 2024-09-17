@@ -12,7 +12,6 @@ from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, 
 from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
 
-
 # --------------------------------------------------
 # Misc tools
 # --------------------------------------------------
@@ -231,7 +230,6 @@ class CustomerPortal(Controller):
     def on_account_update(self, values, partner):
         pass
 
-    # ------------------------------------------------------------------
     @route(['/my/addresses'], type='http', auth='user', website=True)
     def my_addresses(self, **kwargs):
         values = {
@@ -254,9 +252,7 @@ class CustomerPortal(Controller):
         :rtype: str
         """
         partner_id = partner_id and int(partner_id)
-        print("/portal/address", partner_id, query_params)
         partner_sudo = self._check_partner_edit_rights(partner_id=partner_id, address_type=address_type, **query_params)
-        print("PORTAL RESULT CHECK_EDIT", partner_sudo, partner_id)
         address_form_values = self._prepare_address_form_values(partner_sudo, address_type, **query_params)
         return request.render(template, address_form_values)
 
@@ -274,46 +270,47 @@ class CustomerPortal(Controller):
             raise Forbidden()
         return partner_sudo
 
-    def _prepare_address_form_values(self, partner_sudo, address_type, **_kwargs):
+    def _prepare_address_form_values(
+        self, partner_sudo, address_type, **_kwargs
+    ):
         """ Prepare and return the values to use to render the address form.
-        It returns the sudoed partner editing the form and the values used in the form.
-
-        :param int partner_id: id of the partner editing the address form
+        :param partner_sudo: The partner whose address to update through the address form.
         :param str address_type: The type of the address: 'billing' or 'delivery'.
-        :param str template: rendering template to use
-        : param query_params: additional parameters
-        :rtype: tuple[record of `res.partner`, dict]
+        :param str callback:
+        :return: The checkout page values.
+        :rtype: dict
         """
         can_edit_vat = (
             address_type in ['invoice', 'billing']
             and (not partner_sudo or partner_sudo.can_edit_vat())
         )
-        can_edit_vat = partner_sudo.type in ['invoice', 'billing'] and (not partner_sudo or partner_sudo.can_edit_vat())
 
         ResCountrySudo = request.env['res.country'].sudo()
         country_sudo = partner_sudo.country_id
         if not country_sudo:
-            country_sudo = request.env.user.country_id
+            country_sudo = request.env.user.parent_id.country_id
 
         state_id = partner_sudo.state_id.id
+
         address_fields = country_sudo and country_sudo.get_address_fields() or ['city', 'zip']
+
         return {
             'partner_sudo': partner_sudo,  # If set, customer is editing an existing address
             'partner_id': partner_sudo.id,
             'address_type': address_type,  # 'billing' or 'delivery'
             'type': address_type,
             'can_edit_vat': can_edit_vat,
+            'parent_id': request.env.user.partner_id.id,
             'discard_url': '/my/addresses',
             'country': country_sudo,
             'countries': ResCountrySudo.search([]),
-            'has_invoice': not partner_sudo._can_edit_info() if partner_sudo else False,
             'state_id': state_id or 1,
             'country_states': country_sudo.state_ids,
             'zip_before_city': (
                 'zip' in address_fields
                 and address_fields.index('zip') < address_fields.index('city')
             ),
-            'show_vat': bool(address_type in ['contact', 'billing', 'invoice'] and not partner_sudo.parent_id),
+            'show_vat': bool(address_type in ['invoice', 'billing'] and not partner_sudo.parent_id and (can_edit_vat or partner_sudo.vat)),
             'vat_label': _("VAT"),
         }
 
@@ -401,7 +398,7 @@ class CustomerPortal(Controller):
 
     def _get_address_submit_result(self, partner_id=None, address_type='other', **form_data):
         partner_id = partner_id and int(partner_id)
-        partner_sudo = self._check_partner_edit_rights(partner_id=partner_id)
+        partner_sudo = self._check_partner_edit_rights(partner_id=partner_id, address_type=address_type)
         # Parse form data into address values, and extract incompatible data as extra form data.
         address_values, extra_form_data = self._parse_form_data(form_data)
         if 'country_id' not in address_values and partner_sudo.country_id:
@@ -421,15 +418,13 @@ class CustomerPortal(Controller):
                 'invalid_fields': list(invalid_fields | missing_fields),
                 'messages': error_messages,
             }
-        if  address_type == 'billing' or address_type == 'invoice':
+        if address_type == 'billing' or address_type == 'invoice':
             address_values['type'] = 'invoice'
         elif address_type == 'delivery':
             address_values['type'] = 'delivery'
         if not partner_sudo:  # Creation of a new address.
             # arj todo: NOT WORKING WITH anonymous cart !!! we should override it in website_sale to avoid adding the partner to the public user
             address_values['parent_id'] = address_values.get('parent_id')
-            print("NEW ADDRESSE VALUES: ", address_values)
-            print("FORM DATA ", form_data)
             create_context = tools.clean_context(request.env.context)
             create_context.update({
                 'tracking_disable': True,
@@ -439,6 +434,8 @@ class CustomerPortal(Controller):
                 create_context
             ).create(address_values)
         else:
+            if address_values.get('parent_id'):
+                address_values.pop('parent_id')
             partner_sudo.write(address_values)
         callback = form_data.get('callback') or '/my/addresses'
         return partner_sudo, {'successUrl': callback}
@@ -549,8 +546,10 @@ class CustomerPortal(Controller):
 
     @route('/address/update_address', type='json', auth="user", website=True)
     def portal_update_address(self, partner_id, address_type='', action=None, **kwargs):
+        if not partner_id:
+            return {}
         partner_id = int(partner_id)
-        partner_sudo = self._check_partner_edit_rights(partner_id=partner_id)
+        partner_sudo = self._check_partner_edit_rights(partner_id=partner_id, address_type=address_type)
         if not partner_sudo._can_be_edited_by_current_partner(**kwargs):
             raise MissingError(_("The address can't be found"))
         if action == 'archive':

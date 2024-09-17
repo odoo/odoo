@@ -67,7 +67,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
             {address_type: this.addressType},
         );
 
-        if (data.phone_code !== 0) {
+        if (data.phone_code) {
             this.addressForm.phone.placeholder = '+' + data.phone_code;
         } else {
             this.addressForm.phone.placeholder = '';
