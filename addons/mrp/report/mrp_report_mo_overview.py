@@ -53,11 +53,13 @@ class ReportMoOverview(models.AbstractModel):
         if doc['show_unit_costs']:
             footer_colspan += 1
         doc['show_mo_costs'] = data.get('moCosts') == '1'
+        doc['show_bom_costs'] = data.get('bomCosts') == '1'
         doc['show_real_costs'] = data.get('realCosts') == '1'
         doc['show_uom'] = self.env.user.has_group('uom.group_uom')
         if doc['show_uom']:
             footer_colspan += 1
         doc['data_mo_unit_cost'] = doc['summary'].get('mo_cost', 0) / (doc['summary'].get('quantity') or 1)
+        doc['data_bom_unit_cost'] = doc['summary'].get('bom_cost', 0) / (doc['summary'].get('quantity') or 1)
         doc['data_real_unit_cost'] = doc['summary'].get('real_cost', 0) / (doc['summary'].get('quantity') or 1)
         doc['unfolded_ids'] = set(json.loads(data.get('unfoldedIds', '[]')))
         doc['footer_colspan'] = footer_colspan
@@ -76,10 +78,23 @@ class ReportMoOverview(models.AbstractModel):
 
         components = self._get_components_data(production, level=1, current_index='')
         operations = self._get_operations_data(production, level=1, current_index='')
-        initial_mo_cost, initial_real_cost = self._compute_cost_sums(components, operations)
-        remaining_cost_share, byproducts = self._get_byproducts_data(production, initial_mo_cost, initial_real_cost, level=1, current_index='')
-        summary = self._get_mo_summary(production, components, initial_mo_cost, initial_real_cost, remaining_cost_share)
-        extra_lines = self._get_report_extra_lines(summary, components, operations, production.state == 'done')
+        initial_mo_cost, initial_bom_cost, initial_real_cost = self._compute_cost_sums(components, operations)
+
+        if production.bom_id:
+            currency = (production.company_id or self.env.company).currency_id
+            missing_components = (bom_line for bom_line in production.bom_id.bom_line_ids if bom_line not in (production.move_raw_ids.bom_line_id + self._get_kit_bom_lines(production.bom_id)))
+            missing_operations = (bom_line for bom_line in production.bom_id.operation_ids if bom_line not in production.workorder_ids.operation_id)
+            for line in missing_components:
+                line_cost = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line.product_qty
+                initial_bom_cost += currency.round(line_cost * production.product_uom_qty / production.bom_id.product_qty)
+            for operation in missing_operations:
+                cost = (operation._get_duration_expected(production.product_id, production.product_qty) / 60.0) * operation.workcenter_id.costs_hour
+                bom_cost = self.env.company.currency_id.round(cost)
+                initial_bom_cost += currency.round(bom_cost * production.product_uom_qty / production.bom_id.product_qty)
+
+        remaining_cost_share, byproducts = self._get_byproducts_data(production, initial_mo_cost, initial_bom_cost, initial_real_cost, level=1, current_index='')
+        summary = self._get_mo_summary(production, components, operations, initial_mo_cost, initial_bom_cost, initial_real_cost, remaining_cost_share)
+        extra_lines = self._get_report_extra_lines(summary, components, operations, production)
         return {
             'id': production.id,
             'name': production.display_name,
@@ -91,30 +106,33 @@ class ReportMoOverview(models.AbstractModel):
             'cost_breakdown': self._get_cost_breakdown_data(production, extra_lines, remaining_cost_share),
         }
 
-    def _get_report_extra_lines(self, summary, components, operations, production_done=False):
+    def _get_report_extra_lines(self, summary, components, operations, production):
         currency = summary.get('currency', self.env.company.currency_id)
         unit_mo_cost = currency.round(summary.get('mo_cost', 0) / (summary.get('quantity') or 1))
+        unit_bom_cost = currency.round(summary.get('bom_cost', 0) / (summary.get('quantity') or 1))
         unit_real_cost = currency.round(summary.get('real_cost', 0) / (summary.get('quantity') or 1))
         extras = {
             'unit_mo_cost': unit_mo_cost,
-            'unit_mo_cost_decorator': self._get_comparison_decorator(unit_real_cost, unit_mo_cost, currency.rounding),
+            'unit_bom_cost': unit_bom_cost,
             'unit_real_cost': unit_real_cost,
         }
-        if production_done:
+        if production.state == 'done':
             production_qty = summary.get('quantity') or 1.0
             extras['total_mo_cost_components'] = sum(compo.get('summary', {}).get('mo_cost', 0.0) for compo in components)
+            extras['total_bom_cost_components'] = sum(compo.get('summary', {}).get('bom_cost', 0.0) for compo in components)
             extras['total_real_cost_components'] = sum(compo.get('summary', {}).get('real_cost', 0.0) for compo in components)
-            extras['total_mo_cost_components_decorator'] = self._get_comparison_decorator(extras['total_real_cost_components'], extras['total_mo_cost_components'], currency.rounding)
             extras['unit_mo_cost_components'] = extras['total_mo_cost_components'] / production_qty
+            extras['unit_bom_cost_components'] = extras['total_bom_cost_components'] / production_qty
             extras['unit_real_cost_components'] = extras['total_real_cost_components'] / production_qty
             extras['total_mo_cost_operations'] = operations.get('summary', {}).get('mo_cost', 0.0)
+            extras['total_bom_cost_operations'] = operations.get('summary', {}).get('bom_cost', 0.0)
             extras['total_real_cost_operations'] = operations.get('summary', {}).get('real_cost', 0.0)
-            extras['total_mo_cost_operations_decorator'] = self._get_comparison_decorator(extras['total_real_cost_operations'], extras['total_mo_cost_operations'], currency.rounding)
             extras['unit_mo_cost_operations'] = extras['total_mo_cost_operations'] / production_qty
+            extras['unit_bom_cost_operations'] = extras['total_bom_cost_operations'] / production_qty
             extras['unit_real_cost_operations'] = extras['total_real_cost_operations'] / production_qty
             extras['total_mo_cost'] = extras['total_mo_cost_components'] + extras['total_mo_cost_operations']
+            extras['total_bom_cost'] = extras['total_bom_cost_components'] + extras['total_bom_cost_operations']
             extras['total_real_cost'] = extras['total_real_cost_components'] + extras['total_real_cost_operations']
-            extras['total_mo_cost_decorator'] = self._get_comparison_decorator(extras['total_real_cost'], extras['total_mo_cost'], currency.rounding)
         return extras
 
     def _get_cost_breakdown_data(self, production, extras, remaining_cost_share):
@@ -159,11 +177,16 @@ class ReportMoOverview(models.AbstractModel):
             'uom_name': uom_name,
         }
 
-    def _get_mo_summary(self, production, components, current_mo_cost, current_real_cost, remaining_cost_share):
+    def _get_mo_summary(self, production, components, operations, current_mo_cost, current_bom_cost, current_real_cost, remaining_cost_share):
         currency = (production.company_id or self.env.company).currency_id
         product = production.product_id
         mo_cost = current_mo_cost * remaining_cost_share
+        bom_cost = current_bom_cost * remaining_cost_share
         real_cost = current_real_cost * remaining_cost_share
+        decorator = self._get_comparison_decorator(real_cost if self._is_production_started(production) else bom_cost, mo_cost, currency.rounding)
+        mo_cost_decorator = decorator if any(compo['summary']['mo_cost_decorator'] == decorator for compo in (components + [operations])) else False
+        real_cost_temp_decorator = self._get_comparison_decorator(mo_cost, real_cost, currency.rounding) if self._is_production_started(production) else False
+        real_cost_decorator = real_cost_temp_decorator if any(compo['summary']['real_cost_decorator'] == real_cost_temp_decorator for compo in (components + [operations])) else False
         return {
             'level': 0,
             'model': production._name,
@@ -173,6 +196,7 @@ class ReportMoOverview(models.AbstractModel):
             'product_id': production.product_id.id,
             'state': production.state,
             'formatted_state': self._format_state(production, components),
+            'has_bom': bool(production.bom_id),
             'quantity': production.product_qty if production.state != 'done' else production.qty_produced,
             'uom_name': production.product_uom_id.display_name,
             'uom_precision': self._get_uom_precision(production.product_uom_id.rounding or 0.01),
@@ -182,7 +206,9 @@ class ReportMoOverview(models.AbstractModel):
             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
             'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
             'mo_cost': currency.round(mo_cost),
-            'mo_cost_decorator': self._get_comparison_decorator(real_cost, mo_cost, currency.rounding),
+            'mo_cost_decorator': mo_cost_decorator,
+            'real_cost_decorator': real_cost_decorator if not mo_cost_decorator else False,
+            'bom_cost': currency.round(bom_cost),
             'real_cost': currency.round(real_cost),
             'currency_id': currency.id,
             'currency': currency,
@@ -236,12 +262,20 @@ class ReportMoOverview(models.AbstractModel):
 
     def _get_comparison_decorator(self, expected, current, rounding):
         compare = float_compare(current, expected, precision_rounding=rounding)
-        if float_is_zero(current, precision_rounding=rounding) or compare == 0:
+        if compare == 0 or expected is False or current is False:
             return False
         elif compare > 0:
             return 'danger'
         else:
             return 'success'
+
+    def _get_bom_operation_cost(self, workorder, production, kit_operation=False):
+        operations = production.bom_id.operation_ids + kit_operation if kit_operation else production.bom_id.operation_ids
+        if workorder.operation_id not in operations:
+            return False
+        capacity = workorder.operation_id.workcenter_id._get_capacity(production.product_id)
+        operation_cycle = float_round(production.product_uom_qty / capacity, precision_rounding=1, rounding_method='UP')
+        return workorder.operation_id._compute_operation_cost() * operation_cycle
 
     def _get_operations_data(self, production, level=0, current_index=False):
         if production.state == "done":
@@ -251,22 +285,27 @@ class ReportMoOverview(models.AbstractModel):
         operations = []
         total_expected_time = 0.0
         total_current_time = 0.0
+        total_bom_cost = False
         total_expected_cost = 0.0
         total_real_cost = 0.0
         for index, workorder in enumerate(production.workorder_ids):
             wo_duration = workorder.get_duration()
-            expected_cost = workorder._compute_expected_operation_cost()
-            current_cost = workorder._compute_current_operation_cost()
-            mo_cost = expected_cost if production.state != 'done' else current_cost
-            is_workorder_started = not float_is_zero(wo_duration, precision_digits=2)
-            if is_workorder_started:
-                real_cost = current_cost
-            elif workorder.operation_id:
-                operation = workorder.operation_id
-                bom_duration_expected = operation._get_duration_expected(production.product_id, production.product_uom_qty, production.product_uom_id)
-                real_cost = expected_cost / (workorder.duration_expected or 1) * bom_duration_expected
+            mo_cost = real_cost = workorder._compute_expected_operation_cost()
+            bom_cost = self._get_bom_operation_cost(workorder, production, kit_operation=self._get_kit_operations(production.bom_id))
+            real_cost = workorder._compute_current_operation_cost()
+            real_cost_decorator = False
+            mo_cost_decorator = False
+            if self._is_production_started(production):
+                real_cost_decorator = self._get_comparison_decorator(mo_cost, real_cost, 0.01)
+            elif production.state == "confirmed":
+                if workorder.operation_id not in production.bom_id.operation_ids:
+                    bom_cost = 0
+                mo_cost_decorator = self._get_comparison_decorator(bom_cost, mo_cost, 0.01)
             else:
-                real_cost = expected_cost
+                if not production.bom_id:
+                    bom_cost = mo_cost
+                mo_cost_decorator = 'danger' if isinstance(bom_cost, bool) and not bom_cost else self._get_comparison_decorator(bom_cost, mo_cost, 0.01)
+            is_workorder_started = not float_is_zero(wo_duration, precision_digits=2)
 
             operations.append({
                 'level': level,
@@ -277,27 +316,36 @@ class ReportMoOverview(models.AbstractModel):
                 'state': workorder.state,
                 'formatted_state': self._format_state(workorder),
                 'quantity': workorder.duration_expected if float_is_zero(wo_duration, precision_digits=2) else wo_duration,
-                'quantity_decorator': self._get_comparison_decorator(workorder.duration_expected, wo_duration, 0.01),
                 'uom_name': operation_uom,
                 'production_id': production.id,
-                'unit_cost': expected_cost / (workorder.duration_expected or 1),
+                'unit_cost': mo_cost / (workorder.duration_expected or 1),
                 'mo_cost': mo_cost,
+                'mo_cost_decorator': mo_cost_decorator,
+                'bom_cost': bom_cost,
                 'real_cost': real_cost,
+                'real_cost_decorator': real_cost_decorator,
                 'currency_id': currency.id,
                 'currency': currency,
             })
             total_expected_time += workorder.duration_expected
             total_current_time += wo_duration if is_workorder_started else workorder.duration_expected
             total_expected_cost += mo_cost
+            total_bom_cost = self._sum_bom_cost(total_bom_cost, bom_cost)
             total_real_cost += real_cost
+
+        mo_cost_decorator = False
+        if not self._is_production_started(production):
+            mo_cost_decorator = self._get_comparison_decorator(total_bom_cost or 0.0, total_expected_cost, 0.01)
 
         return {
             'summary': {
                 'index': f"{current_index}W",
                 'quantity': total_current_time,
-                'quantity_decorator': self._get_comparison_decorator(total_expected_time, total_current_time, 0.01),
                 'mo_cost': total_expected_cost,
+                'mo_cost_decorator': mo_cost_decorator,
+                'bom_cost': total_bom_cost,
                 'real_cost': total_real_cost,
+                'real_cost_decorator': self._get_comparison_decorator(total_expected_cost, total_real_cost, 0.01) if self._is_production_started(production) else False,
                 'uom_name': operation_uom,
                 'currency_id': currency.id,
                 'currency': currency,
@@ -305,18 +353,37 @@ class ReportMoOverview(models.AbstractModel):
             'details': operations,
         }
 
+    def _get_kit_operations(self, bom):
+        operations = self.env['mrp.routing.workcenter']
+        for bom_line in bom.bom_line_ids:
+            if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
+                operations += bom_line.child_bom_id.operation_ids + self._get_kit_operations(bom_line.child_bom_id)
+        return operations
+
+    def _get_kit_bom_lines(self, bom):
+        bom_lines = self.env['mrp.bom.line']
+        for bom_line in bom.bom_line_ids:
+            if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
+                bom_lines += bom_line + bom_line.child_bom_id.bom_line_ids + self._get_kit_bom_lines(bom_line.child_bom_id)
+        return bom_lines
+
     def _get_finished_operation_data(self, production, level=0, current_index=False):
         currency = (production.company_id or self.env.company).currency_id
         done_operation_uom = _("Hours")
         operations = []
-        total_duration = total_duration_expected = total_cost = 0
+        total_duration = total_duration_expected = total_cost = total_mo_cost = 0
+        total_bom_cost = False
         for index, workorder in enumerate(production.workorder_ids):
             hourly_cost = workorder.costs_hour or workorder.workcenter_id.costs_hour
             duration = workorder.get_duration() / 60
+            operation_cost = duration * hourly_cost
+            mo_cost = workorder._compute_expected_operation_cost(without_employee_cost=True)
+            bom_cost = self._get_bom_operation_cost(workorder, production)
             total_duration += duration
             total_duration_expected += workorder.duration_expected
-            operation_cost = duration * hourly_cost
             total_cost += operation_cost
+            total_mo_cost += mo_cost
+            total_bom_cost = self._sum_bom_cost(total_bom_cost, bom_cost)
             operations.append({
                 'level': level,
                 'index': f"{current_index}W{index}",
@@ -325,8 +392,11 @@ class ReportMoOverview(models.AbstractModel):
                 'uom_name': done_operation_uom,
                 'uom_precision': 4,
                 'unit_cost': hourly_cost,
-                'mo_cost': currency.round(operation_cost),
+                'mo_cost': currency.round(mo_cost),
+                'mo_cost_decorator': False,
+                'bom_cost': currency.round(bom_cost) if bom_cost else False,
                 'real_cost': currency.round(operation_cost),
+                'real_cost_decorator': self._get_comparison_decorator(mo_cost, operation_cost, currency.rounding),
                 'currency_id': currency.id,
                 'currency': currency,
             })
@@ -335,9 +405,11 @@ class ReportMoOverview(models.AbstractModel):
                 'index': f"{current_index}W",
                 'done': True,
                 'quantity': total_duration,
-                'quantity_decorator': self._get_comparison_decorator(total_duration_expected, total_duration, 0.01),
-                'mo_cost': total_cost,
+                'mo_cost': total_mo_cost,
+                'mo_cost_decorator': False,
+                'bom_cost': total_bom_cost,
                 'real_cost': total_cost,
+                'real_cost_decorator': self._get_comparison_decorator(total_mo_cost, total_cost, currency.rounding),
                 'uom_name': done_operation_uom,
                 'currency_id': currency.id,
                 'currency': currency,
@@ -345,20 +417,27 @@ class ReportMoOverview(models.AbstractModel):
             'details': operations,
         }
 
-    def _get_byproducts_data(self, production, current_mo_cost, current_real_cost, level=0, current_index=False):
+    def _get_byproducts_data(self, production, current_mo_cost, current_bom_cost, current_real_cost, level=0, current_index=False):
         currency = (production.company_id or self.env.company).currency_id
         byproducts = []
         byproducts_cost_portion = 0
         total_mo_cost = 0
+        total_bom_cost = False
         total_real_cost = 0
         for index, move_bp in enumerate(production.move_byproduct_ids):
             product = move_bp.product_id
             cost_share = move_bp.cost_share / 100
             byproducts_cost_portion += cost_share
             mo_cost = current_mo_cost * cost_share
+            bom_cost = current_bom_cost * cost_share
             real_cost = current_real_cost * cost_share
             total_mo_cost += mo_cost
+            total_bom_cost = self._sum_bom_cost(total_bom_cost, bom_cost)
             total_real_cost += real_cost
+            if self._is_production_started(production):
+                mo_cost_decorator = self._get_comparison_decorator(real_cost, mo_cost, currency.rounding)
+            else:
+                mo_cost_decorator = self._get_comparison_decorator(bom_cost, mo_cost, currency.rounding)
             byproducts.append({
                 'level': level,
                 'index': f"{current_index}B{index}",
@@ -370,17 +449,23 @@ class ReportMoOverview(models.AbstractModel):
                 'uom_precision': self._get_uom_precision(move_bp.product_uom.rounding),
                 'unit_cost': self._get_unit_cost(move_bp),
                 'mo_cost': currency.round(mo_cost),
-                'mo_cost_decorator': self._get_comparison_decorator(real_cost, mo_cost, currency.rounding),
+                'mo_cost_decorator': mo_cost_decorator,
+                'bom_cost': currency.round(bom_cost),
                 'real_cost': currency.round(real_cost),
                 'currency_id': currency.id,
                 'currency': currency,
             })
 
+        if self._is_production_started(production):
+            mo_cost_decorator = self._get_comparison_decorator(total_real_cost, total_mo_cost, currency.rounding)
+        else:
+            mo_cost_decorator = self._get_comparison_decorator(total_bom_cost, total_mo_cost, currency.rounding)
         return float_round(1 - byproducts_cost_portion, precision_rounding=0.0001), {
             'summary': {
                 'index': f"{current_index}B",
                 'mo_cost': currency.round(total_mo_cost),
-                'mo_cost_decorator': self._get_comparison_decorator(total_real_cost, total_mo_cost, currency.rounding),
+                'mo_cost_decorator': mo_cost_decorator,
+                'bom_cost': currency.round(total_bom_cost),
                 'real_cost': currency.round(total_real_cost),
                 'currency_id': currency.id,
                 'currency': currency,
@@ -389,14 +474,16 @@ class ReportMoOverview(models.AbstractModel):
         }
 
     def _compute_cost_sums(self, components, operations=False):
-        total_mo_cost = total_real_cost = 0
+        total_mo_cost = total_bom_cost = total_real_cost = 0
         if operations:
             total_mo_cost = operations.get('summary', {}).get('mo_cost', 0.0)
+            total_bom_cost = operations.get('summary', {}).get('bom_cost', 0.0)
             total_real_cost = operations.get('summary', {}).get('real_cost', 0.0)
         for component in components:
             total_mo_cost += component.get('summary', {}).get('mo_cost', 0.0)
+            total_bom_cost += component.get('summary', {}).get('bom_cost', 0.0)
             total_real_cost += component.get('summary', {}).get('real_cost', 0.0)
-        return total_mo_cost, total_real_cost
+        return total_mo_cost, total_bom_cost, total_real_cost
 
     def _get_components_data(self, production, replenish_data=False, level=0, current_index=False):
         if not replenish_data:
@@ -428,11 +515,28 @@ class ReportMoOverview(models.AbstractModel):
     def _format_component_move(self, production, move_raw, replenishments, replenish_data, level, index):
         currency = (production.company_id or self.env.company).currency_id
         product = move_raw.product_id
-        quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity
-        replenish_mo_cost, dummy_real_cost = self._compute_cost_sums(replenishments)
+        expected_quantity = move_raw.product_uom_qty
+        current_quantity = move_raw.quantity
+        replenish_mo_cost, _dummy_bom_cost, _dummy_real_cost = self._compute_cost_sums(replenishments)
         replenish_quantity = sum(rep.get('summary', {}).get('quantity', 0.0) for rep in replenishments)
-        missing_quantity = quantity - replenish_quantity
+        mo_quantity = current_quantity if production.state == 'done' else expected_quantity
+        missing_quantity = mo_quantity - replenish_quantity
         missing_quantity_cost = self._get_component_real_cost(move_raw, missing_quantity)
+        mo_cost = currency.round(replenish_mo_cost + missing_quantity_cost)
+        real_cost = currency.round(self._get_component_real_cost(move_raw, current_quantity if move_raw.picked else 0))
+        if production.bom_id:
+            if move_raw.bom_line_id:
+                bom_cost = currency.round(self._get_component_real_cost(move_raw, move_raw.bom_line_id.product_qty * production.product_uom_qty / production.bom_id.product_qty))
+            else:
+                bom_cost = False
+        else:
+            bom_cost = currency.round(self._get_component_real_cost(move_raw, expected_quantity))
+        cost_to_compare = real_cost if production.state != 'confirmed' else bom_cost
+        if production.state == 'draft':
+            mo_cost_decorator = self._get_comparison_decorator(bom_cost, mo_cost, currency.rounding)
+        else:
+            cost_to_compare = real_cost if production.state != 'confirmed' else bom_cost
+            mo_cost_decorator = self._get_comparison_decorator(cost_to_compare, mo_cost, currency.rounding)
         component = {
             'level': level,
             'index': index,
@@ -442,7 +546,7 @@ class ReportMoOverview(models.AbstractModel):
             'product_model': product._name,
             'product': product,
             'product_id': product.id,
-            'quantity': quantity,
+            'quantity': expected_quantity if move_raw.state != 'done' else current_quantity,
             'uom': move_raw.product_uom,
             'uom_name': move_raw.product_uom.display_name,
             'uom_precision': self._get_uom_precision(move_raw.product_uom.rounding),
@@ -451,12 +555,14 @@ class ReportMoOverview(models.AbstractModel):
             'quantity_reserved': self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data),
             'receipt': self._check_planned_start(production.date_start, self._get_component_receipt(product, move_raw, production.warehouse_id, replenishments, replenish_data)),
             'unit_cost': self._get_unit_cost(move_raw),
-            'mo_cost': currency.round(replenish_mo_cost + missing_quantity_cost),
-            'real_cost': currency.round(self._get_component_real_cost(move_raw, quantity)),
+            'mo_cost': mo_cost,
+            'mo_cost_decorator': 'danger' if isinstance(bom_cost, bool) and not bom_cost and not self._is_production_started(production) else mo_cost_decorator,
+            'bom_cost': bom_cost,
+            'real_cost': real_cost,
+            'real_cost_decorator': False,
             'currency_id': currency.id,
             'currency': currency,
         }
-        component['mo_cost_decorator'] = self._get_comparison_decorator(component['real_cost'], component['mo_cost'], currency.rounding)
         if not product.is_storable:
             return component
         if any(rep.get('summary', {}).get('model') == 'to_order' for rep in replenishments):
@@ -522,6 +628,7 @@ class ReportMoOverview(models.AbstractModel):
             replenishment = {}
             forecast_uom_id = forecast_line['uom_id']
             line_quantity = min(quantity, forecast_uom_id._compute_quantity(forecast_line['quantity'], move_raw.product_uom))  # Avoid over-rounding
+            bom_quantity = production.product_uom_qty * move_raw.bom_line_id.product_qty - (quantity - line_quantity)
             replenishment['summary'] = {
                 'level': level + 1,
                 'index': replenishment_index,
@@ -536,6 +643,7 @@ class ReportMoOverview(models.AbstractModel):
                 'uom_precision': self._get_uom_precision(forecast_line['uom_id']['rounding']),
                 'unit_cost': self._get_unit_cost(move_raw),
                 'mo_cost': forecast_line.get('cost', self._get_replenishment_mo_cost(product, line_quantity, move_raw.product_uom, currency, forecast_line.get('move_in'))),
+                'bom_cost': currency.round(self._get_component_real_cost(move_raw, bom_quantity)) if bom_quantity else False,
                 'real_cost': currency.round(self._get_component_real_cost(move_raw, line_quantity)),
                 'currency_id': currency.id,
                 'currency': currency,
@@ -544,16 +652,22 @@ class ReportMoOverview(models.AbstractModel):
             if doc_in._name == 'mrp.production':
                 replenishment['components'] = self._get_components_data(doc_in, replenish_data, level + 2, replenishment_index)
                 replenishment['operations'] = self._get_operations_data(doc_in, level + 2, replenishment_index)
-                initial_mo_cost, initial_real_cost = self._compute_cost_sums(replenishment['components'], replenishment['operations'])
-                remaining_cost_share, byproducts = self._get_byproducts_data(doc_in, initial_mo_cost, initial_real_cost, level + 2, replenishment_index)
+                initial_mo_cost, initial_bom_cost, initial_real_cost = self._compute_cost_sums(replenishment['components'], replenishment['operations'])
+                remaining_cost_share, byproducts = self._get_byproducts_data(doc_in, initial_mo_cost, initial_bom_cost, initial_real_cost, level + 2, replenishment_index)
                 replenishment['byproducts'] = byproducts
-                replenishment['summary']['real_cost'] = initial_real_cost * remaining_cost_share
                 replenishment['summary']['mo_cost'] = initial_mo_cost * remaining_cost_share
+                replenishment['summary']['bom_cost'] = initial_bom_cost * remaining_cost_share
+                replenishment['summary']['real_cost'] = initial_real_cost * remaining_cost_share
+
             if self._is_doc_in_done(doc_in):
                 replenishment['summary']['receipt'] = self._format_receipt_date('available')
             else:
                 replenishment['summary']['receipt'] = self._check_planned_start(production.date_start, self._get_replenishment_receipt(doc_in, replenishment.get('components', [])))
-            replenishment['summary']['mo_cost_decorator'] = self._get_comparison_decorator(replenishment['summary']['real_cost'], replenishment['summary']['mo_cost'], replenishment['summary']['currency'].rounding)
+
+            if self._is_production_started(production):
+                replenishment['summary']['mo_cost_decorator'] = self._get_comparison_decorator(replenishment['summary']['real_cost'], replenishment['summary']['mo_cost'], replenishment['summary']['currency'].rounding)
+            else:
+                replenishment['summary']['mo_cost_decorator'] = self._get_comparison_decorator(replenishment['summary']['bom_cost'], replenishment['summary']['mo_cost'], replenishment['summary']['currency'].rounding)
             replenishment['summary']['formatted_state'] = self._format_state(doc_in, replenishment['components']) if doc_in._name == 'mrp.production' else self._format_state(doc_in)
             replenishments.append(replenishment)
             total_ordered += replenishment['summary']['quantity']
@@ -567,7 +681,10 @@ class ReportMoOverview(models.AbstractModel):
         reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
         # Avoid creating a "to_order" line to compensate for missing stock (i.e. negative free_qty).
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
-        missing_quantity = quantity - (reserved_quantity + free_qty + total_ordered)
+        available_qty = reserved_quantity + free_qty + total_ordered
+        missing_quantity = quantity - available_qty
+        bom_missing_quantity = production.product_uom_qty * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
+
         if product.is_storable and production.state not in ('done', 'cancel')\
            and float_compare(missing_quantity, 0, precision_rounding=move_raw.product_uom.rounding) > 0:
             # Need to order more products to fulfill the need
@@ -586,19 +703,26 @@ class ReportMoOverview(models.AbstractModel):
                 'replenish_quantity': move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id),
                 'uom_name': move_raw.product_uom.display_name,
                 'uom_precision': self._get_uom_precision(move_raw.product_uom.rounding),
-                'real_cost': currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id)),
+                'real_cost': currency.round(product.standard_price * move_raw.product_uom._compute_quantity(available_qty, product.uom_id)),
                 'currency_id': currency.id,
                 'currency': currency,
             }}
             if resupply_data:
                 mo_cost = resupply_data['currency']._convert(resupply_data['cost'], currency, (production.company_id or self.env.company), fields.Date.today())
                 to_order_line['summary']['mo_cost'] = mo_cost
+                to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
                 to_order_line['summary']['receipt'] = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.datetime.today() + timedelta(days=resupply_data['delay'])))
             else:
                 to_order_line['summary']['mo_cost'] = currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
+                to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
                 to_order_line['summary']['receipt'] = self._format_receipt_date('unavailable')
             to_order_line['summary']['unit_cost'] = currency.round(to_order_line['summary']['mo_cost'] / missing_quantity)
-            to_order_line['summary']['mo_cost_decorator'] = self._get_comparison_decorator(to_order_line['summary']['real_cost'], to_order_line['summary']['mo_cost'], currency.rounding)
+
+            if self._is_production_started(production):
+                to_order_line['summary']['mo_cost_decorator'] = self._get_comparison_decorator(to_order_line['summary']['real_cost'], to_order_line['summary']['mo_cost'], currency.rounding)
+            else:
+                to_order_line['summary']['mo_cost_decorator'] = self._get_comparison_decorator(to_order_line['summary']['bom_cost'], to_order_line['summary']['mo_cost'], currency.rounding)
+
             replenishments.append(to_order_line)
 
         return replenishments
@@ -617,8 +741,14 @@ class ReportMoOverview(models.AbstractModel):
         currency = (production.company_id or self.env.company).currency_id
         lg = self.env['res.lang']._get_data(code=self.env.user.lang) or get_lang(self.env)
         receipt_date = datetime.strptime(in_transit['delivery_date'], lg.date_format)
+        bom_missing_qty = max(0, production.product_uom_qty * move_raw.bom_line_id.product_qty - (move_raw.product_uom_qty - in_transit['quantity']))
         mo_cost = self._get_replenishment_mo_cost(product, in_transit['quantity'], in_transit['uom_id'], currency)
+        bom_cost = self._get_replenishment_mo_cost(product, bom_missing_qty, in_transit['uom_id'], currency) if production.bom_id else False
         real_cost = product.standard_price * in_transit['uom_id']._compute_quantity(in_transit['quantity'], product.uom_id)
+        if self._is_production_started(production) or not production.bom_id:
+            mo_cost_decorator = self._get_comparison_decorator(real_cost, mo_cost, currency.rounding)
+        else:
+            mo_cost_decorator = self._get_comparison_decorator(bom_cost, mo_cost, currency.rounding)
         return {'summary': {
             'level': level + 1,
             'index': f"{current_index}IT",
@@ -630,12 +760,16 @@ class ReportMoOverview(models.AbstractModel):
             'uom_name': move_raw.product_uom.display_name,
             'uom_precision': self._get_uom_precision(move_raw.product_uom.rounding),
             'mo_cost': mo_cost,
-            'mo_cost_decorator': self._get_comparison_decorator(real_cost, mo_cost, currency.rounding),
+            'mo_cost_decorator': mo_cost_decorator,
+            'bom_cost': bom_cost,
             'real_cost': currency.round(real_cost),
             'receipt': self._check_planned_start(production.date_start, self._format_receipt_date('expected', receipt_date)),
             'currency_id': currency.id,
             'currency': currency,
         }}
+
+    def _is_production_started(self, production):
+        return production.state not in {"draft", "confirmed"}
 
     def _get_replenishment_mo_cost(self, product, quantity, uom_id, currency, move_in=False):
         return currency.round(product.standard_price * uom_id._compute_quantity(quantity, product.uom_id))
@@ -740,7 +874,7 @@ class ReportMoOverview(models.AbstractModel):
     def _add_origins_to_forecast(self, forecast_lines):
         # Keeps the link to its origin even when the product is now in stock.
         new_lines = []
-        for line in filter(lambda line: not line.get('document_in', False) and line.get('move_out', False), forecast_lines):
+        for line in filter(lambda line: not line.get('document_in', False) and line.get('move_out', False) and line.get('replenishment_filled', False), forecast_lines):
             move_out_qty = line['move_out'].product_uom._compute_quantity(line['move_out'].product_uom_qty, line['uom_id'])
             for move_origin in self.env['stock.move'].browse(line['move_out']._rollup_move_origs()):
                 doc_origin = self._get_origin(move_origin)
@@ -869,3 +1003,8 @@ class ReportMoOverview(models.AbstractModel):
             replenish_data['qty_reserved'][move_raw] = total_reserved
 
         return replenish_data['qty_reserved'][move_raw]
+
+    def _sum_bom_cost(self, current_total, increment):
+        if current_total is False and increment is False:
+            return False
+        return current_total + increment

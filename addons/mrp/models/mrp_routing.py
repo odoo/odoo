@@ -183,3 +183,6 @@ class MrpRoutingWorkcenter(models.Model):
         capacity = workcenter._get_capacity(product)
         cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method='UP')
         return workcenter._get_expected_duration(product) + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency
+
+    def _compute_operation_cost(self):
+        return (self.time_cycle / 60.0) * (self.workcenter_id.costs_hour)

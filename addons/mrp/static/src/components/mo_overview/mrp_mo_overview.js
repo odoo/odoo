@@ -48,6 +48,11 @@ export class MoOverview extends Component {
             [this.activeId],
         );
         this.state.data = reportValues.data;
+        if (this.isProductionStarted) {
+            this.state.showOptions.bomCosts = false;
+        } else {
+            this.state.showOptions.realCosts = false;
+        }
         if (this.isProductionDone) {
             // Hide Availabilities / Receipts / Status columns when the MO is done.
             this.state.showOptions.availabilities = false;
@@ -101,6 +106,7 @@ export class MoOverview extends Component {
             receipts: true,
             unitCosts: false,
             moCosts: true,
+            bomCosts: true,
             realCosts: true,
         };
     }
@@ -143,8 +149,24 @@ export class MoOverview extends Component {
         return this.state.showOptions.moCosts;
     }
 
+    get showBomCosts() {
+        return this.state.showOptions.bomCosts;
+    }
+
     get showRealCosts() {
         return this.state.showOptions.realCosts;
+    }
+
+    get hasBom() {
+        return this.state.data?.summary?.has_bom;
+    }
+
+    get isProductionStarted() {
+        return !["draft", "confirmed"].includes(this.state.data?.summary?.state);
+    }
+
+    get isProductionDraft() {
+        return this.state.data?.summary?.state === "draft";
     }
 
     get isProductionDone() {
@@ -176,6 +198,7 @@ export class MoOverview extends Component {
             + `&receipts=${+this.state.showOptions.receipts}`
             + `&unitCosts=${+this.state.showOptions.unitCosts}`
             + `&moCosts=${+this.state.showOptions.moCosts}`
+            + `&bomCosts=${+this.state.showOptions.bomCosts}`
             + `&realCosts=${+this.state.showOptions.realCosts}`
             + `&unfoldedIds=${JSON.stringify(Array.from(this.unfoldedIds))}`;
     }

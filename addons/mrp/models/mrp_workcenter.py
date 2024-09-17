@@ -21,7 +21,7 @@ class MrpWorkcenter(models.Model):
     _name = 'mrp.workcenter'
     _description = 'Work Center'
     _order = "sequence, id"
-    _inherit = ['resource.mixin']
+    _inherit = ['mail.thread', 'resource.mixin']
     _check_company_auto = True
 
     # resource
@@ -40,7 +40,7 @@ class MrpWorkcenter(models.Model):
         help="Gives the sequence order when displaying a list of work centers.")
     color = fields.Integer('Color')
     currency_id = fields.Many2one('res.currency', 'Currency', related='company_id.currency_id', readonly=True, required=True)
-    costs_hour = fields.Float(string='Cost per hour', help='Hourly processing cost.', default=0.0)
+    costs_hour = fields.Float(string='Cost per hour', help='Hourly processing cost.', default=0.0, tracking=True)
     time_start = fields.Float('Setup Time')
     time_stop = fields.Float('Cleanup Time')
     routing_line_ids = fields.One2many('mrp.routing.workcenter', 'workcenter_id', "Routing Lines")
