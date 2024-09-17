@@ -113,7 +113,7 @@
                                 <field name="total_cost" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
                                 <field name="margin" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
                                 <field name="margin_percent" invisible="not is_total_cost_computed" optional="hide" widget="percentage"/>
-                                <field name="discount" string="Disc.%"/>
+                                <field name="discount" width="50px" string="Disc.%"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tags" column_invisible="True"/>
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
