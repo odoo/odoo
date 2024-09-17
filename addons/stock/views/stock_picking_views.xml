@@ -53,7 +53,7 @@
                                     <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                                 </div>
                                 <div class="d-flex ms-auto mt-1 align-items-center">
-                                    <t t-esc="record.scheduled_date.value and record.scheduled_date.value.split(' ')[0] or False"/>
+                                    <field name="scheduled_date" options="{'show_time': false}"/>
                                     <field name="user_id" widget="many2one_avatar_user" invisible="not user_id" readonly="state in ['cancel', 'done']" class="ms-1"/>
                                 </div>
                             </footer>
