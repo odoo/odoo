@@ -8,6 +8,8 @@ import { DateFromToValue } from "../filter_date_from_to_value/filter_date_from_t
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { Domain } from "@web/core/domain";
+import { user } from "@web/core/user";
 import { TextFilterValue } from "../filter_text_value/filter_text_value";
 
 export class FilterValue extends Component {
@@ -34,6 +36,14 @@ export class FilterValue extends Component {
 
     get textAllowedValues() {
         return this.getters.getTextFilterOptions(this.filter.id);
+    }
+
+    get relationalAllowedDomain() {
+        const domain = this.props.filter.domainOfAllowedValues;
+        if (domain) {
+            return new Domain(domain).toList(user.context);
+        }
+        return [];
     }
 
     onDateInput(id, value) {

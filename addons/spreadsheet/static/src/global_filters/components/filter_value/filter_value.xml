@@ -16,6 +16,7 @@
                     placeholder="' ' + translate(filter.label)"
                     resModel="filter.modelName"
                     resIds="filterValue || []"
+                    domain="relationalAllowedDomain"
                     update="(resIds) => this.onTagSelected(filter.id, resIds)" />
             </span>
             <div t-if="filter.type === 'date'" class="w-100">
