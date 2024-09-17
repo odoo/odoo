@@ -325,8 +325,6 @@ export class HierarchyNode {
      * @param {HierarchyNode} node parent node to set
      */
     setParentNode(node) {
-        this.parentNode = node;
-        node.addChildNode(this);
         const tree = node.tree;
         if (tree.root === this) {
             tree.root = node;
@@ -334,6 +332,8 @@ export class HierarchyNode {
             this.tree.removeRoot();
             this.setTree(node.tree);
         }
+        this.parentNode = node;
+        node.addChildNode(this);
     }
 
     setTree(tree) {

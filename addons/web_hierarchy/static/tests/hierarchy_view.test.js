@@ -1520,4 +1520,6 @@ test("Avoid fetching subnodes if those subnodes are already in the view", async 
         "Georges\nAlbert",
         "Josephine\nAlbert",
     ]);
+    // The button to show the subnodes should be displayed for Georges and Josephine
+    expect(".o_hierarchy_node_button.btn-primary").toHaveCount(2);
 });
