@@ -56,6 +56,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'groups_id': [
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
+                (4, cls.env.ref('stock.group_stock_user').id),
             ],
             'tz': 'America/New_York',
         })
