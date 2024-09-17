@@ -1114,7 +1114,7 @@
                                         <!-- required for @api.onchange('product_id') -->
                                         <field name="product_uom_id" column_invisible="True"/>
                                         <field name="price_unit" string="Price"/>
-                                        <field name="discount" string="Disc.%" optional="hide"/>
+                                        <field name="discount" width="50px" string="Disc.%" optional="hide"/>
                                         <field name="tax_ids" widget="many2many_tax_tags"
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain, 'active_test': True}"
