@@ -189,24 +189,6 @@ patch(PosStore.prototype, {
         }
         return context;
     },
-    getPendingOrder() {
-        const context = this.getSyncAllOrdersContext();
-        const { orderToCreate, orderToUpdate, paidOrdersNotSent } = super.getPendingOrder();
-
-        if (!this.config.module_pos_restaurant || !context.table_ids || !context.table_ids.length) {
-            return { orderToCreate, orderToUpdate, paidOrdersNotSent };
-        }
-
-        return {
-            paidOrdersNotSent,
-            orderToCreate: orderToCreate.filter(
-                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
-            ),
-            orderToUpdate: orderToUpdate.filter(
-                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
-            ),
-        };
-    },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
         if (this.config.module_pos_restaurant && !this.get_order().uiState.booked) {
             this.get_order().setBooked(true);
@@ -238,7 +220,7 @@ patch(PosStore.prototype, {
         this.selectedTable = table;
         try {
             this.loadingOrderState = true;
-            const orders = await this.syncAllOrders();
+            const orders = await this.syncAllOrders({ throw: true });
             const orderUuids = orders.map((order) => order.uuid);
 
             for (const order of table.orders) {
@@ -358,6 +340,7 @@ patch(PosStore.prototype, {
             this.set_order(destinationOrder);
             await this.deleteOrders([order]);
         }
+        this.addPendingOrder([order.id]);
         await this.setTable(destinationTable);
     },
     updateTables(...tables) {

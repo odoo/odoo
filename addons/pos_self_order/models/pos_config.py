@@ -323,7 +323,8 @@ class PosConfig(models.Model):
         self.ensure_one()
 
         if not self.current_session_id:
-            self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
+            session = self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
+            session.set_opening_control(0, "")
             self._notify('STATUS', {'status': 'open'})
 
         ctx = dict(self._context, app_id='pos_self_order', footer=False)
