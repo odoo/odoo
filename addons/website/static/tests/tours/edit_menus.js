@@ -4,7 +4,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -201,7 +201,7 @@ registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     // Drag a block to be able to scroll later.
-    ...dragNDrop({id: "s_media_list", name: "Media List", groupName: "Content"}),
+    ...insertSnippet({id: "s_media_list", name: "Media List", groupName: "Content"}),
     ...clickOnSave(),
     clickOnExtraMenuItem({}, true),
     {

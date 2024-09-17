@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     },
 }, {
     content: 'wait for the snippet menu to finish the drop process',
-    trigger: 'body:not(:has(.o_we_already_dragging))',
+    trigger: 'body:not(:has(.o_we_ongoing_insertion))',
 }, {
     content: 'verify that the title was inserted properly in the editor',
     trigger: '[name="body_arch"] :iframe .o_editable h1',

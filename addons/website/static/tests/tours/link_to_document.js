@@ -1,4 +1,4 @@
-import { dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 /**
  * The purpose of this tour is to check the Linktools to create a link to an
  * uploaded document.
@@ -11,7 +11,7 @@ registerWebsitePreviewTour(
         edition: true,
     },
     () => [
-        ...dragNDrop({
+        ...insertSnippet({
             name: "Banner",
             id: "s_banner",
             groupName: "Intro",

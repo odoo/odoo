@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { goToCart, assertCartContains } from '@website_sale/js/tours/tour_utils';
-import { registerWebsitePreviewTour, clickOnEditAndWaitEditMode, clickOnSnippet, dragNDrop, selectElementInWeSelectWidget, clickOnSave, clickOnElement, assertPathName } from '@website/js/tours/tour_utils';
+import { registerWebsitePreviewTour, clickOnEditAndWaitEditMode, clickOnSnippet, insertSnippet, selectElementInWeSelectWidget, clickOnSave, clickOnElement, assertPathName } from '@website/js/tours/tour_utils';
 
 
 function editAddToCartSnippet() {
@@ -17,7 +17,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         test: true,
     },
     () => [
-        ...dragNDrop({name: 'Add to Cart Button'}),
+        ...insertSnippet({name: 'Add to Cart Button'}),
 
         // Basic product with no variants
         ...clickOnSnippet({id: 's_add_to_cart'}),

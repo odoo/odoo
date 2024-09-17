@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { dragNDrop, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import { insertSnippet, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 const blockIDToData = {
     parent: {
@@ -54,7 +54,7 @@ registerWebsitePreviewTour("focus_blur_snippets", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_focusblur",
         name: "s_focusblur",
         groupName: "Content",

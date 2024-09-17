@@ -3,7 +3,7 @@
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -13,7 +13,7 @@ registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     edition: true,
 }, () => [
     // Put a Newsletter block.
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_newsletter_block',
         name: 'Newsletter Block',
         groupName: "Contact & Forms",

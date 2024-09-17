@@ -4,7 +4,7 @@ import {
     changeOption,
     clickOnSave,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -19,7 +19,7 @@ registerWebsitePreviewTour('website_replace_grid_image', {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop(snippet),
+    ...insertSnippet(snippet),
     ...clickOnSnippet(snippet),
     {
         content: "Toggle to grid mode",
@@ -65,9 +65,9 @@ registerWebsitePreviewTour("scroll_to_new_grid_item", {
     edition: true,
 }, () => [
     // Drop enough snippets to scroll.
-    ...dragNDrop({id: "s_text_image", name: "Text - Image", groupName: "Content"}),
-    ...dragNDrop({id: "s_image_text", name: "Image - Text", groupName: "Content"}),
-    ...dragNDrop({id: "s_image_text", name: "Image - Text", groupName: "Content"}),
+    ...insertSnippet({id: "s_text_image", name: "Text - Image", groupName: "Content"}),
+    ...insertSnippet({id: "s_image_text", name: "Image - Text", groupName: "Content"}),
+    ...insertSnippet({id: "s_image_text", name: "Image - Text", groupName: "Content"}),
     // Toggle the first snippet to grid mode.
     ...clickOnSnippet({id: "s_text_image", name: "Text - Image"}),
     changeOption("layout_column", 'we-button[data-name="grid_mode"]'),

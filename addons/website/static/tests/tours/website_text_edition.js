@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import {
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
     goToTheme,
     registerWebsitePreviewTour,
@@ -26,7 +26,7 @@ registerWebsitePreviewTour('website_text_edition', {
         run: `edit ${WEBSITE_MAIN_COLOR} && click body`,
     },
     goBackToBlocks(),
-    ...dragNDrop({id: "s_text_block", name: "Text", groupName: "Text"}),
+    ...insertSnippet({id: "s_text_block", name: "Text", groupName: "Text"}),
     {
         content: "Click on the text block first paragraph (to auto select)",
         trigger: ':iframe .s_text_block p',

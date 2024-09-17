@@ -5,7 +5,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -16,7 +16,7 @@ registerWebsitePreviewTour("test_parallax", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop(coverSnippet),
+    ...insertSnippet(coverSnippet),
     ...clickOnSnippet(coverSnippet),
     changeOption("BackgroundOptimize", "we-toggler"),
     changeOption("BackgroundOptimize", 'we-button[data-gl-filter="blur"]'),

@@ -1,4 +1,4 @@
-import { dragNDrop, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import { insertSnippet, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 /**
  * The purpose of this tour is to check the link on image flow.
@@ -22,7 +22,7 @@ registerWebsitePreviewTour('test_image_link', {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",

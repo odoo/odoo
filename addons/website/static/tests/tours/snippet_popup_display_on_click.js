@@ -5,7 +5,7 @@ import {
     clickOnElement,
     clickOnSave,
     changeOption,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 import { browser } from "@web/core/browser/browser";
@@ -15,8 +15,8 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
-    ...dragNDrop({id: "s_popup", name: "Popup", groupName: "Content"}),
+    ...insertSnippet({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
+    ...insertSnippet({id: "s_popup", name: "Popup", groupName: "Content"}),
     {
         content: "Click inside the popup to access its options menu.",
         trigger: ":iframe .s_popup .s_banner",
@@ -71,7 +71,7 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
         trigger: ".o_website_preview[data-view-xmlid='website.contactus']",
     },
     ...clickOnEditAndWaitEditMode(),
-    ...dragNDrop({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
+    ...insertSnippet({id: "s_text_image", name: "Image - Text", groupName: "Content"}),
     clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Add a link to the homepage in the URL input",

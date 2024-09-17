@@ -1,13 +1,13 @@
 /** @odoo-module */
 
-import { dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour('website_image_quality', {
     test: true,
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",

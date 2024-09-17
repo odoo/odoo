@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {clickOnSnippet, dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import {clickOnSnippet, insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 const wallRaceConditionClass = "image_wall_race_condition";
 const preventRaceConditionSteps = [{
@@ -54,7 +54,7 @@ registerWebsitePreviewTour("snippet_images_wall", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_images_wall",
         name: "Images Wall",
         groupName: "Images",

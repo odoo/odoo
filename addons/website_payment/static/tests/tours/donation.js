@@ -3,7 +3,7 @@
 import {
     clickOnSave,
     registerWebsitePreviewTour,
-    dragNDrop,
+    insertSnippet,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('donation_snippet_edition', {
@@ -11,7 +11,7 @@ registerWebsitePreviewTour('donation_snippet_edition', {
     url: '/',
     edition: true,
 }, () => [
-        ...dragNDrop({
+        ...insertSnippet({
             id: "s_donation",
             name: "Donation",
             groupName: "Contact & Forms",

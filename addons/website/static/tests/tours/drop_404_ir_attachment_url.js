@@ -2,7 +2,7 @@
 
 import {
     changeOption,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -11,7 +11,7 @@ registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_404_snippet',
         name: '404 Snippet',
         groupName: "Images",

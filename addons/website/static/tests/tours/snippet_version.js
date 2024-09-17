@@ -2,7 +2,7 @@
 
 import {
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour
 } from '@website/js/tours/tour_utils';
 
@@ -11,12 +11,12 @@ registerWebsitePreviewTour("snippet_version_1", {
     url: "/",
     test: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_test_snip',
         name: 'Test snip',
         groupName: "Content",
     }),
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",

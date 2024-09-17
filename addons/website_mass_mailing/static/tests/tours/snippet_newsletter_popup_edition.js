@@ -2,7 +2,7 @@
 
 import {
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 import snippetNewsletterPopupUseTour from "@website_mass_mailing/../tests/tours/snippet_newsletter_popup_use";
@@ -12,7 +12,7 @@ registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_newsletter_subscribe_popup',
         name: 'Newsletter Popup',
         groupName: "Contact & Forms",

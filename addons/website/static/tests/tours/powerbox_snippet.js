@@ -1,11 +1,11 @@
-import {clickOnSnippet, dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import {clickOnSnippet, insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour("website_powerbox_snippet",{
     edition: true,
     test: true,
 },
 () => [
-...dragNDrop({
+...insertSnippet({
     id: "s_text_block",
     name: "Text",
     groupName: "Text",

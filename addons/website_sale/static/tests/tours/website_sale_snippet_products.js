@@ -5,7 +5,7 @@ import {
     changeOption,
     clickOnSave,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 import { goToCart } from '@website_sale/js/tours/tour_utils';
@@ -50,7 +50,7 @@ registerWebsitePreviewTour('website_sale.snippet_products', {
         templatesSteps = templatesSteps.concat(changeTemplate(templateKey));
     }
     return [
-        ...dragNDrop(productsSnippet),
+        ...insertSnippet(productsSnippet),
         ...clickOnSnippet(productsSnippet),
         ...templatesSteps,
         ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
@@ -69,7 +69,7 @@ registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
     edition: true,
 },
 () => [
-    ...dragNDrop(productsSnippet),
+    ...insertSnippet(productsSnippet),
     ...clickOnSnippet(productsSnippet),
     ...changeTemplate('dynamic_filter_template_product_product_add_to_cart'),
     changeOption(optionBlock, 'we-select[data-name="filter_opt"] we-toggler', 'filter'),

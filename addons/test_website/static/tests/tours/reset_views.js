@@ -22,7 +22,7 @@ registerWebsitePreviewTour(
     () => [
         {
             content: "Drag the Intro snippet group and drop it in #oe_structure_test_website_page.",
-            trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+            trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
             // id starting by 'oe_structure..' will actually create an inherited view
             run: "drag_and_drop :iframe #oe_structure_test_website_page",
         },
