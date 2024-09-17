@@ -4,7 +4,7 @@
     <div t-name="mrp.MoOverview" class="o_action">
         <Layout display="{ controlPanel: {} }">
             <t t-set-slot="layout-actions">
-                <MoOverviewDisplayFilter showOptions="state.showOptions" limited="isProductionDone" changeDisplay.bind="onChangeDisplay"/>
+                <MoOverviewDisplayFilter showOptions="state.showOptions" limited="isProductionDone" changeDisplay.bind="onChangeDisplay" isProductionDraft="isProductionDraft"/>
             </t>
 
             <t t-set-slot="control-panel-create-button">
@@ -26,7 +26,9 @@
                             <th class="text-end" t-if="showReceipts">Receipt</th>
                             <th class="text-end" t-if="showUnitCosts">Unit Cost</th>
                             <th class="text-end" t-if="showMoCosts" title="Cost based on related replenishments. Otherwise cost from product form">MO Cost</th>
-                            <th class="text-end" t-if="showRealCosts" title="Cost from product form">Real Cost</th>
+                            <th class="text-end" t-if="showBomCosts" title="Cost based on the BoM">BoM Cost</th>
+                            <th class="text-end" t-if="showRealCosts and realInDraft" title="Cost based on cost projection">Real Cost</th>
+                            <th class="text-end" t-elif="showRealCosts" title="Cost as it is currently accumulated">Real Cost</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,27 +42,31 @@
                     <tfoot t-if="showMoCosts or showRealCosts">
                         <tr name="unitCost">
                             <td class="text-end" t-att-colspan="totalColspan">Unit Cost</td>
-                            <td t-attf-class="text-end {{ getColorClass(state.data.extras.unit_mo_cost_decorator) }}" t-if="showMoCosts" t-out="formatCost(state.data.extras.unit_mo_cost)"/>
-                            <td class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.unit_real_cost)"/>
+                            <td t-attf-class="text-end" t-if="showMoCosts" t-out="formatCost(state.data.extras.unit_mo_cost)"/>
+                            <td class="text-end" t-if="showBomCosts" t-out="formatCost(state.data.extras.unit_bom_cost)"/>
+                            <td t-attf-class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.unit_real_cost)"/>
                         </tr>
                         <t t-if="isProductionDone">
                             <tr>
                                 <td class="text-end" t-att-colspan="totalColspan">Total Cost of Components</td>
-                                <td t-attf-class="text-end {{ getColorClass(state.data.extras.total_mo_cost_components_decorator) }}" t-if="showMoCosts" t-out="formatCost(state.data.extras.total_mo_cost_components)"/>
-                                <td class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.total_real_cost_components)"/>
+                                <td t-attf-class="text-end" t-if="showMoCosts" t-out="formatCost(state.data.extras.total_mo_cost_components)"/>
+                                <td class="text-end" t-if="showBomCosts" t-out="formatCost(state.data.extras.total_bom_cost_components)"/>
+                                <td t-attf-class="text-end {{ getColorClass(state.data.extras.total_real_cost_components_decorator) }}" t-if="showRealCosts" t-out="formatCost(state.data.extras.total_real_cost_components)"/>
                             </tr>
                             <tr t-if="state.data.summary.quantity != 1">
                                 <td class="text-end" t-att-colspan="totalColspan">
                                     Cost of Components per unit
                                     <t t-if="showUom">(in <t t-out='state.data.summary.uom_name'/>)</t>
                                 </td>
-                                <td t-attf-class="text-end {{ getColorClass(state.data.extras.total_mo_cost_components_decorator) }}" t-if="showMoCosts" t-out="formatCost(state.data.extras.unit_mo_cost_components)"/>
-                                <td class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.unit_real_cost_components)"/>
+                                <td t-attf-class="text-end" t-if="showMoCosts" t-out="formatCost(state.data.extras.unit_mo_cost_components)"/>
+                                <td class="text-end" t-if="showBomCosts" t-out="formatCost(state.data.extras.unit_bom_cost_components)"/>
+                                <td t-attf-class="text-end {{ getColorClass(state.data.extras.total_real_cost_components_decorator) }}" t-if="showRealCosts" t-out="formatCost(state.data.extras.unit_real_cost_components)"/>
                             </tr>
                             <tr t-if="hasOperations">
                                 <td class="text-end" t-att-colspan="totalColspan">Total Cost of Operations</td>
                                 <td t-attf-class="text-end {{ getColorClass(state.data.extras.total_mo_cost_operations_decorator) }}" t-if="showMoCosts" t-out="formatCost(state.data.extras.total_mo_cost_operations)"/>
-                                <td class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.total_real_cost_operations)"/>
+                                <td class="text-end" t-if="showBomCosts" t-out="formatCost(state.data.extras.total_bom_cost_operations)"/>
+                                <td t-attf-class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.total_real_cost_operations)"/>
                             </tr>
                             <tr t-if="hasOperations and state.data.summary.quantity != 1">
                                 <td class="text-end" t-att-colspan="totalColspan">
@@ -68,12 +74,14 @@
                                     <t t-if="showUom">(in <t t-out='state.data.summary.uom_name'/>)</t>
                                 </td>
                                 <td t-attf-class="text-end {{ getColorClass(state.data.extras.total_mo_cost_operations_decorator) }}" t-if="showMoCosts" t-out="formatCost(state.data.extras.unit_mo_cost_operations)"/>
-                                <td class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.unit_real_cost_operations)"/>
+                                <td class="text-end" t-if="showBomCosts" t-out="formatCost(state.data.extras.unit_bom_cost_operations)"/>
+                                <td t-attf-class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.unit_real_cost_operations)"/>
                             </tr>
                             <tr t-if="hasBreakdown and hasOperations">
                                 <td class="text-end" t-att-colspan="totalColspan">Total Cost of Production</td>
-                                <td t-attf-class="text-end {{ getColorClass(state.data.extras.total_mo_cost_decorator) }}" t-if="showMoCosts" t-out="formatCost(state.data.extras.total_mo_cost)"/>
-                                <td class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.total_real_cost)"/>
+                                <td t-attf-class="text-end" t-if="showMoCosts" t-out="formatCost(state.data.extras.total_mo_cost)"/>
+                                <td class="text-end" t-if="showBomCosts" t-out="formatCost(state.data.extras.total_bom_cost)"/>
+                                <td t-attf-class="text-end" t-if="showRealCosts" t-out="formatCost(state.data.extras.total_real_cost)"/>
                             </tr>
                         </t>
                     </tfoot>
