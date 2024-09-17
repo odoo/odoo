@@ -7,8 +7,6 @@ from passlib.totp import TOTP
 
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.exceptions import AccessDenied
-from odoo.service import common as auth, model
 from odoo.tests import tagged, get_db_name, loaded_demo_data
 from odoo.tools import mute_logger
 
