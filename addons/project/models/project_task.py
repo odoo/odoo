@@ -406,9 +406,8 @@ class ProjectTask(models.Model):
 
     def _inverse_state(self):
         last_task_id_per_recurrence_id = self.recurrence_id._get_last_task_id_per_recurrence_id()
-        for task in self:
-            if task.state in CLOSED_STATES and task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
-                task.recurrence_id._create_next_occurrence(task)
+        tasks = self.filtered(lambda task: task.state in CLOSED_STATES and task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id))
+        self.env['project.task.recurrence']._create_next_occurrences(tasks)
 
     @api.depends_context('uid')
     @api.depends('user_ids')
@@ -790,6 +789,10 @@ class ProjectTask(models.Model):
 
     def copy_data(self, default=None):
         default = dict(default or {})
+        default.update({
+            'depend_on_ids': False,
+            'dependent_ids': False,
+        })
         vals_list = super().copy_data(default=default)
         not_project_user = not self.env.user.has_group('project.group_project_user')
         if not_project_user:
@@ -809,8 +812,6 @@ class ProjectTask(models.Model):
                 vals['milestone_id'] = milestone_mapping.get(vals['milestone_id'], vals['milestone_id'])
             if task.child_ids and not default.get('child_ids'):
                 default = {
-                    'depend_on_ids': False,
-                    'dependent_ids': False,
                     'parent_id': False,
                 }
                 vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in task.child_ids]
@@ -840,18 +841,7 @@ class ProjectTask(models.Model):
     def _portal_get_parent_hash_token(self, pid):
         return self.project_id._sign_token(pid)
 
-    def copy(self, default=None):
-        default = default or {}
-        default.update({
-            'depend_on_ids': False,
-            'dependent_ids': False,
-        })
-        copied_tasks = super(ProjectTask, self.with_context(
-            mail_auto_subscribe_no_notify=True,
-            mail_create_nosubscribe=True,
-            mail_create_nolog=True,
-        )).copy(default=default)
-
+    def _resolve_copied_dependencies(self, copied_tasks):
         task_mapping, task_dependencies = self._create_task_mapping(copied_tasks)
 
         for original_task_id, (depend_on_ids, dependant_ids) in task_dependencies.items():
@@ -865,6 +855,16 @@ class ProjectTask(models.Model):
                 task_id if task_id not in task_mapping else task_mapping[task_id].id
                 for task_id in dependant_ids
             ]
+
+    def copy(self, default=None):
+        default = default or {}
+        copied_tasks = super(ProjectTask, self.with_context(
+            mail_auto_subscribe_no_notify=True,
+            mail_create_nosubscribe=True,
+            mail_create_nolog=True,
+        )).copy(default=default)
+
+        self._resolve_copied_dependencies(copied_tasks)
 
         return copied_tasks
 
