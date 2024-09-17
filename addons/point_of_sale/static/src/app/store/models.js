@@ -1126,6 +1126,14 @@ export class Orderline extends PosModel {
     isPartOfCombo() {
         return Boolean(this.comboParent || this.comboLines?.length);
     }
+    getComboTotalPrice() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithTax, 0);
+    }
+    getComboTotalPriceWithoutTax() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithoutTax, 0);
+    }
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];
         const addedPtal_id = [];
