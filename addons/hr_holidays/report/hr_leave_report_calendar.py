@@ -11,7 +11,7 @@ class LeaveReportCalendar(models.Model):
     _auto = False
     _order = "start_datetime DESC, employee_id"
 
-    name = fields.Char(string='Name', readonly=True)
+    name = fields.Char(string='Name', readonly=True, compute="_compute_name")
     start_datetime = fields.Datetime(string='From', readonly=True)
     stop_datetime = fields.Datetime(string='To', readonly=True)
     tz = fields.Selection(_tz_get, string="Timezone", readonly=True)
@@ -44,7 +44,6 @@ class LeaveReportCalendar(models.Model):
         (SELECT 
             hl.id AS id,
             hl.id AS leave_id,
-            CONCAT(em.name, ': ', hl.duration_display) AS name,
             hl.date_from AS start_datetime,
             hl.date_to AS stop_datetime,
             hl.employee_id AS employee_id,
@@ -90,6 +89,16 @@ class LeaveReportCalendar(models.Model):
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         return self.env.user.employee_id._get_unusual_days(date_from, date_to)
+
+    @api.depends('employee_id.name', 'leave_id')
+    def _compute_name(self):
+        for leave in self:
+            leave.name = leave.employee_id.name
+            if self.env.user.has_group('hr_holidays.group_hr_holidays_manager') or self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+                # Include the time off type name
+                leave.name += f" {leave.leave_id.holiday_status_id.name}"
+            # Include the time off duration.
+            leave.name += f": {leave.leave_id.sudo().duration_display}"
 
     @api.depends('leave_manager_id')
     def _compute_is_manager(self):
