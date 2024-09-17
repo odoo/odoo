@@ -1,9 +1,12 @@
 /** @odoo-module */
 
+import {
+    mockedCancelAnimationFrame,
+    mockedRequestAnimationFrame,
+} from "@web/../lib/hoot-dom/helpers/time";
 import { makeNetworkLogger } from "../core/logger";
 import { ensureArray, makePublicListeners } from "../hoot_utils";
 import { getSyncValue, MockBlob, setSyncValue } from "./sync_values";
-import { mockedCancelAnimationFrame, mockedRequestAnimationFrame } from "./time";
 
 //-----------------------------------------------------------------------------
 // Global
