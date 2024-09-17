@@ -2,7 +2,7 @@
 
 import {
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
     toggleMobilePreview,
 } from '@website/js/tours/tour_utils';
@@ -43,7 +43,7 @@ registerWebsitePreviewTour("website_update_column_count", {
     url: "/",
     edition: true,
 }, () => [
-...dragNDrop({
+...insertSnippet({
     id: "s_three_columns",
     name: "Columns",
     groupName: "Columns",
@@ -166,8 +166,8 @@ registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({id: "s_three_columns", name: "Columns", groupName: "Columns"}),
-    ...dragNDrop({id: "s_text_image", name: "Text - Image", groupName: "Content"}),
+    ...insertSnippet({id: "s_three_columns", name: "Columns", groupName: "Columns"}),
+    ...insertSnippet({id: "s_text_image", name: "Text - Image", groupName: "Content"}),
     ...toggleMobilePreview(true),
     // Add a mobile order to the "Columns" snippet columns.
     ...changeFirstAndSecondColumnsMobileOrder(columnsSnippetRow, "Columns"),

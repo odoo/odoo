@@ -2,7 +2,7 @@
 import {
     changeOption,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -11,7 +11,7 @@ registerWebsitePreviewTour("snippet_rating", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({ id: "s_rating", name: "Rating" }),
+    ...insertSnippet({ id: "s_rating", name: "Rating" }),
     ...clickOnSnippet({ id: "s_rating", name: "Rating" }),
     changeOption("Rating", "we-select:has([data-select-class]) we-toggler"),
     changeOption("Rating", 'we-button[data-select-class="s_rating_inline"]'),

@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import {
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
@@ -70,7 +70,7 @@ goBackToBlocks(),
     isActive: ["auto"],
     trigger: "body:not(.modal-open)",
 },
-...dragNDrop({
+...insertSnippet({
     id: "s_text_image",
     name: "Text - Image",
     groupName: "Content",

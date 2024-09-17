@@ -5,7 +5,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnElement,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -41,9 +41,9 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop(snippets[1]), // Media List
-    ...dragNDrop(snippets[1]), // Media List
-    ...dragNDrop(snippets[2]), // Columns
+    ...insertSnippet(snippets[1]), // Media List
+    ...insertSnippet(snippets[1]), // Media List
+    ...insertSnippet(snippets[2]), // Columns
     clickOnElement("3rd columns", ":iframe .s_three_columns .row > :last-child"),
     ...setOnScrollAnim(),
     {
@@ -94,14 +94,14 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
         run: "click",
     },
-    ...dragNDrop(snippets[0]), // Popup
-    ...dragNDrop(snippets[1]), // Media List
+    ...insertSnippet(snippets[0]), // Popup
+    ...insertSnippet(snippets[1]), // Media List
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
     {
         content: "Drag the Columns snippet group and drop it at the bottom of the popup.",
-        trigger: '#oe_snippets .oe_snippet[name="Columns"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        trigger: '#oe_snippets .oe_snippet[name="Columns"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
         run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
     },
     {

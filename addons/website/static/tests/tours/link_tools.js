@@ -5,7 +5,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnElement,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
@@ -22,7 +22,7 @@ registerWebsitePreviewTour('link_tools', {
     edition: true,
 }, () => [
     // 1. Create a new link from scratch.
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -137,7 +137,7 @@ registerWebsitePreviewTour('link_tools', {
     },
     // 4. Add link on image.
     ...clickOnEditAndWaitEditMode(),
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_three_columns',
         name: 'Columns',
         groupName: "Columns",

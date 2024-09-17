@@ -4,7 +4,7 @@ import {
     changeBackgroundColor,
     clickOnSnippet,
     clickOnText,
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
     registerThemeHomepageTour,
 } from "@website/js/tours/tour_utils";
@@ -53,17 +53,17 @@ const snippets = [
 ];
 
 registerThemeHomepageTour('homepage', () => [
-    ...dragNDrop(snippets[0], "top"),
+    ...insertSnippet(snippets[0], "top"),
     ...clickOnText(snippets[0], "h1"),
     goBackToBlocks(),
-    ...dragNDrop(snippets[1]),
-    ...dragNDrop(snippets[2]),
+    ...insertSnippet(snippets[1]),
+    ...insertSnippet(snippets[2]),
     ...clickOnSnippet(snippets[2], "top"),
     changeBackgroundColor(),
     goBackToBlocks(),
-    ...dragNDrop(snippets[3]),
-    ...dragNDrop(snippets[4], "top"),
-    ...dragNDrop(snippets[5]),
-    ...dragNDrop(snippets[6]),
-    ...dragNDrop(snippets[7]),
+    ...insertSnippet(snippets[3]),
+    ...insertSnippet(snippets[4], "top"),
+    ...insertSnippet(snippets[5]),
+    ...insertSnippet(snippets[6]),
+    ...insertSnippet(snippets[7]),
 ]);

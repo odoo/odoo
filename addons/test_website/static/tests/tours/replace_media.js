@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 import { VideoSelector } from '@web_editor/components/media_dialog/video_selector';
 import {
     changeOption,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -37,7 +37,7 @@ registerWebsitePreviewTour('test_replace_media', {
             });
         },
     },
-    ...dragNDrop({
+    ...insertSnippet({
         name: 'Title - Image',
         id: 's_picture',
         groupName: "Images",

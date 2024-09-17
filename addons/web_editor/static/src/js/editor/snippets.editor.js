@@ -3584,7 +3584,7 @@ class SnippetsMenu extends Component {
             el: this.snippetsAreaRef.el,
             elements: ".oe_snippet.o_we_draggable",
             scrollingElement: $scrollingElement[0],
-            handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
+            handle: '.oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
             cancel: '.oe_snippet.o_disabled',
             dropzones: () => {
                 return $dropZones.toArray();
@@ -3613,7 +3613,7 @@ class SnippetsMenu extends Component {
 
                 this.options.wysiwyg.odooEditor.automaticStepUnactive();
 
-                this.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
+                this.$el.find('.oe_snippet_thumbnail').addClass('o_we_ongoing_insertion');
                 this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
 
                 dropped = false;
@@ -3784,7 +3784,7 @@ class SnippetsMenu extends Component {
                                 this._disableUndroppableSnippets();
                                 this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
                                 this.options.wysiwyg.odooEditor.historyStep();
-                                this.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                                this.$el.find('.oe_snippet_thumbnail').removeClass('o_we_ongoing_insertion');
                             });
                         });
                     } else {
@@ -3796,7 +3796,7 @@ class SnippetsMenu extends Component {
                     if (dragAndDropResolve) {
                         dragAndDropResolve();
                     }
-                    this.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                    this.$el.find('.oe_snippet_thumbnail').removeClass('o_we_ongoing_insertion');
                 }
                 this._onDropZoneStop();
             },
@@ -5001,6 +5001,8 @@ class SnippetsMenu extends Component {
 
             this.options.wysiwyg.odooEditor.historyPauseSteps();
             if (isSnippetGroupClicked) {
+                const thumbnailEl = initialSnippetEl.querySelector(".oe_snippet_thumbnail");
+                thumbnailEl.classList.add("o_we_ongoing_insertion");
                 // When the "snippet group block" is clicked, we add drop zones on
                 // the page where the snippet can be placed, then we detect
                 // the drop zone closest to the middle of the page.
@@ -5049,7 +5051,7 @@ class SnippetsMenu extends Component {
                 }
                 this.options.wysiwyg.odooEditor.historyUnpauseSteps();
                 for (const snippetThumbnail of snippetThumbnails) {
-                    snippetThumbnail.classList.remove('o_we_already_dragging');
+                    snippetThumbnail.classList.remove('o_we_ongoing_insertion');
                 }
                 return;
             }
@@ -5085,7 +5087,7 @@ class SnippetsMenu extends Component {
                                 this._disableUndroppableSnippets();
                                 this.options.wysiwyg.odooEditor.historyStep();
                                 for (const snippetThumbnail of snippetThumbnails) {
-                                    snippetThumbnail.classList.remove('o_we_already_dragging');
+                                    snippetThumbnail.classList.remove('o_we_ongoing_insertion');
                                 }
                             });
                         });
@@ -5110,7 +5112,7 @@ class SnippetsMenu extends Component {
                             this.options.wysiwyg.odooEditor.automaticStepSkipStack();
                             this.options.wysiwyg.odooEditor.historyUnpauseSteps();
                             for (const snippetThumbnail of snippetThumbnails) {
-                                snippetThumbnail.classList.remove('o_we_already_dragging');
+                                snippetThumbnail.classList.remove('o_we_ongoing_insertion');
                             }
                             resolve();
                         }
