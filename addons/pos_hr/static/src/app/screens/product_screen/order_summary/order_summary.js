@@ -4,9 +4,9 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(OrderSummary.prototype, {
-    setLinePrice(line, price) {
+    async setLinePrice(line, price) {
         if (!this.pos.config.module_pos_hr || this.pos.employeeIsAdmin) {
-            super.setLinePrice(line, price);
+            await super.setLinePrice(line, price);
             return;
         }
 

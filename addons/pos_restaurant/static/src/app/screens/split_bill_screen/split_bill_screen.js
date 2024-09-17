@@ -7,10 +7,20 @@ import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
+<<<<<<< saas-18.1:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.js
     static components = { Orderline, OrderDisplay };
     static props = {
         disallow: { type: Boolean, optional: true },
     };
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.js
+    static components = { Orderline, OrderWidget };
+    static props = {
+        disallow: { type: Boolean, optional: true },
+    };
+=======
+    static components = { Orderline, OrderWidget };
+    static props = {};
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.js
 
     setup() {
         this.pos = usePos();
@@ -92,6 +102,15 @@ export class SplitBillScreen extends Component {
         return `${latestOrderName.slice(0, -1)}${nextChar}`;
     }
 
+<<<<<<< saas-18.1:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.js
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.js
+    createSplittedOrder() {
+=======
+    // Meant to be overridden
+    async preSplitOrder(originalOrder, newOrder) {}
+    async postSplitOrder(originalOrder, newOrder) {}
+
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.js
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
@@ -101,8 +120,7 @@ export class SplitBillScreen extends Component {
         const newOrder = this.pos.createNewOrder();
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
-        newOrder.originalSplittedOrder = originalOrder;
-
+        await this.preSplitOrder(originalOrder, newOrder);
         // Create lines for the new order
         const lineToDel = [];
         for (const line of originalOrder.lines) {
@@ -144,7 +162,14 @@ export class SplitBillScreen extends Component {
         }
 
         originalOrder.customer_count -= 1;
+<<<<<<< saas-18.1:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.js
         originalOrder.setScreenData({ name: "ProductScreen" });
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.js
+        originalOrder.set_screen_data({ name: "ProductScreen" });
+=======
+        await this.postSplitOrder(originalOrder, newOrder);
+        originalOrder.set_screen_data({ name: "ProductScreen" });
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.js
         this.pos.selectedOrderUuid = null;
         this.pos.setOrder(newOrder);
         this.back();

@@ -52,14 +52,16 @@ patch(ControlButtons.prototype, {
         document.addEventListener(
             "click",
             async (ev) => {
-                this.pos.isOrderTransferMode = false;
-                const tableElement = ev.target.closest(".table");
-                if (!tableElement) {
-                    return;
+                if (this.pos.isOrderTransferMode) {
+                    this.pos.isOrderTransferMode = false;
+                    const tableElement = ev.target.closest(".table");
+                    if (!tableElement) {
+                        return;
+                    }
+                    const table = this.pos.getTableFromElement(tableElement);
+                    await this.pos.transferOrder(orderUuid, table);
+                    this.pos.setTableFromUi(table);
                 }
-                const table = this.pos.getTableFromElement(tableElement);
-                await this.pos.transferOrder(orderUuid, table);
-                this.pos.setTableFromUi(table);
             },
             { once: true }
         );

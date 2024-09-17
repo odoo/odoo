@@ -3,7 +3,7 @@
     <data>
         <template id="pos_session_sales_details">
             <div class="page">
-                <div class="bg-secondary p-3">
+                <div class="bg-secondary p-3" id="header">
                     <div class="row">
                         <div class="col-3 d-flex flex-column justify-content-center">
                             <br/>
@@ -183,25 +183,40 @@
                                     </t>
                                 </td>
                                 <tr t-foreach="category['products']" t-as="line" class="border-bottom border-secondary">
+<<<<<<< saas-18.1
                                     <td class="ps-5"><span t-out="line['product_name']">Laptop</span><span t-if="line['combo_products_label']" t-out="line['combo_products_label']"/></td>
                                     <td/>
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+                                    <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
+                                    <td class="ps-5"><span t-out="internal_reference">7897</span><span t-out="line['product_name']">Laptop</span></td>
+                                    <td/>
+=======
+                                    <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
+                                    <td class="ps-5"><span t-out="internal_reference">7897</span><span t-out="line['product_name']">Laptop</span></td>
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
                                     <td class="text-end">
+<<<<<<< saas-18.1
                                         <t t-if="line['barcode']">
                                             <img t-att-src="'/report/barcode/Code128/'+line['barcode']" style="width:230px; height:23px" alt="Barcode"/>
                                         </t>
                                     </td>
                                     <td class="text-end">
                                         <td class="text-end"><span t-out="line['quantity']">0</span></td>
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+                                        <td class="text-end"><span t-out="line['quantity']">0</span></td>
+=======
+                                        <span t-out="line['quantity']">0</span>
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
                                         <t t-if='line["uom"] != "Units"'>
                                             <span t-out='line["uom"]'>Unit</span>
                                         </t>
                                     </td>
                                     <td class="text-end">
                                         <t t-if="currency['position']">
-                                            <span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out='currency["symbol"]'>$</span>
+                                            <span t-out='line["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span><span t-out='currency["symbol"]'>$</span>
                                         </t>
                                         <t t-else="" >
-                                            <span t-out='currency["symbol"]'>$</span><span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
+                                            <span t-out='currency["symbol"]'>$</span><span t-out='line["base_amount"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
                                         </t>
                                         <t t-if='line["discount"] != 0'>
                                             Disc: <span t-out='line["discount"]'>0</span>%
@@ -450,7 +465,7 @@
                         </span>
                     </div>
                 </t>
-                <div style="page-break-after: always;"/>
+                <div id="end_report" style="page-break-after: always;"/>
             </div>
         </template>
     </data>

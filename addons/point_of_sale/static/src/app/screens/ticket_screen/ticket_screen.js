@@ -59,9 +59,7 @@ export class TicketScreen extends Component {
         this.ui = useState(useService("ui"));
         this.dialog = useService("dialog");
         this.numberBuffer = useService("number_buffer");
-        this.doPrint = useTrackedAsync((_selectedSyncedOrder) =>
-            this.pos.printReceipt({ order: _selectedSyncedOrder })
-        );
+        this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
@@ -85,6 +83,7 @@ export class TicketScreen extends Component {
             this.onFilterSelected(this.state.filter);
         });
     }
+<<<<<<< saas-18.1
     onPresetSelected(preset) {
         if (this.state.selectedPreset === preset) {
             this.state.selectedPreset = null;
@@ -96,6 +95,11 @@ export class TicketScreen extends Component {
                 this.onClickOrder(firstFilteredOrder);
             }
         }
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+=======
+    async print(order) {
+        await this.pos.printReceipt({ order: order });
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;

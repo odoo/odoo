@@ -13,6 +13,7 @@ class HrEmployee(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
+<<<<<<< saas-18.1
         config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         if len(config_id.basic_employee_ids) > 0:
             return [
@@ -20,6 +21,18 @@ class HrEmployee(models.Model):
                 '|', ('user_id', '=', self.env.uid), ('id', 'in', config_id.basic_employee_ids.ids + config_id.advanced_employee_ids.ids + config_id.minimal_employee_ids.ids)]
         else:
             return [('company_id', '=', config_id.company_id.id)]
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        if len(config_id.basic_employee_ids) > 0:
+            return [
+                '&', ('company_id', '=', config_id.company_id.id),
+                '|', ('user_id', '=', self.env.uid), ('id', 'in', config_id.basic_employee_ids.ids + config_id.advanced_employee_ids.ids)]
+        else:
+            return [('company_id', '=', config_id.company_id.id)]
+=======
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        return config_id._employee_domain(config_id.current_user_id.id)
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
 
     @api.model
     def _load_pos_data_fields(self, config_id):

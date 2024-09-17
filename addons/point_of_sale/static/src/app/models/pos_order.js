@@ -97,9 +97,20 @@ export class PosOrder extends Base {
         return this.finalized && typeof this.id === "string";
     }
 
+<<<<<<< saas-18.1
     get presetTime() {
         const dateTime = DateTime.fromSQL(this.preset_time);
         return dateTime.isValid ? dateTime.toFormat("HH:mm") : false;
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+    getEmailItems() {
+        return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
+=======
+    get originalSplittedOrder() {
+        return this.models["pos.order"].find((o) => o.uuid === this.uiState.splittedOrderUuid);
+    }
+    getEmailItems() {
+        return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
     }
 
     getEmailItems() {
@@ -305,6 +316,7 @@ export class PosOrder extends Base {
                     };
                 }
                 line.setHasChange(false);
+                line.saved_quantity = line.get_quantity();
             }
         });
         // Checks whether an orderline has been deleted from the order since it
@@ -624,12 +636,46 @@ export class PosOrder extends Base {
         );
     }
 
+<<<<<<< saas-18.1
     getTotalWithTax() {
         return this.taxTotals.order_sign * this.taxTotals.total_amount_currency;
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+    get_total_with_tax() {
+        return this.get_total_without_tax() + this.get_total_tax();
+=======
+    get_total_with_tax() {
+        return this.get_total_with_tax_of_lines(this.lines);
     }
 
+    get_total_with_tax_of_lines(lines) {
+        return this.get_total_without_tax_of_lines(lines) + this.get_total_tax_of_lines(lines);
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
+    }
+
+<<<<<<< saas-18.1
     getTotalWithoutTax() {
         return this.taxTotals.order_sign * this.taxTotals.base_amount_currency;
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+    get_total_without_tax() {
+        return roundPrecision(
+            this.lines.reduce(function (sum, line) {
+                return sum + line.get_price_without_tax();
+            }, 0),
+            this.currency.rounding
+        );
+=======
+    get_total_without_tax() {
+        return this.get_total_without_tax_of_lines(this.lines);
+    }
+
+    get_total_without_tax_of_lines(lines) {
+        return roundPrecision(
+            lines.reduce(function (sum, line) {
+                return sum + line.get_price_without_tax();
+            }, 0),
+            this.currency.rounding
+        );
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
     }
 
     _getIgnoredProductIdsTotalDiscount() {
@@ -653,10 +699,21 @@ export class PosOrder extends Base {
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
+<<<<<<< saas-18.1
                         orderLine.getUnitDisplayPriceBeforeDiscount() *
                         (orderLine.getDiscount() / 100) *
                         orderLine.getQuantity();
                     if (orderLine.displayDiscountPolicy() === "without_discount") {
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+                        orderLine.getUnitDisplayPriceBeforeDiscount() *
+                        (orderLine.get_discount() / 100) *
+                        orderLine.get_quantity();
+                    if (orderLine.display_discount_policy() === "without_discount") {
+=======
+                        orderLine.get_all_prices().priceWithTaxBeforeDiscount -
+                        orderLine.get_all_prices().priceWithTax;
+                    if (orderLine.display_discount_policy() === "without_discount") {
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
                         sum +=
                             (orderLine.getTaxedlstUnitPrice() -
                                 orderLine.getUnitDisplayPriceBeforeDiscount()) *
@@ -669,8 +726,84 @@ export class PosOrder extends Base {
         );
     }
 
+<<<<<<< saas-18.1
     getTotalTax() {
         return this.taxTotals.order_sign * this.taxTotals.tax_amount_currency;
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+    get_total_tax() {
+        if (this.company.tax_calculation_rounding_method === "round_globally") {
+            // As always, we need:
+            // 1. For each tax, sum their amount across all order lines
+            // 2. Round that result
+            // 3. Sum all those rounded amounts
+            const groupTaxes = {};
+            this.lines.forEach(function (line) {
+                const taxDetails = line.get_tax_details();
+                const taxIds = Object.keys(taxDetails);
+                for (const taxId of taxIds) {
+                    if (!(taxId in groupTaxes)) {
+                        groupTaxes[taxId] = 0;
+                    }
+                    groupTaxes[taxId] += taxDetails[taxId].amount;
+                }
+            });
+
+            let sum = 0;
+            const taxIds = Object.keys(groupTaxes);
+            for (var j = 0; j < taxIds.length; j++) {
+                var taxAmount = groupTaxes[taxIds[j]];
+                sum += roundPrecision(taxAmount, this.currency.rounding);
+            }
+
+            return sum;
+        } else {
+            return roundPrecision(
+                this.lines.reduce(function (sum, orderLine) {
+                    return sum + orderLine.get_tax();
+                }, 0),
+                this.currency.rounding
+            );
+        }
+=======
+    get_total_tax() {
+        return this.get_total_tax_of_lines(this.lines);
+    }
+
+    get_total_tax_of_lines(lines) {
+        if (this.company.tax_calculation_rounding_method === "round_globally") {
+            // As always, we need:
+            // 1. For each tax, sum their amount across all order lines
+            // 2. Round that result
+            // 3. Sum all those rounded amounts
+            const groupTaxes = {};
+            lines.forEach(function (line) {
+                const taxDetails = line.get_tax_details();
+                const taxIds = Object.keys(taxDetails);
+                for (const taxId of taxIds) {
+                    if (!(taxId in groupTaxes)) {
+                        groupTaxes[taxId] = 0;
+                    }
+                    groupTaxes[taxId] += taxDetails[taxId].amount;
+                }
+            });
+
+            let sum = 0;
+            const taxIds = Object.keys(groupTaxes);
+            for (var j = 0; j < taxIds.length; j++) {
+                var taxAmount = groupTaxes[taxIds[j]];
+                sum += roundPrecision(taxAmount, this.currency.rounding);
+            }
+
+            return sum;
+        } else {
+            return roundPrecision(
+                lines.reduce(function (sum, orderLine) {
+                    return sum + orderLine.get_tax();
+                }, 0),
+                this.currency.rounding
+            );
+        }
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
     }
 
     getTotalPaid() {
@@ -689,10 +822,28 @@ export class PosOrder extends Base {
         return this.getTotalWithTax() + this.getRoundingApplied();
     }
 
+<<<<<<< saas-18.1
     getTaxDetails() {
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+    get_tax_details() {
+=======
+    get_tax_details() {
+        return this.get_tax_details_of_lines(this.lines);
+    }
+
+    get_tax_details_of_lines(lines) {
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
         const taxDetails = {};
+<<<<<<< saas-18.1
         for (const line of this.lines) {
             for (const taxData of line.allPrices.taxesData) {
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+        for (const line of this.lines) {
+            for (const taxData of line.get_all_prices().taxesData) {
+=======
+        for (const line of lines) {
+            for (const taxData of line.get_all_prices().taxesData) {
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
                 const taxId = taxData.id;
                 if (!taxDetails[taxId]) {
                     taxDetails[taxId] = Object.assign({}, taxData, {

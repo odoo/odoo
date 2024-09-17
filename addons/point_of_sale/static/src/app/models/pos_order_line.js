@@ -182,7 +182,12 @@ export class PosOrderline extends Base {
 
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
+<<<<<<< saas-18.1
         this.order_id.recomputeOrderData();
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+        this.discountStr = "" + disc;
+=======
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
         this.setDirty();
     }
 
@@ -684,7 +689,14 @@ export class PosOrderline extends Base {
     setHasChange(isChange) {
         this.uiState.hasChange = isChange;
     }
+<<<<<<< saas-18.1
     getDiscountStr() {
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+    get_discount_str() {
+        return this.discountStr;
+=======
+    get_discount_str() {
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
         return this.discount ? this.discount.toString() : "";
     }
     getQuantity() {

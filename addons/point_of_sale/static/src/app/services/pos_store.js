@@ -175,8 +175,16 @@ export class PosStore extends WithLazyGetterTrap {
         window.location.href = url.href;
     }
 
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
     showLoginScreen() {
         this.resetCashier();
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/point_of_sale/static/src/app/store/pos_store.js
+    showLoginScreen() {
+        this.reset_cashier();
+=======
+    async showLoginScreen() {
+        this.reset_cashier();
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/point_of_sale/static/src/app/store/pos_store.js
         this.showScreen("LoginScreen");
         this.dialog.closeAll();
     }
@@ -396,6 +404,8 @@ export class PosStore extends WithLazyGetterTrap {
                 } else if (typeof order.id === "number") {
                     ids.add(order.id);
                 }
+            } else {
+                return false;
             }
         }
 
@@ -410,6 +420,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         if (ids.size > 0) {
             await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+            return true;
         }
 
         return true;
@@ -526,6 +537,29 @@ export class PosStore extends WithLazyGetterTrap {
             searchTerm: term,
         };
     }
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/point_of_sale/static/src/app/store/pos_store.js
+    getDefaultPricelist() {
+        const current_order = this.get_order();
+        if (current_order) {
+            return current_order.pricelist_id;
+        }
+        return this.config.pricelist_id;
+    }
+=======
+
+    async setDiscountFromUI(line, val) {
+        line.set_discount(val);
+    }
+
+    getDefaultPricelist() {
+        const current_order = this.get_order();
+        if (current_order) {
+            return current_order.pricelist_id;
+        }
+        return this.config.pricelist_id;
+    }
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/point_of_sale/static/src/app/store/pos_store.js
 
     async setTip(tip) {
         const currentOrder = this.getOrder();
@@ -558,13 +592,29 @@ export class PosStore extends WithLazyGetterTrap {
     // The configure parameter is available if the orderline already contains all
     // the information without having to be calculated. For example, importing a SO.
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
         let merge = true;
         let order = this.getOrder();
         order.assertEditable();
 
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/point_of_sale/static/src/app/store/pos_store.js
+        let merge = true;
+
+        let order = this.get_order();
+        order.assert_editable();
+
+=======
+        let order = this.get_order();
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/point_of_sale/static/src/app/store/pos_store.js
         if (!order) {
             order = await this.addNewOrder();
         }
+        return await this.addLineToOrder(vals, order, opts, configure);
+    }
+
+    async addLineToOrder(vals, order, opts = {}, configure = true) {
+        let merge = true;
+        order.assert_editable();
 
         const options = {
             ...opts,
@@ -574,7 +624,18 @@ export class PosStore extends WithLazyGetterTrap {
             merge = false;
         }
 
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
         const productTemplate = vals.product_tmpl_id;
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/point_of_sale/static/src/app/store/pos_store.js
+        const product = vals.product_id;
+
+=======
+        if (typeof vals.product_id == "number") {
+            vals.product_id = this.data.models["product.product"].get(vals.product_id);
+        }
+        const product = vals.product_id;
+
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/point_of_sale/static/src/app/store/pos_store.js
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
             price_extra: 0,
@@ -813,9 +874,20 @@ export class PosStore extends WithLazyGetterTrap {
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
         this.selectOrderLine(order, line);
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
         this.numberBuffer.reset();
 
         const selectedOrderline = order.getSelectedOrderline();
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/point_of_sale/static/src/app/store/pos_store.js
+        this.numberBuffer.reset();
+
+        const selectedOrderline = order.get_selected_orderline();
+=======
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+        const selectedOrderline = order.get_selected_orderline();
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/point_of_sale/static/src/app/store/pos_store.js
         if (options.draftPackLotLines && configure) {
             selectedOrderline.setPackLotLines({
                 ...options.draftPackLotLines,
@@ -840,12 +912,16 @@ export class PosStore extends WithLazyGetterTrap {
             this.selectOrderLine(order, order.getLastOrderline());
         }
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         // FIXME: Put this in an effect so that we don't have to call it manually.
         order.recomputeOrderData();
 
-        this.numberBuffer.reset();
+        if (configure) {
+            this.numberBuffer.reset();
+        }
 
         this.hasJustAddedProduct = true;
         clearTimeout(this.productReminderTimeout);
@@ -1092,7 +1168,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     // There for override
-    preSyncAllOrders(orders) {}
+    async preSyncAllOrders(orders) {}
     postSyncAllOrders(orders) {}
     async syncAllOrders(options = {}) {
         const { orderToCreate, orderToUpdate } = this.getPendingOrder();
@@ -1108,7 +1184,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             const context = this.getSyncAllOrdersContext(orders, options);
-            this.preSyncAllOrders(orders);
+            await this.preSyncAllOrders(orders);
 
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
@@ -1359,6 +1435,30 @@ export class PosStore extends WithLazyGetterTrap {
         return false;
     }
 
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
+||||||| 69b404c7109ff689381f56520aad758424ec01aa:addons/point_of_sale/static/src/app/store/pos_store.js
+    getCurrencySymbol() {
+        return this.currency ? this.currency.symbol : "$";
+    }
+    isOpenOrderShareable() {
+        return this.config.raw.trusted_config_ids.length > 0;
+    }
+=======
+    restrictLineDiscountChange() {
+        return false;
+    }
+
+    restrictLinePriceChange() {
+        return false;
+    }
+
+    getCurrencySymbol() {
+        return this.currency ? this.currency.symbol : "$";
+    }
+    isOpenOrderShareable() {
+        return this.config.raw.trusted_config_ids.length > 0;
+    }
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd:addons/point_of_sale/static/src/app/store/pos_store.js
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
     }

@@ -237,7 +237,13 @@ export class ProductScreen extends Component {
     _barcodeDiscountAction(code) {
         var last_orderline = this.currentOrder.getLastOrderline();
         if (last_orderline) {
+<<<<<<< saas-18.1
             last_orderline.setDiscount(code.value);
+||||||| 69b404c7109ff689381f56520aad758424ec01aa
+            last_orderline.set_discount(code.value);
+=======
+            this.pos.setDiscountFromUI(last_orderline, code.value);
+>>>>>>> f3f07012b8df310db66b3e6cf06ef5598346aadd
         }
     }
     /**

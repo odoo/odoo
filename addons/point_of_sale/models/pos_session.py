@@ -369,22 +369,24 @@ class PosSession(models.Model):
             if not config_id:
                 raise UserError(_("You should assign a Point of Sale to your session."))
 
+            name_counter = 0
+            if not vals.get('rescue'):
+                config_name = self.env['pos.config'].browse(config_id).name
+                vals['name'] = config_name + '/'
+                sessions = self.sudo().search_read([('name', 'ilike', vals['name'])], ['name'], order='name desc', limit=1)
+                if len(sessions):
+                    name_counter = int(sessions[0]['name'].split('/')[-1]) + 1
+
+                vals['name'] += str(name_counter).zfill(5)
             # journal_id is not required on the pos_config because it does not
             # exists at the installation. If nothing is configured at the
             # installation we do the minimal configuration. Impossible to do in
             # the .xml files as the CoA is not yet installed.
             pos_config = self.env['pos.config'].browse(config_id)
 
-            pos_name = self.env['ir.sequence'].with_context(
-                company_id=pos_config.company_id.id
-            ).next_by_code('pos.session')
-            if vals.get('name'):
-                pos_name += ' ' + vals['name']
-
             update_stock_at_closing = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
 
             vals.update({
-                'name': pos_name,
                 'config_id': config_id,
                 'update_stock_at_closing': update_stock_at_closing,
             })
@@ -1698,6 +1700,8 @@ class PosSession(models.Model):
 
     def set_opening_control(self, cashbox_value: int, notes: str):
         self.state = 'opened'
+        if not self.rescue:
+            self.name = self.env['ir.sequence'].with_context(company_id=self.config_id.company_id.id).next_by_code('pos.session')
 
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:
