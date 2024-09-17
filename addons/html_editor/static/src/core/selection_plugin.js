@@ -218,7 +218,6 @@ export class SelectionPlugin extends Plugin {
                 direction: DIRECTIONS.RIGHT,
                 textContent: () => "",
                 intersectsNode: () => false,
-                isDefault: true,
             };
         } else {
             range = selection.getRangeAt(0);
@@ -261,7 +260,6 @@ export class SelectionPlugin extends Plugin {
                 direction,
                 textContent: () => (range.collapsed ? "" : selection.toString()),
                 intersectsNode: (node) => range.intersectsNode(node),
-                isDefault: false,
             };
         }
 
@@ -503,9 +501,6 @@ export class SelectionPlugin extends Plugin {
         this.canApplySelectionToDocument = selectionData.documentSelectionIsInEditable;
         return {
             restore: () => {
-                if (selection.isDefault) {
-                    return;
-                }
                 this.setSelection(
                     {
                         anchorNode: anchor.node,
