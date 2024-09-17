@@ -11,8 +11,8 @@
                     <p class="lead">Explore our curated selection of coffee, tea, and more. Delight in every sip!</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="s_pricelist_cafe_col col-lg-4 justify-content-start py-5 o_cc o_cc5 s_col_no_resize">
+            <div class="row align-items-center">
+                <div class="s_pricelist_cafe_col col-lg-4 py-5 o_cc o_cc5 s_col_no_resize">
                     <h3>Coffees</h3>
                     <ul class="list-unstyled my-3">
                         <t t-call="website.s_pricelist_cafe_item">
@@ -32,10 +32,10 @@
                         </t>
                     </ul>
                 </div>
-                <div class="s_pricelist_cafe_col col-lg-4 justify-content-center d-lg-flex d-none o_snippet_mobile_invisible s_col_no_resize">
+                <div class="s_pricelist_cafe_col col-lg-4 d-lg-block d-none o_snippet_mobile_invisible s_col_no_resize">
                     <img class="img img-fluid d-block mx-auto rounded-circle shadow" src="/web/image/website.s_pricelist_cafe_default_image" alt=""/>
                 </div>
-                <div class="s_pricelist_cafe_col col-lg-4 justify-content-start py-5 o_cc o_cc1 s_col_no_resize">
+                <div class="s_pricelist_cafe_col col-lg-4 py-5 o_cc o_cc1 s_col_no_resize">
                     <h3>Teas</h3>
                     <ul class="list-unstyled my-3">
                         <t t-call="website.s_pricelist_cafe_item">
@@ -82,24 +82,12 @@
 </template>
 
 <template id="s_pricelist_cafe_options" inherit_id="website.snippet_options">
-    <!--  Box Vertical Alignment -->
-    <xpath expr="//div[@data-js='WebsiteAnimate']" position="after">
-        <div data-selector=".s_pricelist_cafe_col">
-            <we-button-group string="Vert. Alignment" title="Vertical Alignment">
-                <we-button title="Align Top"
-                        data-select-class="justify-content-start"
-                        data-img="/website/static/src/img/snippets_options/align_solo_top.svg"/>
-                <we-button title="Align Middle"
-                        data-select-class="justify-content-center"
-                        data-img="/website/static/src/img/snippets_options/align_solo_middle.svg"/>
-                <we-button title="Align Bottom"
-                        data-select-class="justify-content-end"
-                        data-img="/website/static/src/img/snippets_options/align_solo_bottom.svg"/>
-            </we-button-group>
-        </div>
-    </xpath>
-    <!-- Add products -->
     <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
+        <!-- Vertical Alignment -->
+        <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_pricelist_cafe" data-target=".row:has(.s_pricelist_cafe_col)">
+            <t t-call="website.vertical_alignment_option"/>
+        </div>
+        <!-- Add products -->
         <div data-js="MultipleItems" data-selector=".s_pricelist_cafe">
             <t t-call="website.s_pricelist_cafe_add_product_widget">
                 <t t-set="apply_to" t-valuef="> :has(.s_pricelist_cafe_item):not(:has(.row > div:has(.s_pricelist_cafe_item)))"/>
