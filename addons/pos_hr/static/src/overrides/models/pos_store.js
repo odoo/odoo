@@ -1,5 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { browser } from "@web/core/browser/browser";
 
 patch(PosStore.prototype, {
     async setup() {
@@ -10,6 +11,15 @@ patch(PosStore.prototype, {
                 this.showScreen("LoginScreen");
             }
         }
+        this.employeeBuffer = [];
+        browser.addEventListener("online", () => {
+            this.employeeBuffer.forEach((employee) =>
+                this.data.write("pos.session", [this.config.current_session_id.id], {
+                    employee_id: employee.id,
+                })
+            );
+            this.employeeBuffer = [];
+        });
     },
     get employeeIsAdmin() {
         const cashier = this.get_cashier();
@@ -52,6 +62,13 @@ patch(PosStore.prototype, {
         super.set_cashier(employee);
 
         if (this.config.module_pos_hr) {
+            if (navigator.onLine) {
+                this.data.write("pos.session", [this.config.current_session_id.id], {
+                    employee_id: employee.id,
+                });
+            } else {
+                this.employeeBuffer.push(employee);
+            }
             const o = this.get_order();
             if (o && !o.get_orderlines().length) {
                 // Order without lines can be considered to be un-owned by any employee.

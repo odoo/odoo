@@ -566,9 +566,12 @@ class PosSession(models.Model):
                 'redirect': True
             }
 
-        self.message_post(body='Point of Sale Session ended')
+        self.post_close_register_message()
 
         return {'successful': True}
+
+    def post_close_register_message(self):
+        self.message_post(body=_('Closed Register'))
 
     def update_closing_control_state_session(self, notes):
         # Prevent closing the session again if it was already closed

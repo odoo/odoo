@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, api
+from odoo import fields, models, api, _
+from odoo.tools import plaintext2html
 
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
+    employee_id = fields.Many2one(
+        "hr.employee",
+        string="Cashier",
+        help="The employee who currently uses the cash register",
+        tracking=True,
+    )
 
     @api.model
     def _load_pos_data_models(self, config_id):
@@ -13,6 +20,19 @@ class PosSession(models.Model):
         if config_id.module_pos_hr:
             data += ['hr.employee']
         return data
+
+    def set_opening_control(self, cashbox_value: int, notes: str):
+        super().set_opening_control(cashbox_value, notes)
+        if not self.employee_id:
+            return
+        author_id = self.employee_id._get_related_partners() or self.user_id
+        self.message_post(body=plaintext2html(_('Opened register')), author_id=author_id.id)
+
+    def post_close_register_message(self):
+        if not self.employee_id:
+            return super().post_close_register_message()
+        author_id = self.employee_id._get_related_partners() or self.user_id
+        self.message_post(body=plaintext2html(_('Closed Register')), author_id=author_id.id)
 
     def _aggregate_payments_amounts_by_employee(self, payments):
         payments_by_employee = {}
