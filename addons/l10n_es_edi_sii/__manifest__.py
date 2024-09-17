@@ -26,14 +26,12 @@ that extra taxes need to be created for certain exempt/no sujeta reasons.
 You need to configure your certificate and the tax agency.
     """,
     'depends': [
+        'certificate',
         'l10n_es',
         'account_edi',
     ],
     'data': [
         'data/account_edi_data.xml',
-
-        'security/ir.model.access.csv',
-        'security/l10n_es_edi_sii_certificate.xml',
 
         'views/account_move_views.xml',
         'views/l10n_es_edi_sii_certificate_views.xml',

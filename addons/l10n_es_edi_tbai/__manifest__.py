@@ -22,6 +22,7 @@ You need to configure your certificate and the tax agency.
     """,
     'depends': [
         'l10n_es',
+        'certificate',
     ],
     'data': [
         'data/template_invoice.xml',

@@ -89,9 +89,21 @@ def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
 def _mock_user_creation(func, self, *args, **kwargs):
     func(self, *args, **kwargs)
     self.account_peppol_proxy_state = 'receiver' if self.smp_registration else 'sender'
-    self.edi_user_id.write({
-        'private_key': b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read()),
-    })
+    content = b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read())
+
+    attachments = self.env['ir.attachment'].search([
+        ('res_model', '=', 'certificate.key'),
+        ('res_field', '=', 'content'),
+        ('company_id', '=', self.edi_user_id.company_id.id)
+    ])
+    content_to_key_id = {attachment.datas: attachment.res_id for attachment in attachments}
+    pkey_id = content_to_key_id.get(content)
+    if not pkey_id:
+        pkey_id = self.env['certificate.key'].create({
+            'content': content,
+            'company_id': self.edi_user_id.company_id.id,
+        })
+    self.edi_user_id.private_key_id = pkey_id
     return self._action_send_notification(
         *_get_notification_message(self.account_peppol_proxy_state)
     )
