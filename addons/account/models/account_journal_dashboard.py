@@ -545,20 +545,16 @@ class account_journal(models.Model):
         for journal_type, journals in [('sale', sale_journals), ('purchase', purchase_journals)]:
             if not journals:
                 continue
-            query, params = journals._get_open_sale_purchase_query(journal_type).select(
-                SQL("account_move_line.journal_id"),
-                SQL("account_move_line.company_id"),
-                SQL("account_move_line.currency_id AS currency"),
-                SQL("account_move_line.date_maturity < %s AS late", fields.Date.context_today(self)),
-                SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
-                SQL("SUM(account_move_line.amount_residual_currency) AS amount_total"),
-                SQL("COUNT(*)"),
+
+            query, selects = journals._get_open_sale_purchase_query(journal_type)
+            sql = SQL("""%s
+                    GROUP BY account_move_line.company_id, account_move_line.journal_id, account_move_line.currency_id, late, to_pay""",
+                      query.select(*selects),
             )
-            query += " GROUP BY company_id, journal_id, currency, late"
-            self.env.cr.execute(query, params)
+            self.env.cr.execute(sql)
             query_result = group_by_journal(self.env.cr.dictfetchall())
             for journal in journals:
-                query_results_to_pay[journal.id] = query_result[journal.id]
+                query_results_to_pay[journal.id] = [r for r in query_result[journal.id] if r['to_pay']]
                 late_query_results[journal.id] = [r for r in query_result[journal.id] if r['late']]
 
         to_check_vals = {
@@ -702,7 +698,7 @@ class account_journal(models.Model):
 
     def _get_open_sale_purchase_query(self, journal_type):
         assert journal_type in ('sale', 'purchase')
-        return self.env['account.move.line']._where_calc([
+        query = self.env['account.move.line']._where_calc([
             ('move_id', 'in', self.env['account.move']._where_calc([
                 *self.env['account.move.line']._check_company_domain(self.env.companies),
                 ('journal_id', 'in', self.ids),
@@ -712,6 +708,18 @@ class account_journal(models.Model):
             ])),
             ('account_type', '=', 'asset_receivable' if journal_type == 'sale' else 'liability_payable'),
         ])
+        selects = [
+            SQL("account_move_line.journal_id"),
+            SQL("account_move_line.company_id"),
+            SQL("account_move_line.currency_id AS currency"),
+            SQL("account_move_line.date_maturity < %s AS late", fields.Date.context_today(self)),
+            SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
+            SQL("SUM(account_move_line.amount_residual_currency) AS amount_total"),
+            SQL("COUNT(*)"),
+            SQL("TRUE AS to_pay")
+        ]
+
+        return query, selects
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency):
         """ Loops on a query result to count the total number of invoices and sum
