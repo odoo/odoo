@@ -241,7 +241,7 @@ class configmanager(object):
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Database related options")
-        group.add_option("-d", "--database", dest="db_name", my_default=False,
+        group.add_option("-d", "--db_name", "--database", dest="db_name", my_default=False,
                          help="specify the database name")
         group.add_option("-r", "--db_user", dest="db_user", my_default=False,
                          help="specify the database user name")
