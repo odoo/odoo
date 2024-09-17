@@ -46,25 +46,25 @@ import { useComponent, useEffect, useExternalListener } from "@odoo/owl";
 // start over.
 
 // Hardcoded widths
-const DEFAULT_MIN_WIDTH = 110;
+const DEFAULT_MIN_WIDTH = 80;
 const SELECTOR_WIDTH = 20;
 const OPEN_FORM_VIEW_BUTTON_WIDTH = 54;
 const DELETE_BUTTON_WIDTH = 12;
 const FIELD_WIDTHS = {
-    boolean: [110, 136], // [minWidth, maxWidth]
-    char: [110], // only minWidth, no maxWidth
-    date: 82, // minWidth = maxWidth
-    datetime: 136,
-    float: [82, 136],
-    integer: [82, 136],
-    many2many: [110],
-    many2one_reference: [110],
-    many2one: [110],
-    monetary: [110, 136],
-    one2many: [110],
-    reference: [110],
-    selection: [110],
-    text: [110, 1200],
+    boolean: [20, 100], // [minWidth, maxWidth]
+    char: [80], // only minWidth, no maxWidth
+    date: 80, // minWidth = maxWidth
+    datetime: 145,
+    float: 93,
+    integer: 71,
+    many2many: [80],
+    many2one_reference: [80],
+    many2one: [80],
+    monetary: 105,
+    one2many: [80],
+    reference: [80],
+    selection: [80],
+    text: [80, 1200],
 };
 
 /**
