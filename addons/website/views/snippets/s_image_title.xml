@@ -9,38 +9,12 @@
                 <div class="o_grid_item g-height-9 g-col-lg-8 col-lg-8" style="--grid-item-padding-y: 32px; grid-area: 1 / 1 / 10 / 9; z-index: 1;">
                     <h1 class="display-3">A Deep Dive into Innovation and Excellence</h1>
                 </div>
-                <div class="o_grid_item g-height-9 g-col-lg-7 col-lg-7 justify-content-end" style="--grid-item-padding-y: 32px; grid-area: 1 / 6 / 10 / 13; z-index: 2;">
+                <div class="o_grid_item g-height-3 g-col-lg-7 col-lg-7" style="--grid-item-padding-y: 24px; grid-area: 7 / 6 / 10 / 13; z-index: 2;">
                     <p class="lead" style="text-align: end;">Transform your environment with our new design collection, where elegance meets functionality. Elevate your space with pieces that blend style and comfort seamlessly.</p>
                 </div>
             </div>
         </div>
     </section>
 </template>
-
-<template id="s_image_title_options" inherit_id="website.snippet_options">
-    <!--  Box Vertical Alignment -->
-    <xpath expr="//div[@data-js='WebsiteAnimate']" position="after">
-        <div data-selector=".s_image_title .row > div" data-exclude=".o_grid_item_image">
-            <we-button-group string="Vert. Alignment" title="Vertical Alignment">
-                <we-button title="Align Top"
-                        data-select-class=""
-                        data-img="/website/static/src/img/snippets_options/align_solo_top.svg"/>
-                <we-button title="Align Middle"
-                        data-select-class="justify-content-center"
-                        data-img="/website/static/src/img/snippets_options/align_solo_middle.svg"/>
-                <we-button title="Align Bottom"
-                        data-select-class="justify-content-end"
-                        data-img="/website/static/src/img/snippets_options/align_solo_bottom.svg"/>
-            </we-button-group>
-        </div>
-    </xpath>
-</template>
-
-<!-- Assets -->
-<record id="website.s_image_title_000_scss" model="ir.asset">
-    <field name="name">Image Title 000 SCSS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">website/static/src/snippets/s_image_title/000.scss</field>
-</record>
 
 </odoo>
