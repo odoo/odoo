@@ -673,6 +673,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_2'), new_account)
 
     def test_account_code_mapping(self):
+        company_3 = self.env['res.company'].create({'name': 'Test Company 3'})
         account = self.env['account.account'].create({
             'code': 'test1',
             'name': 'Test Account',
@@ -682,20 +683,29 @@ class TestAccountAccount(TestAccountMergeCommon):
         # Write to DB so that the account gets an ID, and invalidate cache for code_mapping_ids so that they will be looked up
         account.invalidate_recordset(['code_mapping_ids'])
 
-        account = account.with_context({'allowed_company_ids': [self.company_data['company'].id, self.company_data_2['company'].id]})
+        account = account.with_context({'allowed_company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, company_3.id]})
 
         with Form(account) as account_form:
             # Test that the code mapping gives correct values once the form has been opened (which should call search)
             self.assertRecordValues(account.code_mapping_ids, [
                 {'company_id': self.company_data['company'].id, 'code': 'test1'},
                 {'company_id': self.company_data_2['company'].id, 'code': False},
+                {'company_id': company_3.id, 'code': False},
             ])
 
-            # Test that we are able to set a new code for company 2 via the company mapping
+            # Test that we are able to set a new code for companies 2 and 3 via the company mapping
             with account_form.code_mapping_ids.edit(1) as code_mapping_form:
                 code_mapping_form.code = 'test2'
+            with account_form.code_mapping_ids.edit(2) as code_mapping_form:
+                code_mapping_form.code = 'test3'
+
+            # Test that writing codes and companies at the same time doesn't trigger the constraint
+            # that the code must be set for each company in company_ids
+            account_form.company_ids.add(self.company_data_2['company'])
+            account_form.company_ids.add(company_3)
 
         self.assertRecordValues(account.with_company(self.company_data_2['company'].id), [{'code': 'test2'}])
+        self.assertRecordValues(account.with_company(company_3.id), [{'code': 'test3'}])
 
     def test_account_group_hierarchy_consistency(self):
         """ Test if the hierarchy of account groups is consistent when creating, deleting and recreating an account group """
