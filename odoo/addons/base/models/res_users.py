@@ -1569,18 +1569,13 @@ class ResGroups(models.Model):  # noqa: F811
         """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
         groups = self.sudo().search([], order='id')
         id_to_ref = groups.get_external_id()
-
-        # The 'base.group_no_one' is not actually involved by any other group because it is session dependent.
-        group_no_one_id = {gid for gid, ref in id_to_ref.items() if ref == 'base.group_no_one'}
-
         data = {
             group.id: {
                 'ref': id_to_ref[group.id] or str(group.id),
-                'supersets': set(group.implied_ids.ids) - group_no_one_id,
+                'supersets': group.implied_ids.ids,
             }
             for group in groups
         }
-
         # determine exclusive groups (will be disjoint for the set expression)
         user_types_category_id = self.env['ir.model.data']._xmlid_to_res_id('base.module_category_user_type', raise_if_not_found=False)
         if user_types_category_id:
