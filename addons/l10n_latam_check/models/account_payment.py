@@ -239,6 +239,32 @@ class AccountPayment(models.Model):
             res.append('new_third_party_checks')
         return res
 
+    def action_unmark_sent(self):
+        """ Unmarking as sent for electronic/deferred check would give the option to print and re-number check but
+        it's not implemented yet for this kind of checks"""
+        if self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks):
+            raise UserError(_('Unmark sent is not implemented for electronic or deferred checks'))
+        return super().action_unmark_sent()
+
+    def action_post(self):
+        msgs = self._get_blocking_l10n_latam_warning_msg()
+        if msgs:
+            raise ValidationError('* %s' % '\n* '.join(msgs))
+
+        res = super().action_post()
+
+        # mark own checks that are not printed as sent
+        self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks).write({'is_move_sent': True})
+        return res
+
+    def action_draft(self):
+        if self.l10n_latam_check_operation_ids.filtered(lambda x: x.state == "posted"):
+            raise ValidationError(_(
+               "This third party check is already used to make one or more payments. Please reset them to draft first.\n"
+                "Payments made with this check: %s",
+                "".join(f'\n    - {payment.name}' for payment in self.l10n_latam_check_operation_ids)))
+        return super().action_draft()
+
     @api.model
     def _get_trigger_fields_to_synchronize(self):
         res = super()._get_trigger_fields_to_synchronize()
