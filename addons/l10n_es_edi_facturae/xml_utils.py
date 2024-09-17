@@ -1,10 +1,6 @@
 import base64
 import hashlib
-from base64 import b64encode
 from copy import deepcopy
-
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
 from lxml import etree
 
 from odoo.exceptions import UserError
@@ -66,22 +62,4 @@ def _reference_digests(node, base_uri=""):
     for reference in node.findall("ds:Reference", namespaces=NS_MAP):
         ref_node = _get_uri(reference.get("URI", ""), reference, base_uri=base_uri)
         lib = hashlib.new("sha256", ref_node)
-        reference.find("ds:DigestValue", namespaces=NS_MAP).text = b64encode(lib.digest())
-
-
-def _fill_signature(node, private_key):
-    """
-    Uses private_key to sign the SignedInfo sub-node of `node`, as specified in:
-    https://www.w3.org/TR/xmldsig-core/#sec-SignatureValue
-    https://www.w3.org/TR/xmldsig-core/#sec-SignedInfo
-    """
-    signed_info_xml = node.find("ds:SignedInfo", namespaces=NS_MAP)
-
-    # During signature generation, the digest is computed over the canonical form of the document
-    signature = private_key.sign(_canonicalize_node(signed_info_xml), padding.PKCS1v15(), hashes.SHA256())
-    node.find("ds:SignatureValue", namespaces=NS_MAP).text = base64.encodebytes(signature)
-
-
-def _int_to_bytes(number):
-    """ Converts an integer to a byte string (in smallest big-endian form). """
-    return number.to_bytes((number.bit_length() + 7) // 8, byteorder='big')
+        reference.find("ds:DigestValue", namespaces=NS_MAP).text = base64.b64encode(lib.digest())

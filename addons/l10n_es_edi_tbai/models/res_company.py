@@ -46,12 +46,13 @@ class ResCompany(models.Model):
         string="Certificate (TicketBAI)",
         store=True,
         readonly=False,
-        comodel_name='l10n_es_edi_tbai.certificate',
+        comodel_name='certificate.certificate',
         compute="_compute_l10n_es_tbai_certificate",
     )
     l10n_es_tbai_certificate_ids = fields.One2many(
-        comodel_name='l10n_es_edi_tbai.certificate',
+        comodel_name='certificate.certificate',
         inverse_name='company_id',
+        domain=[('scope', '=', 'tbai')],
     )
 
     # === TBAI config ===
@@ -93,8 +94,8 @@ class ResCompany(models.Model):
     def _compute_l10n_es_tbai_certificate(self):
         for company in self:
             if company.country_code == 'ES':
-                company.l10n_es_tbai_certificate_id = self.env['l10n_es_edi_tbai.certificate'].search(
-                    [('company_id', '=', company.id)],
+                company.l10n_es_tbai_certificate_id = self.env['certificate.certificate'].search(
+                    [('company_id', '=', company.id), ('is_valid', '=', True), ('scope', '=', 'tbai')],
                     order='date_end desc',
                     limit=1,
                 )

@@ -25,7 +25,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'l10n_sa_additional_identification_number': '2525252525252',
             'l10n_sa_additional_identification_scheme': 'CRN',
             'vat': '311111111111113',
-            'l10n_sa_private_key': cls.env['res.company']._l10n_sa_generate_private_key(),
+            'l10n_sa_private_key_id': cls.env['certificate.key']._generate_ec_private_key(cls.company),
             'state_id': cls.env['res.country.state'].create({
                 'name': 'Riyadh',
                 'code': 'RYA',

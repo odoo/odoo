@@ -11,7 +11,7 @@ Odoo database.
     """,
     'version': '1.0',
     'category': 'Accounting/Accounting',
-    'depends': ['account'],
+    'depends': ['account', 'certificate'],
     'external_dependencies': {
         'python': ['cryptography']
     },

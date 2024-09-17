@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 from lxml import etree
 
 from odoo import tools
 from odoo.tests import tagged
+from odoo.tools.misc import file_open
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -85,12 +86,16 @@ class TestItEdi(AccountTestInvoicingCommon):
         })
 
         # We create this because we are unable to post without a proxy user existing
+        cls.private_key_id = cls.env['certificate.key'].create({
+            'name': 'IT test key',
+            'content': base64.b64encode(file_open('l10n_it_edi/data/pkey.key', 'rb').read()),
+        })
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'proxy_type': 'l10n_it_edi',
             'id_client': 'l10n_it_edi_test',
             'company_id': cls.company.id,
             'edi_identification': 'l10n_it_edi_test',
-            'private_key': 'l10n_it_edi_test',
+            'private_key_id': cls.private_key_id.id,
         })
 
         cls.default_tax = cls.env['account.tax'].with_company(cls.company).create({

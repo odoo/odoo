@@ -13,8 +13,7 @@
                                 <field name="proxy_type" readonly="1" options="{'no_open': True}"/>
                                 <field name="id_client" readonly="1"/>
                                 <field name="edi_identification" readonly="1"/>
-                                <field name="private_key_filename" invisible="1"/>
-                                <field name="private_key" widget="binary" filename="private_key_filename" readonly="1"/>
+                                <field name="private_key_id" readonly="1"/>
                                 <field name="refresh_token" readonly="1"/>
                             </group>
                             <group/>
@@ -32,8 +31,7 @@
                     <field name="company_id" groups="base.group_multi_company" column_invisible="True"/>
                     <field name="id_client" readonly="1"/>
                     <field name="edi_identification" readonly="1"/>
-                    <field name="private_key_filename" column_invisible="True"/>
-                    <field name="private_key" widget="binary" filename="private_key_filename" readonly="1"/>
+                    <field name="private_key_id" readonly="1"/>
                     <field name="refresh_token" readonly="1"/>
                 </list>
             </field>
