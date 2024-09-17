@@ -222,6 +222,7 @@ class SaleOrder(models.Model):
     amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
     amount_to_invoice = fields.Monetary(string="Un-invoiced Balance", compute='_compute_amount_to_invoice')
     amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
+    amount_due = fields.Monetary(string="Amount due to confirm", compute='_compute_amount_due')
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
     invoice_ids = fields.Many2many(
@@ -506,6 +507,11 @@ class SaleOrder(models.Model):
             invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
+
+    @api.depends('amount_paid', 'prepayment_percent')
+    def _compute_amount_due(self):
+        for order in self:
+            order.amount_due = order._get_prepayment_required_amount() - order.amount_paid
 
     def _search_invoice_ids(self, operator, value):
         if operator == 'in' and value:
@@ -800,6 +806,11 @@ class SaleOrder(models.Model):
     def _onchange_prepayment_percent(self):
         if not self.prepayment_percent:
             self.require_payment = False
+
+    @api.onchange('amount_paid', 'prepayment_percent')
+    def _onchange_amount_due(self):
+        for order in self:
+            order.amount_due = order._get_prepayment_required_amount() - order.amount_paid
 
     #=== CRUD METHODS ===#
 
@@ -1717,7 +1728,6 @@ class SaleOrder(models.Model):
         - its state is 'draft' or `sent`;
         - it's not expired;
         - it requires a payment;
-        - the last transaction's state isn't `done`;
         - the total amount is strictly positive.
         - confirmation amount is not reached
 

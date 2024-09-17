@@ -35,9 +35,18 @@ class PaymentLinkWizard(models.TransientModel):
         if self.res_model != 'sale.order':
             return res
 
+        sale_order = self.env['sale.order'].browse(self.res_id)
         # The other order-related values are read directly from the sales order in the controller.
         return {
-            'amount': self.amount,
-            'access_token': self._prepare_access_token(),
-            'sale_order_id': self.res_id,
+            'link_amount': self.amount,
+            'access_token': sale_order.access_token or sale_order._portal_ensure_token(),
+            'showPaymentModal': 'true',
         }
+
+    def _prepare_url(self, base_url, related_document):
+        res = super()._prepare_url(base_url, related_document)
+
+        if self.res_model == 'sale.order':
+            res = f'{base_url}/my/orders/{related_document.id}'
+
+        return res

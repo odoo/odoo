@@ -115,6 +115,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
         message=False,
         download=False,
         downpayment=None,
+        link_amount=None,
+        installment=False,
         **kw
     ):
         try:
@@ -159,14 +161,21 @@ class CustomerPortal(payment_portal.PaymentPortal):
             'report_type': 'html',
             'backend_url': backend_url,
             'res_company': order_sudo.company_id,  # Used to display correct company logo
+            'link_amount': link_amount,
+            'installment': installment,
         }
 
         # Payment values
-        if order_sudo._has_to_be_paid():
+        if order_sudo._has_to_be_paid() or link_amount:
+            if link_amount:
+                installment = (installment
+                               or float(link_amount) != order_sudo._get_prepayment_required_amount())
             values.update(
                 self._get_payment_values(
                     order_sudo,
-                    downpayment=downpayment == 'true' if downpayment is not None else order_sudo.prepayment_percent < 1.0
+                    downpayment=downpayment == 'true' if downpayment is not None else order_sudo.prepayment_percent < 1.0,
+                    installment=installment,
+                    link_amount=link_amount,
                 )
             )
 
@@ -180,7 +189,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         return request.render('sale.sale_order_portal_template', values)
 
-    def _get_payment_values(self, order_sudo, downpayment=False, **kwargs):
+    def _get_payment_values(
+            self, order_sudo,
+            downpayment=False,
+            installment=False,
+            link_amount=None,
+            **kwargs
+    ):
         """ Return the payment-specific QWeb context values.
 
         :param sale.order order_sudo: The sales order being paid.
@@ -193,10 +208,20 @@ class CustomerPortal(payment_portal.PaymentPortal):
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_id
         company = order_sudo.company_id
-        if downpayment:
-            amount = order_sudo._get_prepayment_required_amount()
+        if not link_amount:
+            if downpayment:
+                amount = order_sudo._get_prepayment_required_amount() - order_sudo.amount_paid
+            else:
+                amount = order_sudo.amount_total - order_sudo.amount_paid
         else:
-            amount = order_sudo.amount_total - order_sudo.amount_paid
+            if installment == 'false':
+                if float(link_amount) >= order_sudo.amount_due:
+                    amount = order_sudo.amount_total - order_sudo.amount_paid
+                else:
+                    amount = order_sudo._get_prepayment_required_amount() - order_sudo.amount_paid
+            else:
+                amount = float(link_amount)
+
         currency = order_sudo.currency_id
 
         availability_report = {}
