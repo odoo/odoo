@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import {
-    dragNDrop,
+    insertSnippet,
     goToTheme,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
@@ -40,7 +40,7 @@ function checkComputedFontSize(fontSizeClass, stage) {
 
 function getFontSizeTestSteps(fontSizeClass) {
     return [
-        ...dragNDrop({id: "s_text_block", name: "Text", groupName: "Text"}),
+        ...insertSnippet({id: "s_text_block", name: "Text", groupName: "Text"}),
         {
             content: `[${fontSizeClass}] Click on the text block first paragraph (to auto select)`,
             trigger: ":iframe .s_text_block p",

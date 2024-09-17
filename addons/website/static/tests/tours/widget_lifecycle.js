@@ -3,7 +3,7 @@
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -19,7 +19,7 @@ registerWebsitePreviewTour("widget_lifecycle", {
     url: "/",
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_countdown",
         name: "Countdown",
         groupName: "Content",

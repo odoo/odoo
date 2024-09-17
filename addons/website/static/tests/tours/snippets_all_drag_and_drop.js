@@ -2,7 +2,7 @@
 
 import {
     clickOnEditAndWaitEditMode,
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
 } from "@website/js/tours/tour_utils";
 import { patch } from "@web/core/utils/patch";
@@ -136,7 +136,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
     // This first step is needed as it will be used later for inner snippets
     // Without this, it will dropped inside the footer and will need an extra
     // selector.
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_text_image",
         name: "Text - Image",
         groupName: "Content"

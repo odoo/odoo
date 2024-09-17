@@ -4,12 +4,12 @@ import { browser } from '@web/core/browser/browser';
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
 const makeSteps = (steps = []) => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: "s_text_image",
         name: "Text - Image",
         groupName: "Content",
@@ -106,7 +106,7 @@ registerWebsitePreviewTour('website_no_dirty_lazy_image', {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",

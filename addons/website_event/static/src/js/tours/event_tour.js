@@ -5,7 +5,7 @@ import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 
 import { markup } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
-import { dragNDrop } from '@website/js/tours/tour_utils';
+import { insertSnippet } from '@website/js/tours/tour_utils';
 
 patch(EventAdditionalTourSteps.prototype, {
 
@@ -22,7 +22,7 @@ patch(EventAdditionalTourSteps.prototype, {
                 tooltipPosition: 'bottom',
                 run: "click",
             },
-            ...dragNDrop({
+            ...insertSnippet({
                 id: "s_image_text",
                 name: "Image - Text",
                 groupName: "Content",
