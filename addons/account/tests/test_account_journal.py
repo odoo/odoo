@@ -148,6 +148,25 @@ class TestAccountJournal(AccountTestInvoicingCommon):
 
         self.assertEqual(sorted(new_journals.mapped("code")), ["GEN1", "OD_BL"], "The journals should be set correctly")
 
+    def test_archive_used_journal(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'sale',
+            'code': 'A',
+        })
+        check_method = self.env['account.payment.method'].sudo().create({
+                'name': 'Test',
+                'code': 'check_printing_expense_test',
+                'payment_type': 'outbound',
+        })
+        self.env['account.payment.method.line'].create({
+            'name': 'Check',
+            'payment_method_id': check_method.id,
+            'journal_id': journal.id
+            })
+        with self.assertRaises(ValidationError):
+            journal.action_archive()
+
 
 @tagged('post_install', '-at_install', 'mail_alias')
 class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
