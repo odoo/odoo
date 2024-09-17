@@ -3,9 +3,9 @@
 import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Component, reactive, useState, xml } from "@odoo/owl";
 import { parseUrl } from "../local_helpers";
 
-import { Component, reactive, useState, xml } from "@odoo/owl";
 import { HootTechnicalValue } from "../../ui/hoot_technical_value";
 
 const mountTechnicalValue = async (defaultValue) => {
