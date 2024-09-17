@@ -3627,8 +3627,6 @@ class AccountMove(models.Model):
                             invoices |= invoice
                             current_invoice = self.env['account.move']
                             add_file_data_results(file_data, invoice)
-                        if extend_with_existing_lines:
-                            return attachments_by_invoice
 
                 except RedirectWarning:
                     raise
