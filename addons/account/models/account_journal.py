@@ -852,6 +852,11 @@ class AccountJournal(models.Model):
                 name = f"{name} ({journal.currency_id.name})"
             journal.display_name = name
 
+    def action_archive(self):
+        if self.env['account.payment.method.line'].search_count([('journal_id', '=', self.id)], limit=1):
+            raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
+        return super().action_archive()
+
     def action_configure_bank_journal(self):
         """ This function is called by the "configure" button of bank journals,
         visible on dashboard if no bank statement source has been defined yet
