@@ -5934,7 +5934,7 @@ test(`display a tooltip on a field`, async () => {
         `,
     });
 
-    hover(`th[data-name="foo"]`);
+    hover(`th[data-name="foo"] div`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--technical`).toHaveCount(0);
     expect(`.o-tooltip`).toHaveCount(1);
@@ -5944,7 +5944,7 @@ test(`display a tooltip on a field`, async () => {
 
     // it is necessary to rerender the list so tooltips can be properly created
     await validateSearch(); // reload view
-    hover(`th[data-name="bar"]`);
+    hover(`th[data-name="bar"] div`);
     await runAllTimers();
     expect(`.o-tooltip .o-tooltip--technical`).toHaveCount(1);
     expect(`.o-tooltip--technical > li[data-item="widget"]`).toHaveCount(1);
@@ -5963,7 +5963,7 @@ test("field (with help) tooltip in non debug mode", async function () {
         resModel: "foo",
         arch: `<list><field name="foo"/></list>`,
     });
-    hover(`th[data-name="foo"]`);
+    hover(`th[data-name="foo"] div`);
     await runAllTimers();
     expect(`.o-tooltip`).toHaveCount(1);
     expect(`.o-tooltip`).toHaveText("Foo\nThis is a foo field");
