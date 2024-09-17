@@ -2176,6 +2176,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "CustomerLoyaltyPointsDisplayed", login="pos_user")
 
     def test_cheapest_product_reward_pos_combo(self):
+        self.env['product.product'].create({
+            "name": "Expensive product",
+            "lst_price": 1000,
+            "available_in_pos": True,
+        })
+        self.env['product.product'].create({
+            "name": "Cheap product",
+            "lst_price": 1,
+            "available_in_pos": True,
+        })
         setup_pos_combo_items(self)
         self.office_combo.write({'lst_price': 50})
         self.env['loyalty.program'].search([]).write({'active': False})
