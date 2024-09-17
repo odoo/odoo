@@ -612,7 +612,7 @@
                                     context="{'active_test': True}"
                                     readonly="qty_invoiced &gt; 0 or is_downpayment"
                                     optional="show"/>
-                                <field name="discount" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
+                                <field name="discount" width="50px" string="Disc.%" groups="sale.group_discount_per_so_line" optional="show"/>
                                 <field name="is_downpayment" column_invisible="True"/>
                                 <field name="price_subtotal" string="Tax excl." invisible="is_downpayment"/>
                                 <field name="price_total"
