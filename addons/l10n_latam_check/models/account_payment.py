@@ -270,6 +270,14 @@ class AccountPayment(models.Model):
         self.filtered(lambda x: x.payment_method_line_id.code == 'check_printing' and x.l10n_latam_manual_checks).write({'is_move_sent': True})
         return res
 
+    def action_draft(self):
+        if self.l10n_latam_check_operation_ids.filtered(lambda x: x.state == "posted"):
+            raise ValidationError(_(
+               "This third party check is already used to make one or more payments. Please reset them to draft first.\n"
+                "Payments made with this check: %s",
+                "".join(f'\n    - {payment.name}' for payment in self.l10n_latam_check_operation_ids)))
+        return super().action_draft()
+
     @api.model
     def _get_trigger_fields_to_synchronize(self):
         res = super()._get_trigger_fields_to_synchronize()
