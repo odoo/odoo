@@ -49,11 +49,16 @@ export class PosData extends Reactive {
         );
 
         browser.addEventListener("online", () => {
-            this.setOnline();
+            if (this.network.offline) {
+                this.network.offline = false;
+                this.network.warningTriggered = false; // Avoid the display of the offline popup multiple times
+            }
+
+            this.syncData();
         });
 
         browser.addEventListener("offline", () => {
-            this.setOffline();
+            this.network.offline = true;
         });
     }
 
@@ -179,24 +184,8 @@ export class PosData extends Reactive {
         return results;
     }
 
-    setOffline() {
-        if (!this.network.offline) {
-            this.network.offline = true;
-        }
-    }
-
-    setOnline() {
-        if (this.network.offline) {
-            this.network.offline = false;
-            this.network.warningTriggered = false; // Avoid the display of the offline popup multiple times
-        }
-
-        this.syncData();
-    }
-
     resetUnsyncQueue() {
         this.network.unsyncData = [];
-        this.setOnline();
     }
 
     async loadInitialData() {
@@ -385,7 +374,6 @@ export class PosData extends Reactive {
                 });
             }
 
-            this.setOffline();
             throw error;
         } finally {
             this.network.loading = false;

@@ -41,7 +41,8 @@ patch(ProductScreen.prototype, {
         return this.pos.categoryCount.slice(0, 3);
     },
     async submitOrder() {
-        this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+        this.pos.addPendingOrder([this.currentOrder.id]);
     },
     get primaryReviewButton() {
         return (
