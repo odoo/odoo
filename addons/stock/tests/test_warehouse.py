@@ -789,13 +789,22 @@ class TestWarehouse(TestStockCommon):
         wh.code = "chic"
         warehouse = wh.save()
         self.assertEqual(warehouse.int_type_id.barcode, 'CHICINT')
+        self.assertIn("Chicago", warehouse.int_type_id.sequence_id.name)
         self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'chic/INT/')
+        warehouse.int_type_id.sequence_code = "custom/INT/%(year)s/"
 
         wh = Form(warehouse)
         wh.code = 'CH'
         wh.save()
         self.assertEqual(warehouse.int_type_id.barcode, 'CHINT')
-        self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'CH/INT/')
+        self.assertIn("Chicago", warehouse.int_type_id.sequence_id.name)
+        self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'custom/INT/%(year)s/')
+
+        wh = Form(warehouse)
+        wh.name = 'Chicago2'
+        wh.save()
+        self.assertIn("Chicago2", warehouse.int_type_id.sequence_id.name)
+        self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'custom/INT/%(year)s/')
 
     def test_location_warehouse(self):
         """ Check that the closest warehouse is selected

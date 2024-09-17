@@ -183,15 +183,6 @@ class StockWarehouse(models.Model):
         })
         return values
 
-    def _get_sequence_values(self, name=False, code=False):
-        values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
-        values.update({
-            'pbm_type_id': {'name': _('%(name)s Sequence picking before manufacturing', name=self.name), 'prefix': self.code + '/PC/', 'padding': 5, 'company_id': self.company_id.id},
-            'sam_type_id': {'name': _('%(name)s Sequence stock after manufacturing', name=self.name), 'prefix': self.code + '/SFP/', 'padding': 5, 'company_id': self.company_id.id},
-            'manu_type_id': {'name': _('%(name)s Sequence production', name=self.name), 'prefix': self.code + '/MO/', 'padding': 5, 'company_id': self.company_id.id},
-        })
-        return values
-
     def _get_picking_type_create_values(self, max_sequence):
         data, next_sequence = super(StockWarehouse, self)._get_picking_type_create_values(max_sequence)
         data.update({
@@ -203,7 +194,7 @@ class StockWarehouse(models.Model):
                 'default_location_src_id': self.lot_stock_id.id,
                 'default_location_dest_id': self.pbm_loc_id.id,
                 'sequence': next_sequence + 1,
-                'sequence_code': 'PC',
+                'sequence_code': self.code + '/PC/',
                 'company_id': self.company_id.id,
             },
             'sam_type_id': {
@@ -214,7 +205,7 @@ class StockWarehouse(models.Model):
                 'default_location_src_id': self.sam_loc_id.id,
                 'default_location_dest_id': self.lot_stock_id.id,
                 'sequence': next_sequence + 3,
-                'sequence_code': 'SFP',
+                'sequence_code': self.code + '/SFP/',
                 'company_id': self.company_id.id,
             },
             'manu_type_id': {
@@ -223,7 +214,7 @@ class StockWarehouse(models.Model):
                 'use_create_lots': True,
                 'use_existing_lots': True,
                 'sequence': next_sequence + 2,
-                'sequence_code': 'MO',
+                'sequence_code': self.code + '/MO/',
                 'company_id': self.company_id.id,
             },
         })

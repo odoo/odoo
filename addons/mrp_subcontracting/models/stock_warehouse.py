@@ -130,13 +130,14 @@ class StockWarehouse(models.Model):
 
     def _get_picking_type_create_values(self, max_sequence):
         data, next_sequence = super(StockWarehouse, self)._get_picking_type_create_values(max_sequence)
+        count = self.env['ir.sequence'].search_count([('prefix', '=like', self.code + '/SBC%/%')])
         data.update({
             'subcontracting_type_id': {
                 'name': _('Subcontracting'),
                 'code': 'mrp_operation',
                 'use_create_components_lots': True,
                 'sequence': next_sequence + 2,
-                'sequence_code': 'SBC',
+                'sequence_code': self.code + (('/SBC' + str(count) + '/') if count else '/SBC/'),
                 'company_id': self.company_id.id,
             },
             'subcontracting_resupply_type_id': {
@@ -146,31 +147,12 @@ class StockWarehouse(models.Model):
                 'use_existing_lots': True,
                 'default_location_dest_id': self._get_subcontracting_location().id,
                 'sequence': next_sequence + 3,
-                'sequence_code': 'RES',
+                'sequence_code': self.code + (('/RES' + str(count) + '/') if count else '/RES/'),
                 'print_label': True,
                 'company_id': self.company_id.id,
             }
         })
         return data, max_sequence + 4
-
-    def _get_sequence_values(self, name=False, code=False):
-        values = super(StockWarehouse, self)._get_sequence_values(name=name, code=code)
-        count = self.env['ir.sequence'].search_count([('prefix', '=like', self.code + '/SBC%/%')])
-        values.update({
-            'subcontracting_type_id': {
-                'name': _('%(name)s Sequence subcontracting', name=self.name),
-                'prefix': self.code + (('/SBC' + str(count) + '/') if count else '/SBC/'),
-                'padding': 5,
-                'company_id': self.company_id.id
-            },
-            'subcontracting_resupply_type_id': {
-                'name': _('%(name)s Sequence Resupply Subcontractor', name=self.name),
-                'prefix': self.code + (('/RES' + str(count) + '/') if count else '/RES/'),
-                'padding': 5,
-                'company_id': self.company_id.id
-            },
-        })
-        return values
 
     def _get_picking_type_update_values(self):
         data = super(StockWarehouse, self)._get_picking_type_update_values()

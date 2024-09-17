@@ -3031,6 +3031,9 @@ class TestRoutes(TestStockCommon):
             'default_location_dest_id': new_loc.id,
             'warehouse_id': self.wh.id,
         })
+        self.assertEqual(picking_type.sequence_id.prefix, "NPT")
+        self.assertIn(self.wh.name, picking_type.sequence_id.name)
+        self.assertIn("NPT", picking_type.sequence_id.name)
         route = self.env['stock.route'].create({
             'name': 'new route',
             'rule_ids': [(0, False, {
@@ -3068,6 +3071,9 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move1.location_dest_id, new_loc)
         positive_quant = product.stock_quant_ids.filtered(lambda q: q.quantity > 0)
         self.assertEqual(positive_quant.location_id, new_loc)
+        picking_type.sequence_id.prefix = "WH/%(year)s/%(month)s/NPT/"
+        picking_type.write({"sequence_code": "WH/%(year)s/%(month)s/NPT2/"})
+        self.assertEqual(picking_type.sequence_id.prefix, "WH/%(year)s/%(month)s/NPT2/")
 
     def test_mtso_mto_adjust_01(self):
         """ Run '_adjust_procure_method' for products A & B:
