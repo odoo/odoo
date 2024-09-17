@@ -2635,26 +2635,6 @@ class AccountMoveLine(models.Model):
 
         all_amls._reconcile_post_hook(pre_hook_data)
 
-    def _create_reconciliation_partials(self):
-        '''create the partial reconciliation between all the records in self
-         :return: A recordset of account.partial.reconcile.
-        '''
-        partials_vals_list, exchange_data = self._prepare_reconciliation_partials([
-            {
-                'aml': line,
-                'amount_residual': line.amount_residual,
-                'amount_residual_currency': line.amount_residual_currency,
-            }
-            for line in self
-        ])
-        partials = self.env['account.partial.reconcile'].create(partials_vals_list)
-
-        # ==== Create exchange difference moves ====
-        for index, exchange_values in exchange_data.items():
-            partials[index].exchange_move_id = self._create_exchange_difference_move(exchange_values)
-
-        return partials
-
     def _prepare_exchange_difference_move_vals(self, amounts_list, company=None, exchange_date=None, **kwargs):
         """ Prepare values to create later the exchange difference journal entry.
         The exchange difference journal entry is there to fix the debit/credit of lines when the journal items are
