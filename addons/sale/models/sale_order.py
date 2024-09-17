@@ -850,6 +850,8 @@ class SaleOrder(models.Model):
         mail_template = self._find_mail_template()
         if mail_template and mail_template.lang:
             lang = mail_template._render_lang(self.ids)[self.id]
+        report_template_id = 'sale.action_report_pro_forma_invoice' if self.env.context.get('proforma', False) else 'sale.action_report_saleorder'
+        mail_template.report_template_ids = self.env.ref(report_template_id).ids
         ctx = {
             'default_model': 'sale.order',
             'default_res_ids': self.ids,
