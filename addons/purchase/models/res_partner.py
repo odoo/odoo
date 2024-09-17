@@ -72,13 +72,3 @@ class res_partner(models.Model):
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', default=1, company_dependent=True,
         help="Number of days to send reminder email before the promised receipt date")
     buyer_id = fields.Many2one('res.users', string='Buyer')
-
-    def action_open_purchase_matching(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _("Purchase Matching"),
-            'res_model': 'purchase.bill.line.match',
-            'domain': [('partner_id', '=', self.id), ('company_id', 'in', [self.env.company.id])],
-            'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'list')],
-        }

@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
-from odoo.tools import format_list, SQL
+from odoo.tools import SQL
 from odoo.exceptions import UserError
 
 
@@ -27,10 +27,31 @@ class PurchaseBillMatch(models.Model):
     state = fields.Char()
 
     product_uom_id = fields.Many2one(comodel_name='uom.uom', related='product_id.uom_id')
-    product_uom_qty = fields.Float(compute='_compute_product_uom_qty')
+    product_uom_qty = fields.Float(compute='_compute_product_uom_qty', inverse='_inverse_product_uom_qty', readonly=False)
+    product_uom_price = fields.Float(compute='_compute_product_uom_price', inverse='_inverse_product_uom_price', readonly=False)
     billed_amount_untaxed = fields.Monetary(compute='_compute_amount_untaxed_fields', currency_field='currency_id')
     purchase_amount_untaxed = fields.Monetary(compute='_compute_amount_untaxed_fields', currency_field='currency_id')
     reference = fields.Char(compute='_compute_reference')
+
+    @api.onchange('product_uom_price')
+    def _inverse_product_uom_price(self):
+        for line in self:
+            if line.aml_id:
+                line.aml_id.price_unit = line.product_uom_price
+            else:
+                line.pol_id.price_unit = line.product_uom_price
+
+    @api.onchange('product_uom_qty')
+    def _inverse_product_uom_qty(self):
+        for line in self:
+            if line.aml_id:
+                line.aml_id.quantity = line.product_uom_qty
+            else:
+                # on POL, setting product_qty will recompute price_unit to have the old value
+                # this prevents the price to revert by saving the previous price and re-setting them again
+                previous_price_unit = line.pol_id.price_unit
+                line.pol_id.product_qty = line.product_uom_qty
+                line.pol_id.price_unit = previous_price_unit
 
     def _compute_amount_untaxed_fields(self):
         for line in self:
@@ -49,6 +70,12 @@ class PurchaseBillMatch(models.Model):
         for line in self:
             line.product_uom_qty = line.line_uom_id._compute_quantity(line.line_qty, line.product_uom_id)
 
+    @api.depends('aml_id.price_unit', 'pol_id.price_unit')
+    def _compute_product_uom_price(self):
+        for line in self:
+            line.product_uom_price = line.aml_id.price_unit if line.aml_id else line.pol_id.price_unit
+
+    @api.model
     def _select_po_line(self):
         return SQL("""
             SELECT pol.id,
@@ -72,6 +99,7 @@ class PurchaseBillMatch(models.Model):
                 OR ((pol.display_type = '' OR pol.display_type IS NULL) AND pol.is_downpayment AND pol.qty_invoiced > 0)
         """)
 
+    @api.model
     def _select_am_line(self):
         return SQL("""
             SELECT -aml.id,
@@ -109,40 +137,45 @@ class PurchaseBillMatch(models.Model):
             'res_id': self.account_move_id.id if self.account_move_id else self.purchase_order_id.id,
         }
 
-    def action_match_lines(self):
-        if not self.pol_id or not self.aml_id:
-            raise UserError(_("You must select at least one Purchase Order line and one Vendor Bill line to match them."))
+    @api.model
+    def _action_create_bill_from_po_lines(self, partner, po_lines):
+        """ Create a new vendor bill with the selected PO lines and returns an action to open it """
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': partner.id,
+        })
+        bill._add_purchase_order_lines(po_lines)
+        return bill._get_records_action()
 
-        matches_found = 0
-        problem_products = self.env['product.product']
+    def action_match_lines(self):
+        if not self.pol_id:  # we need POL(s) to either match or create bill
+            raise UserError(_("You must select at least one Purchase Order line to match or create bill."))
+        if not self.aml_id:  # select POL(s) without AML -> create a draft bill with the POL(s)
+            return self._action_create_bill_from_po_lines(self.partner_id, self.pol_id)
+        if len(self.aml_id.move_id) > 1:  # for purchase matching, disallow matching multiple bills at the same time
+            raise UserError(_("You can't select lines from multiple Vendor Bill to do the matching."))
+
         pol_by_product = self.pol_id.grouped('product_id')
         aml_by_product = self.aml_id.grouped('product_id')
+        residual_purchase_order_lines = self.pol_id
+        residual_account_move_lines = self.aml_id
+        residual_bill = self.aml_id.move_id
 
-        for product, po_lines in pol_by_product.items():
-            if len(po_lines) > 1:
-                problem_products += product
-                continue
+        # Match all matchable POL-AML lines and remove them from the residual group
+        for product, po_line in pol_by_product.items():
+            po_line = po_line[0]  # in case of multiple POL with same product, only match the first one
             matching_bill_lines = aml_by_product.get(product)
             if matching_bill_lines:
-                matching_bill_lines.purchase_line_id = po_lines.id
-                matches_found += 1
-        if problem_products:
-            message = _("More than 1 Purchase Order line has the same product: %(products)s",
-                        products=format_list(self.env, problem_products.mapped('display_name')))
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _("Unable to match"),
-                    'type': "warning",
-                    'message': message,
-                    'next': {
-                        'type': 'ir.actions.act_window_close',
-                    },
-                }
-            }
-        if not matches_found:
-            raise UserError(_("No matching products found."))
+                matching_bill_lines.purchase_line_id = po_line.id
+                residual_purchase_order_lines -= po_line
+                residual_account_move_lines -= matching_bill_lines
+
+        # Delete all unmatched selected AML
+        if residual_account_move_lines:
+            residual_account_move_lines.unlink()
+
+        # Add all remaining POL to the residual bill
+        residual_bill._add_purchase_order_lines(residual_purchase_order_lines)
 
     def action_add_to_po(self):
         if not self or not self.aml_id:

@@ -582,7 +582,18 @@ class PurchaseOrder(models.Model):
                 line.product_id.product_tmpl_id.sudo().write(vals)
 
     def action_bill_matching(self):
-        return self.partner_id.action_open_purchase_matching()
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Bill Matching"),
+            'res_model': 'purchase.bill.line.match',
+            'domain': [
+                ('partner_id', '=', self.partner_id.id),
+                ('company_id', 'in', self.env.company.ids),
+                ('purchase_order_id', 'in', [self.id, False]),
+            ],
+            'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'list')],
+        }
 
     def _prepare_down_payment_section_values(self):
         self.ensure_one()
