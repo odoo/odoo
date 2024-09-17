@@ -38,7 +38,7 @@
                        groups="stock.group_stock_multi_locations"
                        options="{'no_create': True}"
                        required="sublocation == 'closest_location'"
-                       readonly="sublocation != 'last_used'"
+                       readonly="sublocation == 'no'"
                        placeholder="Any Category"
                        optional="show"/>
                 <field name="company_id" groups="stock.group_stock_multi_locations" force_save="1" readonly="context.get('fixed_location', False)" options="{'no_create': True}" optional="show"/>
