@@ -78,21 +78,36 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _('Export/SEZ'),
                 'sequence': 3,
                 'auto_apply': True,
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals(use_sez_exp_igst=True),
+                'tax_ids': (
+                    self._get_l10n_in_fiscal_tax_vals(trailing_id='_sez_exp')
+                    + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
+                ),
             },
             'fiscal_position_in_lut_sez': {
                 'name': _('LUT - Export/SEZ'),
                 'sequence': 4,
-                'tax_ids': self._get_l10n_in_fiscal_tax_vals(use_zero_rated_igst=True),
+                'tax_ids': (
+                    self._get_l10n_in_fiscal_tax_vals(use_zero_rated_igst=True, trailing_id='_sez_exp_lut')
+                    + self._get_l10n_in_zero_rated_with_igst_zero_tax_vals()
+                )
             },
         }
 
-    def _get_l10n_in_fiscal_tax_vals(self, use_zero_rated_igst=False, use_sez_exp_igst=False):
+    def _get_l10n_in_fiscal_tax_vals(self, use_zero_rated_igst=False, trailing_id=False):
         return [Command.clear()] + [
             Command.create({
                 'tax_src_id': f"sgst_{tax_type}_{rate}",
-                'tax_dest_id': f"igst_{tax_type}_{rate if not use_zero_rated_igst else 0}{'_sez_exp' if use_sez_exp_igst and tax_type == 'sale' else ''}",
+                'tax_dest_id': f"igst_{tax_type}_{0 if use_zero_rated_igst and tax_type == 'purchase' else rate}{(tax_type == 'sale' and trailing_id) or ''}",
             })
             for tax_type in ["sale", "purchase"]
             for rate in [1, 2, 5, 12, 18, 28]  # Available existing GST Rates
+        ]
+
+    def _get_l10n_in_zero_rated_with_igst_zero_tax_vals(self):
+        return [
+            Command.create({
+                'tax_src_id': zero_tax,
+                'tax_dest_id': "igst_sale_0"
+            })
+            for zero_tax in ["exempt_sale", "nil_rated_sale"]
         ]
