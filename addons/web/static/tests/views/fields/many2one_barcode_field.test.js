@@ -44,6 +44,19 @@ class Product extends models.Model {
             .map((record) => [record.id, record.name]);
         return records.concat(result);
     }
+    _views = {
+        kanban: `
+        <kanban>
+            <templates>
+                <t t-name="card">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="barcode"/>
+                </t>
+            </templates>
+        </kanban>`,
+        search: "<search/>",
+    };
 }
 
 class SaleOrderLine extends models.Model {
@@ -109,7 +122,7 @@ test("barcode button with single results", async () => {
     expect.verifySteps(["vibrate:100"]);
 });
 
-test.tags("desktop")("barcode button with multiple results", async () => {
+test.tags("desktop")("barcode button with multiple results on desktop", async () => {
     expect.assertions(5);
 
     // The product selected (mock) for the barcode scanner
@@ -149,5 +162,74 @@ test.tags("desktop")("barcode button with multiple results", async () => {
         ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item:nth-child(1)"
     ).click();
     await clickSave();
+    expect.verifySteps(["vibrate:100"]);
+});
+
+test.tags("mobile")("barcode button with multiple results on mobile", async () => {
+    expect.assertions(5);
+
+    // The product selected (mock) for the barcode scanner
+    const selectedRecordTest = Product._records[1];
+
+    patchWithCleanup(BarcodeScanner, {
+        scanBarcode: async () => "mask",
+    });
+
+    onRpc("sale.order.line", "web_save", (args) => {
+        const selectedId = args.args[1]["product_id"];
+        expect(selectedId).toBe(selectedRecordTest.id, {
+            message: `product id selected ${selectedId}, should be ${selectedRecordTest.id} (${selectedRecordTest.barcode})`,
+        });
+        return args.parent();
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order.line",
+        arch: `<form><field name="product_id" options="{'can_scan_barcode': True}"/></form>`,
+    });
+
+    expect(".o_barcode").toHaveCount(1, { message: "has scanner barcode button" });
+
+    await contains(".o_barcode").click();
+
+    expect(".modal-dialog.modal-lg").toHaveCount(1, {
+        message: "there should be one modal opened in full screen",
+    });
+    expect(".modal-dialog.modal-lg .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2, {
+        message: "there should be 2 records displayed",
+    });
+
+    await contains(".o_kanban_record:nth-child(1)").click();
+    await clickSave();
+    expect.verifySteps(["vibrate:100"]);
+});
+
+test.tags("mobile")("many2one with barcode show all records", async () => {
+    // The product selected (mock) for the barcode scanner
+    const selectedRecordTest = Product._records[1];
+
+    patchWithCleanup(BarcodeScanner, {
+        scanBarcode: async () => selectedRecordTest.barcode,
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order.line",
+        arch: `<form><field name="product_id" options="{'can_scan_barcode': True}"/></form>`,
+    });
+
+    // Select one product
+    await contains(".o_barcode").click();
+
+    // Click on the input to show all records
+    await contains(".o_input_dropdown > input").click();
+
+    expect(".modal-dialog.modal-lg").toHaveCount(1, {
+        message: "there should be one modal opened in full screen",
+    });
+    expect(".modal-dialog.modal-lg .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3, {
+        message: "there should be 3 records displayed",
+    });
     expect.verifySteps(["vibrate:100"]);
 });
