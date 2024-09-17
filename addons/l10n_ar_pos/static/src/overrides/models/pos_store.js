@@ -12,9 +12,10 @@ patch(PosStore.prototype, {
         if (this.isArgentineanCompany()) {
             this.consumidorFinalAnonimoId = this.data.custom.consumidor_final_anonimo_id;
 
-            this["l10n_latam.identification.type"] = this.data["l10n_latam.identification.type"];
+            this["l10n_latam.identification.type"] =
+                this.models["l10n_latam.identification.type"].getAll();
             this["l10n_ar.afip.responsibility.type"] =
-                this.data["l10n_ar.afip.responsibility.type"];
+                this.models["l10n_ar.afip.responsibility.type"].getAll();
         }
     },
     isArgentineanCompany() {
