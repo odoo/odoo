@@ -1084,6 +1084,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         error = dict()
         error_message = []
 
+        partner_su = request.env['res.partner'].sudo()
         if data.get('partner_id'):
             partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
             if partner_su:
@@ -1116,7 +1117,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Required fields from mandatory field function
         country_id = int(data.get('country_id', False))
 
-        _update_mode, address_mode = mode
+        update_mode, address_mode = mode
         if address_mode == 'shipping':
             required_fields += self._get_mandatory_fields_shipping(country_id)
         else: # 'billing'
@@ -1125,6 +1126,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 # If the billing address is also used as shipping one, the phone is required as well
                 # because it's required for shipping addresses
                 required_fields.append('phone')
+
+            order_sudo = request.website.sale_get_order()
+            if (
+                # New secondary billing address (SO is not an anonymous cart)
+                (update_mode == 'new' and not order_sudo._is_public_order())
+                or
+                # Editing secondary billing address
+                (partner_su and order_sudo.partner_id != partner_su)
+            ):
+                # Commercial fields managed by the parent partner should not be set or edited
+                # through a child billing address.  They should therefore be removed from the
+                # required fields.
+                for fname in partner_su._commercial_fields():
+                    if fname not in data and fname in required_fields:
+                        required_fields.remove(fname)
 
         # error message for empty required fields
         for field_name in required_fields:
