@@ -218,7 +218,6 @@ patch(PaymentScreen.prototype, {
             });
             return;
         }
-        this.pos.removePendingOrder(this.currentOrder);
         this.currentOrder.state = "paid";
         this.pos.validated_orders_name_server_id_map[this.currentOrder.name] = this.currentOrder.id;
 
