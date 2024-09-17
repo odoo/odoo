@@ -867,21 +867,14 @@ patch(PosOrder.prototype, {
      * @returns the order's cheapest line
      */
     _getCheapestLine() {
-        let cheapestLine;
-        for (const line of this.get_orderlines().filter(
-            (line) => line.combo_line_ids?.length === 0
-        )) {
-            if (line.reward_id || !line.get_quantity()) {
-                continue;
-            }
-            if (!cheapestLine || cheapestLine.price_unit > line.price_unit) {
-                cheapestLine = line;
-            }
-        }
-        return cheapestLine;
+        const filtered_lines = this.get_orderlines().filter(
+            (line) => !line.comboParent && !line.reward_id && line.get_quantity
+        );
+        return filtered_lines.toSorted(
+            (lineA, lineB) => lineA.getComboTotalPrice() - lineB.getComboTotalPrice()
+        )[0];
     },
     /**
-     * @param {loyalty.reward} reward
      * @returns the discountable and discountable per tax for this discount on cheapest reward.
      */
     _getDiscountableOnCheapest(reward) {
@@ -891,8 +884,10 @@ patch(PosOrder.prototype, {
         }
         const taxKey = cheapestLine.tax_ids.map((t) => t.id);
         return {
-            discountable: cheapestLine.price_unit,
-            discountablePerTax: Object.fromEntries([[taxKey, cheapestLine.price_unit]]),
+            discountable: cheapestLine.getComboTotalPriceWithoutTax(),
+            discountablePerTax: Object.fromEntries([
+                [taxKey, cheapestLine.getComboTotalPriceWithoutTax()],
+            ]),
         };
     },
     /**

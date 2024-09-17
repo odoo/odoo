@@ -583,6 +583,15 @@ export class PosOrderline extends Base {
         return Boolean(this.combo_parent_id || this.combo_line_ids?.length);
     }
 
+    getComboTotalPrice() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithTax, 0);
+    }
+    getComboTotalPriceWithoutTax() {
+        const allLines = this.getAllLinesInCombo();
+        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithoutTax, 0);
+    }
+
     get_old_unit_display_price() {
         return (
             this.display_discount_policy() === "without_discount" &&
