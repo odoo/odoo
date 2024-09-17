@@ -174,6 +174,18 @@ $input-border-color: $gray-400;
             max-width: $o-wsale-dropdown-width-overflow;
         }
     }
+
+    // Remove the breadcrumb splitter '/' on small devices
+    // since show only 1 entry on the product page.
+    @include media-breakpoint-down(lg) {
+        .o_wsale_breadcrumb .breadcrumb-item {
+            padding-left: 0;
+
+            &::before {
+                content: "";
+            }
+        }
+    }
 }
 
 #product_detail ~ .oe_structure.oe_empty > section:first-child {

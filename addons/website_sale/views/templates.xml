@@ -1223,36 +1223,55 @@
                 <t t-set="editor_message">DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS</t>
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" t-att-data-editor-message="editor_message"/>
                 <section id="product_detail"
-                         t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}"
+                         t-attf-class="oe_website_sale container my-3 my-lg-4 #{'discount'
+                            if combination_info['has_discounted_price'] else ''}"
                          t-att-data-view-track="view_track and '1' or '0'"
                          t-att-data-product-tracking-info="'product_tracking_info' in combination_info and json.dumps(combination_info['product_tracking_info'])"
                 >
                     <div class="row align-items-center">
-                        <div class="col-lg-6 d-flex align-items-center">
+                        <div class="col d-flex align-items-center order-1 order-lg-0">
+                            <ol class="o_wsale_breadcrumb breadcrumb p-0 mb-4 m-lg-0">
+                                <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
+                                    <a t-att-href="keep(category=0, attribute_value=0, tags=0)">
+                                        <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/>All Products
+                                    </a>
+                                </li>
+                                <li
+                                    t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
+                                    t-if="category"
+                                    class="breadcrumb-item"
+                                >
+                                    <a
+                                        class="py-2 py-lg-0"
+                                        t-att-href="keep('/shop/category/%s' % slug(category), category=0, attribute_value=0, tags=0)"
+                                    >
+                                        <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="category.name"/>
+                                    </a>
+                                </li>
+                                <li t-else="" class="o_not_editable breadcrumb-item d-lg-none">
+                                    <a
+                                        class="py-2 py-lg-0"
+                                        t-att-href="keep(category=0, attribute_value=0, tags=0)"
+                                    >
+                                        <i class="oi oi-chevron-left me-1" role="presentation"/>All Products
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item d-none d-lg-inline-block active">
+                                    <span t-field="product.name" />
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="col-lg-4 d-flex align-items-center">
                             <div class="d-flex justify-content-between w-100">
                                 <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
                                     <t t-set="search" t-value="False"/>
-                                    <t t-set="_form_classes" t-valuef="mb-2 mb-lg-0"/>
+                                    <t t-set="_form_classes" t-valuef="mb-4 mb-lg-0"/>
                                     <t t-set="_classes" t-value="'me-sm-2'"/>
                                 </t>
                                 <t t-call="website_sale.pricelist_list">
                                     <t t-set="_classes" t-valuef="d-lg-inline ms-2"/>
                                 </t>
                             </div>
-                        </div>
-                        <div class="col-lg-6 d-flex align-items-center">
-                            <ol class="breadcrumb p-0 mb-2 m-lg-0">
-                                <li class="breadcrumb-item o_not_editable">
-                                    <a t-att-href="keep(category=0, attribute_value=0, tags=0)">All Products</a>
-                                </li>
-                                <li t-nocache="The category does not have to be cached, as the product can be accessed via different paths."
-                                    t-if="category" class="breadcrumb-item">
-                                    <a t-att-href="keep('/shop/category/%s' % slug(category), category=0, attribute_value=0, tags=0)" t-field="category.name" />
-                                </li>
-                                <li class="breadcrumb-item active">
-                                    <span t-field="product.name" />
-                                </li>
-                            </ol>
                         </div>
                     </div>
                     <div class="row" id="product_detail_main" data-name="Product Page"
