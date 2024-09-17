@@ -587,13 +587,40 @@ export class TablePlugin extends Plugin {
         const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
         const startTable = closestElement(selection.anchorNode, "table");
         const endTable = closestElement(selection.focusNode, "table");
-        if (!(startTable && endTable) || startTable !== endTable) {
+        if (!(startTable || endTable)) {
             return;
         }
         const [startTd, endTd] = [
             closestElement(selection.anchorNode, "td"),
             closestElement(selection.focusNode, "td"),
         ];
+        if (startTable !== endTable) {
+            // Deselect the table if it was fully selected.
+            if (endTable) {
+                const deselectingBackward =
+                    ["ArrowLeft", "ArrowUp"].includes(ev.key) &&
+                    selection.direction === DIRECTIONS.RIGHT;
+                const deselectingForward =
+                    ["ArrowRight", "ArrowDown"].includes(ev.key) &&
+                    selection.direction === DIRECTIONS.LEFT;
+                let targetNode;
+                if (deselectingBackward) {
+                    targetNode = endTable.previousElementSibling;
+                } else if (deselectingForward) {
+                    targetNode = endTable.nextElementSibling;
+                }
+                if (targetNode) {
+                    ev.preventDefault();
+                    this.dependencies.selection.setSelection({
+                        anchorNode: selection.anchorNode,
+                        anchorOffset: selection.anchorOffset,
+                        focusNode: targetNode,
+                        focusOffset: deselectingBackward ? nodeSize(targetNode) : 0,
+                    });
+                }
+            }
+            return;
+        }
         // Handle selection for the single cell.
         if (startTd === endTd && !startTd.classList.contains("o_selected_td")) {
             const { focusNode, focusOffset } = selection;
