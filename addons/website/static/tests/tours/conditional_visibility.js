@@ -5,7 +5,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
@@ -55,7 +55,7 @@ registerWebsitePreviewTour('conditional_visibility_1', {
     url: '/',
     test: true,
 }, () => [
-...dragNDrop(snippets[0]),
+...insertSnippet(snippets[0]),
 ...clickOnSnippet(snippets[0]),
 changeOption('ConditionalVisibility', 'we-toggler'),
 {
@@ -113,7 +113,7 @@ registerWebsitePreviewTour("conditional_visibility_3", {
 () => [
 checkEyeIcon("Text - Image", true),
 // Drag a "Banner" snippet on the website.
-...dragNDrop(snippets[1]),
+...insertSnippet(snippets[1]),
 // Click on the "Banner" snippet.
 ...clickOnSnippet(snippets[1]),
 changeOption("ConditionalVisibility", "we-toggler"),
@@ -121,7 +121,7 @@ changeOption("ConditionalVisibility", '[data-name="visibility_conditional"]'),
 checkEyeIcon("Banner", true),
 goBackToBlocks(),
 // Drag a "Popup" snippet on the website.
-...dragNDrop(snippets[2]),
+...insertSnippet(snippets[2]),
 {
     content: "Toggle the visibility of the popup",
     trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup')",
@@ -209,7 +209,7 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         content: "Check that the footer is visible",
         trigger: ":iframe #wrapwrap footer",
     },
-    ...dragNDrop(snippets[0]),
+    ...insertSnippet(snippets[0]),
     {
         content: "Click on the image of the dragged snippet",
         trigger: ":iframe .s_text_image img",

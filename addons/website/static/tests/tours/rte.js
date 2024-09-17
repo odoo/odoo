@@ -3,7 +3,7 @@
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     goToTheme,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
@@ -117,7 +117,7 @@ registerWebsitePreviewTour('rte_translator', {
 {
     trigger: "body:not(:has(.modal))",
 },
-...dragNDrop({
+...insertSnippet({
     id: "s_cover",
     name: "Cover",
     groupName: "Intro",

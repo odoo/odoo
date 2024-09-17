@@ -4,7 +4,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
-    dragNDrop,
+    insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -89,7 +89,7 @@ registerWebsitePreviewTour('snippet_social_media', {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({id: 's_social_media', name: 'Social Media'}),
+    ...insertSnippet({id: 's_social_media', name: 'Social Media'}),
     ...clickOnSnippet({id: 's_social_media', name: 'Social Media'}),
     ...addNewSocialNetwork(7, 7, 'https://www.youtu.be/y7TlnAv6cto'),
     {
