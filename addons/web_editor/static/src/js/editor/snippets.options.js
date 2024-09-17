@@ -1860,7 +1860,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     _shouldIgnoreClick(ev) {
-        return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
+        return ev.__isColorpickerClick || this._super(...arguments);
     },
     /**
      * Browses the colorpicker XML template to return all possible values of
