@@ -42,3 +42,8 @@ class L10nECWebsiteSale(WebsiteSale):
             payment_methods = payment_values['payment_methods_sudo'].filtered(lambda pm: bool(pm.l10n_ec_sri_payment_id))
             payment_values['payment_methods_sudo'] = payment_methods
         return payment_values
+
+    def force_show_vat(self):
+        if request.website.sudo().company_id.account_fiscal_country_id.code == "EC":
+            return True
+        return super().force_show_vat()

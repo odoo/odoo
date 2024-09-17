@@ -1236,6 +1236,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 new_values['parent_id'] = commercial_partner.id
         return new_values, errors, error_msg
 
+    def force_show_vat(self):
+        return False
+
     @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True, sitemap=False)
     def address(self, **kw):
         Partner = request.env['res.partner'].with_context(show_address=1).sudo()
@@ -1371,6 +1374,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'is_public_user': is_public_user,
             'is_public_order': order._is_public_order(),
             'use_same': is_public_user or ('use_same' in kw and str2bool(kw.get('use_same') or '0')),
+            'force_show_vat': self.force_show_vat(),
         }
         render_values.update(self._get_country_related_render_values(kw, render_values))
         return request.render("website_sale.address", render_values)

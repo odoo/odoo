@@ -1946,10 +1946,9 @@
                                         <t t-if="website._display_partner_b2b_fields()">
                                             <div class="w-100"/>
                                             <t t-set='vat_warning' t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat" />
-                                            <t t-if="(mode == ('new', 'billing') and is_public_order
+                                            <t t-if="force_show_vat or (mode == ('new', 'billing') and is_public_order
                                                 or mode == ('edit', 'billing') and partner_id == website_sale_order.partner_id.id)
-                                                and (can_edit_vat or 'vat' in checkout and checkout['vat'])"
-                                            >
+                                                and (can_edit_vat or 'vat' in checkout and checkout['vat'])">
                                                 <div t-attf-class="#{error.get('company_name') and 'o_has_error'} col-lg-6 mb-2">
                                                     <label class="col-form-label fw-normal label-optional" for="company_name">Company Name</label>
                                                     <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if vat_warning else None" />

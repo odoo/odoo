@@ -84,3 +84,8 @@ class L10nPEWebsiteSale(WebsiteSale):
     def city_infos(self, city, **kw):
         districts = request.env["l10n_pe.res.city.district"].sudo().search([("city_id", "=", city.id)])
         return {'districts': [(d.id, d.name, d.code) for d in districts]}
+
+    def force_show_vat(self):
+        if request.website.sudo().company_id.account_fiscal_country_id.code == "PE":
+            return True
+        return super().force_show_vat()
