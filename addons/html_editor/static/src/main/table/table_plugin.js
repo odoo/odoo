@@ -486,7 +486,7 @@ export class TablePlugin extends Plugin {
         const selection = this.shared.getSelectionData().deepEditableSelection;
         const startTable = closestElement(selection.anchorNode, "table");
         const endTable = closestElement(selection.focusNode, "table");
-        if (!(startTable && endTable) || startTable !== endTable) {
+        if (!(startTable || endTable)) {
             return;
         }
         const [startTd, endTd] = [
@@ -514,6 +514,33 @@ export class TablePlugin extends Plugin {
             } else {
                 ev.preventDefault();
                 this.selectTableCells(this.shared.getEditableSelection());
+            }
+            return;
+        }
+        if (startTable !== endTable) {
+            // Deselect the table at once if it is fully selected.
+            if (endTable) {
+                const deselectingBackward =
+                    ["ArrowLeft", "ArrowUp"].includes(ev.key) &&
+                    selection.direction === DIRECTIONS.RIGHT;
+                const deselectingForward =
+                    ["ArrowRight", "ArrowDown"].includes(ev.key) &&
+                    selection.direction === DIRECTIONS.LEFT;
+                let targetNode;
+                if (deselectingBackward) {
+                    targetNode = endTable.previousElementSibling;
+                } else if (deselectingForward) {
+                    targetNode = endTable.nextElementSibling;
+                }
+                if (targetNode) {
+                    ev.preventDefault();
+                    this.shared.setSelection({
+                        anchorNode: selection.anchorNode,
+                        anchorOffset: selection.anchorOffset,
+                        focusNode: targetNode,
+                        focusOffset: deselectingBackward ? nodeSize(targetNode) : 0,
+                    });
+                }
             }
             return;
         }
