@@ -9,7 +9,7 @@ from odoo.tools import frozendict, SQL
 
 class AccountPaymentRegister(models.TransientModel):
     _name = 'account.payment.register'
-    _description = 'Register Payment'
+    _description = 'Pay'
     _check_company_auto = True
 
     # == Business fields ==
@@ -443,14 +443,11 @@ class AccountPaymentRegister(models.TransientModel):
         # The communication can't be computed in '_compute_from_lines' because
         # it's a compute editable field and then, should be computed in a separated method.
         for wizard in self:
-            if wizard.can_edit_wizard:
-                if wizard.installments_mode == 'full' or wizard.custom_user_amount:
-                    lines = wizard.line_ids
-                else:
-                    lines = wizard._get_total_amounts_to_pay(wizard.batches[0])['lines']
-                wizard.communication = wizard._get_communication(lines)
+            if wizard.can_edit_wizard and wizard.installments_mode == 'full' or wizard.custom_user_amount:
+                lines = wizard.line_ids
             else:
-                wizard.communication = False
+                lines = wizard._get_total_amounts_to_pay(wizard.batches)['lines']
+            wizard.communication = wizard._get_communication(lines)
 
     @api.depends('can_edit_wizard')
     def _compute_group_payment(self):
@@ -578,9 +575,9 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 # Foreign currency on payment different than the one set on the journal entries.
                 total_amount += comp_curr._convert(amount_residual, wizard_curr, self.company_id, self.payment_date)
-        return abs(total_amount)
+        return total_amount
 
-    def _get_total_amounts_to_pay(self, batch_result):
+    def _get_total_amounts_to_pay(self, batch_results):
         self.ensure_one()
         amount_per_line_common = []
         amount_per_line_by_default = []
@@ -588,11 +585,13 @@ class AccountPaymentRegister(models.TransientModel):
         amount_per_line_for_difference = []
         epd_applied = False
         first_installment_mode = False
-        last_installment_mode = False
-        moves = batch_result['lines'].move_id
-        all_lines = batch_result['lines'].sorted(key=lambda line: (line.move_id, line.date_maturity))
+        all_lines = self.env['account.move.line']
+        for batch_result in batch_results:
+            all_lines |= batch_result['lines']
+        all_lines = all_lines.sorted(key=lambda line: (line.move_id, line.date_maturity))
         for move, lines in all_lines.grouped('move_id').items():
             installments = lines._get_installments_data(payment_currency=self.currency_id, payment_date=self.payment_date)
+            last_installment_mode = False
             for installment in installments:
                 line = installment['line']
                 if installment['type'] == 'early_payment_discount':
@@ -609,8 +608,7 @@ class AccountPaymentRegister(models.TransientModel):
                 # In case of overdue, all of them are sum as a default amount to be paid.
                 # The next installment is added for the difference.
                 if (
-                    len(moves) == 1
-                    and line.display_type == 'payment_term'
+                    line.display_type == 'payment_term'
                     and installment['type'] in ('overdue', 'next')
                 ):
                     if installment['type'] == 'overdue':
@@ -620,6 +618,9 @@ class AccountPaymentRegister(models.TransientModel):
                             amount_per_line_full_amount.append(installment)
                         elif not last_installment_mode:
                             amount_per_line_common.append(installment)
+                            # if we have several moves and one of them has as first installment, a 'next', we want
+                            # the whole batches to have a mode of 'next', overriding an 'overdue' on another move
+                            first_installment_mode = 'next'
                     last_installment_mode = installment['type']
                     first_installment_mode = first_installment_mode or last_installment_mode
                     continue
@@ -636,9 +637,12 @@ class AccountPaymentRegister(models.TransientModel):
             lines |= value['line']
 
         return {
-            'amount_by_default': common + by_default,
-            'amount_for_difference': common + for_difference,
-            'full_amount': common + for_difference + full_amount,
+            # default amount shown in the wizard (different from full for installments)
+            'amount_by_default': abs(common + by_default),
+            'full_amount': abs(common + by_default + full_amount),
+            # for_difference is used to compute the difference for the Early Payment Discount
+            'amount_for_difference': abs(common + for_difference),
+            'full_amount_for_difference': abs(common + for_difference + full_amount),
             'epd_applied': epd_applied,
             'installment_mode': first_installment_mode,
             'lines': lines,
@@ -649,10 +653,10 @@ class AccountPaymentRegister(models.TransientModel):
         if not self.can_edit_wizard or not self.currency_id:
             return
 
-        total_amount_values = self._get_total_amounts_to_pay(self.batches[0])
+        total_amount_values = self._get_total_amounts_to_pay(self.batches)
         is_custom_user_amount = all(
             not self.currency_id.is_zero(self.amount - total_amount_values[amount_field])
-            for amount_field in ('amount_by_default', 'amount_for_difference', 'full_amount')
+            for amount_field in ('amount_by_default', 'amount_for_difference', 'full_amount', 'full_amount_for_difference')
         )
         if is_custom_user_amount:
             self.custom_user_amount = self.amount
@@ -686,28 +690,23 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date or wizard.custom_user_amount:
                 wizard.amount = wizard.amount
-            elif wizard.source_currency_id and wizard.can_edit_wizard:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches[0])
-                wizard.amount = total_amount_values['amount_by_default']
             else:
-                # The wizard is not editable so no partial payment allowed and then, 'amount' is not used.
-                wizard.amount = None
+                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
+                wizard.amount = total_amount_values['amount_by_default']
 
     @api.depends('amount')
     def _compute_installments_mode(self):
         for wizard in self:
             if not wizard.journal_id or not wizard.currency_id:
                 wizard.installments_mode = wizard.installments_mode
-            elif wizard.can_edit_wizard:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches[0])
+            else:
+                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
                 if wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['full_amount']) == 0:
                     wizard.installments_mode = 'full'
                 elif wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['amount_by_default']) == 0:
                     wizard.installments_mode = total_amount_values['installment_mode']
                 else:
                     wizard.installments_mode = 'full'
-            else:
-                wizard.installments_mode = False
 
     @api.depends('installments_mode')
     def _compute_installments_switch_values(self):
@@ -715,8 +714,8 @@ class AccountPaymentRegister(models.TransientModel):
             if not wizard.journal_id or not wizard.currency_id:
                 wizard.installments_switch_amount = wizard.installments_switch_amount
                 wizard.installments_switch_html = wizard.installments_switch_html
-            elif wizard.can_edit_wizard:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches[0])
+            else:
+                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
                 html_lines = []
                 if wizard.installments_mode == 'full':
                     if (
@@ -752,33 +751,31 @@ class AccountPaymentRegister(models.TransientModel):
                         'btn_start': markupsafe.Markup('<span class="installments_switch_button btn btn-link p-0 align-baseline">'),
                         'btn_end': markupsafe.Markup('</span>'),
                     }
-            else:
-                wizard.installments_switch_amount = 0.0
-                wizard.installments_switch_html = None
 
     @api.depends('can_edit_wizard', 'payment_date', 'currency_id', 'amount')
     def _compute_early_payment_discount_mode(self):
         for wizard in self:
             if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date:
                 wizard.early_payment_discount_mode = wizard.early_payment_discount_mode
-            elif wizard.can_edit_wizard:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches[0])
-                wizard.early_payment_discount_mode = (
-                    wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['amount_by_default']) == 0
-                    and total_amount_values['epd_applied']
-                )
             else:
-                wizard.early_payment_discount_mode = False
+                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
+                wizard.early_payment_discount_mode = (
+                    total_amount_values['epd_applied']
+                    and (
+                        wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['amount_by_default']) == 0
+                        or wizard.currency_id.compare_amounts(wizard.amount, total_amount_values['full_amount']) == 0
+                    )
+                )
 
     @api.depends('can_edit_wizard', 'amount', 'installments_mode')
     def _compute_payment_difference(self):
         for wizard in self:
-            if wizard.can_edit_wizard and wizard.payment_date:
-                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches[0])
+            if wizard.payment_date:
+                total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
                 if wizard.installments_mode in ('overdue', 'next'):
                     wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount
                 elif wizard.installments_mode == 'full':
-                    wizard.payment_difference = total_amount_values['full_amount'] - wizard.amount
+                    wizard.payment_difference = total_amount_values['full_amount_for_difference'] - wizard.amount
                 else:
                     wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount
             else:
@@ -1065,7 +1062,7 @@ class AccountPaymentRegister(models.TransientModel):
         if partner_bank_id:
             payment_vals['partner_bank_id'] = partner_bank_id
 
-        total_amount_values = self._get_total_amounts_to_pay(batch_result)
+        total_amount_values = self._get_total_amounts_to_pay([batch_result])
         total_amount = total_amount_values['amount_by_default']
         currency = self.env['res.currency'].browse(batch_values['source_currency_id'])
         if total_amount_values['epd_applied']:
@@ -1234,9 +1231,12 @@ class AccountPaymentRegister(models.TransientModel):
         else:
             # Don't group payments: Create one batch per move.
             if not self.group_payment:
+                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode == 'next' else self.line_ids
                 new_batches = []
                 for batch_result in batches:
                     for line in batch_result['lines']:
+                        if line not in lines_to_pay:
+                            continue
                         new_batches.append({
                             **batch_result,
                             'payment_values': {

@@ -672,6 +672,13 @@ class AccountMove(models.Model):
 
     taxes_legal_notes = fields.Html(string='Taxes Legal Notes', compute='_compute_taxes_legal_notes')
 
+    # payment_date is the minimum payment_date of the unpaid lines of the move.
+    next_payment_date = fields.Date(
+        string='Next Payment Date',
+        compute='_compute_next_payment_date',
+        search='_search_next_payment_date',
+    )
+
     _sql_constraints = [(
         'unique_name', "", "Another entry with the same name already exists.",
     )]
@@ -1891,6 +1898,18 @@ class AccountMove(models.Model):
                 for tax in OrderedSet(move.line_ids.tax_ids)
                 if not is_html_empty(tax.invoice_legal_notes)
             )
+
+    @api.depends('line_ids.payment_date', 'line_ids.reconciled')
+    def _compute_next_payment_date(self):
+        for move in self:
+            move.next_payment_date = min([line.payment_date for line in move.line_ids.filtered(lambda l: l.payment_date and not l.reconciled)], default=False)
+
+    def _search_next_payment_date(self, operator, value):
+        lines_before_date = self.env['account.move.line'].search([
+            ('reconciled', '=', False),
+            ('payment_date', operator, value)
+        ])
+        return [('line_ids', 'in', lines_before_date.ids)]
 
     # -------------------------------------------------------------------------
     # SEARCH METHODS
