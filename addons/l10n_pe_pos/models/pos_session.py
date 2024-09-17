@@ -23,7 +23,7 @@ class PosSession(models.Model):
             'fields': ["name", "country_id", "state_id"],
         }
         params['l10n_latam.identification.type'] = {
-            'domain': [("l10n_pe_vat_code", "!=", False)],
+            'domain': [("l10n_pe_vat_code", "!=", False), ('country_id', 'in', [self.company_id.country_id.id, False])],
             'fields': ['name'],
         }
 
