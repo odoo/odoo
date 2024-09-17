@@ -24,6 +24,7 @@ export class ComboConfiguratorDialog extends Component {
         company_id: { type: Number, optional: true },
         pricelist_id: { type: Number, optional: true },
         date: String,
+        price_info: { type: String, optional: true },
         edit: { type: Boolean, optional: true },
         save: Function,
         discard: Function,
@@ -80,6 +81,7 @@ export class ComboConfiguratorDialog extends Component {
                     this.state.selectedComboItems.set(comboId, selectedComboItem);
                 },
                 discard: () => {},
+                ...this._getAdditionalDialogProps(),
             });
         } else {
             this.state.selectedComboItems.set(comboId, comboItem.deepCopy());
@@ -100,6 +102,7 @@ export class ComboConfiguratorDialog extends Component {
             date: this.props.date,
             company_id: this.props.company_id,
             pricelist_id: this.props.pricelist_id,
+            ...this._getAdditionalRpcParams(),
         });
     }
 
@@ -207,5 +210,23 @@ export class ComboConfiguratorDialog extends Component {
      */
     get _selectedComboItems() {
         return Array.from(this.state.selectedComboItems.values());
+    }
+
+    /**
+     * Hook to append additional RPC params in overriding modules.
+     *
+     * @return {Object} The additional RPC params.
+     */
+    _getAdditionalRpcParams() {
+        return {};
+    }
+
+    /**
+     * Hook to append additional props in overriding modules.
+     *
+     * @return {Object} The additional props.
+     */
+    _getAdditionalDialogProps() {
+        return {};
     }
 }

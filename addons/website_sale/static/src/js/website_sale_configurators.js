@@ -28,6 +28,7 @@ WebsiteSale.include({
                 product_tmpl_id: this.rootProduct.product_template_id,
                 quantity: this.rootProduct.quantity,
                 date: serializeDateTime(DateTime.now()),
+                ...this._getAdditionalRpcParams(),
             }
         );
         if (combos.length) {
@@ -112,10 +113,12 @@ WebsiteSale.include({
                     combo_product_id: this.rootProduct.product_id,
                     quantity: comboProductData.quantity,
                     selected_combo_items: selectedComboItems.map(serializeComboItem),
+                    ...this._getAdditionalRpcParams(),
                 });
                 this._onConfigured(options, values);
             },
             discard: () => {},
+            ...this._getAdditionalDialogProps(),
         });
     },
 

@@ -6,8 +6,6 @@ import { Product } from '@sale/js/product/product';
 patch(Product, {
     props: {
         ...Product.props,
-        is_storable: { type: Boolean, optional: true },
-        allow_out_of_stock_order: { type: Boolean, optional: true },
         free_qty: { type: Number, optional: true },
     },
 });
