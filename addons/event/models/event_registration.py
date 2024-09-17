@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import os
+import markupsafe
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.addons.event.tools.esc_label_tools import print_event_attendees, setup_printer, layout_96x82, layout_96x134
@@ -435,4 +436,4 @@ class EventRegistration(models.Model):
             attendees_details = attendees.mapped(lambda attendee: attendee._get_registration_print_details())
             command.concat(print_event_attendees(event._get_event_print_details(), attendees_details, badge_layout))
 
-        return command.to_string()
+        return markupsafe.Markup(command.to_string())

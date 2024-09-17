@@ -87,15 +87,6 @@ class EscLabelCommand:
         self._command += f"^S(CLS,G,{gap}"
         return self
 
-    def set_printing_offset(self, left_offset: int, top_offset: int):
-        """
-        Offset the printing by the specfied numbers of dots, useful for alignment.
-
-        The offsets can be positive or negative.
-        """
-        self._command += f"^S(CLE,M,{left_offset} ^S(CLE,T,{top_offset}"
-        return self
-
     def set_utf8_encoding(self):
         """
         Call this to ensure that non-ASCII characters are printed correctly.
@@ -346,14 +337,26 @@ def setup_printer(layout: dict):
                             layout["print_height"] * 2 if layout["double_sided"] else layout["print_height"])
         .set_label_gap(layout["label_gap"])
         .set_left_gap(48)
-        .set_printing_offset(layout["print_offset_left"], layout["print_offset_top"])
         .wrap_command()
     )
 
 
-def print_centered_text(layout: dict, text: str, y_position: int, font_size: int, command: EscLabelCommand, flip=False):
+def print_centered_text(
+    layout: dict,
+    text: str,
+    y_position: int,
+    font_size: int,
+    command: EscLabelCommand,
+    max_length = 0,
+    flip=False
+):
     if flip:
         y_position = layout["print_height"] * 2 - y_position - font_size
+    if max_length > 0 and len(text) > max_length:
+        cutoff_index = text.rfind(" ", 0, max_length)
+        if cutoff_index == -1:
+            cutoff_index = max_length
+        text = text[:cutoff_index] + "…"
     command.print_text(
         text,
         position=(layout["text_margin"], y_position),
@@ -375,6 +378,7 @@ def print_event_template(event: dict, layout: dict, flip=False):
         text=event["name"],
         y_position=layout["event_name_y_pos"],
         font_size=layout["event_name_font_size"],
+        max_length=34,
         command=command,
         flip=flip
     )
@@ -489,6 +493,7 @@ def print_attendee_badge(attendee: dict, layout: dict, flip=False):
             text=attendee["ticket_name"],
             y_position=layout["ticket_text_y_pos"],
             font_size=layout["ticket_font_size"],
+            max_length=40,
             command=command,
             flip=flip
         )
@@ -512,19 +517,17 @@ def print_event_attendees(event: dict, attendees: list[dict], layout: dict):
 layout_96x82 = {
     "print_width": 2340,
     "print_height": 1965,
-    "print_offset_left": -30,
-    "print_offset_top": 50,
     "double_sided": True,
     "label_gap": 80,
-    "text_margin": 160,
+    "text_margin": 100,
     "logo_width": 800,
     "logo_height": 300,
     "ticket_bg_height": 275,
-    "event_name_font_size": 150,
+    "event_name_font_size": 130,
     "details_font_size": 80,
     "attendee_name_font_size": 130,
     "company_font_size": 100,
-    "ticket_font_size": 110,
+    "ticket_font_size": 90,
     "event_name_y_pos": 350,
     "date_y_pos": 550,
     "address_y_pos": 670,
@@ -542,19 +545,17 @@ layout_96x82 = {
 layout_96x134 = {
     "print_width": 2340,
     "print_height": 3225,
-    "print_offset_left": -30,
-    "print_offset_top": 36,
     "double_sided": True,
     "label_gap": 80,
-    "text_margin": 160,
+    "text_margin": 100,
     "logo_width": 800,
     "logo_height": 300,
     "ticket_bg_height": 275,
-    "event_name_font_size": 150,
+    "event_name_font_size": 130,
     "details_font_size": 80,
     "attendee_name_font_size": 130,
     "company_font_size": 100,
-    "ticket_font_size": 110,
+    "ticket_font_size": 90,
     "event_name_y_pos": 450,
     "date_y_pos": 650,
     "address_y_pos": 770,
