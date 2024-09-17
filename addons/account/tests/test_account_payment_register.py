@@ -649,14 +649,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             .with_context(active_model='account.move', active_ids=active_ids)\
             .create({
                 'group_payment': True,
-                'amount': 1000.0
-                # Test _compute_payment_difference. Since the partners_ids are not the same, this should be without effect.
             })
         payments = payment_register._create_payments()
-
-        self.assertRecordValues(payment_register, [{
-            'payment_difference': 0.0
-        }])
 
         self.assertRecordValues(payments, [
             {
@@ -1511,7 +1505,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'group_payment': True,
         })
 
-        self.assertEqual(wizard.amount, 39.50)
+        self.assertEqual(
+            wizard.amount, 46.50,
+            "Due to the payment term on partner_b, only 3 is removed for in_refund_2, as it is the first installment"
+        )
+        self.assertEqual(wizard.installments_switch_amount, 39.50, "With the full refund and the epd")
 
     def test_keep_user_amount(self):
         comp_curr = self.env.company.currency_id
@@ -1695,4 +1693,90 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'installments_mode': 'full',
             'installments_switch_amount': 0.0,
             'communication': invoice.name,
+        }])
+
+    def test_installment_mode_multiple_batches(self):
+        """ Tests the wizard values if you select several invoices that produce several batches, with installments """
+        in_invoice_cad_with_payment_term, in_invoice_cad_copy = self.env['account.move'].create([
+            {
+                'move_type': 'in_invoice',
+                'invoice_date': '2016-01-01',
+                'invoice_payment_term_id': self.term_0_5_10_days.id,
+                'currency_id': self.other_currency_2.id,
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
+            },
+            {
+                'move_type': 'in_invoice',
+                'invoice_date': '2016-01-01',
+                'invoice_payment_term_id': self.term_0_5_10_days.id,
+                'currency_id': self.other_currency_2.id,
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
+            },
+        ])
+        (in_invoice_cad_with_payment_term + in_invoice_cad_copy).action_post()
+
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=(self.in_invoice_1 + in_invoice_cad_with_payment_term).ids
+        ).create({'payment_date': '2016-01-01'})
+
+        self.assertRecordValues(wizard, [{
+            'amount': 1033.33,  # 1000 from in_invoice_1 + 1000 * 0.1 (payment_term) / 3 (rate of CAD) for second one
+            'payment_difference': 0.0,
+            'installments_mode': 'next',
+            'installments_switch_amount': 1333.33,
+            'currency_id': self.company.currency_id.id,  # Different currencies, so we get the company's one
+            'communication': Like(f'BATCH/{self.current_year}/...'),
+        }])
+
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=(self.in_invoice_1 + in_invoice_cad_with_payment_term).ids
+        ).create({'payment_date': '2016-01-07'})
+
+        # Some installments are overdue for the second bill, but not the first one, so it is in next
+        self.assertRecordValues(wizard, [{
+            'amount': 1133.33,  # 1000 from in_invoice_1 + 1000 * 0.4 (payment_term) / 3 (rate of CAD) for second one
+            'payment_difference': 0.0,
+            'installments_mode': 'next',
+            'installments_switch_amount': 1333.33,
+        }])
+
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=(in_invoice_cad_with_payment_term + in_invoice_cad_copy).ids
+        ).create({'payment_date': '2016-01-07'})
+
+        # Some installments are overdue for the second bill, but not the first one, so it is in next
+        self.assertRecordValues(wizard, [{
+            'amount': 800,  # both invoices have the payment term at 40%
+            'payment_difference': 0.0,
+            'installments_mode': 'overdue',
+            'currency_id': self.other_currency_2.id,  # Same currency, so we can provide the right one
+            'installments_switch_amount': 2000,
+        }])
+
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=(self.in_invoice_epd_applied + in_invoice_cad_with_payment_term).ids
+        ).create({'payment_date': '2016-01-01'})
+
+        self.assertRecordValues(wizard, [{
+            'amount': 57.83,  # 24.5 for in_invoice_epd_applied + 1000 * 0.1 (payment_term) / 3 (rate) for the second
+            'payment_difference': 0.5,
+            'installments_mode': 'next',
+            'installments_switch_amount': 357.83,  # 24.5 for in_invoice_epd_applied + 1000 / 3 (rate) for the second
+            'communication': Like(f'BATCH/{self.current_year}/...'),
+        }])
+
+        # Clicking on the button to full gets the amount from js, so we need to put it by hand here
+        wizard.write({
+            'installments_mode': 'full',
+            'amount': 357.83,
+        })
+
+        self.assertRecordValues(wizard, [{
+            'amount': 357.83,  # The switch amount computed above
+            'payment_difference': 0.5,
+            'installments_mode': 'full',
+            'installments_switch_amount': 57.83,  # The previous 'next' amount
+            'communication': Like(f'BATCH/{self.current_year}/...'),
         }])

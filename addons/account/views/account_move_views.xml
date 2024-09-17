@@ -514,7 +514,7 @@
                       sample="1">
                     <header>
                         <button name="action_force_register_payment" type="object" string="Pay"
-                            groups="account.group_account_user"
+                            groups="account.group_account_invoice"
                             invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund','in_receipt')"/>
                     </header>
                     <field name="made_sequence_gap" column_invisible="True"/>
@@ -1542,6 +1542,7 @@
                     <field name="partner_id" operator="child_of"/>
                     <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
                     <field name="date" string="Period"/>
+                    <field name="next_payment_date"/>
                     <field name="line_ids" string="Invoice Line"/>
                     <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
