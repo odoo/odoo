@@ -267,7 +267,7 @@
                 <templates>
                     <t t-name="kanban-card">
                         <div class="flex-row">
-                            <field name="vehicle_id" widget="image" options="{'preview_image': 'image_128'}" t-att-alt="record.vehicle_id.value" class="float-start col-2 pe-2"/>
+                            <field name="vehicle_id" widget="image" options="{'preview_image': 'image_128'}" class="float-start col-2 pe-2"/>
                             <div class="col-10 pe-2 text-truncate">
                                 <field class="fw-bolder" name="vehicle_id"/>
                                 <span t-attf-class="float-end badge #{['todo', 'running'].indexOf(record.state.raw_value) > -1 ? 'text-bg-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : 'text-bg-success'}">

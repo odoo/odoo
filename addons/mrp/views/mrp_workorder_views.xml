@@ -364,7 +364,8 @@
                                 <field name="production_id"/> - <field name="name"/>
                             </div>
                             <div class="o_kanban_workorder_date h5">
-                                <span class="d-flex" t-esc="record.date_start.value or record.production_date.value"/>
+                                <field name="date_start"/>
+                                <field t-if="!record.date_start.raw_value" name="production_date"/>
                             </div>
                             <div class="h2 ms-2">
                                 <span t-attf-class="badge #{['progress'].indexOf(record.state.raw_value) > -1 ? 'text-bg-warning' : ['ready', 'waiting', 'pending'].indexOf(record.state.raw_value) > -1 ? 'text-bg-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'text-bg-success' : 'text-bg-danger'}">
