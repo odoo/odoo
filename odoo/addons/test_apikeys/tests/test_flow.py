@@ -24,10 +24,6 @@ class TestAPIKeys(HttpCaseWithUserDemo, TestTOTPMixin):
             del self.registry['ir.logging'].send_key
 
     def test_addremove(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         db = get_db_name()
         self.start_tour('/odoo', 'apikeys_tour_setup', login='demo')
         demo_user = self.env['res.users'].search([('login', '=', 'demo')])
@@ -47,14 +43,10 @@ class TestAPIKeys(HttpCaseWithUserDemo, TestTOTPMixin):
         self.start_tour('/odoo', 'apikeys_tour_teardown', login='demo')
 
     def test_apikeys_totp(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         db = get_db_name()
         self.install_totphook()
         self.start_tour('/odoo', 'apikeys_tour_setup', login='demo')
         self.start_tour('/odoo', 'totp_tour_setup', login='demo')
         [(_, [key], [])] = self.messages  # pylint: disable=unbalanced-tuple-unpacking
         uid = self.xmlrpc_common.authenticate(db, 'demo', key, {})
-        self.assertEqual(uid, self.env.ref('base.user_demo').id)
+        self.assertEqual(uid, self.user_demo.id)

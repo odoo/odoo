@@ -62,7 +62,26 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     run: "click",
 },
 {
-    content: "check that our key is present (FIXME: requires HR to be installed)",
+    // HR is not installed: The profile is a dialog which closes automatically. Re-open the profile.
+    isActive: ["body:not(:has(a[name='page_account_security']))"],
+    content: 'Open user account menu',
+    trigger: '.o_user_menu .dropdown-toggle',
+    run: 'click',
+},
+{
+    isActive: ["body:not(:has(a[name='page_account_security']))"],
+    content: "Open preferences / profile screen",
+    trigger: '[data-menu=settings]',
+    run: 'click',
+},
+{
+    isActive: ["body:not(:has(a[name='page_account_security'].active))"],
+    content: "Switch to security tab",
+    trigger: 'a[role=tab]:contains("Account Security")',
+    run: 'click',
+},
+{
+    content: "check that our key is present",
     trigger: '[name=api_key_ids] td:contains("my key")',
 }]});
 
