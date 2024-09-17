@@ -3,6 +3,7 @@
 from datetime import timedelta
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 from odoo import Command, fields
 
@@ -906,7 +907,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
 
     def test_manual_matching(self):
         po = self.init_purchase(confirm=True, products=[self.product_order])
-        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order], post=True)
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
 
         self.env['account.move.line'].flush_model()  # necessary to get the bill lines
         match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
@@ -918,32 +919,57 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertEqual(bill.invoice_line_ids.purchase_line_id, po.order_line)
         self.assertEqual(po.order_line.qty_invoiced, bill.invoice_line_ids.quantity)
 
-    def test_manual_matching_multi(self):
+    def test_manual_matching_restrict_no_pol(self):
+        """ raises when there's no POL found """
+        with self.assertRaisesRegex(UserError, "must select at least one Purchase Order line"):
+            match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+            match_lines.action_match_lines()
+
+    def test_manual_matching_restrict_multi_bill(self):
+        """ raises when multiple bill selected """
+        with self.assertRaisesRegex(UserError, "can't select lines from multiple Vendor Bill"):
+            self.init_purchase(confirm=True, products=[self.product_order])
+            self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+            self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+            match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+            match_lines.action_match_lines()
+
+    def test_manual_matching_create_bill(self):
+        """ Selecting POL without AML will create bill with the selected POL as the lines """
+        prev_moves = self.env['account.move'].search([])
+        self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
+        self.env['purchase.order.line'].flush_model()
+
+        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines.action_match_lines()
+
+        new_move = self.env['account.move'].search([]) - prev_moves
+        self.assertEqual(new_move.partner_id, self.partner_a)
+        self.assertRecordValues(new_move.invoice_line_ids, [
+            {'product_id': self.product_order.id},
+            {'product_id': self.product_order_var_name.id},
+        ])
+
+    def test_manual_matching_multi_po(self):
+        """ All POL are matched/added into the bill, and all unmatched AML are discarded """
         po_1 = self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
         po_2 = self.init_purchase(confirm=True, products=[self.service_deliver])
         po_3 = self.init_purchase(confirm=True, products=[self.service_order])
-        bill_1 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order], post=True)
-        bill_2 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order_var_name, self.service_deliver], post=True)
-        bill_3 = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_deliver])
+        bill = self.init_invoice(move_type='in_invoice', partner=self.partner_a,
+                                 products=[self.product_order, self.product_order_other_price])
 
         self.env['account.move.line'].flush_model()
         match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
         match_lines.action_match_lines()
 
         self.env.flush_all()
-        self.assertEqual((bill_1 + bill_2).invoice_line_ids.purchase_line_id, (po_1 + po_2).order_line)
-
-        remaining_match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
-        expected_ids = po_3.order_line.ids + [-bill_3.invoice_line_ids.id]
-        self.assertListEqual(remaining_match_lines.ids, expected_ids)
-
-        po_4 = po_3.copy()
-        po_4.button_confirm()
-
-        self.env.flush_all()
-        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
-        action = match_lines.action_match_lines()
-        self.assertTrue(action.get('type') == 'ir.actions.client' and action.get('tag') == 'display_notification')
+        self.assertEqual(bill.invoice_line_ids.purchase_line_id, (po_1 + po_2 + po_3).order_line)
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {'product_id': self.product_order.id},
+            {'product_id': self.service_order.id},
+            {'product_id': self.product_order_var_name.id},
+            {'product_id': self.service_deliver.id},
+        ])
 
     def test_add_bill_to_po(self):
         bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order_var_name, self.service_deliver], post=True)
