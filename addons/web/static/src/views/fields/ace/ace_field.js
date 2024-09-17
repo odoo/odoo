@@ -60,6 +60,7 @@ export class AceField extends Component {
                 await this.props.record.update({ [this.props.name]: this.editedValue });
             }
             this.isDirty = false;
+            this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
         }
     }
 }

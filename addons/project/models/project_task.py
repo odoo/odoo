@@ -1211,7 +1211,7 @@ class Task(models.Model):
         })
         filtered_domain = _change_operator(filtered_domain)
         if not filtered_domain:
-            return False
+            return self.env[comodel]
         if additional_domain:
             filtered_domain = expression.AND([filtered_domain, additional_domain])
         return self.env[comodel].search(filtered_domain, order=order)
