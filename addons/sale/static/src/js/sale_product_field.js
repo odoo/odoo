@@ -254,15 +254,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         });
     }
 
-    /**
-     * Hook to append additional props in overriding modules.
-     *
-     * @return {Object} - The additional props.
-     */
-    _getAdditionalDialogProps() {
-        return {};
-    }
-
     async _openComboConfigurator(edit=false) {
         const saleOrder = this.props.record.model.root.data;
         const comboLineRecord = this.props.record;
@@ -280,6 +271,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             company_id: saleOrder.company_id[0],
             pricelist_id: saleOrder.pricelist_id[0],
             selected_combo_items: selectedComboItems,
+            ...this._getAdditionalRpcParams(),
         });
         this.dialog.add(ComboConfiguratorDialog, {
             combos: combos.map(combo => new ProductCombo(combo)),
@@ -304,7 +296,26 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 await saleOrder.order_line._sort();
             },
             discard: () => saleOrder.order_line.delete(comboLineRecord),
+            ...this._getAdditionalDialogProps(),
         });
+    }
+
+    /**
+     * Hook to append additional RPC params in overriding modules.
+     *
+     * @return {Object} The additional RPC params.
+     */
+    _getAdditionalRpcParams() {
+        return {};
+    }
+
+    /**
+     * Hook to append additional props in overriding modules.
+     *
+     * @return {Object} The additional props.
+     */
+    _getAdditionalDialogProps() {
+        return {};
     }
 
     /**

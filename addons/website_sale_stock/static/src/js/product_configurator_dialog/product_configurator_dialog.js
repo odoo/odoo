@@ -31,9 +31,7 @@ patch(ProductConfiguratorDialog.prototype, {
      * @return {Boolean} - Whether the provided product quantity can be added to the cart.
      */
     _isQuantityAllowed(product, quantity) {
-        return !product.is_storable ||
-            product.allow_out_of_stock_order ||
-            product.free_qty >= quantity;
+        return product.free_qty === undefined || product.free_qty >= quantity;
     },
 
     /**
