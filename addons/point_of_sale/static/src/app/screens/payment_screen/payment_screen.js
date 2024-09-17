@@ -363,13 +363,12 @@ export class PaymentScreen extends Component {
                 this.pos.printReceipt(this.currentOrder);
 
                 if (this.pos.config.iface_print_skip_screen) {
-                    this.currentOrder.uiState.screen_data["value"] = "";
+                    this.currentOrder.set_screen_data({ name: "" });
                     this.currentOrder.uiState.locked = true;
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextScreen = "ProductScreen";
-
                     if (switchScreen) {
-                        this.pos.add_new_order();
+                        this.selectNextOrder();
                     }
                 }
             }
@@ -379,6 +378,13 @@ export class PaymentScreen extends Component {
 
         if (switchScreen) {
             this.pos.showScreen(nextScreen);
+        }
+    }
+    selectNextOrder() {
+        if (this.currentOrder.originalSplittedOrder) {
+            this.pos.selectedOrderUuid = this.currentOrder.originalSplittedOrder.uuid;
+        } else {
+            this.pos.add_new_order();
         }
     }
     /**
