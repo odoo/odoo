@@ -83,6 +83,7 @@ class EventMailScheduler(models.Model):
         string='Trigger ', default="before_event", required=True)
     scheduled_date = fields.Datetime('Schedule Date', compute='_compute_scheduled_date', store=True)
     # contact and status
+    last_registration_id = fields.Many2one('event.registration', 'Last Attendee')
     mail_registration_ids = fields.One2many(
         'event.mail.registration', 'scheduler_id',
         help='Communication related to event registrations')
