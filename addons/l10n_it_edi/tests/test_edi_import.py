@@ -206,7 +206,7 @@ class TestItEdiImport(TestItEdi):
             'proxy_type': 'l10n_it_edi',
             'id_client': str(uuid.uuid4()),
             'edi_identification': ProxyUser._get_proxy_identification(self.company, 'l10n_it_edi'),
-            'private_key': str(uuid.uuid4()),
+            'private_key_id': self.private_key_id.id,
         })
 
         filename = 'IT01234567890_FPR02.xml'

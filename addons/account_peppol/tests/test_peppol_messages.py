@@ -31,12 +31,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         })
 
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'peppol')
+        cls.private_key = cls.env['certificate.key'].create({
+            'name': 'Test key PEPPOL',
+            'content': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
+        })
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': ID_CLIENT,
             'proxy_type': 'peppol',
             'edi_mode': 'test',
             'edi_identification': edi_identification,
-            'private_key': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
+            'private_key_id': cls.private_key.id,
             'refresh_token': FAKE_UUID[0],
         })
 

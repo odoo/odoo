@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="certificate_key_view_form" model="ir.ui.view">
+        <field name="name">certificate.key.form</field>
+        <field name="model">certificate.key</field>
+        <field name="arch" type="xml">
+            <form string="key form">
+                <sheet>
+                    <div class="alert alert-warning" role="alert" invisible="loading_error == ''">
+                        <field name="loading_error"/>
+                    </div>
+                    <group id="key_input">
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        <field name="content" widget="binary"/>
+                        <field name="password" password="True" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="certificate_key_view_list" model="ir.ui.view">
+        <field name="name">certificate.key.list</field>
+        <field name="model">certificate.key</field>
+        <field name="arch" type="xml">
+            <list string="key list">
+                <field name="name" string="Key"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="certificate_key_view_search" model="ir.ui.view">
+        <field name="name">certificate.key.search</field>
+        <field name="model">certificate.key</field>
+        <field name="arch" type="xml">
+            <search string="key search">
+                <filter string="Archived" name="archived" domain="[('active','=',False)]" help="Archived keys"/>
+                <separator/>
+                <filter string="Private" name="private" domain="[('pem_key', '!=', False), ('public','=',False)]"/>
+                <filter string="Public" name="public" domain="[('pem_key', '!=', False), ('public','=',True)]"/>
+                <separator/>
+                <filter string="Invalid" name="invalid" domain="[('pem_key', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

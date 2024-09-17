@@ -1,32 +1,12 @@
 import re
 from odoo import models, fields, _
 from odoo.exceptions import UserError
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import ec
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    def _l10n_sa_generate_private_key(self):
-        """
-            Compute a private key for each company that will be used to generate certificate signing requests (CSR)
-            in order to receive X509 certificates from the ZATCA APIs and sign EDI documents
-
-            -   public_exponent=65537 is a default value that should be used most of the time, as per the documentation
-                of cryptography.
-            -   key_size=2048 is considered a reasonable default key size, as per the documentation of cryptography.
-
-            See https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ec/
-        """
-        private_key = ec.generate_private_key(ec.SECP256K1(), default_backend())
-        return private_key.private_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PrivateFormat.TraditionalOpenSSL,
-            encryption_algorithm=serialization.NoEncryption())
-
-    l10n_sa_private_key = fields.Binary("ZATCA Private key", attachment=False, groups="base.group_system", copy=False,
+    l10n_sa_private_key_id = fields.Many2one(string="ZATCA Private key", comodel_name='certificate.key', copy=False, domain=[('public', '=', False)],
                                         help="The private key used to generate the CSR and obtain certificates",)
 
     l10n_sa_api_mode = fields.Selection(
@@ -47,7 +27,7 @@ class ResCompany(models.Model):
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
             'l10n_sa_api_mode',
-            'l10n_sa_private_key',
+            'l10n_sa_private_key_id',
         ]
 
     def write(self, vals):

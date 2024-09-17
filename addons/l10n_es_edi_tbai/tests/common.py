@@ -61,10 +61,13 @@ class TestEsEdiTbaiCommon(AccountTestInvoicingCommon):
         else:
             raise ValueError("Unknown tax agency: " + agency)
 
-        cls.certificate = cls.env['l10n_es_edi_tbai.certificate'].create({
-            'content': base64.encodebytes(
+        cls.certificate = cls.env['certificate.certificate'].create({
+            'name': 'Test ES TBAI certificate',
+            'content': base64.b64encode(
                 file_open("l10n_es_edi_tbai/demo/certificates/" + cert_name, 'rb').read()),
-            'password': cert_password,
+            'pkcs12_password': cert_password,
+            'scope': 'tbai',
+            'company_id': cls.company_data['company'].id,
         })
         cls.company_data['company'].write({
             'l10n_es_tbai_tax_agency': agency,

@@ -22,10 +22,13 @@ class TestEsEdiCommon(AccountEdiTestCommon):
 
         # ==== Config ====
 
-        cls.certificate = cls.env['l10n_es_edi_sii.certificate'].create({
-            'content': base64.encodebytes(
+        cls.certificate = cls.env['certificate.certificate'].create({
+            'name': 'Test ES certificate',
+            'content': base64.b64encode(
                 misc.file_open("l10n_es_edi_sii/demo/certificates/sello_entidad_act.p12", 'rb').read()),
-            'password': 'IZDesa2021',
+            'pkcs12_password': 'IZDesa2021',
+            'scope': 'sii',
+            'company_id': cls.company_data['company'].id,
         })
 
         cls.company_data['company'].write({

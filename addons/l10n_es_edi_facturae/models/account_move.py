@@ -1,12 +1,21 @@
+import base64
 import re
-
 from collections import defaultdict
+from copy import deepcopy
+from hashlib import sha1
+
+from lxml import etree
 from markupsafe import Markup
 
-from odoo import fields, models, api, _, Command
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
+from odoo.addons.l10n_es_edi_facturae.xml_utils import (
+    NS_MAP,
+    _canonicalize_node,
+    _reference_digests,
+)
 
 PHONE_CLEAN_TABLE = str.maketrans({" ": None, "-": None, "(": None, ")": None, "+": None})
 COUNTRY_CODE_MAP = {
@@ -464,11 +473,10 @@ class AccountMove(models.Model):
         company = self.company_id
         template_values, signature_values = self._l10n_es_edi_facturae_export_facturae()
         xml_content = cleanup_xml_node(self.env['ir.qweb']._render('l10n_es_edi_facturae.account_invoice_facturae_export', template_values))
-        certificate = self.env['l10n_es_edi_facturae.certificate'].search([("company_id", '=', company.id)], limit=1)
 
         errors = []
         try:
-            xml_content = certificate._sign_xml(xml_content, signature_values)
+            xml_content = self._l10n_es_facturae_sign_xml(xml_content, signature_values)
         except ValueError:
             errors.append(_('No valid certificate found for this company, Facturae EDI file will not be signed.\n'))
         return xml_content, errors
@@ -706,3 +714,58 @@ class AccountMove(models.Model):
         code_and_name = re.match(r"(\[(?P<default_code>.*?)\]\s)?(?P<name>.*)", item_description).groupdict()
         product = self.env['product.product']._retrieve_product(**code_and_name)
         return product
+
+    # -------------------------------------------------------------------------
+    # BUSINESS METHODS                                                        #
+    # -------------------------------------------------------------------------
+    def _l10n_es_facturae_sign_xml(self, edi_data, signature_data):
+        """
+        Signs the given XML data with the certificate and private key.
+
+        :param etree._Element edi_data: The XML data to sign.
+        :param dict signature_data: The signature data to use.
+        :return: The signed XML data string.
+        :rtype: str
+        """
+        self.ensure_one()
+        certificates_sudo = self.company_id.sudo().l10n_es_edi_facturae_certificate_ids.filtered("is_valid")
+        if not certificates_sudo:
+            raise UserError(_('No valid certificate found'))
+
+        certificate_sudo = certificates_sudo[0]
+
+        root = deepcopy(edi_data)
+        e, n = certificate_sudo._get_public_key_numbers_bytes()
+        issuer = certificate_sudo._l10n_es_edi_facturae_get_issuer()
+
+        # Identifiers
+        document_id = f"Document-{sha1(etree.tostring(edi_data)).hexdigest()}"
+        signature_id = f"Signature-{document_id}"
+        keyinfo_id = f"KeyInfo-{document_id}"
+        sigproperties_id = f"SignatureProperties-{document_id}"
+
+        signature_data.update({
+            'document_id': document_id,
+            'x509_certificate': base64.encodebytes(base64.b64decode(certificate_sudo._get_der_certificate_bytes())).decode(),
+            'public_modulus': n.decode(),
+            'public_exponent': e.decode(),
+            'iso_now': fields.datetime.now().isoformat(),
+            'keyinfo_id': keyinfo_id,
+            'signature_id': signature_id,
+            'sigproperties_id': sigproperties_id,
+            'reference_uri': f"Reference-{document_id}",
+            'sigpolicy_url': "http://www.facturae.es/politica_de_firma_formato_facturae/politica_de_firma_formato_facturae_v3_1.pdf",
+            'sigpolicy_description': "Política de firma electrónica para facturación electrónica con formato Facturae",
+            'sigcertif_digest': certificate_sudo._get_fingerprint_bytes(formatting='base64').decode(),
+            'x509_issuer_description': issuer,
+            'x509_serial_number': int(certificate_sudo.serial_number),
+        })
+        signature = self.env['ir.qweb']._render('l10n_es_edi_facturae.template_xades_signature', signature_data)
+        signature = cleanup_xml_node(signature, remove_blank_nodes=False)
+        root.append(signature)
+        _reference_digests(signature.find("ds:SignedInfo", namespaces=NS_MAP))
+
+        signed_info_xml = signature.find("ds:SignedInfo", namespaces=NS_MAP)
+        signature.find("ds:SignatureValue", namespaces=NS_MAP).text = certificate_sudo._sign(_canonicalize_node(signed_info_xml)).decode()
+
+        return etree.tostring(root, xml_declaration=True, encoding='UTF-8', standalone=True)

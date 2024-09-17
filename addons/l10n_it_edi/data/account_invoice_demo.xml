@@ -60,13 +60,18 @@
             <field name="l10n_it_pa_index">SOOTJS</field>
         </record>
 
+        <record id="demo_l10n_it_edi_key" model="certificate.key">
+            <field name="name">demo IT private key</field>
+            <field name="content" type="base64" file="l10n_it_edi/data/pkey.key"/>
+        </record>
+
         <record id="demo_l10n_it_edi_proxy_user" model="account_edi_proxy_client.user">
             <field name="id_client">demo_id_client</field>
             <field name="company_id" ref="base.demo_company_it"/>
             <field name="proxy_type">l10n_it_edi</field>
             <field name="edi_mode">demo</field>
             <field name="edi_identification">01654010345</field>
-            <field name="private_key">1234</field>
+            <field name="private_key_id" ref="demo_l10n_it_edi_key"/>
             <field name="refresh_token">demo</field>
         </record>
 

@@ -2,14 +2,12 @@ import gzip
 import json
 import re
 import math
-from base64 import b64encode
+import base64
 from collections import defaultdict
 from datetime import datetime
 from uuid import uuid4
 
 import requests
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.x509.oid import NameOID
 from lxml import etree
 from pytz import timezone
 from requests.exceptions import RequestException
@@ -18,8 +16,11 @@ from odoo import _, api, fields, models, release
 from odoo.addons.l10n_es_edi_sii.models.account_edi_format import PatchedHTTPAdapter
 from odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_agencies import get_key
 from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
-    NS_MAP, bytes_as_block, calculate_references_digests,
-    cleanup_xml_signature, fill_signature, int_as_bytes)
+    NS_MAP,
+    calculate_references_digests,
+    canonicalize_node,
+    cleanup_xml_signature,
+)
 from odoo.exceptions import UserError
 from odoo.tools import get_lang
 from odoo.tools.float_utils import float_repr, float_round
@@ -288,7 +289,7 @@ class L10nEsEdiTbaiDocument(models.Model):
             'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
             'fiscal_year': str(self.date.year),
         }
-        lroe_values.update({'tbai_b64_list': [b64encode(self.xml_attachment_id.raw).decode()]})
+        lroe_values.update({'tbai_b64_list': [base64.b64encode(self.xml_attachment_id.raw).decode()]})
         lroe_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
         lroe_xml = cleanup_xml_node(lroe_str)
 
@@ -665,9 +666,12 @@ class L10nEsEdiTbaiDocument(models.Model):
         return xml_doc
 
     def _sign_sale_document(self, xml_root):
+        self.ensure_one()
+
         company = self.company_id
-        cert_private, cert_public = company.l10n_es_tbai_certificate_id._get_key_pair()
-        public_key = cert_public.public_key()
+        certificate_sudo = company.sudo().l10n_es_tbai_certificate_id
+        if not certificate_sudo:
+            raise UserError(_('No certificate found'))
 
         # Identifiers
         document_id = "Document-" + str(uuid4())
@@ -676,16 +680,16 @@ class L10nEsEdiTbaiDocument(models.Model):
         sigproperties_id = "SignatureProperties-" + document_id
 
         # Render digital signature scaffold from QWeb
-        common_name = cert_public.issuer.get_attributes_for_oid(NameOID.COMMON_NAME)[0].value
-        org_unit = cert_public.issuer.get_attributes_for_oid(NameOID.ORGANIZATIONAL_UNIT_NAME)[0].value
-        org_name = cert_public.issuer.get_attributes_for_oid(NameOID.ORGANIZATION_NAME)[0].value
-        country_name = cert_public.issuer.get_attributes_for_oid(NameOID.COUNTRY_NAME)[0].value
+
+        e, n = certificate_sudo._get_public_key_numbers_bytes()
+        issuer = certificate_sudo._l10n_es_edi_tbai_get_issuer()
+
         values = {
             'dsig': {
                 'document_id': document_id,
-                'x509_certificate': bytes_as_block(cert_public.public_bytes(encoding=serialization.Encoding.DER)),
-                'public_modulus': bytes_as_block(int_as_bytes(public_key.public_numbers().n)),
-                'public_exponent': bytes_as_block(int_as_bytes(public_key.public_numbers().e)),
+                'x509_certificate': base64.encodebytes(base64.b64decode(certificate_sudo._get_der_certificate_bytes())).decode(),
+                'public_modulus': n.decode(),
+                'public_exponent': e.decode(),
                 'iso_now': datetime.now().isoformat(),
                 'keyinfo_id': keyinfo_id,
                 'signature_id': signature_id,
@@ -693,9 +697,9 @@ class L10nEsEdiTbaiDocument(models.Model):
                 'reference_uri': "Reference-" + document_id,
                 'sigpolicy_url': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_url'),
                 'sigpolicy_digest': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_digest'),
-                'sigcertif_digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
-                'x509_issuer_description': f'CN={common_name}, OU={org_unit}, O={org_name}, C={country_name}',
-                'x509_serial_number': cert_public.serial_number,
+                'sigcertif_digest': certificate_sudo._get_fingerprint_bytes(formatting='base64').decode(),
+                'x509_issuer_description': issuer,
+                'x509_serial_number': int(certificate_sudo.serial_number),
             }
         }
         xml_sig_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_digital_signature', values)
@@ -708,7 +712,8 @@ class L10nEsEdiTbaiDocument(models.Model):
         calculate_references_digests(xml_sig.find("SignedInfo", namespaces=NS_MAP))
 
         # Sign (writes into SignatureValue)
-        fill_signature(xml_sig, cert_private)
+        signed_info_xml = xml_sig.find('SignedInfo', namespaces=NS_MAP)
+        xml_sig.find('SignatureValue', namespaces=NS_MAP).text = certificate_sudo._sign(canonicalize_node(signed_info_xml)).decode()
 
         return xml_root
 
