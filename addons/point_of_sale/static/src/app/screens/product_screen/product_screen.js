@@ -274,7 +274,7 @@ export class ProductScreen extends Component {
     }
 
     getProductPrice(product) {
-        return this.pos.getProductPriceFormatted(product);
+        return this.pos.getProductPriceFormatted(product, product.list_price);
     }
 
     getProductImage(product) {

@@ -422,8 +422,8 @@ export class PosStore extends Reactive {
             return "flex-row-reverse justify-content-between m-1";
         }
     }
-    getProductPriceFormatted(product) {
-        const formattedUnitPrice = this.env.utils.formatCurrency(this.getProductPrice(product));
+    getProductPriceFormatted(product, p) {
+        const formattedUnitPrice = this.env.utils.formatCurrency(this.getProductPrice(product, p));
 
         if (product.to_weight) {
             return `${formattedUnitPrice}/${product.uom_id.name}`;
