@@ -4,6 +4,7 @@ import logging
 import time
 
 from odoo import api, fields, models, Command, _
+from odoo.tools.float_utils import float_is_zero
 
 _logger = logging.getLogger(__name__)
 
@@ -62,8 +63,11 @@ class AccountMove(models.Model):
         self.currency_id = new_currency_id
 
         # Copy purchase lines.
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         po_lines = self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id')
         for line in po_lines.filtered(lambda l: not l.display_type):
+            if float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                continue
             self.invoice_line_ids += self.env['account.move.line'].new(
                 line._prepare_account_move_line(self)
             )

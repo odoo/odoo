@@ -37,7 +37,7 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             ],
         })
         po.button_confirm()
-
+        po.order_line.qty_received = 1
         f = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         f.invoice_date = f.date
         f.partner_id = po.partner_id

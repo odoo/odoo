@@ -880,7 +880,9 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         invoice1 = po1.invoice_ids
         self.assertEqual(invoice1.invoice_user_id, self.env.user)
         # creating bill with Auto_complete feature
+        po2.order_line.qty_to_invoice = 0
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice2 = move_form.save()
         self.assertEqual(invoice2.invoice_user_id, self.env.user)
+        self.assertNotIn(self.product_order, invoice2.invoice_line_ids.mapped("product_id"))
