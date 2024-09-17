@@ -1001,7 +1001,7 @@
                                     <field name="journal_id"
                                            groups="account.group_account_readonly"
                                            options="{'no_create': True, 'no_open': True}"
-                                           readonly="name and name != '/'"/>
+                                           readonly="posted_before and name not in (False, '', '/')"/>
 
                                     <span class="o_form_label mx-3 oe_edit_only"
                                           groups="account.group_account_readonly"
