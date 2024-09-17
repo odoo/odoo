@@ -46,10 +46,8 @@ export {
     queryValue,
     waitFor,
     waitForNone,
-    waitUntil,
 } from "./helpers/dom";
 export {
-    animationFrame,
     check,
     clear,
     click,
@@ -74,3 +72,17 @@ export {
     uncheck,
     unload,
 } from "./helpers/events";
+export {
+    Deferred,
+    advanceFrame,
+    advanceTime,
+    animationFrame,
+    cancelAllTimers,
+    delay,
+    freezeTime,
+    microTick,
+    runAllTimers,
+    setFrameRate,
+    tick,
+    waitUntil,
+} from "./helpers/time";

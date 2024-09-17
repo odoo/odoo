@@ -1,9 +1,10 @@
 /** @odoo-module */
 
 import { describe, expect, test } from "@odoo/hoot";
+import { parseUrl } from "../local_helpers";
+
 import { Runner } from "../../core/runner";
 import { Suite } from "../../core/suite";
-import { parseUrl } from "../local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
     test("can register suites", () => {

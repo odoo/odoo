@@ -1,8 +1,10 @@
 /** @odoo-module */
 
+import { Deferred, on, setFrameRate } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { cleanupDOM } from "@web/../lib/hoot-dom/helpers/dom";
-import { enableEventLogs, on } from "@web/../lib/hoot-dom/helpers/events";
+import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
+import { cleanupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { isIterable, parseRegExp } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     Callbacks,
@@ -19,10 +21,10 @@ import {
     getFuzzyScore,
     normalize,
 } from "../hoot_utils";
+import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
 import { cleanupNavigator, mockUserAgent } from "../mock/navigator";
 import { cleanupNetwork } from "../mock/network";
-import { Deferred, cleanupTime, setFrameRate } from "../mock/time";
 import { cleanupWindow, getViewPortHeight, getViewPortWidth, mockTouch } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
@@ -1662,7 +1664,8 @@ export class Runner {
             cleanupNavigator,
             this.fixture.cleanup,
             cleanupDOM,
-            cleanupTime
+            cleanupTime,
+            cleanupDate
         );
 
         if (this.debug) {

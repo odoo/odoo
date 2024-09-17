@@ -2,8 +2,17 @@
 
 import { EventBus, whenReady } from "@odoo/owl";
 import { getCurrentDimensions, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
+import {
+    mockedCancelAnimationFrame,
+    mockedClearInterval,
+    mockedClearTimeout,
+    mockedRequestAnimationFrame,
+    mockedSetInterval,
+    mockedSetTimeout,
+} from "@web/../lib/hoot-dom/helpers/time";
 import { getRunner } from "../main_runner";
 import { MockConsole } from "./console";
+import { MockDate } from "./date";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBroadcastChannel,
@@ -21,15 +30,6 @@ import {
 import { MockNotification } from "./notification";
 import { MockStorage } from "./storage";
 import { MockBlob } from "./sync_values";
-import {
-    MockDate,
-    mockedCancelAnimationFrame,
-    mockedClearInterval,
-    mockedClearTimeout,
-    mockedRequestAnimationFrame,
-    mockedSetInterval,
-    mockedSetTimeout,
-} from "./time";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -41,8 +41,6 @@ const {
     HTMLBodyElement,
     HTMLHeadElement,
     HTMLHtmlElement,
-    innerHeight,
-    innerWidth,
     MessagePort,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
@@ -53,8 +51,6 @@ const {
         hasOwn: $hasOwn,
     },
     ontouchstart,
-    outerHeight,
-    outerWidth,
     Reflect: { ownKeys: $ownKeys },
     Set,
     SharedWorker,
