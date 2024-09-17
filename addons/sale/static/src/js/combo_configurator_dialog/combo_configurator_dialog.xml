@@ -48,9 +48,16 @@
                         isMinusButtonDisabled="state.quantity === 1"
                     />
                 </div>
-                <span name="sale_combo_configurator_total" class="h4">
-                    Total: <span t-out="formattedTotalPrice"/>
-                </span>
+                <div class="d-flex flex-column justify-content-center">
+                    <span name="sale_combo_configurator_total" class="h4 mb-0">
+                        Total: <span t-out="formattedTotalPrice"/>
+                    </span>
+                    <span
+                        t-if="this.props.price_info"
+                        t-out="this.props.price_info"
+                        class="text-muted"
+                    />
+                </div>
             </t>
         </Dialog>
     </t>

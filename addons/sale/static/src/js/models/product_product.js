@@ -2,12 +2,19 @@ import { ProductTemplateAttributeLine } from './product_template_attribute_line'
 
 export class ProductProduct {
     /**
+     * The instance is initialized in `setup` to allow patching, as constructors can't be patched.
+     */
+    constructor(...args) {
+        this.setup(...args);
+    }
+
+    /**
      * @param {number} id
      * @param {number} product_tmpl_id
      * @param {string} display_name
      * @param {ProductTemplateAttributeLine[]|object[]} ptals
      */
-    constructor({id, product_tmpl_id, display_name, ptals}) {
+    setup({id, product_tmpl_id, display_name, ptals}) {
         this.id = id;
         this.product_tmpl_id = product_tmpl_id;
         this.display_name = display_name;

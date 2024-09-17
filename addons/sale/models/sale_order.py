@@ -816,7 +816,7 @@ class SaleOrder(models.Model):
             )
         )
         if lines_to_delete:
-            self.order_line = [Command.unlink(line.id) for line in lines_to_delete]
+            self.order_line = [Command.delete(line.id) for line in lines_to_delete]
         for index, line in enumerate(self.order_line):
             if line.product_type == 'combo' and line.selected_combo_items:
                 linked_lines = line._get_linked_lines()
@@ -860,7 +860,7 @@ class SaleOrder(models.Model):
 
                 # Clear `selected_combo_items` to avoid applying the same changes multiple times.
                 line.selected_combo_items = False
-                self.update({'order_line': delete_commands + create_commands + update_commands})
+                self.order_line = delete_commands + create_commands + update_commands
 
     #=== CRUD METHODS ===#
 
