@@ -467,6 +467,9 @@ export function ensureError(value) {
  * @returns {string}
  */
 export function formatHumanReadable(value, options) {
+    if (value instanceof RawString) {
+        return value;
+    }
     if (typeof value === "string") {
         if (value.length > 255) {
             value = value.slice(0, 255) + "...";
@@ -1073,7 +1076,7 @@ export class Markup {
     constructor(params) {
         this.className = params.className || "";
         this.tagName = params.tagName || "div";
-        this.content = params.content || "";
+        this.content = deepCopy(params.content) || "";
         this.technical = params.technical;
     }
 
@@ -1118,7 +1121,7 @@ export class Markup {
      * @param {unknown} value
      */
     static green(content, value) {
-        return [new this({ className: "text-pass", content }), value];
+        return [new this({ className: "text-pass", content }), deepCopy(value)];
     }
 
     /**
@@ -1133,7 +1136,7 @@ export class Markup {
      * @param {unknown} value
      */
     static red(content, value) {
-        return [new this({ className: "text-fail", content }), value];
+        return [new this({ className: "text-fail", content }), deepCopy(value)];
     }
 
     /**
@@ -1145,6 +1148,8 @@ export class Markup {
         return new this({ ...options, content });
     }
 }
+
+export class RawString extends String {}
 
 export const INCLUDE_LEVEL = {
     url: 1,
