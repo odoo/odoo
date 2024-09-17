@@ -1,7 +1,16 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts, queryAttribute, queryFirst } from "@odoo/hoot-dom";
+import {
+    click,
+    edit,
+    press,
+    queryAll,
+    queryAllTexts,
+    queryAttribute,
+    queryFirst,
+} from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
+    contains,
     clickSave,
     defineActions,
     defineModels,
@@ -773,4 +782,106 @@ test.tags("desktop")("correctly load statusbar when dynamic domain changes", asy
     await clickSave();
     expect(queryAllTexts(".o_statusbar_status button:not(.d-none)")).toEqual(["Stage Project 2"]);
     expect.verifySteps([]);
+});
+
+test.tags("mobile")("statusbar is rendered correctly on small devices", async () => {
+    Partner._records = [
+        { id: 1, name: "first record", trululu: 4 },
+        { id: 2, name: "second record", trululu: 1 },
+        { id: 3, name: "third record" },
+        { id: 4, name: "aaa" },
+    ];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="trululu" widget="statusbar" options="{'clickable': 1}" />
+                </header>
+                <field name="name" />
+            </form>
+        `,
+    });
+    expect(queryAll(".o_statusbar_status .o_arrow_button", { visible: true })).toHaveCount(4);
+    expect(
+        queryAll(".o_statusbar_status .o_arrow_button.dropdown-toggle", { visible: true })
+    ).toHaveCount(1);
+    expect(".o_statusbar_status .o_arrow_button.o_arrow_button_current").toHaveCount(1);
+    expect(".o-dropdown--menu").toHaveCount(0, { message: "dropdown should be hidden" });
+    expect(".o_statusbar_status button.dropdown-toggle:eq(0)").toHaveText("...");
+
+    // open the dropdown
+    await contains(".o_statusbar_status .dropdown-toggle.o_last").click();
+
+    expect(".o-dropdown--menu").toHaveCount(1, { message: "dropdown should be visible" });
+    expect(".o-dropdown--menu .dropdown-item").toHaveCount(1);
+});
+
+test.tags("mobile")("statusbar with no status on extra small screens", async () => {
+    Partner._records = [
+        { id: 1, name: "first record", trululu: 4 },
+        { id: 2, name: "second record", trululu: 1 },
+        { id: 3, name: "third record" },
+        { id: 4, name: "aaa" },
+    ];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 4,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="trululu" widget="statusbar" />
+                </header>
+            </form>
+        `,
+    });
+
+    expect(".o_field_statusbar").not.toHaveClass("o_field_empty", {
+        message: "statusbar widget should have class o_field_empty in edit",
+    });
+    expect(".o_statusbar_status button.dropdown-toggle:visible:disabled").toHaveCount(1);
+    expect(".o_statusbar_status button.dropdown-toggle:visible:disabled").toHaveText("...");
+});
+
+test.tags("mobile")("clickable statusbar widget on mobile view", async () => {
+    Partner._records = [
+        { id: 1, name: "first record", trululu: 4 },
+        { id: 2, name: "second record", trululu: 1 },
+        { id: 3, name: "third record" },
+        { id: 4, name: "aaa" },
+    ];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+                <form>
+                    <header>
+                        <field name="trululu" widget="statusbar" options="{'clickable': '1'}" />
+                    </header>
+                </form>
+            `,
+    });
+
+    // Open dropdown
+    click(queryFirst(".o_statusbar_status .dropdown-toggle", { visible: true }));
+    await animationFrame();
+
+    expect(".o-dropdown--menu .dropdown-item").toHaveCount(1);
+
+    click(".o-dropdown--menu .dropdown-item");
+    await animationFrame();
+
+    expect(".o_arrow_button_current").toHaveText("first record");
+    expect(queryAll(".o_statusbar_status .o_arrow_button", { visible: true })).toHaveCount(3);
+    expect(queryAll(".o_statusbar_status .dropdown-toggle", { visible: true })).toHaveCount(1);
+
+    // Open second dropdown
+    click(queryFirst(".o_statusbar_status .dropdown-toggle", { visible: true }));
+    await animationFrame();
+
+    expect(".o-dropdown--menu .dropdown-item").toHaveCount(2);
 });
