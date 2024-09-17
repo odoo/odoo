@@ -1204,7 +1204,7 @@ class AccountMoveLine(models.Model):
         if ctx:
             context.update(ctx)
         return {
-            'name': _('Register Payment'),
+            'name': _('Pay'),
             'res_model': 'account.payment.register',
             'view_mode': 'form',
             'views': [[False, 'form']],
