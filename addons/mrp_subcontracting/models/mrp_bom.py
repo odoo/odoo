@@ -25,3 +25,8 @@ class MrpBom(models.Model):
     def _check_subcontracting_no_operation(self):
         if self.filtered_domain([('type', '=', 'subcontract'), '|', ('operation_ids', '!=', False), ('byproduct_ids', '!=', False)]):
             raise ValidationError(_('You can not set a Bill of Material with operations or by-product line as subcontracting.'))
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.type == 'subcontract':
+            self.operation_ids = False
