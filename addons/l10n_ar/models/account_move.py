@@ -28,8 +28,7 @@ class AccountMove(models.Model):
     # Mostly used on reports
     l10n_ar_afip_concept = fields.Selection(
         compute='_compute_l10n_ar_afip_concept', selection='_get_afip_invoice_concepts', string="AFIP Concept",
-        help="A concept is suggested regarding the type of the products on the invoice but it is allowed to force a"
-        " different type if required.")
+        help="A concept is suggested regarding the type of the products on the invoice.")
     l10n_ar_afip_service_start = fields.Date(string='AFIP Service Start Date')
     l10n_ar_afip_service_end = fields.Date(string='AFIP Service End Date')
 
