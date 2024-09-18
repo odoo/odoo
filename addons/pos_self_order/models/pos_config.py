@@ -326,14 +326,11 @@ class PosConfig(models.Model):
             self.env['pos.session'].create({'user_id': self.env.uid, 'config_id': self.id})
             self._notify('STATUS', {'status': 'open'})
 
-        ctx = dict(self._context, app_id='pos_self_order', footer=False)
-
         return {
-            'res_model': 'pos.config',
-            'type': 'ir.actions.client',
-            'tag': 'install_kiosk_pwa',
+            'type': 'ir.actions.act_url',
+            'name': _('Self Order'),
             'target': 'new',
-            'context': ctx
+            'url': self.get_kiosk_url(),
         }
 
     def get_kiosk_url(self):
