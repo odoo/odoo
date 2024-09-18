@@ -125,7 +125,7 @@
                                 Already Paid: <span t-out="amount_paid" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                             </div>
                             <div t-if="payment_state == 'partially_paid'" class="alert alert-warning px-2 py-1 text-center mb-2">
-                                Left to pay:
+                                Left to Pay:
                                 <span t-out="amount_due" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                 <div t-if="installment_state and is_last_installment" class="w-100 mt-2">
                                     <i class="fa fa-clock-o"/>
