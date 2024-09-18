@@ -13384,3 +13384,34 @@ test.tags("desktop")("click on empty kanban must shake the NEW button", async ()
 
     expect("[data-bounce-button]").toHaveClass("o_catch_attention");
 });
+
+test.tags("mobile")("Should load grouped kanban with folded column", async () => {
+    onRpc("web_read_group", ({ parent }) => {
+        const result = parent();
+        result.groups[1].__fold = true;
+        return result;
+    });
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "blip": "danger"}'/>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_column_progress").toHaveCount(2, { message: "Should have 2 progress bar" });
+    expect(".o_kanban_group").toHaveCount(2, { message: "Should have 2 grouped column" });
+    expect(".o_kanban_record").toHaveCount(2, { message: "Should have 2 loaded record" });
+    expect(".o_kanban_load_more").toHaveCount(1, {
+        message: "Should have a folded column with a load more button",
+    });
+    await contains(".o_kanban_load_more button").click();
+    expect(".o_kanban_load_more").toHaveCount(0, { message: "Shouldn't have a load more button" });
+    expect(".o_kanban_record").toHaveCount(4, { message: "Should have 4 loaded record" });
+});
