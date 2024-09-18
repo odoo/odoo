@@ -4,7 +4,6 @@ import {
     isMediaElement,
     isProtected,
     isProtecting,
-    isTextNode,
     paragraphRelatedElements,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
@@ -581,10 +580,6 @@ export class SelectionPlugin extends Plugin {
             (nodes) => {
                 const edgeNodes = getUnselectedEdgeNodes(selection);
                 return nodes.filter((node) => !edgeNodes.has(node));
-            },
-            // Filter whitespace
-            (nodes) => {
-                return nodes.filter((node) => !isTextNode(node) || node.textContent !== "\n");
             },
             // Custom modifiers
             ...(this.resources.modifyTraversedNodes || []),
