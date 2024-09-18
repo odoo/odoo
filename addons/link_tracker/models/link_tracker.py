@@ -42,7 +42,7 @@ class LinkTracker(models.Model):
     label = fields.Char(string='Button label')
     # Tracking
     link_code_ids = fields.One2many('link.tracker.code', 'link_id', string='Codes')
-    code = fields.Char(string='Short URL code', compute='_compute_code')
+    code = fields.Char(string='Short URL code', compute='_compute_code', inverse="_inverse_code", readonly=False)
     link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
     count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
@@ -83,6 +83,14 @@ class LinkTracker(models.Model):
         for tracker in self:
             record = self.env['link.tracker.code'].search([('link_id', '=', tracker.id)], limit=1, order='id DESC')
             tracker.code = record.code
+
+    def _inverse_code(self):
+        self.ensure_one()
+        if not self.code:
+            return
+        record = self.env['link.tracker.code'].search([('link_id', '=', self.id)], limit=1, order='id DESC')
+        if record:
+            record.code = self.code
 
     @api.depends('url')
     def _compute_redirected_url(self):
@@ -266,7 +274,7 @@ class LinkTracker(models.Model):
         if filter == 'newest':
             return self.search_read([], order='create_date DESC, id DESC', limit=limit)
         elif filter == 'most-clicked':
-            return self.search_read([('count', '!=', 0)], order='count DESC', limit=limit)
+            return self.search_read([('count', '!=', 0)], order='count DESC, id DESC', limit=limit)
         elif filter == 'recently-used':
             return self.search_read([('count', '!=', 0)], order='write_date DESC, id DESC', limit=limit)
         else:
