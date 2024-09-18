@@ -10,7 +10,8 @@ from collections import defaultdict
 from datetime import time, timedelta
 
 from odoo import api, fields, models
-from odoo.osv import expression
+
+from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 from odoo.addons.resource.models.resource import Intervals
@@ -226,6 +227,21 @@ class HolidaysType(models.Model):
 
         return [('id', 'in', valid_leave_types.ids)]
 
+    def write(self, values):
+        if 'requires_allocation' in values:
+            leaves = self.env['hr.leave'].search([
+                ('holiday_status_id', 'in', self.ids),
+            ])
+            allocations = self.env['hr.leave.allocation'].search([
+                ('holiday_status_id', 'in', self.ids),
+            ])
+            if leaves or allocations:
+                raise ValidationError(_("""
+                    You cannot change the allocation requirement field while leaves or allocation already exist for this time off type.
+                    Delete them first or create a new time off type.
+                """))
+        return super().write(values)
+
     def _get_employees_days_per_allocation(self, employee_ids, date=None):
         leaves = self.env['hr.leave'].search([
             ('employee_id', 'in', employee_ids),
@@ -393,7 +409,6 @@ class HolidaysType(models.Model):
                             break
 
         return allocations_days_consumed
-
 
     def get_employees_days(self, employee_ids, date=None):
 
