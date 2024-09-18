@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from reportlab.pdfbase import pdfmetrics
+
 from odoo.tests.common import TransactionCase
 from odoo.tools.barcode import check_barcode_encoding, get_barcode_check_digit
 
@@ -25,3 +27,6 @@ class TestBarcode(TransactionCase):
         self.assertFalse(check_barcode_encoding('9745213796148', 'ean13'), 'incorrect check digit')
         self.assertFalse(check_barcode_encoding('2022!71416014', 'ean13'), 'should contains digits only')
         self.assertFalse(check_barcode_encoding('0022071416014', 'ean13'), 'when starting with one zero, it indicates that a 12-digit UPC-A code follows')
+
+    def test_barcode_fonts_available(self):
+        self.assertNotEqual(pdfmetrics.TypeFace('Courier').findT1File(), None, 'Adobe Base-14 fonts should be available, check reportlab')
