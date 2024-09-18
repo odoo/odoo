@@ -1372,6 +1372,17 @@ options.registry.ReplaceMedia.include({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        if (widgetName === "replace_media_opt"
+            && this.$target[0].classList.contains("o_translatable_attribute")
+        ) {
+            return !!this.$target[0].getAttribute("src");
+        }
+        return this._super(...arguments);
+    },
+    /**
      * Fills the dropdown with the available anchors for the page referenced in
      * the href.
      *
@@ -3908,6 +3919,15 @@ options.registry.WebsiteAnimate = options.Class.extend({
     /**
      * @override
      */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        if (this.$target[0].matches(".o_animated_text")) {
+            return true;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     _computeVisibility(methodName, params) {
         if (this.$target[0].matches('img')) {
             return isImageSupportedForStyle(this.$target[0]);
@@ -4056,6 +4076,15 @@ options.registry.TextHighlight = options.Class.extend({
             await this._refreshPublicWidgets($(this.options.wysiwyg.odooEditor.editable))
         });
     },
+    /**
+     * @override
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        if (this.$target[0].matches(".o_text_highlight")) {
+            return true;
+        }
+        return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -4169,6 +4198,9 @@ options.registry.sizing.include({
     start() {
         const defs = this._super(...arguments);
         const self = this;
+        if (!this.canUseHandle) {
+            return defs;
+        }
         this.$handles.on('mousedown', function (ev) {
             // Since website is edited in an iframe, a div that goes over the
             // iframe is necessary to catch mousemove and mouseup events,

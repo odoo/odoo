@@ -415,7 +415,7 @@
          data-selector="img, .media_iframe_video, span.fa, i.fa"
          data-exclude="[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa">
         <we-row string="Media">
-            <we-button class="o_we_bg_success" data-replace-media="true" data-no-preview="true">Replace</we-button>
+            <we-button class="o_we_bg_success" data-replace-media="true" data-no-preview="true" data-name="replace_media_opt">Replace</we-button>
             <div>
                 <we-button class="fa fa-link"
                     data-name="media_link_opt"
@@ -721,11 +721,11 @@
         </div>
         <we-input string="Description" class="o_we_large"
             data-select-attribute="" data-attribute-name="alt"
-            placeholder="Alt tag"
+            placeholder="Alt tag" data-name="image_alt_opt"
             title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."/>
         <we-input string="Tooltip" class="o_we_large"
             data-select-attribute="" data-attribute-name="title"
-            placeholder="Title tag"
+            placeholder="Title tag" data-name="image_title_opt"
             title="'Title tag' is shown as a tooltip when you hover the picture."/>
         <we-row string="Transform">
             <we-button class="fa fa-fw fa-crop" data-crop="true" data-no-preview="true" title="Crop Image"/>

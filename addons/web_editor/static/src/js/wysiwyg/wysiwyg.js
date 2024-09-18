@@ -1091,7 +1091,8 @@ export class Wysiwyg extends Component {
         this.savingContent = true;
         if (!editable) {
             await this.cleanForSave();
-            const editables = "getContentEditableAreas" in this.options ? this.options.getContentEditableAreas(this.odooEditor) : [];
+            const editables = this.options.enableTranslation ? this.$editable :
+                "getContentEditableAreas" in this.options ? this.options.getContentEditableAreas(this.odooEditor) : [];
             await this.savePendingImages(editables.length ? $(editables) : this.$editable);
             await this._saveViewBlocks();
         } else {
@@ -1682,17 +1683,17 @@ export class Wysiwyg extends Component {
     openMediaDialog(params = {}) {
         const sel = this.odooEditor.document.getSelection();
 
-        if (!sel.rangeCount) {
+        if (!sel.rangeCount && !params.node) {
             return;
         }
-        const range = sel.getRangeAt(0);
+        const node = params.node || sel.getRangeAt(0).startContainer;
+        const editable = OdooEditorLib.closestElement(node, '.o_editable');
         // We lose the current selection inside the content editable when we
         // click the media dialog button so we need to be able to restore the
         // selection when the modal is closed.
         const restoreSelection = preserveCursor(this.odooEditor.document);
 
-        const editable = OdooEditorLib.closestElement(params.node || range.startContainer, '.o_editable') || this.odooEditor.editable;
-        const { resModel, resId, field, type } = this._getRecordInfo(editable);
+        const { resModel, resId, field, type } = this._getRecordInfo(editable || this.odooEditor.editable);
 
         this.env.services.dialog.add(params.MediaDialog || MediaDialog, {
             resModel,
@@ -1780,7 +1781,30 @@ export class Wysiwyg extends Component {
                     params.node.setAttribute(attribute.nodeName, attribute.nodeValue);
                 }
             } else {
-                params.node.replaceWith(element);
+                if (this.options.enableTranslation) {
+                    if (params.node.dataset.oeTranslatableLink) {
+                        params.node.dataset.oeTranslatableLink = element.getAttribute("src");
+                    }
+                    const attributesToKeep = ["data-resize-width", "title", "alt", "data-oe-translation-state", "data-oe-translatable-link"];
+                    // We don't replace the node with the element because there
+                    // are mutation observers needed for the translation system.
+                    for (const attribute of element.attributes) {
+                        if (!attributesToKeep.includes(attribute.name)) {
+                            params.node.setAttribute(attribute.name, attribute.value);
+                        }
+                    }
+                    for (const attribute of [...params.node.attributes]) {
+                        if (!attributesToKeep.includes(attribute.name)
+                            && !element.hasAttribute(attribute.name)
+                        ) {
+                            params.node.removeAttribute(attribute.name);
+                        }
+                    }
+                    params.node.removeAttribute("data-mimetype");
+                    element = params.node;
+                } else {
+                    params.node.replaceWith(element);
+                }
             }
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
@@ -3604,6 +3628,9 @@ export class Wysiwyg extends Component {
             delete el.dataset.bgSrc;
         } else {
             el.setAttribute('src', newAttachmentSrc);
+            if (this.options.enableTranslation && el.dataset.oeTranslatableLink) {
+                el.dataset.oeTranslatableLink = el.getAttribute("src");
+            }
             // Also update carousel thumbnail.
             weUtils.forwardToThumbnail(el);
         }
