@@ -5,10 +5,17 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 threadActionsRegistry.add("show-threads", {
+    close(component, action) {
+        action.popover?.close();
+    },
     condition: (component) => component.thread?.hasSubChannelFeature,
-    icon: "fa fa-fw fa-lg fa-comments-o",
-    name: _t("Show threads"),
+    icon: "fa fa-fw fa-comments-o",
+    iconLarge: "fa fa-fw fa-lg fa-comments-o",
+    name: _t("Threads"),
     component: SubChannelList,
+    componentProps(action) {
+        return { close: () => action.close() };
+    },
     setup(action) {
         const component = useComponent();
         if (!component.props.chatWindow) {
@@ -27,6 +34,7 @@ threadActionsRegistry.add("show-threads", {
         action.popover?.open(component.root.el.querySelector(`[name="${action.id}"]`), {
             thread: component.thread,
         }),
-    sequence: (component) => (component.props.chatWindow ? 16 : 2),
+    sequence: (comp) => (comp.props.chatWindow ? 40 : 5),
+    sequenceGroup: 10,
     toggle: true,
 });

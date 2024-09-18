@@ -19,10 +19,10 @@
 
 .o-mail-ChatWindow-command {
     color: inherit !important;
-    &:hover, &.o-active {
+    &:hover:not(.o-actionsMenu), &.o-active, &.o-hover {
         background-color: rgba(0, 0, 0, 0.05);
     }
-    &:not(:hover):not(.o-active) .fa-caret-down {
+    &:not(.o-active):not(.o-hover) .fa-caret-down {
         opacity: 50%;
     }
 }

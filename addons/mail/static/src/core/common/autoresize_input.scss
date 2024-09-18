@@ -3,6 +3,10 @@
     border:$input-border-width solid var(--o-input-border-color);
     background-color: var(--o-input-background-color, #{$input-bg});
 
+    &::placeholder {
+        opacity: 50%;
+    }
+
     &:not([disabled]) {
         &:hover {
             --o-input-border-color: #{$border-color};
