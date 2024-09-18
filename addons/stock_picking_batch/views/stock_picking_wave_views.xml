@@ -92,7 +92,7 @@
         <field name="model">stock.picking.type</field>
         <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('col-6') and hasclass('o_kanban_card_manage_section') and hasclass('o_kanban_manage_new')]" position="inside">
+            <xpath expr="//div[@name='kanban_menu_section']" position="inside">
                 <div role="menuitem">
                     <a name="action_batch" type="object" context="{'view_mode':'form'}">
                         Prepare Batch
@@ -105,7 +105,7 @@
                 </div>
             </xpath>
             <xpath expr="//button[@name='get_action_picking_tree_ready']" position="before">
-                <button t-if="record.count_picking_batch.raw_value > 0" class="btn btn-primary mr8 mb4 align-top" name="action_batch" type="object">
+                <button t-if="record.count_picking_batch.raw_value > 0" class="btn btn-primary me-2" name="action_batch" type="object">
                     <field name="count_picking_batch"/> Batches
                 </button>
             </xpath>
@@ -113,18 +113,18 @@
                 <attribute
                     name="t-attf-class"
                     remove="btn-primary"
-                    add="{{ record.count_picking_batch.raw_value > 0 ? 'btn-secondary' : 'btn-primary'}} align-top"
+                    add="{{ record.count_picking_batch.raw_value > 0 ? 'btn-secondary' : 'btn-primary'}}"
                     separator=" "
                 />
             </xpath>
-            <xpath expr="//div[@name='picking_type_backorder_count']" position="after">
-                <div t-if="record.count_picking_wave.raw_value > 0" class="row">
-                    <div class="col-12">
-                        <a class="oe_kanban_stock_picking_type_list" name="%(stock_picking_batch.action_picking_tree_wave)d" type="action">
-                            <field name="count_picking_wave"/>
-                            Waves
-                        </a>
-                    </div>
+            <xpath expr="//div[@name='picking_type_backorder_count']" class="row" position="after">
+                <div class="row">
+                    <a class="col-8 offset-4 text-truncate" name="%(stock_picking_batch.action_picking_tree_wave)d" type="action">
+                        <div t-if="record.count_picking_wave.raw_value > 0"  class="row">
+                            <span class="col-6">Waves</span>
+                            <field name="count_picking_wave" class="col-2 text-end"/>
+                        </div>
+                    </a>
                 </div>
             </xpath>
         </field>

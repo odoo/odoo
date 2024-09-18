@@ -7,9 +7,9 @@
             <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//div[hasclass('col-6') and hasclass('o_kanban_card_manage_section') and hasclass('o_kanban_manage_new')]" position="after">
+                    <xpath expr="//div[@name='kanban_menu_section']" position="after">
                         <t t-if="record.code.raw_value == 'incoming' or record.code.raw_value == 'outgoing'">
-                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                            <div class="col-6">
                                 <h5 role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
                                     <a>Transport Management</a>
                                 </h5>
