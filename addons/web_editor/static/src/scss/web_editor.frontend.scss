@@ -40,8 +40,18 @@
         grid-template-columns: repeat(12, 1fr);
         row-gap: 0px;
         column-gap: 0px;
+
+        // Adapt the horizontal margins of a direct row child of a grid item, to
+        // make them compensate the grid item horizontal padding (to avoid an
+        // overflow).
+        .o_grid_item > .row {
+            --grid-inner-row-gutter-x: clamp(0px, 2 * var(--grid-item-padding-x), 30px);
+            margin-left: calc(-0.5 * var(--grid-inner-row-gutter-x));
+            margin-right: calc(-0.5 * var(--grid-inner-row-gutter-x));
+        }
+
+        --gutter-x: 0px;
     }
-    --gutter-x: 0px;
     --grid-item-padding-y: 10px;
     --grid-item-padding-x: 10px;
 
@@ -50,6 +60,12 @@
         min-width: 0;
         margin: 0 !important;
         padding: var(--grid-item-padding-y) var(--grid-item-padding-x) !important;
+
+        @include media-breakpoint-down(lg) {
+            // Force the horizontal padding to 15px in mobile view, to be
+            // consistent with the normal mode.
+            padding: var(--grid-item-padding-y) calc(0.5 * var(--gutter-x)) !important;
+        }
     }
 }
 
@@ -61,14 +77,6 @@
     display: flex !important;
     row-gap: 0px !important;
     column-gap: 0px !important;
-}
-
-// Adapt the horizontal margins of a direct row child of a grid item, to make
-// them compensate the grid item horizontal padding (to avoid an overflow).
-.o_grid_item > .row {
-    --grid-inner-row-gutter-x: clamp(0px, 2 * var(--grid-item-padding-x), 30px);
-    margin-left: calc(-0.5 * var(--grid-inner-row-gutter-x));
-    margin-right: calc(-0.5 * var(--grid-inner-row-gutter-x));
 }
 
 .o_grid_item_image {
