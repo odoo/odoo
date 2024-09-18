@@ -96,9 +96,6 @@ export const tourService = {
                 tourName,
                 tourRegistry.get(tourName),
             ];
-            if (!tour.at(1)) {
-                throw new Error(`Tour '${tourName}' is not found in the registry.`);
-            }
 
             return {
                 ...tour[1],
@@ -238,7 +235,7 @@ export const tourService = {
                 startTour(paramsTourName, { mode: "manual" });
             }
 
-            if (tourState.getCurrentTour()) {
+            if (tourState.getCurrentTour() && tourRegistry.contains(tourState.getCurrentTour())) {
                 resumeTour();
             } else if (session.current_tour) {
                 startTour(session.current_tour.name, {
