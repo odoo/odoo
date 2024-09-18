@@ -1181,8 +1181,9 @@ QUnit.test("allow attachment delete on authored message", async () => {
         message_type: "comment",
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await click(".o-mail-AttachmentImage div[title='Remove']");
+    await openDiscuss(channelId);
+    await click(".o-mail-AttachmentImage [title='Actions']");
+    await click(".dropdown-item", { text: "Remove" });
     await contains(".modal-dialog .modal-body", { text: 'Do you really want to delete "BLAH"?' });
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentCard", { count: 0 });
@@ -1227,8 +1228,9 @@ QUnit.test("allow attachment image download on message", async () => {
         res_id: channelId,
     });
     const { openDiscuss } = await start();
-    openDiscuss(channelId);
-    await contains(".o-mail-AttachmentImage .fa-download");
+    await openDiscuss(channelId);
+    await click(".o-mail-AttachmentImage [title='Actions']");
+    await contains(".dropdown-item", { text: "Download" });
 });
 
 QUnit.test("Can download all files of a message", async () => {
