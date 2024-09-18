@@ -7,7 +7,8 @@ from unittest.mock import patch
 from odoo import SUPERUSER_ID
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
 from odoo.exceptions import UserError
-from odoo.tests import Form, TransactionCase, new_test_user, tagged
+from odoo.http import _request_stack
+from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users
 from odoo.tools import mute_logger
 
 
@@ -547,3 +548,45 @@ class TestUsersTweaks(TransactionCase):
         self.assertFalse(user.active)
         with self.assertRaises(UserError):
             user.write({'active': True})
+
+
+@tagged('post_install', '-at_install')
+class TestUsersIdentitycheck(HttpCase):
+
+    @users('admin')
+    def test_revoke_all_devices(self):
+        """
+        Test to check the revoke all devices by changing the current password as a new password
+        """
+        # Change the password to 8 characters for security reasons
+        self.env.user.password = "admin@odoo"
+
+        # Create a first session that will be used to revoke other sessions
+        session = self.authenticate('admin', 'admin@odoo')
+
+        # Create a second session that will be used to check it has been revoked
+        self.authenticate('admin', 'admin@odoo')
+        # Test the session is valid
+        # Valid session -> not redirected from /web to /web/login
+        self.assertTrue(self.url_open('/web').url.endswith('/web'))
+
+        # Push a fake request to the request stack, because @check_identity requires a request.
+        # Use the first session created above, used to invalid other sessions than itself.
+        _request_stack.push(SimpleNamespace(session=session, env=self.env))
+        self.addCleanup(_request_stack.pop)
+        # The user clicks the button logout from all devices from his profile
+        action = self.env.user.action_revoke_all_devices()
+        # The form of the check identity wizard opens
+        form = Form(self.env[action['res_model']].browse(action['res_id']), action.get('view_id'))
+        # The user fills his password
+        form.password = 'admin@odoo'
+        # The user clicks the button "Log out from all devices", which triggers a save then a call to the button method
+        user_identity_check = form.save()
+        action = user_identity_check.run_check()
+
+        # Test the session is no longer valid
+        # Invalid session -> redirected from /web to /web/login
+        self.assertTrue(self.url_open('/web').url.endswith('/web/login?redirect=%2Fweb%3F'))
+
+        # In addition, the password must have been emptied from the wizard
+        self.assertFalse(user_identity_check.password)
