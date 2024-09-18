@@ -13,6 +13,10 @@ patch(Store.prototype, {
         const livechatService = this.env.services["im_livechat.livechat"];
         if (livechatService.state === SESSION_STATE.PERSISTED) {
             await super.initialize();
+            livechatService.thread ??= this.store.Thread.get({
+                id: livechatService.savedState?.store["discuss.channel"][0].id,
+                model: "discuss.channel",
+            });
             if (!livechatService.thread) {
                 livechatService.leave({ notifyServer: false });
             }
