@@ -31,7 +31,7 @@ export class LoadingFullScreen extends Component {
     }
 
     static template = xml`
-    <div class="position-absolute top-0 start-0 bg-white vh-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3" style="z-index: 9999">
+    <div class="position-fixed top-0 start-0 bg-white vh-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3" style="z-index: 9999">
         <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
