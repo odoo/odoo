@@ -175,12 +175,6 @@ export class Message extends Record {
     starred = false;
 
     /**
-     * We exclude the milliseconds because datetime string from the server don't
-     * have them. Message without date like transient message can be missordered
-     */
-    now = DateTime.now().set({ milliseconds: 0 });
-
-    /**
      * True if the backend would technically allow edition
      * @returns {boolean}
      */
