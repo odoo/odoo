@@ -33,11 +33,11 @@
         </xpath>
         <xpath expr="//button[hasclass('o_fiscal_position_button')]" position="after">
             <button t-if="pos.config.takeaway"
-                t-attf-class="{{ currentOrder.takeaway ? 'btn-primary' : 'btn-secondary'}} btn btn-lg py-5"
+                t-attf-class="btn-secondary btn btn-lg py-5"
                 t-on-click="clickTakeAway">
-                <i t-attf-class="{{ currentOrder.takeaway ? 'fa fa-car' : 'fa fa-cutlery'}} me-1"></i>
-                <span t-if="currentOrder.takeaway">Takeaway</span>
-                <span t-else="">Dine in</span>
+                <i t-attf-class="{{ currentOrder.takeaway ? 'fa fa-cutlery' : 'fa fa-car' }} me-1"></i>
+                <span t-if="currentOrder.takeaway">Switch to Dine in</span>
+                <span t-else="">Switch to Takeaway</span>
             </button>
         </xpath>
         <xpath expr="//button[hasclass('o_fiscal_position_button')]" position="attributes">
