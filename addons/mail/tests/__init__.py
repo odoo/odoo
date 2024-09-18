@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import test_attachment_controller
 from . import test_controller_common
 from . import test_discuss_tools
 from . import test_ir_mail_server
@@ -12,6 +13,7 @@ from . import test_mail_render
 from . import test_mail_template
 from . import test_mail_tools
 from . import test_message_reaction_controller
+from . import test_message_update_controller
 from . import test_res_company
 from . import test_res_partner
 from . import test_res_users
