@@ -73,7 +73,10 @@ const DiscussSidebarCategoryPatch = {
                     [false, "kanban"],
                     [false, "form"],
                 ],
-                domain: [["channel_type", "=", "channel"]],
+                domain: [
+                    ["channel_type", "=", "channel"],
+                    ["parent_channel_id", "=", false],
+                ],
             });
         }
     },

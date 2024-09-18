@@ -386,6 +386,12 @@ export class DiscussChannel extends models.ServerModel {
             ]);
             const res = this._channel_basic_info([channel.id]);
             res.fetchChannelInfoState = "fetched";
+            res.parent_channel_id = mailDataHelpers.Store.one(
+                this.browse(channel.parent_channel_id)
+            );
+            res.from_message_id = mailDataHelpers.Store.one(
+                MailMessage.browse(channel.from_message_id)
+            );
             if (this.env.user) {
                 const message_needaction_counter = MailNotification._filter([
                     ["res_partner_id", "=", this.env.user.partner_id],
@@ -548,6 +554,50 @@ export class DiscussChannel extends models.ServerModel {
             partners.map((partner) => partner.id)
         );
         return new mailDataHelpers.Store(DiscussChannel.browse(id)).get_result();
+    }
+
+    _create_sub_channel(ids, from_message_id, name) {
+        const kwargs = getKwArgs(arguments, "ids", "from_message_id", "name");
+        ids = kwargs.ids;
+        from_message_id = kwargs.from_message_id;
+        name = kwargs.name;
+        delete kwargs.name;
+        delete kwargs.ids;
+        delete kwargs.from_message_id;
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import {"mock_model"}.ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        const self = this.browse(ids)[0];
+        let message;
+        if (from_message_id) {
+            [message] = MailMessage.browse(from_message_id);
+        }
+        const [partner] = ResPartner._get_current_persona();
+        const subChannels = this.browse(
+            this.create({
+                channel_member_ids: [Command.create({ partner_id: partner.id })],
+                channel_type: "channel",
+                group_public_id: self.group_public_id,
+                from_message_id: message?.id,
+                name: message ? message.body.substring(0, 30) : name || "New Thread",
+                parent_channel_id: self.id,
+            })
+        );
+        const store = new mailDataHelpers.Store(subChannels);
+        store.add(subChannels, { forceOpen: true });
+        BusBus._sendone(partner, "mail.record/insert", store.get_result());
+        this.message_post(
+            self.id,
+            makeKwArgs({
+                body: `${partner.display_name} started a thread: <a href='#' class='o_channel_redirect' data-oe-id='${subChannels[0].id}' data-oe-model='discuss.channel'>${subChannels[0].name}</a>. <a href='#' data-oe-type='sub-channels-menu'>See all threads</a>.`,
+                message_type: "notification",
+                subtype_xmlid: "mail.mt_comment",
+            })
+        );
+        return store.get_result();
     }
 
     /** @param {number} id */

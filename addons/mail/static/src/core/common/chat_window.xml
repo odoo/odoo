@@ -18,13 +18,14 @@
                 <div class="d-flex text-truncate">
                     <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
                         <button
-                            class="o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-1 py-2 m-0 w-100 rounded-end-0"
-                            t-att-class="{ 'ps-2 pe-1 rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened }"
+                            class="o-mail-ChatWindow-command o-actionsMenu btn rounded-0 d-flex align-items-center px-1 py-1 m-0 w-100 rounded-end-0"
+                            t-att-class="{ 'ps-2 pe-1 rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened, 'o-hover': actionsMenuButtonHover.isHover and !parentChannelHover.isHover }"
                             t-att-disabled="state.editingName"
                             t-att-title="actionsMenuTitleText"
+                            t-ref="actionsMenuButton"
                         >
                             <t t-call="mail.ChatWindow.headerContent"/>
-                            <i t-if="!state.editingName" class="fa fa-fw fa-caret-down ms-1"/>
+                            <i t-if="!state.editingName" class="fa fa-fw fa-caret-down"/>
                         </button>
                         <t t-set-slot="content">
                             <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 3)"/>
@@ -69,7 +70,7 @@
                     onValidate.bind="renameThread"
                     value="props.chatWindow.displayName"
                 />
-                <i t-if="state.editingName" class="fa fa-fw fa-caret-down opacity-50 ms-1"/>
+                <i t-if="state.editingName" class="fa fa-fw fa-caret-down opacity-50"/>
             </t>
             <t t-else="">
                 <t t-call="mail.ChatWindow.headerContent"/>
@@ -125,16 +126,20 @@
 </t>
 
 <t t-name="mail.ChatWindow.headerContent">
-    <div class="o-mail-ChatWindow-threadAvatar my-0 me-1" t-att-class="{
+    <div class="o-mail-ChatWindow-threadAvatar my-0 me-1 py-1" t-att-class="{
         'py-2': thread and threadActions.actions.length lte 3,
         'ms-1': thread and threadActions.actions.length > 4,
         'ms-3': threadActions.actions.length lte 4 or !thread,
     }">
-        <img t-if="thread" class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+        <img t-if="thread" class="rounded" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
         <i t-else="" class="fa fa-pencil fa-lg fa-fw py-1"/>
+        <t t-if="thread?.parent_channel_id">
+            <span class="fw-bolder small ms-1 p-1 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open()"/>
+            <i class="fa fa-chevron-right o-xsmaller ms-1 text-muted"/>
+        </t>
     </div>
     <ThreadIcon t-if="thread and thread.channel_type === 'chat' and thread.correspondent" thread="thread"/>
     <CountryFlag t-if="thread?.anonymous_country" country="thread.anonymous_country" class="'o-mail-ChatWindow-country border'"/>
-    <div t-if="!state.editingName" class="text-truncate fw-bolder border border-transparent mx-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall }"/>
+    <div t-if="!state.editingName" class="text-truncate fw-bolder border border-transparent mx-1 my-0 py-1" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall }"/>
 </t>
 </templates>

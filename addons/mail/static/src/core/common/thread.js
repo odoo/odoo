@@ -558,4 +558,10 @@ export class Thread extends Component {
             this.messageHighlight.scrollTo(el).then(() => (this.scrollingToHighlight = false));
         }
     }
+
+    get orderedMessages() {
+        return this.props.order === "asc"
+            ? [...this.props.thread.nonEmptyMessages]
+            : [...this.props.thread.nonEmptyMessages].reverse();
+    }
 }
