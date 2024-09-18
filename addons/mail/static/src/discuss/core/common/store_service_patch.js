@@ -12,7 +12,7 @@ const storeServicePatch = {
             fromThread.open(true, { autofocus: false });
         }
     },
-    sortOnlineMembers(m1, m2) {
+    sortMembers(m1, m2) {
         return m1.persona.name?.localeCompare(m2.persona.name) || m1.id - m2.id;
     },
 };
