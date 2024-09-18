@@ -3,6 +3,7 @@ import {
     clear,
     click,
     hover,
+    manuallyDispatchProgrammaticEvent,
     press,
     queryAllAttributes,
     queryAllTexts,
@@ -60,6 +61,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { FormController } from "@web/views/form/form_controller";
 import { WebClient } from "@web/webclient/webclient";
+import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 
 const fieldsRegistry = registry.category("fields");
 const widgetsRegistry = registry.category("view_widgets");
@@ -12100,4 +12102,263 @@ test("onchange returns values w.r.t. extended record specs, for not extended one
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["name changed", "name twisted"]);
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
+});
+
+test.tags("mobile")(`statusbar buttons are correctly rendered in mobile`, async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <header>
+                    <button string="Confirm" />
+                    <button string="Do it" />
+                </header>
+                <sheet>
+                    <group>
+                        <button name="name" />
+                    </group>
+                </sheet>
+            </form>
+        `,
+    });
+
+    // open the dropdown
+    await contains(".o_cp_action_menus button:has(.fa-cog)").click();
+    expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
+    expect(".o-dropdown--menu button").toHaveCount(2, {
+        message: "should have 2 buttons in the dropdown",
+    });
+});
+
+test.tags("mobile")(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: `
+            <form>
+                <header>
+                    <widget name="attach_document" string="Attach document" />
+                    <button string="Ciao" invisible="name == 'first record'" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        `,
+    });
+
+    // Now there should an action dropdown, because there are two visible buttons
+    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
+        message: "should have 'CogMenu' dropdown",
+    });
+
+    await contains(".o_cp_action_menus button:has(.fa-cog)").click();
+    expect(".o-dropdown--menu button").toHaveCount(2, {
+        message: "should have 2 buttons in the dropdown",
+    });
+
+    // change display_name to update buttons modifiers and make one button visible
+    await contains(".o_field_widget[name=name] input").edit("first record");
+    await contains(".o_cp_action_menus button:has(.fa-cog)").click();
+    expect(".o-dropdown--menu button").toHaveCount(1, {
+        message: "should have 1 button in the dropdown",
+    });
+});
+
+test.tags("mobile")(`CogMenu dropdown should keep its open/close state`, async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+                <form>
+                    <header>
+                        <button string="Just more than one" />
+                        <button string="Confirm" invisible="name == ''" />
+                        <button string="Do it" invisible="name != ''" />
+                    </header>
+                    <sheet>
+                        <field name="name" />
+                    </sheet>
+                </form>
+            `,
+    });
+    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
+        message: "should have a 'CogMenu' dropdown",
+    });
+
+    expect(".o_cp_action_menus button:has(.fa-cog)").not.toHaveClass("show", {
+        message: "dropdown should be closed",
+    });
+
+    // open the dropdown
+    await contains(".o_cp_action_menus button:has(.fa-cog)").click();
+    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
+        message: "dropdown should be opened",
+    });
+
+    // change name to update buttons' modifiers
+    await contains(".o_field_widget[name=name] input").edit("test");
+
+    expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
+        message: "should have a 'CogMenu' dropdown",
+    });
+
+    expect(".o_cp_action_menus button:has(.fa-cog)").not.toHaveClass("show", {
+        message: "dropdown should be opened",
+    });
+});
+
+test.tags("mobile")(
+    `CogMenu dropdown's open/close state shouldn't be modified after 'onchange'`,
+    async () => {
+        Partner._onChanges = {
+            name() {},
+        };
+        const onchangeDef = new Deferred();
+        onRpc("partner", "onchange", ({ args }) => {
+            if (args[2][0] === "name") {
+                return onchangeDef;
+            }
+        });
+
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <header>
+                        <button name="create" string="Create Invoice" type="action" />
+                        <button name="send" string="Send by Email" type="action" />
+                    </header>
+                    <sheet>
+                        <field name="name" />
+                    </sheet>
+                </form>
+            `,
+        });
+
+        expect(".o_cp_action_menus button:has(.fa-cog)").toHaveCount(1, {
+            message: "statusbar should contain a dropdown",
+        });
+        expect(".o_cp_action_menus button:has(.fa-cog)").not.toHaveClass("show", {
+            message: "dropdown should be opened",
+        });
+
+        await contains(".o_field_widget[name=name] input").edit("before onchange");
+        await contains(".o_cp_action_menus button:has(.fa-cog)").click();
+        expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
+            message: "dropdown should be opened",
+        });
+
+        onchangeDef.resolve({ value: { name: "after onchange" } });
+        await animationFrame();
+        expect(".o_field_widget[name=name] input").toHaveValue("after onchange");
+        expect(".o_cp_action_menus button:has(.fa-cog)").toHaveClass("show", {
+            message: "dropdown should be opened",
+        });
+    }
+);
+
+test.tags("mobile")(
+    `preserve current scroll position on form view while closing dialog`,
+    async () => {
+        Partner._views = {
+            kanban: `<kanban><templates><t t-name="card"><field name="name" /></t></templates></kanban>`,
+            search: `<search />`,
+        };
+
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            resId: 2,
+            arch: `
+                <form>
+                    <sheet>
+                        <p style="height:500px" />
+                        <field name="parent_id" />
+                        <p style="height:500px" />
+                    </sheet>
+                </form>
+            `,
+        });
+
+        let position = { top: 0, left: 0 };
+        patchWithCleanup(window, {
+            scrollTo(newPosition) {
+                position = newPosition;
+            },
+            get scrollX() {
+                return position.left;
+            },
+            get scrollY() {
+                return position.top;
+            },
+        });
+
+        window.scrollTo({ top: 265, left: 0 });
+        expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
+        expect(window.screenLeft).toBe(0, { message: "Should be 0 px from left as it is" });
+
+        // click on m2o field
+        await contains(".o_field_many2one input").click();
+        // assert.strictEqual(window.scrollY, 0, "Should have scrolled to top (0) px");
+        expect(".modal.o_modal_full").toHaveCount(1, {
+            message: "there should be a many2one modal opened in full screen",
+        });
+
+        // click on back button
+        await contains(".modal .modal-header .oi-arrow-left").click();
+
+        expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
+        expect(window.screenLeft).toBe(0, { message: "Should be 0 px from left as it is" });
+    }
+);
+
+test.tags("mobile")("attach_document widget also works inside a dropdown", async () => {
+    let fileInput;
+    patchWithCleanup(AttachDocumentWidget.prototype, {
+        setup() {
+            super.setup();
+            fileInput = this.fileInput;
+        },
+    });
+    mockService("http", {
+        post: (route, params) => {
+            expect.step("post");
+            expect(route).toBe("/web/binary/upload_attachment");
+            expect(params.model).toBe("partner");
+            expect(params.id).toBe(1);
+            return '[{ "id": 5 }, { "id": 2 }]';
+        },
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <header>
+                    <button string="Confirm" />
+                    <widget name="attach_document" string="Attach Document"/>
+                </header>
+                <sheet>
+                    <group>
+                        <button name="name" />
+                    </group>
+                </sheet>
+            </form>
+        `,
+    });
+
+    await contains(".o_cp_action_menus button:has(.fa-cog)").click();
+    await contains(".o_attach_document").click();
+    await manuallyDispatchProgrammaticEvent(fileInput, "change");
+    await animationFrame();
+    expect.verifySteps(["post"]);
 });
