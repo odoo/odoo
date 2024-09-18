@@ -7,14 +7,14 @@
                         <div class="mt8">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/r">Link Tracker</a></li>
-                                <li class="breadcrumb-item active"><t t-esc="title"/></li>
+                                <li class="breadcrumb-item active truncate_text"><t t-esc="title"/></li>
                             </ol>
                         </div>
 
                         <input type="hidden" id="code" t-att-value="code" />
                         <input type="hidden" id="link_id" t-att-value="id" />
 
-                        <h1 class="o_page_header mt0"><t t-esc="title"/></h1>
+                        <h1 class="o_page_header mt0 text-truncate"><t t-esc="title"/></h1>
 
                         <div class="row">
                             <div class="col-md-2">
@@ -36,9 +36,8 @@
                                         <a role="button" class="o_website_links_ok_edit btn btn-sm btn-primary" href="#">ok</a> or 
                                         <a class="o_website_links_cancel_edit" href="#">cancel</a>
                                     </span>
-                                    <a class="o_website_links_edit_code" aria-label="Edit code" title="Edit code"><span class="fa fa-pencil gray"></span></a>
-                                    <a class="copy-to-clipboard" t-att-data-clipboard-text="short_url">copy</a>
-
+                                    <a t-attf-class="#{'' if can_create_link_tracker_code else 'd-none'} o_website_links_edit_code" aria-label="Edit code" title="Edit code"><span class="fa fa-pencil gray"></span></a>
+                                    <a class="copy-to-clipboard btn btn-sm btn-primary" t-att-data-clipboard-text="short_url"><i class="fa fa-copy me-2"/>Copy</a>
                                 </p>
                                 <p class='o_website_links_code_error' style='color:red;font-weight:bold;display:none'></p>
                             </div>
@@ -48,10 +47,11 @@
                             <div class="col-md-2">
                                 <p><strong>Redirected URL</strong></p>
                             </div>
-                            <div class="col-md-10">
-                                <p class="truncate_text mw-100" t-att-title="redirected_url">
+                            <div class="col-md-10 d-flex flex-nowrap align-items-start gap-1">
+                                <p class="truncate_text" t-att-title="redirected_url">
                                     <t t-esc="redirected_url"/>
                                 </p>
+                                <a class="copy-to-clipboard btn btn-sm btn-primary" t-att-data-clipboard-text="redirected_url"><i class="fa fa-copy me-2"/>Copy</a>
                             </div>
                         </div>
                         <div t-if="campaign_id" class="row">
@@ -80,7 +80,7 @@
                         </div>
                         <div t-if="label" class="row" >
                             <div class="col-md-2">
-                                <p><strong>Label</strong></p>
+                                <p><strong>Name</strong></p>
                             </div>
                             <div class="col-md-10">
                                 <p t-out="label"/>
@@ -101,37 +101,37 @@
                             <div class="tab-content">
                                 <!-- All Time Charts -->
                                 <div role="tabpanel" class="tab-pane active" id="all_time_charts">
-                                    <div class="website_links_click_chart" id="all_time_clicks_chart">
+                                    <div class="website_links_click_chart mt32" id="all_time_clicks_chart">
                                         <h3 class="title"></h3>
-                                        <canvas style="height:20em;"></canvas>
+                                        <canvas style="height:10em;"></canvas>
                                     </div>
-                                    <div class="website_links_click_chart" id="all_time_countries_charts">
+                                    <div class="website_links_click_chart mt32" id="all_time_countries_charts">
                                         <h3 class="title"></h3>
-                                        <canvas style="height:20em;"></canvas>
+                                        <canvas style="height:10em;"></canvas>
                                     </div>
                                 </div>
 
                                 <!-- Last Month Charts -->
                                 <div role="tabpanel" class="tab-pane" id="last_month_charts">
-                                    <div class="website_links_click_chart" id="last_month_clicks_chart">
+                                    <div class="website_links_click_chart mt32" id="last_month_clicks_chart">
                                         <h3 class="title"></h3>
-                                        <canvas style="height:20em;"></canvas>
+                                        <canvas style="height:10em;"></canvas>
                                     </div>
-                                    <div class="website_links_click_chart" id="last_month_countries_charts">
+                                    <div class="website_links_click_chart mt32" id="last_month_countries_charts">
                                         <h3 class="title"></h3>
-                                        <canvas style="height:20em;"></canvas>
+                                        <canvas style="height:10em;"></canvas>
                                     </div>
                                 </div>
 
                                 <!-- Last Week Charts -->
                                 <div role="tabpanel" class="tab-pane" id="last_week_charts">
-                                    <div class="website_links_click_chart" id="last_week_clicks_chart">
+                                    <div class="website_links_click_chart mt32" id="last_week_clicks_chart">
                                         <h3 class="title"></h3>
-                                        <canvas style="height:20em;"></canvas>
+                                        <canvas style="height:10em;"></canvas>
                                     </div>
-                                    <div class="website_links_click_chart" id="last_week_countries_charts">
+                                    <div class="website_links_click_chart mt32" id="last_week_countries_charts">
                                         <h3 class="title"></h3>
-                                        <canvas style="height:20em;"></canvas>
+                                        <canvas style="height:10em;"></canvas>
                                     </div>
                                 </div>
                             </div>

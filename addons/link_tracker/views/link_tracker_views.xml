@@ -45,7 +45,11 @@
                                 <field name="title"/>
                                 <field name="label"/>
                                 <field name="url"/>
-                                <field name="short_url"/>
+                                <label for="short_url_host" string="Tracked URL" class="opacity-100 fw-bold text-900"/>
+                                <div>
+                                    <field name="short_url_host" nolabel="1" readonly="1" class="me-1 oe_inline"/>
+                                    <field name="code" nolabel="1" required="1" class="oe_inline o_input"/>
+                                </div>
                             </group>
                             <group name="utm" string="UTM">
                                 <field name="campaign_id" options="{'create_name_field': 'title'}"/>
