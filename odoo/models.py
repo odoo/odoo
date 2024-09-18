@@ -239,6 +239,8 @@ class MetaModel(api.Meta):
         attrs.setdefault('__slots__', ())
         # this collects the fields defined on the class (via Field.__set_name__())
         attrs.setdefault('_field_definitions', [])
+        # this collects the SQL object definition on the class (via SQLObject.__set_name__())
+        attrs.setdefault('_local_sql_objects', {})
 
         if attrs.get('_register', True):
             # determine '_module'
@@ -612,7 +614,7 @@ class BaseModel(metaclass=MetaModel):
     """
     _table = None                   #: SQL table name used by model if :attr:`_auto`
     _table_query = None             #: SQL expression of the table's content (optional)
-    _sql_constraints: list[tuple[str, str, str]] = []   #: SQL constraints [(name, sql_def, message)]
+    _sql_objects: dict[str, SQLObject] = frozendict()  #: SQL constraints and indexes
 
     _rec_name = None                #: field to use for labeling records, default: ``name``
     _rec_names_search: list[str] | None = None    #: fields to consider in ``name_search``
@@ -726,10 +728,6 @@ class BaseModel(metaclass=MetaModel):
             _logger.warning("Model attribute '_constraints' is no longer supported, "
                             "please use @api.constrains on methods instead.")
 
-        # Keep links to non-inherited constraints in cls; this is useful for
-        # instance when exporting translations
-        cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
-
         # all models except 'base' implicitly inherit from 'base'
         name = cls._name
         parents = list(cls._inherit)
@@ -752,6 +750,7 @@ class BaseModel(metaclass=MetaModel):
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
                 '_fields': {},                          # populated in _setup_base()
+                '_sql_objects': {},                     # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
 
@@ -820,9 +819,9 @@ class BaseModel(metaclass=MetaModel):
         cls._description = cls._name
         cls._table = cls._name.replace('.', '_')
         cls._log_access = cls._auto
+        sql_objects = {}
         inherits = {}
         depends = {}
-        _sql_constraints = {}
 
         for base in reversed(cls.__base_classes):
             if is_definition_class(base):
@@ -838,21 +837,8 @@ class BaseModel(metaclass=MetaModel):
             for mname, fnames in base._depends.items():
                 depends.setdefault(mname, []).extend(fnames)
 
-            for cons in base._sql_constraints:
-                if not isinstance(cons, SQLObject):
-                    # XXX this will be removed before merging
-                    cons_name, definition, *cons_message = cons
-                    match definition.strip().lower().split():
-                        case ["index", *_]:
-                            cons = Index(definition[5:].strip())
-                        case ["unique", "index", *_]:
-                            cons = UniqueIndex(definition[13:].strip(), *cons_message)
-                        case _:
-                            cons = Constraint(definition, *cons_message)
-                    cons.__set_name__(cls, cons_name)
-                _sql_constraints[cons.key] = cons
-
-        cls._sql_constraints = list(_sql_constraints.values())
+            sql_objects.update(base._sql_objects or base._local_sql_objects)
+        sql_objects.update(cls._local_sql_objects)
 
         # avoid assigning an empty dict to save memory
         if inherits:
@@ -3488,11 +3474,10 @@ class BaseModel(metaclass=MetaModel):
             _logger.error('parent_path field on model %r should be indexed! Add index=True to the field definition.', self._name)
 
     def _add_sql_constraints(self):
-        """ Modify this model's database table constraints so they match the one
-        in _sql_constraints.
-
+        """ Modify this model's database table constraints and indexes
+        so they match the ones in _sql_objects.
         """
-        for cons in self._sql_constraints:
+        for cons in self._sql_objects.values():
             cons.sync_database_object(self)
 
     @api.model
@@ -3548,7 +3533,6 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _sql_error_to_message_generic(self, exc: psycopg2.Error) -> str:
         """ Convert a database exception to a generic user error message. """
-        # NOTE: do not use cr because the transaction may be in a failed status
         diag = exc.diag
         unknown = self.env._('Unknown')
         info = {
@@ -3755,6 +3739,15 @@ class BaseModel(metaclass=MetaModel):
             cls._active_name = 'active'
         elif 'x_active' in cls._fields:
             cls._active_name = 'x_active'
+
+        # 7. determine sql_objects
+        sql_objects = {}
+        for klass in reversed(cls._model_classes):
+            # this condition is an optimization of is_definition_class(klass)
+            if isinstance(klass, MetaModel):
+                sql_objects.update(klass._local_sql_objects)
+        sql_objects.update(cls._local_sql_objects)
+        cls._sql_objects = sql_objects
 
     @api.model
     def _setup_fields(self):
@@ -7576,7 +7569,10 @@ class SQLObject:
         self.key = ''
 
     def __set_name__(self, owner, name):
-        self.key = name
+        assert isinstance(owner, MetaModel)
+        assert name.startswith('_'), "Names of SQL objects in a model must start with '_'"
+        self.key = name[1:]
+        owner._local_sql_objects[self.key] = self
 
     @property
     def definition(self) -> str:
@@ -7643,12 +7639,11 @@ class Constraint(SQLObject):
         super().__init__()
         self._definition = definition
         self._set_message(message)
+        # see 'ir.model.constraint'.type
         if self._FOREIGN_KEY_RE.match(definition):
-            self._type = 'FK'
-        elif not definition:
-            self._type = 'VIRTUAL'
+            self._type = 'f'
         else:
-            self._type = 'CONSTRAINT'
+            self._type = 'u'
 
     @property
     def definition(self):
@@ -7666,11 +7661,7 @@ class Constraint(SQLObject):
             # constraint exists but its definition may have changed
             sql.drop_constraint(cr, model._table, conname)
 
-        if self._type == 'VIRTUAL':
-            # virtual constraint (e.g. implemented by a custom index)
-            warnings.warn(f"Since 18.0, stop using virtual constraints, give a proper defintion like INDEX for '{conname}'", DeprecationWarning)
-            model.pool.post_init(sql.check_index_exist, cr, conname)
-        elif self._type == "FK":
+        if self._type == "f":
             model.pool.post_init(sql.add_constraint, cr, model._table, conname, definition)
         else:
             model.pool.post_constraint(sql.add_constraint, cr, model._table, conname, definition)
