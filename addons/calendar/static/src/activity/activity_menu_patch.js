@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 patch(ActivityMenu.prototype, {
     openActivityGroup(group) {
         if (group.model === "calendar.event") {
-            document.body.click();
+            this.dropdown.close();
             this.action.doAction("calendar.action_calendar_event", {
                 additionalContext: {
                     default_mode: "day",
