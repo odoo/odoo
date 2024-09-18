@@ -173,7 +173,7 @@ export class TourRecorder extends Component {
                 root: this.state.editedElement.parentElement,
             });
             this.state.steps.push({
-                trigger: `.o-autocomplete--dropdown-item > a:contains('${selectedRow.textContent}')`,
+                trigger: `.o-autocomplete--dropdown-item > a:contains('${selectedRow.textContent}'), .fa-circle-o-notch`,
                 run: "click",
             });
             this.state.editedElement = undefined;
