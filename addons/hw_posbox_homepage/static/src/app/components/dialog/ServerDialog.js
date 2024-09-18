@@ -21,10 +21,6 @@ export class ServerDialog extends Component {
 
     async connectToServer() {
         try {
-            if (!this.form.token) {
-                return;
-            }
-
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/connect_to_server",
                 method: "POST",

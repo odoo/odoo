@@ -23,11 +23,6 @@ export default class Store {
             });
 
             const data = await response.json();
-
-            if (data.result.system === "Linux") {
-                this.isLinux = true;
-            }
-
             return data.result;
         } else if (method === "GET") {
             const response = await fetch(url);
