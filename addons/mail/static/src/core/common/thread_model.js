@@ -548,7 +548,12 @@ export class Thread extends Record {
                     !this.store.Thread.onlineMemberStatuses.includes(member.persona?.im_status)
             );
         },
-        sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
+        sort: (m1, m2) => {
+            if (m1.persona?.name === m2.persona?.name) {
+                return m1.id - m2.id;
+            }
+            return m1.persona?.name < m2.persona?.name ? -1 : 1;
+        },
     });
 
     get nonEmptyMessages() {
