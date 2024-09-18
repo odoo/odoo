@@ -325,10 +325,13 @@ class StockMoveLine(models.Model):
             if move_line.picking_id.state != 'done':
                 moves = move_line._get_linkable_moves()
                 if moves:
-                    move_line.write({
+                    vals = {
                         'move_id': moves[0].id,
                         'picking_id': moves[0].picking_id.id,
-                    })
+                    }
+                    if moves[0].picked:
+                        vals['picked'] = True
+                    move_line.write(vals)
                 else:
                     create_move(move_line)
             else:
