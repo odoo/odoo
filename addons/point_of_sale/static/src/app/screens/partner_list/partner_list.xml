@@ -5,7 +5,7 @@
         <Dialog bodyClass="'partner-list overflow-y-auto'" contentClass="'h-100'">
             <t t-set-slot="header">
                 <button t-if="!ui.isSmall" class="btn btn-primary" role="img" aria-label="Add a customer"
-                        t-on-click="() => this.pos.editPartner()"
+                        t-on-click="() => this.editPartner()"
                         title="Add a customer">
                 Create 
                 </button>
