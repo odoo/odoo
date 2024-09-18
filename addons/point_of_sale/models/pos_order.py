@@ -1221,6 +1221,8 @@ class PosOrder(models.Model):
         return attachment
 
     def action_send_receipt(self, email, ticket_image, basic_image):
+        if self.env['mail.mail'].sudo().search(['&', ('subject', 'like', self.name), ('email_to', '=', email)]):
+            raise UserError(_('A receipt has already been sent to this email address: %s', email))
         self.env['mail.mail'].sudo().create(self._prepare_mail_values(email, ticket_image, basic_image)).send()
         self.email = email
 
