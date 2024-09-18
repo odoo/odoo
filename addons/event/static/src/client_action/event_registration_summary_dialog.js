@@ -45,13 +45,21 @@ export class EventRegistrationSummaryDialog extends Component {
             this.printSettings.iotPrinterId = this.registration.iot_printers[0].id;
         }
 
+        this.willAutoPrint = 
+            this.registration.status === 'confirmed_registration' &&
+            this.printSettings.autoPrint && this.useIotPrinter &&
+            this.hasSelectedPrinter() && !this.registration.has_to_pay;
+
+        this.dialogState = useState({ isHidden: this.willAutoPrint });
+
         onMounted(() => {
             if (this.props.registration.status === 'already_registered' || this.props.registration.status === 'need_manual_confirmation') {
                 this.props.playSound("notify");
             } else if (this.props.registration.status === 'not_ongoing_event' || this.props.registration.status === 'canceled_registration') {
                 this.props.playSound("error");
-            } else if (this.props.registration.status === 'confirmed_registration' && this.printSettings.autoPrint && this.useIotPrinter && this.hasSelectedPrinter()) {
-                this.onRegistrationPrintPdf();
+            } else if (this.willAutoPrint) {
+                this.onRegistrationPrintPdf()
+                    .catch(() => { this.dialogState.isHidden = false; });
             }
             // Without this, repeat barcode scans don't work as focus is lost
             this.continueButtonRef.el.focus();
@@ -79,11 +87,16 @@ export class EventRegistrationSummaryDialog extends Component {
         if (this.useIotPrinter && this.printSettings.iotPrinterId) {
             await this.printWithBadgePrinter();
         } else {
-            this.actionService.doAction({
+            await this.actionService.doAction({
                 type: "ir.actions.report",
                 report_type: "qweb-pdf",
                 report_name: `event.event_registration_report_template_badge/${this.registration.id}`,
             });
+        }
+        if (this.props.doNextScan) {
+            this.onScanNext();
+        } else {
+            this.dialogState.isHidden = false;
         }
     }
 
@@ -148,7 +161,10 @@ export class EventRegistrationSummaryDialog extends Component {
         const reportName = `event.event_report_template_esc_label_${this.registration.badge_format}_badge`;
         const [{ id: reportId }] = await this.orm.searchRead("ir.actions.report", [["report_name", "=", reportName]], ["id"]);
 
-        this.notification.add(_t("Printing badge on %s...", this.selectedPrinter.name), { type: "info" })
+        this.notification.add(
+            _t("'%(name)s' badge sent to printer '%(printer)s'", { name: this.registration.name, printer: this.selectedPrinter.name }),
+            { type: "info" }
+        );
         if (await this.isIotBoxReachable()) {
             const printSuccessful = await this.printWithLongpolling(reportId);
             if (printSuccessful) {
