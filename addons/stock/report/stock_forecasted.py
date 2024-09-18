@@ -33,7 +33,11 @@ class StockForecasted(models.AbstractModel):
         out_domain = move_domain + [
             '&',
             ('location_id', 'in', wh_location_ids),
+            '|',
             ('location_dest_id', 'not in', wh_location_ids),
+            '&',
+            ('location_final_id', '!=', False),
+            ('location_final_id', 'not in', wh_location_ids),
         ]
         in_domain = move_domain + [
             '&',
