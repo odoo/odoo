@@ -122,7 +122,7 @@ export class SelectionPlugin extends Plugin {
         "rectifySelection",
         // "collapseIfZWS",
     ];
-    static resources = (p) => ({
+    static resources = () => ({
         shortcuts: [{ hotkey: "control+a", command: "SELECT_ALL" }],
     });
 
