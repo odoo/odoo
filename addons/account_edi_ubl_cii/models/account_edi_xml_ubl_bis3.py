@@ -99,6 +99,8 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 # DK-R-014: For Danish Suppliers it is mandatory to specify schemeID as "0184" (DK CVR-number) when
                 # PartyLegalEntity/CompanyID is used for AccountingSupplierParty
                 vals['company_id_attrs'] = {'schemeID': '0184'}
+                if partner.company_registry:
+                    vals['company_id'] = partner.company_registry
 
         return vals_list
 
