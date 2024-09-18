@@ -13,7 +13,7 @@ class ReportStockQuantity(models.Model):
         'product.product': ['product_tmpl_id'],
         'product.template': ['type'],
         'stock.location': ['parent_path'],
-        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_id', 'product_id', 'product_qty', 'state'],
+        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_final_id', 'location_id', 'product_id', 'product_qty', 'state'],
         'stock.quant': ['company_id', 'location_id', 'product_id', 'quantity'],
         'stock.warehouse': ['view_location_id'],
     }
@@ -56,7 +56,7 @@ WITH
         SELECT m.id, m.product_id, pt.id, m.product_qty, m.date, m.state, m.company_id, source.w_id, dest.w_id
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
-        LEFT JOIN warehouse_cte dest ON dest.sl_id = m.location_dest_id
+        LEFT JOIN warehouse_cte dest ON dest.sl_id = COALESCE(m.location_final_id, m.location_dest_id)
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
         WHERE pt.type = 'product' AND
