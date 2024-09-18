@@ -35,6 +35,9 @@ export function insertListAfter(document, afterNode, mode, content = []) {
  * - container for nested lists (li.oe-nested)
  */
 export function compareListTypes(a, b) {
+    if (!a || !b) {
+        return a === b;
+    }
     if (a.tagName !== b.tagName) {
         return false;
     }

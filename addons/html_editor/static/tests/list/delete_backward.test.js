@@ -11,12 +11,18 @@ describe("Selection collapsed", () => {
             test("should convert to paragraph", async () => {
                 await testEditor({
                     contentBefore: "<ol><li><br>[]</li></ol>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
                 await testEditor({
                     contentBefore: '<ol><li class="oe-nested"><ol><li>[]abc</li></ol></li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
             });
@@ -61,20 +67,29 @@ describe("Selection collapsed", () => {
             test("should merge a list item with its previous list item", async () => {
                 await testEditor({
                     contentBefore: "<ol><li>abc</li><li>[]def</li></ol>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ol><li>abc</li></ol><p>[]def</p>",
                 });
                 // With another list item after.
                 await testEditor({
                     contentBefore: "<ol><li>abc</li><li>[]def</li><li>ghi</li></ol>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ol><li>abc</li></ol><p>[]def</p><ol><li>ghi</li></ol>",
                 });
                 // Where the list item to merge into is empty, with an
                 // empty list item before.
                 await testEditor({
                     contentBefore: "<ol><li><br></li><li><br></li><li>[]abc</li></ol>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ol><li><br></li><li><br></li></ol><p>[]abc</p>",
                 });
             });
@@ -220,6 +235,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter:
                         '<ol><li>abc[]def</li><li class="oe-nested"><ol><li>ghi</li></ol></li></ol>',
@@ -230,7 +246,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li class="oe-nested"><ol><li>abc</li></ol></li><li>[]def</li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ol><li class="oe-nested"><ol><li>abc</li></ol></li></ol><p>[]def</p>',
                 });
@@ -243,6 +262,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ol><li>abc[]def</li></ol>",
                 });
@@ -251,14 +271,20 @@ describe("Selection collapsed", () => {
             test("should outdent a list item", async () => {
                 await testEditor({
                     contentBefore: '<ol><li class="oe-nested"><ol><li>[]abc</li></ol></li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore:
                         '<p>abc</p><ol><li class="oe-nested"><ol><li>[]def</li></ol></li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>abc</p><p>[]def</p>",
                 });
             });
@@ -289,7 +315,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li>abc</li><li class="oe-nested"><ol><li>[]<br></li><li><br></li></ol></li><li>def</li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ol><li>abc</li></ol><p>[]<br></p><ol><li class="oe-nested"><ol><li><br></li></ol></li><li>def</li></ol>',
                 });
@@ -299,7 +328,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li>abc</li><li class="oe-nested"><ol><li>[]<br></li></ol></li><li>def</li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ol><li>abc</li></ol><p>[]<br></p><ol><li>def</li></ol>",
                 });
             });
@@ -307,7 +339,10 @@ describe("Selection collapsed", () => {
             test("should outdent an empty list", async () => {
                 await testEditor({
                     contentBefore: '<ol><li class="oe-nested"><ol><li><br>[]</li></ol></li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
             });
@@ -315,13 +350,19 @@ describe("Selection collapsed", () => {
             test("should outdent a list to the point that it's a paragraph", async () => {
                 await testEditor({
                     contentBefore: "<ol><li>[]<br></li></ol>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore: "<p><br></p><ol><li>[]<br></li></ol>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p><br></p><p>[]<br></p>",
                 });
             });
@@ -331,6 +372,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore: "<p>abcd</p><ol><li>ef[]gh</li><li>ij</li></ol>",
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
@@ -370,12 +412,18 @@ describe("Selection collapsed", () => {
             test("should do nothing", async () => {
                 await testEditor({
                     contentBefore: "<ul><li><br>[]</li></ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
                 await testEditor({
                     contentBefore: '<ul><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
             });
@@ -420,20 +468,29 @@ describe("Selection collapsed", () => {
             test("should merge a list item with its previous list item", async () => {
                 await testEditor({
                     contentBefore: "<ul><li>abc</li><li>[]def</li></ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ul><li>abc</li></ul><p>[]def</p>",
                 });
                 // With another list item after.
                 await testEditor({
                     contentBefore: "<ul><li>abc</li><li>[]def</li><li>ghi</li></ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ul><li>abc</li></ul><p>[]def</p><ul><li>ghi</li></ul>",
                 });
                 // Where the list item to merge into is empty, with an
                 // empty list item before.
                 await testEditor({
                     contentBefore: "<ul><li><br></li><li><br></li><li>[]abc</li></ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ul><li><br></li><li><br></li></ul><p>[]abc</p>",
                 });
             });
@@ -587,6 +644,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: unformat(`
                             <ul>
@@ -604,7 +662,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul><li class="oe-nested"><ul><li>abc</li></ul></li></ul><p>[]def</p>',
                 });
@@ -617,6 +678,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ul><li>abc[]def</li></ul>",
                 });
@@ -625,14 +687,20 @@ describe("Selection collapsed", () => {
             test("should outdent a list item", async () => {
                 await testEditor({
                     contentBefore: '<ul><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore:
                         '<p>abc</p><ul><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>abc</p><p>[]def</p>",
                 });
             });
@@ -641,7 +709,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul><li>abc</li></ul><p>[]<br></p><ul><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ul>',
                 });
@@ -651,7 +722,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ul><li>abc</li></ul><p>[]<br></p><ul><li>def</li></ul>",
                 });
             });
@@ -659,7 +733,10 @@ describe("Selection collapsed", () => {
             test("should outdent an empty list", async () => {
                 await testEditor({
                     contentBefore: '<ul><li class="oe-nested"><ul><li><br>[]</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
             });
@@ -667,13 +744,19 @@ describe("Selection collapsed", () => {
             test("should outdent a list to the point that it's a paragraph", async () => {
                 await testEditor({
                     contentBefore: "<ul><li>[]<br></li></ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore: "<p><br></p><ul><li>[]<br></li></ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p><br></p><p>[]<br></p>",
                 });
             });
@@ -683,6 +766,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore: "<p>abcd</p><ul><li>ef[]gh</li><li>ij</li></ul>",
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
@@ -709,7 +793,10 @@ describe("Selection collapsed", () => {
                         "<li><b>[]hij</b>klm</li>" +
                         "<li>nop</li>" +
                         "</ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         "<ul>" +
                         "<li>abc</li>" +
@@ -744,18 +831,27 @@ describe("Selection collapsed", () => {
             test("should remove the list and turn into p", async () => {
                 await testEditor({
                     contentBefore: '<ul class="o_checklist"><li><br>[]</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
                 await testEditor({
                     contentBefore: '<ul class="o_checklist"><li class="o_checked"><br>[]</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
             });
@@ -810,42 +906,60 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">[]def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p>',
                 });
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p>',
                 });
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li>abc</li><li class="o_checked">[]def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: '<ul class="o_checklist"><li>abc</li></ul><p>[]def</p>',
                 });
                 // With another list item after.
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">[]def</li><li class="o_checked">ghi</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p><ul class="o_checklist"><li class="o_checked">ghi</li></ul>',
                 });
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li><li>ghi</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p><ul class="o_checklist"><li>ghi</li></ul>',
                 });
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li><li class="o_checked">ghi</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p><ul class="o_checklist"><li class="o_checked">ghi</li></ul>',
                 });
@@ -854,7 +968,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li><br></li><li><br></li><li class="o_checked">[]abc</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li><br></li><li><br></li></ul><p>[]abc</p>',
                 });
@@ -1075,6 +1192,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ghi</li></ul></li></ul>',
@@ -1085,7 +1203,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li><li class="o_checked">[]def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li></ul><p>[]def</p>',
                 });
@@ -1098,6 +1219,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
@@ -1108,14 +1230,20 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore:
                         '<p>abc</p><ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>abc</p><p>[]def</p>",
                 });
             });
@@ -1129,7 +1257,10 @@ describe("Selection collapsed", () => {
                         "<li><h1>[]def</h1></li>" +
                         "</ul></li>" +
                         "</ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ul>" + "<li>abc</li>" + "</ul>" + "<h1>[]def</h1>",
                 });
             });
@@ -1170,20 +1301,23 @@ describe("Selection collapsed", () => {
                                 </li>
                                 <li class="o_checked">def</li>
                             </ul>`),
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: unformat(`
-                        <ul class="o_checklist">
-                            <li>abc</li>
-                        </ul>
-                        <p>[]<br></p>
-                        <ul class="o_checklist">
-                            <li class="oe-nested">
-                                <ul class="o_checklist">
-                                    <li><br></li>
-                                </ul>
-                            </li>
-                            <li class="o_checked">def</li>
-                        </ul>`),
+                            <ul class="o_checklist">
+                                <li>abc</li>
+                            </ul>
+                            <p>[]<br></p>
+                            <ul class="o_checklist">
+                                <li class="oe-nested">
+                                    <ul class="o_checklist">
+                                        <li><br></li>
+                                    </ul>
+                                </li>
+                                <li class="o_checked">def</li>
+                            </ul>`),
                 });
             });
 
@@ -1191,7 +1325,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li></ul></li><li class="o_checked">def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li>abc</li></ul><p>[]<br></p><ul class="o_checklist"><li class="o_checked">def</li></ul>',
                 });
@@ -1201,7 +1338,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked"><br>[]</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
             });
@@ -1209,13 +1349,19 @@ describe("Selection collapsed", () => {
             test("should outdent a list to the point that it's a paragraph", async () => {
                 await testEditor({
                     contentBefore: '<ul class="o_checklist"><li>[]<br></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore: '<p><br></p><ul class="o_checklist"><li>[]<br></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p><br></p><p>[]<br></p>",
                 });
             });
@@ -1226,6 +1372,7 @@ describe("Selection collapsed", () => {
                     contentBefore:
                         '<p>abcd</p><ul class="o_checklist"><li class="o_checked">ef[]gh</li><li class="o_checked">ij</li></ul>',
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
@@ -1243,6 +1390,7 @@ describe("Selection collapsed", () => {
                         deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter:
                         '<p>abc[]gh</p><ul class="o_checklist"><li class="o_checked">ij</li></ul>',
@@ -1251,6 +1399,7 @@ describe("Selection collapsed", () => {
                     contentBefore:
                         '<p>abcd</p><ul class="o_checklist"><li class="o_checked">ef[]gh</li><li>ij</li></ul>',
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
@@ -1280,7 +1429,10 @@ describe("Selection collapsed", () => {
                         '<li class="o_checked"><b>[]hij</b>klm</li>' +
                         '<li class="o_checked">nop</li>' +
                         "</ul>",
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist">' +
                         '<li class="o_checked">abc</li>' +
@@ -1322,12 +1474,14 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ul><li>a[]b</li></ul>",
                 });
                 await testEditor({
                     contentBefore: "<ul><li>a</li></ul><ol><li><p>[]b</p></li></ol>",
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
@@ -1338,12 +1492,14 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ul><li><p>a[]b</p></li></ul>",
                 });
                 await testEditor({
                     contentBefore: "<ul><li><p>a</p></li></ul><ol><li><p>[]b</p></li></ol>",
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
@@ -1355,7 +1511,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li>abc</li><li class="oe-nested"><ol><li>[]def</li><li>ghi</li></ol></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul><li>abc</li></ul><p>[]def</p><ul><li class="oe-nested"><ol><li>ghi</li></ol></li></ul>',
                 });
@@ -1365,7 +1524,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ol><li class="oe-nested"><ul><li>abc</li></ul></li></ol><p>[]def</p>',
                 });
@@ -1378,6 +1540,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ul><li>abc[]def</li></ul>",
                 });
@@ -1386,14 +1549,20 @@ describe("Selection collapsed", () => {
             test("should outdent an ordered list item that is within a unordered list", async () => {
                 await testEditor({
                     contentBefore: '<ul><li class="oe-nested"><ol><li>[]abc</li></ol></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore:
                         '<p>abc</p><ul><li class="oe-nested"><ol><li>[]def</li></ol></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>abc</p><p>[]def</p>",
                 });
             });
@@ -1402,7 +1571,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li>abc</li><li class="oe-nested"><ol><li>[]<br></li><li><br></li></ol></li><li>def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul><li>abc</li></ul><p>[]<br></p><ul><li class="oe-nested"><ol><li><br></li></ol></li><li>def</li></ul>',
                 });
@@ -1412,7 +1584,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li>abc</li><li class="oe-nested"><ol><li>[]<br></li></ol></li><li>def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ul><li>abc</li></ul><p>[]<br></p><ul><li>def</li></ul>",
                 });
             });
@@ -1420,7 +1595,10 @@ describe("Selection collapsed", () => {
             test("should outdent an empty ordered list within an unordered list (2)", async () => {
                 await testEditor({
                     contentBefore: '<ul><li class="oe-nested"><ol><li><br>[]</li></ol></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
             });
@@ -1432,12 +1610,14 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ol><li>a[]b</li></ol>",
                 });
                 await testEditor({
                     contentBefore: "<ol><li>a</li></ol><ul><li><p>[]b</p></li></ul>",
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
@@ -1448,12 +1628,14 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ol><li><p>a[]b</p></li></ol>",
                 });
                 await testEditor({
                     contentBefore: "<ol><li><p>a</p></li></ol><ul><li><p>[]b</p></li></ul>",
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
@@ -1473,7 +1655,10 @@ describe("Selection collapsed", () => {
                                     </ul>
                                 </li>
                             </ol>`),
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: unformat(`
                             <ol>
                                 <li>abc</li>
@@ -1493,7 +1678,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li class="oe-nested"><ol><li>abc</li></ol></li><li>[]def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul><li class="oe-nested"><ol><li>abc</li></ol></li></ul><p>[]def</p>',
                 });
@@ -1506,6 +1694,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ol><li>abc[]def</li></ol>",
                 });
@@ -1514,14 +1703,20 @@ describe("Selection collapsed", () => {
             test("should outdent an unordered list item that is within a ordered list", async () => {
                 await testEditor({
                     contentBefore: '<ol><li class="oe-nested"><ul><li>[]abc</li></ul></li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore:
                         '<p>abc</p><ol><li class="oe-nested"><ul><li>[]def</li></ul></li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>abc</p><p>[]def</p>",
                 });
             });
@@ -1530,7 +1725,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ol><li>abc</li></ol><p>[]<br></p><ol><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ol>',
                 });
@@ -1540,7 +1738,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ol><li>abc</li></ol><p>[]<br></p><ol><li>def</li></ol>",
                 });
             });
@@ -1548,7 +1749,10 @@ describe("Selection collapsed", () => {
             test("should outdent an empty unordered list within an ordered list (2)", async () => {
                 await testEditor({
                     contentBefore: '<ol><li class="oe-nested"><ul><li><br>[]</li></ul></li></ol>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
             });
@@ -1560,6 +1764,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ul><li>a[]b</li></ul>",
                 });
@@ -1567,6 +1772,7 @@ describe("Selection collapsed", () => {
                     contentBefore:
                         '<ul><li>a</li></ul><ul class="o_checklist"><li><p>[]b</p></li></ul>',
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
@@ -1578,6 +1784,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ul><li><p>a[]b</p></li></ul>",
                 });
@@ -1585,6 +1792,7 @@ describe("Selection collapsed", () => {
                     contentBefore:
                         '<ul><li><p>a</p></li></ul><ul class="o_checklist"><li><p>[]b</p></li></ul>',
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
@@ -1599,6 +1807,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter:
                         '<ul><li>abc[]def</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ghi</li></ul></li></ul>',
@@ -1609,7 +1818,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="oe-nested"><ul><li>abc</li></ul></li></ul><p>[]def</p>',
                 });
@@ -1622,6 +1834,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: "<ul><li>abc[]def</li></ul>",
                 });
@@ -1631,14 +1844,20 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore:
                         '<p>abc</p><ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>abc</p><p>[]def</p>",
                 });
             });
@@ -1647,7 +1866,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul><li>abc</li></ul><p>[]<br></p><ul><li class="oe-nested"><ul class="o_checklist"><li><br></li></ul></li><li>def</li></ul>',
                 });
@@ -1657,7 +1879,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li></ul></li><li>def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<ul><li>abc</li></ul><p>[]<br></p><ul><li>def</li></ul>",
                 });
             });
@@ -1666,7 +1891,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li class="oe-nested"><ul class="o_checklist"><li><br>[]</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
             });
@@ -1679,6 +1907,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
                 });
@@ -1686,6 +1915,7 @@ describe("Selection collapsed", () => {
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">a</li></ul><ul><li><p>[]b</p></li></ul>',
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
@@ -1698,6 +1928,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     // Paragraphs in list items are kept unless empty
                     contentAfter:
@@ -1707,6 +1938,7 @@ describe("Selection collapsed", () => {
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked"><p>a</p></li></ul><ul><li><p>[]b</p></li></ul>',
                     stepFunction: async (editor) => {
+                        deleteBackward(editor);
                         deleteBackward(editor);
                         deleteBackward(editor);
                     },
@@ -1731,6 +1963,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter: unformat(`
                             <ul class="o_checklist">
@@ -1748,7 +1981,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li><li>[]def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li></ul><p>[]def</p>',
                 });
@@ -1761,6 +1997,7 @@ describe("Selection collapsed", () => {
                     stepFunction: async (editor) => {
                         deleteBackward(editor);
                         deleteBackward(editor);
+                        deleteBackward(editor);
                     },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
@@ -1771,14 +2008,20 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]abc</p>",
                 });
                 // With a paragraph before the list:
                 await testEditor({
                     contentBefore:
                         '<p>abc</p><ul class="o_checklist"><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>abc</p><p>[]def</p>",
                 });
             });
@@ -1787,7 +2030,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li class="o_checked">def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]<br></p><ul class="o_checklist"><li class="oe-nested"><ul><li><br></li></ul></li><li class="o_checked">def</li></ul>',
                 });
@@ -1797,7 +2043,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li>abc</li></ul><p>[]<br></p><ul class="o_checklist"><li class="oe-nested"><ul><li><br></li></ul></li><li>def</li></ul>',
                 });
@@ -1807,7 +2056,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li class="o_checked">def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]<br></p><ul class="o_checklist"><li class="o_checked">def</li></ul>',
                 });
@@ -1817,7 +2069,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter:
                         '<ul class="o_checklist"><li>abc</li></ul><p>[]<br></p><ul class="o_checklist"><li>def</li></ul>',
                 });
@@ -1827,7 +2082,10 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="oe-nested"><ul><li><br>[]</li></ul></li></ul>',
-                    stepFunction: deleteBackward,
+                    stepFunction: async (editor) => {
+                        deleteBackward(editor);
+                        deleteBackward(editor);
+                    },
                     contentAfter: "<p>[]<br></p>",
                 });
             });

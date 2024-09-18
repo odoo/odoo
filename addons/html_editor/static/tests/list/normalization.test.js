@@ -125,3 +125,154 @@ describe("Inlines and blocks in list item", () => {
         });
     });
 });
+
+describe("Merge similar lists", () => {
+    test("should not merge oe-nested items with text content", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ol>
+                    <li class="oe-nested">abc</li>
+                    <li class="oe-nested">def</li>
+                </ol>
+            `),
+            contentAfter: unformat(`
+                <ol>
+                    <li class="oe-nested">abc</li>
+                    <li class="oe-nested">def</li>
+                </ol>
+            `),
+        });
+    });
+
+    test("should not merge oe-nested items with element and text content", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">abc</li>
+                            <li class="oe-nested">def</li>
+                        </ol>
+                    </li>
+                    <li class="oe-nested">ghi</li>
+                </ol>
+            `),
+            contentAfter: unformat(`
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">abc</li>
+                            <li class="oe-nested">def</li>
+                        </ol>
+                    </li>
+                    <li class="oe-nested">ghi</li>
+                </ol>
+            `),
+        });
+    });
+
+    test("should merge similar elements inside oe-nested", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">abc</li>
+                            <li class="oe-nested">def</li>
+                        </ol>
+                        <ol>
+                            <li class="oe-nested">ghi</li>
+                            <li class="oe-nested">jkl</li>
+                        </ol>
+                    </li>
+                </ol>
+            `),
+            contentAfter: unformat(`
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">abc</li>
+                            <li class="oe-nested">def</li>
+                            <li class="oe-nested">ghi</li>
+                            <li class="oe-nested">jkl</li>
+                        </ol>
+                    </li>
+                </ol>
+            `),
+        });
+    });
+
+    test("should not merge different elements inside oe-nested", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">abc</li>
+                            <li class="oe-nested">def</li>
+                        </ol>
+                        <ul>
+                            <li class="oe-nested">ghi</li>
+                            <li class="oe-nested">jkl</li>
+                        </ul>
+                    </li>
+                </ol>
+            `),
+            contentAfter: unformat(`
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">abc</li>
+                            <li class="oe-nested">def</li>
+                        </ol>
+                        <ul>
+                            <li class="oe-nested">ghi</li>
+                            <li class="oe-nested">jkl</li>
+                        </ul>
+                    </li>
+                </ol>
+            `),
+        });
+    });
+
+    test("should merge consecutive oe-nested items with similar elements inside", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">abc</li>
+                            <li class="oe-nested">def</li>
+                        </ol>
+                    </li>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">ghi</li>
+                            <li class="oe-nested">jkl</li>
+                        </ol>
+                    </li>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">mno</li>
+                            <li class="oe-nested">pqr</li>
+                        </ol>
+                    </li>
+                </ol>
+            `),
+            contentAfter: unformat(`
+                <ol>
+                    <li class="oe-nested">
+                        <ol>
+                            <li class="oe-nested">abc</li>
+                            <li class="oe-nested">def</li>
+                            <li class="oe-nested">ghi</li>
+                            <li class="oe-nested">jkl</li>
+                            <li class="oe-nested">mno</li>
+                            <li class="oe-nested">pqr</li>
+                        </ol>
+                    </li>
+                </ol>
+            `),
+        });
+    });
+});
