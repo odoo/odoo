@@ -158,6 +158,15 @@
                         </group>
                     </group>
                 </page>
+
+                <field name="vat" position="before">
+                    <field name="partner_vat_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                </field>
+                <field name="vat" position="attributes">
+                    <attribute name="placeholder"></attribute>
+                    <attribute name="widget">char_with_placeholder_field</attribute>
+                    <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
+                </field>
             </field>
         </record>
 

@@ -13,6 +13,7 @@ from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo.addons.base_vat.models.res_partner import _ref_vat
 from odoo.tools import SQL, unique
 
 _logger = logging.getLogger(__name__)
@@ -338,6 +339,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
+    partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -922,3 +924,26 @@ class ResPartner(models.Model):
         if self.vat and self.vat[:2].isalpha():
             country_code = self.vat[:2].upper()
         return country_code
+
+    @api.depends('country_id')
+    def _compute_partner_vat_placeholder(self):
+        for partner in self:
+            placeholder = _("/ if not applicable")
+            if partner.country_id:
+                expected_vat = _ref_vat.get(partner.country_id.code.lower())
+                if expected_vat:
+                    placeholder = _("%s, or / if not applicable", expected_vat)
+
+            partner.partner_vat_placeholder = placeholder
+
+    @api.model
+    def _get_view(self, view_id=None, view_type='form', **options):
+        arch, view = super()._get_view(view_id, view_type, **options)
+
+        if view_type == 'form':
+            for node in arch.xpath("//field[@name='vat']"):
+                # Means that the get_view on partner_autocomplete/models/res_company.py has been launched
+                if node.get('widget') == 'field_partner_autocomplete':
+                    node.set('widget', 'char_with_placeholder_autocomplete_field')
+
+        return arch, view
