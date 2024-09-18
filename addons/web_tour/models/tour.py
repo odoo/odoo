@@ -21,10 +21,10 @@ class Tour(models.Model):
         ('uniq_name', 'unique(name)', "A tour already exists with this name . Tour's name must be unique!"),
     ]
 
-    @api.depends("url")
+    @api.depends("name")
     def _compute_sharing_url(self):
         for tour in self:
-            tour.sharing_url = tour.url and f"{tour.get_base_url()}/odoo?tour={tour.name}"
+            tour.sharing_url = f"{tour.get_base_url()}/odoo?tour={tour.name}"
 
     @api.model
     def consume(self, tourName):
