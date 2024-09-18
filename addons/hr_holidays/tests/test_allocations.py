@@ -181,8 +181,8 @@ class TestAllocations(TestHrHolidaysCommon):
             ('employee_id', '=', self.employee_emp.id),
         ])
 
-        self.assertAlmostEqual(employee_allocation.number_of_hours_display, 11.43, places=2)
-        self.assertAlmostEqual(employee_emp_allocation.number_of_hours_display, 10.0, places=2)
+        self.assertEqual(employee_allocation.number_of_hours_display, 10)
+        self.assertEqual(employee_emp_allocation.number_of_hours_display, 10)
 
     def change_allocation_type_hours(self):
         self.leave_type.write({
@@ -304,3 +304,31 @@ class TestAllocations(TestHrHolidaysCommon):
             default_date_to='2024-08-18 15:00:00'
         ).name_search(args=[['id', '=', leave_type.id]])
         self.assertEqual(result[0][1], 'Compensatory Days (9 remaining out of 9 days)')
+
+    def test_allocation_hourly_leave_type(self):
+        """
+        Make sure that the number of hours is correctly set on the allocation for an hourly leave type
+        for an employee who works some other schedule than the default 8 hours per day.
+        """
+        employee = self.env['hr.employee'].create({
+            'name': 'My Employee',
+            'company_id': self.company.id,
+            'resource_calendar_id': self.ref('resource.resource_calendar_std_35h'),
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Hourly Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+
+        with Form(self.env['hr.leave.allocation']) as allocation_form:
+            allocation_form.allocation_type = 'regular'
+            allocation_form.employee_id = employee
+            allocation_form.holiday_status_id = leave_type
+            allocation_form.number_of_hours_display = 10
+            allocation = allocation_form.save()
+
+        self.assertEqual(allocation.number_of_hours_display, 10.0)
