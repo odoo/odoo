@@ -548,7 +548,7 @@ class expression(object):
                     records = records.search([(parent_name, 'in', records.ids)], order='id') - records.browse(child_ids)
                 domain = [('id', 'in', list(child_ids))]
             if prefix:
-                return [(left, 'in', left_model._search(domain, order='id'))]
+                return [(left, 'in', left_model.with_context(active_test=False)._search(domain, order='id'))]
             return domain
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix=''):
@@ -576,7 +576,7 @@ class expression(object):
                     records = records[parent_name] - records.browse(parent_ids)
                 domain = [('id', 'in', list(parent_ids))]
             if prefix:
-                return [(left, 'in', left_model._search(domain, order='id'))]
+                return [(left, 'in', left_model.with_context(active_test=False)._search(domain, order='id'))]
             return domain
 
         HIERARCHY_FUNCS = {'child_of': child_of_domain,
