@@ -805,18 +805,6 @@ class SaleOrder(models.Model):
 
     @api.onchange('order_line')
     def _onchange_order_line(self):
-        virtual_ids = self.order_line.mapped('virtual_id')
-        lines_to_delete = self.order_line.filtered(
-            lambda sol: bool(
-                # Lines which aren't saved in DB yet.
-                virtual_ids and sol.linked_virtual_id and sol.linked_virtual_id not in virtual_ids
-            ) or bool(
-                # Lines which are saved in DB.
-                sol.linked_line_id and sol.linked_line_id not in self.order_line
-            )
-        )
-        if lines_to_delete:
-            self.order_line = [Command.delete(line.id) for line in lines_to_delete]
         for index, line in enumerate(self.order_line):
             if line.product_type == 'combo' and line.selected_combo_items:
                 linked_lines = line._get_linked_lines()

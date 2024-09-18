@@ -74,6 +74,13 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         );
     }
 
+    async onDeleteRecord(record) {
+        if (this.isCombo(record)) {
+            await record.update({ selected_combo_items: JSON.stringify([]) });
+        }
+        await super.onDeleteRecord(record);
+    }
+
     isCombo(record) {
         return record.data.product_type === 'combo';
     }
