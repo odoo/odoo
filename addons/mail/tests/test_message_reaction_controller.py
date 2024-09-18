@@ -10,8 +10,6 @@ class TestMessageReactionControllerCommon(TestControllerCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        last_message = cls.env["mail.message"].search([], order="id desc", limit=1)
-        cls.fake_message = cls.env["mail.message"].browse(last_message.id + 1000000)
         cls.reaction = "😊"
 
     def _execute_subtests(self, message, subtests):
