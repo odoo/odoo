@@ -30,6 +30,7 @@ class MailRtcSession(models.Model):
     is_camera_on = fields.Boolean(string="Is sending user video")
     is_muted = fields.Boolean(string="Is microphone muted")
     is_deaf = fields.Boolean(string="Has disabled incoming sound")
+    is_raising_hand = fields.Boolean(string="Is raising hand")
 
     _sql_constraints = [
         ('channel_member_unique', 'UNIQUE(channel_member_id)',
@@ -79,7 +80,7 @@ class MailRtcSession(models.Model):
         """ Updates the session and notifies all members of the channel
             of the change.
         """
-        valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf'}
+        valid_values = {'is_screen_sharing_on', 'is_camera_on', 'is_muted', 'is_deaf', 'is_raising_hand'}
         self.write({key: values[key] for key in valid_values if key in values})
         store = Store(self, extra=True)
         self.channel_id._bus_send(
@@ -150,6 +151,7 @@ class MailRtcSession(models.Model):
                         "isDeaf": rtc_session.is_deaf,
                         "isSelfMuted": rtc_session.is_muted,
                         "isScreenSharingOn": rtc_session.is_screen_sharing_on,
+                        "raisingHand": rtc_session.is_raising_hand,
                     }
                 )
             store.add(rtc_session, data)
