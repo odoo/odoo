@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from math import ceil
 from pytz import timezone, UTC
+from markupsafe import Markup
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
@@ -1116,7 +1117,7 @@ class HrLeave(models.Model):
         for holiday in leaves:
             responsible = holiday.employee_id.leave_manager_id.partner_id.ids
             if responsible:
-                self.env['mail.thread'].sudo().message_notify(
+                holiday.sudo().message_notify(
                     partner_ids=responsible,
                     model_description=model_description,
                     subject=_('Refused Time Off'),
@@ -1124,7 +1125,8 @@ class HrLeave(models.Model):
                         '%(holiday_name)s has been refused.',
                         holiday_name=holiday.display_name,
                     ),
-                    email_layout_xmlid='mail.mail_notification_light',
+                    email_layout_xmlid="mail.mail_notification_layout",
+                    subtitles=[holiday.display_name],
                 )
 
     def _action_user_cancel(self, reason=None):
@@ -1139,8 +1141,12 @@ class HrLeave(models.Model):
         if reason:
             model_description = self.env['ir.model']._get('hr.holidays').display_name
             for leave in leaves:
+                body = self.env._(
+                    "The time off request has been cancelled for the following reason:%(reason)s",
+                    reason=Markup("<p>{reason}</p>").format(reason=reason)
+                )
                 leave.message_post(
-                    body=self.env._('The time off has been cancelled: %s', reason),
+                    body=body,
                     subtype_xmlid=msg_subtype
                 )
 
@@ -1160,19 +1166,21 @@ class HrLeave(models.Model):
                     responsibles |= leave.holiday_status_id.responsible_ids.partner_id
 
                 if responsibles:
-                    self.env['mail.thread'].sudo().message_notify(
+                    body = self.env._(
+                        "%(leave_name)s has been cancelled for the following reason: %(reason)s",
+                        leave_name=leave.display_name,
+                        reason=Markup("<blockquote>{reason}</blockquote>").format(reason=reason),
+                    )
+                    leave.message_notify(
                         partner_ids=responsibles.ids,
                         model_description=model_description,
                         subject=self.env._('Cancelled Time Off'),
-                        body=self.env._(
-                            "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s.",
-                            leave_name=leave.display_name,
-                            reason=reason
-                        ),
-                        email_layout_xmlid='mail.mail_notification_light',
+                        body=body,
+                        email_layout_xmlid="mail.mail_notification_layout",
+                        subtitles=[leave.display_name],
                     )
         leave_sudo = self.sudo()
-        leave_sudo.state = 'cancel'
+        leave_sudo.state = "cancel"
         leave_sudo.activity_update()
         leave_sudo._post_leave_cancel()
 
