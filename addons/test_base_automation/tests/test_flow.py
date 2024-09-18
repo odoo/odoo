@@ -125,6 +125,25 @@ class BaseAutomationTest(TransactionCaseWithUserDemo):
         self.assertEqual(lead2.state, 'draft')
         self.assertEqual(lead2.user_id, self.user_demo)
 
+    def test_111_on_stage_set_pian(self):
+        """ Test case: on_stage_set, with filter_pre_domain and filter_domain"""
+        stage = self.create_stage()
+        create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_stage_set',
+            filter_domain="[('stage_id', '=', %s)]" % stage.id,
+            filter_pre_domain='[("type", "=", "lead")]',
+            _actions={'state': 'code', 'code': "record.write({'user_id': %s})" % (self.user_demo.id)},
+        )
+        # Creating a lead should trigger the automation
+        lead = self.create_lead(type='lead', stage_id=stage.id)
+        self.assertEqual(lead.user_id, self.user_demo)
+
+        # Creating an opportunity shouldn't trigger the automation
+        opportunity = self.create_lead(type='opportunity', stage_id=stage.id)
+        self.assertNotEqual(opportunity.user_id, self.user_demo, "This automation should run only on leads not opportunities")
+
     def test_001_on_create_or_write(self):
         """
         Test case: on save, with filter_domain

@@ -28,6 +28,10 @@ class LeadTest(models.Model):
         'test_base_automation.stage', string='Stage',
         compute='_compute_stage_id', readonly=False, store=True)
 
+    type = fields.Selection([
+        ('lead', 'Lead'), ('opportunity', 'Opportunity')], required=True, index=True,
+        default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity')
+
     @api.depends('state')
     def _compute_stage_id(self):
         Stage = self.env['test_base_automation.stage']
