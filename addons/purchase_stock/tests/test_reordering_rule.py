@@ -3,11 +3,13 @@
 
 from datetime import datetime as dt, time
 from datetime import timedelta as td
+from json import loads
 
 from odoo import SUPERUSER_ID, Command
 from odoo.fields import Date
 from odoo.tests import Form, tagged, freeze_time
 from odoo.tests.common import TransactionCase
+from odoo.tools import format_date
 from odoo.tools.date_utils import add
 from odoo.exceptions import UserError, ValidationError
 
@@ -1052,6 +1054,67 @@ class TestReorderingRule(TransactionCase):
         # virtual available is -1 but we need to replenish 2
         self.product_01.virtual_available = -1
         self.assertEqual(op.qty_to_order, 2, 'sale order is ignored')
+
+    def test_reordering_rule_visibility_days_display(self):
+        """ Checks that the visibility days are properly shown on the info wizard & the orderpoint forecast.
+        """
+        today = dt.today()
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'visibility_days': 5,
+        })
+
+        # Out move in 5 days
+        out_5_days = self.env['stock.move'].create({
+            'name': '5 days',
+            'product_id': self.product_01.id,
+            'product_uom_qty': 5,
+            'location_id': warehouse.lot_stock_id.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'date': today + td(days=5),
+        })
+        out_5_days._action_confirm()
+
+        # Visibility days should be ignored if nothing is found within lead times (today + 1 day)
+        replenishment_info = loads(self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id}).json_lead_days)
+        self.assertEqual(replenishment_info['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
+        self.assertEqual(float(replenishment_info['qty_to_order']), 0)
+        self.assertEqual(replenishment_info['visibility_days'], 0)
+        # Extra lines for forecast are given through its context
+        context = orderpoint.action_product_forecast_report()['context']
+        self.assertEqual(context['qty_to_order'], 0)
+        self.assertEqual(context['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
+        self.assertEqual(context['qty_to_order_with_visibility_days'], 0)
+
+        # Out move today
+        out_today = self.env['stock.move'].create({
+            'name': 'today',
+            'product_id': self.product_01.id,
+            'product_uom_qty': 3,
+            'location_id': warehouse.lot_stock_id.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'partner_id': self.partner.id,  # Avoids the two moves being merged
+            'date': today,
+        })
+        out_today._action_confirm()
+
+        # Visibility days should be used something is found within lead times
+        replenishment_info = loads(self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id}).json_lead_days)
+        self.assertEqual(replenishment_info['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
+        self.assertEqual(float(replenishment_info['qty_to_order']), 8)
+        self.assertEqual(replenishment_info['visibility_days'], 5)
+        self.assertEqual(replenishment_info['visibility_days_date'], format_date(orderpoint.env, today + td(days=1) + td(days=5)))
+        # Extra lines for forecast are given through its context
+        context = orderpoint.action_product_forecast_report()['context']
+        self.assertEqual(context['qty_to_order'], 3)
+        self.assertEqual(context['lead_days_date'], format_date(orderpoint.env, today + td(days=1)))
+        self.assertEqual(context['qty_to_order_with_visibility_days'], 8)
+        self.assertEqual(context['visibility_days_date'], format_date(orderpoint.env, today + td(days=1) + td(days=5)))
 
     def test_update_po_line_without_purchase_access_right(self):
         """ Test that a user without purchase access right can update a PO line from picking."""

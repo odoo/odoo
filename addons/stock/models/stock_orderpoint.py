@@ -13,7 +13,7 @@ from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, frozendict, split_every
+from odoo.tools import float_compare, float_is_zero, frozendict, split_every, format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -228,6 +228,10 @@ class StockWarehouseOrderpoint(models.Model):
         action['context'] = {
             'active_id': self.product_id.id,
             'active_model': 'product.product',
+            'lead_days_date': format_date(self.env, self.lead_days_date),
+            'qty_to_order': self._get_qty_to_order(force_visibility_days=0),
+            'visibility_days_date': format_date(self.env, fields.Date.add(self.lead_days_date, days=int(self.visibility_days))),
+            'qty_to_order_with_visibility_days': self.qty_to_order_computed,
         }
         warehouse = self.warehouse_id
         if warehouse:
@@ -326,26 +330,33 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('qty_multiple', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
     def _compute_qty_to_order_computed(self):
         for orderpoint in self:
-            if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.qty_to_order_computed = False
-                continue
-            qty_to_order = 0.0
-            rounding = orderpoint.product_uom.rounding
-            # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
-            # there is a already something to ressuply base on lead times.
-            if float_compare(orderpoint.qty_forecast, orderpoint.product_min_qty, precision_rounding=rounding) < 0:
-                # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
-                product_context = orderpoint._get_product_context(visibility_days=orderpoint.visibility_days)
-                qty_forecast_with_visibility = orderpoint.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + orderpoint._quantity_in_progress()[orderpoint.id]
-                qty_to_order = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - qty_forecast_with_visibility
-                remainder = orderpoint.qty_multiple > 0.0 and qty_to_order % orderpoint.qty_multiple or 0.0
-                if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
-                        and float_compare(orderpoint.qty_multiple - remainder, 0.0, precision_rounding=rounding) > 0):
-                    if float_is_zero(orderpoint.product_max_qty, precision_rounding=rounding):
-                        qty_to_order += orderpoint.qty_multiple - remainder
-                    else:
-                        qty_to_order -= remainder
-            orderpoint.qty_to_order_computed = qty_to_order
+            orderpoint.qty_to_order_computed = orderpoint._get_qty_to_order()
+
+    def _get_qty_to_order(self, force_visibility_days=False):
+        self.ensure_one()
+        if not self.product_id or not self.location_id:
+            return False
+        visibility_days = self.visibility_days
+        if force_visibility_days is not False:
+            # Accepts falsy values such as 0.
+            visibility_days = force_visibility_days
+        qty_to_order = 0.0
+        rounding = self.product_uom.rounding
+        # The check is on purpose. We only want to consider the visibility days if the forecast is negative and
+        # there is a already something to ressuply base on lead times.
+        if float_compare(self.qty_forecast, self.product_min_qty, precision_rounding=rounding) < 0:
+            # We want to know how much we should order to also satisfy the needs that gonna appear in the next (visibility) days
+            product_context = self._get_product_context(visibility_days=visibility_days)
+            qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + self._quantity_in_progress()[self.id]
+            qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
+            remainder = (self.qty_multiple > 0.0 and qty_to_order % self.qty_multiple) or 0.0
+            if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
+                    and float_compare(self.qty_multiple - remainder, 0.0, precision_rounding=rounding) > 0):
+                if float_is_zero(self.product_max_qty, precision_rounding=rounding):
+                    qty_to_order += self.qty_multiple - remainder
+                else:
+                    qty_to_order -= remainder
+        return qty_to_order
 
     def _get_qty_multiple_to_order(self):
         """ Calculates the minimum quantity that can be ordered according to the PO UoM or BoM
