@@ -1,14 +1,31 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import BaseCase, TransactionCase, tagged
+from odoo.tests.common import _logger as test_logger
 
 import logging
 import os
+
+from unittest.mock import patch
 
 _logger = logging.getLogger(__name__)
 
 
 class TestRetryCommon(BaseCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        original_runbot = test_logger.runbot
+        # lower 25 to info to avoid spaming builds with test logs
+
+        def runbot(message, *args):
+            if message.startswith('Retrying'):
+                return test_logger.info(message, *args)
+            return original_runbot(message, *args)
+        patcher = patch.object(test_logger, 'runbot', runbot)
+        cls.startClassPatcher(patcher)
+
     def get_tests_run_count(self):
         return int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
 
@@ -23,7 +40,6 @@ class TestRetry(TestRetryCommon):
     def test_log_levels(self):
         _logger.debug('test debug')
         _logger.info('test info')
-        _logger.runbot('test 25')
 
     def test_retry_success(self):
         tests_run_count = self.get_tests_run_count()
