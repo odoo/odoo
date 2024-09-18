@@ -156,8 +156,8 @@
                         </aside>
                         <main class="ms-2">
                             <field name="name" class="mb-0 fw-bold fs-4"/>
-                            <t t-if="installed">
-                                <div class="d-flex">
+                            <div class="d-flex">
+                                <t t-if="installed">
                                     <field name="state"
                                         widget="label_selection"
                                         options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'light'}}"/>
@@ -173,9 +173,9 @@
                                             </span>
                                         </div>
                                     </t>
-                                </div>
-                            </t>
-                            <span t-if="to_upgrade" class="badge text-bg-primary ms-1">Enterprise</span>
+                                </t>
+                                <span t-if="to_upgrade" class="badge text-bg-primary">Enterprise</span>
+                            </div>
                             <footer>
                                 <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-sm btn-primary ms-auto" name="button_immediate_install">Install</button>
                                 <button t-if="installed and is_disabled and !selection_mode" type="edit" class="btn btn-sm btn-secondary ms-auto">Activate</button>
