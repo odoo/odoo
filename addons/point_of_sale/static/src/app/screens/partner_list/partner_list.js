@@ -92,6 +92,12 @@ export class PartnerList extends Component {
     get isBalanceDisplayed() {
         return false;
     }
+    async editPartner(p) {
+        const partner = await this.pos.editPartner(p);
+        if (partner) {
+            this.clickPartner(partner);
+        }
+    }
     clickPartner(partner) {
         this.props.getPayload(partner);
         this.props.close();
