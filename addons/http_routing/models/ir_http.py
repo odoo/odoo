@@ -158,7 +158,7 @@ class IrHttp(models.AbstractModel):
         return path + sep + qs
 
     @classmethod
-    def _url_lang(cls, path_or_uri: str, lang_code: str | None = None) -> str:
+    def _url_lang(cls, path_or_uri: str, lang_code: str | None = None) -> dict:
         ''' Given a relative URL, make it absolute and add the required lang or
             remove useless lang.
             Nothing will be done for absolute or invalid URL.
@@ -176,8 +176,11 @@ class IrHttp(models.AbstractModel):
         except ValueError:
             # e.g. Invalid IPv6 URL, `werkzeug.urls.url_parse('http://]')`
             url = False
+        lang_url_code = ''
+        is_url_handled = False
         # relative URL with either a path or a force_lang
         if url and not url.netloc and not url.scheme and (url.path or force_lang):
+            is_url_handled = True
             location = werkzeug.urls.url_join(request.httprequest.path, location)
             lang_url_codes = [info.url_code for info in Lang._get_frontend().values()]
             lang_code = lang_code or request.context['lang']
@@ -194,6 +197,8 @@ class IrHttp(models.AbstractModel):
                     # Remove the default language unless it's explicitly provided
                     elif ps[1] == default_lg.url_code:
                         ps.pop(1)
+                        lang_code = default_lg.code
+                        lang_url_code = default_lg.url_code
                 # Insert the context language or the provided language
                 elif lang_url_code != default_lg.url_code or force_lang:
                     ps.insert(1, lang_url_code)
@@ -202,7 +207,7 @@ class IrHttp(models.AbstractModel):
                         ps.pop(-1)
 
                 location = '/'.join(ps) + sep + qs
-        return location
+        return {'location': location, 'lang_url_code': lang_url_code, 'lang_code': lang_code, 'is_url_handled': is_url_handled}
 
     @classmethod
     def _url_for(cls, url_from: str, lang_code: str | None = None) -> str:
@@ -213,7 +218,7 @@ class IrHttp(models.AbstractModel):
             :param lang_code: Must be the lang `code`. It could also be something
                               else, such as `'[lang]'` (used for url_return).
         '''
-        return cls._url_lang(url_from, lang_code=lang_code)
+        return cls._url_lang(url_from, lang_code=lang_code)['location']
 
     @classmethod
     def _is_multilang_url(cls, local_url: str, lang_url_codes: list[str] | None = None) -> bool:

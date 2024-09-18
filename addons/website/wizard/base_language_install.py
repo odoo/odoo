@@ -27,5 +27,9 @@ class BaseLanguageInstall(models.TransientModel):
         params = self._context.get('params', {})
         if 'url_return' in params:
             url = params['url_return'].replace('[lang]', self.first_lang_id.code)
-            return self.env['website'].get_client_action(url)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+                'params': {'action_id': self.env['website'].get_client_action_url(url)},
+            }
         return action

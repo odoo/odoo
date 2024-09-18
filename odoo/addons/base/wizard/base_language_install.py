@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class BaseLanguageInstall(models.TransientModel):
@@ -39,28 +39,14 @@ class BaseLanguageInstall(models.TransientModel):
         self.lang_ids.active = True
         mods._update_translations(self.lang_ids.mapped('code'), self.overwrite)
 
-        if len(self.lang_ids) == 1:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'base.language.install',
-                'res_id': self.id,
-                'view_mode': 'form',
-                'target': 'new',
-                'views': [[self.env.ref('base.language_install_view_form_lang_switch').id, 'form']],
-            }
-
+        template = 'base.language_install_view_form_lang_switch' if len(self.lang_ids) == 1 else 'base.languages_install'
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'context': dict(self._context, active_ids=self.ids),
+            'type': 'ir.actions.act_window',
+            'res_model': 'base.language.install',
+            'res_id': self.id,
+            'view_mode': 'form',
             'target': 'new',
-            'params': {
-                'message': _("The languages that you selected have been successfully installed.\
-                            Users can choose their favorite language in their preferences."),
-                'type': 'success',
-                'sticky': False,
-                'next': {'type': 'ir.actions.act_window_close'},
-            }
+            'views': [[self.env.ref(template).id, 'form']],
         }
 
     def reload(self):

@@ -25,6 +25,23 @@
            </field>
         </record>
 
+        <record id="base.languages_install" model="ir.ui.view">
+            <field name="name">Languages installed</field>
+            <field name="model">base.language.install</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <form string="Languages installed">
+                    <div>
+                        The languages that you selected have been successfully installed.
+                            Users can choose their favorite language in their preferences.
+                    </div>
+                    <footer>
+                        <button name="reload" string="Close" type="object" class="btn-primary" data-hotkey="q"/>
+                    </footer>
+                </form>
+           </field>
+        </record>
+
         <record id="view_base_language_install" model="ir.ui.view">
             <field name="name">Load a Translation</field>
             <field name="model">base.language.install</field>

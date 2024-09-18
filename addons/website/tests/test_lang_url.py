@@ -154,3 +154,137 @@ class TestControllerRedirect(TestLangUrl):
         # website.page
         assertUrlRedirect('/fr/page_1/', '/fr/page_1', "Check for website.page with language in URL.")
         assertUrlRedirect('/fr/page_1/?a=b', '/fr/page_1?a=b', "Check for website.page with language in URL + URL params.")
+
+
+@tagged('-at_install', 'post_install')
+class TestTranslateUrl(TestLangUrl):
+    def setUp(self):
+        super().setUp()
+        self.base = self.base_url()
+        view_test_translate_url = self.env['ir.ui.view'].create({
+            'name': 'NewPage',
+            'type': 'qweb',
+            'arch': '<div>NewPage</div>',
+            'key': 'test.view_test_translate_url',
+        })
+        self.name_page_en = '/page-en'
+        self.page = self.env['website.page'].create({
+            'view_id': view_test_translate_url.id,
+            'url': self.name_page_en,
+            'is_published': True,
+            'website_id': self.website.id,
+        })
+        self.name_page_fr = '/page-fr'
+        self.page.with_context(lang='fr_FR').url = self.name_page_fr
+
+    def test_access_translated_url(self):
+        # Trying to access the french url of a page (without the lang in the
+        # url) if the website language is in english should redirect to the
+        # english url of this page.
+        r = self.url_open(self.name_page_fr)
+        self.assertEqual(r.history[0].status_code, 303)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, self.base + self.name_page_en)
+
+        # Trying to access the french url of a page (with the lang in the url)
+        # should change the website language to french and access the french url
+        # of the page.
+        r = self.url_open('/fr' + self.name_page_fr)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, self.base + '/fr' + self.name_page_fr)
+
+        # Trying to access the english url of a page (without the lang in the
+        # url) if the website language is in french should redirect to the
+        # french url of this page.
+        r = self.url_open(self.name_page_en)
+        self.assertEqual(r.history[0].status_code, 303)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, self.base + '/fr' + self.name_page_fr)
+
+    def test_access_translated_homepage(self):
+        # From the homepage, changing the language of the website should
+        # redirect to the french url of the specific homepage.
+        name_homepage_url_fr = '/accueil'
+        homepage_domain = [('url', '=', '/')] + self.website.website_domain()
+        homepage_specific = self.env['website.page'].search(homepage_domain, order='website_id asc', limit=1)
+        homepage_specific.with_context(lang='fr_FR').url = name_homepage_url_fr
+        r = self.url_open('/fr')
+        self.assertEqual(r.history[0].status_code, 303)
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, self.base + '/fr' + name_homepage_url_fr)
+
+    def test_translate_url_exists_in_other_language(self):
+        # It should be possible to translate the url of a page with a url that
+        # exists in another language.
+        self.start_tour('/contactus', 'translate_url_exists_in_other_language', login='admin')
+        r = self.url_open('/fr/page-en')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, self.base + '/fr/page-en')
+
+    def test_translate_url_exists_in_current_language(self):
+        # It should not be possible to have two url that are the same in the
+        # same language
+        self.start_tour('/contactus', 'translate_url_exists_in_same_language', login='admin')
+        r = self.url_open('/fr/page-fr-1')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.url, self.base + '/fr/page-fr-1')
+
+    def test_update_url_impact_homepage_url(self):
+        # If a page url is the website homepage url, updating this url through
+        # the "translate" modal should also update the homepage url if the
+        # translation is done in the website default language.
+        self.website.homepage_url = '/contactus'
+        self.website.default_lang_id = self.lang_fr
+        self.start_tour('/contactus', 'update_homepage_url', login='admin')
+        self.assertEqual(self.website.homepage_url, '/contactus-fr')
+
+    def test_new_homepage_impact_homepage_url_translations(self):
+        # Using a page as the default website page should update the website
+        # homepage url.
+        self.website.default_lang_id = self.lang_fr
+        self.page.is_homepage = True
+        self.assertEqual(self.website.homepage_url, self.name_page_fr)
+        self.page.is_homepage = False
+        self.assertEqual(self.website.homepage_url, '')
+
+    def test_redirect_on_new_url(self):
+        # If the user modifies a url in the website default language, it should
+        # have the possibility to create a url redirection.
+        self.website.default_lang_id = self.lang_fr
+        self.start_tour('/contactus', 'update_default_lang_website_url', login='admin')
+        website_rewrite = self.env['website.rewrite'].search([('url_from', '=', '/contactus'), ('url_to', '=', '/contactus-fr')])
+        self.assertEqual(len(website_rewrite), 1, "A rewrite route should have been created")
+
+    def test_automatic_link_on_page_translation(self):
+        # If a url is translated, the links to this url that are present on a
+        # page should automatically be translated when changing the website
+        # language.
+        view_with_anchor = self.env['ir.ui.view'].create({
+            'name': 'new_page_with_anchor',
+            'type': 'qweb',
+            'arch': f'<a id="foo" href="{self.name_page_en}">Link to page</a>',
+            'key': 'test.test_translate_url_links',
+        })
+        page_with_anchor = self.env['website.page'].create({
+            'name': 'page-link',
+            'view_id': view_with_anchor.id,
+            'url': '/page-link-en',
+            'website_id': self.website.id,
+        })
+        page_with_anchor_url_fr = '/page-link-fr'
+        page_with_anchor.with_context(lang='fr_FR').url = page_with_anchor_url_fr
+        default_website = self.env.ref('website.default_website')
+        self.page_specific_menu = self.env['website.menu'].create({
+            'name': 'page-link',
+            'page_id': page_with_anchor.id,
+            'website_id': self.website.id,
+            'parent_id': default_website.menu_id.id,
+        })
+        with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}):
+            self.authenticate('admin', 'admin')
+            r = self.url_open('/fr')
+            self.assertIn(f'href="/fr{page_with_anchor_url_fr}"', r.text)
+            self.assertNotIn('href="/page-link-en"', r.text)
+            r = self.url_open(f'/fr{page_with_anchor_url_fr}', r.text)
+            self.assertIn(f'href="/fr{self.name_page_fr}"', r.text)
+            self.assertNotIn(f'href="{self.name_page_en}"', r.text)

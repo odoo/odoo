@@ -30,6 +30,7 @@ class IrQWeb(models.AbstractModel):
         'link': 'href',
         'script': 'src',
         'img': 'src',
+        'iframe': 'src',
     }
 
     # assume cache will be invalidated by third party on write to ir.ui.view
@@ -106,11 +107,19 @@ class IrQWeb(models.AbstractModel):
 
         return irQweb
 
+    def _is_static_node(self, el, compile_context):
+        if el.tag in self.URL_ATTRS and not el.attrib.get('data-no-post-process'):
+            return False
+        return super()._is_static_node(el, compile_context)
+
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):
             return atts
 
         atts = super()._post_processing_att(tagName, atts)
+
+        if tagName not in self.URL_ATTRS:
+            return atts
 
         website = ir_http.get_request_website()
         if not website and self.env.context.get('website_id'):
