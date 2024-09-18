@@ -73,8 +73,8 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 run: "click",
             },
             // Dine in / Takeaway can be toggled.
-            ProductScreen.clickControlButton("Dine in"),
-            ProductScreen.clickControlButton("Takeaway"),
+            ProductScreen.clickControlButton("Switch to Takeaway"),
+            ProductScreen.clickControlButton("Switch to Dine in"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
