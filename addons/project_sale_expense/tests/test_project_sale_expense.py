@@ -32,3 +32,38 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         })
         so.action_confirm()
         self.assertFalse(so.project_account_id)
+
+    def test_compute_analytic_distribution_expense(self):
+        project = self.env['project.project'].create({'name': 'SO Project'})
+        project.account_id = self.analytic_account_1
+        so_values = {
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 2,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': self.product_a.list_price,
+            })],
+            'project_id': project.id,
+        }
+
+        so1 = self.env['sale.order'].create(so_values)
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense Test',
+            'employee_id': self.expense_employee.id,
+            'sale_order_id': so1.id,
+        })
+        self.assertEqual(
+            expense.analytic_distribution,
+            {str(self.analytic_account_1.id): 100},
+            "The analytic distribution of the expense should be set to the account of the project.",
+        )
+
+        project.account_id = False
+        so2 = self.env['sale.order'].create(so_values)
+        expense.sale_order_id = so2
+        self.assertFalse(
+            expense.analytic_distribution,
+            "The analytic distribution of the expense should be unset as the project has no account.",
+        )
