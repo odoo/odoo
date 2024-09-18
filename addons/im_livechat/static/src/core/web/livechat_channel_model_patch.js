@@ -1,6 +1,5 @@
 import { LivechatChannel } from "@im_livechat/core/common/livechat_channel_model";
 
-import { Record } from "@mail/core/common/record";
 import { useSequential } from "@mail/utils/common/hooks";
 
 import { _t } from "@web/core/l10n/translation";
@@ -10,10 +9,6 @@ import { sprintf } from "@web/core/utils/strings";
 const sequential = useSequential();
 
 const livechatChannelPatch = {
-    setup() {
-        super.setup(...arguments);
-        this.threads = Record.many("Thread", { inverse: "livechatChannel" });
-    },
     async join({ notify = true } = {}) {
         this.are_you_inside = true;
         if (notify) {
