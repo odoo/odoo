@@ -23,9 +23,9 @@ export class OrderTabs extends Component {
     newFloatingOrder() {
         this.pos.selectedTable = null;
         const order = this.pos.add_new_order();
-        order.setBooked(true);
         this.pos.showScreen("ProductScreen");
         this.dialog.closeAll();
+        return order;
     }
     selectFloatingOrder(order) {
         this.pos.set_order(order);
