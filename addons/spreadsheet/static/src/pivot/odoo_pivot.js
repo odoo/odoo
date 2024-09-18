@@ -6,11 +6,12 @@ import { user } from "@web/core/user";
 import { NO_RECORD_AT_THIS_POSITION, OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
-import { deepEqual, omit } from "@web/core/utils/objects";
+import { omit } from "@web/core/utils/objects";
 import { OdooPivotLoader } from "./odoo_pivot_loader";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
-const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotValue } = helpers;
+const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotValue, deepEquals } =
+    helpers;
 
 /**
  * @typedef {import("@odoo/o-spreadsheet").FunctionResultObject} FunctionResultObject
@@ -81,15 +82,15 @@ export class OdooPivot {
         const actualDefinition = this.coreDefinition;
         this.coreDefinition = nextDefinition;
         if (
-            deepEqual(actualDefinition.columns, nextDefinition.columns) &&
-            deepEqual(actualDefinition.rows, nextDefinition.rows) &&
-            deepEqual(actualDefinition.sortedColumn, nextDefinition.sortedColumn) &&
-            deepEqual(actualDefinition.domain, nextDefinition.domain) &&
-            deepEqual(actualDefinition.context, nextDefinition.context) &&
-            deepEqual(actualDefinition.actionXmlId, nextDefinition.actionXmlId) &&
-            deepEqual(actualDefinition.model, nextDefinition.model)
+            deepEquals(actualDefinition.columns, nextDefinition.columns) &&
+            deepEquals(actualDefinition.rows, nextDefinition.rows) &&
+            deepEquals(actualDefinition.sortedColumn, nextDefinition.sortedColumn) &&
+            deepEquals(actualDefinition.domain, nextDefinition.domain) &&
+            deepEquals(actualDefinition.context, nextDefinition.context) &&
+            deepEquals(actualDefinition.actionXmlId, nextDefinition.actionXmlId) &&
+            deepEquals(actualDefinition.model, nextDefinition.model)
         ) {
-            if (deepEqual(actualDefinition.measures, nextDefinition.measures)) {
+            if (deepEquals(actualDefinition.measures, nextDefinition.measures)) {
                 // Nothing change for the table structure, no need to reload the data
                 return;
             }
@@ -107,6 +108,9 @@ export class OdooPivot {
     }
 
     isMeasuresTheSameForData(actualMeasures, nextMeasures) {
+        if (actualMeasures.length !== nextMeasures.length) {
+            return false;
+        }
         for (const measure of actualMeasures) {
             const updatedMeasure = nextMeasures.find((m) => m.id === measure.id);
             if (

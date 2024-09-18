@@ -794,6 +794,81 @@ test("can import (export) contextual domain", async () => {
     expect.verifySteps(["read_group"]);
 });
 
+test("Adding a measure should trigger a reload", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [],
+                name: "A pivot",
+            },
+        },
+    };
+    const model = await createModelWithDataSource({
+        spreadsheetData,
+        mockRPC: function (route, args) {
+            if (args.method === "read_group") {
+                expect.step(args.kwargs.fields);
+                expect.step("read_group");
+            }
+        },
+    });
+    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:sum")');
+    await animationFrame();
+    expect.verifySteps([["probability:sum"], "read_group"]);
+    updatePivot(model, 1, {
+        measures: [
+            { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
+            { id: "probability:avg", fieldName: "probability", aggregator: "avg" },
+        ],
+    });
+    await animationFrame();
+    expect.verifySteps([["probability:sum", "probability:avg"], "read_group"]);
+    updatePivot(model, 1, {
+        measures: [
+            { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
+            { id: "probability:avg", fieldName: "probability", aggregator: "avg" },
+            { id: "__count", fieldName: "__count", aggregator: "sum" },
+        ],
+    });
+    await animationFrame();
+    expect.verifySteps([["probability:sum", "probability:avg", "__count"], "read_group"]);
+});
+
+test("Updating dimensions with undefined values does not trigger a new rpc", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                columns: [{ fieldName: "date" }],
+                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
+                model: "partner",
+                rows: [],
+                name: "A pivot",
+            },
+        },
+    };
+    const model = await createModelWithDataSource({
+        spreadsheetData,
+        mockRPC: function (route, args) {
+            if (args.method === "read_group") {
+                expect.step("read_group");
+            }
+        },
+    });
+    setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:sum")');
+    await animationFrame();
+    expect.verifySteps(["read_group", "read_group"]);
+    updatePivot(model, 1, {
+        columns: [{ fieldName: "date", granularity: undefined, order: undefined }],
+    });
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 test("Can group by many2many field ", async () => {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
