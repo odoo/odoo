@@ -4,6 +4,7 @@ import ast
 import json
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
 
@@ -87,7 +88,9 @@ class LoyaltyReward(models.Model):
     is_global_discount = fields.Boolean(compute='_compute_is_global_discount')
 
     # Product rewards
-    reward_product_id = fields.Many2one('product.product', string='Product')
+    reward_product_id = fields.Many2one(
+        'product.product', string='Product', domain=[('type', '!=', 'combo')]
+    )
     reward_product_tag_id = fields.Many2one('product.tag', string='Product Tag')
     multi_product = fields.Boolean(compute='_compute_multi_product')
     reward_product_ids = fields.Many2many(
@@ -175,7 +178,9 @@ class LoyaltyReward(models.Model):
     @api.depends('reward_product_id', 'reward_product_tag_id', 'reward_type')
     def _compute_multi_product(self):
         for reward in self:
-            products = reward.reward_product_id + reward.reward_product_tag_id.product_ids
+            products = reward.reward_product_id + reward.reward_product_tag_id.product_ids.filtered(
+                lambda product: product.type != 'combo'
+            )
             reward.multi_product = reward.reward_type == 'product' and len(products) > 1
             reward.reward_product_ids = reward.reward_type == 'product' and products or self.env['product.product']
 
@@ -247,6 +252,11 @@ class LoyaltyReward(models.Model):
     @api.depends("reward_type")
     def _compute_user_has_debug(self):
         self.user_has_debug = self.env.user.has_group('base.group_no_one')
+
+    @api.constrains('reward_product_id')
+    def _check_reward_product_id_no_combo(self):
+        if any(reward.reward_product_id.type == 'combo' for reward in self):
+            raise ValidationError(_("A reward product can't be of type \"combo\"."))
 
     def _create_missing_discount_line_products(self):
         # Make sure we create the product that will be used for our discounts
