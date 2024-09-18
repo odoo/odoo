@@ -24,6 +24,7 @@ export class OutOfFocusService {
         this.audio = undefined;
         this.multiTab = services.multi_tab;
         this.notificationService = services.notification;
+        this.closeFuncs = [];
     }
 
     async notify(message, channel) {
@@ -110,7 +111,10 @@ export class OutOfFocusService {
      * @param {Object} options
      */
     async sendOdooNotification(message, options) {
-        this.notificationService.add(message, options);
+        this.closeFuncs.push(this.notificationService.add(message, options));
+        if (this.closeFuncs.length > 3) {
+            this.closeFuncs.shift()();
+        }
         this._playSound();
     }
 
