@@ -112,10 +112,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 return cls.registries[db_name]
             except KeyError:
                 return cls.new(db_name)
-            finally:
-                # set db tracker - cleaned up at the WSGI dispatching phase in
-                # odoo.http.root
-                threading.current_thread().dbname = db_name
 
     _init: bool  # whether init needs to be done
     ready: bool  # whether everything is set up
