@@ -1,5 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
+import { isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
+import { isTextNode } from "@web/views/view_compiler";
 import { Toolbar } from "./toolbar";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
@@ -129,6 +131,12 @@ export class ToolbarPlugin extends Plugin {
         }
     }
 
+    getFilterTraverseNodes() {
+        return this.shared
+            .getTraversedNodes()
+            .filter((node) => !isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)));
+    }
+
     updateToolbarVisibility(selectionData) {
         if (this.config.disableFloatingToolbar) {
             return;
@@ -144,7 +152,7 @@ export class ToolbarPlugin extends Plugin {
         if (this.overlay.isOpen) {
             if (
                 !inEditable ||
-                ((isCollapsed || !this.shared.getTraversedNodes().length) && !this.isMobileToolbar)
+                ((isCollapsed || !this.getFilterTraverseNodes().length) && !this.isMobileToolbar)
             ) {
                 const preventClosing = selectionData.documentSelection?.anchorNode?.closest?.(
                     "[data-prevent-closing-overlay]"
@@ -176,7 +184,7 @@ export class ToolbarPlugin extends Plugin {
         if (!selection) {
             return;
         }
-        const nodes = this.shared.getTraversedNodes();
+        const nodes = this.getFilterTraverseNodes();
         for (const buttonGroup of this.buttonGroups) {
             if (buttonGroup.namespace === this.state.namespace) {
                 for (const button of buttonGroup.buttons) {
