@@ -884,9 +884,7 @@ export class Thread extends Record {
     }
 
     /** @param {Object} [options] */
-    open(options) {
-        this.setAsDiscussThread();
-    }
+    open(options) {}
 
     openChatWindow({ fromMessagingMenu } = {}) {
         const cw = this.store.ChatWindow.insert(
