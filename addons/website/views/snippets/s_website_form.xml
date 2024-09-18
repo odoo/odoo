@@ -211,14 +211,14 @@
                            data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
             </we-button-group>
             <we-checkbox string="Description" data-toggle-description="true" data-no-preview="true"/>
-            <we-input string="Placeholder" class="o_we_large"
+            <we-input string="Placeholder" class="o_we_large" data-name="placeholder_opt"
                 data-select-attribute="" data-attribute-name="placeholder"
                 data-apply-to="input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], textarea"/>
             <t t-set="default_value_label">Default Value</t>
-            <we-input t-att-string="default_value_label" class="o_we_large" data-select-textarea-value="" data-apply-to="textarea"/>
+            <we-input t-att-string="default_value_label" class="o_we_large" data-select-textarea-value="" data-apply-to="textarea" data-name="textarea_value_opt"/>
             <we-checkbox t-att-string="default_value_label" data-select-attribute="checked" data-attribute-name="checked"
                       data-apply-to=".col-sm > * > input[type='checkbox']" data-no-preview="true"/>
-            <we-input t-att-string="default_value_label" class="o_we_large" data-select-attribute="" data-attribute-name="value" data-select-property=""
+            <we-input t-att-string="default_value_label" class="o_we_large" data-select-attribute="" data-attribute-name="value" data-select-property="" data-name="value_opt"
                       data-property-name="value" data-apply-to="input[type='text']:not(.datetimepicker-input), input[type='email'], input[type='tel'], input[type='url']"/>
             <we-input t-att-string="default_value_label" class="o_we_large" data-select-attribute="" data-attribute-name="value" data-select-property=""
                       data-step="1" data-property-name="value" data-apply-to="input[type='number']"/>

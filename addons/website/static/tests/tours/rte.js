@@ -32,7 +32,7 @@ registerWebsitePreviewTour('rte_translator', {
     content: 'select Parseltongue',
     trigger: '.dropdown-item:contains(Parseltongue)',
     run: "click",
-}, 
+},
 {
     trigger: '.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
 },
@@ -127,13 +127,29 @@ registerWebsitePreviewTour('rte_translator', {
     run() {
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap p:first").replaceWith('<p>Write one or <font style="background-color: yellow;">two paragraphs <b>describing</b></font> your product or\
             <font style="color: rgb(255, 0, 0);">services</font>. To be successful your content needs to be\
-            useful to your <a href="/999">readers</a>.</p> <input value="test translate default value" placeholder="test translate placeholder"/>\
-            <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
+            useful to your <a href="/999">readers</a>.</p>\
+            <p class="test_translate">&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>');
         $('iframe:not(.o_ignore_in_tour)').contents().find("#wrap img").attr("title", "test translate image title");
     }
-    }, {
+}, {
     content: "ensure change was applied",
     trigger: ':iframe #wrap p:first b',
+},
+...dragNDrop({
+    id: "s_website_form",
+    name: "Form"
+}), {
+    content: "Click on form text input",
+    trigger: ':iframe .s_website_form input[type="text"]',
+    run: "click",
+}, {
+    content: "Set a placeholder",
+    trigger: '[data-attribute-name="placeholder"] input',
+    run: 'edit test translate placeholder',
+}, {
+    content: "Set a default value",
+    trigger: '[data-attribute-name="value"] input',
+    run: 'edit test translate default value',
 },
 ...clickOnSave(),
 {
@@ -184,7 +200,7 @@ registerWebsitePreviewTour('rte_translator', {
     },
 }, {
     content: "translate text with special char",
-    trigger: ':iframe #wrap input + p span:first',
+    trigger: ':iframe #wrap p.test_translate span:first',
     run(actionHelper) {
         actionHelper.click();
         this.anchor.textContent = '<{translated}>' + this.anchor.textContent;
@@ -199,24 +215,16 @@ registerWebsitePreviewTour('rte_translator', {
 },
 {
     content: "click on input",
-    trigger: ':iframe #wrap input:first',
+    trigger: ':iframe .s_website_form input[type="text"]',
     run: 'click',
 }, {
     content: "translate placeholder",
-    trigger: '.modal-dialog input:first',
+    trigger: '[data-attribute-name="placeholder"] input',
     run: "edit test Parseltongue placeholder",
 }, {
     content: "translate default value",
-    trigger: '.modal-dialog input:last',
+    trigger: '[data-attribute-name="value"] input',
     run: "edit test Parseltongue default value",
-},
-{
-    trigger: '.modal input:value("test Parseltongue placeholder")',
-},
-{
-    content: "close modal",
-    trigger: '.modal-footer .btn-primary',
-    run: "click",
 }, {
     content: "check: input marked as translated",
     trigger: ':iframe input[placeholder="test Parseltongue placeholder"].oe_translated',
@@ -227,7 +235,7 @@ registerWebsitePreviewTour('rte_translator', {
     trigger: ':iframe #wrap p font:first:contains(translated Parseltongue text)',
 }, {
     content: "check: content with special char is translated",
-    trigger: ":iframe #wrap input + p:contains(<{translated}><b></b> is an HTML tag & )",
+    trigger: ":iframe #wrap p.test_translate:contains(<{translated}><b></b> is an HTML tag & )",
 }, {
     content: "check: placeholder translation",
     trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',

@@ -10,6 +10,7 @@ from __future__ import annotations
 import codecs
 import fnmatch
 import functools
+import html as html_stdlib
 import inspect
 import io
 import itertools
@@ -165,6 +166,12 @@ TRANSLATED_ATTRS = dict.fromkeys({
     'value_label', 'data-tooltip', 'label',
 }, lambda e: True)
 
+# These attributes must not be exported to .po(t) files and `t-attf-` attributes
+# should not be translated.
+NO_EXPORT_TRANSLATED_ATTRS = dict.fromkeys({
+    'src',
+}, lambda e: True)
+
 def translate_attrib_value(node):
     # check if the value attribute of a node must be translated
     classes = node.attrib.get('class', '').split(' ')
@@ -179,6 +186,7 @@ TRANSLATED_ATTRS.update(
     value=translate_attrib_value,
     text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
     **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
+    **NO_EXPORT_TRANSLATED_ATTRS,
 )
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
@@ -1025,7 +1033,7 @@ def _extract_translatable_qweb_terms(element, callback):
         if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
         if (el.tag.lower() not in SKIPPED_ELEMENTS
                 and "t-js" not in el.attrib
-                and not (el.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS)
+                and not (el.tag == 'attribute' and el.get('name') not in TRANSLATED_ATTRS or el.get('name') in NO_EXPORT_TRANSLATED_ATTRS)
                 and el.get("t-translation", '').strip() != "off"):
 
             _push(callback, el.text, el.sourceline)
@@ -1033,7 +1041,10 @@ def _extract_translatable_qweb_terms(element, callback):
             # component nodes
             is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
             for attr in el.attrib:
-                if (not is_component and attr in TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
+                if (
+                    (not is_component and attr in TRANSLATED_ATTRS and attr not in NO_EXPORT_TRANSLATED_ATTRS)
+                    or (is_component and attr.endswith(".translate"))
+                ):
                     _push(callback, el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
@@ -1192,6 +1203,15 @@ class TranslationReader:
                     _logger.exception("Failed to extract terms from %s %s", xml_name, name)
                     continue
                 for term_en, term_langs in translation_dictionary.items():
+                    term_en_unescaped = html_stdlib.unescape(term_en)
+                    value_en_unescaped = html_stdlib.unescape(value_en)
+                    re_attr_no_export = r'(%s)=[\'"]' % '|'.join(NO_EXPORT_TRANSLATED_ATTRS) + re.escape(term_en_unescaped) + r'[\'"]'
+                    if re.search(re_attr_no_export, value_en_unescaped):
+                        # That's not perfect, we could check that the term
+                        # is ONLY in src attributes, but that's not perfect
+                        # either, because we could have this HTML:
+                        # <img src="X"/> <div style="background-image: url(X)"/>
+                        continue
                     term_lang = term_langs.get(self._lang)
                     self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id, value=term_lang if term_lang != term_en else '')
 

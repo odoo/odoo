@@ -5,48 +5,10 @@ import { useService } from '@web/core/utils/hooks';
 import { WebsiteEditorComponent } from '../editor/editor';
 import { WebsiteDialog } from '../dialog/dialog';
 import { browser } from "@web/core/browser/browser";
-import { useEffect, useRef, Component, xml } from "@odoo/owl";
+import { Component, useRef, xml } from "@odoo/owl";
 
 const localStorageNoDialogKey = 'website_translator_nodialog';
 
-export class AttributeTranslateDialog extends Component {
-    static components = { WebsiteDialog };
-    static template = "website.AttributeTranslateDialog";
-    static props = ["node", "close"];
-    setup() {
-        this.title = _t("Translate Attribute");
-
-        this.formEl = useRef('form-container');
-
-        useEffect(() => {
-            this.translation = $(this.props.node).data('translation');
-            const $group = $('<div/>', {class: 'mb-3'}).appendTo(this.formEl.el);
-            for (const [attr, node] of Object.entries(this.translation)) {
-                const $node = $(node);
-                const $label = $('<label class="col-form-label"></label>').text(attr);
-                const $input = $('<input class="form-control"/>').val($node.html());
-                $input.on('change keyup', function () {
-                    const value = $input.val();
-                    $node.text(value).trigger('change', node);
-                    const $originalNode = $node.data('$node');
-                    const nodeAttribute = $node.data('attribute');
-                    if (nodeAttribute) {
-                        $originalNode.attr(nodeAttribute, value);
-                        if (nodeAttribute === 'value') {
-                            $originalNode[0].value = value;
-                        }
-                        $originalNode.trigger('translate');
-                    } else {
-                        $originalNode.val(value).trigger('translate');
-                    }
-                    $node.trigger('change');
-                    $originalNode[0].classList.add('oe_translated');
-                });
-                $group.append($label).append($input);
-            }
-        }, () => [this.props.node]);
-    }
-}
 
 // Used to translate the text of `<select/>` options since it should not be
 // possible to interact with the content of `.o_translation_select` elements.
@@ -105,6 +67,7 @@ const savableSelector = '[data-oe-translation-source-sha], ' +
     '[title*="data-oe-translation-source-sha="], ' +
     '[value*="data-oe-translation-source-sha="], ' +
     'textarea:contains(data-oe-translation-source-sha), ' +
+    '[data-oe-translatable-link*="data-oe-translation-source-sha="], ' +
     '[alt*="data-oe-translation-source-sha="]';
 
 export class WebsiteTranslator extends WebsiteEditorComponent {
@@ -167,16 +130,14 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
     async _beforeEditorActive($wysiwygEditable) {
         this.$wysiwygEditable = $wysiwygEditable;
         const self = this;
-        var attrs = ['placeholder', 'title', 'alt', 'value'];
         const $editable = this.getEditableArea();
         const translationRegex = /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
-        let $edited = $();
-        attrs.forEach((attr) => {
+        for (const attr of ["placeholder", "title", "alt", "value", "data-oe-translatable-link"]) {
             const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-source-sha="]').filter(':empty, input, select, textarea, img');
             attrEdit.each(function () {
                 var $node = $(this);
                 var translation = $node.data('translation') || {};
-                var trans = $node.attr(attr);
+                var trans = decodeURI($node.attr(attr));
                 var match = trans.match(translationRegex);
                 var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_attribute').appendTo(self.websiteService.pageDocument.body);
                 $trans.data('$node', $node).data('attribute', attr);
@@ -192,9 +153,18 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 }
 
                 $node.addClass('o_translatable_attribute').data('translation', translation);
+                const onAttrChange = (mutationsList, observer) => {
+                    for (let mutation of mutationsList) {
+                        const targetEl = mutation.target;
+                        const value = targetEl.getAttribute(attr);
+                        $trans[0].textContent = value;
+                        targetEl.classList.add("oe_translated");
+                    }
+                };
+                const attrObserver = new MutationObserver(onAttrChange);
+                attrObserver.observe(this, { attributeFilter: [attr] });
             });
-            $edited = $edited.add(attrEdit);
-        });
+        }
         const textEdit = $editable.filter('textarea:contains(data-oe-translation-source-sha)');
         textEdit.each(function () {
             var $node = $(this);
@@ -211,6 +181,12 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
 
             $node.addClass('o_translatable_text').removeClass('o_text_content_invisible')
                 .data('translation', translation);
+            // We can't use an observer here because textarea value property is
+            // not reflected in the DOM.
+            this.addEventListener("change", () => {
+                $trans[0].textContent = this.value;
+                this.classList.add("oe_translated");
+            });
         });
 
         // Hack: we add a temporary element to handle option's text
@@ -260,9 +236,13 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const toTranslateColor = window.getComputedStyle(document.documentElement).getPropertyValue('--o-we-content-to-translate-color');
         const translatedColor = window.getComputedStyle(document.documentElement).getPropertyValue('--o-we-translated-content-color');
 
-        styleEl.sheet.insertRule(`[data-oe-translation-state].o_dirty {background: ${translatedColor} !important;}`);
-        styleEl.sheet.insertRule(`[data-oe-translation-state="translated"] {background: ${translatedColor} !important;}`);
-        styleEl.sheet.insertRule(`[data-oe-translation-state] {background: ${toTranslateColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state].o_dirty:not(img) {background: ${translatedColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state="translated"]:not(img) {background: ${translatedColor} !important;}`);
+        styleEl.sheet.insertRule(`[data-oe-translation-state]:not(img) {background: ${toTranslateColor} !important;}`);
+
+        styleEl.sheet.insertRule(`img[data-oe-translation-state].o_dirty {border: 5px solid ${translatedColor} !important;}`);
+        styleEl.sheet.insertRule(`img[data-oe-translation-state="translated"] {border: 5px solid ${translatedColor} !important;}`);
+        styleEl.sheet.insertRule(`img[data-oe-translation-state] {border: 5px solid ${toTranslateColor} !important;}`);
 
         const showNotification = ev => {
             let message = _t('This translation is not editable.');
@@ -275,7 +255,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             });
         };
         for (const translationEl of $editable) {
-            if (translationEl.closest('.o_not_editable')) {
+            if (translationEl.closest('.o_not_editable' && !translationEl.closest('img.o_editable_media'))) {
                 translationEl.addEventListener('click', showNotification);
             }
             if (translationEl.closest('.s_table_of_content_navbar_wrap')) {
@@ -328,11 +308,9 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
 
         this.$translations
             .add(this.getEditableArea().filter('.o_translation_select_option'))
+            .filter((_, elem) => !!elem.closest('.o_translation_select'))
             .prependEvent('click.translator', (ev) => {
-                const node = ev.target;
-                const isSelectTranslation = !!node.closest('.o_translation_select');
-                this.dialogService.add(isSelectTranslation ?
-                    SelectTranslateDialog : AttributeTranslateDialog, {node});
+                this.dialogService.add(SelectTranslateDialog, {node: ev.target});
             });
     }
 
