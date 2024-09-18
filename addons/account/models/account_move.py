@@ -5148,11 +5148,17 @@ class AccountMove(models.Model):
             discount_date = epd_installment['line'].discount_date
             discount_amount_currency = epd_installment['discount_amount_currency']
             days_left = (discount_date - fields.Date.context_today(self)).days  # should never be lower than 0 since epd is valid
-            discount_msg = _(
-                "Discount of %(amount)s if paid %(when)s",
-                amount=self.currency_id.format(discount_amount_currency),
-                when=_("within %(days)s days", days=days_left) if days_left > 0 else _("today"),
-            )
+            if days_left > 0:
+                discount_msg = _(
+                    "Discount of %(amount)s if paid within %(days)s days",
+                    amount=self.currency_id.format(discount_amount_currency),
+                    days=days_left,
+                )
+            else:
+                discount_msg = _(
+                    "Discount of %(amount)s if paid today",
+                    amount=self.currency_id.format(discount_amount_currency),
+                )
 
             additional_info.update({
                 'epd_discount_amount_currency': discount_amount_currency,
