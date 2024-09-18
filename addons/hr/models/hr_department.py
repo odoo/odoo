@@ -14,7 +14,7 @@ class Department(models.Model):
     _parent_store = True
 
     name = fields.Char('Department Name', required=True, translate=True)
-    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
+    complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True, translate=True)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.company)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True, check_company=True)
