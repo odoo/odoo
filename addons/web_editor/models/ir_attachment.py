@@ -38,7 +38,7 @@ class IrAttachment(models.Model):
                 attachment.image_src = attachment.url
             else:
                 # Adding unique in URLs for cache-control
-                unique = attachment.checksum[:8]
+                unique = (attachment.checksum or attachment._compute_checksum(attachment.datas))[:8]
                 if attachment.url:
                     # For attachments-by-url, unique is used as a cachebuster. They
                     # currently do not leverage max-age headers.
