@@ -6,6 +6,10 @@
     --ListRenderer-thead-bg-color: #{$gray-200};
     --ListRenderer-thead-border-end-color: #{$border-color};
 
+    &:focus {
+        outline: none;
+    }
+
     @include media-breakpoint-up(md) {
         height: 100%;
     }
@@ -379,6 +383,10 @@
             button:active {
                 color: $link-hover-color;
                 outline: none;
+            }
+
+            a:focus, a:active, a:hover {
+                text-decoration: underline;
             }
 
             button {
