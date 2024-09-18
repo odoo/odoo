@@ -12,32 +12,52 @@ class Project(models.Model):
     purchase_orders_count = fields.Integer('# Purchase Orders', compute='_compute_purchase_orders_count', groups='purchase.group_purchase_user', export_string_translation=False)
 
     def _compute_purchase_orders_count(self):
-        purchase_count_per_project = dict(
+        purchase_orders_per_project = dict(
             self.env['purchase.order']._read_group(
-                [('project_id', 'in', self.ids)],
-                ['project_id'], ['__count'],
+                domain=[('project_id', 'in', self.ids)],
+                groupby=['project_id'],
+                aggregates=['id:array_agg'],
             )
         )
-        for project in self:
-            project.purchase_orders_count = purchase_count_per_project.get(project)
+        purchase_orders_count_per_project_from_lines = dict(
+            self.env['purchase.order.line']._read_group(
+                domain=[
+                    ('order_id', 'not in', [order_id for values in purchase_orders_per_project.values() for order_id in values]),
+                    ('analytic_distribution', 'in', self.account_id.ids),
+                ],
+                groupby=['analytic_distribution'],
+                aggregates=['__count'],
+            )
+        )
+
+        projects_no_account = self.filtered(lambda project: not project.account_id)
+        for project in projects_no_account:
+            project.purchase_orders_count = len(purchase_orders_per_project.get(project, []))
+
+        purchase_orders_per_project = {project.account_id.id: len(orders) for project, orders in purchase_orders_per_project.items()}
+        for project in (self - projects_no_account):
+            project.purchase_orders_count = purchase_orders_per_project.get(project.account_id.id, 0) + purchase_orders_count_per_project_from_lines.get(project.account_id.id, 0)
 
     # ----------------------------
     #  Actions
     # ----------------------------
 
     def action_open_project_purchase_orders(self):
-        purchase_orders_domain = [('project_id', '=', self.id)]
+        purchase_orders = self.env['purchase.order.line'].search([
+            '|',
+                ('analytic_distribution', 'in', self.account_id.ids),
+                ('order_id.project_id', '=', self.id),
+        ]).order_id
         action_window = {
             'name': self.env._('Purchase Orders'),
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
             'views': [[False, 'list'], [False, 'form']],
-            'domain': purchase_orders_domain,
+            'domain': [('id', 'in', purchase_orders.ids)],
             'context': {
                 'default_project_id': self.id,
             },
         }
-        purchase_orders = self.env['purchase.order'].search(purchase_orders_domain)
         if len(purchase_orders) == 1 and not self.env.context.get('from_embedded_action'):
             action_window['views'] = [[False, 'form']]
             action_window['res_id'] = purchase_orders.id
