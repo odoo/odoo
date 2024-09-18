@@ -6,6 +6,7 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import {
+    useHover,
     useMessageEdition,
     useMessageHighlight,
     useMessageToReplyTo,
@@ -57,6 +58,8 @@ export class ChatWindow extends Component {
         this.ui = useState(useService("ui"));
         this.contentRef = useRef("content");
         this.threadActions = useThreadActions();
+        this.actionsMenuButtonHover = useHover("actionsMenuButton");
+        this.parentChannelHover = useHover("parentChannel");
 
         useChildSubEnv({
             closeActionPanel: () => this.threadActions.activeAction?.close(),

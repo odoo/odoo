@@ -182,16 +182,16 @@ test("chat window: basic rendering", async () => {
     });
     await click("[title='Open Actions Menu']");
     await contains(".o-mail-ChatWindow-command", { count: 14 });
-    await contains(".o-dropdown-item", { text: "Search Messages" });
-    await contains(".o-dropdown-item", { text: "Show threads" });
-    await contains(".o-dropdown-item", { text: "Notification Settings" });
-    await contains(".o-dropdown-item", { text: "Rename" });
+    await contains(".o-dropdown-item", { text: "Attachments" });
     await contains(".o-dropdown-item", { text: "Pinned Messages" });
-    await contains(".o-dropdown-item", { text: "Show Attachments" });
-    await contains(".o-dropdown-item", { text: "Add Users" });
-    await contains(".o-dropdown-item", { text: "Show Member List" });
-    await contains(".o-dropdown-item", { text: "Show Call Settings" });
+    await contains(".o-dropdown-item", { text: "Members" });
+    await contains(".o-dropdown-item", { text: "Threads" });
+    await contains(".o-dropdown-item", { text: "Invite People" });
+    await contains(".o-dropdown-item", { text: "Search Messages" });
+    await contains(".o-dropdown-item", { text: "Rename Thread" });
     await contains(".o-dropdown-item", { text: "Open in Discuss" });
+    await contains(".o-dropdown-item", { text: "Notification Settings" });
+    await contains(".o-dropdown-item", { text: "Call Settings" });
 });
 
 test.skip("Fold state of chat window is sync among browser tabs", async () => {

@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
     test: true,
     steps: () => [
         {
-            trigger: "button[title='Show threads']",
+            trigger: "button[title='Threads']",
             run: "click",
         },
         {
@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             async run() {
                 // 30 newest sub channels are loaded initially.
                 for (let i = 99; i > 69; i--) {
-                    await contains(".o-mail-SubChannelList .o-mail-NotificationItem", {
+                    await contains(".o-mail-SubChannelList-thread", {
                         text: `Sub Channel ${i}`,
                     });
                 }
@@ -29,9 +29,9 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             run: "click",
         },
         {
-            trigger: ".o-mail-NotificationItem:contains(Sub Channel 10)",
+            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 10)",
             async run() {
-                await contains(".o-mail-SubChannelList .o-mail-NotificationItem", {
+                await contains(".o-mail-SubChannelList-thread", {
                     count: 1,
                 });
             },
@@ -41,27 +41,25 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             run: "clear",
         },
         {
-            trigger: ".o-mail-NotificationItem:contains(Sub Channel 99)",
+            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 99)",
             async run() {
                 // Already fetched sub channels are shown in addition to the one
                 // that was fetched during the search.
                 for (let i = 99; i > 69; i--) {
-                    await contains(".o-mail-SubChannelList .o-mail-NotificationItem", {
+                    await contains(".o-mail-SubChannelList-thread", {
                         text: `Sub Channel ${i}`,
                     });
                 }
-                await contains(".o-mail-SubChannelList .o-mail-NotificationItem", {
-                    text: `Sub Channel 10`,
-                });
+                await contains(".o-mail-SubChannelList-thread", { text: `Sub Channel 10` });
                 // Ensure lazy loading is still working after a search.
                 await scroll(".o-mail-ActionPanel:has(.o-mail-SubChannelList)", "bottom");
             },
         },
         {
-            trigger: ".o-mail-NotificationItem:contains(Sub Channel 40)",
+            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 40)",
             async run() {
                 for (let i = 99; i > 39; i--) {
-                    await contains(".o-mail-SubChannelList .o-mail-NotificationItem", {
+                    await contains(".o-mail-SubChannelList-thread", {
                         text: `Sub Channel ${i}`,
                     });
                 }
@@ -69,10 +67,10 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             },
         },
         {
-            trigger: ".o-mail-NotificationItem:contains(Sub Channel 11)",
+            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 11)",
             async run() {
                 for (let i = 99; i > 9; i--) {
-                    await contains(".o-mail-SubChannelList .o-mail-NotificationItem", {
+                    await contains(".o-mail-SubChannelList-thread", {
                         text: `Sub Channel ${i}`,
                     });
                 }
@@ -80,10 +78,10 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             },
         },
         {
-            trigger: ".o-mail-NotificationItem:contains(Sub Channel 0)",
+            trigger: ".o-mail-SubChannelList-thread:contains(Sub Channel 0)",
             async run() {
                 for (let i = 99; i > 0; i--) {
-                    await contains(".o-mail-SubChannelList .o-mail-NotificationItem", {
+                    await contains(".o-mail-SubChannelList-thread", {
                         text: `Sub Channel ${i}`,
                     });
                 }

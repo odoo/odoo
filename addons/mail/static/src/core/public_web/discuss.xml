@@ -9,7 +9,7 @@
             <div class="o-mail-Discuss-header px-3 d-flex flex-shrink-0 align-items-center border-bottom z-1 flex-grow-0" t-ref="header">
                 <t t-if="thread">
                     <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
-                        <img class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+                        <img class="rounded" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
                         <FileUploader t-if="thread.is_editable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                             <t t-set-slot="toggler">
                                 <a href="#" class="position-absolute z-1 h-100 w-100 rounded start-0 bottom-0" title="Upload Avatar">
@@ -24,17 +24,21 @@
                     <CountryFlag t-if="thread.anonymous_country" country="thread.anonymous_country" class="'o-mail-Discuss-headerCountry border'"/>
                     <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" member="thread.correspondent" />
                     <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
+                        <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
+                            <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.parent_channel_id.displayName" t-on-click="() => this.thread.parent_channel_id.open()"/>
+                            <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                        </div>
                         <AutoresizeInput
-                            className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
+                            className="'o-mail-Discuss-threadName fw-bolder flex-shrink-1 text-dark py-0'"
                             enabled="thread.is_editable or thread.channel_type === 'chat'"
                             onValidate.bind="renameThread"
                             value="thread.displayName"
                         />
                         <t t-if="thread.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
-                            <div class="flex-shrink-0 mx-2 py-2 border-start"/>
+                            <div class="flex-shrink-0 mx-1 py-2 border-start"/>
                             <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                             <AutoresizeInput
-                                className="'o-mail-Discuss-threadDescription flex-shrink-1 py-1'"
+                                className="'o-mail-Discuss-threadDescription flex-shrink-1 text-muted small pt-1'"
                                 enabled="thread.is_editable"
                                 onValidate.bind="updateThreadDescription"
                                 placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
