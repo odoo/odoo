@@ -232,7 +232,7 @@ export const tourService = {
         if (!window.frameElement) {
             const paramsTourName = new URLSearchParams(browser.location.search).get("tour");
             if (paramsTourName) {
-                startTour(paramsTourName, { mode: "manual" });
+                startTour(paramsTourName, { mode: "manual", fromDB: true });
             }
 
             if (tourState.getCurrentTour() && tourRegistry.contains(tourState.getCurrentTour())) {
