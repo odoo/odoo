@@ -121,6 +121,7 @@ class ResPartner extends models.ServerModel {
         const error = new RPCError();
         error.exceptionName = "odoo.exceptions.ValidationError";
         error.code = 200;
+        error.message = "ValidationError";
         error.data = {
             name: "ValidationError",
         };
