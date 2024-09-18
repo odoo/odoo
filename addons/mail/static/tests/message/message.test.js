@@ -1154,7 +1154,8 @@ test("allow attachment delete on authored message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-AttachmentImage [title='Remove']");
+    await click(".o-mail-AttachmentImage [title='Actions']");
+    await click(".dropdown-item", { text: "Remove" });
     await contains(".modal-dialog .modal-body", { text: 'Do you really want to delete "BLAH"?' });
     await click(".modal-footer .btn-primary");
     await contains(".o-mail-AttachmentCard", { count: 0 });
@@ -1224,7 +1225,8 @@ test("allow attachment image download on message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-AttachmentImage .fa-download");
+    await click(".o-mail-AttachmentImage [title='Actions']");
+    await contains(".dropdown-item", { text: "Download" });
 });
 
 test("Can download all files of a message", async () => {
