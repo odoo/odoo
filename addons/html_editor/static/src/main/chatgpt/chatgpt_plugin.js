@@ -9,6 +9,7 @@ import { LanguageSelector } from "./language_selector";
 export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
     static dependencies = ["selection", "history", "dom", "sanitize"];
+    /** @type { (p: ChatGPTPlugin) => Record<string, any> } */
     static resources = (p) => ({
         toolbarCategory: {
             id: "ai",

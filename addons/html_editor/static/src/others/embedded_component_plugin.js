@@ -9,6 +9,7 @@ import { memoize } from "@web/core/utils/functions";
 export class EmbeddedComponentPlugin extends Plugin {
     static name = "embedded_components";
     static dependencies = ["history", "protected_node"];
+    /** @type { (p: EmbeddedComponentPlugin) => Record<string, any> } */
     static resources(p) {
         return {
             filter_descendants_to_serialize: p.filterDescendantsToSerialize.bind(p),

@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 export class StarPlugin extends Plugin {
     static name = "star";
     static dependencies = ["dom"];
+    /** @type { (p: StarPlugin) => Record<string, any> } */
     static resources = (p) => ({
         powerboxItems: [
             {
