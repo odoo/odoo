@@ -1789,17 +1789,16 @@ class IrModelConstraint(models.Model):
     _description = 'Model Constraint'
     _allow_sudo_commands = False
 
-    name = fields.Char(string='Constraint', required=True, index=True,
-                       help="PostgreSQL constraint or foreign key name.")
-    definition = fields.Char(help="PostgreSQL constraint definition")
+    name = fields.Char(
+        string='Constraint', required=True, index=True, readonly=True,
+        help="PostgreSQL constraint or foreign key name.")
+    definition = fields.Char(help="PostgreSQL constraint definition", readonly=True)
     message = fields.Char(help="Error message returned when the constraint is violated.", translate=True)
-    model = fields.Many2one('ir.model', required=True, ondelete="cascade", index=True)
-    module = fields.Many2one('ir.module.module', required=True, index=True, ondelete='cascade')
-    type = fields.Char(string='Constraint Type', required=True, size=1, index=True,
-                       help="Type of the constraint: `f` for a foreign key, "
-                            "`u` for other constraints.")
-    write_date = fields.Datetime()
-    create_date = fields.Datetime()
+    model = fields.Many2one('ir.model', required=True, ondelete="cascade", index=True, readonly=True)
+    module = fields.Many2one('ir.module.module', required=True, index=True, ondelete='cascade', readonly=True)
+    type = fields.Char(
+        string='Constraint Type', required=True, size=1, index=True, readonly=True,
+        help="Type of the constraint: `f` for a foreign key, `u` for other constraints.")
 
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)',
