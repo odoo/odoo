@@ -1789,6 +1789,7 @@ class Request:
             cr = None
             try:
                 registry = Registry(self.db)
+                threading.current_thread().dbname = registry.db_name
                 cr = registry.cursor(readonly=True)
                 self.registry = registry.check_signaling(cr)
             except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
