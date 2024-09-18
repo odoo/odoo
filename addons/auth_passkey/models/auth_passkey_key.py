@@ -83,6 +83,7 @@ class PassKey(models.Model):
             expected_rp_id=parsed_url.host,
             credential_public_key=base64url_to_bytes(public_key),
             credential_current_sign_count=sign_count,
+            require_user_verification=True,
         )
         return auth_verification.new_sign_count
 
@@ -110,6 +111,7 @@ class PassKey(models.Model):
             expected_challenge=base64url_to_bytes(self._get_session_challenge()),
             expected_origin=parsed_url.replace(path='').to_url(),
             expected_rp_id=parsed_url.host,
+            require_user_verification=True,
         )
         return {
             'credential_id': verification.credential_id,
