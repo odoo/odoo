@@ -363,7 +363,7 @@ test("Edit contenteditable", async () => {
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["editor Bismillah"]);
 });
 
-test("Selecting item in autocomplete field though Enter", async () => {
+test("Selecting item in autocomplete field through Enter", async () => {
     class Dummy extends Component {
         static components = { AutoComplete };
         static template = xml`
@@ -389,7 +389,7 @@ test("Selecting item in autocomplete field though Enter", async () => {
     press("Enter");
     checkTourSteps([
         ".o-autocomplete--input",
-        ".o-autocomplete--dropdown-item > a:contains('World')",
+        ".o-autocomplete--dropdown-item > a:contains('World'), .fa-circle-o-notch",
     ]);
     expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["click", "click"]);
 });
