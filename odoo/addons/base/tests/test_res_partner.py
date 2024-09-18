@@ -122,6 +122,12 @@ class TestPartner(TransactionCase):
         res_bhide = test_partner_bhide.with_context(show_address=1, address_inline=1).name_get()
         self.assertEqual(res_bhide[0][1], "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
+        test_invoice_partner_no_name = self.env['res.partner'].create({'name': '', 'parent_id': test_partner_jetha.id, 'type': 'invoice'})
+        res_invoice_partner_no_name = test_invoice_partner_no_name.name_get()
+        self.assertEqual(res_invoice_partner_no_name[0][1], "Jethala, Invoice Address", "name should contain parent name and address type")
+        res_invoice_partner_no_name = test_invoice_partner_no_name.with_context(no_address_type=1).name_get()
+        self.assertEqual(res_invoice_partner_no_name[0][1], "Jethala", "name should contain only parent name and no address type")
+
     def test_company_change_propagation(self):
         """ Check propagation of company_id across children """
         User = self.env['res.users']
