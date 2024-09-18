@@ -18,6 +18,7 @@ const livechatChannelPatch = {
             },
             inverse: "livechatChannel",
         });
+        this.threads = Record.many("Thread", { inverse: "livechatChannel" });
     },
 };
 patch(LivechatChannel.prototype, livechatChannelPatch);
