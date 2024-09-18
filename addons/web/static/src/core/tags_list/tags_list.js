@@ -7,20 +7,23 @@ export class TagsList extends Component {
     };
     static props = {
         displayText: { type: Boolean, optional: true },
-        itemsVisible: { type: Number, optional: true },
+        visibleItemsLimit: { type: Number, optional: true },
         tags: { type: Object },
     };
     get visibleTagsCount() {
-        return this.props.itemsVisible - 1;
+        return this.props.visibleItemsLimit - 1;
     }
     get visibleTags() {
-        if (this.props.itemsVisible && this.props.tags.length > this.props.itemsVisible) {
+        if (this.props.visibleItemsLimit && this.props.tags.length > this.props.visibleItemsLimit) {
             return this.props.tags.slice(0, this.visibleTagsCount);
         }
         return this.props.tags;
     }
     get otherTags() {
-        if (!this.props.itemsVisible || this.props.tags.length <= this.props.itemsVisible) {
+        if (
+            !this.props.visibleItemsLimit ||
+            this.props.tags.length <= this.props.visibleItemsLimit
+        ) {
             return [];
         }
         return this.props.tags.slice(this.visibleTagsCount);

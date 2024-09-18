@@ -7,7 +7,7 @@
             t-att-class="{'o_tags_input o_input': !props.readonly}"
             t-ref="many2ManyTagsField"
         >
-            <TagsList tags="tags" itemsVisible="itemsVisible"/>
+            <TagsList tags="tags" visibleItemsLimit="visibleItemsLimit"/>
             <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
                 <Many2XAutocomplete
                     id="props.id"
