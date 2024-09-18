@@ -89,7 +89,6 @@ registry.category("web_tour.tours").add("ChromeTour", {
             ProductScreen.orderIsEmpty(),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.deleteOrder("-0004"),
-            TicketScreen.deleteOrder("-0001"),
 
             // After deleting order 1 above, order 2 became
             // the 2nd-row order and it has payment status
