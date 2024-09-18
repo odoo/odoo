@@ -804,11 +804,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': '2021-11-19 23:59:59',
         })
         self.assertEqual(time_off.active, False)
-    def test_holiday_type_requires_no_allocation(self):
-        # holiday_type_2 initially requires an allocation
-        # Once an allocation is granted and a leave is taken,
-        # the holiday type is changed to no longer require an allocation.
-        # Leaves taken and available days should be correctly computed.
+
+    def test_holiday_type_allocation(self):
         with freeze_time('2020-09-15'):
             allocation = self.env['hr.leave.allocation'].create({
                 'name': 'Expired Allocation',
@@ -820,7 +817,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_to': '2020-12-31',
             })
             allocation.action_validate()
-            leave1 = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Holiday Request',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_type_2.id,
@@ -832,32 +829,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             self._check_holidays_count(
                 self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
                 ml=5, lt=0, rl=5, vrl=2, vlt=3, closest_allocation=allocation,
-            )
-
-            self.holidays_type_2.requires_allocation = 'no'
-            leave2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
-                'name': 'Holiday Request',
-                'employee_id': self.employee_emp_id,
-                'holiday_status_id': self.holidays_type_2.id,
-                'date_from': '2020-07-06',
-                'date_to': '2020-07-08',
-                'number_of_days': 3,
-            })
-
-            # The 5 allocation days are not consumed anymore
-            # virtual_remaining_leaves reflect the total number of leave days taken
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                ml=5, lt=0, rl=5, vrl=5, vlt=6, closest_allocation=allocation,
-            )
-
-            leave1.with_user(self.user_hrmanager_id).action_approve()
-            leave2.with_user(self.user_hrmanager_id).action_approve()
-
-            # leaves_taken and virtual_leaves_taken reflect the total number of leave days taken
-            self._check_holidays_count(
-                self.holidays_type_2.get_employees_days([self.employee_emp_id])[self.employee_emp_id][self.holidays_type_2.id],
-                ml=5, lt=6, rl=5, vrl=5, vlt=6, closest_allocation=allocation,
             )
 
     def test_archived_allocation(self):
@@ -1146,3 +1117,20 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         msg = "hr_holidays: duration_display should update after adding an overlapping holiday"
         self.assertEqual(sick_leave.duration_display, '2 days', msg)
         self.assertEqual(comp_leave.duration_display, '8 hours', msg)
+
+    def test_holiday_type_allocation_requirement_edit(self):
+        # Does not raise an error since no leave of this type exists yet
+        self.holidays_type_2.requires_allocation = 'no'
+        self.assertEqual(self.holidays_type_2.requires_allocation, 'no', 'Allocations should no longer be required')
+
+        self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': (datetime.today() - relativedelta(days=1)),
+            'date_to': datetime.today(),
+            'number_of_days': 1,
+        })
+
+        with self.assertRaises(UserError):
+            self.holidays_type_2.requires_allocation = 'yes'
