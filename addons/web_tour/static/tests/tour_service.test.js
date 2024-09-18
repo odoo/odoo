@@ -1334,6 +1334,7 @@ test("check tooltip position", async () => {
     expect(tooltip.getBoundingClientRect().bottom).toBeLessThan(
         button3.getBoundingClientRect().top
     );
+    await contains(".button3").click();
 });
 
 test("check rainbowManMessage", async () => {

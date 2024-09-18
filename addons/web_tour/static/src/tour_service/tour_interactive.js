@@ -4,6 +4,7 @@ import { getScrollParent } from "@web_tour/tour_service/tour_utils";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
 import { TourStep } from "./tour_step";
+import { MacroMutationObserver } from "@web/core/macro";
 
 /**
  * @typedef ConsumeEvent
@@ -36,7 +37,8 @@ export class TourInteractive {
         this.pointer = pointer;
         this.debouncedToggleOpen = debounce(this.pointer.showContent, 50, true);
         this.onTourEnd = onTourEnd;
-        this.observerDisconnect = hoot.observe(document.body, () => this._onMutation());
+        this.observer = new MacroMutationObserver(() => this._onMutation());
+        this.observer.observe(document.body);
         this.currentActionIndex = tourState.getCurrentIndex();
         this.play();
     }
@@ -78,7 +80,7 @@ export class TourInteractive {
     play() {
         this.removeListeners();
         if (this.currentActionIndex === this.actions.length) {
-            this.observerDisconnect();
+            this.observer.disconnect();
             this.onTourEnd();
             return;
         }
