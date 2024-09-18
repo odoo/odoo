@@ -7,6 +7,6 @@ from . import forum_post_vote
 from . import forum_tag
 from . import gamification_challenge
 from . import gamification_karma_tracking
-from . import ir_attachment
+from . import media
 from . import res_users
 from . import website

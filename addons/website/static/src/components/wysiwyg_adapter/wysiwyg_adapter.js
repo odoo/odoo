@@ -982,7 +982,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             const recordNameEl = imageEl.closest("body").querySelector(`[data-oe-model="${resModel}"][data-oe-id="${resID}"][data-oe-field="name"]`);
             const recordName = recordNameEl ? `'${recordNameEl.textContent.replaceAll("/", "")}'` : resID;
             const attachment = await rpc(
-                '/web_editor/attachment/add_data',
+                "/html_editor/media/add_data",
                 {
                     name: `${modelName} ${recordName} cover image.${groups.mimetype.split("/")[1]}`,
                     data: groups.imageData,

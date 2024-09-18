@@ -77,7 +77,6 @@ export class ImageSelector extends FileSelector {
         this.state.libraryResults = null;
         this.state.isFetchingLibrary = false;
         this.state.searchService = "all";
-        this.state.showOptimized = false;
         this.NUMBER_OF_MEDIA_TO_DISPLAY = 10;
 
         this.uploadText = _t("Upload an image");
@@ -88,7 +87,6 @@ export class ImageSelector extends FileSelector {
             "Uploaded image's format is not supported. Try with: " + IMAGE_EXTENSIONS.join(", ")
         );
         this.allLoadedText = _t("All images have been loaded");
-        this.showOptimizedOption = this.env.debug;
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(",");
@@ -128,39 +126,12 @@ export class ImageSelector extends FileSelector {
         return [...super.allAttachments, ...this.state.libraryMedia];
     }
 
-    get attachmentsDomain() {
-        const domain = super.attachmentsDomain;
-        domain.push(["mimetype", "in", IMAGE_MIMETYPES]);
+    get mediaDomain() {
+        const domain = super.mediaDomain;
+        domain.push(["media_type", "=", "image"]);
         if (!this.props.useMediaLibrary) {
             domain.push("|", ["url", "=", false], "!", ["url", "=ilike", "/html_editor/shape/%"]);
         }
-        domain.push("!", ["name", "=like", "%.crop"]);
-        domain.push("|", ["type", "=", "binary"], "!", ["url", "=like", "/%/static/%"]);
-
-        // Optimized images (meaning they are related to an `original_id`) can
-        // only be shown in debug mode as the toggler to make those images
-        // appear is hidden when not in debug mode.
-        // There is thus no point to fetch those optimized images outside debug
-        // mode. Worst, it leads to bugs: it might fetch only optimized images
-        // when clicking on "load more" which will look like it's bugged as no
-        // images will appear on screen (they all will be hidden).
-        if (!this.env.debug) {
-            const subDomain = [false];
-
-            // Particular exception: if the edited image is an optimized
-            // image, we need to fetch it too so it's displayed as the
-            // selected image when opening the media dialog.
-            // We might get a few more optimized image than necessary if the
-            // original image has multiple optimized images but it's not a
-            // big deal.
-            const originalId = this.props.media && this.props.media.dataset.originalId;
-            if (originalId) {
-                subDomain.push(originalId);
-            }
-
-            domain.push(["original_id", "in", subDomain]);
-        }
-
         return domain;
     }
 
@@ -356,7 +327,7 @@ export class ImageSelector extends FileSelector {
                     let accessToken = attachment.access_token;
                     if (!accessToken) {
                         [accessToken] = await orm.call("ir.attachment", "generate_access_token", [
-                            attachment.id,
+                            attachment.attachment_id,
                         ]);
                     }
                     src += `?access_token=${encodeURIComponent(accessToken)}`;
@@ -423,5 +394,26 @@ export class ImageSelector extends FileSelector {
                 "CORS is misconfigured on the API server, image will be treated as non-dynamic."
             );
         }
+    }
+
+    /**
+     * Retrieves a media record, its attachment's ID and all the IDs of the
+     * copies of that attachment.
+     *
+     * @param {integer} mediaId
+     * @returns {Object} attachments - res_model {String}, res_id {String},
+     * attachment_id {Integer}, and ids of the source attachment and copies
+     * {Array<number>}.
+     */
+    async getOriginalAndCopies(mediaId) {
+        const media = (await this.orm.searchRead(
+            "html_editor.media",
+            [["id", "=", mediaId]],
+            ["attachment_id", "res_model", "res_id"]
+        ))[0];
+        const idsDomain = ["|", ["original_id", "=", media.attachment_id[0]], ["id", "=", media.attachment_id[0]]];
+        const attachmentsIds = await this.orm.search("ir.attachment", idsDomain);
+
+        return { ...media, attachmentsIds };
     }
 }

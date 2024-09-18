@@ -9,14 +9,15 @@ import { Deferred } from "@web/../lib/hoot/hoot-mock";
 test("Unsplash is inserted in the Media Dialog", async () => {
     const imageRecord = {
         id: 1,
+        attachment_id: 1,
         name: "logo",
         mimetype: "image/png",
         image_src: "/web/static/img/logo2.png",
         access_token: false,
         public: true,
     };
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [imageRecord];
+    onRpc("/web/dataset/call_kw/html_editor.media/web_search_read", () => {
+        return { records: [imageRecord] };
     });
     const fetchDef = new Deferred();
     onRpc("/web_unsplash/fetch_images", () => {
@@ -69,14 +70,15 @@ test("Unsplash is inserted in the Media Dialog", async () => {
 test("Unsplash error is displayed when there is no key", async () => {
     const imageRecord = {
         id: 1,
+        attachment_id: 1,
         name: "logo",
         mimetype: "image/png",
         image_src: "/web/static/img/logo2.png",
         access_token: false,
         public: true,
     };
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [imageRecord];
+    onRpc("/web/dataset/call_kw/html_editor.media/web_search_read", () => {
+        return { records: [imageRecord] };
     });
     const fetchDef = new Deferred();
     onRpc("/web_unsplash/fetch_images", () => {
@@ -101,17 +103,16 @@ test("Unsplash error is displayed when there is no key", async () => {
 });
 
 test("Document tab does not crash with FileSelector extension", async () => {
-    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-        return [
-            {
-                id: 1,
-                name: "logo",
-                mimetype: "image/png",
-                image_src: "/web/static/img/logo2.png",
-                access_token: false,
-                public: true,
-            },
-        ];
+    onRpc("/web/dataset/call_kw/html_editor.media/web_search_read", () => {
+        return { records: [{
+            id: 1,
+            attachment_id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        }] };
     });
     const env = await makeMockEnv();
     const { editor } = await setupEditor("<p>a[]</p>", { env });

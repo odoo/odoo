@@ -112,12 +112,14 @@ class Web_Unsplash(http.Controller):
                 'data': image,
                 'res_id': res_id,
                 'res_model': res_model,
+                'media_type': 'image',
             }
-            attachment = HTML_Editor._attachment_create(self, **attachment_data)
+            media = HTML_Editor._media_create(self, **attachment_data)
+            attachment = media.attachment_id
             if value.get('description'):
                 attachment.description = value.get('description')
             attachment.generate_access_token()
-            uploads.append(attachment._get_media_info())
+            uploads.append(media._get_media_info())
 
             # Notifies Unsplash from an image download. (API requirement)
             self._notify_download(value.get('download_url'))

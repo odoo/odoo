@@ -669,7 +669,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         });
 
         const mockRPC = async function (route, args) {
-            if (route === '/web_editor/attachment/add_data') {
+            if (route === "/web_editor/media/add_data") {
                 // Check that the correct record model and id were sent.
                 assert.equal(args.res_model, 'partner');
                 assert.equal(args.res_id, 1);
@@ -1138,6 +1138,33 @@ export const uploadTestModule = QUnit.module(
                         },
                     ],
                 },
+                "html_editor.media": {
+                    fields: {
+                        "name": {
+                            type: "char",
+                        },
+                        url: {
+                            type: "char",
+                        },
+                        media_type: {
+                            type: "char",
+                        },
+                        res_id: {
+                            type: "integer",
+                        },
+                        res_model: {
+                            type: "char",
+                        },
+                        public: {
+                            type: "boolean",
+                        },
+                        attachment_id: {
+                            type: "many2one",
+                            relation: "ir.attachment",
+                        },
+                    },
+                    records: [],
+                },
             });
         },
     },
@@ -1207,7 +1234,16 @@ export const uploadTestModule = QUnit.module(
                     assert.equal(createVals.attachment_ids[0][1], 5); // on attachment id "5"
                     webSaveTriggered.resolve();
                 }
-                if (route === "/web_editor/attachment/add_data") {
+                if (route === "/web_editor/media/add_data") {
+                    const media = {
+                        id: 2,
+                        name: "test.jpg",
+                        url: false,
+                        res_id: 0,
+                        res_model: "mail.compose.message",
+                        public: false,
+                        media_type: "image",
+                    };
                     const attachment = {
                         id: 5,
                         name: "test.jpg",
@@ -1216,8 +1252,8 @@ export const uploadTestModule = QUnit.module(
                         checksum: "7951a43bbfb08fd742224ada280913d1897b89ab",
                         url: false,
                         type: "binary",
-                        res_id: 0,
-                        res_model: "mail.compose.message",
+                        res_id: 2,
+                        res_model: "html_editor.media",
                         public: false,
                         access_token: false,
                         image_src: "/web/image/1-a0e63e61/test.jpg",
@@ -1225,6 +1261,7 @@ export const uploadTestModule = QUnit.module(
                         image_height: 1,
                         original_id: false,
                     };
+                    serverData.models["html_editor.media"].records.push({ ...media });
                     serverData.models["ir.attachment"].records.push({ ...attachment });
                     return Promise.resolve(attachment);
                 } else if (route === "/web/dataset/call_kw/ir.attachment/generate_access_token") {

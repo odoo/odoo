@@ -94,6 +94,23 @@ const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
     "mimetypeBeforeConversion",
 ]);
 
+// Fields returned by cropperjs 'getData' method also need to be passed when
+// initializing the cropper to reuse the previous crop.
+export const cropperDataFields = ['x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY'];
+const modifierFields = [
+    'filter',
+    'quality',
+    'mimetype',
+    'glFilter',
+    'originalId',
+    'originalSrc',
+    'resizeWidth',
+    'aspectRatio',
+    "bgSrc",
+    "mimetypeBeforeConversion",
+];
+export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
+
 /**
  * Computes the number of "px" needed to make a "rem" unit. Subsequent calls
  * returns the cached computed value.
@@ -512,6 +529,8 @@ export default {
     CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
     DEFAULT_PALETTE: DEFAULT_PALETTE,
     EDITOR_COLOR_CSS_VARIABLES: EDITOR_COLOR_CSS_VARIABLES,
+    cropperDataFields: cropperDataFields,
+    removeOnImageChangeAttrs: removeOnImageChangeAttrs,
     computePxByRem: _computePxByRem,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,
