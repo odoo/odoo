@@ -955,7 +955,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 # eg : holidays_user can create a leave request with validation_type = 'manager' for someone else
                 # but they can only write on it if they are leave_manager_id
                 holiday_sudo = holiday.sudo()
-                holiday_sudo.add_follower(employee_id)
+                holiday_sudo.add_follower(holiday.employee_id.id)
                 if holiday.validation_type == 'manager':
                     holiday_sudo.message_subscribe(partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids)
                 if holiday.validation_type == 'no_validation':

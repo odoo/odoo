@@ -262,8 +262,11 @@
             <field name="inherit_id" ref="project.view_project"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_order">sequence, name, id</attribute>
+                </xpath>
                 <field name="sequence" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                    <attribute name="column_invisible">0</attribute>
                     <attribute name="widget">handle</attribute>
                 </field>
             </field>
