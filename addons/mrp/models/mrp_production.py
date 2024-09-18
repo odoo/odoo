@@ -2050,6 +2050,15 @@ class MrpProduction(models.Model):
                 'state': 'done',
             })
 
+        # It is prudent to reserve any quantity that has become available to the backorder
+        # production's move_raw_ids after the production which spawned them has been marked done.
+        backorders_to_assign = backorders.filtered(
+            lambda order:
+            order.picking_type_id.reservation_method == 'at_confirm'
+        )
+        for backorder in backorders_to_assign:
+            backorder.action_assign()
+
         report_actions = self._get_autoprint_done_report_actions()
         if self.env.context.get('skip_redirection'):
             if report_actions:
@@ -2129,7 +2138,9 @@ class MrpProduction(models.Model):
         productions_auto = set()
         for production in self:
             if not float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
-                production.move_raw_ids.filtered('manual_consumption').picked = True
+                production.move_raw_ids.filtered(
+                    lambda move: move.manual_consumption and not move.picked
+                ).picked = True
                 continue
             if production._auto_production_checks():
                 productions_auto.add(production.id)
