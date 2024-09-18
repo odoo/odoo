@@ -311,7 +311,7 @@ class ChannelMember(models.Model):
                     "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
                 },
             )
-        if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type in {'chat', 'group'}:
+        if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type != "channel":
             self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
             self._rtc_invite_members()
 

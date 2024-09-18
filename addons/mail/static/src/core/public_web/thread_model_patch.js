@@ -82,7 +82,7 @@ patch(Thread.prototype, {
             this.openChatWindow(options);
             return;
         }
-        super.open();
+        this.setAsDiscussThread();
     },
     async unpin() {
         this.isLocallyPinned = false;
