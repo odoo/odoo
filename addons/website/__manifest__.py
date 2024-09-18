@@ -79,6 +79,7 @@
         'views/snippets/s_parallax.xml',
         'views/snippets/s_quotes_carousel.xml',
         'views/snippets/s_numbers_grid.xml',
+        'views/snippets/s_quotes_carousel_minimal.xml',
         'views/snippets/s_numbers.xml',
         'views/snippets/s_cta_box.xml',
         'views/snippets/s_masonry_block.xml',
