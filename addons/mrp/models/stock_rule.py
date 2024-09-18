@@ -75,6 +75,8 @@ class StockRule(models.Model):
             if not mo:
                 procurement_qty = procurement.product_qty
                 batch_size = procurement.values.get('batch_size', procurement_qty)
+                if batch_size <= 0:
+                    batch_size = procurement_qty
                 vals = rule._prepare_mo_vals(*procurement, bom)
                 while float_compare(procurement_qty, 0, precision_rounding=procurement.product_uom.rounding) > 0:
                     current_qty = min(procurement_qty, batch_size)
