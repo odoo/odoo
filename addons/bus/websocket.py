@@ -746,6 +746,7 @@ class WebsocketRequest:
         try:
             self.registry = Registry(self.db)
             self.registry.check_signaling()
+            threading.current_thread().dbname = self.registry.db_name
         except (
             AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
         ) as exc:
