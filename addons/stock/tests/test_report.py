@@ -348,6 +348,59 @@ class TestReports(TestReportsCommon):
             [], ['product_qty:sum'])
         self.assertEqual(report_records[0][0], 10.0)
 
+    def test_report_quantity_4(self):
+        """ Checks the predicted quantity works in a multi-step setup.
+        """
+        now = datetime.now()
+        customer_loc, supplier_loc = self.env['stock.warehouse']._get_partner_locations()
+        self.wh_2.write({'reception_steps': 'two_steps', 'delivery_steps': 'pick_ship'})
+
+        # Pick move for delivery of 5 units in 2 days
+        move_pick = self.env['stock.move'].create({
+            'name': 'Out',
+            'picking_type_id': self.wh_2.pick_type_id.id,
+            'location_id': self.wh_2.lot_stock_id.id,
+            'location_final_id': customer_loc.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 5.0,
+            'date': now + timedelta(days=2),
+        })
+        move_pick._action_confirm()
+        self.env.flush_all()
+        report_records = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', now.date())],
+            [], ['product_qty:sum'])
+        self.assertFalse(report_records[0][0], "Forecast should still be at 0 today, so no records.")
+        report_records = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', (now + timedelta(days=2)).date())],
+            [], ['product_qty:sum'])
+        self.assertEqual(report_records[0][0], -5)
+
+        # In move for receipt of 10 units tomorrow
+        move_in = self.env['stock.move'].create({
+            'name': 'In',
+            'picking_type_id': self.wh_2.in_type_id.id,
+            'location_id': supplier_loc.id,
+            'location_final_id': self.wh_2.lot_stock_id.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 10.0,
+            'date': now + timedelta(days=1),
+        })
+        move_in._action_confirm()
+        self.env.flush_all()
+        report_records = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', now.date())],
+            [], ['product_qty:sum'])
+        self.assertFalse(report_records[0][0], "Forecast should still be at 0 today, so no records.")
+        report_records = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', (now + timedelta(days=1)).date())],
+            [], ['product_qty:sum'])
+        self.assertEqual(report_records[0][0], 10)
+        report_records = self.env['report.stock.quantity']._read_group(
+            [('state', '=', 'forecast'), ('product_id', '=', self.product1.id), ('date', '=', (now + timedelta(days=2)).date())],
+            [], ['product_qty:sum'])
+        self.assertEqual(report_records[0][0], 5)
+
     def test_report_forecast_1(self):
         """ Checks report data for product is empty. Then creates and process
         some operations and checks the report data accords rigthly these operations.
@@ -1336,6 +1389,26 @@ class TestReports(TestReportsCommon):
                 'forecast_availability': 3.0,
             }
         ])
+
+    def test_report_forecast_14_ongoing_multi_step_delivery(self):
+        """ Check that an ongoing multi-step delivery is properly picked up by the forecast report.
+        """
+        customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
+        self.wh_2.write({'delivery_steps': 'pick_ship'})
+
+        # Pick move for future delivery
+        move_pick = self.env['stock.move'].create({
+            'name': 'Out',
+            'picking_type_id': self.wh_2.pick_type_id.id,
+            'location_id': self.wh_2.lot_stock_id.id,
+            'location_final_id': customer_loc.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 5.0,
+        })
+        move_pick._action_confirm()
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product1.product_tmpl_id.ids, context={'warehouse_id': self.wh_2.id})
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0]['move_out']['id'], move_pick.id)
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
