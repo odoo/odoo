@@ -363,15 +363,16 @@ export class PosData extends Reactive {
 
             return result;
         } catch (error) {
-            const uuids = this.network.unsyncData.map((d) => d.uuid);
-            const skipError = error.constructor.name != "ConnectionLostError";
-            if (queue && !uuids.includes(uuid) && method !== "sync_from_ui" && !skipError) {
-                this.network.unsyncData.push({
-                    args: [...arguments],
-                    date: DateTime.now(),
-                    try: 1,
-                    uuid: uuidv4(),
-                });
+            if (error instanceof ConnectionLostError) {
+                const uuids = this.network.unsyncData.map((d) => d.uuid);
+                if (queue && !uuids.includes(uuid) && method !== "sync_from_ui") {
+                    this.network.unsyncData.push({
+                        args: [...arguments],
+                        date: DateTime.now(),
+                        try: 1,
+                        uuid: uuidv4(),
+                    });
+                }
             }
 
             throw error;
