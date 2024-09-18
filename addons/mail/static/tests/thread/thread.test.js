@@ -800,11 +800,11 @@ test("Thread messages are only loaded once", async () => {
         },
     ]);
     await openDiscuss();
-    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel");
+    await click("button", { text: "General" });
     await contains(".o-mail-Message-content", { text: "Message on channel1" });
-    await click(":nth-child(2 of .o-mail-DiscussSidebarChannel)");
+    await click("button", { text: "Sales" });
     await contains(".o-mail-Message-content", { text: "Message on channel2" });
-    await click(":nth-child(1 of .o-mail-DiscussSidebarChannel)");
+    await click("button", { text: "General" });
     await contains(".o-mail-Message-content", { text: "Message on channel1" });
     await assertSteps([`load messages - ${channelIds[0]}`, `load messages - ${channelIds[1]}`]);
 });

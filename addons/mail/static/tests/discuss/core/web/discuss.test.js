@@ -64,6 +64,7 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
             kwargs: {
                 limit: 10,
                 domain: [
+                    ["parent_channel_id", "=", false],
                     ["channel_type", "=", "channel"],
                     ["name", "ilike", "abc"],
                 ],

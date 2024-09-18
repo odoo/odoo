@@ -52,6 +52,9 @@
                             <field name="active" invisible="1"/>
                             <field name="channel_type" groups="base.group_no_one"/>
                             <field name="description" placeholder="Topics discussed in this group..." readonly="not is_editable"/>
+                            <field name="parent_channel_id" groups="base.group_no_one"/>
+                            <field name="sub_channel_ids" groups="base.group_no_one"/>
+                            <field name="from_message_id" groups="base.group_no_one"/>
                         </group>
                         <group class="o_label_nowrap" groups="base.group_no_one">
                             <field name="sfu_channel_uuid"/>
@@ -61,7 +64,7 @@
                             <page string="Privacy" name="privacy">
                                 <group class="o_label_nowrap">
                                     <field name="group_public_id"
-                                        invisible="channel_type != 'channel'" readonly="not is_editable"/>
+                                        invisible="channel_type != 'channel' or parent_channel_id" readonly="not is_editable"/>
                                     <field name="group_ids" widget="many2many_tags"
                                         invisible="channel_type != 'channel'"
                                         string="Auto Subscribe Groups" readonly="not is_editable"/>

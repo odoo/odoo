@@ -59,6 +59,9 @@ class Channel(models.Model):
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
         search='_search_channel_partner_ids')
     channel_member_ids = fields.One2many('discuss.channel.member', 'channel_id', string='Members')
+    parent_channel_id = fields.Many2one("discuss.channel", help="Parent channel", ondelete="cascade", index=True, readonly=True)
+    sub_channel_ids = fields.One2many("discuss.channel", "parent_channel_id", string="Sub Channels", readonly=True)
+    from_message_id = fields.Many2one("mail.message", help="The message the channel was created from.", readonly=True)
     pinned_message_ids = fields.One2many('mail.message', 'res_id', domain=[('model', '=', 'discuss.channel'), ('pinned_at', '!=', False)], string='Pinned Messages')
     sfu_channel_uuid = fields.Char(groups="base.group_system")
     sfu_server_url = fields.Char(groups="base.group_system")
@@ -78,6 +81,12 @@ class Channel(models.Model):
     allow_public_upload = fields.Boolean(default=False)
     _sql_constraints = [
         ('channel_type_not_null', 'CHECK(channel_type IS NOT NULL)', 'The channel type cannot be empty'),
+        ("from_message_id_unique", "UNIQUE(from_message_id)", "Messages can only be linked to one sub-channel"),
+        (
+            "sub_channel_no_group_public_id",
+            "CHECK(parent_channel_id IS NULL OR group_public_id IS NULL)",
+            "Group public id should not be set on sub-channels as access is based on parent channel",
+        ),
         ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
         ('group_public_id_check',
          "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
@@ -85,6 +94,39 @@ class Channel(models.Model):
     ]
 
     # CONSTRAINTS
+    @api.constrains("from_message_id")
+    def _constraint_from_message_id(self):
+        # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
+        if failing_channels := self.sudo().filtered(
+            lambda c: c.from_message_id
+            and (
+                c.from_message_id.res_id != c.parent_channel_id.id
+                or c.from_message_id.model != "discuss.channel"
+            )
+        ):
+            raise ValidationError(
+                _(
+                    "Cannot create %(channels)s: initial message should belong to parent channel.",
+                    channels=format_list(self.env, failing_channels.mapped("name")),
+                )
+            )
+
+    @api.constrains("parent_channel_id")
+    def _constraint_parent_channel_id(self):
+        # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
+        if failing_channels := self.sudo().filtered(
+            lambda c: c.parent_channel_id
+            and (
+                c.parent_channel_id.parent_channel_id
+                or c.parent_channel_id.channel_type != "channel"
+            )
+        ):
+            raise ValidationError(
+                _(
+                    "Cannot create %(channels)s: parent should not be a sub-channel and should be of type 'channel'.",
+                    channels=format_list(self.env, failing_channels.mapped("name")),
+                ),
+            )
 
     @api.constrains('channel_member_ids')
     def _constraint_partners_chat(self):
@@ -193,7 +235,9 @@ class Channel(models.Model):
     @api.depends('channel_type')
     def _compute_group_public_id(self):
         channels = self.filtered(lambda channel: channel.channel_type == 'channel')
-        channels.filtered(lambda channel: not channel.group_public_id).group_public_id = self.env.ref('base.group_user')
+        channels.filtered(
+            lambda channel: not channel.parent_channel_id and not channel.group_public_id
+        ).group_public_id = self.env.ref("base.group_user")
         (self - channels).group_public_id = None
 
     @api.depends('uuid')
@@ -268,6 +312,13 @@ class Channel(models.Model):
             failing_channels = self.filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
+        if {"from_message_id", "parent_channel_id"} & set(vals):
+            raise UserError(
+                _(
+                    "Cannot change initial message nor parent channel of: %(channels)s.",
+                    channels=format_list(self.env, self.mapped("name")),
+                )
+            )
         old_vals = {channel: channel._channel_basic_info() for channel in self}
         result = super().write(vals)
         for channel in self:
@@ -316,23 +367,30 @@ class Channel(models.Model):
     def action_unfollow(self):
         self._action_unfollow(self.env.user.partner_id)
 
-    def _action_unfollow(self, partner):
+    def _action_unfollow(self, partner=None, guest=None):
+        self.ensure_one()
         self.message_unsubscribe(partner.ids)
         custom_store = Store(self, {"is_pinned": False, "isLocallyPinned": False})
         member = self.env["discuss.channel.member"].search(
-            [("channel_id", "=", self.id), ("partner_id", "=", partner.id)]
+            [
+                ("channel_id", "=", self.id),
+                ("partner_id", "=", partner.id) if partner else ("guest_id", "=", guest.id),
+            ]
         )
         if not member:
-            partner._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+            target = partner or guest
+            target._bus_send_store(custom_store, notification_type="discuss.channel/leave")
             return
-        member.unlink()
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _("left the channel")
+        notification = Markup('<div class="o_mail_notification">%s</div>') % _(
+            "left the channel"
+        )
         # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
-        self.sudo().message_post(
+        member.channel_id.sudo().message_post(
             body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
         )
         # send custom store after message_post to avoid is_pinned reset to True
-        partner._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+        member._bus_send_store(custom_store, notification_type="discuss.channel/leave")
+        member.unlink()
         self._bus_send_store(
             self,
             {
@@ -845,6 +903,8 @@ class Channel(models.Model):
             info = channel._channel_basic_info()
             info["is_editable"] = channel.is_editable
             info["fetchChannelInfoState"] = "fetched"
+            info["parent_channel_id"] = Store.one(channel.parent_channel_id)
+            info["from_message_id"] = Store.one(channel.from_message_id)
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter
@@ -1065,6 +1125,42 @@ class Channel(models.Model):
         })
         channel._broadcast(channel.channel_member_ids.partner_id.ids)
         return channel
+
+    def _create_sub_channel(self, from_message_id=None, name=None):
+        self.ensure_one()
+        message = self.env["mail.message"]
+        if from_message_id:
+            message = self.env["mail.message"].search([("id", "=", from_message_id)])
+        sub_channel = self.create(
+            {
+                "channel_member_ids": [Command.create({"partner_id": self.env.user.partner_id.id})],
+                "channel_type": "channel",
+                "from_message_id": message.id,
+                "name": name or (message.body.striptags()[:30] if message else _("New Thread")),
+                "parent_channel_id": self.id,
+            }
+        )
+        self.env.user.partner_id._bus_send_store(Store(sub_channel))
+        notification = (
+            Markup('<div class="o_mail_notification">%s</div>')
+            % _(
+                "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s. %(goto_all)sSee all threads%(goto_all_end)s."
+            )
+        ) % {
+            "user": self.env.user.display_name,
+            "goto": Markup(
+                "<a href='#' class='o_channel_redirect' data-oe-id='%s' data-oe-model='discuss.channel'>"
+            )
+            % sub_channel.id,
+            "goto_end": Markup("</a>"),
+            "goto_all": Markup("<a href='#' data-oe-type='sub-channels-menu'>"),
+            "goto_all_end": Markup("</a>"),
+            "thread_name": sub_channel.name,
+        }
+        self.message_post(
+            body=notification, message_type="notification", subtype_xmlid="mail.mt_comment"
+        )
+        return sub_channel
 
     @api.readonly
     @api.model

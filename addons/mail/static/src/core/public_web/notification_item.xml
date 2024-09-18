@@ -3,7 +3,15 @@
 
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 gap-2 position-relative border-0" t-att-class="{ 'o-important': props.muted === 0, 'text-muted': props.muted === 1, 'opacity-50': props.muted === 2, 'py-3 o-small': ui.isSmall, 'border-top-0': props.first, 'px-3 py-2': !ui.isSmall, 'o-active': props.isActive }" t-on-click="onClick" t-ref="root">
+        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 gap-2 position-relative border-0" t-on-click="onClick" t-ref="root" t-att-class="{
+            'o-important': props.muted === 0,
+            'text-muted': props.muted === 1,
+            'opacity-50': props.muted === 2,
+            'py-3 o-small': ui.isSmall,
+            'border-top-0': props.first,
+            'px-3 py-2': !ui.isSmall,
+            'o-active': props.isActive,
+        }">
             <span class="o-mail-NotificationItem-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': props.muted }"><i class="fa fa-circle"/></span>
             <div class="position-relative bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
