@@ -26,6 +26,18 @@
                         = <t t-out="jsonValue.lead_days_date"/>
                     </td>
                 </tr>
+                <tr t-if="jsonValue.visibility_days > 0">
+                    <td>Visibility days</td>
+                    <td class="text-end text-nowrap">
+                        + <t t-out="jsonValue.visibility_days"/> Day(s)
+                    </td>
+                </tr>
+                <tr t-if="jsonValue.visibility_days > 0" class="table-info fw-bold">
+                    <td>Forecasted Date + Visibility Days</td>
+                    <td class="text-end text-nowrap">
+                        = <t t-out="jsonValue.visibility_days_date"/>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
