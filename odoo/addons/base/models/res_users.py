@@ -2155,8 +2155,9 @@ class CheckIdentity(models.TransientModel):
         return method(*args, **kwargs)
 
     def revoke_all_devices(self):
+        current_password = self.password
         self._check_identity()
-        self.env.user._change_password(self.password)
+        self.env.user._change_password(current_password)
         self.sudo().unlink()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
