@@ -361,21 +361,29 @@ export class PosData extends Reactive {
                 result = results[model];
             }
 
-            return result;
+            return result || true;
         } catch (error) {
-            if (error instanceof ConnectionLostError) {
-                const uuids = this.network.unsyncData.map((d) => d.uuid);
-                if (queue && !uuids.includes(uuid) && method !== "sync_from_ui") {
-                    this.network.unsyncData.push({
-                        args: [...arguments],
-                        date: DateTime.now(),
-                        try: 1,
-                        uuid: uuidv4(),
-                    });
-                }
+            let throwErr = true;
+            const uuids = this.network.unsyncData.map((d) => d.uuid);
+            if (
+                queue &&
+                !uuids.includes(uuid) &&
+                method !== "sync_from_ui" &&
+                error instanceof ConnectionLostError
+            ) {
+                this.network.unsyncData.push({
+                    args: [...arguments],
+                    date: DateTime.now(),
+                    try: 1,
+                    uuid: uuidv4(),
+                });
+
+                throwErr = false;
             }
 
-            throw error;
+            if (throwErr) {
+                throw error;
+            }
         } finally {
             this.network.loading = false;
         }
