@@ -34,7 +34,7 @@ const StorePatch = {
         super.onStarted(...arguments);
         this.rtc.start();
     },
-    sortOnlineMembers(m1, m2) {
+    sortMembers(m1, m2) {
         const m1HasRtc = Boolean(m1.rtcSession);
         const m2HasRtc = Boolean(m2.rtcSession);
         if (m1HasRtc === m2HasRtc) {
@@ -47,7 +47,7 @@ const StorePatch = {
             if (m1HasRtc && m1RaisingValue !== m2RaisingValue) {
                 return m1RaisingValue - m2RaisingValue;
             } else {
-                return super.sortOnlineMembers(m1, m2);
+                return super.sortMembers(m1, m2);
             }
         } else {
             return m2HasRtc - m1HasRtc;
