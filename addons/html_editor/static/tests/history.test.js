@@ -3,9 +3,11 @@ import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { describe, expect, test } from "@odoo/hoot";
-import { click, pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
+import { click, getActiveElement, pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
+import { Component, xml } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { useAutofocus } from "@web/core/utils/hooks";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { addStep, deleteBackward, insertText, redo, undo } from "./_helpers/user_actions";
@@ -467,6 +469,74 @@ describe("makePreviewableOperation", () => {
         expect("#first").toHaveCount(0);
         expect("#second").toHaveCount(1);
         expect(history.steps.length).toBe(numberOfSteps + 1);
+    });
+
+    test("makePreviewableOperation makePreviewableOperation works correctly when the selection is not in the editable", async () => {
+        class TestInput extends Component {
+            static template = xml`<input t-ref="input" t-att-value="'eee'" class="test"/>`;
+            static props = ["*"];
+
+            setup() {
+                useAutofocus({ refName: "input", mobile: true });
+            }
+        }
+
+        class TestPlugin extends Plugin {
+            static name = "test";
+            static dependencies = ["overlay"];
+            static resources = (p) => ({
+                powerboxItems: [
+                    {
+                        category: "widget",
+                        name: "Test",
+                        action() {
+                            p.showOverlay();
+                        },
+                    },
+                ],
+            });
+
+            setup() {
+                this.overlay = this.shared.createOverlay(TestInput);
+            }
+
+            showOverlay() {
+                this.overlay.open({
+                    props: {},
+                });
+            }
+        }
+
+        const { editor, el } = await setupEditor("<p>te[]st</p>", {
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+        expect(getActiveElement()).toBe(queryOne(".odoo-editor-editable"));
+
+        insertText(editor, "/test");
+        press("enter");
+        await animationFrame();
+        expect(getActiveElement()).toBe(queryOne("input.test"));
+
+        const previewableAddBold = editor.shared.makePreviewableOperation((elemId) => {
+            const newElem = document.createElement("b");
+            newElem.textContent = "yop";
+            editor.shared.domInsert(newElem);
+        });
+        previewableAddBold.preview();
+        expect(getContent(el)).toBe("<p>te<b>yop</b>st</p>");
+        expect(getActiveElement()).toBe(queryOne("input.test"));
+
+        previewableAddBold.revert();
+        expect(getContent(el)).toBe("<p>test</p>");
+        expect(getActiveElement()).toBe(queryOne("input.test"));
+
+        previewableAddBold.preview();
+        expect(getContent(el)).toBe("<p>te<b>yop</b>st</p>");
+        expect(getActiveElement()).toBe(queryOne("input.test"));
+
+        previewableAddBold.commit();
+        expect(getContent(el)).toBe("<p>te<b>yop</b>[]st</p>");
+        expect(getActiveElement()).toBe(queryOne(".odoo-editor-editable"));
     });
 });
 

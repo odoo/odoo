@@ -120,6 +120,7 @@ export class SelectionPlugin extends Plugin {
         "getTraversedBlocks",
         "modifySelection",
         "rectifySelection",
+        "disableApplySelectionToDoc",
         // "collapseIfZWS",
     ];
     static resources = (p) => ({
@@ -218,6 +219,7 @@ export class SelectionPlugin extends Plugin {
                 direction: DIRECTIONS.RIGHT,
                 textContent: () => "",
                 intersectsNode: () => false,
+                isDefault: true,
             };
         } else {
             range = selection.getRangeAt(0);
@@ -260,6 +262,7 @@ export class SelectionPlugin extends Plugin {
                 direction,
                 textContent: () => (range.collapsed ? "" : selection.toString()),
                 intersectsNode: (node) => range.intersectsNode(node),
+                isDefault: false,
             };
         }
 
@@ -498,9 +501,14 @@ export class SelectionPlugin extends Plugin {
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
         const focus = { node: selection.focusNode, offset: selection.focusOffset };
 
-        this.canApplySelectionToDocument = selectionData.documentSelectionIsInEditable;
         return {
             restore: () => {
+                if (
+                    selectionData.editableSelection.isDefault &&
+                    !selectionData.documentSelectionIsInEditable
+                ) {
+                    return;
+                }
                 this.setSelection(
                     {
                         anchorNode: anchor.node,
@@ -510,7 +518,6 @@ export class SelectionPlugin extends Plugin {
                     },
                     { normalize: false }
                 );
-                this.canApplySelectionToDocument = true;
             },
             update(callback) {
                 callback(anchor);
@@ -862,5 +869,12 @@ export class SelectionPlugin extends Plugin {
             this.editable.contains(anchorNode) &&
             (focusNode === anchorNode || this.editable.contains(focusNode))
         );
+    }
+
+    disableApplySelectionToDoc() {
+        this.canApplySelectionToDocument = false;
+        return () => {
+            this.canApplySelectionToDocument = true;
+        };
     }
 }

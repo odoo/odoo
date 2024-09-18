@@ -920,7 +920,15 @@ export class HistoryPlugin extends Plugin {
         return {
             preview: (...args) => {
                 revertOperation();
-                revertOperation = this.makeSavePoint();
+                const restoreSavePoint = this.makeSavePoint();
+                const { documentSelectionIsInEditable } = this.shared.getSelectionData();
+                const enableApplySelectionToDoc = documentSelectionIsInEditable
+                    ? () => {}
+                    : this.shared.disableApplySelectionToDoc();
+                revertOperation = () => {
+                    restoreSavePoint();
+                    enableApplySelectionToDoc();
+                };
                 operation(...args);
             },
             commit: (...args) => {
