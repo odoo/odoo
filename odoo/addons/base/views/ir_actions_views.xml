@@ -472,6 +472,56 @@ env['res.partner'].create({'name': partner_name})
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
 
+        <!-- ir.embedded.actions -->
+
+        <record id="embedded_action_form" model="ir.ui.view">
+            <field name="name">ir.embedded.actions.form</field>
+            <field name="model">ir.embedded.actions</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="parent_action_id"/>
+                                <field name="action_id"/>
+                                <field name="user_id"/>
+                                <field name="filter_ids" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="is_deletable"/>
+                                <field name="default_view_mode"/>
+                                <field name="parent_res_model"/>
+                                <field name="domain"/>
+                                <field name="groups_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="embedded_action_tree" model="ir.ui.view">
+            <field name="name">Embedded Actions</field>
+            <field name="model">ir.embedded.actions</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="parent_action_id"/>
+                    <field name="action_id"/>
+                    <field name="user_id"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="ir_embedded_action" model="ir.actions.act_window">
+            <field name="name">Embedded Actions</field>
+            <field name="res_model">ir.embedded.actions</field>
+            <field name="view_id" ref="embedded_action_tree"/>
+        </record>
+        <menuitem action="ir_embedded_action" id="menu_ir_embedded_action" parent="base.next_id_6"/>
+
         <!-- ir.actions.todo -->
 
         <record id="ir_actions_todo_tree" model="ir.ui.view">
