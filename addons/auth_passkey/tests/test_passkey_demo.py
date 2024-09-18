@@ -107,7 +107,29 @@ class PasskeyTest(HttpCase):
                         "authenticatorAttachment": "platform",
                     }
                 },
-            }
+            },
+            'test-user-verification': {
+                'user': self.demo_user,
+                'credential_identifier': '723TCjL_RdQHFk3Ysp-HUymcWoazFi3ZdfZ1bIn6MYC5bAXvI6B-j8G-UA1taMO0',
+                'public_key': 'pQECAyYgASFYIO9t0woy_0XUBxZN2LKpzFmzmauPpdgt7B1EnoVXHL56IlggUJWIu-UCOAFOCAMUXDXb36pJ49aWNI9Z7njiLQt7amw=',
+                'host': 'http://localhost:8069',
+                'auth': {
+                    'challenge': 'MTIzNDU',
+                    'response': {
+                        'id': '723TCjL_RdQHFk3Ysp-HUymcWoazFi3ZdfZ1bIn6MYC5bAXvI6B-j8G-UA1taMO0',
+                        'rawId': '723TCjL_RdQHFk3Ysp-HUymcWoazFi3ZdfZ1bIn6MYC5bAXvI6B-j8G-UA1taMO0',
+                        'response': {
+                            'authenticatorData': 'SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MBAAAADg',
+                            'clientDataJSON': 'eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiTVRJek5EVSIsIm9yaWdpbiI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA2OSIsImNyb3NzT3JpZ2luIjpmYWxzZX0',
+                            'signature': 'MEQCIFYAdM82D9otAfX2s6WY4CyH8i733Km-3TZSYcfwDmbqAiB6OXGuoaMgX13v6LWCIdkCRY9ZTYhNzhXFTs1Wp7-zkQ',
+                            'userHandle': 'Mg'
+                        },
+                        'type': 'public-key',
+                        'clientExtensionResults': {},
+                        'authenticatorAttachment': 'cross-platform'
+                    }
+                },
+            },
         }
 
         for key, values in self.passkeys.items():
@@ -191,7 +213,8 @@ class PasskeyTest(HttpCase):
             self.assertEqual(self.admin_user.auth_passkey_key_ids.sign_count, 0)
 
     def test_authentication(self):
-        for passkey in self.passkeys.values():
+        for key in ['test-yubikey', 'test-yubikey-nano', 'test-keepassxc']:
+            passkey = self.passkeys[key]
             auth = passkey['auth']
             webauthn_challenge, webauthn_response = auth['challenge'], auth['response']
             self.env['ir.config_parameter'].sudo().set_param('web.base.url', passkey['host'])
@@ -242,7 +265,8 @@ class PasskeyTest(HttpCase):
                 self.assertEqual(error, 'Cannot find a challenge for this session')
 
     def test_check_identity(self):
-        for passkey in self.passkeys.values():
+        for key in ['test-yubikey', 'test-yubikey-nano', 'test-keepassxc']:
+            passkey = self.passkeys[key]
             user, auth = passkey['user'], passkey['auth']
             webauthn_challenge, webauthn_response = auth['challenge'], auth['response']
             self.env['ir.config_parameter'].sudo().set_param('web.base.url', passkey['host'])
@@ -323,3 +347,93 @@ class PasskeyTest(HttpCase):
             self.assertFalse(response.get('result'))
             self.assertTrue(response.get('error'))
             self.assertEqual(passkey['passkey'].sign_count, sign_count)
+
+    def test_check_user_verification(self):
+        """Asserts authenticating without user verification (not entering the PIN code of the passkey) is prevented.
+
+        In addition to ask the browser to require the user verification
+        during the preparation of the webauthn authentication options,
+        the fact the user verification actually happened must be verified, server-side.
+
+        In the webauthn protocol, the fact the user verification happened
+        is stored by the browser in the `authenticatorData`,
+        in the 33rd byte "flags", in the 2nd bit "User Verified (UV)".
+        https://www.w3.org/TR/webauthn-1/#sec-authenticator-data
+
+        In the webauthn response provided in the setup class above, the `authenticatorData` provided
+        does not have the user verification flag.
+        This response should therefore not be allowed for authentication,
+        as we want to require the user to enter his PIN code (User Verification, UV)
+        in addition to touching the key (User Presence, UP) to act as a 2 factor authentication:
+        Something you have + Something you know.
+
+        Then, we replay the same authentication, with the same challenge,
+        but this time with an authenticator data with the user verified,
+        and an updated signature with this new authenticator data,
+        and then the authentication can be allowed.
+        """
+        passkey = self.passkeys['test-user-verification']
+        webauthn_challenge, webauthn_response = passkey['auth']['challenge'], passkey['auth']['response']
+        self.env['ir.config_parameter'].sudo().set_param('web.base.url', passkey['host'])
+
+        with self.patch_start_auth(webauthn_challenge):
+            csrf_token = etree.fromstring(
+                self.url_open('/web/login').content
+            ).xpath('//input[@name="csrf_token"]')[0].get('value')
+            self.url_open('/auth/passkey/start-auth', '{}', headers={"Content-Type": "application/json"})
+            response = self.url_open('/web/login', data={
+                'type': 'webauthn',
+                'webauthn_response': json.dumps(webauthn_response),
+                'csrf_token': csrf_token,
+                'password': '',
+            })
+            # Login unsuccessful, redirected back to /web/login
+            self.assertTrue(response.url.endswith('/web/login'))
+            # with the error message
+            error = etree.fromstring(response.content).xpath('//p[@class="alert alert-danger"]')[0].text.strip()
+            self.assertEqual(error, 'User verification is required but user was not verified during authentication')
+
+            # New authenticator data with the user verification bit turned on (+ counter increased)
+            # Previous authenticator data without user verified:    SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MBAAAADg
+            # New authenticator data with user verified:            SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MFAAAAFQ
+            # Only the end changes, as:
+            # - An Authenticator Data is 37 bytes long
+            # - The user verified (UV) is on the 33rd byte
+            # - The counter is from the 34th byte to the 37th byte
+            # https://www.w3.org/TR/webauthn-1/#sec-authenticator-data
+            # To see the 33rd byte "flags" change:
+            # ```py
+            # import base64
+            # flags = base64.urlsafe_b64decode(authenticator_data + '==')[32:33]
+            # print(f'{flags[0]:08b}')
+            # ```
+            # Without the User Verified authenticator data, the above code prints `00000001`
+            # With the User Verified authenticator data, the above code prints `00000101`
+            # bit 0 is the least significant bit:
+            # - Bit 0: User Present (UP)
+            # - Bit 2: User Verified (UV)
+            # The counter is from byte 34 to 37. To get the counter:
+            # `int.from_bytes(base64.urlsafe_b64decode(authenticator_data + '==')[33:37])`
+            # In the case of the authenticator data without user verified, the counter is 14
+            # In the case of the authenticator data with user verified, the counter is 21
+            # The response with the invalid authenticator data, without the UV flag
+            # must be played before the response with the valid authenticator data,
+            # as its counter is lower. Otherwise you would have another error in addition to the missing UV flag:
+            # `Response sign count of 14 was not greater than current count of 21`
+            webauthn_response['response']['authenticatorData'] = 'SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MFAAAAFQ'
+            # Signature changes as the authenticator data changed.
+            webauthn_response['response']['signature'] = 'MEQCIAdcWwNtQVrklYo70p5eHjVdSkA4Pgk6hbCCT6O8-V0BAiBBVKgroyNNOqN5xwO6Rr4yJV61J1TGWoOyUsoUftjypw'
+
+            csrf_token = etree.fromstring(
+                self.url_open('/web/login').content
+            ).xpath('//input[@name="csrf_token"]')[0].get('value')
+            self.url_open('/auth/passkey/start-auth', '{}', headers={"Content-Type": "application/json"})
+            response = self.url_open('/web/login', data={
+                'type': 'webauthn',
+                'webauthn_response': json.dumps(webauthn_response),
+                'csrf_token': csrf_token,
+                'password': '',
+            })
+
+            # Login successful, redirected to /web
+            self.assertTrue(response.url.endswith('/web'))
