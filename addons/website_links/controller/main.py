@@ -14,7 +14,11 @@ class WebsiteUrl(http.Controller):
 
     @http.route('/r', type='http', auth='user', website=True)
     def shorten_url(self, **post):
-        return request.render("website_links.page_shorten_url", post)
+        return request.render("website_links.page_shorten_url", {
+            "can_create_link_tracker": request.env['link.tracker'].has_access('create'),
+            "can_create_link_tracker_code": request.env['link.tracker.code'].has_access('create'),
+            **post,
+        })
 
     @http.route('/website_links/add_code', type='json', auth='user')
     def add_code(self, **post):
@@ -34,6 +38,9 @@ class WebsiteUrl(http.Controller):
         code = request.env['link.tracker.code'].search([('code', '=', code)], limit=1)
 
         if code:
-            return request.render("website_links.graphs", code.link_id.read()[0])
+            return request.render("website_links.graphs", {
+                "can_create_link_tracker_code": request.env['link.tracker.code'].has_access('create'),
+                **code.link_id.read()[0]
+            })
         else:
             return request.redirect('/', code=301)

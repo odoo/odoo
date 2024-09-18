@@ -28,7 +28,6 @@
         'wizard/mailing_sms_test_views.xml',
     ],
     'demo': [
-        'demo/utm.xml',
         'demo/mailing_list_contact.xml',
         'demo/mailing_subscription.xml',
         'demo/mailing_mailing.xml',

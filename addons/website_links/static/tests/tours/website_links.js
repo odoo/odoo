@@ -82,19 +82,23 @@ registry.category("web_tour.tours").add('website_links_tour', {
                 browser.navigator.clipboard.writeText = () => {
                     console.info("Copy in clipboard ignored!");
                 };
-                document.querySelector("#btn_shorten_url").click();
                 browser.navigator.clipboard.writeText = oldWriteText;
             },
         },
+        {
+            content: "Generate Link Tracker",
+            trigger: "#btn_shorten_url",
+            run: "click",
+        },
         // 2. Visit it
         {
-            trigger: '#o_website_links_recent_links .truncate_text:first():contains("Contact Us")',
+            trigger: '#o_website_links_recent_links .o_website_links_title:first():contains("Contact Us")',
         },
         {
             content: "check that link was created and visit it",
-            trigger: '#o_website_links_link_tracker_form #generated_tracked_link:contains("/r/")',
+            trigger: '.o_website_links_create_tracked_url #generated_tracked_link .o_website_links_short_url:contains("/r/")',
             run: function () {
-                window.location.href = $('#generated_tracked_link').text();
+                window.location.href = $('#generated_tracked_link .o_website_links_short_url').text();
             },
         },
         {
@@ -111,13 +115,18 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         // 3. Check that counter got incremented and charts are correctly displayed
         {
-            content: "filter recently used links",
-            trigger: '#filter-recently-used-links',
+            content: "Sort the recent links",
+            trigger: ".o_website_links_sort_by",
+            run: "click",
+        },
+        {
+            content: "Sort by last clicked links",
+            trigger: "#recent_links_sort_by a[data-filter='recently-used']",
             run: "click",
         },
         {
             content: "visit link stats page",
-            trigger: "#o_website_links_recent_links a:contains(/^Stats$/):first",
+            trigger: ".o_website_links_card",
             run: "click",
         },
         {

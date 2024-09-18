@@ -3,7 +3,6 @@
 import { loadBundle } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { browser } from "@web/core/browser/browser";
 const { DateTime } = luxon;
 
 var BarChart = publicWidget.Widget.extend({
@@ -60,6 +59,19 @@ var BarChart = publicWidget.Widget.extend({
 
                 }],
             },
+            options: {
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                if (Number.isInteger(value)) {
+                                    return value;
+                                }
+                            },
+                        }
+                    }
+                }
+            }
         };
         var canvas = this.$('canvas')[0];
         var context = canvas.getContext('2d');
@@ -122,9 +134,6 @@ var PieChart = publicWidget.Widget.extend({
 
 publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
     selector: '.o_website_links_chart',
-    events: {
-        'click .copy-to-clipboard': '_onCopyToClipboardClick',
-    },
 
     init() {
         this._super(...arguments);
@@ -277,43 +286,6 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             ["country_id"],
             ["country_id"]
         );
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCopyToClipboardClick: async function (ev) {
-        ev.preventDefault();
-
-        const textValue = ev.target.dataset.clipboardText;
-        await browser.navigator.clipboard.writeText(textValue);
-
-        if (this.animating_copy) {
-            return;
-        }
-
-        this.animating_copy = true;
-
-        $('.o_website_links_short_url').clone()
-            .css('position', 'absolute')
-            .css('left', '15px')
-            .css('bottom', '10px')
-            .css('z-index', 2)
-            .removeClass('.o_website_links_short_url')
-            .addClass('animated-link')
-            .appendTo($('.o_website_links_short_url'))
-            .animate({
-                opacity: 0,
-                bottom: '+=20',
-            }, 500, function () {
-                $('.animated-link').remove();
-                this.animating_copy = false;
-            });
     },
 });
 
