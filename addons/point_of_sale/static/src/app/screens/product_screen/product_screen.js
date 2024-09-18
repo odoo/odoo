@@ -95,9 +95,9 @@ export class ProductScreen extends Component {
             : this.pos.models["pos.category"].filter((category) => !category.parent_id);
     }
     getCategoriesAndSub() {
-        return this.getAncestorsAndCurrent().flatMap((category) =>
-            this.getChildCategoriesInfo(category)
-        );
+        return this.getAncestorsAndCurrent()
+            .flatMap((category) => this.getChildCategoriesInfo(category))
+            .toSorted((a, b) => a.id - b.id);
     }
 
     getChildCategoriesInfo(selectedCategory) {
