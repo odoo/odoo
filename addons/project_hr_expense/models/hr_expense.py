@@ -20,5 +20,5 @@ class HrExpense(models.Model):
             analytic_distribution = self.env['project.project'].browse(project_id)._get_analytic_distribution()
             if analytic_distribution:
                 for vals in vals_list:
-                    vals['analytic_distribution'] = analytic_distribution
+                    vals['analytic_distribution'] = vals.get('analytic_distribution', analytic_distribution)
         return super().create(vals_list)
