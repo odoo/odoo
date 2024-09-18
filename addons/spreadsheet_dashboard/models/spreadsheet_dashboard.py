@@ -12,6 +12,7 @@ class SpreadsheetDashboard(models.Model):
     name = fields.Char(required=True, translate=True)
     dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True)
     sequence = fields.Integer()
+    sample_dashboard_file_path = fields.Char(export_string_translation=False)
     is_published = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company')
     group_ids = fields.Many2many('res.groups', default=lambda self: self.env.ref('base.group_user'))
