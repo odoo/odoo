@@ -175,21 +175,16 @@
         <field name="name">stock.picking.type.kanban</field>
         <field name="model">stock.picking.type</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard o_stock_kanban o_emphasize_colors" js_class="stock_dashboard_kanban" create="0" group_create="false" can_open="0">
+            <kanban highlight_color="color" class="o_stock_kanban" js_class="stock_dashboard_kanban" create="0" group_create="false" can_open="0">
                 <field name="color"/>
                 <field name="code" readonly="1"/>
-                <field name="count_picking_ready"/>
-                <field name="count_picking_draft"/>
-                <field name="count_picking_waiting"/>
-                <field name="count_picking_late"/>
-                <field name="count_picking_backorders"/>
                 <field name="count_move_ready"/>
                 <field name="show_picking_type" invisible="1"/>
                 <templates>
                     <t t-name="kanban-menu" t-if="!selection_mode">
                         <div class="container" t-if="record.show_picking_type.raw_value">
                             <div class="row">
-                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                <div class="col-6">
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <span t-if="record.code.raw_value == 'internal'">Transfers</span>
                                         <span t-else="">View</span>
@@ -204,7 +199,7 @@
                                         <a name="get_action_picking_tree_waiting" type="object">Waiting</a>
                                     </div>
                                 </div>
-                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                <div name="kanban_menu_section" class="col-6">
                                     <h5 role="menuitem" class="o_kanban_card_manage_title">
                                         <a name="%(action_picking_form)d" type="action">New</a>
                                     </h5>
@@ -216,7 +211,7 @@
 
                             <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
                                 <div class="col-8" role="menuitem" aria-haspopup="true">
-                                    <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                    <field name="color" widget="kanban_color_picker"/>
                                 </div>
                             </div>
 
@@ -228,76 +223,64 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="kanban-box">
-                        <div t-if="record.show_picking_type.raw_value" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking">
-                            <div t-attf-class="o_kanban_card_header">
-                                <div class="o_kanban_card_header_title">
-                                    <div class="o_primary" t-if="!selection_mode">
-                                        <a type="object" name="get_stock_picking_action_picking_type">
-                                            <field name="name"/>
+                    <t t-name="kanban-card">
+                        <div t-if="record.show_picking_type.raw_value" name="stock_picking" class="px-2">
+                            <a t-if="!selection_mode" type="object" name="get_stock_picking_action_picking_type">
+                                <field class="fw-bold fs-4" name="name"/>
+                            </a>
+                            <field t-if="selection_mode" class="fw-bold fs-4" name="name"/>
+                            <field name="warehouse_id" class="d-block" groups="stock.group_stock_multi_warehouses"/>
+                            <div t-if="!selection_mode" class="row mt-3">
+                                <div class="col-6">
+                                    <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
+                                        <span t-if="record.count_picking_ready.raw_value > 0">
+                                            <field name="count_picking_ready"/>
+                                            <t t-if="record.code.raw_value === 'incoming'"> To Receive</t>
+                                            <t t-elif="record.code.raw_value === 'outgoing'" name="outgoing_label"> To Deliver</t>
+                                            <t t-else=""> To Process</t>
+                                        </span>
+                                        <span t-else="">Open</span>
+                                    </button>
+                                </div>
+                                <div class="col-6 stock-overview-links">
+                                    <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
+                                        <a class="col-8 offset-4 text-truncate" name="get_action_picking_tree_waiting" type="object">
+                                            <div class="row">
+                                                <span class="col-6">Waiting</span>
+                                                <field class="col-2 text-end" name="count_picking_waiting"/>
+                                            </div>
                                         </a>
                                     </div>
-                                    <div class="o_primary" t-if="selection_mode">
-                                        <field name="name"/>
+
+                                    <div t-if="record.count_picking_late.raw_value > 0" class="row">
+                                        <a class="col-8 offset-4 text-truncate" name="get_action_picking_tree_late" type="object">
+                                            <div class="row">
+                                                <span class="col-6">Late</span>
+                                                <field class="col-2 text-end" name="count_picking_late"/>
+                                            </div>
+                                        </a>
                                     </div>
-                                    <div class="o_secondary"><field class="o_secondary" name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>
+
+                                    <div t-if="record.count_picking_backorders.raw_value > 0" class="row" name="picking_type_backorder_count">
+                                        <a class="col-8 offset-4 text-truncate" name="get_action_picking_tree_backorder" type="object">
+                                            <div class="row">
+                                                <span class="col-6">Back Orders</span>
+                                                <field class="col-2 text-end" name="count_picking_backorders"/>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                    <div t-if="record.count_move_ready.raw_value > 0" class="row">
+                                        <a class="col-8 offset-4 text-truncate" name="get_action_picking_type_ready_moves" type="object">
+                                            <div class="row">
+                                                <span class="col-6">Operations</span>
+                                                <field class="col-2 text-end" name="count_move_ready"/>
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="container o_kanban_card_content" t-if="!selection_mode">
-                                <div class="row">
-                                    <div class="col-6 o_kanban_primary_left">
-                                        <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
-                                            <span t-if="record.count_picking_ready.raw_value > 0">
-                                                <t t-esc="record.count_picking_ready.value"/>
-                                                <t t-if="record.code.raw_value === 'incoming'"> To Receive</t>
-                                                <t t-elif="record.code.raw_value === 'outgoing'" name="outgoing_label"> To Deliver</t>
-                                                <t t-else=""> To Process</t>
-                                            </span>
-                                            <span t-else="">Open</span>
-                                        </button>
-                                    </div>
-                                    <div class="col-6 o_kanban_primary_right stock-overview-links">
-                                        <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
-                                            <a class="col-8 offset-4" name="get_action_picking_tree_waiting" type="object">
-                                                <div class="row">
-                                                    <span class="col-6">Waiting</span>
-                                                    <field class="col-2 text-end" name="count_picking_waiting"/>
-                                                </div>
-                                            </a>
-                                        </div>
-
-                                        <div t-if="record.count_picking_late.raw_value > 0" class="row">
-                                            <a class="col-8 offset-4 oe_kanban_stock_picking_type_list" name="get_action_picking_tree_late" type="object">
-                                                <div class="row">
-                                                    <span class="col-6">Late</span>
-                                                    <field class="col-2 text-end" name="count_picking_late"/>
-                                                </div>
-                                            </a>
-                                        </div>
-
-                                        <div t-if="record.count_picking_backorders.raw_value > 0" class="row" name="picking_type_backorder_count">
-                                            <a class="col-8 offset-4 oe_kanban_stock_picking_type_list" name="get_action_picking_tree_backorder" type="object">
-                                                <div class="row">
-                                                    <span class="col-6">Back Orders</span>
-                                                    <field class="col-2 text-end" name="count_picking_backorders"/>
-                                                </div>
-                                            </a>
-                                        </div>
-
-                                        <div t-if="record.count_move_ready.raw_value > 0" class="row">
-                                            <a class="col-8 offset-4" name="get_action_picking_type_ready_moves" type="object">
-                                                <div class="row">
-                                                    <span class="col-6">Operations</span>
-                                                    <field class="col-2 text-end" name="count_move_ready"/>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt-auto">
-                                    <field name="kanban_dashboard_graph" graph_type="bar" widget="picking_type_dashboard_graph"/>
-                                </div>
-                            </div>
+                            <field t-if="!selection_mode" name="kanban_dashboard_graph" class="mt-auto" graph_type="bar" widget="picking_type_dashboard_graph"/>
                         </div>
                     </t>
                 </templates>
