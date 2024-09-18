@@ -74,6 +74,15 @@ beforeEach(() => {
     onRpc("/web/dataset/call_kw/res.users/switch_tour_enabled", async () => {
         return true;
     });
+    onRpc("/web/dataset/call_kw/web_tour.tour/get_tour_json_by_name", async () => {
+        return {
+            name: "tour1",
+            steps: [
+                { trigger: "button.foo", run: "click" },
+                { trigger: "button.bar", run: "click" },
+            ],
+        };
+    });
 });
 
 afterEach(() => {
@@ -1184,13 +1193,6 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
 });
 
 test("Tour started by the URL", async () => {
-    registry.category("web_tour.tours").add("tour1", {
-        steps: () => [
-            { trigger: "button.foo", run: "click" },
-            { trigger: "button.bar", run: "click" },
-        ],
-    });
-
     browser.location.href = `${browser.location.origin}?tour=tour1`;
 
     class Dummy extends Component {
