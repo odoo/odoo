@@ -41,7 +41,7 @@ export const many2ManyTagsAvatarField = {
 registry.category("fields").add("many2many_tags_avatar", many2ManyTagsAvatarField);
 
 export class ListMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
-    itemsVisible = 5;
+    visibleItemsLimit = 5;
 }
 
 export const listMany2ManyTagsAvatarField = {
@@ -106,9 +106,6 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
             closeOnClickAway: (target) => !target.closest(".modal"),
         });
     }
-    get visibleTagsCount() {
-        return this.props.itemsVisible;
-    }
     openPopover(ev) {
         if (this.props.readonly) {
             return;
@@ -137,7 +134,7 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         ...Many2ManyTagsAvatarField.props,
         isEditable: { type: Boolean, optional: true },
     };
-    itemsVisible = 2;
+    visibleItemsLimit = 3;
 
     get popoverProps() {
         const props = {
