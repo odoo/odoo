@@ -1,10 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, press, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { BOLD_TAGS, notStrong, span, strong } from "../_helpers/tags";
-import { bold, tripleClick } from "../_helpers/user_actions";
+import { bold, simulateArrowKeyPress, tripleClick } from "../_helpers/user_actions";
 
 const styleH1Bold = `h1 { font-weight: bold; }`;
 
@@ -216,6 +217,24 @@ test("should type in bold", async () => {
     expect(getContent(el)).toBe(`<p>ab${strong("xy")}${span("[]\u200B", "first")}cd</p>`);
     typeChar(editor, "z");
     expect(getContent(el)).toBe(`<p>ab${strong("xy")}z[]cd</p>`);
+});
+
+test.tags("desktop")("create bold with shortcut + selected with arrow", async () => {
+    const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+    press(["control", "b"]);
+    expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
+
+    simulateArrowKeyPress(editor, ["Shift", "ArrowRight"]);
+    await tick(); // await selectionchange
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(1);
+    expect(getContent(el)).toBe(`<p>ab${strong("[\u200B", "first")}c]d</p>`);
+
+    simulateArrowKeyPress(editor, ["Shift", "ArrowLeft"]);
+    await tick(); // await selectionchange
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(0);
+    expect(getContent(el)).toBe(`<p>ab${strong("[\u200B]", "first")}cd</p>`);
 });
 
 const styleContentBold = `.boldClass { font-weight: bold; }`;
