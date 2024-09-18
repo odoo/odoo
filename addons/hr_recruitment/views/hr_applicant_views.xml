@@ -323,6 +323,7 @@
                 <field name="user_id"/>
                 <field name="active"/>
                 <field name="application_status" />
+                <field name="company_id" invisible="1"/> <!-- We need to keep this field as it is used in the domain of user_id in the model -->
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                 <templates>
                     <t t-name="kanban-menu">
