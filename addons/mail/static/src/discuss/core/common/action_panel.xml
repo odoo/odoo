@@ -16,6 +16,7 @@
                 <button t-if="env.closeActionPanel" class="btn p-1 opacity-75 opacity-100-hover text-muted" title="Close panel" t-on-click.stop="env.closeActionPanel">
                     <i class="oi oi-arrow-left fa-fw"/>
                 </button>
+                <i t-if="props.icon" class="text-muted" t-att-class="props.icon"/>
                 <p t-if="props.title" class="fs-6 fw-bold text-uppercase m-0 text-muted flex-grow-1" t-esc="props.title"/>
             </div>
             <t t-slot="header"/>

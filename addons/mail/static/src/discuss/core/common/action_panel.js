@@ -12,6 +12,7 @@ export class ActionPanel extends Component {
     static template = "mail.ActionPanel";
     static components = { ResizablePanel };
     static props = {
+        icon: { type: String, optional: true },
         title: { type: String, optional: true },
         resizable: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },

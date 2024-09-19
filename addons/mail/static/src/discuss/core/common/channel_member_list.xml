@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList">
-        <ActionPanel title.translate="Members" minWidth="200">
-            <button t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-secondary m-2 mt-0">Invite a User</button>
+        <ActionPanel title.translate="Members" minWidth="200" icon="'fa fa-users'">
+            <button t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-sm btn-secondary m-2 mt-0 d-flex align-items-center justify-content-center gap-1"><i class="fa fa-user-plus"/><span>Invite a User</span></button>
             <t t-if="props.thread.onlineMembers.length > 0">
                 <h6 class="text-muted pt-2 text-uppercase smaller">
                     Online -
