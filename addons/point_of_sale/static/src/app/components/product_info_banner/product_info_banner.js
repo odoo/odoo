@@ -39,8 +39,7 @@ export class ProductInfoBanner extends Component {
 
                     if (result) {
                         const productInfo = result.productInfo;
-                        this.state.available_quantity =
-                            productInfo.warehouses[0]?.available_quantity;
+                        this.state.available_quantity = productInfo.total_qty_available;
                         this.state.price_with_tax = productInfo.all_prices.price_with_tax;
                         this.state.price_without_tax = productInfo.all_prices.price_without_tax;
                         this.state.tax_name = productInfo.all_prices.tax_details[0]?.name || "";

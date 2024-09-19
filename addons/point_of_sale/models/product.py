@@ -177,7 +177,7 @@ class ProductProduct(models.Model):
         config = self.env['pos.config'].browse(pos_config_id)
 
         # Tax related
-        taxes = self.taxes_id.compute_all(price, config.currency_id, quantity, self)
+        taxes = self.taxes_id.compute_all(self.product_tmpl_id.list_price, config.currency_id, quantity, self)
         grouped_taxes = {}
         for tax in taxes['taxes']:
             if tax['id'] in grouped_taxes:
@@ -241,7 +241,8 @@ class ProductProduct(models.Model):
             'pricelists': pricelist_list,
             'warehouses': warehouse_list,
             'suppliers': supplier_list,
-            'variants': variant_list
+            'variants': variant_list,
+            'total_qty_available': self.product_tmpl_id.qty_available
         }
 
 

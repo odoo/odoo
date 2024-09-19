@@ -7,13 +7,13 @@
                 <span class="h4" t-esc="props.product.name"/>
                 <span t-if="this.props.product.is_storable" class="h4">
                     <span>On hand: </span>
-                    <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>
+                    <span class="section-product-info-title-quantity" t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/> Units</span>
                     <span t-elif="this.fetchStock.status === 'error'">N/A</span>
                     <i t-else="" class="fa fa-fw fa-spin fa-circle-o-notch" aria-hidden="true" />
                 </span>
             </div>
             <div t-att-class="{ 'align-items-end': !this.ui.isSmall }" class="d-flex flex-column">
-                <span class="h4"><t t-esc="this.env.utils.formatCurrency(state.price_with_tax)"/></span>
+                <span class="h4 section-product-info-title-price"><t t-esc="this.env.utils.formatCurrency(state.price_with_tax)"/></span>
                 <span class="h4">VAT: <t t-esc="state.tax_name || 0" /> (= <t t-esc="this.env.utils.formatCurrency(state.tax_amount)" />)</span>
             </div>
         </div>
