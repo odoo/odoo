@@ -18,7 +18,7 @@ export class PosOrderline extends Base {
             this.delete();
             return;
         }
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
+        this.uuid = this.id;
         this.setFullProductName();
 
         // Data that are not saved in the backend

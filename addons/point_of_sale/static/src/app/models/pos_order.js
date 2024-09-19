@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
-import { random5Chars, uuidv4, gte, lt } from "@point_of_sale/utils";
+import { random5Chars, gte, lt } from "@point_of_sale/utils";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
@@ -23,15 +23,22 @@ export class PosOrder extends Base {
         this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
         this.state = vals.state || "draft";
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
-        this.last_order_preparation_change = vals.last_order_preparation_change
-            ? JSON.parse(vals.last_order_preparation_change)
-            : {
-                  lines: {},
-                  general_customer_note: "",
-                  internal_note: "",
-                  sittingMode: 0,
-              };
+        // this.uuid = vals.uuid ? vals.uuid : uuidv4();
+        this.uuid = this.id;
+        // this.last_order_preparation_change = vals.last_order_preparation_change
+        //     ? JSON.parse(vals.last_order_preparation_change)
+        //     : {
+        //           lines: {},
+        //           general_customer_note: "",
+        //           internal_note: "",
+        //           sittingMode: 0,
+        //       };
+        this.last_order_preparation_change = {
+            lines: {},
+            general_customer_note: "",
+            internal_note: "",
+            sittingMode: 0,
+        };
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
         if (!vals.lines) {

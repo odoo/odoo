@@ -21,18 +21,6 @@ class PosOrder(models.Model):
             domain += [('uuid', '=', order.get('uuid'))]
         return self.env["pos.order"].search(domain, limit=1)
 
-    @api.model
-    def sync_from_ui(self, orders):
-        result = super().create(orders)
-
-        order_ids = self.browse([o['id'] for o in result["pos.order"]])
-        if order_ids:
-            config_id = order_ids.config_id.ids[0] if order_ids else False
-            result['restaurant.order.course'] = order_ids.course_ids.read(order_ids.course_ids._load_pos_data_fields(config_id)) if config_id else []
-        else:
-            result['restaurant.order.course'] = []
-        return result
-
     def _process_order(self, order, existing_order):
         restaurant_course_lines = order.pop("restaurant_course_lines", None)
         order_id = super()._process_order(order, existing_order)
