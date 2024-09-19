@@ -1170,7 +1170,7 @@ stepUtils.autoExpandMoreButtons(true),
     stepUtils.goToAppSteps('accountant.menu_accounting', _t('Go to Accounting'))[2], // 2 -> Ent only
 {
     isActive: ["enterprise", "desktop"],
-    trigger: "div.o_account_kanban div.o_kanban_card_header a.oe_kanban_action span:contains('Bank')",
+    trigger: "div.o_account_kanban a.oe_kanban_action span:contains('Bank')",
     content: _t("Open the bank reconciliation widget"),
     run: "click",
 }, {

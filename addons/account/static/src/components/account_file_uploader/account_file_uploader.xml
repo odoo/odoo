@@ -18,9 +18,9 @@
     </t>
 
     <t t-name="account.JournalUploadLink">
-        <div t-att-class="props.btnClass" groups="account.group_account_invoice">
-            <a href="#" t-out="props.linkText"/>
-        </div>
+        <t groups="account.group_account_invoice">
+            <a t-att-class="props.btnClass" href="#" t-out="props.linkText"/>
+        </t>
     </t>
 
 </templates>
