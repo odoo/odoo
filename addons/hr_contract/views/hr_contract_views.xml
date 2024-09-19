@@ -285,7 +285,7 @@
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                     <t t-name="kanban-menu" groups="hr_contract.group_hr_contract_manager">
-                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Contract</a></t>
+                        <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit Contract</a></t>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                     </t>
                     <t t-name="kanban-card">

@@ -3236,8 +3236,7 @@ Forbidden owl directive used in arch (t-on-click).""",
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_forbidden_owl_directives_in_kanban(self):
-        arch = "<kanban><templates><t t-name='kanban-box'>%s</t></templates></kanban>"
-
+        arch = "<kanban><templates><t t-name='kanban-card'>%s</t></templates></kanban>"
         self.assertValid(arch % ('<span t-esc="record.resId"/>'))
         self.assertValid(arch % ('<t t-debug=""/>'))
 
@@ -3245,7 +3244,7 @@ Forbidden owl directive used in arch (t-on-click).""",
             arch % ('<span t-on-click="x.doIt()"/>'),
             """Error while validating view near:
 
-<kanban __validate__="1"><templates><t t-name="kanban-box"><span t-on-click="x.doIt()"/></t></templates></kanban>
+<kanban __validate__="1"><templates><t t-name="kanban-card"><span t-on-click="x.doIt()"/></t></templates></kanban>
 Forbidden owl directive used in arch (t-on-click).""",
         )
 
@@ -3271,13 +3270,13 @@ Forbidden attribute used in arch (data-tooltip-template)."""
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_forbidden_data_tooltip_attributes_in_kanban(self):
-        arch = "<kanban><templates><t t-name='kanban-box'>%s</t></templates></kanban>"
+        arch = "<kanban><templates><t t-name='kanban-card'>%s</t></templates></kanban>"
 
         self.assertInvalid(
             arch % ('<span data-tooltip="Test"/>'),
             """Error while validating view near:
 
-<kanban __validate__="1"><templates><t t-name="kanban-box"><span data-tooltip="Test"/></t></templates></kanban>
+<kanban __validate__="1"><templates><t t-name="kanban-card"><span data-tooltip="Test"/></t></templates></kanban>
 Forbidden attribute used in arch (data-tooltip)."""
         )
 
@@ -3285,7 +3284,7 @@ Forbidden attribute used in arch (data-tooltip)."""
             arch % ('<span data-tooltip-template="test"/>'),
             """Error while validating view near:
 
-<kanban __validate__="1"><templates><t t-name="kanban-box"><span data-tooltip-template="test"/></t></templates></kanban>
+<kanban __validate__="1"><templates><t t-name="kanban-card"><span data-tooltip-template="test"/></t></templates></kanban>
 Forbidden attribute used in arch (data-tooltip-template)."""
         )
 
@@ -3293,7 +3292,7 @@ Forbidden attribute used in arch (data-tooltip-template)."""
             arch % ('<span t-att-data-tooltip="test"/>'),
             """Error while validating view near:
 
-<kanban __validate__="1"><templates><t t-name="kanban-box"><span t-att-data-tooltip="test"/></t></templates></kanban>
+<kanban __validate__="1"><templates><t t-name="kanban-card"><span t-att-data-tooltip="test"/></t></templates></kanban>
 Forbidden attribute used in arch (t-att-data-tooltip)."""
         )
 
@@ -3301,18 +3300,18 @@ Forbidden attribute used in arch (t-att-data-tooltip)."""
             arch % ('<span t-attf-data-tooltip-template="{{ test }}"/>'),
             """Error while validating view near:
 
-<kanban __validate__="1"><templates><t t-name="kanban-box"><span t-attf-data-tooltip-template="{{ test }}"/></t></templates></kanban>
+<kanban __validate__="1"><templates><t t-name="kanban-card"><span t-attf-data-tooltip-template="{{ test }}"/></t></templates></kanban>
 Forbidden attribute used in arch (t-attf-data-tooltip-template)."""
         )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_forbidden_use_of___comp___in_kanban(self):
-        arch = "<kanban><templates><t t-name='kanban-box'>%s</t></templates></kanban>"
+        arch = "<kanban><templates><t t-name='kanban-card'>%s</t></templates></kanban>"
         self.assertInvalid(
             arch % '<t t-esc="__comp__.props.resId"/>',
             """Error while validating view near:
 
-<kanban __validate__="1"><templates><t t-name="kanban-box"><t t-esc="__comp__.props.resId"/></t></templates></kanban>
+<kanban __validate__="1"><templates><t t-name="kanban-card"><t t-esc="__comp__.props.resId"/></t></templates></kanban>
 Forbidden use of `__comp__` in arch."""
         )
 

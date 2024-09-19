@@ -112,7 +112,7 @@
                 <field name="supported_attachment_ids_count"/>
                 <templates>
                     <t t-name="kanban-menu" groups="base.group_user">
-                        <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Time Off</a>
+                        <a t-if="widget.editable" role="menuitem" type="open" class="dropdown-item">Edit Time Off</a>
                         <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                     </t>
                     <t t-name="kanban-card" class="row g-0">

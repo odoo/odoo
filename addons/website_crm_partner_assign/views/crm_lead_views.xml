@@ -181,10 +181,7 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='partner_id']" position="replace">
-                    <span t-att-title="record.partner_id.value">
-                        <field class="text-truncate" name="partner_id"/>
-                    </span>
+                <xpath expr="//field[@name='partner_id']" position="after">
                     <span class="text-truncate ms-1" t-if="record.partner_assigned_id.value">
                         (<i class="fa fa-long-arrow-right me-1" aria-label="Assigned Partner" title="Assigned Partner"/>
                         <span t-att-title="record.partner_assigned_id.value"><field name="partner_assigned_id"/></span>)
