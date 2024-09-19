@@ -27,22 +27,17 @@ class IrEmbeddedActions(models.Model):
     context = fields.Char(default="{}", help="Context dictionary as Python expression, empty by default (Default: {})")
     groups_ids = fields.Many2many('res.groups', help='Groups that can execute the embedded action. Leave empty to allow everybody.')
 
-    _sql_constraints = [
-        (
-            'check_only_one_action_defined',
-            """CHECK(
-                (action_id IS NOT NULL AND python_method IS NULL) OR
-                (action_id IS NULL AND python_method IS NOT NULL)
-            )""",
-            'Constraint to ensure that either an XML action or a python_method is defined, but not both.'
-        ), (
-            'check_python_method_requires_name',
-            """CHECK(
-                NOT (python_method IS NOT NULL AND name IS NULL)
-            )""",
-            'Constraint to ensure that if a python_method is defined, then the name must also be defined.'
-        )
-    ]
+    _check_only_one_action_defined = models.Constraint(
+        '''CHECK(
+            (action_id IS NOT NULL AND python_method IS NULL)
+            OR (action_id IS NULL AND python_method IS NOT NULL)
+        )''',
+        "Constraint to ensure that either an XML action or a python_method is defined, but not both.",
+    )
+    _check_python_method_requires_name = models.Constraint(
+        'CHECK(NOT (python_method IS NOT NULL AND name IS NULL))',
+        "Constraint to ensure that if a python_method is defined, then the name must also be defined.",
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
