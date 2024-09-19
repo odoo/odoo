@@ -820,6 +820,8 @@ class AccountAccount(models.Model):
                 for account_id, values in account_values.items()
             })
 
+        self.env.flush_all()
+
     def _toggle_reconcile_to_true(self):
         '''Toggle the `reconcile´ boolean from False -> True
 
