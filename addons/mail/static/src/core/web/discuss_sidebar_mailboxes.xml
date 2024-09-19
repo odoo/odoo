@@ -28,7 +28,7 @@
                 'bg-inherit': mailbox.notEq(store.discuss.thread),
                 'o-active': mailbox.eq(store.discuss.thread),
                 'justify-content-center position-relative': store.discuss.isSidebarCompact,
-                'py-1': !store.discuss.isSidebarCompact,
+                'py-0': !store.discuss.isSidebarCompact,
             }"
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
