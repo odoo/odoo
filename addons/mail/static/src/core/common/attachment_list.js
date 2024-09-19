@@ -55,8 +55,8 @@ export class AttachmentList extends Component {
         }
         return url(attachment.urlRoute, {
             ...attachment.urlQueryParams,
-            width: this.imagesWidth,
-            height: this.props.imagesHeight,
+            width: this.imagesWidth * 2,
+            height: this.props.imagesHeight * 2,
         });
     }
 
