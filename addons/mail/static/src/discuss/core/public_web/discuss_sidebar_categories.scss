@@ -52,8 +52,17 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
     }
 }
 
+.o-mail-DiscussSidebarChannel-badge.o-nonCompact {
+    margin-right: map-get($spacers, 2) + map-get($spacers, 2) / 2;
+}
+
 .o-mail-DiscussSidebarChannel-itemMain {
     background-color: inherit !important; // Not 'bg-inherit' so it cancels btn hover effect too
+}
+
+.o-mail-DiscussSidebarChannel-marginEnd::before {
+    // invisible character so that typing status bar has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
 }
 
 .o-mail-DiscussSidebarChannel-threadIcon {
@@ -81,8 +90,8 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 }
 
 .o-mail-DiscussSidebarCategories-quickSearchBtn {
-    padding-top: map-get($spacers, 1) + map-get($spacers, 2); // so that button is square like other items
-    padding-bottom: map-get($spacers, 1) + map-get($spacers, 2); // so that button is square like other items
+    padding-top: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
+    padding-bottom: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
 
     &.o-active {
         background-color: rgba($o-action, .75);
