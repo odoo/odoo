@@ -47,6 +47,11 @@ export class Homepage extends Component {
             const data = await this.store.rpc({
                 url: "/hw_posbox_homepage/data",
             });
+
+            if (data.system === "Linux") {
+                this.store.isLinux = true;
+            }
+
             this.data = data;
             this.store.base = data;
             this.state.loading = false;
@@ -82,14 +87,14 @@ export class Homepage extends Component {
 
     <div t-if="!this.state.loading" class="w-100 d-flex flex-column align-items-center justify-content-center" style="background-color: #F1F1F1; height: 100vh">
         <div class="bg-white p-4 rounded overflow-auto position-relative" style="min-width: 600px;">
-            <div class="position-absolute end-0 top-0 mt-3 me-4 d-flex gap-">
+            <div class="position-absolute end-0 top-0 mt-3 me-4 d-flex gap-1">
                 <IconButton onClick.bind="toggleAdvanced" icon="this.store.advanced ? 'fa-cog' : 'fa-cogs'" />
                 <IconButton onClick.bind="restartOdooService" icon="'fa-power-off'" />
             </div>
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
                 <h4 class="text-center m-0">IoT Box - <t t-esc="this.data.hostname" /></h4>
             </div>
-            <div class="alert alert-warning" role="alert">
+            <div t-if="this.store.advanced" class="alert alert-warning" role="alert">
                 <p class="m-0 fw-bold">HTTPS certificate</p>
                 <small>Error code: <t t-esc="this.data.certificate_details" /></small>
             </div>
