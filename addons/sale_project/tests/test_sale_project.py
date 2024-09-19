@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form, new_test_user, tagged
 
 from .common import TestSaleProjectCommon
@@ -817,3 +817,19 @@ class TestSaleProject(TestSaleProjectCommon):
             'sale_line_id': sale_order.order_line.id,
         })
         self.assertEqual(task3.sale_order_id, sale_order, "Task matches SO's partner_id")
+
+    def test_revoke_project_access_after_product_type_update(self):
+        order = self.env['sale.order'].create({
+            'name': 'Project Order',
+            'partner_id': self.partner.id
+        })
+
+        self.env['sale.order.line'].create({
+            'product_id': self.product_order_service4.id,
+            'order_id': order.id,
+        })
+
+        order.action_confirm()
+        self.product_order_service4.type = 'consu'
+        with self.assertRaises(UserError):
+            order.action_view_project_ids()

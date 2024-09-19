@@ -201,7 +201,14 @@ class SaleOrder(models.Model):
             return {'type': 'ir.actions.act_window_close'}
 
         sorted_line = self.order_line.sorted('sequence')
-        default_sale_line = next(sol for sol in sorted_line if sol.product_id.detailed_type == 'service')
+        default_sale_line = next((
+            sol for sol in sorted_line
+            if sol.product_id.detailed_type == 'service' and not sol.is_downpayment
+        ), self.env['sale.order.line'])
+
+        if not default_sale_line:
+            raise UserError(_("The product configuration has been modified, please refresh the page."))
+
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
