@@ -12,6 +12,6 @@ export class ProjectTaskCalendarModel extends CalendarModel {
         if (this.isCheckProject) {
             return _t("Private");
         }
-        return super.onWillStart();
+        return super.defaultFilterLabel;
     }
 }
