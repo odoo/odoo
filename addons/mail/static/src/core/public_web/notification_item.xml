@@ -3,10 +3,10 @@
 
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 gap-2 position-relative border-0" t-on-click="onClick" t-ref="root" t-att-class="{
+        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 gap-2 position-relative border rounded" t-on-click="onClick" t-ref="root" t-att-class="{
             'o-important': props.muted === 0,
-            'text-muted': props.muted === 1,
-            'opacity-50': props.muted === 2,
+            'text-muted border-transparent': props.muted === 1,
+            'opacity-50 border-transparent': props.muted === 2,
             'py-3 o-small': ui.isSmall,
             'border-top-0': props.first,
             'px-3 py-2': !ui.isSmall,
