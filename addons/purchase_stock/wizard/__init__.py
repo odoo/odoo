@@ -3,3 +3,4 @@
 
 from . import stock_replenishment_info
 from . import product_replenish
+from . import stock_picking_return
