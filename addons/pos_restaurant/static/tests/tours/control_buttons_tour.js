@@ -20,27 +20,21 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
     test: true,
     steps: () =>
         [
-            // Test TransferOrderButton
+            // Test merging table, transfer is already tested in pos_restaurant_sync_second_login.
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
             activeTableIs("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
-            ProductScreen.clickControlButton("Transfer"),
+            Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             activeTableIs("4"),
-            Order.hasLine({ productName: "Water", withClass: ".selected" }),
-            Chrome.clickPlanButton(),
+            ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
+            ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("2"),
             activeTableIs("2"),
-            ProductScreen.orderIsEmpty(),
-            Chrome.clickPlanButton(),
-            FloorScreen.isShown(),
-            FloorScreen.clickTable("4"),
-            Order.hasLine({
-                productName: "Water",
-                quantity: "5",
-            }),
+            Order.hasLine({ productName: "Water", quantity: "5" }),
+            Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
 
             // Test SplitBillButton
             ProductScreen.clickControlButton("Split"),
@@ -58,7 +52,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             }),
             // Check that note is imported if come back to the table
             Chrome.clickPlanButton(),
-            FloorScreen.clickTable("4"),
+            FloorScreen.clickTable("2"),
             Order.hasLine({
                 productName: "Water",
                 quantity: "5",
