@@ -129,10 +129,11 @@ class User(models.Model):
     def _sync_all_microsoft_calendar(self):
         """ Cron job """
         users = self.env['res.users'].sudo().search([('microsoft_calendar_rtoken', '!=', False), ('microsoft_synchronization_stopped', '=', False)])
-        for user in users:
+        for done, user in enumerate(users, 1):
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
                 user.with_user(user).sudo()._sync_microsoft_calendar()
+                self.env['ir.cron']._notify_progress(done=done, remaining=len(users) - done)
                 self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))

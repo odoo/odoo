@@ -89,6 +89,7 @@ class Partner(models.Model):
         partners = self.search([('membership_state', 'in', ['invoiced', 'paid'])])
         # mark the field to be recomputed, and recompute it
         self.env.add_to_compute(self._fields['membership_state'], partners)
+        self.env['ir.cron']._notify_progress(done=len(partners), remaining=0)
 
     def create_membership_invoice(self, product, amount):
         """ Create Customer Invoice of Membership for partners.
