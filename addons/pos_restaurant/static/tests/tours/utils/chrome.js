@@ -6,3 +6,9 @@ export function isTabActive(tabText) {
         },
     ];
 }
+
+export function activeTableOrOrderIs(label) {
+    return {
+        trigger: `.table-free-order-label:contains("${label}")`,
+    };
+}
