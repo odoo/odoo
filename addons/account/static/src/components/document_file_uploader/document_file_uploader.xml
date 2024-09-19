@@ -1,19 +1,17 @@
 <templates>
 
     <t t-name="account.DocumentFileUploader">
-        <div t-att-class="divClass">
-            <FileUploader
-                acceptedFileExtensions="props.acceptedFileExtensions"
-                fileUploadClass="'document_file_uploader'"
-                multiUpload="true"
-                onUploaded.bind="onFileUploaded"
-                onUploadComplete.bind="onUploadComplete">
-                <t t-set-slot="toggler">
-                    <t t-slot="toggler"/>
-                </t>
-                <t t-slot="default"/>
-            </FileUploader>
-        </div>
+        <FileUploader
+            acceptedFileExtensions="props.acceptedFileExtensions"
+            fileUploadClass="'document_file_uploader'"
+            multiUpload="true"
+            onUploaded.bind="onFileUploaded"
+            onUploadComplete.bind="onUploadComplete">
+            <t t-set-slot="toggler">
+                <t t-slot="toggler"/>
+            </t>
+            <t t-slot="default"/>
+        </FileUploader>
     </t>
 
     <t t-name="account.DocumentViewUploadButton">
