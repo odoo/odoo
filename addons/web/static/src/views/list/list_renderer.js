@@ -1255,7 +1255,7 @@ export class ListRenderer extends Component {
             case "tab": {
                 const index = list.records.indexOf(record);
                 const lastIndex = topReCreate ? 0 : list.records.length - 1;
-                if (index === lastIndex) {
+                if (index === lastIndex || index === list.records.length - 1) {
                     if (this.displayRowCreates) {
                         if (record.isNew && !record.isDirty) {
                             list.unselectRecord(true);
