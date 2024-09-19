@@ -167,7 +167,7 @@ export class DeletePlugin extends Plugin {
 
     /**
      * @param {"backward"|"forward"} direction
-     * @param {"character"|"word"} granularity
+     * @param {"character"|"word"|"line"} granularity
      */
     delete(direction, granularity) {
         const selection = this.shared.getEditableSelection();
@@ -191,7 +191,7 @@ export class DeletePlugin extends Plugin {
 
     /**
      * @param {EditorSelection} selection
-     * @param {"character"|"word"} granularity
+     * @param {"character"|"word"|"line"} granularity
      */
     deleteBackward(selection, granularity) {
         // Normalize selection
@@ -221,7 +221,7 @@ export class DeletePlugin extends Plugin {
 
     /**
      * @param {EditorSelection} selection
-     * @param {"character"|"word"} granularity
+     * @param {"character"|"word"|"line"} granularity
      */
     deleteForward(selection, granularity) {
         // Normalize selection
