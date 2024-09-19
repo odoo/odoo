@@ -472,7 +472,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Compute values for invoice lines.
         line_extension_amount = 0.0
 
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
         invoice_line_vals_list = []
         for line_id, line in enumerate(invoice_lines):
