@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.NotificationSettings">
-        <ActionPanel title.translate="Notification Settings">
+        <ActionPanel title.translate="Notification Settings" icon="'fa fa-bell'">
             <div class="o-discuss-NotificationSettings">
                 <div t-if="store.settings.mute_until_dt" class="d-flex flex-column alert alert-warning">
                     <span><i class="fa fa-exclamation-triangle"/> <a href="#" t-on-click="onClickServerMuted">Server is muted</a></span>
