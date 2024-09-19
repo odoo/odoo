@@ -48,9 +48,9 @@ def _get_uri(uri, reference, base_uri=""):
         if len(results) == 1:
             return _canonicalize_node(results[0])
         if len(results) > 1:
-            raise UserError(f"Ambiguous reference URI {uri} resolved to {len(results)} nodes")
+            raise UserError(f"Ambiguous reference URI {uri} resolved to {len(results)} nodes")  # pylint: disable=missing-gettext
 
-    raise UserError(f'URI {uri} not found')
+    raise UserError(f'URI {uri} not found')  # pylint: disable=missing-gettext
 
 
 def _reference_digests(node, base_uri=""):

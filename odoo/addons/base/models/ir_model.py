@@ -2120,7 +2120,7 @@ class IrModelAccess(models.Model):
 
         resolution_info = str(ACCESS_ERROR_RESOLUTION)
 
-        return AccessError(f"{operation_error}\n\n{group_info}\n\n{resolution_info}")
+        return AccessError(operation_error + "\n\n" + group_info + "\n\n" + resolution_info)
 
     @api.model
     def call_cache_clearing_methods(self):

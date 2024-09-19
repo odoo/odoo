@@ -31,7 +31,7 @@ class Session(http.Controller):
     @http.route('/web/session/authenticate', type='jsonrpc', auth="none", readonly=False)
     def authenticate(self, db, login, password, base_location=None):
         if not http.db_filter([db]):
-            raise AccessError("Database not found.")
+            raise AccessError("Database not found.")  # pylint: disable=missing-gettext
 
         with ExitStack() as stack:
             if not request.db or request.db != db:
