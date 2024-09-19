@@ -17,8 +17,6 @@ class LinkPreview(models.Model):
     _inherit = "bus.listener.mixin"
     _description = "Store link preview data"
 
-    message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade')
-    is_hidden = fields.Boolean()
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
     og_title = fields.Char('Title')
@@ -29,8 +27,16 @@ class LinkPreview(models.Model):
     image_mimetype = fields.Char('Image MIME type')
     create_date = fields.Datetime(index=True)
 
-    def _bus_channel(self):
-        return self.message_id._bus_channel()
+    def init(self):
+        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_link_preview_source_url ON %s (source_url)" % self._table)
+
+    @api.model
+    def _add(self, message):
+        for link_preview in self:
+            self.env["mail.link.preview.message"].create({
+                "message_id": message.id,
+                "link_preview_id": link_preview.id
+            })
 
     @api.model
     def _create_from_message_and_notify(self, message, request_url=None):
@@ -49,42 +55,30 @@ class LinkPreview(models.Model):
         for url in urls:
             if ignore_pattern and ignore_pattern.match(url):
                 continue
+            existing_link_preview = link_previews.search([("source_url", "=", url)])
+            if existing_link_preview and not url in link_previews_by_url:
+                existing_link_preview[0]._add(message)
+                link_previews += existing_link_preview
+                continue
             if url in link_previews_by_url:
                 preview = link_previews_by_url.pop(url)
-                if not preview.is_hidden:
-                    link_previews += preview
+                link_previews += preview
                 continue
             if preview := get_link_preview_from_url(url, requests_session):
-                preview['message_id'] = message.id
                 link_preview_values.append(preview)
             if len(link_preview_values) + len(link_previews) > 5:
                 break
         for unused_preview in link_previews_by_url.values():
-            unused_preview._unlink_and_notify()
+            self.env["mail.link.preview.message"].search([
+                ("link_preview_id", "=", unused_preview.id),
+                ("message_id", "=", message.id)
+            ])._unlink_and_notify()
         if link_preview_values:
-            link_previews += link_previews.create(link_preview_values)
+            new_link_preview = link_previews.create(link_preview_values)
+            new_link_preview._add(message)
+            link_previews += new_link_preview
         if link_previews := link_previews.sorted(key=lambda p: list(urls).index(p.source_url)):
             message._bus_send_store(message, {"linkPreviews": Store.many(link_previews)})
-
-    def _hide_and_notify(self):
-        if not self:
-            return True
-        for link_preview in self:
-            link_preview._bus_send_store(
-                link_preview.message_id,
-                {"linkPreviews": Store.many(link_preview, "DELETE", only_id=True)},
-            )
-        self.is_hidden = True
-
-    def _unlink_and_notify(self):
-        if not self:
-            return True
-        for link_preview in self:
-            link_preview._bus_send_store(
-                link_preview.message_id,
-                {"linkPreviews": Store.many(link_preview, "DELETE", only_id=True)},
-            )
-        self.unlink()
 
     @api.model
     def _is_link_preview_enabled(self):
@@ -121,7 +115,6 @@ class LinkPreview(models.Model):
                 ],
                 load=False,
             )[0]
-            data["message"] = Store.one(preview.message_id, only_id=True)
             store.add(preview, data)
 
     @api.autovacuum

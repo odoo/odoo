@@ -13,7 +13,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class LinkPreviewConfirmDelete extends Component {
     static components = { Dialog };
-    static props = ["linkPreview", "close", "LinkPreview"];
+    static props = ["linkPreview", "message", "close", "LinkPreview"];
     static template = "mail.LinkPreviewConfirmDelete";
 
     setup() {
@@ -28,7 +28,10 @@ export class LinkPreviewConfirmDelete extends Component {
     onClickOk() {
         rpc(
             "/mail/link_preview/hide",
-            { link_preview_ids: [this.props.linkPreview.id] },
+            {
+                message_id: this.props.message.id,
+                link_preview_ids: [this.props.linkPreview.id]
+            },
             { silent: true }
         );
         this.props.close();
@@ -37,7 +40,10 @@ export class LinkPreviewConfirmDelete extends Component {
     onClickDeleteAll() {
         rpc(
             "/mail/link_preview/hide",
-            { link_preview_ids: this.message.linkPreviews.map((lp) => lp.id) },
+            {
+                message_id: this.props.message.id,
+                link_preview_ids: this.props.message.linkPreviews.map((lp) => lp.id)
+            },
             { silent: true }
         );
         this.props.close();
