@@ -279,7 +279,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/lib/bootstrap/js/dist/dropdown.js'),
             ('remove', 'web/static/lib/bootstrap/js/dist/modal.js'),
             ('remove', 'web/static/lib/bootstrap/js/dist/offcanvas.js'),
-            ('remove', 'web/static/lib/bootstrap/js/dist/tooltip.js',),
+            ('remove', 'web/static/lib/bootstrap/js/dist/tooltip.js'),
             ('remove', 'web/static/lib/bootstrap/js/dist/popover.js'),
             ('remove', 'web/static/lib/bootstrap/js/dist/scrollspy.js'),
             ('remove', 'web/static/lib/bootstrap/js/dist/tab.js'),
