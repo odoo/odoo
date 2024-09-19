@@ -9,7 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
+import { asyncStep, waitForSteps, Command } from "@web/../tests/web_test_helpers";
 import { press } from "@odoo/hoot-dom";
 
 import { rpc } from "@web/core/network/rpc";
@@ -30,10 +30,10 @@ test("auto layout with link preview list", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -53,10 +53,10 @@ test("auto layout with link preview as gif", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -74,10 +74,10 @@ test("simplest card layout", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -98,10 +98,10 @@ test("simplest card layout with image", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -123,10 +123,10 @@ test("Link preview video layout", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -146,10 +146,10 @@ test("Link preview image layout", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -169,10 +169,10 @@ test("Remove link preview Gif", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -193,10 +193,10 @@ test("Remove link preview card", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -218,10 +218,10 @@ test("Remove link preview video", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -241,10 +241,10 @@ test("Remove link preview image", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -264,15 +264,19 @@ test("No crash on receiving link preview of non-known message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     const messageId = pyEnv["mail.message"].create({
         body: "https://make-link-preview.com",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
+    });
+    const messageLinkPreviewId = pyEnv["mail.message.link.preview"].create({
+        message_id: messageId,
+        link_preview_id: linkPreviewId,
     });
     await start();
     await openDiscuss();
     rpc("/mail/link_preview", { message_id: messageId });
-    rpc("/mail/link_preview/hide", { link_preview_ids: [linkPreviewId] });
+    rpc("/mail/link_preview/hide", { message_link_preview_ids: [messageLinkPreviewId] });
     expect(true).toBe(true, { message: "no assertions" });
 });
 
@@ -286,10 +290,10 @@ test("Squash the message and the link preview when the link preview is an image 
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "<a href='linkPreviewLink'>http://linkPreview</a>",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -308,10 +312,10 @@ test("Link preview and message should not be squashed when the link preview is n
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "<a href='linkPreviewLink'>http://linkPreview</a>",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -328,10 +332,10 @@ test("Link preview and message should not be squashed when there is more than th
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "<a href='linkPreviewLink'>http://linkPreview</a> not empty",
-        link_preview_ids: [linkPreviewId],
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId })],
     });
     await start();
     await openDiscuss(channelId);
@@ -350,7 +354,7 @@ test("Sending message with link preview URL should show a link preview card", as
 
 test("Delete all link previews at once", async () => {
     const pyEnv = await startServer();
-    const linkPreviewIds = pyEnv["mail.link.preview"].create([
+    const [linkPreviewId_1, linkPreviewId_2] = pyEnv["mail.link.preview"].create([
         {
             og_description: "Description",
             og_title: "Article title 1",
@@ -366,10 +370,13 @@ test("Delete all link previews at once", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
-        link_preview_ids: linkPreviewIds,
         message_type: "comment",
         model: "discuss.channel",
         res_id: channelId,
+        message_link_preview_ids: [
+            Command.create({ link_preview_id: linkPreviewId_1 }),
+            Command.create({ link_preview_id: linkPreviewId_2 })
+        ],
     });
     await start();
     await openDiscuss(channelId);
@@ -382,7 +389,7 @@ test("Delete all link previews at once", async () => {
 test("link preview request is only made when message contains URL", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Sales" });
-    onRpcBefore("/mail/link_preview", () => asyncStep("/mail/link_preview"));
+    onRpcBefore("/mail/link_preview$", () => asyncStep("/mail/link_preview"));
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
@@ -404,7 +411,7 @@ test("link preview request is only made when message contains URL", async () => 
 test("youtube and gdrive videos URL are embed", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const linkPreviewIds = pyEnv["mail.link.preview"].create([
+    const [linkPreviewId_1, linkPreviewId_2] = pyEnv["mail.link.preview"].create([
         {
             og_title: "vokoscreenNG-2024-08-22_13-56-37.mkv",
             og_type: "article",
@@ -419,17 +426,17 @@ test("youtube and gdrive videos URL are embed", async () => {
     pyEnv["mail.message"].create([
         {
             body: "GDrive video preview",
-            link_preview_ids: [linkPreviewIds[0]],
             message_type: "comment",
             model: "discuss.channel",
             res_id: channelId,
+            message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId_1 })],
         },
         {
             body: "YT video preview",
-            link_preview_ids: [linkPreviewIds[1]],
             message_type: "comment",
             model: "discuss.channel",
             res_id: channelId,
+            message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId_2 })],
         },
     ]);
     await start();
