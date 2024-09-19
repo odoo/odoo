@@ -61,9 +61,7 @@ class SaleOrderFetcher extends EventBus {
         return sale_orders;
     }
     async _getOrderIdsForCurrentPage(limit, offset) {
-        const domain = [["currency_id", "=", this.pos.currency.id]].concat(
-            this.searchDomain || []
-        );
+        const domain = this.searchDomain || [];
 
         this.pos.set_synch("connecting");
         const saleOrders = await this.orm.searchRead(
