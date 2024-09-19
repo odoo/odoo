@@ -1,4 +1,3 @@
-# coding: utf-8
 from odoo import api, models
 from odoo.addons.website.models import ir_http
 

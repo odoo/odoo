@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-# -*- coding: utf-8 -*-
 
 from odoo.http import request
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
