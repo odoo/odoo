@@ -16,6 +16,10 @@ websiteSaleAddress.include({
     },
 
     _onChangeZip: function() {
+        if (this.countryCode !== 'BR') {
+            return;
+        }
+
         const newZip = this.addressForm.zip.value.padEnd(5, '0');
 
         for (let option of this.addressForm.querySelectorAll('select[name="city_id"]:not(.d-none) > option')) {
@@ -60,6 +64,10 @@ websiteSaleAddress.include({
 
     async _changeCountry(ev) {
         const res = await this._super(...arguments);
+        if (this.countryCode !== 'BR') {
+            return res;
+        }
+
         const countryOption = this.addressForm.country_id;
         const selectedCountryCode = countryOption.value ? countryOption.selectedOptions[0].getAttribute('code') : '';
 
