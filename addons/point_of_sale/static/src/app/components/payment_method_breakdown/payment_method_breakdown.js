@@ -3,7 +3,7 @@ import { AccordionItem } from "@point_of_sale/app/generic_components/accordion_i
 
 export class PaymentMethodBreakdown extends Component {
     static components = { AccordionItem };
-    static template = "pos_hr.PaymentMethodBreakdown";
+    static template = "point_of_sale.PaymentMethodBreakdown";
 
     static props = {
         title: String,
