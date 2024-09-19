@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
+const { INTERACTIVE_LEGEND_CONFIG } = spreadsheet.constants;
 
 const { getDefaultChartJsRuntime, chartFontColor, ColorGenerator } = spreadsheet.helpers;
 
@@ -23,15 +24,14 @@ function createOdooChartRuntime(chart, getters) {
     const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
     const locale = getters.getLocale();
-    const chartJsConfig = getPieConfiguration(chart, labels, locale);
+    const dataSetsLength = Math.max(0, ...datasets.map((ds) => ds?.data?.length ?? 0));
+    const backgroundColors = getPieColors(new ColorGenerator(dataSetsLength), datasets);
+    const chartJsConfig = getPieConfiguration(chart, labels, locale, backgroundColors);
     chartJsConfig.options = {
         ...chartJsConfig.options,
         ...getters.getChartDatasetActionCallbacks(chart),
     };
-    const dataSetsLength = Math.max(0, ...datasets.map((ds) => ds?.data?.length ?? 0));
-    const colors = new ColorGenerator(dataSetsLength);
     for (const { label, data } of datasets) {
-        const backgroundColor = getPieColors(colors, datasets);
         const dataset = {
             label,
             data,
@@ -44,14 +44,27 @@ function createOdooChartRuntime(chart, getters) {
     return { background, chartJsConfig };
 }
 
-function getPieConfiguration(chart, labels, locale) {
+function getPieConfiguration(chart, labels, locale, colors) {
     const color = chartFontColor(chart.background);
     const config = getDefaultChartJsRuntime(chart, labels, color, { locale });
     config.type = chart.type.replace("odoo_", "");
     const legend = {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
-        labels: { color },
+        ...INTERACTIVE_LEGEND_CONFIG,
+        labels: {
+            color,
+            usePointStyle: true,
+            generateLabels: (_chart) =>
+                _chart.data.labels.map((label, index) => ({
+                    text: label,
+                    strokeStyle: colors[index],
+                    fillStyle: colors[index],
+                    pointStyle: "rect",
+                    hidden: false,
+                    lineWidth: 2,
+                })),
+        },
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};

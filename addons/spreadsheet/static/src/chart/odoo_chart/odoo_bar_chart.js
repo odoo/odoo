@@ -5,9 +5,15 @@ import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
+const { INTERACTIVE_LEGEND_CONFIG } = spreadsheet.constants;
 
-const { getDefaultChartJsRuntime, getChartAxisTitleRuntime, chartFontColor, ColorGenerator } =
-    spreadsheet.helpers;
+const {
+    getDefaultChartJsRuntime,
+    getChartAxisTitleRuntime,
+    getCustomLegendLabels,
+    chartFontColor,
+    ColorGenerator
+} = spreadsheet.helpers;
 
 export class OdooBarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
@@ -70,6 +76,11 @@ function getBarConfiguration(chart, labels, locale) {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
         labels: { color },
+        ...INTERACTIVE_LEGEND_CONFIG,
+        ...getCustomLegendLabels(color, {
+            pointStyle: "rect",
+            lineWidth: 3,
+        })
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};
