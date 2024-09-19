@@ -691,10 +691,6 @@ export class ListRenderer extends Component {
         return ["float", "integer", "monetary"].includes(type);
     }
 
-    shouldReverseHeader(column) {
-        return this.isNumericColumn(column) && !this.isRTL;
-    }
-
     isSortable(column) {
         const { hasLabel, name, options } = column;
         const { sortable } = this.fields[name];
@@ -707,7 +703,7 @@ export class ListRenderer extends Component {
         if (orderBy.length && orderBy[0].name === column.name) {
             classNames.push(orderBy[0].asc ? "fa-angle-up" : "fa-angle-down");
         } else {
-            classNames.push("fa-angle-down", "opacity-0", "opacity-75-hover");
+            classNames.push("fa-angle-down", "opacity-0", "opacity-100-hover");
         }
 
         return classNames.join(" ");
