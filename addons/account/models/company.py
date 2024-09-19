@@ -11,6 +11,7 @@ from odoo.tools import format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
+from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 
 MONTH_SELECTION = [
@@ -253,6 +254,7 @@ class ResCompany(models.Model):
         required=True,
         help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
     )
+    company_vat_placeholder = fields.Char(compute='_compute_company_vat_placeholder')
 
     def get_next_batch_payment_communication(self):
         '''
@@ -1002,3 +1004,16 @@ class ResCompany(models.Model):
 
         return {'date_from': datetime(year=current_date.year, month=1, day=1).date(),
                 'date_to': datetime(year=current_date.year, month=12, day=31).date()}
+
+    @api.depends('country_id', 'account_fiscal_country_id')
+    def _compute_company_vat_placeholder(self):
+        for company in self:
+            placeholder = _("/ if not applicable")
+            if company.country_id or company.account_fiscal_country_id:
+                expected_vat = _ref_vat.get(
+                    company.country_id.code.lower() or company.account_fiscal_country_id.code.lower()
+                )
+                if expected_vat:
+                    placeholder = _("%s, or / if not applicable", expected_vat)
+
+            company.company_vat_placeholder = placeholder
