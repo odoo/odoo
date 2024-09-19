@@ -89,6 +89,7 @@
                     t-attf-class="floor-map position-relative w-100 h-100 {{ pos.isEditMode ? 'floor-grid' : ''}}"
                     t-ref="floor-map-ref"
                     t-attf-style="
+                        -webkit-touch-callout: none;
                         height: {{state.floorHeight}} !important;
                         width: {{state.floorWidth}} !important;
                         {{ activeFloor?.floor_background_image and !isKanban ?
