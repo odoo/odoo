@@ -24,7 +24,7 @@
                                     <input
                                         type="radio"
                                         class="d-none"
-                                        t-if="attribute.display_type !== 'multi'"
+                                        t-if="attribute.attribute_id.display_type !== 'multi'"
                                         t-att-value="value.id"
                                         t-attf-id="{{ attribute.id }}_{{ value.id }}"
                                         t-model="this.selectedValues[attribute.id]" />

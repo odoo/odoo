@@ -38,3 +38,19 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
         Utils.checkIsNoBtn("Order Now"),
     ],
 });
+
+registry.category("web_tour.tours").add("self_multi_attribute_selector", {
+    test: true,
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Multi Check Attribute Product"),
+        ...ProductPage.setupAttribute(
+            [
+                { name: "Attribute 1", value: "Attribute Val 1" },
+                { name: "Attribute 1", value: "Attribute Val 2" },
+            ],
+            false
+        ),
+        ProductPage.verifyIsCheckedAttribute("Attribute 1", ["Attribute Val 1", "Attribute Val 2"]),
+    ],
+});
