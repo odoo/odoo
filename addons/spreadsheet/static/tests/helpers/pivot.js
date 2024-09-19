@@ -41,7 +41,6 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
     const pyEnv = getPyEnv();
     const pivot = {
         type: "ODOO",
-        sortedColumn: null,
         domain: [],
         context: {},
         measures: archInfo.activeMeasures.map((measure) => ({

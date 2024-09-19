@@ -23,7 +23,6 @@ const { pivotTimeAdapter, toString, areDomainArgsFieldsValid, toNormalizedPivotV
  * @typedef {import("@spreadsheet").OdooPivot<OdooPivotRuntimeDefinition>} IPivot
  * @typedef {import("@spreadsheet").OdooFields} OdooFields
  * @typedef {import("@spreadsheet").OdooPivotCoreDefinition} OdooPivotCoreDefinition
- * @typedef {import("@spreadsheet").SortedColumn} SortedColumn
  * @typedef {import("@spreadsheet").OdooGetters} OdooGetters
  * @typedef {import("@spreadsheet/data_sources/odoo_data_provider").OdooDataProvider} OdooDataProvider
  */
@@ -88,10 +87,12 @@ export class OdooPivot {
         this.domainWithGlobalFilters = nextDefinition.domain;
         const actualDefinition = this.coreDefinition;
         this.coreDefinition = nextDefinition;
+        if (!deepEquals(actualDefinition.sortedColumn, nextDefinition.sortedColumn)) {
+            this.model.updateSortColumn(nextDefinition.sortedColumn);
+        }
         if (
             deepEquals(actualDefinition.columns, nextDefinition.columns) &&
             deepEquals(actualDefinition.rows, nextDefinition.rows) &&
-            deepEquals(actualDefinition.sortedColumn, nextDefinition.sortedColumn) &&
             deepEquals(actualDefinition.domain, nextDefinition.domain) &&
             deepEquals(actualDefinition.context, nextDefinition.context) &&
             deepEquals(actualDefinition.actionXmlId, nextDefinition.actionXmlId) &&
@@ -232,6 +233,10 @@ export class OdooPivot {
             const { dimensionWithGranularity, isPositional, field } =
                 this.parseGroupField(nameWithGranularity);
             if (isPositional) {
+                const table = this.getTableStructure();
+                // @ts-ignore: That's a VERY ugly hack to make sure the table is computed and sorted (which is needed for
+                // positional arguments), calling a method from the CHILD class PivotPresentationLayer...
+                this.sortTableStructure(table);
                 const previousDomain = [
                     ...domain,
                     // Need to keep the "#"
@@ -502,8 +507,6 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         this._context = definition.context;
         /** @type {string} */
         this._model = definition.model;
-        /** @type {SortedColumn} */
-        this._sortedColumn = definition.sortedColumn;
         for (const dimension of this.columns.concat(this.rows)) {
             if (
                 (dimension.type === "date" || dimension.type === "datetime") &&
@@ -513,10 +516,6 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
                 dimension.nameWithGranularity = `${dimension.fieldName}:month`;
             }
         }
-    }
-
-    get sortedColumn() {
-        return this._sortedColumn;
     }
 
     get domain() {
@@ -547,7 +546,6 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
                 orderBy: [],
             },
             metaData: {
-                sortedColumn: this.sortedColumn,
                 activeMeasures: this.measures.filter((m) => !m.computedBy).map((m) => m.fieldName),
                 resModel: this.model,
                 colGroupBys: this.columns.map((c) => c.nameWithGranularity),
