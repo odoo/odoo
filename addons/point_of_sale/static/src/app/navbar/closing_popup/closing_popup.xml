@@ -28,6 +28,8 @@
                             <span>Payments in <t t-esc="props.default_cash_details.name"/></span>
                             <span class="align-top" t-esc="env.utils.formatCurrency(Math.abs(props.default_cash_details.payment_amount))"/>
                         </div>
+                        <t t-set="moveData" t-value="cashMoveData"/>
+                        <PaymentMethodBreakdown title.translate="Cash In / Out" total_amount="cashMoveData.total" transactions="cashMoveData.moves"/>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
                             <span>Counted</span>
                             <span t-esc="env.utils.formatCurrency(env.utils.parseValidFloat(counted))" />
