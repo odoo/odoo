@@ -246,7 +246,7 @@
                     <field name="website_published"/>
                     <templates>
                         <t t-name="kanban-menu">
-                            <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                            <div role="menuitem" aria-haspopup="true">
                                 <field name="color" widget="kanban_color_picker"/>
                             </div>
                             <div class="o_kanban_slides_card_manage_pane">
@@ -286,7 +286,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div name="card_content" class="row mt3">
+                            <div name="card_content" class="row mt-auto">
                                 <a name="action_redirect_to_invited_members" type="object" class="d-flex flex-column align-items-center col-3 border-end">
                                     <field name="members_invited_count" class="fw-bold"/>
                                     <span class="text-muted">Invited</span>
