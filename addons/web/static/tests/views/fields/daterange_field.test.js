@@ -357,6 +357,9 @@ test("Render with initial empty value and optional start date", async () => {
     });
 
     await contains("input[data-field=datetime_end]").click();
+    // wait for the popover to be rendered.
+    // It sometimes happens that the element is not present yet.
+    await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1);
     expect(".o_add_date").toHaveCount(0);
 
