@@ -113,7 +113,7 @@ export class AttributeSelection extends Component {
             this.selectedValues[attr.id] = {};
 
             for (const value of attr.attribute_id.template_value_ids) {
-                if (attr.display_type === "multi") {
+                if (attr.attribute_id.display_type === "multi") {
                     this.selectedValues[attr.id][value.id] = initValue(value);
                 } else if (typeof this.selectedValues[attr.id] !== "number") {
                     this.selectedValues[attr.id] = initValue(value);
@@ -127,7 +127,7 @@ export class AttributeSelection extends Component {
     }
 
     isChecked(attribute, value) {
-        return attribute.display_type === "multi"
+        return attribute.attribute_id.display_type === "multi"
             ? this.selectedValues[attribute.id][value.id]
             : parseInt(this.selectedValues[attribute.id]) === value.id;
     }
