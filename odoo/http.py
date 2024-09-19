@@ -1480,6 +1480,7 @@ class Request:
 
     def _post_init(self):
         self.session, self.db = self._get_session_and_dbname()
+        self._post_init = None
 
     def _get_session_and_dbname(self):
         sid = self.httprequest.cookies.get('session_id')
