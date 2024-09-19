@@ -471,7 +471,9 @@
                    data-widget="datetime-picker" data-widget-type="date"
                    t-att-data-min-date="question.validation_min_date"
                    t-att-data-max-date="question.validation_max_date"/>
-            <div t-if="not survey_form_readonly" class="position-absolute input-group-text o_input_group_date_icon text-primary border-0 bg-transparent p-0 end-0"><i class="fa fa-calendar"></i></div>
+            <button t-if="not survey_form_readonly" class="position-absolute input-group-text o_input_group_date_icon text-primary border-0 bg-transparent p-0 end-0" data-open-picker="true">
+                <i class="fa fa-calendar"></i>
+            </button>
         </div>
     </template>
 
@@ -484,7 +486,9 @@
                    data-widget="datetime-picker" data-widget-type="datetime"
                    t-att-data-min-date="question.validation_min_datetime"
                    t-att-data-max-date="question.validation_max_datetime"/>
-            <div t-if="not survey_form_readonly" class="position-absolute input-group-text o_input_group_date_icon text-primary border-0 bg-transparent p-0 end-0"><i class="fa fa-calendar"></i></div>
+            <button t-if="not survey_form_readonly" class="position-absolute input-group-text o_input_group_date_icon text-primary border-0 bg-transparent p-0 end-0" data-open-picker="true">
+                <i class="fa fa-calendar"></i>
+            </button>
         </div>
     </template>
 

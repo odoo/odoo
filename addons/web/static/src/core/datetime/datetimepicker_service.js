@@ -469,13 +469,14 @@ export const datetimePickerService = {
                                 editableInputs++;
                             }
                         }
-                        const calendarIconGroupEl = getInput(0)?.parentElement.querySelector(
-                            ".o_input_group_date_icon"
-                        );
-                        if (calendarIconGroupEl) {
-                            calendarIconGroupEl.classList.add("cursor-pointer");
-                            calendarIconGroupEl.addEventListener("click", () => openPicker(0));
-                        }
+
+                        getInputs().forEach((el, i) => {
+                            const triggerEl =
+                                el?.parentElement?.querySelector("[data-open-picker]");
+                            if (triggerEl) {
+                                el.addEventListener(triggerEl, "click", () => openPicker(i));
+                            }
+                        });
                         if (!editableInputs && popover.isOpen) {
                             saveAndClose();
                         }

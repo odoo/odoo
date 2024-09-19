@@ -189,6 +189,7 @@ const PRECISION_LEVELS = new Map()
                 let startOfNextWeek = getStartOfWeek(monthRange[0]);
                 for (let w = 0; w < 6; w++) {
                     const weekDayItems = [];
+                    let hasDayInRange = false;
                     // Generate all days of the week
                     for (let d = 0; d < 7; d++) {
                         const day = startOfNextWeek.plus({ day: d });
@@ -200,12 +201,15 @@ const PRECISION_LEVELS = new Map()
                             range,
                             extraClass: dayCellClass?.(day) || "",
                         });
+                        hasDayInRange ||= !dayItem.isOutOfRange;
                         weekDayItems.push(dayItem);
                         if (d === 6) {
                             startOfNextWeek = day.plus({ day: 1 });
                         }
                     }
-                    weeks.push(toWeekItem(weekDayItems));
+                    if (hasDayInRange) {
+                        weeks.push(toWeekItem(weekDayItems));
+                    }
                 }
 
                 // Generate days of week labels
