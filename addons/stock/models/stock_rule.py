@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import split_every
+from odoo.tools.sql import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -524,6 +525,90 @@ class ProcurementGroup(models.Model):
         return True
 
     @api.model
+    def _search_rule_for_warehouses(self, route_ids, packaging_id, product_id, warehouse_ids, domain):
+        """ Optimized version of _search_rule working with multiple warehouse_id and multiple
+        location_dest_id in `domain`.
+        Designed to be called by _get_rule.
+
+        :returns: a dictionary with location_dest_ids as keys
+        """
+        rule_queries = []
+        Rule = self.env['stock.rule']
+        Rule.flush_model()  # We don't know the fields in `domain` so we flush everything.
+        if warehouse_ids:
+            domain = expression.AND([['|', ('warehouse_id', 'in', warehouse_ids.ids), ('warehouse_id', '=', False)], domain])
+        # Construct the where clause of the rule_cte using _where_calc(domain)
+        cte_where_calc = Rule._where_calc(domain)
+        # Enforce the ir.rules
+        Rule._apply_ir_rules(cte_where_calc)
+        cte_query = SQL("""
+            WITH rule_cte AS (
+                SELECT id, sequence, route_sequence, route_id, location_dest_id, warehouse_id
+                FROM stock_rule
+                WHERE %(where_clause)s
+                ORDER BY route_sequence, sequence
+            )
+        """, where_clause=cte_where_calc.where_clause)
+        # Base query string to fetch stock.rules based on route_id.
+        # Each route_ids source adds one SQL object to the rule_queries list.
+        base_rule_query_str = """
+            SELECT id, route_sequence, sequence, %s as warehouse_route_flag, route_id, %s as union_number
+            FROM rule_cte r2
+            WHERE r2.route_id IN %s
+                AND COALESCE(r2.warehouse_id, 0) = COALESCE(r1.warehouse_id, 0)
+                AND r2.location_dest_id = r1.location_dest_id
+        """
+        # We need to add a union number to ensure deterministic execution order in case of Parallel Append.
+        union_number = 0
+        if route_ids:
+            union_number += 1
+            rule_queries.append(SQL(base_rule_query_str, False, union_number, tuple(route_ids.ids)))
+        if packaging_id:
+            packaging_routes = packaging_id.route_ids
+            if packaging_routes:
+                union_number += 1
+                rule_queries.append(SQL(base_rule_query_str, False, union_number, tuple(packaging_routes.ids)))
+        product_routes = product_id.route_ids | product_id.categ_id.total_route_ids
+        if product_routes:
+            union_number += 1
+            rule_queries.append(SQL(base_rule_query_str, False, union_number, tuple(product_routes.ids)))
+        if warehouse_ids:
+            warehouse_routes = warehouse_ids.route_ids
+            if warehouse_routes:
+                union_number += 1
+                rule_queries.append(SQL(base_rule_query_str, True, union_number, tuple(warehouse_routes.ids)))
+        if not rule_queries:
+            return defaultdict(list)
+        # The query executed to fetch the stock.rules. It's in three parts:
+        # - The cte_query emits rows passing the `domain` where clause + record rules of stock.rule.
+        # - A Lateral Join with a GROUP BY that executes the inner query for each value of the group by key.
+        # - An UNION ALL inner query that will return 0 or 1 row, stopping at the first subplan
+        #   returning a result thanks to the global LIMIT 1.
+        query = SQL("""
+                %(cte_query)s
+                SELECT r2.id as rule_id,
+                    r2.warehouse_route_flag as warehouse_route_flag,
+                    r1.warehouse_id,
+                    r1.location_dest_id,
+                    r2.route_id
+                FROM (SELECT location_dest_id, warehouse_id FROM rule_cte GROUP BY location_dest_id, warehouse_id) r1
+                JOIN LATERAL (
+                    %(query)s
+                    ORDER BY union_number
+                    LIMIT 1
+                ) r2 ON true
+                ORDER BY r2.union_number
+            """, cte_query=cte_query, query=SQL("""UNION ALL""").join(rule_queries))
+        self.env.cr.execute(query)
+        locations_dict = defaultdict(list)
+        for res in self.env.cr.dictfetchall():
+            locations_dict[res['location_dest_id']].append({
+                k: v
+                for k, v in res.items()
+                if k != 'location_dest_id'
+            })
+        return locations_dict
+
     def _search_rule(self, route_ids, packaging_id, product_id, warehouse_id, domain):
         """ First find a rule among the ones defined on the procurement
         group, then try on the routes defined for the product, finally fallback
@@ -555,23 +640,65 @@ class ProcurementGroup(models.Model):
         locations if it could not be found.
         """
         result = self.env['stock.rule']
+        locations = location_id
+        # Get the location hierarchy, starting from location_id up to its root location.
+        while locations[-1].location_id:
+            locations |= locations[-1].location_id
+        domain = self._get_rule_domain(locations, values)
+        # Get a mapping location_id -> (rule_id, warehouse_id, route_id, warehouse_route_flag)
+        rules_by_location = self._search_rule_for_warehouses(
+            values.get("route_ids", False),
+            values.get("product_packaging_id", False),
+            product_id,
+            values.get("warehouse_id", locations.warehouse_id),
+            domain,
+        )
+
+        def check_warehouse(rule_dict, location):
+            warehouse = values.get('warehouse_id', location.warehouse_id)
+            if not warehouse:
+                return True
+            return not rule_dict['warehouse_id'] or rule_dict['warehouse_id'] == warehouse.id
+
         location = location_id
+        # Go through the location hierarchy again, this time breaking at the first valid stock.rule found
+        # in rules_by_location.
         while (not result) and location:
-            domain = self._get_rule_domain(location, values)
-            result = self._search_rule(values.get('route_ids', False), values.get('product_packaging_id', False), product_id, values.get('warehouse_id', location.warehouse_id), domain)
-            location = location.location_id
+            warehouse = values.get('warehouse_id', location.warehouse_id)
+            warehouse_routes = set(warehouse.route_ids.ids)
+            location_rule_dicts = rules_by_location[location.id]
+            if self._check_intercomp_location(location):
+                # Add the intercomp location to location_rule_dicts as the intercomp domain was added
+                # above in the call to _get_rule_domain.
+                inter_comp_location = self.env.ref('stock.stock_location_customers', raise_if_not_found=False)
+                location_rule_dicts += rules_by_location[inter_comp_location.id]
+            for rule_dict in location_rule_dicts:
+                # Warehouse_route_flag indicates if rule_dict['rule_id'] was found using warehouse_id.route_id
+                if not rule_dict['warehouse_route_flag'] and check_warehouse(rule_dict, location):
+                    result = self.env['stock.rule'].browse(rule_dict['rule_id'])
+                    break
+                elif rule_dict['warehouse_route_flag'] and check_warehouse(rule_dict, location):
+                    if rule_dict['route_id'] in warehouse_routes:
+                        result = self.env['stock.rule'].browse(rule_dict['rule_id'])
+                        break
+            else:
+                location = location.location_id
         return result
 
     @api.model
-    def _get_rule_domain(self, location, values):
-        domain = ['&', ('location_dest_id', '=', location.id), ('action', '!=', 'push')]
+    def _check_intercomp_location(self, locations):
+        if self.env.user.has_group('base.group_multi_company') and locations.filtered(lambda location: location.usage == 'transit'):
+            inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
+            return inter_comp_location and inter_comp_location.id in locations.ids
+
+    @api.model
+    def _get_rule_domain(self, locations, values):
+        location_ids = locations.ids
         # If the method is called to find rules towards the Inter-company location, also add the 'Customer' location in the domain.
         # This is to avoid having to duplicate every rules that deliver to Customer to have the Inter-company part.
-        if self.env.user.has_group('base.group_multi_company') and location.usage == 'transit':
-            inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
-            if inter_comp_location and location.id == inter_comp_location.id:
-                customers_location = self.env.ref('stock.stock_location_customers', raise_if_not_found=False)
-                domain = expression.OR([domain, ['&', ('location_dest_id', '=', customers_location.id), ('action', '!=', 'push')]])
+        if self._check_intercomp_location(locations):
+            location_ids.append(self.env.ref('stock.stock_location_customers', raise_if_not_found=False).id)
+        domain = ['&', ('location_dest_id', 'in', location_ids), ('action', '!=', 'push')]
         # In case the method is called by the superuser, we need to restrict the rules to the
         # ones of the company. This is not useful as a regular user since there is a record
         # rule to filter out the rules based on the company.
