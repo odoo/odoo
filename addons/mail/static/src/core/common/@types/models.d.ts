@@ -8,6 +8,7 @@ declare module "models" {
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
+    import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
@@ -29,6 +30,7 @@ declare module "models" {
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
     export interface Message extends MessageClass {}
+    export interface MessageLinkPreview extends MessageLinkPreviewClass {}
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
     export interface Persona extends PersonaClass {}
@@ -49,6 +51,7 @@ declare module "models" {
         "mail.followers": Follower,
         "mail.link.preview": LinkPreview,
         "mail.message": Message,
+        "mail.message.link.preview": MessageLinkPreview,
         "mail.notification": Notification,
         "MessageReactions": MessageReactions,
         "Persona": Persona,

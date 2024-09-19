@@ -91,9 +91,9 @@ class MailMessage(models.Model):
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
-    link_preview_ids = fields.One2many(
-        'mail.link.preview', 'message_id', string='Link Previews',
-        groups="base.group_erp_manager")
+    message_link_preview_ids = fields.One2many(
+        "mail.message.link.preview",
+        "message_id", domain=[("is_hidden", "=", False)], groups="base.group_erp_manager")
     reaction_ids = fields.One2many(
         'mail.message.reaction', 'message_id', string="Reactions",
         groups="base.group_system")
@@ -927,10 +927,7 @@ class MailMessage(models.Model):
             Store.Attr("is_note", lambda m: m.subtype_id.id == note_id),
             Store.Attr("is_discussion", lambda m: m.subtype_id.id == com_id),
             # sudo: mail.message - reading link preview on accessible message is allowed
-            Store.Many(
-                "link_preview_ids",
-                value=lambda m: m.sudo().link_preview_ids.filtered(lambda l: not l.is_hidden),
-            ),
+            Store.Many("message_link_preview_ids", sudo=True),
             "message_format",
             "message_type",
             "model",  # keep for iOS app
