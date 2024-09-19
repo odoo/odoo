@@ -39,7 +39,8 @@
                     }"
                 >
                     <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-Composer-input o-mail-Composer-inputStyle form-control o-mail-Composer-bg border-0 rounded-3 shadow-none overflow-auto"
+                        <t t-set="inputClasses" t-value="'o-mail-Composer-inputStyle form-control border-0 rounded-3'"/>
+                        <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto"
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
@@ -57,7 +58,8 @@
                              the textarea properly without flicker.
                         -->
                         <textarea
-                            class="o-mail-Composer-fake o-mail-Composer-inputStyle position-absolute border-0"
+                            class="o-mail-Composer-fake position-absolute overflow-hidden"
+                            t-att-class="inputClasses"
                             t-model="props.composer.text"
                             t-ref="fakeTextarea"
                             disabled="1"
