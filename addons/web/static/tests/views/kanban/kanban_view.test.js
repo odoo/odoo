@@ -12894,10 +12894,8 @@ test.tags("desktop")(`kanban view: press "hotkey" to execute header button actio
                 </header>
                 <field name="bar" />
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo" />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,

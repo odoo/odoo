@@ -62,7 +62,7 @@
                                     <field name="color" widget="kanban_color_picker"/>
                                 </div>
                                 <div class="col-6" role="menuitem">
-                                    <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
+                                    <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="open">Configuration</a>
                                     <a class="dropdown-item" t-if="record.active.raw_value" type="archive" >Archive</a>
                                     <a class="dropdown-item" t-if="!record.active.raw_value" name="toggle_active" type="object">Unarchive</a>
                                 </div>
@@ -90,7 +90,7 @@
                                 </button>
                             </div>
                             <div class="col-5">
-                                <a name="edit_job" type="edit" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_user">
+                                <a name="edit_job" type="open" t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="hr_recruitment.group_hr_recruitment_user">
                                     <field name="no_of_recruitment"/> To Recruit
                                 </a>
                                 <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" groups="!hr_recruitment.group_hr_recruitment_user">
