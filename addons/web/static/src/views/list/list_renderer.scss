@@ -2,7 +2,8 @@
 .o_list_renderer {
     --ListRenderer-table-padding-x: #{$table-cell-padding-x-sm};
     --ListRenderer-thead-padding-y: #{map-get($spacers, 4)};
-    --ListRenderer-thead-bg-color:  #{$o-webclient-background-color};
+    --ListRenderer-thead-bg-color: #{$o-webclient-background-color};
+    --ListRenderer-thead-bg-active-color: #{$o-gray-200};
     --ListRenderer-thead-border-end-color: #{$border-color};
     --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
     --sticky-header-zindex: 1;
@@ -89,11 +90,39 @@
                 @include media-only(print) {
                     font-weight: $font-weight-bold;
                 }
+
+                &.table-active {
+                    background: var(--ListRenderer-thead-bg-active-color);
+                    box-shadow: none;
+                }
             }
 
             .o_list_number_th {
                 /*rtl:ignore*/
                 text-align: right;
+            }
+
+            .o_column_sortable {
+
+                .o_list_sortable_caret {
+                    background: var(--ListRenderer-thead-bg-color);
+                    position: absolute;
+                    right: .2rem;
+                    padding: 0 .2rem;
+                }
+
+                &.table-active .o_list_sortable_caret {
+                    background: var(--ListRenderer-thead-bg-active-color);
+                }
+
+                .o_list_header_label_spacer {
+                    flex: 0 0 0;
+                }
+
+                &.table-active .o_list_header_label_spacer {
+                    flex: 1 0 0.4rem;
+                    max-width: 1.2rem;
+                }
             }
         }
 

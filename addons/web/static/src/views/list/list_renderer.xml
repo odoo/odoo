@@ -28,12 +28,13 @@
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
                                 <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
-                                    <div t-att-class="{'d-flex': true, 'flex-row-reverse': shouldReverseHeader(column)}"
+                                    <div class="d-flex"
                                         t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
                                         t-att-data-tooltip-info="makeTooltip(column)">
-                                        <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
+                                        <span class="d-block min-w-0 text-truncate flex-grow-1 flex-shrink-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
                                               t-esc="column.label"/>
-                                        <i t-att-class="getSortableIconClass(column)"/>
+                                        <div class="o_list_header_label_spacer"/>
+                                        <i class="o_list_sortable_caret" t-att-class="getSortableIconClass(column)"/>
                                     </div>
                                     <span
                                           class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-1"
