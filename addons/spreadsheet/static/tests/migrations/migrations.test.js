@@ -505,6 +505,37 @@ test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
     expect(migratedData.sheets[0].cells.A4).toBe(`=ODOO.PIVOT.POSITION("1",14)`);
 });
 
+test("Pivot sorted columns are migrated (12 to 13)", () => {
+    const data = {
+        version: 23,
+        odooVersion: 12,
+        sheets: [],
+        pivots: {
+            1: {
+                name: "test",
+                sortedColumn: { groupId: [[], []], measure: "testMeasure", order: "desc" },
+                columns: [],
+                rows: [],
+                measures: [],
+            },
+            2: {
+                name: "test2",
+                sortedColumn: { groupId: [[], [1]], measure: "testMeasure", order: "desc" },
+                columns: [{ fieldName: "product_id" }],
+                rows: [],
+                measures: [],
+            },
+        },
+    };
+    const migratedData = load(data);
+    expect(migratedData.pivots["1"].sortedColumn).toEqual({
+        domain: [],
+        measure: "testMeasure",
+        order: "desc",
+    });
+    expect(migratedData.pivots["2"].sortedColumn).toBe(undefined);
+});
+
 test("Odoo version is exported", () => {
     const model = new Model();
     expect(model.exportData().odooVersion).toBe(ODOO_VERSION);
