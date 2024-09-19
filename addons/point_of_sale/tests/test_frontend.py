@@ -1478,6 +1478,47 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
 
+    def test_product_price_and_qty_in_popup(self):
+        """
+            Description
+        """
+        attribute_size = self.env['product.attribute'].create({
+            'name': 'Size',
+        })
+        attribute_value_small = self.env['product.attribute.value'].create({
+            'name': 'Small',
+            'attribute_id': attribute_size.id,
+        })
+        attribute_value_large = self.env['product.attribute.value'].create({
+            'name': 'Large',
+            'attribute_id': attribute_size.id,
+        })
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product with Sizes',
+            'available_in_pos': True,
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'list_price': 5,
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': attribute_size.id,
+                    'value_ids': [(6, 0, [attribute_value_small.id, attribute_value_large.id])]
+                }),
+            ],
+        })
+
+        for product in product_template.product_variant_ids:
+            product.write({'price_extra': 2})
+            self.env['stock.quant'].create({
+                'product_id': product.id,
+                'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,  # default location
+                'quantity': 10,
+            })
+
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosPopupPriceAndQuantity', login="pos_admin")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

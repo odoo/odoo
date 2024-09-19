@@ -328,3 +328,23 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             PartnerList.searchCustomerValue("john@doe.com"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosPopupPriceAndQuantity", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickInfoProduct("Test Product with Sizes"),
+            {
+                content: `Check Product Quantity`,
+                trigger: '.section-product-info-title-quantity:contains("20 Units")',
+                run: () => {},
+            },
+            {
+                content: `Check Product Price`,
+                trigger: '.section-product-info-title-price:contains("$ 5.75")',
+                run: () => {},
+            },
+        ].flat(),
+});
