@@ -7,14 +7,10 @@ import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/produc
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as SplitBillScreen from "@pos_restaurant/../tests/tours/utils/split_bill_screen_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as ChromePos from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
+const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import { registry } from "@web/core/registry";
-
-function activeTableIs(tableNumber) {
-    return {
-        trigger: `.table-free-order-label:contains("${tableNumber}")`,
-    };
-}
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
     test: true,
@@ -24,15 +20,15 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
-            activeTableIs("2"),
+            Chrome.activeTableOrOrderIs("2"),
             ProductScreen.addOrderline("Water", "5", "2", "10.0"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
-            activeTableIs("4"),
+            Chrome.activeTableOrOrderIs("4"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("2"),
-            activeTableIs("2"),
+            Chrome.activeTableOrOrderIs("2"),
             Order.hasLine({ productName: "Water", quantity: "5" }),
             Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
 

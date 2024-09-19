@@ -52,14 +52,43 @@ export class SplitBillScreen extends Component {
         }
     }
 
+    _getOrderName(order) {
+        return order.table_id?.table_number.toString() || order.getFloatingOrderName() || "";
+    }
+
+    _getLatestOrderNameStartingWith(name) {
+        return (
+            this.pos
+                .get_open_orders()
+                .map((order) => this._getOrderName(order))
+                .filter((orderName) => orderName.slice(0, -1) === name)
+                .sort((a, b) => a.slice(-1).localeCompare(b.slice(-1)))
+                .at(-1) || name
+        );
+    }
+
+    _getSplitOrderName(originalOrderName) {
+        const latestOrderName = this._getLatestOrderNameStartingWith(originalOrderName);
+        if (latestOrderName === originalOrderName) {
+            return `${originalOrderName}B`;
+        }
+        const lastChar = latestOrderName[latestOrderName.length - 1];
+        if (lastChar === "Z") {
+            throw new Error("You cannot split the order into more than 26 parts!");
+        }
+        const nextChar = String.fromCharCode(lastChar.charCodeAt(0) + 1);
+        return `${latestOrderName.slice(0, -1)}${nextChar}`;
+    }
+
     createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         this.pos.selectedTable = null;
+        const originalOrderName = this._getOrderName(originalOrder);
+        const newOrderName = this._getSplitOrderName(originalOrderName);
+
         const newOrder = this.pos.createNewOrder();
-        const originalOrderName = originalOrder.getFloatingOrderName();
-        newOrder.floating_order_name = `${newOrder.tracking_number} Split from ${originalOrderName}`;
-        newOrder.general_note = originalOrder.general_note || "";
+        newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         newOrder.originalSplittedOrder = originalOrder;
 
