@@ -168,7 +168,7 @@ class Warehouse(models.Model):
         warehouse_action = self.env.ref('stock.action_warehouse_form')
         msg = _('Please create a warehouse for company %s.', self.env.company.display_name)
         if not self.env.user.has_group('stock.group_stock_manager'):
-            raise UserError('Please contact your administrator to configure your warehouse.')
+            raise UserError(self.env._('Please contact your administrator to configure your warehouse.'))
         raise RedirectWarning(msg, warehouse_action.id, _('Go to Warehouses'))
 
     def copy_data(self, default=None):

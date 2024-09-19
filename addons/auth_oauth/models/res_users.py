@@ -62,7 +62,7 @@ class ResUsers(models.Model):
             ]
         ]), None)
         if not subject:
-            raise AccessDenied('Missing subject identity')
+            raise AccessDenied(self.env._('Missing subject identity'))
         validation['user_id'] = subject
 
         return validation

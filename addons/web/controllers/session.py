@@ -33,7 +33,7 @@ class Session(http.Controller):
         elif request.db:
             request.env.cr.rollback()
         if not http.db_filter([db]):
-            raise AccessError("Database not found.")
+            raise AccessError("Database not found.")  # pylint: disable=missing-gettext
         credential = {'login': login, 'password': password, 'type': 'password'}
         auth_info = request.session.authenticate(db, credential)
         if auth_info['uid'] != request.session.uid:

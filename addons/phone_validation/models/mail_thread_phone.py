@@ -240,4 +240,4 @@ class PhoneMixin(models.AbstractModel):
                 'target': 'new',
             }
         else:
-            raise AccessError("You do not have the access right to unblacklist phone numbers. Please contact your administrator.")
+            raise AccessError(self.env._("You do not have the access right to unblacklist phone numbers. Please contact your administrator."))

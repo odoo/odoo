@@ -52,7 +52,7 @@ class HtmlFieldHistory(models.AbstractModel):
             fields_data = self.env[self._name]._fields
 
             if any(f in vals and not fields_data[f].sanitize for f in versioned_fields):
-                raise ValidationError(
+                raise ValidationError(  # pylint: disable=missing-gettext
                     "Ensure all versioned fields ( %s ) in model %s are declared as sanitize=True"
                     % (str(versioned_fields), self._name)
                 )

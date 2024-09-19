@@ -17,7 +17,7 @@ class Partner(http.Controller):
                  '/web/partner/vcard'], type='http', auth="user")
     def download_vcard(self, partner_ids=None, partner=None, **kwargs):
         if importlib.util.find_spec('vobject') is None:
-            raise UserError('vobject library is not installed')
+            raise UserError(self.env._('vobject library is not installed'))
 
         if partner_ids:
             partner_ids = list(filter(None, (int(pid) for pid in partner_ids.split(',') if pid.isdigit())))
