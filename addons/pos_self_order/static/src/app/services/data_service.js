@@ -8,13 +8,6 @@ patch(PosData.prototype, {
         const configId = session.data.config_id;
         return await rpc(`/pos-self/data/${parseInt(configId)}`);
     },
-    async loadFieldsAndRelations() {
-        const configId = session.data.config_id;
-        return await rpc(`/pos-self/relations/${parseInt(configId)}`);
-    },
-    get databaseName() {
-        return `self_order-config-id_${session.data.config_id}_${session.data.access_token}`;
-    },
     initIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? super.initIndexedDB(...arguments)
