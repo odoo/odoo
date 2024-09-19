@@ -29,11 +29,18 @@
                     </button>
                 </div>
                 <div t-if="!ui.isSmall" class="ms-1 me-2 my-2 border-start border"/>
-                <div class="d-flex align-items-center" t-if="pos.orderToTransferUuid">
+                <div class="d-flex align-items-center" t-if="pos.orderToTransferUuid and !ui.isSmall">
                     <strong class="mx-2 text-warning">
                         Select table to transfer order
                     </strong>
                 </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-rightheader')]//div[hasclass('status-buttons')]" position="before">
+            <div class="d-flex align-items-center" t-if="pos.orderToTransferUuid and ui.isSmall">
+                <strong class="mx-2 text-warning">
+                    Transferring
+                </strong>
             </div>
         </xpath>
     </t>

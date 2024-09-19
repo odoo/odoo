@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderTabs">
-        <ListContainer items="orders"
+        <ListContainer
+            items="orders"
             onClickPlus="() => this.newFloatingOrder()"
             t-slot-scope="scope"
             class="props.class"
-            forceSmall="ui.isSmall and !env.inDialog"
+            show="showOderTabs()"
         >
             <t t-set="order" t-value="scope.item" />
             <button t-esc="order.getName()"

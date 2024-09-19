@@ -9,4 +9,7 @@ patch(OrderTabs.prototype, {
             order.setBooked(true);
         }
     },
+    showOderTabs() {
+        return super.showOderTabs() && !this.pos.orderToTransferUuid;
+    },
 });

@@ -28,12 +28,14 @@ export class ListContainer extends Component {
         slots: { type: Object },
         class: { type: String, optional: true },
         forceSmall: { type: Boolean, optional: true },
+        show: { type: Boolean, optional: true },
     };
     static defaultProps = {
         class: "",
+        show: true,
     };
     static template = xml`
-        <div class="overflow-hidden d-flex flex-grow-1" t-attf-class="{{props.class}}">
+        <div t-if="props.show" class="overflow-hidden d-flex flex-grow-1" t-attf-class="{{props.class}}">
             <button t-if="props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg me-1" t-on-click="props.onClickPlus">
                 <i class="fa fa-fw fa-plus-circle" aria-hidden="true"/>
             </button>
