@@ -18,6 +18,7 @@ export class PosOrder extends Base {
     setup(vals) {
         super.setup(vals);
 
+        this.uuid = vals.uuid ? vals.uuid : uuidv4();
         if (!this.session_id && typeof this.id === "string") {
             this.session_id = this.session;
         }
@@ -27,14 +28,18 @@ export class PosOrder extends Base {
         this.to_invoice = vals.to_invoice || false;
         this.shipping_date = vals.shipping_date || false;
         this.state = vals.state || "draft";
-        this.uuid = vals.uuid ? vals.uuid : uuidv4();
-        this.last_order_preparation_change = vals.last_order_preparation_change
-            ? JSON.parse(vals.last_order_preparation_change)
-            : {
-                  lines: {},
-                  general_customer_note: "",
-                  internal_note: "",
-              };
+        // this.last_order_preparation_change = vals.last_order_preparation_change
+        //     ? JSON.parse(vals.last_order_preparation_change)
+        //     : {
+        //           lines: {},
+        //           general_customer_note: "",
+        //           internal_note: "",
+        //       };
+        this.last_order_preparation_change = {
+            lines: {},
+            general_customer_note: "",
+            internal_note: "",
+        };
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
         if (!vals.lines) {
@@ -484,6 +489,8 @@ export class PosOrder extends Base {
             const newPaymentline = this.models["pos.payment"].create({
                 pos_order_id: this,
                 payment_method_id: payment_method,
+
+                amount: 0,
             });
 
             this.selectPaymentline(newPaymentline);
