@@ -729,6 +729,8 @@ class AccountAccount(models.Model):
         for company, company_accounts in accounts_per_company.items():
             company._update_opening_move({account: data[account.id] for account in company_accounts})
 
+        self.env.flush_all()
+
     def _toggle_reconcile_to_true(self):
         '''Toggle the `reconcile´ boolean from False -> True
 
