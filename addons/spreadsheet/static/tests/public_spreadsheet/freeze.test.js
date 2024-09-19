@@ -60,7 +60,6 @@ test("Pivot with a type different of ODOO is not converted", async function () {
                 formulaId: "1",
                 colGroupBys: ["foo"],
                 rowGroupBys: ["bar"],
-                sortedColumn: null,
             },
         },
     };
