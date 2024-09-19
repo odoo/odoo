@@ -24,7 +24,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
         })
 
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         cls._attachments = [{

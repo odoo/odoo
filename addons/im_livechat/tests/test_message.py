@@ -23,7 +23,7 @@ class TestImLivechatMessage(HttpCase, MailCommon):
         self.users = self.env['res.users'].create([
             {
                 'email': 'e.e@example.com',
-                'groups_id': [Command.link(self.env.ref('base.group_user').id)],
+                'group_ids': [Command.link(self.env.ref('base.group_user').id)],
                 'login': 'emp',
                 'name': 'Ernest Employee',
                 'notification_type': 'inbox',

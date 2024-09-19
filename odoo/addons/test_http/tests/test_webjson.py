@@ -59,7 +59,7 @@ class TestHttpWebJson_18_0(TestHttpBase):
 
         # remove export permssion
         group_export = self.env.ref('base.group_allow_export')
-        self.user_demo.write({'groups_id': [Command.unlink(group_export.id)]})
+        self.user_demo.write({'group_ids': [Command.unlink(group_export.id)]})
 
         # check that demo has no access to /json
         with self.assertLogs('odoo.http', 'WARNING') as capture:

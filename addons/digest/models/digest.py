@@ -309,7 +309,7 @@ class Digest(models.Model):
     def _compute_tips(self, company, user, tips_count=1, consumed=True):
         tips = self.env['digest.tip'].search([
             ('user_ids', '!=', user.id),
-            '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
+            '|', ('group_id', 'in', user.group_ids.all_implied_ids.ids), ('group_id', '=', False)
         ], limit=tips_count)
         tip_descriptions = [
             tools.html_sanitize(

@@ -137,6 +137,22 @@ class SetDefinitions:
             return Leaf(UnknownId(ref), ref)
         return self.__leaves[ref]
 
+    def get_superset_ids(self, ids: Iterable[int]) -> set[int]:
+        return {
+            sub_id
+            for id_ in ids
+            if id_ in self.__leaves
+            for sub_id in self.__leaves[id_].supersets - {id_}
+            if sub_id != id_
+        }
+
+    def get_disjoint_ids(self, ids: Iterable[int]) -> set[int]:
+        return {disjoint_id
+            for id_ in ids
+            if id_ in self.__leaves
+            for disjoint_id in self.__leaves[id_].disjoints
+            if id_ in self.__leaves}
+
 
 class SetExpression(ABC):
     """ An object that represents a combination of named sets with union,

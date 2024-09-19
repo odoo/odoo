@@ -17,7 +17,7 @@ class TestProjectSharingUi(HttpCase):
             'email': 'georges@project.portal',
             'signature': 'SignGeorges',
             'notification_type': 'email',
-            'groups_id': [Command.set([cls.env.ref('base.group_portal').id])],
+            'group_ids': [Command.set([cls.env.ref('base.group_portal').id])],
         })
 
         cls.partner_portal = cls.env['res.partner'].with_context({'mail_create_nolog': True}).create({

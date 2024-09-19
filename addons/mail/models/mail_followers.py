@@ -138,7 +138,7 @@ class Followers(models.Model):
         """
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])
         self.env['mail.message.subtype'].flush_model(['internal'])
-        self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'groups_id'])
+        self.env['res.users'].flush_model(['notification_type', 'active', 'partner_id', 'group_ids'])
         self.env['res.partner'].flush_model(['active', 'partner_share'])
         self.env['res.groups'].flush_model(['users'])
         # if we have records and a subtype: we have to fetch followers, unless being

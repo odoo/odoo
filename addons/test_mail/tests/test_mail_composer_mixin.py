@@ -17,7 +17,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
 
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         cls.mail_template = cls.env['mail.template'].create({
@@ -45,8 +45,8 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
             notification_type='inbox',
             signature='--\nErnest'
         )
-        cls.user_rendering_restricted.groups_id -= cls.env.ref('mail.group_mail_template_editor')
-        cls.user_employee.groups_id += cls.env.ref('mail.group_mail_template_editor')
+        cls.user_rendering_restricted.group_ids -= cls.env.ref('mail.group_mail_template_editor')
+        cls.user_employee.group_ids += cls.env.ref('mail.group_mail_template_editor')
 
         cls._activate_multi_lang(
             layout_arch_db='<body><t t-out="message.body"/> English Layout for <t t-esc="model_description"/></body>',

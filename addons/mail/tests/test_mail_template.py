@@ -17,7 +17,7 @@ class TestMailTemplate(MailCommon):
         super(TestMailTemplate, cls).setUpClass()
         # Enable the Jinja rendering restriction
         cls.env['ir.config_parameter'].set_param('mail.restrict.template.rendering', True)
-        cls.user_employee.groups_id -= cls.env.ref('mail.group_mail_template_editor')
+        cls.user_employee.group_ids -= cls.env.ref('mail.group_mail_template_editor')
 
         cls.mail_template = cls.env['mail.template'].create({
             'name': 'Test template',

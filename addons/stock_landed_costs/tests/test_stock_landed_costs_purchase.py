@@ -484,7 +484,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
             'name': 'User h',
             'login': 'usher',
             'email': 'usher@yourcompany.com',
-            'groups_id': [(6, 0, [self.env.ref('account.group_account_invoice').id])]
+            'group_ids': [(6, 0, [self.env.ref('account.group_account_invoice').id])]
         })
         # Post the bill
         bill.landed_costs_ids = [(6, 0, lc.id)]

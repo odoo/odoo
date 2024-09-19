@@ -131,7 +131,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 210.0,
             'amount_total': 1410.0,
         }
-        cls.env.user.groups_id += cls.env.ref('uom.group_uom')
+        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
 
     def setUp(self):
         super(TestAccountMoveOutInvoiceOnchanges, self).setUp()
@@ -1224,7 +1224,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertIn(account_revenue_copy, invoice.line_ids.account_id)
 
     def test_out_invoice_line_onchange_analytic(self):
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account = self.env['account.analytic.account'].create({
@@ -1343,7 +1343,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], self.move_vals)
 
     def test_out_invoice_line_onchange_analytic_2(self):
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         analytic_account = self.env['account.analytic.account'].create({
@@ -1375,7 +1375,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_line_onchange_cash_rounding_1(self):
         # Required for `invoice_cash_rounding_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
+        self.env.user.group_ids += self.env.ref('account.group_cash_rounding')
         # Test 'add_invoice_line' rounding
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.

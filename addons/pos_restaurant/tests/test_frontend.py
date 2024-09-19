@@ -212,7 +212,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
 
     def test_01_pos_restaurant(self):
         self.pos_user.write({
-            'groups_id': [
+            'group_ids': [
                 (4, self.env.ref('account.group_account_invoice').id),
             ]
         })

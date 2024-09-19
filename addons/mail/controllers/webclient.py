@@ -91,6 +91,6 @@ class WebclientController(http.Controller):
             domain = [
                 "|",
                 ("create_uid", "=", request.env.user.id),
-                ("group_ids", "in", request.env.user.groups_id.ids),
+                ("group_ids", "in", request.env.user.group_ids.all_implied_ids.ids),
             ]
             store.add(request.env["mail.canned.response"].search(domain))

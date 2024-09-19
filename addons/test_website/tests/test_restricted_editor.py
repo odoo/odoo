@@ -31,7 +31,7 @@ class TestRestrictedEditor(odoo.tests.HttpCase):
             'name': 'Restricted Editor',
             'login': 'restricted',
             'password': 'restricted',
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 self.ref('base.group_user'),
                 self.ref('website.group_website_restricted_editor'),
             ])]
@@ -44,7 +44,7 @@ class TestRestrictedEditor(odoo.tests.HttpCase):
             'name': 'Restricted Editor',
             'login': 'restricted',
             'password': 'restricted',
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 self.ref('base.group_user'),
                 self.ref('website.group_website_restricted_editor'),
                 self.ref('test_website.group_test_website_admin'),

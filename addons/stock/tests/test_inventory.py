@@ -327,8 +327,8 @@ class TestInventory(TransactionCase):
         # Config: enable tracking and multilocations.
         grp_lot = self.env.ref('stock.group_production_lot')
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(3, grp_lot.id)]})
-        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(3, grp_lot.id)]})
+        self.env.user.write({'group_ids': [(3, grp_multi_loc.id)]})
         # Creates other locations.
         stock_location_2 = self.env['stock.location'].create({
             'name': 'stock 2',
@@ -522,7 +522,7 @@ class TestInventory(TransactionCase):
         dates auto-generate and apply relevant dates.
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
         now = datetime.now()
         today = now.date()
 

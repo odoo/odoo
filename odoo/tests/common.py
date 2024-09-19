@@ -189,7 +189,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
     Some specific fields are automatically filled to avoid issues
 
-     * groups_id: it is filled using groups function parameter;
+     * group_ids: it is filled using groups function parameter;
      * name: "login (groups)" by default as it is required;
      * email: it is either the login (if it is a valid email) or a generated
        string 'x.x@example.com' (x being the first login letter). This is due
@@ -202,8 +202,8 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
     if context is None:
         context = {}
 
-    groups_id = [Command.set(kwargs.pop('groups_id', False) or [env.ref(g.strip()).id for g in groups.split(',')])]
-    create_values = dict(kwargs, login=login, groups_id=groups_id)
+    group_ids = [Command.set(kwargs.pop('group_ids', False) or [env.ref(g.strip()).id for g in groups.split(',')])]
+    create_values = dict(kwargs, login=login, group_ids=group_ids)
     # automatically generate a name as "Login (groups)" to ease user comprehension
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
@@ -887,7 +887,7 @@ class TransactionCase(BaseCase):
                 ['pbkdf2_sha512', 'plaintext'],
                 pbkdf2_sha512__rounds=1,
             )
-        cls._crypt_context_patcher = patch('odoo.addons.base.models.res_users.Users._crypt_context', _crypt_context)
+        cls._crypt_context_patcher = patch('odoo.addons.base.models.res_users.ResUsers._crypt_context', _crypt_context)
         cls.startClassPatcher(cls._crypt_context_patcher)
 
     def setUp(self):
@@ -1915,7 +1915,7 @@ class HttpCase(TransactionCase):
                 return {'uid': self.id, 'auth_method': 'password', 'mfa': 'default'}
 
             # patching to speedup the check in case the password is hashed with many hashround + avoid to update the password
-            with patch('odoo.addons.base.models.res_users.Users._check_credentials', new=patched_check_credentials):
+            with patch('odoo.addons.base.models.res_users.ResUsers._check_credentials', new=patched_check_credentials):
                 credential = {'login': user, 'password': password, 'type': 'password'}
                 auth_info = self.registry['res.users'].authenticate(session.db, credential, {'interactive': False})
             uid = auth_info['uid']

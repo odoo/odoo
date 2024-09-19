@@ -309,7 +309,7 @@ form: module.record_id""" % (xml_id,)
                 group_id = self.id_get(group)
                 groups.append(odoo.Command.link(group_id))
         if groups:
-            values['groups_id'] = groups
+            values['group_ids'] = groups
 
 
         data = {
@@ -496,7 +496,7 @@ form: module.record_id""" % (xml_id,)
         groups = el.attrib.pop('groups', None)
         if groups:
             grp_lst = [("ref('%s')" % x) for x in groups.split(',')]
-            record.append(Field(name="groups_id", eval="[Command.set(["+', '.join(grp_lst)+"])]"))
+            record.append(Field(name="group_ids", eval="[Command.set(["+', '.join(grp_lst)+"])]"))
         if el.get('primary') == 'True':
             # Pseudo clone mode, we'll set the t-name to the full canonical xmlid
             el.append(

@@ -7,7 +7,7 @@ from odoo.tools import email_normalize
 from odoo.addons.mail.tools.discuss import Store
 
 
-class Users(models.Model):
+class ResUsers(models.Model):
     """ Update of res.users class
         - add a preference about sending emails about notifications
         - make a new user follow itself
@@ -32,9 +32,9 @@ class Users(models.Model):
         "Only internal user can receive notifications in Odoo",
     )]
 
-    @api.depends('share', 'groups_id')
+    @api.depends('share', 'group_ids')
     def _compute_notification_type(self):
-        # Because of the `groups_id` in the `api.depends`,
+        # Because of the `group_ids.all_implied_ids` in the `api.depends`,
         # this code will be called for any change of group on a user,
         # even unrelated to the group_mail_notification_type_inbox or share flag.
         # e.g. if you add HR > Manager to a user, this method will be called.
@@ -43,10 +43,10 @@ class Users(models.Model):
         inbox_group_id = self.env['ir.model.data']._xmlid_to_res_id('mail.group_mail_notification_type_inbox')
 
         self.filtered_domain([
-            ('groups_id', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
+            ('group_ids.all_implied_ids', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
         ]).notification_type = 'inbox'
         self.filtered_domain([
-            ('groups_id', 'not in', inbox_group_id), ('notification_type', '=', 'inbox')
+            ('group_ids.all_implied_ids', 'not in', inbox_group_id), ('notification_type', '=', 'inbox')
         ]).notification_type = 'email'
 
         # Special case: internal users with inbox notifications converted to portal must be converted to email users
@@ -55,8 +55,8 @@ class Users(models.Model):
     def _inverse_notification_type(self):
         inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
         inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
-        inbox_users.write({"groups_id": [Command.link(inbox_group.id)]})
-        (self - inbox_users).write({"groups_id": [Command.unlink(inbox_group.id)]})
+        inbox_users.write({"group_ids": [Command.link(inbox_group.id)]})
+        (self - inbox_users).write({"group_ids": [Command.unlink(inbox_group.id)]})
 
     # ------------------------------------------------------------
     # CRUD
@@ -73,7 +73,7 @@ class Users(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
 
-        users = super(Users, self).create(vals_list)
+        users = super().create(vals_list)
 
         # log a portal status change (manual tracking)
         log_portal_access = not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
@@ -89,7 +89,7 @@ class Users(models.Model):
         return users
 
     def write(self, vals):
-        log_portal_access = 'groups_id' in vals and not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
+        log_portal_access = 'group_ids.all_implied_ids' in vals and not self._context.get('mail_create_nolog') and not self._context.get('mail_notrack')
         user_portal_access_dict = {
             user.id: user._is_portal()
             for user in self
@@ -105,7 +105,7 @@ class Users(models.Model):
         if 'notification_type' in vals:
             user_notification_type_modified = self.filtered(lambda user: user.notification_type != vals['notification_type'])
 
-        write_res = super(Users, self).write(vals)
+        write_res = super().write(vals)
 
         # log a portal status change (manual tracking)
         if log_portal_access:
@@ -156,7 +156,7 @@ class Users(models.Model):
     def action_archive(self):
         activities_to_delete = self.env['mail.activity'].search([('user_id', 'in', self.ids)])
         activities_to_delete.unlink()
-        return super(Users, self).action_archive()
+        return super().action_archive()
 
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
         """ This method is meant to be called whenever a sensitive update is done on the user's account.
@@ -245,7 +245,7 @@ class Users(models.Model):
         else:
             users_to_blacklist = []
 
-        super(Users, self)._deactivate_portal_user(**post)
+        super()._deactivate_portal_user(**post)
 
         for user, user_email in users_to_blacklist:
             self.env['mail.blacklist']._add(

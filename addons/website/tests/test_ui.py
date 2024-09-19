@@ -106,7 +106,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
 
     def test_html_editor_scss(self):
         self.user_demo.write({
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 self.env.ref('base.group_user').id,
                 self.env.ref('website.group_website_designer').id
             ])]
@@ -234,7 +234,7 @@ class TestUi(odoo.tests.HttpCase):
             'name': 'Restricted Editor',
             'login': 'restricted',
             'password': 'restricted',
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 self.ref('base.group_user'),
                 self.ref('website.group_website_restricted_editor')
             ])]

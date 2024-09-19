@@ -17,7 +17,7 @@ class TestMailFullComposer(MailCommon, HttpCase):
             'partner_to': '{{ object.id }}',
         })
         self.user_employee.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, self.env.ref('base.group_partner_manager').id)],
         })
 
         automation = self.env['base.automation'].create({

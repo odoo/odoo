@@ -385,7 +385,7 @@
                                     and `quantity_done` is not within the finished move views,
                                     (byproduct moves are a subset of finished moves)
                                     the `quantity_done` of byproducts is not updated correctly with the onchange
-                                    Another solution is to add `self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')`
+                                    Another solution is to add `self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')`
                                     to the test `test_00_mrp_byproduct`, which could makes sense as it's a test testing the byproducts features,
                                     for which you should have the byproducts group to have access to,
                                     but it seemed better to keep the feature working even if you do not see the byproducts features with your user.

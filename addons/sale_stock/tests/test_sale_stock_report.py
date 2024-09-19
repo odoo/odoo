@@ -128,7 +128,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         """
         display_lots = self.env.ref('stock_account.group_lot_on_invoice')
         display_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -162,7 +162,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         """
         display_lots = self.env.ref('stock_account.group_lot_on_invoice')
         display_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
 
         self.product_by_lot.invoice_policy = "order"
 
@@ -195,7 +195,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         """
         display_lots = self.env.ref('stock_account.group_lot_on_invoice')
         display_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -264,7 +264,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         """
         display_lots = self.env.ref('stock_account.group_lot_on_invoice')
         display_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
 
         lot01 = self.env['stock.lot'].search([('name', '=', 'LOT0001')])
         lot02, lot03 = self.env['stock.lot'].create([{
@@ -365,7 +365,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         """
         display_lots = self.env.ref('stock_account.group_lot_on_invoice')
         display_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
@@ -429,7 +429,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         """
         display_lots = self.env.ref('stock_account.group_lot_on_invoice')
         display_uom = self.env.ref('uom.group_uom')
-        self.env.user.write({'groups_id': [(4, display_lots.id), (4, display_uom.id)]})
+        self.env.user.write({'group_ids': [(4, display_lots.id), (4, display_uom.id)]})
 
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,

@@ -196,7 +196,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertEqual(current_user_trackings[-1].old_value, base_test_user_karma)
 
     def test_user_as_erp_manager(self):
-        self.test_user.write({'groups_id': [
+        self.test_user.write({'group_ids': [
             (4, self.env.ref('base.group_partner_manager').id),
             (4, self.env.ref('base.group_erp_manager').id)
         ]})
@@ -220,7 +220,7 @@ class TestKarmaTrackingCommon(common.TransactionCase):
         self.assertIn(str(self.test_user_2.id), trackings[1].reason)
 
     def test_user_tracking(self):
-        self.test_user.write({'groups_id': [
+        self.test_user.write({'group_ids': [
             (4, self.env.ref('base.group_partner_manager').id),
             (4, self.env.ref('base.group_system').id)
         ]})
@@ -383,7 +383,7 @@ class TestComputeRankCommon(common.TransactionCase):
             nonlocal number_of_users
             number_of_users = len(_self & self.users)
 
-        patch_bulk = patch('odoo.addons.gamification.models.res_users.Users._recompute_rank', _patched_recompute_rank)
+        patch_bulk = patch('odoo.addons.gamification.models.res_users.ResUsers._recompute_rank', _patched_recompute_rank)
         self.startPatcher(patch_bulk)
         self.rank_3.karma_min = 700
         self.assertEqual(number_of_users, 7, "Should just recompute for the 7 users between 500 and 700")
@@ -394,7 +394,7 @@ class TestComputeRankCommon(common.TransactionCase):
         def _patched_check_in_bulk(*args, **kwargs):
             raise
 
-        patch_bulk = patch('odoo.addons.gamification.models.res_users.Users._recompute_rank_bulk', _patched_check_in_bulk)
+        patch_bulk = patch('odoo.addons.gamification.models.res_users.ResUsers._recompute_rank_bulk', _patched_check_in_bulk)
         self.startPatcher(patch_bulk)
 
         # call on 5 users should not trigger the bulk function

@@ -242,7 +242,7 @@ class TestPartner(MailCommon):
         """ Test for '_find_or_create_from_emails' allowing to find or create
         partner based on emails in a batch-enabled and optimized fashion. """
         self.user_employee_c2.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, self.env.ref('base.group_partner_manager').id)],
         })
 
         with self.mockPartnerCalls():
@@ -312,7 +312,7 @@ class TestPartner(MailCommon):
         """ Specific test for duplicates management: based on email to avoid
         creating similar partners. """
         self.user_employee_c2.write({
-            'groups_id': [(4, self.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, self.env.ref('base.group_partner_manager').id)],
         })
 
         # all same partner, same email 'test.customer@test.dupe.example.com'
@@ -458,7 +458,7 @@ class TestPartner(MailCommon):
         self.assertNotIn('Portal Access Granted', new_msg.body)
         self.assertIn('Contact created', new_msg.body)
 
-        new_user.write({'groups_id': [(4, group_portal.id), (3, group_user.id)]})
+        new_user.write({'group_ids': [(4, group_portal.id), (3, group_user.id)]})
         new_msg = new_user.message_ids[0]
         self.assertIn('Portal Access Granted', new_msg.body)
         self.assertEqual(new_msg.subtype_id, subtype_note)
@@ -466,7 +466,7 @@ class TestPartner(MailCommon):
         # check at create
         new_user = Users.create({
             'email': 'micheline.2@test.example.com',
-            'groups_id': [(4, group_portal.id)],
+            'group_ids': [(4, group_portal.id)],
             'login': 'michmich.2',
             'name': 'Micheline Portal',
         })

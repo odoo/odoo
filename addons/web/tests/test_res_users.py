@@ -46,7 +46,7 @@ class TestResUsers(TransactionCase):
             'name': 'Internal',
             'login': 'user_internal',
             'password': 'password',
-            'groups_id': [self.env.ref('base.group_user').id],
+            'group_ids': [self.env.ref('base.group_user').id],
         })
         with Form(self.env['change.password.wizard'].with_context(active_model='res.users', active_ids=user_internal.ids), view='base.change_password_wizard_view') as form:
             with form.user_ids.edit(0) as line:

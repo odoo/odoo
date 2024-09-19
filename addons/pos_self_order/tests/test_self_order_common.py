@@ -19,7 +19,7 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             'self_ordering_service_mode': 'table',
         })
 
-        self.pos_admin.groups_id += self.env.ref('account.group_account_invoice')
+        self.pos_admin.group_ids += self.env.ref('account.group_account_invoice')
         self_route = self.pos_config._get_self_order_route()
 
         # Verify behavior when self Order is closed

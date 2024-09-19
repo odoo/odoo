@@ -613,7 +613,7 @@ class TestBatchPicking(TransactionCase):
         Create a third picking with same partner
         - Should be added to the batch
         """
-        self.env.user.groups_id = [(4, self.ref('stock.group_reception_report'))]
+        self.env.user.group_ids = [(4, self.ref('stock.group_reception_report'))]
         self.env['stock.picking.type'].browse(self.picking_type_in).write({
             'auto_show_reception_report': True,
             'auto_batch': True,
@@ -771,7 +771,7 @@ class TestBatchPicking02(TransactionCase):
         # Adding a new line should not raise an error
         confirmed_form.move_line_ids.new()
         # Adding a line should work also for users in multi_locations (former storage categories) group
-        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         batch_form = Form(self.env['stock.picking.batch'])
         batch_form.picking_ids.add(picking)
         batch = batch_form.save()

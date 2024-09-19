@@ -21,7 +21,7 @@ from odoo.addons.bus.models.bus import ImBus, json_dump
 from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
-from odoo.addons.mail.models.res_users import Users
+from odoo.addons.mail.models.res_users import ResUsers
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, new_test_user
 from odoo.tools import email_normalize, formataddr, mute_logger
@@ -894,7 +894,7 @@ class MailCase(MockEmail):
             {'id': partner.id,
              'active': partner.active,
              'is_follower': partner in record.message_partner_ids if record else False,
-             'groups': partner.user_ids.groups_id.ids,
+             'groups': partner.user_ids.group_ids.ids,
              'notif': partner.user_ids.notification_type or 'email',
              'share': partner.partner_share,
              'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
@@ -1306,7 +1306,7 @@ class MailCommon(common.TransactionCase, MailCase):
             'email': 'your.company@example.com',  # ensure email for various fallbacks
             'name': 'YourTestCompany',  # force for reply_to computation
         })
-        with patch.object(Users, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
+        with patch.object(ResUsers, '_notify_security_setting_update', side_effect=lambda *args, **kwargs: None):
             cls.user_admin.write({
                 'country_id': cls.env.ref('base.be').id,
                 'email': 'test.admin@test.example.com',

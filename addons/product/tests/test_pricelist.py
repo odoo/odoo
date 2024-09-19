@@ -37,7 +37,7 @@ class TestPricelist(ProductCommon):
             ],
         })
         # Enable pricelist feature
-        cls.env.user.groups_id += cls.env.ref('product.group_product_pricelist')
+        cls.env.user.group_ids += cls.env.ref('product.group_product_pricelist')
 
     def test_10_discount(self):
         # Make sure the price using a pricelist is the same than without after

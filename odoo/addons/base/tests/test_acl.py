@@ -186,7 +186,7 @@ class TestACL(TransactionCaseWithUserDemo):
         self._set_field_groups(Partner, 'email', self.TEST_GROUP)
         views = Partner.with_user(self.user_demo).get_views([(False, 'form')])
         self.assertFalse('email' in views['models']['res.partner']["fields"])
-        self.user_demo.groups_id = [Command.link(self.test_group.id)]
+        self.user_demo.group_ids = [Command.link(self.test_group.id)]
         views = Partner.with_user(self.user_demo).get_views([(False, 'form')])
         self.assertTrue('email' in views['models']['res.partner']["fields"])
 

@@ -101,7 +101,7 @@ class TestMrpCommon(TestStockCommon):
         # `workorder_ids` to be visible in the view of `mrp.production`. The
         # field `product_uom_id` must be set by many tests, and subviews of
         # `workorder_ids` must be present in many tests to create records.
-        cls.env.user.groups_id += cls.env.ref('uom.group_uom') + cls.env.ref('mrp.group_mrp_routings')
+        cls.env.user.group_ids += cls.env.ref('uom.group_uom') + cls.env.ref('mrp.group_mrp_routings')
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Nuclear Workcenter',

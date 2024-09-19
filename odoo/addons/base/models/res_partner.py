@@ -19,7 +19,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 import typing
 if typing.TYPE_CHECKING:
-    from .res_users import UsersView as ResUsers
+    from .res_users import ResUsers
     from .res_bank import ResPartnerBank
     from .res_country import Country, CountryState
     from .res_company import Company as ResCompany

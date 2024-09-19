@@ -13,7 +13,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
             'name': 'salesman',
             'login': 'salesman',
             'email': 'salesman007@example.com',
-            'groups_id': [(6, 0, cls.env.ref('sales_team.group_sale_salesman').ids)],
+            'group_ids': [(6, 0, cls.env.ref('sales_team.group_sale_salesman').ids)],
         })
 
         cls.course_product = cls.env['product.product'].create({

@@ -29,7 +29,7 @@ class IrUiMenu(models.Model):
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
     parent_path = fields.Char(index=True)
-    groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
+    group_ids = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
                                  'menu_id', 'gid', string='Groups',
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
@@ -74,7 +74,7 @@ class IrUiMenu(models.Model):
             raise ValidationError(_('Error! You cannot create recursive menus.'))
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
+    @tools.ormcache('frozenset(self.env.user.group_ids.ids)', 'debug')
     def _visible_menu_ids(self, debug=False):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
@@ -86,7 +86,7 @@ class IrUiMenu(models.Model):
         if not debug:
             group_ids = group_ids - {self.env['ir.model.data']._xmlid_to_res_id('base.group_no_one', raise_if_not_found=False)}
         menus = menus.filtered(
-            lambda menu: not (menu.groups_id and group_ids.isdisjoint(menu.groups_id._ids)))
+            lambda menu: not (menu.group_ids and group_ids.isdisjoint(menu.group_ids._ids)))
 
         # take apart menus that have an action
         actions_by_model = defaultdict(set)

@@ -23,7 +23,7 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
             'name': 'Purchase user',
             'login': 'purchaseUser',
             'email': 'pu@odoo.com',
-            'groups_id': [(6, 0, [group_purchase_user.id, group_employee.id, group_partner_manager.id])],
+            'group_ids': [(6, 0, [group_purchase_user.id, group_employee.id, group_partner_manager.id])],
         })
 
         cls.vendor = cls.env['res.partner'].create({
@@ -116,12 +116,12 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         self.purchase_user.write({
             'company_ids': [(4, company.id)],
             'company_id': company.id,
-            'groups_id': [(3, group_purchase_manager.id)],
+            'group_ids': [(3, group_purchase_manager.id)],
         })
         order.with_user(self.purchase_user).button_confirm()
         self.assertEqual(order.state, 'to approve')
         order.with_user(self.purchase_user).button_approve()
         self.assertEqual(order.state, 'to approve')
-        self.purchase_user.groups_id += group_purchase_manager
+        self.purchase_user.group_ids += group_purchase_manager
         order.with_user(self.purchase_user).button_approve()
         self.assertEqual(order.state, 'purchase')

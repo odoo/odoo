@@ -23,7 +23,7 @@ class TestEquipment(TransactionCase):
             company_id=self.main_company.id,
             login="emp",
             email="empuser@yourcompany.example.com",
-            groups_id=[(6, 0, [res_user.id])]
+            group_ids=[(6, 0, [res_user.id])]
         ))
 
         self.manager = self.res_users.create(dict(
@@ -31,7 +31,7 @@ class TestEquipment(TransactionCase):
             company_id=self.main_company.id,
             login="hm",
             email="eqmanager@yourcompany.example.com",
-            groups_id=[(6, 0, [res_manager.id])]
+            group_ids=[(6, 0, [res_manager.id])]
         ))
 
         self.equipment_monitor = self.env['maintenance.equipment.category'].create({

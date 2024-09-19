@@ -33,7 +33,7 @@ class TestMailComposer(MailCommon, TestRecipients):
 
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         cls.user_employee_2 = mail_new_test_user(
@@ -2177,7 +2177,7 @@ class TestComposerResultsCommentStatus(TestMailComposer):
 
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         # add 2 new records with customers
@@ -2264,7 +2264,7 @@ class TestComposerResultsMass(TestMailComposer):
         super(TestComposerResultsMass, cls).setUpClass()
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
         cls.template.write({
             "scheduled_date": False,
@@ -3236,7 +3236,7 @@ class TestComposerResultsMassStatus(TestMailComposer):
 
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         # add 2 new records with customers

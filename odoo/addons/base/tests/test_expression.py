@@ -2051,9 +2051,9 @@ class TestMany2many(TransactionCase):
         group = self.env.ref('base.group_user')
         rule = group.rule_groups[0]
 
-        self.User.search([('groups_id', 'in', group.ids)], order='id')
-        self.User.search([('groups_id.name', 'like', group.name)], order='id')
-        self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+        self.User.search([('group_ids.all_implied_ids', 'in', group.ids)], order='id')
+        self.User.search([('group_ids.name', 'like', group.name)], order='id')
+        self.User.search([('group_ids.rule_groups.name', 'like', rule.name)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
@@ -2065,7 +2065,7 @@ class TestMany2many(TransactionCase):
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id', 'in', group.ids)], order='id')
+            self.User.search([('group_ids.all_implied_ids', 'in', group.ids)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
@@ -2077,7 +2077,7 @@ class TestMany2many(TransactionCase):
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id', 'not in', group.ids)], order='id')
+            self.User.search([('group_ids.all_implied_ids', 'not in', group.ids)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
@@ -2093,7 +2093,7 @@ class TestMany2many(TransactionCase):
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id.color', '=', 1)], order='id')
+            self.User.search([('group_ids.color', '=', 1)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
@@ -2117,12 +2117,12 @@ class TestMany2many(TransactionCase):
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
+            self.User.search([('group_ids.rule_groups.name', 'like', rule.name)], order='id')
 
     def test_autojoin(self):
-        self.patch(self.User._fields['groups_id'], 'auto_join', True)
+        self.patch(self.User._fields['group_ids'], 'auto_join', True)
         with self.assertRaises(NotImplementedError):
-            self.User.search([('groups_id.name', '=', 'foo')])
+            self.User.search([('group_ids.name', '=', 'foo')])
 
     def test_name_search(self):
         self.User.search([('company_ids', 'like', self.company.name)], order='id')
@@ -2144,8 +2144,8 @@ class TestMany2many(TransactionCase):
             self.User.search([('company_ids', 'like', self.company.name)], order='id')
 
     def test_empty(self):
-        self.User.search([('groups_id', '!=', False)], order='id')
-        self.User.search([('groups_id', '=', False)], order='id')
+        self.User.search([('group_ids', '!=', False)], order='id')
+        self.User.search([('group_ids', '=', False)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
@@ -2156,7 +2156,7 @@ class TestMany2many(TransactionCase):
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id', '!=', False)], order='id')
+            self.User.search([('group_ids', '!=', False)], order='id')
 
         with self.assertQueries(['''
             SELECT "res_users"."id"
@@ -2167,7 +2167,7 @@ class TestMany2many(TransactionCase):
             )
             ORDER BY "res_users"."id"
         ''']):
-            self.User.search([('groups_id', '=', False)], order='id')
+            self.User.search([('group_ids', '=', False)], order='id')
 
 
 class TestPrettifyDomain(BaseCase):

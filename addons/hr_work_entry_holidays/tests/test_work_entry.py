@@ -144,7 +144,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'login': 'Classic User',
             'company_id': self.env.ref('base.main_company').id,
             'company_ids': self.env.ref('base.main_company').ids,
-            'groups_id': [(6, 0, [self.env.ref('hr_contract.group_hr_contract_manager').id, self.env.ref('base.group_user').id])],
+            'group_ids': [(6, 0, [self.env.ref('hr_contract.group_hr_contract_manager').id, self.env.ref('base.group_user').id])],
         })
         self.env['hr.employee'].with_user(user).generate_work_entries('2019-12-01', '2019-12-31')
 

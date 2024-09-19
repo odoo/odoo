@@ -18,13 +18,13 @@ class TestProjectRecurrence(TransactionCase):
         user_group_project_recurring_task = cls.env.ref('project.group_project_recurring_tasks')
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
 
-        cls.env.user.groups_id += user_group_project_recurring_task
+        cls.env.user.group_ids += user_group_project_recurring_task
         cls.user_projectuser = Users.create({
             'name': 'Armande ProjectUser',
             'login': 'armandel',
             'password': 'armandel',
             'email': 'armande.projectuser@example.com',
-            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id, user_group_project_recurring_task.id])]
+            'group_ids': [(6, 0, [user_group_employee.id, user_group_project_user.id, user_group_project_recurring_task.id])]
         })
 
         cls.stage_a = cls.env['project.task.type'].create({'name': 'a'})

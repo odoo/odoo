@@ -19,21 +19,21 @@ class TestWebsiteBlogCommon(common.TransactionCase):
             'login': 'armande',
             'email': 'armande.employee@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [group_employee_id])]
+            'group_ids': [(6, 0, [group_employee_id])]
         })
         self.user_blogmanager = Users.with_context({'no_reset_password': True}).create({
             'name': 'Bastien BlogManager',
             'login': 'bastien',
             'email': 'bastien.blogmanager@example.com',
             'notification_type': 'inbox',
-            'groups_id': [(6, 0, [group_blog_manager_id, group_employee_id])]
+            'group_ids': [(6, 0, [group_blog_manager_id, group_employee_id])]
         })
         self.user_public = Users.with_context({'no_reset_password': True}).create({
             'name': 'Cedric Public',
             'login': 'cedric',
             'email': 'cedric.public@example.com',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [group_public_id])]
+            'group_ids': [(6, 0, [group_public_id])]
         })
 
         self.test_blog = self.env['blog.blog'].with_user(self.user_blogmanager).create({

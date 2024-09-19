@@ -101,8 +101,8 @@ beforeEach(async () => {
         ...getBasicData(),
         "ir.ui.menu": {
             records: [
-                { id: 1, name: "test menu 1", action: "action1", groups_id: [10] },
-                { id: 2, name: "test menu 2", action: "action2", groups_id: [10] },
+                { id: 1, name: "test menu 1", action: "action1", group_ids: [10] },
+                { id: 2, name: "test menu 2", action: "action2", group_ids: [10] },
             ],
         },
         "res.group": { records: [{ id: 10, name: "test group" }] },

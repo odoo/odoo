@@ -30,7 +30,7 @@
             <field name="print_report_name">'Packages - %s' % (object.name)</field>
             <field name="binding_model_id" ref="model_stock_picking"/>
             <field name="binding_type">report</field>
-            <field name="groups_id" eval="[Command.link(ref('stock.group_tracking_lot'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('stock.group_tracking_lot'))]"/>
         </record>
         <record id="action_report_inventory" model="ir.actions.report">
             <field name="name">Count Sheet</field>

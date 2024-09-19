@@ -1579,7 +1579,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
 
-        user0.write({'groups_id': [Command.link(self.env.ref('base.group_system').id)]})
+        user0.write({'group_ids': [Command.link(self.env.ref('base.group_system').id)]})
         record.with_user(user0).foo = 'yes we can'
 
         # add ir.rule to prevent access on record
@@ -1610,7 +1610,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(attribute_record.bar, 'DEFDEF')
 
         # a low priviledge user should be able to search on company_dependent fields
-        company_record.env.user.groups_id -= self.env.ref('base.group_system')
+        company_record.env.user.group_ids -= self.env.ref('base.group_system')
         self.assertFalse(company_record.env.user.has_group('base.group_system'))
         company_records = self.env['test_new_api.company'].search([('foo', '=', 'DEF')])
         self.assertEqual(len(company_records), 1)
@@ -2083,12 +2083,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             'participants': [(6, 0, self.env.user.ids)],
         })
         # Put the user groups in the cache of the new record
-        new_disc.participants.groups_id
+        new_disc.participants.group_ids
 
         # Check that the groups in the cache are not returned by convert_to_write
         # because no real change happened, the values are identical except that
-        # self.env.user.groups_id._ids = (Id1, Id2, ...) whereas
-        # new_disc.participants.groups_id._ids = (NewId(origin=Id1), NewId(origin=Id2), ...)
+        # self.env.user.group_ids._ids = (Id1, Id2, ...) whereas
+        # new_disc.participants.group_ids._ids = (NewId(origin=Id1), NewId(origin=Id2), ...)
         field = new_disc._fields.get("participants")
         # make sure that there is no inverse field for discussions on res_users,
         # as the test depends on it
@@ -3133,7 +3133,7 @@ class TestX2many(TransactionExpressionCase):
                 'login': 'portal',
                 'password': 'portal',
                 'partner_id': cls.partner_portal.id,
-                'groups_id': [Command.set([cls.env.ref('base.group_portal').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_portal').id])],
             })
 
     def test_definition_many2many(self):
@@ -3521,7 +3521,7 @@ class TestX2many(TransactionExpressionCase):
             with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
                 my_partner.write({
                     'user_ids': [Command.update(my_partner.user_ids[0].id, {
-                        'groups_id': [self.env.ref('base.group_system').id],
+                        'group_ids': [self.env.ref('base.group_system').id],
                     })],
                 })
             # 1.2 Command.DELETE
@@ -3654,12 +3654,12 @@ class TestHtmlField(TransactionCase):
         internal_user = self.env['res.users'].create({
             'name': 'test internal user',
             'login': 'test_sanitize',
-            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+            'group_ids': [(6, 0, [self.ref('base.group_user')])],
         })
         bypass_user = self.env['res.users'].create({
             'name': 'test bypass user',
             'login': 'test_sanitize2',
-            'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('base.group_sanitize_override')])],
+            'group_ids': [(6, 0, [self.ref('base.group_user'), self.ref('base.group_sanitize_override')])],
         })
         record = self.env['test_new_api.mixed'].create({})
 

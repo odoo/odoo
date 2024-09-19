@@ -14,7 +14,7 @@ class ResUsers(models.Model):
 
         interviewers = self - recruitment_group.users
         interviewers.sudo().write({
-            'groups_id': [(4, interviewer_group.id)]
+            'group_ids': [(4, interviewer_group.id)]
         })
 
     def _remove_recruitment_interviewers(self):
@@ -32,5 +32,5 @@ class ResUsers(models.Model):
         # Remove users that are no longer interviewers on at least a job or an application
         users_to_remove = set(self.ids) - (user_ids | set(recruitment_group.users.ids))
         self.env['res.users'].browse(users_to_remove).sudo().write({
-            'groups_id': [(3, interviewer_group.id)]
+            'group_ids': [(3, interviewer_group.id)]
         })

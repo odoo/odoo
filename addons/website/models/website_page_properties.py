@@ -101,11 +101,11 @@ class PagePropertiesBase(models.TransientModel):
                 if self.is_published:
                     # Publish
                     target.visibility = ''
-                    target.groups_id -= self._get_ir_ui_view_unpublish_group()
+                    target.group_ids -= self._get_ir_ui_view_unpublish_group()
                 else:
                     # Unpublish
                     target.visibility = 'restricted_group'
-                    target.groups_id += self._get_ir_ui_view_unpublish_group()
+                    target.group_ids += self._get_ir_ui_view_unpublish_group()
                 self.env.registry.clear_cache('templates')
         elif 'is_published' in target._fields:
             target.is_published = self.is_published
@@ -116,7 +116,7 @@ class PagePropertiesBase(models.TransientModel):
     def _is_ir_ui_view_unpublished(self, view):
         view.ensure_one()
         return (view.visibility == 'restricted_group' and
-                self._get_ir_ui_view_unpublish_group() in view.groups_id)
+                self._get_ir_ui_view_unpublish_group() in view.group_ids.all_implied_ids)
 
     def _is_ir_ui_view_published(self, view):
         view.ensure_one()
@@ -137,7 +137,7 @@ class PageProperties(models.TransientModel):
     website_indexed = fields.Boolean(related='target_model_id.website_indexed', readonly=False)
     visibility = fields.Selection(related='target_model_id.visibility', readonly=False)
     visibility_password_display = fields.Char(related='target_model_id.visibility_password_display', readonly=False)
-    groups_id = fields.Many2many(related='target_model_id.groups_id', readonly=False)
+    group_ids = fields.Many2many(related='target_model_id.group_ids', readonly=False)
     is_new_page_template = fields.Boolean(related='target_model_id.is_new_page_template', readonly=False)
 
     old_url = fields.Char()

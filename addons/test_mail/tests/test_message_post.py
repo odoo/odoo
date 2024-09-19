@@ -574,7 +574,7 @@ class TestMessageLog(TestMessagePostCommon):
         super(TestMessageLog, cls).setUpClass()
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
@@ -1450,11 +1450,11 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         super(TestMessagePostHelpers, cls).setUpClass()
         # ensure employee can create partners, necessary for templates
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         cls.user_employee.write({
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         cls.test_records, cls.test_partners = cls._create_records_for_batch(
@@ -1799,7 +1799,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
             'subject': 'EnglishSubject for {{ object.name }}',
         })
         cls.user_employee.write({  # add group to create contacts, necessary for templates
-            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'group_ids': [(4, cls.env.ref('base.group_partner_manager').id)],
         })
 
         cls._activate_multi_lang(test_record=cls.test_records[0], test_template=cls.test_template)

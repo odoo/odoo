@@ -18,7 +18,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.user.groups_id += cls.env.ref('stock_account.group_stock_accounting_automatic')
+        cls.env.user.group_ids += cls.env.ref('stock_account.group_stock_accounting_automatic')
 
         cls.stock_account_product_categ = cls.env['product.category'].create({
             'name': 'Test category',
@@ -52,7 +52,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
             'name': "Inventory User",
             'login': "su",
             'email': "stockuser@yourcompany.com",
-            'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])],
+            'group_ids': [(6, 0, [cls.env.ref('stock.group_stock_user').id])],
             })
 
     @classmethod

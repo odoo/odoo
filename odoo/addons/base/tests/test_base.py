@@ -210,7 +210,7 @@ class TestGroups(TransactionCase):
         u2 = self.env['res.users'].create({'login': 'u2', 'name': 'U2'})
         default = self.env.ref('base.default_user')
         portal = self.env.ref('base.group_portal')
-        p = self.env['res.users'].create({'login': 'p', 'name': 'P', 'groups_id': [Command.set([portal.id])]})
+        p = self.env['res.users'].create({'login': 'p', 'name': 'P', 'group_ids': [Command.set([portal.id])]})
 
         a = self.env['res.groups'].create({'name': 'A', 'users': [Command.set(u1.ids)]})
         b = self.env['res.groups'].create({'name': 'B', 'users': [Command.set(u1.ids)]})
@@ -247,7 +247,7 @@ class TestGroups(TransactionCase):
 
         # When adding the template user to a new group, it should add it to existing internal users
         e = self.env['res.groups'].create({'name': 'E'})
-        default.write({'groups_id': [Command.link(e.id)]})
+        default.write({'group_ids': [Command.link(e.id)]})
         self.assertIn(u1, e.users)
         self.assertIn(u2, e.users)
         self.assertIn(default, e.with_context(active_test=False).users)

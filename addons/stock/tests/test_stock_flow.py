@@ -1768,9 +1768,9 @@ class TestStockFlow(TestStockCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')
         grp_multi_companies = self.env.ref('base.group_multi_company')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_companies.id)]})
 
         company_2 = self.company
         # Need to add a new company on user.
@@ -1832,9 +1832,9 @@ class TestStockFlow(TestStockCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         grp_multi_routes = self.env.ref('stock.group_adv_location')
         grp_multi_companies = self.env.ref('base.group_multi_company')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
-        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_companies.id)]})
 
         company_2 = self.company
         # Need to add a new company on user.
@@ -1961,7 +1961,7 @@ class TestStockFlow(TestStockCommon):
         but not in state 'confirmed'.
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id, 0)]})
 
         product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
@@ -2423,7 +2423,7 @@ class TestStockFlow(TestStockCommon):
         as done
         """
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id, 0)]})
 
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         stock_location = warehouse.lot_stock_id
@@ -2454,7 +2454,7 @@ class TestStockFlow(TestStockCommon):
     def test_multi_picking_validation(self):
         """ This test ensures that the validation of 2 pickings is successfull even if they have different operation types """
 
-        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_reception_report').id)]})
+        self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_reception_report').id)]})
         picking_A, picking_B = self.PickingObj.create([{
             'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,

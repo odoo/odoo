@@ -11,7 +11,7 @@ class TestUSerCreationSettings(TransactionCase):
         user = self.env.user.create({
             'name': 'A portal user',
             'login': 'portal_test',
-            'groups_id': [(6, 0, [portal_group.id])],
+            'group_ids': [(6, 0, [portal_group.id])],
         })
         self.assertFalse(user.res_users_settings_ids, 'Portal users should not have settings by default')
 

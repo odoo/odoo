@@ -30,9 +30,9 @@ class ChannelMember(models.Model):
         for channel in channels:
             allowed_users = users
             if channel.channel_type == "channel" and channel.group_public_id:
-                if random.randint(1, 2) == 1 and channel.group_public_id in admin.groups_id:
+                if random.randint(1, 2) == 1 and channel.group_public_id in admin.group_ids.all_implied_ids:
                     users_by_channel[channel].append(admin)
-                allowed_users = users.filtered(lambda user: channel.group_public_id in user.groups_id)
+                allowed_users = users.filtered(lambda user: channel.group_public_id in user.group_ids.all_implied_ids)
             elif random.randint(1, 2) == 1 and channel.channel_type in ["channel", "group"]:
                 users_by_channel[channel].append(admin)
             if allowed_users:

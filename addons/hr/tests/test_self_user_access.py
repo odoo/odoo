@@ -65,7 +65,7 @@ class TestSelfAccessProfile(TestHrCommon):
         for xml_id in all_groups_xml_ids:
             all_groups |= self.env.ref(xml_id.strip())
         user_all_groups = new_test_user(self.env, groups='base.group_user', login='hel', name='God')
-        user_all_groups.write({'groups_id': [(4, group.id, False) for group in all_groups]})
+        user_all_groups.write({'group_ids.all_implied_ids': [(4, group.id, False) for group in all_groups]})
         view_infos = self.env['res.users'].with_user(user_all_groups).get_view(view.id)
         full_fields = [el.get('name') for el in etree.fromstring(view_infos['arch']).xpath('//field[not(ancestor::field)]')]
 

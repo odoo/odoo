@@ -30,7 +30,7 @@ class TestRecruitmentProcess(TestHrCommon):
             'name': 'HR Recruitment Officer',
             'login': "hrro",
             'email': "hrofcr@yourcompany.com",
-            'groups_id': [(6, 0, [self.env.ref('hr_recruitment.group_hr_recruitment_user').id])]
+            'group_ids': [(6, 0, [self.env.ref('hr_recruitment.group_hr_recruitment_user').id])]
         })
 
         # An applicant is interested in the job position. So he sends a resume by email.
@@ -71,7 +71,7 @@ class TestRecruitmentProcess(TestHrCommon):
                 "name": "user_1",
                 "login": "user_1",
                 "email": "user_1@example.com",
-                "groups_id": [
+                "group_ids": [
                     (4, self.env.ref("hr.group_hr_manager").id),
                     (4, self.env.ref("hr_recruitment.group_hr_recruitment_manager").id),
                 ],

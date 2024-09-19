@@ -4,7 +4,7 @@
     <record id="account_move_send_form" model="ir.ui.view">
         <field name="name">account.move.send.form</field>
         <field name="model">account.move.send</field>
-        <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
         <field name="arch" type="xml">
             <form>
                 <!-- Invisible fields -->

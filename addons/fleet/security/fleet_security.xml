@@ -18,7 +18,7 @@
 
     <data noupdate="1">
         <record id="base.default_user" model="res.users">
-            <field name="groups_id" eval="[(4,ref('fleet.fleet_group_manager'))]"/>
+            <field name="group_ids" eval="[(4,ref('fleet.fleet_group_manager'))]"/>
         </record>
         <record id="fleet_rule_contract_visibility_user" model="ir.rule">
             <field name="name">User can only see his/her contracts</field>
