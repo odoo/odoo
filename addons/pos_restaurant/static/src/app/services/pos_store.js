@@ -200,12 +200,6 @@ patch(PosStore.prototype, {
 
         return await super.afterProcessServerData(...arguments);
     },
-    //@override
-    addNewOrder(data = {}) {
-        const order = super.addNewOrder(...arguments);
-        this.addPendingOrder([order.id]);
-        return order;
-    },
     createOrderIfNeeded(data) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
             let order = this.models["pos.order"].find((order) => order.isDirectSale);
@@ -253,8 +247,6 @@ patch(PosStore.prototype, {
         return super.getDefaultSearchDetails();
     },
     async setTable(table, orderUuid = null) {
-        this.loadingOrderState = true;
-
         let currentOrder = table
             .getOrders()
             .find((order) => (orderUuid ? order.uuid === orderUuid : !order.finalized));
@@ -274,22 +266,20 @@ patch(PosStore.prototype, {
                 this.addNewOrder({ table_id: table });
             }
         }
-        try {
-            this.loadingOrderState = true;
-            const orders = await this.syncAllOrders({ throw: true });
-            const orderUuids = orders.map((order) => order.uuid);
-            for (const order of table.getOrders()) {
-                if (
-                    !orderUuids.includes(order.uuid) &&
-                    typeof order.id === "number" &&
-                    order.uiState.screen_data?.value?.name !== "TipScreen"
-                ) {
-                    order.delete();
-                }
-            }
-        } finally {
-            this.loadingOrderState = false;
-        }
+        // TODO
+        // try {
+        //     const orders = await this.syncAllOrders({ throw: true });
+        //     const orderUuids = orders.map((order) => order.uuid);
+        //     for (const order of table.getOrders()) {
+        //         if (
+        //             !orderUuids.includes(order.uuid) &&
+        //             typeof order.id === "number" &&
+        //             order.uiState.screen_data?.value?.name !== "TipScreen"
+        //         ) {
+        //             order.delete();
+        //         }
+        //     }
+        // }
     },
     editFloatingOrderName(order) {
         this.dialog.add(EditOrderNamePopup, {
@@ -374,14 +364,6 @@ patch(PosStore.prototype, {
         return this.getOpenOrders().filter((order) => order.table_id?.id === tableId);
     },
     async unsetTable() {
-        try {
-            await this.syncAllOrders();
-        } catch (e) {
-            if (!(e instanceof ConnectionLostError)) {
-                throw e;
-            }
-            Promise.reject(e);
-        }
         const order = this.getOrder();
         if (order && !order.isBooked) {
             this.removeOrder(order);
@@ -402,7 +384,6 @@ patch(PosStore.prototype, {
     },
     prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
-        this.loadingOrderState = false;
         this.alert.dismiss();
 
         if (destinationTable.id === originalTable?.id) {
@@ -415,7 +396,6 @@ patch(PosStore.prototype, {
             order.origin_table_id = originalTable?.id;
             order.table_id = destinationTable;
             this.setOrder(order);
-            this.addPendingOrder([order.id]);
             return false;
         }
         return true;
