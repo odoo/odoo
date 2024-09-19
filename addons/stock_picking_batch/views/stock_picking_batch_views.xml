@@ -45,7 +45,7 @@
             <list editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
                 <field name="tracking" column_invisible="True"/>
                 <field name="state" column_invisible="True"/>
-                <field name="company_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True" groups="base.group_multi_company"/>
                 <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="id"/>
                 <field name="picking_id" required="1" readonly="id"
                     options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
@@ -68,7 +68,7 @@
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <form string="Stock Batch Transfer">
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="show_check_availability" invisible="1"/>
                 <field name="show_allocation" invisible="1"/>
                 <field name="picking_type_code" invisible="1"/>
