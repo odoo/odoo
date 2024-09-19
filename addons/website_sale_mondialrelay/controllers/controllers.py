@@ -14,7 +14,7 @@ class MondialRelay(http.Controller):
         order = request.website.sale_get_order()
 
         if order.partner_id == request.website.user_id.sudo().partner_id:
-            raise AccessDenied('Customer of the order cannot be the public user at this step.')
+            raise AccessDenied(self.env._('Customer of the order cannot be the public user at this step.'))
 
         if order.carrier_id.country_ids:
             country_is_allowed = data['Pays'][:2].upper() in order.carrier_id.country_ids.mapped(lambda c: c.code.upper())

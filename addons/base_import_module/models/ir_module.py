@@ -532,7 +532,7 @@ def _domain_asks_for_industries(domain):
         if is_leaf(dom) and dom[0] == 'module_type':
             if dom[2] == 'industries':
                 if dom[1] != '=':
-                    raise UserError('%r is an unsupported leaf' % (dom,))
+                    raise UserError('%r is an unsupported leaf' % (dom,))  # pylint: disable=missing-gettext
                 return True
     return False
 

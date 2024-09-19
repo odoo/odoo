@@ -590,13 +590,13 @@ class BaseModel(metaclass=MetaModel):
             for model in [cls] + [self.env.registry[inherit] for inherit in cls._inherits]
         )
         if not (is_class_field or self.env['ir.model.fields']._is_manual_name(name)):
-            raise ValidationError(
+            raise ValidationError(  # pylint: disable=missing-gettext
                 f"The field `{name}` is not defined in the `{cls._name}` Python class and does not start with 'x_'"
             )
 
         # Assert the attribute to assign is a Field
         if not isinstance(field, fields.Field):
-            raise ValidationError("You can only add `fields.Field` objects to a model fields")
+            raise ValidationError("You can only add `fields.Field` objects to a model fields")  # pylint: disable=missing-gettext
 
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
@@ -5421,7 +5421,7 @@ class BaseModel(metaclass=MetaModel):
                 continue
             d_id, d_module, d_name, d_model, d_res_id, d_noupdate, r_id = row
             if self._name != d_model:
-                raise ValidationError(
+                raise ValidationError(  # pylint: disable=missing-gettext
                     f"For external id {xml_id} "
                     f"when trying to create/update a record of model {self._name} "
                     f"found record of different model {d_model} ({d_id})"

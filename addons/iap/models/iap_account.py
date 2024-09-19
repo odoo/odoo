@@ -164,7 +164,7 @@ class IapAccount(models.Model):
         if not accounts:
             service = self.env['iap.service'].search([('technical_name', '=', service_name)], limit=1)
             if not service:
-                raise UserError("No service exists with the provided technical name")
+                raise UserError(self.env._("No service exists with the provided technical name"))
             if self.is_running_test_suite():
                 # During testing, we don't want to commit the creation of a new IAP account to the database
                 return self.sudo().create({'service_id': service.id})

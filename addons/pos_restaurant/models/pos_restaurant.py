@@ -47,8 +47,12 @@ class RestaurantFloor(models.Model):
             for config in floor.pos_config_ids:
                 if config.has_active_session and (vals.get('pos_config_ids') or vals.get('active')):
                     raise UserError(
-                        'Please close and validate the following open PoS Session before modifying this floor.\n'
-                        'Open session: %s' % (' '.join(config.mapped('name')),))
+                        self.env._(
+                            "Please close and validate the following open PoS Session before modifying this floor.\n"
+                            "Open session: %(session_names)s",
+                            session_names=" ".join(config.mapped("name")),
+                        )
+                    )
             for table in floor.table_ids:
                 # Verify if table number begin by old prefix
                 if table.table_number and str(table.table_number).startswith(str(self.floor_prefix)) and vals.get('floor_prefix'):
