@@ -52,27 +52,29 @@
             <attribute name="class" separator=" " add="o_standard_address"/>
         </div>
         <div id="div_street" position="after">
-            <div id="div_street_name" t-attf-class="col-lg-8 mb-2 o_extended_address">
-                <label class="col-form-label" for="o_street_name">Street</label>
-                <input id="o_street_name" type="text" name="street_name" class="form-control" t-att-value="partner_sudo.street_name"/>
-            </div>
-            <div id="div_street_number" t-attf-class="col-lg-4 mb-2 o_extended_address">
-                <label class="col-form-label" for="o_street_number">Street Number</label>
-                <input id="o_street_number" type="text" name="street_number" class="form-control" t-att-value="partner_sudo.street_number"/>
-            </div>
-            <div class="w-100"/>
-            <div id="div_street_number2" t-attf-class="col-lg-6 mb-2 o_extended_address">
-                <label class="col-form-label" for="o_street_number2">Complement</label>
-                <input id="o_street_number2" type="text" name="street_number2" class="form-control" t-att-value="partner_sudo.street_number2"/>
-            </div>
-            <div id="div_street2" position="move"/>
+            <t t-if="res_company.account_fiscal_country_id.code == 'BR'">
+                <div id="div_street_name" t-attf-class="col-lg-8 mb-2 o_extended_address">
+                    <label class="col-form-label" for="o_street_name">Street</label>
+                    <input id="o_street_name" type="text" name="street_name" class="form-control" t-att-value="partner_sudo.street_name"/>
+                </div>
+                <div id="div_street_number" t-attf-class="col-lg-4 mb-2 o_extended_address">
+                    <label class="col-form-label" for="o_street_number">Street Number</label>
+                    <input id="o_street_number" type="text" name="street_number" class="form-control" t-att-value="partner_sudo.street_number"/>
+                </div>
+                <div class="w-100"/>
+                <div id="div_street_number2" t-attf-class="col-lg-6 mb-2 o_extended_address">
+                    <label class="col-form-label" for="o_street_number2">Complement</label>
+                    <input id="o_street_number2" type="text" name="street_number2" class="form-control" t-att-value="partner_sudo.street_number2"/>
+                </div>
+                <div id="div_street2" position="move"/>
+            </t>
         </div>
         <!-- street2 is used for neighborhood in Brazil, change the default label -->
         <label for="o_street2" position="attributes">
             <attribute name="t-attf-class" separator=" " add="col-form-label label-optional o_standard_address"/>
         </label>
         <label for="o_street2" position="after">
-            <label t-attf-class="col-form-label label-optional o_extended_address" for="o_street2">Neighborhood</label>
+            <label t-if="res_company.account_fiscal_country_id.code == 'BR'" t-attf-class="col-form-label label-optional o_extended_address" for="o_street2">Neighborhood</label>
         </label>
     </template>
 
