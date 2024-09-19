@@ -27,6 +27,7 @@ class PosSelfOrderController(http.Controller):
             del order['picking_type_id']
 
         order['name'] = order_reference
+        order['sequence_number'] = sequence_number
         order['pos_reference'] = order_reference
         order['sequence_number'] = sequence_number
         order['user_id'] = request.session.uid

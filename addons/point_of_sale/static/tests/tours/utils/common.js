@@ -57,3 +57,10 @@ export function selectButton(name) {
         run: "click",
     };
 }
+
+export function openRegister() {
+    return {
+        trigger: "button[name='open_ui']",
+        run: "click",
+    };
+}
