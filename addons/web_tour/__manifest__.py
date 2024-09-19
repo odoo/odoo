@@ -14,6 +14,7 @@ Odoo Web tours.
     'data': [
         'security/ir.model.access.csv',
         'views/tour_views.xml',
+        'views/res_users_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
