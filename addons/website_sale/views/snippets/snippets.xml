@@ -390,11 +390,10 @@
         </div>
     </xpath>
     <xpath expr="//div[@data-selector='.o_mega_menu']" position="inside">
-        <we-row string="eCommerce">
-            <div>
-                <we-button class="fetch_ecom_categories" title="Fetch Ecommerce Categories">
-                    Load Categories
-                </we-button>
+        <we-row>
+            <we-title class="o_long_title">Load eCommerce Categories</we-title>
+            <div class="o_switch">
+                <we-checkbox class="o_mega_menu" data-select-class="fetchEComCategories"/>
             </div>
         </we-row>
     </xpath>
