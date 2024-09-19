@@ -41,7 +41,7 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # mock odoofin requests
-        if '/proxy_rpc_call/v1/get_favorite_institutions' in r.url:
+        if 'proxy/v1/get_dashboard_institutions' in r.url:
             r = Response()
             r.status_code = 200
             r.json = lambda: {'result': {}}
