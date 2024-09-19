@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderTabs">
-        <ListContainer items="orders"
+        <ListContainer items="props.orders.toSorted((a, b) => a.getName().localeCompare(b.getName()))"
             onClickPlus="() => this.newFloatingOrder()"
             t-slot-scope="scope"
             class="props.class"
