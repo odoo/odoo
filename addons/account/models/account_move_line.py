@@ -3292,6 +3292,9 @@ class AccountMoveLine(models.Model):
         }
         return res
 
+    def _check_edi_line_tax_required(self):
+        return True
+
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------
