@@ -231,7 +231,7 @@ class AccountFiscalPosition(models.Model):
                 not fpos.country_group_id
                 or (partner.country_id in fpos.country_group_id.country_ids and 2)
             )),
-            ('sequence', lambda fpos: fpos.sequence or 0.1),  # do not filter out sequence=0
+            ('sequence', lambda fpos: -(fpos.sequence or 0.1)),  # do not filter out sequence=0, priority to lowest sequence in `max` method
         ]
 
     @api.model

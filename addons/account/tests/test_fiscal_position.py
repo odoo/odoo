@@ -307,3 +307,11 @@ class TestFiscalPosition(common.TransactionCase):
             'zip_from': '123',
             'zip_to': '456',
         }])
+
+    def test_get_first_fiscal_position(self):
+        fiscal_positions = self.fp.create([{
+            'name': f'fiscal_position_{sequence}',
+            'auto_apply': True,
+            'sequence': sequence
+        } for sequence in range(1, 3)])
+        self.assertEqual(self.fp._get_fiscal_position(self.env.company.partner_id), fiscal_positions[0])
