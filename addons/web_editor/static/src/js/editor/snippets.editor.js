@@ -5061,6 +5061,7 @@ class SnippetsMenu extends Component {
                     snippets: this.snippets,
                     groupSelected: groupSelected,
                     optionsSnippets: this.options.snippets,
+                    frontendDirection: this.options.direction,
                     installModule: (moduleID, snippetName) => {
                         resolve();
                         this._installModule(moduleID, snippetName);
