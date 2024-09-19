@@ -490,6 +490,15 @@ X[]
                         contentAfter: `<p>[]&nbsp;def</p>`,
                     });
                 });
+                it('should remove the contentEditable false element', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>test[]</p>\n<div contentEditable="false"><p>abc</p></div>`,
+                        stepFunction: async editor => {
+                            await deleteForward(editor);
+                        },
+                        contentAfter: `<p>test[]</p>`,
+                    });
+                });
             });
             describe('white spaces', () => {
                 describe('no intefering spaces', () => {
