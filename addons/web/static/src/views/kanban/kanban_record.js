@@ -280,6 +280,14 @@ export class KanbanRecord extends Component {
         return classes.join(" ");
     }
 
+    getMenuClasses() {
+        if (this.props.archInfo.isLegacyArch) {
+            return "o-dropdown--legacy-kanban-record-menu";
+        } else {
+            return "o-dropdown--kanban-record-menu";
+        }
+    }
+
     /**
      * @param {MouseEvent} ev
      */
@@ -350,12 +358,9 @@ export class KanbanRecord extends Component {
                 break;
             }
             default: {
-                return this.notification.add(
-                    _t("Kanban: no action for type: %(type)s", { type }),
-                    {
-                        type: "danger",
-                    }
-                );
+                return this.notification.add(_t("Kanban: no action for type: %(type)s", { type }), {
+                    type: "danger",
+                });
             }
         }
     }
