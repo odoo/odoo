@@ -538,7 +538,7 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCommon):
         }
         for create_user, organizer, expect_mail in [
             (user_root, self.users[0], True), (user_root, None, True),
-                (self.users[0], None, False), (self.users[0], self.users[1], False)]:
+                (self.users[0], None, False), (self.users[0], self.users[0], False), (self.users[0], self.users[1], False)]:
             with self.subTest(create_uid=create_user.name if create_user else None, user_id=organizer.name if organizer else None):
                 with self.mock_mail_gateway(), patch.object(MicrosoftCalendarService, 'insert') as mock_insert:
                     mock_insert.return_value = ('1', '1')
