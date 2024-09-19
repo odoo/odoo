@@ -149,6 +149,12 @@ export async function freezeOdooData(model) {
             }
         }
     }
+    if (data.pivots) {
+        data.pivots = Object.fromEntries(
+            Object.entries(data.pivots).filter(([id, def]) => def.type !== "ODOO")
+        );
+    }
+    data.lists = {};
     exportGlobalFiltersToSheet(model, data);
     return data;
 }

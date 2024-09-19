@@ -19,6 +19,7 @@ import { OdooPivot, OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/odoo_p
 const { pivotRegistry } = registries;
 
 import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
+import { createSpreadsheetWithList } from "../helpers/list";
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -269,5 +270,12 @@ test("spilled pivot table", async function () {
     expect(cells.B11.content).toBe("Probability");
     expect(cells.B12.content).toBe("131");
     expect(data.formats[cells.B12.format]).toBe("#,##0.00");
+    expect(data.pivots).toEqual({});
     expect(data.styles[cells.B12.style]).toEqual({ bold: true }, { message: "style is preserved" });
+});
+
+test("Lists are purged from the frozen data", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const data = await freezeOdooData(model);
+    expect(data.lists).toEqual({});
 });
