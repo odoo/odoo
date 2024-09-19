@@ -155,7 +155,15 @@ class SnailmailLetter(models.Model):
             paperformat = report.get_paperformat()
             if (paperformat.format == 'custom' and paperformat.page_width != 210 and paperformat.page_height != 297) or paperformat.format != 'A4':
                 raise UserError(_("Please use an A4 Paper format."))
+            # The external_report_layout_id is changed just for the snailmail pdf generation if the layout is not supported
+            prev = self.company_id.external_report_layout_id
+            if prev in {
+                self.env.ref(f'web.external_layout_{layout}')
+                for layout in ('bubble', 'wave', 'folder')
+            }:
+                self.company_id.external_report_layout_id = self.env.ref('web.external_layout_standard')
             pdf_bin, unused_filetype = self.env['ir.actions.report'].with_context(snailmail_layout=not self.cover, lang='en_US')._render_qweb_pdf(report, self.res_id)
+            self.company_id.external_report_layout_id = prev
             pdf_bin = self._overwrite_margins(pdf_bin)
             if self.cover:
                 pdf_bin = self._append_cover_page(pdf_bin)
@@ -221,7 +229,6 @@ class SnailmailLetter(models.Model):
         dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         documents = []
 
-        batch = len(self) > 1
         for letter in self:
             recipient_name = letter.partner_id.name or letter.partner_id.parent_id and letter.partner_id.parent_id.name
             if not recipient_name:
