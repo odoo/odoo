@@ -232,9 +232,9 @@ class AccountEdiXmlOIOUBL201(models.AbstractModel):
             for line in invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term').sorted('date_maturity')
         ]
 
-    def _get_tax_category_list(self, invoice, taxes):
+    def _get_tax_category_list(self, customer, supplier, taxes):
         # EXTENDS account.edi.common
-        vals_list = super()._get_tax_category_list(invoice, taxes)
+        vals_list = super()._get_tax_category_list(customer, supplier, taxes)
         for vals in vals_list:
             # TaxCategory https://www.oioubl.info/Classes/en/TaxCategory.html
             vals['id'] = UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.get(vals['id'])
