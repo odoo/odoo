@@ -2775,14 +2775,14 @@ export class Wysiwyg extends Component {
                         // new rejection with all relevant info
                         var id = uniqueId("carlos_danger_");
                         $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
-                        $('.o_editable.' + id)
-                            .removeClass(id)
-                            .popover({
-                                trigger: 'hover',
-                                content: error.data?.message || '',
-                                placement: 'auto',
-                            })
-                            .popover('show');
+                        const editableEl = document.querySelector(`.o_editable.${id}`);
+                        editableEl.classList.remove(id);
+                        const popover = Popover.getOrCreateInstance(editableEl, {
+                            trigger: "hover",
+                            content: error.data?.message || "",
+                            placement: "auto",
+                        });
+                        popover.show();
                         reject();
                     });
                 });

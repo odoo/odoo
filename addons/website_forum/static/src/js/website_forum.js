@@ -128,7 +128,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         // Initialize forum's tooltips
         this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
-        this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
+        document.querySelectorAll('[data-bs-toggle="popover"]').forEach((el) => {
+            Popover.getOrCreateInstance(el, {
+                offset: [0, 8], // Adjusting offset, format is [skidding, distance]
+            });
+        });
 
         const selectMenuWrapperEl = document.querySelector("div.js_select_menu_wrapper");
         if (selectMenuWrapperEl) {
@@ -181,13 +185,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             });
         });
 
-        this.$('.o_wforum_bio_popover').toArray().forEach((authorBox) => {
-            $(authorBox).popover({
-                trigger: 'hover',
-                offset: '10',
+        document.querySelectorAll(".o_wforum_bio_popover").forEach((authorBoxEl) => {
+            Popover.getOrCreateInstance(authorBoxEl, {
+                trigger: "hover",
+                offset: "10",
                 animation: false,
                 html: true,
-                customClass: 'o_wforum_bio_popover_container shadow-sm',
+                customClass: "o_wforum_bio_popover_container shadow-sm",
             });
         });
 

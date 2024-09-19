@@ -2025,7 +2025,8 @@ options.registry.menu_data = options.Class.extend({
       * @override
       */
     onBlur: function () {
-        this.$target.popover('hide');
+        const popover = Popover.getOrCreateInstance(this.$target[0]);
+        popover.hide();
     },
 });
 

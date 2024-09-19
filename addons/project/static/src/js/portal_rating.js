@@ -10,19 +10,19 @@ publicWidget.registry.ProjectRatingImage = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.$el.popover({
-            placement: 'bottom',
-            trigger: 'hover',
+        const el = this.el;
+        Popover.getOrCreateInstance(el, {
+            placement: "bottom",
+            trigger: "hover",
             html: true,
             content: function () {
-                var $elem = $(this);
-                var id = $elem.data('id');
-                var ratingDate = $elem.data('rating-date');
-                var baseDate = parseDate(ratingDate);
-                var duration = baseDate.toRelative();
-                var $rating = $('#rating_' + id);
-                $rating.find('.rating_timeduration').text(duration);
-                return $rating.html();
+                const id = el.dataset.id;
+                const ratingDateEl = el.dataset.ratingDate;
+                const baseDate = parseDate(ratingDateEl);
+                const duration = baseDate.toRelative();
+                const ratingEl = document.querySelector(`#rating_${id}`);
+                ratingEl.querySelector(".rating_timeduration").textContent = duration;
+                return ratingEl.innerHTML;
             },
         });
         return this._super.apply(this, arguments);

@@ -101,21 +101,21 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
     _onCopySessionLink: async function (ev) {
         ev.preventDefault();
 
-        var $clipboardBtn = this.$('.o_survey_session_copy');
-        $clipboardBtn.tooltip('dispose');
+        const clipboardBtnEl = document.querySelector(".o_survey_session_copy");
+        clipboardBtnEl.tooltip('dispose');
 
-        $clipboardBtn.popover({
-            placement: 'right',
-            container: 'body',
-            offset: '0, 3',
+        const popover = Popover.getOrCreateInstance(clipboardBtnEl, {
+            placement: "right",
+            container: "body",
+            offset: "0, 3",
             content: function () {
                 return _t("Copied!");
-            }
+            },
         });
 
         await browser.navigator.clipboard.writeText(this.target.querySelector('.o_survey_session_copy_url').textContent);
-        $clipboardBtn.popover('show');
-        setTimeout(() => $clipboardBtn.popover('dispose'), 800);
+        popover.show();
+        setTimeout(() => popover.dispose(), 800);
     },
 
     /**
