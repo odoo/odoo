@@ -90,7 +90,7 @@ class MailController(http.Controller):
                     # - Make a new access test if it succeeds, redirect to the record. Otherwise,
                     #   redirect to the messaging.
                     if not suggested_company:
-                        raise AccessError('')
+                        raise AccessError(_("There is no candidate company that has read access to the record."))
                     cids = cids + [suggested_company.id]
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access('read')
                     request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
