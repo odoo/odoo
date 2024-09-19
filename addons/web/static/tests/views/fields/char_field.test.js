@@ -50,6 +50,8 @@ class Partner extends models.Model {
     });
     product_id = fields.Many2one({ relation: "product" });
 
+    placeholder_name = fields.Char();
+
     _records = [
         {
             id: 1,
@@ -57,6 +59,7 @@ class Partner extends models.Model {
             name: "yop",
             int_field: 10,
             partner_ids: [],
+            placeholder_name: "Placeholder Name",
         },
         {
             id: 2,
@@ -833,6 +836,30 @@ test("char field with placeholder", async () => {
     });
     expect(".o_field_widget[name='name'] input").toHaveAttribute("placeholder", "Placeholder", {
         message: "placeholder attribute should be set",
+    });
+});
+
+test("Form: placeholder_field shows as placeholder", async () => {
+    Partner._records[0].name = false;
+    await mountView({
+        type: "form",
+        resModel: "res.partner",
+        resId: 1,
+        arch: `
+        <form>
+            <sheet>
+                <group>
+                    <field name="placeholder_name" invisible="1" />
+                    <field name="name" options="{'placeholder_field': 'placeholder_name'}" />
+                </group>
+            </sheet>
+        </form>`,
+    });
+    expect("input").toHaveValue("", {
+        message: "should have no value in input",
+    });
+    expect("input").toHaveAttribute("placeholder", "Placeholder Name", {
+        message: "placeholder_field should be the placeholder",
     });
 });
 

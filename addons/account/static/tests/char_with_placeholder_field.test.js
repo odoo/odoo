@@ -28,16 +28,6 @@ class Account extends models.Model {
     ];
 
     _views = {
-        form: /* xml */ `
-            <form>
-                <sheet>
-                    <group>
-                        <field name="placeholder_code" invisible="1" />
-                        <field name="code" widget="char_with_placeholder_field" options="{'placeholder_field': 'placeholder_code'}" />
-                    </group>
-                </sheet>
-            </form>
-        `,
         list: /* xml */ `
             <list editable="top" create="1" delete="1">
                 <field name="placeholder_code" column_invisible="1" />
@@ -49,18 +39,6 @@ class Account extends models.Model {
 
 defineAccountModels();
 defineModels([Account]);
-
-test("Form: placeholder_field shows as placeholder", async () => {
-    await mountView({ type: "form", resModel: "account.account", resId: 1 });
-
-    expect("input").toHaveValue("", {
-        message: "should have no value in input",
-    });
-    expect("input").toHaveAttribute("placeholder", "Placeholder Code", {
-        message: "placeholder_field should be the placeholder",
-    });
-});
-
 test.tags("desktop")("List: placeholder_field shows as text/placeholder", async () => {
     await mountView({
         type: "list",
