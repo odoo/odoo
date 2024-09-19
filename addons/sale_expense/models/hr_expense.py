@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
@@ -12,6 +11,7 @@ class Expense(models.Model):
         # context key. So, this domain is not the one applied.
         domain="[('state', '=', 'sale'), ('company_id', '=', company_id)]",
         help="If the category has an expense policy, it will be reinvoiced on this sales order")
+    sale_order_line_id = fields.Many2one('sale.order.line', string='Sale Order Line', readonly=True)
     can_be_reinvoiced = fields.Boolean("Can be reinvoiced", compute='_compute_can_be_reinvoiced')
 
     @api.depends('product_id.expense_policy')
@@ -23,6 +23,7 @@ class Expense(models.Model):
     def _compute_sale_order_id(self):
         for expense in self.filtered(lambda e: not e.can_be_reinvoiced):
             expense.sale_order_id = False
+            expense.sale_order_line_id = False
 
     @api.onchange('sale_order_id')
     def _onchange_sale_order_id(self):
@@ -31,7 +32,8 @@ class Expense(models.Model):
         self.env.add_to_compute(self._fields['analytic_distribution'], to_reset)
 
     def _get_split_values(self):
-        vals = super(Expense, self)._get_split_values()
+        # EXTENDS hr_expense
+        vals = super()._get_split_values()
         for split_value in vals:
             split_value['sale_order_id'] = self.sale_order_id.id
         return vals
