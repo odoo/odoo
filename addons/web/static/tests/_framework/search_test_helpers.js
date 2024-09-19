@@ -13,7 +13,7 @@ const ensureSearchView = async () => {
         queryAll`.o_control_panel_navigation`.length &&
         !queryAll`.o_searchview`.length
     ) {
-        await contains(`.o_control_panel_navigation button`).click();
+        await contains(`.o_control_panel_navigation .fa-search`).click();
     }
 };
 
