@@ -12,7 +12,6 @@ export class DocumentFileUploader extends Component {
     static props = {
         ...standardWidgetProps,
         record: { type: Object, optional: true },
-        divClass: { type: String, optional: true },
         slots: { type: Object, optional: true },
         resModel: { type: String, optional: true },
     };
@@ -69,9 +68,5 @@ export class DocumentFileUploader extends Component {
             action.help = markup(action.help);
         }
         this.action.doAction(action);
-    }
-
-    get divClass() {
-        return this.props.divClass || (this.props.record && this.props.record.data ? `oe_kanban_color_${this.props.record.data.color}` : '');
     }
 }

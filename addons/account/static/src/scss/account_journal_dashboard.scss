@@ -1,8 +1,11 @@
-.o_kanban_dashboard.o_account_kanban .o_kanban_renderer {
+.o_account_kanban .o_kanban_renderer {
+    --KanbanRecord-padding-v: #{$o-kanban-dashboard-vpadding};
+    --KanbanRecord-padding-h: #{$o-kanban-dashboard-hpadding};
+
     .o_kanban_record {
 
-        > div:not(.o_dropdown_kanban) {
-            padding: 10px 16px;
+        &:not(.o_kanban_ghost) {
+            min-height: 150px;
         }
 
         @include media-breakpoint-up(sm) {
@@ -11,13 +14,6 @@
             }
         }
 
-        .o_kanban_card_settings {
-            padding-top: $o-horizontal-padding/2;
-            padding-bottom: $o-horizontal-padding/2;
-
-            border-top: 1px solid;
-            border-color: $o-brand-lightsecondary;
-        }
         .o_dashboard_star {
             font-size: 12px;
 
