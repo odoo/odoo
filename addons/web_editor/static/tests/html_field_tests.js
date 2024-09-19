@@ -743,7 +743,6 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
 
         // Paste image.
         const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
-
         // Test environment replaces 'src' by 'data-src'.
         assert.ok(/^data:image\/png;base64,/.test(img.dataset['src']));
         assert.ok(img.classList.contains('o_b64_image_to_save'));
@@ -754,6 +753,72 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await htmlField.commitChanges();
         assert.equal(img.dataset['src'], '/test_image_url.png?access_token=1234');
         assert.ok(!img.classList.contains('o_b64_image_to_save'));
+    });
+
+    QUnit.test("Pasted/dropped images are saved and content not transfered to next record", async (assert) => {
+        serverData.models.partner.records = [
+            { id: 1, txt: "<p class='image_target'>first</p>" },
+            { id: 2, txt: "<p>second</p>" },
+        ];
+
+        // Patch to get a promise to get the htmlField component instance when
+        // the wysiwyg is instancied.
+        const htmlFieldPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await super.startWysiwyg(...arguments);
+                await nextTick();
+                htmlFieldPromise.resolve(this);
+            }
+        });
+
+        const mockRPC = async function (route, args) {
+            if (route === '/web_editor/attachment/add_data') {
+                return {
+                    image_src: '/test_image_url.png',
+                    access_token: '1234',
+                    public: false,
+                }
+            }
+            if (route.includes("web_save")){
+                // reading next record
+                return [{ id: 2, txt: "<p>second</p>" }];
+            }
+        };
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html_legacy"/>
+                </form>`,
+            mockRPC: mockRPC,
+        });
+        // Let the htmlField be mounted and recover the Component instance.
+        const htmlField = await htmlFieldPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+
+        const paragraph = editor.editable.querySelector(".image_target");
+        Wysiwyg.setRange(paragraph);
+
+        // Paste image.
+        const img = await pasteImage(editor, "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII");
+        // Restore 'src' attribute so that SavePendingImages can do its job.
+        img.src = img.dataset['src'];
+
+        const blurEvent = new Event('blur', {
+            bubbles: true,
+            cancelable: true
+        });
+        target.querySelector(".odoo-editor-editable").dispatchEvent(blurEvent);
+
+        await click(target.querySelector(".o_pager_next"));
+        await nextTick();
+        assert.containsOnce(target, ".odoo-editor-editable p:contains('second')");
     });
 
     QUnit.module('Odoo fields synchronisation');
