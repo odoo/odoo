@@ -91,6 +91,7 @@ export class Store extends BaseStore {
      * @type {string[]}
      */
     channel_types_with_seen_infos = [];
+    emoji_picker_mobile = false;
     /** This is the current logged partner / guest */
     self = Record.one("Persona");
     /**

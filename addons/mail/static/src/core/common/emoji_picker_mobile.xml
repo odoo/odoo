@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-if="store.emoji_picker_mobile?.isVisible" t-name="mail.EmojiPickerMobile" t-inherit="web.EmojiPicker">
+        <xpath expr="//div[hasclass('o-EmojiPicker')]" position="attributes">
+            <attribute name="class" add="o-EmojiPickerMobile" separator=" "/>
+            <attribute name="class" remove="o-EmojiPicker" separator=" "/>
+            <attribute name="t-ref">emojipickermobile</attribute>
+        </xpath>
+    </t>
+</templates>

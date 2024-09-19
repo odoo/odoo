@@ -33,6 +33,13 @@ const composerPatch = {
     get hasGifPickerButton() {
         return this.hasGifPicker && !this.ui.isSmall && !this.env.inChatWindow;
     },
+    get isGifPickerActive() {
+        if (this.picker) {
+            return this.picker?.state.picker === this.picker?.PICKERS.GIF && this.ui.isSmall;
+        } else {
+            return false;
+        }
+    },
     onClickAddGif(ev) {
         markEventHandled(ev, "Composer.onClickAddGif");
     },

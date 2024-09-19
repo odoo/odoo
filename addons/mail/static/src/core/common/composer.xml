@@ -74,7 +74,7 @@
                         }"
                     >
                         <div class="d-flex flex-grow-1 align-items-baseline" t-att-class="{ 'mt-1': !props.composer.message }" t-ref="main-actions">
-                            <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button>
+                            <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': isEmojiPickerActive }" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button>
                             <FileUploader t-if="allowUpload" multiUpload="true" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                                 <t t-set-slot="toggler">
                                     <button t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn border-0 rounded-pill p-1" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-fw fa-paperclip"/></button>
@@ -98,7 +98,7 @@
                     attachments="props.composer.attachments"
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"
                     imagesHeight="50"/>
-                <Picker t-props="picker"/>
+                <Picker t-if="picker" t-props="picker"/>
             </div>
         </div>
         <span t-if="props.composer.message" class="text-muted px-1" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>

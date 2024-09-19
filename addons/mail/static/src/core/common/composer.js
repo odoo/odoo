@@ -30,6 +30,7 @@ import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { useEmojiPickerMobile } from "./emoji_picker_mobile";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -99,6 +100,13 @@ export class Composer extends Component {
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
         this.emojiButton = useRef("emoji-button");
+        if (!this.ui.isSmall || !this.env.inChatter) {
+            this.picker = usePicker(this.pickerSettings);
+        } else {
+            useEmojiPickerMobile(this.emojiButton, {
+                onSelect: (emoji) => this.addEmoji(emoji),
+            });
+        }
         this.state = useState({
             active: true,
         });
@@ -139,7 +147,6 @@ export class Composer extends Component {
         useChildSubEnv({
             inComposer: true,
         });
-        this.picker = usePicker(this.pickerSettings);
         useEffect(
             (focus) => {
                 if (focus && this.ref.el) {
@@ -270,6 +277,14 @@ export class Composer extends Component {
                     close_save: "</a>",
                 })
             );
+        }
+    }
+
+    get isEmojiPickerActive() {
+        if (this.picker) {
+            return this.picker.state.picker === this.picker.PICKERS.EMOJI;
+        } else {
+            return false;
         }
     }
 
