@@ -34,6 +34,7 @@
         'web.assets_backend': [
             'mrp_subcontracting/static/src/components/**/*',
             'mrp_subcontracting/static/src/views/**/*',
+            'mrp_subcontracting/static/src/subcontracting_portal/move_list_view.js',
         ],
         'web.assets_frontend': [
             'mrp_subcontracting/static/src/scss/subcontracting_portal.scss',
