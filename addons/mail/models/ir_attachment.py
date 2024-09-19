@@ -76,6 +76,11 @@ class IrAttachment(models.Model):
     def _attachment_format(self):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'
         return [{
+            'author': {
+                'id': attachment.create_uid.id,
+                'name': attachment.create_uid.name,
+                'partnerId': attachment.create_uid.partner_id.id,
+            },
             'checksum': attachment.checksum,
             'create_date': attachment.create_date,
             'id': attachment.id,

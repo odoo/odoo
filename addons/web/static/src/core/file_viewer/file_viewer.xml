@@ -21,6 +21,12 @@
                             <span>Download</span>
                         </a>
                     </div>
+                    <div t-if="this.state.file.isDeletable" class="o-mail-AttachmentViewer-delete 0-mail-AttachmentViewer-headerButton d-flex align-items-center px-3 cursor-pointer">
+                        <a class="text-reset" t-on-click="() => this.onDeleteAttachment()">
+                            <i class="fa fa-trash fa-fw" role="img"/>
+                            <span>Delete</span>
+                        </a>
+                    </div>
 
                     <div t-on-click.stop="close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
                         <i class="fa fa-fw fa-times" role="img"/>
