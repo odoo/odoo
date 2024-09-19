@@ -15,7 +15,7 @@
 
     <t t-name="web.KanbanRecordMenu">
         <div t-if="showMenu" class="o_dropdown_kanban bg-transparent position-absolute end-0 top-0 w-auto">
-            <Dropdown menuClass="'o-dropdown--kanban-record-menu'" position="'bottom-end'">
+            <Dropdown menuClass="getMenuClasses()" position="'bottom-end'">
                 <button class="btn o-no-caret rounded-0" title="Dropdown menu">
                     <span class="fa fa-ellipsis-v"/>
                 </button>
