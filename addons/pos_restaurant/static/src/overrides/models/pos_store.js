@@ -325,6 +325,7 @@ patch(PosStore.prototype, {
         if (!this.tableHasOrders(destinationTable)) {
             order.update({ table_id: destinationTable });
             this.set_order(order);
+            this.addPendingOrder([order.id]);
         } else {
             const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
             for (const orphanLine of order.lines) {
@@ -338,9 +339,9 @@ patch(PosStore.prototype, {
                 }
             }
             this.set_order(destinationOrder);
+            this.addPendingOrder([destinationOrder.id]);
             await this.deleteOrders([order]);
         }
-        this.addPendingOrder([order.id]);
         await this.setTable(destinationTable);
     },
     updateTables(...tables) {
