@@ -1,3 +1,4 @@
+import { onChange } from "@mail/utils/common/misc";
 import { reactive, toRaw } from "@odoo/owl";
 import { uuidv4 } from "@point_of_sale/utils";
 
@@ -302,7 +303,7 @@ export class Base {
     }
 }
 
-export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
+export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}, callback = () => {}) {
     const indexes = opts.databaseIndex || {};
     const database = opts.databaseTable || {};
     const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
@@ -446,6 +447,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         const Model = modelClasses[model] || Base;
         const record = reactive(new Model({ models, records, model: models[model] }));
         const id = vals["id"];
+        Object.keys(vals).forEach((key) => {
+            onChange(record, key, () => {
+                callback(record, key);
+            });
+        });
+
         record.id = id;
         if (!vals.uuid && database[model]?.key === "uuid") {
             record.uuid = uuidv4();

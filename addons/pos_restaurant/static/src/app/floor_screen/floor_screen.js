@@ -153,9 +153,7 @@ export class FloorScreen extends Component {
                 table.position_h = table.getX();
                 table.position_v = table.getY();
                 if (table.parent_id) {
-                    this.pos.data.write("restaurant.table", [table.id], {
-                        parent_id: null,
-                    });
+                    table.update({ parent_id: null });
                 }
             },
             onWillStartDrag: ({ element, x, y }) => {
@@ -216,7 +214,7 @@ export class FloorScreen extends Component {
                 this.alert.dismiss();
                 const table = this.getPosTable(element);
                 if (this.pos.isEditMode) {
-                    this.pos.data.write("restaurant.table", [table.id], {
+                    table.update({
                         position_h: table.position_h,
                         position_v: table.position_v,
                     });
@@ -232,9 +230,7 @@ export class FloorScreen extends Component {
                 if (oToTrans) {
                     this.pos.transferOrder(oToTrans.uuid, this.state.potentialLink.parent);
                 }
-                this.pos.data.write("restaurant.table", [table.id], {
-                    parent_id: this.state.potentialLink.parent.id,
-                });
+                table.update({ parent_id: this.state.potentialLink.parent.id });
                 this.state.potentialLink = null;
             },
         });
@@ -315,11 +311,7 @@ export class FloorScreen extends Component {
             },
             onDrop: (ctx) => {
                 const table = this.getPosTable(ctx.element.parentElement);
-                this.pos.data.write(
-                    "restaurant.table",
-                    [table.id],
-                    pick(table, "position_h", "position_v", "width", "height")
-                );
+                table.update(pick(table, "position_h", "position_v", "width", "height"));
             },
         });
     }
@@ -379,16 +371,7 @@ export class FloorScreen extends Component {
             ? -12 + Math.min(table.width / 2, table.height / 2) * 0.2929
             : -12;
     }
-    onClickFloorMap(ev) {
-        if (ev.target.closest(".table")) {
-            return;
-        }
-        for (const tableId of this.state.selectedTableIds) {
-            const table = this.pos.models["restaurant.table"].get(tableId);
-            this.pos.data.write("restaurant.table", [tableId], {
-                ...table.serialize({ orm: true }),
-            });
-        }
+    onClickFloorMap() {
         this.state.selectedTableIds = [];
     }
     _computePinchHypo(ev, callbackFunction) {
@@ -537,8 +520,7 @@ export class FloorScreen extends Component {
     }
     async createTableFromRaw(newTableData) {
         newTableData.active = true;
-        const table = await this.pos.data.create("restaurant.table", [newTableData]);
-        return table[0];
+        return this.pos.models.create("restaurant.table", { newTableData });
     }
     _getNewTableNumber() {
         let firstNum = 1;
@@ -619,11 +601,6 @@ export class FloorScreen extends Component {
         }
     }
     unselectTables() {
-        if (this.selectedTables.length) {
-            for (const table of this.selectedTables) {
-                this.pos.data.write("restaurant.table", [table.id], table.serialize({ orm: true }));
-            }
-        }
         this.state.selectedTableIds = [];
     }
     closeEditMode() {
@@ -635,17 +612,11 @@ export class FloorScreen extends Component {
             title: _t("New Floor"),
             placeholder: _t("Floor name"),
             getPayload: async (newName) => {
-                const floor = await this.pos.data.create(
-                    "restaurant.floor",
-                    [
-                        {
-                            name: newName,
-                            background_color: "#FFFFFF",
-                            pos_config_ids: [this.pos.config.id],
-                        },
-                    ],
-                    false
-                );
+                const floor = this.pos.models["restaurant.floor"].create({
+                    name: newName,
+                    background_color: "#FFFFFF",
+                    pos_config_ids: [this.pos.config.id],
+                });
 
                 this.selectFloor(floor[0]);
                 this.pos.isEditMode = true;
@@ -663,13 +634,11 @@ export class FloorScreen extends Component {
         const floor = this.activeFloor;
         const tables = this.activeFloor.table_ids;
         const newFloorName = floor.name + " (copy)";
-        const copyFloor = await this.pos.data.create("restaurant.floor", [
-            {
-                name: newFloorName,
-                background_color: "#ACADAD",
-                pos_config_ids: [this.pos.config.id],
-            },
-        ]);
+        const copyFloor = this.pos.models["restaurant.floor"].create({
+            name: newFloorName,
+            background_color: "#ACADAD",
+            pos_config_ids: [this.pos.config.id],
+        });
 
         this.selectFloor(copyFloor[0]);
         this.pos.isEditMode = true;
@@ -697,10 +666,7 @@ export class FloorScreen extends Component {
             title: _t("Floor Name ?"),
             getPayload: (newName) => {
                 if (newName !== this.activeFloor.name) {
-                    this.activeFloor.name = newName;
-                    this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                        name: newName,
-                    });
+                    this.activeFloor.update({ name: newName });
                 }
             },
         });
@@ -718,9 +684,7 @@ export class FloorScreen extends Component {
                 isValid: (x) => x,
                 getPayload: (newNumber) => {
                     if (parseInt(newNumber) !== this.selectedTables[0].table_number) {
-                        this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
-                            table_number: parseInt(newNumber),
-                        });
+                        this.selectedTables[0].update({ table_number: parseInt(newNumber) });
                     }
                 },
             });
@@ -731,9 +695,7 @@ export class FloorScreen extends Component {
                 getPayload: (newName) => {
                     if (newName !== this.activeFloor.name) {
                         this.activeFloor.name = newName;
-                        this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                            name: newName,
-                        });
+                        this.activeFloor.update({ name: newName });
                     }
                 },
             });
@@ -750,9 +712,7 @@ export class FloorScreen extends Component {
                 const newSeatsNum = parseInt(num, 10);
                 selectedTables.forEach((selectedTable) => {
                     if (newSeatsNum !== selectedTable.seats) {
-                        this.pos.data.write("restaurant.table", [selectedTable.id], {
-                            seats: newSeatsNum,
-                        });
+                        selectedTable.update({ seats: newSeatsNum });
                     }
                 });
             },
@@ -760,22 +720,18 @@ export class FloorScreen extends Component {
     }
     changeShape(form) {
         for (const table of this.selectedTables) {
-            this.pos.data.write("restaurant.table", [table.id], { shape: form });
+            table.update({ shape: form });
         }
     }
 
     setFloorColor(color) {
-        this.activeFloor.background_color = color;
-        this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-            background_color: color,
-            floor_background_image: false,
-        });
+        this.activeFloor.update({ background_color: color, floor_background_image: false });
     }
 
     setTableColor(color) {
         if (this.selectedTables.length > 0) {
             for (const table of this.selectedTables) {
-                this.pos.data.write("restaurant.table", [table.id], { color: color });
+                table.update({ color });
             }
         }
     }
@@ -875,10 +831,9 @@ export class FloorScreen extends Component {
                             this.pos.removeOrder(order, false);
                         }
                     }
-                    const records = this.pos.data.write("restaurant.table", [id], {
-                        active: false,
-                    });
-                    records[0].delete();
+                    this.pos.models["restaurant.table"].get(id).update({ active: false });
+                    // TODO: is this removal ok ?
+                    // records[0].delete();
                 }
             }
         } catch {
