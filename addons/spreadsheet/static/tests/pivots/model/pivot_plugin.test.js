@@ -815,37 +815,6 @@ test("pivot formula for total should return empty string instead of 'FALSE' when
     expect(getEvaluatedCell(model, "A2").value).toBe(10);
 });
 
-test("can import/export sorted pivot", async () => {
-    const spreadsheetData = {
-        pivots: {
-            1: {
-                type: "ODOO",
-                columns: [{ fieldName: "foo" }],
-                domain: [],
-                measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
-                model: "partner",
-                rows: [{ fieldName: "bar" }],
-                sortedColumn: {
-                    measure: "probability",
-                    order: "asc",
-                    groupId: [[], [1]],
-                },
-                name: "A pivot",
-                context: {},
-                fieldMatching: {},
-                formulaId: "1",
-            },
-        },
-    };
-    const model = await createModelWithDataSource({ spreadsheetData });
-    expect(model.getters.getPivotCoreDefinition(1).sortedColumn).toEqual({
-        measure: "probability",
-        order: "asc",
-        groupId: [[], [1]],
-    });
-    expect(model.exportData().pivots).toEqual(spreadsheetData.pivots);
-});
-
 test("can import (export) contextual domain", async () => {
     const uid = user.userId;
     const spreadsheetData = {

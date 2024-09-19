@@ -84,6 +84,11 @@ export class OdooPivotModel extends PivotModel {
         this.resetTableStructure();
     }
 
+    updateSortColumn(sortedColumn) {
+        this.definition.sortedColumn = sortedColumn;
+        this.resetTableStructure();
+    }
+
     getDefinition() {
         return this.definition;
     }
@@ -400,22 +405,22 @@ export class OdooPivotModel extends PivotModel {
      */
     _parsePivotFormulaWithPosition(dimensionWithGranularity, groupValueString, cols, rows) {
         const position = toNumber(groupValueString, DEFAULT_LOCALE) - 1;
+        const table = this.getTableStructure();
         let tree;
         if (this._isCol(dimensionWithGranularity)) {
-            tree = this.data.colGroupTree;
+            tree = table.getColTree();
             for (const col of cols) {
-                tree = tree && tree.directSubTrees.get(col);
+                tree = tree && tree.find((child) => child.value === col)?.children;
             }
         } else {
-            tree = this.data.rowGroupTree;
+            tree = table.getRowTree();
             for (const row of rows) {
-                tree = tree && tree.directSubTrees.get(row);
+                tree = tree && tree.find((child) => child.value === row)?.children;
             }
         }
         if (tree) {
-            const treeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
-            const sortedKey = treeKeys[position];
-            return sortedKey !== undefined ? sortedKey : NO_RECORD_AT_THIS_POSITION;
+            const value = tree[position]?.value;
+            return value !== undefined ? value : NO_RECORD_AT_THIS_POSITION;
         }
         return NO_RECORD_AT_THIS_POSITION;
     }

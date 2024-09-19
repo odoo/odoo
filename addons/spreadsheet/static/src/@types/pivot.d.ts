@@ -5,18 +5,11 @@ import { ServerData } from "@spreadsheet/data_sources/server_data";
 import { Pivot, CommonPivotCoreDefinition, PivotCoreDefinition } from "@odoo/o-spreadsheet";
 
 declare module "@spreadsheet" {
-    interface SortedColumn {
-        groupId: number;
-        measure: string;
-        order: string;
-    }
-
     export interface OdooPivotCoreDefinition extends CommonPivotCoreDefinition {
         type: "ODOO";
         model: string;
         domain: Array;
         context: Object;
-        sortedColumn: SortedColumn | null;
         actionXmlId: string;
     }
 
@@ -49,7 +42,6 @@ declare module "@spreadsheet" {
         resModel: string;
         fields?: Record<string, Field | undefined>;
         modelLabel?: string;
-        sortedColumn: SortedColumn | null;
         fieldAttrs: any;
     }
 

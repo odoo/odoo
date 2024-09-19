@@ -3,7 +3,7 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { corePluginRegistry, migrationStepRegistry } = spreadsheet.registries;
 
-export const ODOO_VERSION = 12;
+export const ODOO_VERSION = 13;
 
 const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
@@ -26,6 +26,16 @@ migrationStepRegistry.add("odoo_migration", {
     versionFrom: "16.1",
     migrate(data) {
         return migrateOdooData(data);
+    },
+});
+migrationStepRegistry.add("odoo_migration_sorted_column", {
+    versionFrom: "24.1",
+    migrate(data) {
+        const version = data.odooVersion || 0;
+        if (version < 13) {
+            data = migrate12to13(data);
+        }
+        return data;
     },
 });
 
@@ -371,6 +381,31 @@ function migrate11to12(data) {
                     }
                 }
             }
+        }
+    }
+    return data;
+}
+
+/**
+ * Change pivot sortedColumn of the odoo's pivot model to the sortedColumn of o-spreadsheet
+ */
+function migrate12to13(data) {
+    if (data.pivots) {
+        for (const pivot of Object.values(data.pivots)) {
+            if (!pivot.sortedColumn) {
+                continue;
+            }
+            // We're missing some information to convert the sortedColumn (fieldType), so we'll drop the sorted columns
+            // that are not on the total column
+            if (pivot.sortedColumn.groupId[1]?.length) {
+                pivot.sortedColumn = undefined;
+                continue;
+            }
+            pivot.sortedColumn = {
+                measure: pivot.sortedColumn.measure,
+                order: pivot.sortedColumn.order,
+                domain: [],
+            };
         }
     }
     return data;
