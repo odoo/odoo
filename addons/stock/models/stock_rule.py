@@ -48,9 +48,9 @@ class StockRule(models.Model):
         'Active', default=True,
         help="If unchecked, it will allow you to hide the rule without removing it.")
     group_propagation_option = fields.Selection([
-        ('none', 'Leave Empty'),
+        ('none', 'Create New'),
         ('propagate', 'Propagate'),
-        ('fixed', 'Fixed')], string="Propagation of Procurement Group", default='propagate')
+        ('fixed', 'Fixed')], string="Propagation of Procurement Group", default='propagate', required=True)
     group_id = fields.Many2one('procurement.group', 'Fixed Procurement Group')
     action = fields.Selection(
         selection=[('pull', 'Pull From'), ('push', 'Push To'), ('pull_push', 'Pull & Push')], string='Action',
