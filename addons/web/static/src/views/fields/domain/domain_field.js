@@ -9,7 +9,7 @@ import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { standardFieldProps } from "../standard_field_props";
 import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
-import { useGetTreeDescription } from "@web/core/tree_editor/utils";
+import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
 import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
 import { treeFromDomain } from "@web/core/tree_editor/condition_tree";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -34,6 +34,7 @@ export class DomainField extends Component {
     setup() {
         this.orm = useService("orm");
         this.getDomainTreeDescription = useGetTreeDescription();
+        this.makeGetFieldDef = useMakeGetFieldDef();
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         this.addDialog = useOwnedDialogs();
 
@@ -139,7 +140,8 @@ export class DomainField extends Component {
         let promises = [];
         const domain = this.getDomain(props);
         try {
-            const tree = treeFromDomain(domain, { distributeNot: !this.env.debug });
+            const getFieldDef = await this.makeGetFieldDef(resModel, treeFromDomain(domain));
+            const tree = treeFromDomain(domain, { distributeNot: !this.env.debug, getFieldDef });
             const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
             promises = trees.map((tree) => this.getDomainTreeDescription(resModel, tree));
         } catch (error) {

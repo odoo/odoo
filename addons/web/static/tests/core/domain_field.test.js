@@ -1000,3 +1000,26 @@ test("folded domain field with any operator", async function () {
     });
     expect(`.o_field_domain .o_facet_values`).toHaveText("Company matches ( Id = 1 )");
 });
+
+test("folded domain field with withinh operator", async function () {
+    Partner._fields.company_id = fields.Many2one({ relation: "partner" });
+    Partner._records[0].foo = `[
+        "&",
+        ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
+        ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(months = 2), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
+    ]`;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="foo" widget="domain" options="{'model': 'partner', 'foldable': true}" />
+                    </group>
+                </sheet>
+            </form>`,
+    });
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Datetime is within 2 months");
+});
