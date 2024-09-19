@@ -203,6 +203,10 @@ export class ListRenderer extends Component {
         this.isRTL = localization.direction === "rtl";
     }
 
+    get shouldAddOnFocus() {
+        return !!this.props.editable && this.props.addOnFocus;
+    }
+
     displaySaveNotification() {
         this.notificationService.add(this.env._t('Please click on the "save" button first'), {
             type: "danger",
@@ -1887,6 +1891,7 @@ ListRenderer.props = [
     "archInfo",
     "openRecord",
     "onAdd?",
+    "addOnFocus?",
     "cycleOnTab?",
     "allowSelectors?",
     "editable?",
@@ -1895,6 +1900,6 @@ ListRenderer.props = [
     "readonly?",
     "onOptionalFieldsChanged?",
 ];
-ListRenderer.defaultProps = { hasSelectors: false, cycleOnTab: true };
+ListRenderer.defaultProps = { hasSelectors: false, cycleOnTab: true, addOnFocus: false };
 
 ListRenderer.LONG_TOUCH_THRESHOLD = 400;

@@ -187,6 +187,7 @@ export class X2ManyField extends Component {
         props.editable = !this.props.readonly && editable;
         props.readonly = this.props.readonly;
         props.nestedKeyOptionalFieldsData = this.nestedKeyOptionalFieldsData;
+        props.addOnFocus = true;
         props.onAdd = (params) => {
             params.editable =
                 !this.props.readonly && ("editable" in params ? params.editable : editable);

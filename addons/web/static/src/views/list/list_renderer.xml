@@ -5,7 +5,8 @@
         <div
             class="o_list_renderer o_renderer table-responsive"
             t-attf-class="{{ props.archInfo.className or '' }}"
-            tabindex="-1"
+            t-att-tabindex="this.shouldAddOnFocus ? 0 : -1"
+            t-on-focus="() => this.shouldAddOnFocus and this.add({})"
             t-ref="root"
         >
             <t t-if="showNoContentHelper" t-call="web.ActionHelper">
