@@ -7,6 +7,7 @@ var utils = require('web.utils');
 var ajax = require('web.ajax');
 var session = require('web.session');
 var _t = core._t;
+const { isBrowserFirefox, isIOS, isMacOS } = require('@web/core/browser/feature_detection');
 
 var VariantMixin = {
     events: {
@@ -388,7 +389,8 @@ var VariantMixin = {
         }
         $parent
             .find('option, input, label, .o_variant_pills')
-            .removeClass('css_not_available')
+            .removeClass('css_not_available disabled')
+            .prop('disabled', false)
             .attr('title', function () { return $(this).data('value_name') || ''; })
             .data('excluded-by', '');
 
@@ -524,6 +526,11 @@ var VariantMixin = {
 
             $target.attr('title', _.str.sprintf(_t('Not available with %s'), excludedByData.join(', ')));
             $target.data('excluded-by', JSON.stringify(excludedByData));
+        }
+        // only Chromium-based browsers on a non-Apple OS support CSS styling of `<option>`
+        // so elsewhere, use the `disabled` prop to indicate unavailability
+        if ($input.is('option') && (isBrowserFirefox() || isIOS() || isMacOS())) {
+            $input.addClass('disabled').prop('disabled', true);
         }
     },
     /**
