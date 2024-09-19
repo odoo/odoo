@@ -121,15 +121,16 @@ class CalendarRecurrence(models.Model):
     until = fields.Date('Repeat Until')
     trigger_id = fields.Many2one('ir.cron.trigger')
 
-    _sql_constraints = [
-        ('month_day',
-         "CHECK (rrule_type != 'monthly' "
-                "OR month_by != 'day' "
-                "OR day >= 1 AND day <= 31 "
-                "OR weekday in %s AND byday in %s)"
-                % (tuple(wd[0] for wd in WEEKDAY_SELECTION), tuple(bd[0] for bd in BYDAY_SELECTION)),
-         "The day must be between 1 and 31"),
-    ]
+    _month_day = models.Constraint("""CHECK (
+        rrule_type != 'monthly'
+        OR month_by != 'day'
+        OR day >= 1 AND day <= 31
+        OR weekday IN %s AND byday IN %s)""" % (
+            tuple(wd[0] for wd in WEEKDAY_SELECTION),
+            tuple(bd[0] for bd in BYDAY_SELECTION),
+        ),
+        "The day must be between 1 and 31",
+    )
 
     def _get_daily_recurrence_name(self):
         if self.end_type == 'count':

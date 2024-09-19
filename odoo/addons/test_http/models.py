@@ -24,9 +24,10 @@ class Test_HttpStargate(models.Model):
     availability = fields.Float(default=0.99, aggregator="avg")
     last_use_date = fields.Date()
 
-    _sql_constraints = [
-        ('address_length', 'CHECK(LENGTH(address) = 6)', "Local addresses have 6 glyphs"),
-    ]
+    _address_length = models.Constraint(
+        'CHECK(LENGTH(address) = 6)',
+        "Local addresses have 6 glyphs",
+    )
 
     @api.depends('galaxy_id')
     def _compute_has_galaxy_crystal(self):
