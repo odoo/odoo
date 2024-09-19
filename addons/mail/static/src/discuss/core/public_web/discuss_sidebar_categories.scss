@@ -33,9 +33,15 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 .o-mail-DiscussSidebar-item {
     &:hover .o-mail-DiscussSidebarChannel-commands {
         display: flex !important;
-        .btn-group .btn:not(:hover) {
-            border-color: transparent;
-            background-color: transparent;
+        .btn-group .btn {
+            &:hover {
+                border-color: rgba($o-action, .25);
+                background-color: $o-view-background-color !important;
+            }
+            &:not(:hover) {
+                border-color: transparent;
+                background-color: transparent;
+            }
         }
     }
 }
