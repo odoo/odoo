@@ -486,7 +486,7 @@ class HrContract(models.Model):
         return ['resource_calendar_id', 'work_entry_source']
 
     @api.model
-    def _cron_generate_missing_work_entries(self):
+    def _cron_generate_missing_work_entries(self, batch_size=100):
         # retrieve contracts for the current month
         today = fields.Date.today()
         start = datetime.combine(today + relativedelta(day=1), time.min)
@@ -499,22 +499,20 @@ class HrContract(models.Model):
             (not c.last_generation_date or c.last_generation_date < today))
         if not contracts_todo:
             return
-        countract_todo_count = len(contracts_todo)
         # Filter contracts by company, work entries generation is not supposed to be called on
         # contracts from differents companies, as we will retrieve the resource.calendar.leave
         # and we don't want to mix everything up. The other contracts will be treated when the
         # cron is re-triggered
         contracts_todo = contracts_todo.filtered(lambda c: c.company_id == contracts_todo[0].company_id)
+        contract_todo_count = len(contracts_todo)
         # generate a batch of work entries
-        BATCH_SIZE = 100
         # Since attendance based are more volatile for their work entries generation
         # it can happen that the date_generated_from and date_generated_to fields are not
         # pushed to start and stop
         # It is more interesting for batching to process statically generated work entries first
         # since we get benefits from having multiple contracts on the same calendar
         contracts_todo = contracts_todo.sorted(key=lambda c: 1 if c.has_static_work_entries() else 100)
-        contracts_todo = contracts_todo[:BATCH_SIZE].generate_work_entries(
-            start.date(), stop.date(), False)
-        # if necessary, retrigger the cron to generate more work entries
-        if countract_todo_count > BATCH_SIZE:
-            self.env.ref('hr_work_entry_contract.ir_cron_generate_missing_work_entries')._trigger()
+        contracts_todo[:batch_size].generate_work_entries(start.date(), stop.date(), False)
+        # if necessary, re-trigger the cron to generate more work entries
+        done = min(contract_todo_count, batch_size)
+        self.env['ir.cron']._notify_progress(done=done, remaining=contract_todo_count - done)

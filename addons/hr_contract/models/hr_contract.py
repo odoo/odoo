@@ -164,21 +164,27 @@ class Contract(models.Model):
     def update_state(self):
         from_cron = 'from_cron' in self.env.context
         companies = self.env['res.company'].search([])
+        done = self._update_state_expire(companies=companies, from_cron=from_cron)
+        self.env['ir.cron']._notify_progress(done=done, remaining=1)
+        done += self._update_state_work_permit_expire(companies=companies, from_cron=from_cron)
+        self.env['ir.cron']._notify_progress(done=done, remaining=1)
+        done += self._update_state_close(from_cron=from_cron)
+        self.env['ir.cron']._notify_progress(done=done, remaining=1)
+        done += self._update_state_open(from_cron=from_cron)
+        self.env['ir.cron']._notify_progress(done=done, remaining=1)
+        done += self._update_contract_following(from_cron=from_cron)
+        self.env['ir.cron']._notify_progress(done=done, remaining=0)
+        return done
+
+    @api.model
+    def _update_state_expire(self, companies, from_cron=False):
         contracts = self.env['hr.contract']
-        work_permit_contracts = self.env['hr.contract']
         for company in companies:
             contracts += self.search([
                 ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'), ('company_id', '=', company.id),
                 '&',
                 ('date_end', '<=', fields.date.today() + relativedelta(days=company.contract_expiration_notice_period)),
                 ('date_end', '>=', fields.date.today() + relativedelta(days=1)),
-            ])
-
-            work_permit_contracts += self.search([
-                ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'), ('company_id', '=', company.id),
-                '&',
-                ('employee_id.work_permit_expiration_date', '<=', fields.date.today() + relativedelta(days=company.work_permit_expiration_notice_period)),
-                ('employee_id.work_permit_expiration_date', '>=', fields.date.today() + relativedelta(days=1)),
             ])
 
         for contract in contracts:
@@ -193,6 +199,22 @@ class Contract(models.Model):
                 )
             )
 
+        if contracts:
+            contracts._safe_write_for_cron({'kanban_state': 'blocked'}, from_cron)
+
+        return len(contracts)
+
+    @api.model
+    def _update_state_work_permit_expire(self, companies, from_cron):
+        work_permit_contracts = self.env['hr.contract']
+        for company in companies:
+            work_permit_contracts += self.search([
+                ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'), ('company_id', '=', company.id),
+                '&',
+                ('employee_id.work_permit_expiration_date', '<=', fields.date.today() + relativedelta(days=company.work_permit_expiration_notice_period)),
+                ('employee_id.work_permit_expiration_date', '>=', fields.date.today() + relativedelta(days=1)),
+            ])
+
         for contract in work_permit_contracts:
             contract.with_context(mail_activity_quick_update=True).activity_schedule(
                 'mail.mail_activity_data_todo', contract.date_end,
@@ -205,11 +227,13 @@ class Contract(models.Model):
                 )
             )
 
-        if contracts:
-            contracts._safe_write_for_cron({'kanban_state': 'blocked'}, from_cron)
         if work_permit_contracts:
             work_permit_contracts._safe_write_for_cron({'kanban_state': 'blocked'}, from_cron)
 
+        return len(work_permit_contracts)
+
+    @api.model
+    def _update_state_close(self, from_cron=False):
         contracts_to_close = self.search([
             ('state', '=', 'open'),
             '|',
@@ -220,11 +244,19 @@ class Contract(models.Model):
         if contracts_to_close:
             contracts_to_close._safe_write_for_cron({'state': 'close'}, from_cron)
 
+        return len(contracts_to_close)
+
+    @api.model
+    def _update_state_open(self, from_cron=False):
         contracts_to_open = self.search([('state', '=', 'draft'), ('kanban_state', '=', 'done'), ('date_start', '<=', fields.Date.to_string(date.today())),])
 
         if contracts_to_open:
             contracts_to_open._safe_write_for_cron({'state': 'open'}, from_cron)
 
+        return len(contracts_to_open)
+
+    @api.model
+    def _update_contract_following(self, from_cron):
         contract_ids = self.search([('date_end', '=', False), ('state', '=', 'close'), ('employee_id', '!=', False)])
         # Ensure all closed contract followed by a new contract have a end date.
         # If closed contract has no closed date, the work entries will be generated for an unlimited period.
@@ -244,7 +276,7 @@ class Contract(models.Model):
             if next_contract:
                 contract._safe_write_for_cron({'date_end': next_contract.date_start - relativedelta(days=1)}, from_cron)
 
-        return True
+        return len(contract_ids)
 
     def _safe_write_for_cron(self, vals, from_cron=False):
         if from_cron:

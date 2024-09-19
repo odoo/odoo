@@ -163,5 +163,7 @@ class FleetVehicleLogContract(models.Model):
         now_running_contracts = self.search([('state', '=', 'futur'), ('start_date', '<=', fields.Date.today())])
         now_running_contracts.write({'state': 'open'})
 
-    def run_scheduler(self):
-        self.scheduler_manage_contract_expiration()
+        self.env['ir.cron']._notify_progress(
+            done=len(nearly_expired_contracts) + len(expired_contracts) + len(futur_contracts) + len(now_running_contracts),
+            remaining=0
+        )
