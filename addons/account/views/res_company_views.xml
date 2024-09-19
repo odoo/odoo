@@ -11,6 +11,12 @@
             <xpath expr="//sheet" position="after">
                 <chatter/>
             </xpath>
+            <field name="vat" position="before">
+                <field name="company_vat_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+            </field>
+            <field name="vat" position="attributes">
+                <attribute name="options">{'placeholder_field': 'company_vat_placeholder'}</attribute>
+            </field>
         </field>
     </record>
 
