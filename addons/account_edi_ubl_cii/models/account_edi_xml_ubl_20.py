@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 from collections import defaultdict
 from lxml import etree
 
-from odoo import models, _
+from odoo import _, models, Command
 from odoo.tools import html2plaintext, cleanup_xml_node
 
 UBL_NAMESPACES = {
@@ -223,7 +222,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         taxes = line.tax_ids.flatten_taxes_hierarchy()
         if self._context.get('convert_fixed_taxes'):
             taxes = taxes.filtered(lambda t: t.amount_type != 'fixed')
-        tax_category_vals_list = self._get_tax_category_list(line.move_id, taxes)
+        customer = line.move_id.commercial_partner_id
+        supplier = line.move_id.company_id.partner_id.commercial_partner_id
+        tax_category_vals_list = self._get_tax_category_list(customer, supplier, taxes)
         description = (line.product_id.display_name and line.product_id.display_name.replace('\n', ', ')) or (line.name and line.name.replace('\n', ', '))
         return {
             'description': description,
@@ -345,7 +346,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Price subtotal with discount / quantity:
         gross_price_unit = gross_price_subtotal / line.quantity if line.quantity else 0.0
 
-        uom = super()._get_uom_unece_code(line)
+        uom = super()._get_uom_unece_code(line.product_uom_id)
 
         return {
             'currency': line.currency_id,
@@ -376,7 +377,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         """
         allowance_charge_vals_list = self._get_invoice_line_allowance_vals_list(line, tax_values_list=taxes_vals)
 
-        uom = super()._get_uom_unece_code(line)
+        uom = super()._get_uom_unece_code(line.product_uom_id)
         total_fixed_tax_amount = sum(
             vals['amount']
             for vals in allowance_charge_vals_list
@@ -436,7 +437,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _get_tax_grouping_key(self, base_line, tax_values):
         tax = tax_values['tax_repartition_line'].tax_id
-        tax_category_vals = self._get_tax_category_list(base_line['record'].move_id, tax)[0]
+        customer = base_line['record'].move_id.commercial_partner_id
+        supplier = base_line['record'].move_id.company_id.partner_id.commercial_partner_id
+        tax_category_vals = self._get_tax_category_list(customer, supplier, tax)[0]
         grouping_key = {
             'tax_category_id': tax_category_vals['id'],
             'tax_category_percent': tax_category_vals['percent'],
@@ -451,7 +454,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _export_invoice_vals(self, invoice):
         # Validate the structure of the taxes
-        self._validate_taxes(invoice)
+        self._validate_taxes(invoice.invoice_line_ids.tax_ids)
 
         # Compute the tax details for the whole invoice and each invoice line separately.
         taxes_vals = invoice._prepare_invoice_aggregated_taxes(
@@ -619,23 +622,26 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _import_retrieve_partner_vals(self, tree, role):
         """ Returns a dict of values that will be used to retrieve the partner """
         return {
-            'vat': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree),
-            'phone': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree),
-            'email': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree),
-            'name': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:Name', tree) or
-                    self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:RegistrationName', tree),
-            'country_code': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
+            'vat': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree),
+            'phone': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Telephone', tree),
+            'email': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:ElectronicMail', tree),
+            'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree) or
+                    self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree),
+            'country_code': self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
         }
 
     def _import_fill_invoice(self, invoice, tree, qty_factor):
         logs = []
+        invoice_values = {}
         if qty_factor == -1:
             logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
-        role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
-        logs += self._import_partner(invoice, **self._import_retrieve_partner_vals(tree, role))
-        logs += self._import_currency(invoice, tree, './/{*}DocumentCurrencyCode')
-        invoice.invoice_date = tree.findtext('./{*}IssueDate')
-        invoice.invoice_date_due = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
+        role = "AccountingCustomer" if invoice.journal_id.type == 'sale' else "AccountingSupplier"
+        partner, partner_logs = self._import_partner(invoice.company_id, **self._import_retrieve_partner_vals(tree, role))
+        # Need to set partner before to compute bank and lines properly
+        invoice.partner_id = partner.id
+        invoice_values['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
+        invoice_values['invoice_date'] = tree.findtext('./{*}IssueDate')
+        invoice_values['invoice_date_due'] = self._find_value(('./cbc:DueDate', './/cbc:PaymentDueDate'), tree)
         # ==== partner_bank_id ====
         bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
         bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
@@ -645,29 +651,37 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== ref, invoice_origin, narration, payment_reference ====
         ref = tree.findtext('./{*}ID')
         if ref and invoice.is_sale_document(include_receipts=True) and invoice.quick_edit_mode:
-            invoice.name = ref
+            invoice_values['name'] = ref
         elif ref:
-            invoice.ref = ref
-        invoice.invoice_origin = tree.findtext('./{*}OrderReference/{*}ID')
-        self._import_narration(invoice, tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
-        invoice.payment_reference = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
+            invoice_values['ref'] = ref
+        invoice_values['invoice_origin'] = tree.findtext('./{*}OrderReference/{*}ID')
+        invoice_values['narration'] = self._import_description(tree, xpaths=['./{*}Note', './{*}PaymentTerms/{*}Note'])
+        invoice_values['payment_reference'] = tree.findtext('./{*}PaymentMeans/{*}PaymentID')
 
         # ==== invoice_incoterm_id ====
         incoterm_code = tree.findtext('./{*}TransportExecutionTerms/{*}DeliveryTerms/{*}ID')
         if incoterm_code:
             incoterm = self.env['account.incoterms'].search([('code', '=', incoterm_code)], limit=1)
             if incoterm:
-                invoice.invoice_incoterm_id = incoterm
+                invoice_values['invoice_incoterm_id'] = incoterm.id
 
         # ==== Document level AllowanceCharge, Prepaid Amounts, Invoice Lines ====
-        logs += self._import_document_allowance_charges(tree, invoice, qty_factor)
+        allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, invoice, invoice.journal_id.type, qty_factor)
         logs += self._import_prepaid_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PrepaidAmount', qty_factor)
         line_tag = (
             'InvoiceLine'
             if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
             else 'CreditNoteLine'
         )
-        logs += self._import_invoice_lines(invoice, tree, './{*}' + line_tag, qty_factor)
+        invoice_line_vals, line_logs = self._import_invoice_lines(invoice, tree, './{*}' + line_tag, qty_factor)
+        line_vals = allowance_charges_line_vals + invoice_line_vals
+
+        invoice_values = {
+            **invoice_values,
+            'invoice_line_ids': [Command.create(line_value) for line_value in line_vals],
+        }
+        invoice.write(invoice_values)
+        logs += partner_logs + currency_logs + line_logs + allowance_charges_logs
         return logs
 
     def _get_tax_nodes(self, tree):
@@ -688,15 +702,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_percentage': './{*}TaxCategory/{*}Percent',
         }
 
-    def _get_invoice_line_xpaths(self, invoice_line, qty_factor):
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
         return {
             'basis_qty': './cac:Price/cbc:BaseQuantity',
             'gross_price_unit': './{*}Price/{*}AllowanceCharge/{*}BaseAmount',
             'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
             'net_price_unit': './{*}Price/{*}PriceAmount',
-            'billed_qty': (
+            'delivered_qty': (
                 './{*}InvoicedQuantity'
-                if invoice_line.move_id.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
+                if document_type and document_type in ('in_invoice', 'out_invoice') or qty_factor == -1
                 else './{*}CreditedQuantity'
             ),
             'allowance_charge': './/{*}AllowanceCharge',

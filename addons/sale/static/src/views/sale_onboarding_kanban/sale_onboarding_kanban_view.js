@@ -1,9 +1,9 @@
 import { SaleKanbanRenderer } from "./sale_onboarding_kanban_renderer";
-import { kanbanView } from "@web/views/kanban/kanban_view";
+import { fileUploadKanbanView } from "@account/views/file_upload_kanban/file_upload_kanban_view";
 import { registry } from "@web/core/registry";
 
 export const saleKanbanView = {
-    ...kanbanView,
+    ...fileUploadKanbanView,
     Renderer: SaleKanbanRenderer,
 };
 

@@ -1,20 +1,12 @@
 from lxml import etree
-from typing import NamedTuple
 
 from odoo import models, _
 from odoo.tools import html2plaintext, cleanup_xml_node
 
 
-class LineAdapter(NamedTuple):
-    """
-    This named tuple was introduced to make _get_uom_unece_code() compatible with purchase order lines
-    TODO: remove it when we fix the signature of _get_uom_unece_code() to accept uom instead of line
-    """
-    product_uom_id: models.Model
-
-
 class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
     _name = "purchase.edi.xml.ubl_bis3"
+    _inherit = 'account.edi.xml.ubl_bis3'
     _description = "UBL BIS 3 Peppol Order transaction 3.4"
 
     # -------------------------------------------------------------------------
@@ -72,12 +64,11 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
             vals['party_tax_scheme_vals'] = self._get_partner_party_tax_scheme_vals(partner.commercial_partner_id)
         return vals
 
-    def _get_delivery_party_vals(self, order):
-        partner = order.dest_address_id or order.partner_id
+    def _get_delivery_party_vals(self, delivery):
         return {
-            'party_name': partner.display_name,
-            'postal_address_vals': self._get_partner_address_vals(partner),
-            'contact_vals': self._get_partner_contact_vals(partner),
+            'party_name': delivery.display_name,
+            'postal_address_vals': self._get_partner_address_vals(delivery),
+            'contact_vals': self._get_partner_contact_vals(delivery),
         }
 
     def _get_payment_terms_vals(self, payment_term):
@@ -89,23 +80,13 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
         if not order_line.taxes_id:
             return None
         tax = order_line.taxes_id[0]
-        tax_unece_codes = self.env['account.edi.common'].get_tax_unece_codes_order(order, tax)
+        customer = order.company_id.partner_id.commercial_partner_id
+        supplier = order.partner_id
+        tax_unece_codes = self._get_tax_unece_codes(customer, supplier, tax)
         return {
             'id': tax_unece_codes.get('tax_category_code'),
             'percent': tax.amount if tax.amount_type == 'percent' else False,
             'tax_scheme_vals': {'id': 'VAT'},
-        }
-
-    def _get_order_allowance_charge_vals(self, order, order_lines):
-        amount = sum(line['price']['allowance_charge_vals']['amount'] for line in order_lines if 'allowance_charge_vals' in line['price'])
-
-        return {
-            'charge_indicator': 'false',
-            'allowance_charge_reason_code': '95',
-            'allowance_charge_reason': _("Discount"),
-            'currency_id': order.currency_id.name,
-            'currency_dp': self.env['account.edi.common']._get_currency_decimal_places(order.currency_id),
-            'amount': amount,
         }
 
     def _get_line_allowance_charge_vals(self, line):
@@ -122,7 +103,7 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
             'allowance_charge_reason_code': '95',
             'allowance_charge_reason': _("Discount"),
             'currency_id': line.currency_id.name,
-            'currency_dp': self.env['account.edi.common']._get_currency_decimal_places(line.currency_id),
+            'currency_dp': self._get_currency_decimal_places(line.currency_id),
             'amount': gross_price_subtotal - net_price_subtotal,
         }
 
@@ -140,19 +121,16 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
         # Price subtotal with discount / quantity:
         gross_price_unit = gross_price_subtotal / line.product_qty if line.product_qty else 0.0
 
-        uom = self.env['account.edi.common']._get_uom_unece_code(LineAdapter(line.product_uom))
+        uom = self._get_uom_unece_code(line.product_uom)
 
         vals = {
             'currency_id': line.currency_id.name,
-            'currency_dp': self.env['account.edi.common']._get_currency_decimal_places(line.currency_id),
+            'currency_dp': self._get_currency_decimal_places(line.currency_id),
             'price_amount': round(gross_price_unit, 10),
             'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
             'base_quantity': 1,
             'base_quantity_unit_code': uom,
         }
-
-        if line.discount:
-            vals['allowance_charge_vals'] = self._get_line_allowance_charge_vals(line)
 
         return vals
 
@@ -161,7 +139,7 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
         allowance_total_amount = sum(line['price']['allowance_charge_vals']['amount'] for line in order_lines if 'allowance_charge_vals' in line['price'])
         return {
             'currency': purchase_order.currency_id,
-            'currency_dp': self.env['account.edi.common']._get_currency_decimal_places(purchase_order.currency_id),
+            'currency_dp': self._get_currency_decimal_places(purchase_order.currency_id),
             'line_extension_amount': line_extension_amount,
             'allowance_total_amount': allowance_total_amount,
             'tax_exclusive_amount': line_extension_amount - allowance_total_amount,
@@ -177,8 +155,8 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
         } for value in product.product_template_attribute_value_ids]
 
         vals = {
-            'name': product.name,
-            'description': order_line.name,
+            'name': product.name or order_line.name,
+            'description': order_line.name or product.description,
             'standard_item_identification': product.barcode,
             'classified_tax_category_vals': self._get_tax_category_vals(order, order_line)
         }
@@ -192,14 +170,16 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
             return {
                 'id': order_line_id,
                 'quantity': order_line.product_qty,
-                'quantity_unit_code': self.env['account.edi.common']._get_uom_unece_code(LineAdapter(order_line.product_uom)),
+                'quantity_unit_code': self._get_uom_unece_code(order_line.product_uom),
                 'line_extension_amount': order_line.price_subtotal,
                 'currency_id': order_line.currency_id.name,
-                'currency_dp': self.env['account.edi.common']._get_currency_decimal_places(order_line.currency_id),
+                'currency_dp': self._get_currency_decimal_places(order_line.currency_id),
                 'price': self._get_line_item_price_vals(order_line),
                 'item': self._get_item_vals(order, order_line),
             }
-        return [_get_order_line_vals(line, line_id) for line_id, line in enumerate(order.order_line, 1)]
+        return [_get_order_line_vals(line, line_id) for line_id, line in enumerate(
+            order.order_line.filtered(lambda line: line.display_type not in ['line_note', 'line_section'])
+        , 1)]
 
     def _export_order_vals(self, order):
         order_lines = self._get_order_lines(order)
@@ -207,6 +187,12 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
 
         supplier = order.partner_id
         customer = order.company_id.partner_id.commercial_partner_id
+        customer_delivery_address = customer.child_ids.filtered(lambda child: child.type == 'delivery')
+        delivery = (
+            order.dest_address_id
+            or (customer_delivery_address and customer_delivery_address[0])
+            or customer
+        )
 
         vals = {
             'builder': self,
@@ -214,24 +200,22 @@ class PurchaseEdiXmlUBLBIS3(models.AbstractModel):
             'supplier': supplier,
             'customer': customer,
 
-            'format_float': self.env['account.edi.common'].format_float,
+            'format_float': self.format_float,
 
             'vals': {
-                'id': order.partner_ref or order.name,
+                'id': order.name,
                 'issue_date': order.create_date.date(),
                 'note': html2plaintext(order.notes) if order.notes else False,
-                'order_reference': order.partner_ref or order.name,
+                'originator_document_reference': order.origin,
                 'document_currency_code': order.currency_id.name.upper(),
-                'delivery_party_vals': self._get_delivery_party_vals(order),
+                'delivery_party_vals': self._get_delivery_party_vals(delivery),
                 'supplier_party_vals': self._get_partner_party_vals(supplier, role='supplier'),
                 'customer_party_vals': self._get_partner_party_vals(customer, role='customer'),
                 'payment_terms_vals': self._get_payment_terms_vals(order.payment_term_id),
-                # allowances at the document level, the allowances on order lines (eg. discount) are on line_vals
                 'anticipated_monetary_total_vals': anticipated_monetary_total_vals,
-                'allowance_charge_vals': self._get_order_allowance_charge_vals(order, order_lines),
                 'tax_amount': order.amount_tax,
                 'order_lines': order_lines,
-                'currency_dp': self.env['account.edi.common']._get_currency_decimal_places(order.currency_id),  # currency decimal places
+                'currency_dp': self._get_currency_decimal_places(order.currency_id),  # currency decimal places
                 'currency_id': order.currency_id.name,
             },
         }

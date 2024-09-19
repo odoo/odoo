@@ -196,9 +196,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         return vals_list
 
-    def _get_tax_category_list(self, invoice, taxes):
+    def _get_tax_category_list(self, customer, supplier, taxes):
         # EXTENDS account.edi.xml.ubl_21
-        vals_list = super()._get_tax_category_list(invoice, taxes)
+        vals_list = super()._get_tax_category_list(customer, supplier, taxes)
 
         for vals in vals_list:
             vals.pop('name')
@@ -434,7 +434,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _import_retrieve_partner_vals(self, tree, role):
         # EXTENDS account.edi.xml.ubl_20
         partner_vals = super()._import_retrieve_partner_vals(tree, role)
-        endpoint_node = tree.find(f'.//cac:Accounting{role}Party/cac:Party/cbc:EndpointID', UBL_NAMESPACES)
+        endpoint_node = tree.find(f'.//cac:{role}Party/cac:Party/cbc:EndpointID', UBL_NAMESPACES)
         if endpoint_node is not None:
             peppol_eas = endpoint_node.attrib.get('schemeID')
             peppol_endpoint = endpoint_node.text

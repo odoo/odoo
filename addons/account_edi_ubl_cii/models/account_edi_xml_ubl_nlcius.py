@@ -38,9 +38,9 @@ class AccountEdiXmlUBLNL(models.AbstractModel):
             'credit_note': 'org.simplerinvoicing:creditnote:2.0.3.3',
         }
 
-    def _get_tax_category_list(self, invoice, taxes):
+    def _get_tax_category_list(self, customer, supplier, taxes):
         # EXTENDS account.edi.xml.ubl_bis3
-        vals_list = super()._get_tax_category_list(invoice, taxes)
+        vals_list = super()._get_tax_category_list(customer, supplier, taxes)
         for tax in vals_list:
             # [BR-NL-35] The use of a tax exemption reason code (cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory
             # /cbc:TaxExemptionReasonCode) is not recommended

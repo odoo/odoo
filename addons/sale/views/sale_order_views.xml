@@ -95,6 +95,19 @@
         </field>
     </record>
 
+    <record id="sale_order_kanban_upload" model="ir.ui.view">
+        <field name="name">sale.order.kanban.upload (orders)</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="view_sale_order_kanban"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="js_class">file_upload_kanban</attribute>
+            </kanban>
+        </field>
+    </record>
+
     <record id="sale_order_tree" model="ir.ui.view">
         <field name="name">sale.order.list</field>
         <field name="model">sale.order</field>
@@ -172,6 +185,19 @@
             <!-- Dummy view content since empty views are not supported atm -->
             <list position="attributes">
                 <attribute name="string">Sales Orders</attribute>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_order_list_upload" model="ir.ui.view">
+        <field name="name">sale.order.tree.upload (orders)</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="view_order_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="js_class">file_upload_list</attribute>
             </list>
         </field>
     </record>
@@ -280,6 +306,18 @@
             <div class="alert alert-warning p-3 text-center" role="alert"
                 invisible="state not in ['draft', 'sent'] or not has_archived_products">
                 <span>Warning: This quote contains archived product(s)</span>
+            </div>
+            <div
+                class="alert alert-warning w-100 d-flex align-items-center gap-1"
+                invisible="state != 'draft' or not duplicated_order_ids"
+                role="alert"
+            >
+                <span>Warning: this order might be a duplicate of</span>
+                <field
+                    name="duplicated_order_ids"
+                    widget="x2many_buttons"
+                    string="Duplicated Documents"
+                />
             </div>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -862,14 +900,14 @@
     <record id="sale_order_action_view_order_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
         <field name="view_mode">list</field>
-        <field name="view_id" ref="sale.view_order_tree"/>
+        <field name="view_id" ref="sale.sale_order_list_upload"/>
         <field name="act_window_id" ref="action_orders"/>
     </record>
 
     <record id="sale_order_action_view_order_kanban" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="sale.view_sale_order_kanban"/>
+        <field name="view_id" ref="sale.sale_order_kanban_upload"/>
         <field name="act_window_id" ref="action_orders"/>
     </record>
 

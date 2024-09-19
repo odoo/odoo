@@ -249,10 +249,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             'allowance_total_amount': allowance_total_amount
         }
 
-    def _get_tax_category_list(self, invoice, taxes):
+    def _get_tax_category_list(self, customer, supplier, taxes):
         """ Override to filter out withholding taxes """
         non_retention_taxes = taxes.filtered(lambda t: not t.l10n_sa_is_retention)
-        return super()._get_tax_category_list(invoice, non_retention_taxes)
+        return super()._get_tax_category_list(customer, supplier, non_retention_taxes)
 
     def _get_document_allowance_charge_vals_list(self, invoice):
         """
@@ -264,6 +264,8 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         res = super()._get_document_allowance_charge_vals_list(invoice)
         for line in invoice.invoice_line_ids.filtered(lambda l: l._is_global_discount_line()):
             taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')
+            customer = invoice.commercial_partner_id
+            supplier = invoice.company_id.partner_id.commercial_partner_id
             res.append({
                 'charge_indicator': 'false',
                 'allowance_charge_reason_code': "95",
@@ -275,7 +277,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
                     'id': tax['id'],
                     'percent': tax['percent'],
                     'tax_scheme_vals': {'id': 'VAT'},
-                } for tax in self._get_tax_category_list(line.move_id, taxes)],
+                } for tax in self._get_tax_category_list(customer, supplier, taxes)],
             })
         return res
 
@@ -370,8 +372,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
 
         def grouping_key_generator(base_line, tax_values):
+            customer = line.move_id.commercial_partner_id
+            supplier = line.move_id.company_id.partner_id.commercial_partner_id
             tax = tax_values['tax_repartition_line'].tax_id
-            tax_category_vals = self._get_tax_category_list(line.move_id, tax)[0]
+            tax_category_vals = self._get_tax_category_list(customer, supplier, tax)[0]
             grouping_key = {
                 'tax_category_id': tax_category_vals['id'],
                 'tax_category_percent': tax_category_vals['percent'],
@@ -431,7 +435,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         }]
         return res
 
-    def _get_tax_unece_codes(self, invoice, tax):
+    def _get_tax_unece_codes(self, customer, supplier, tax):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
 
         def _exemption_reason(code, reason):
@@ -444,7 +448,6 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
                 )
             }
 
-        supplier = invoice.company_id.partner_id.commercial_partner_id
         if supplier.country_id.code == 'SA':
             if not tax or tax.amount == 0:
                 exemption_codes = dict(tax._fields["l10n_sa_exemption_reason_code"]._description_selection(self.env))
@@ -460,7 +463,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
                     'tax_exemption_reason_code': None,
                     'tax_exemption_reason': None,
                 }
-        return super()._get_tax_unece_codes(invoice, tax)
+        return super()._get_tax_unece_codes(customer, supplier, tax)
 
     def _get_invoice_payment_terms_vals_list(self, invoice):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
