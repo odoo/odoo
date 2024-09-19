@@ -373,8 +373,8 @@ describe.tags("desktop")("board_desktop", () => {
         Partner._views["kanban,5"] = `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div><field name="foo"/></div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`;
@@ -436,11 +436,9 @@ describe.tags("desktop")("board_desktop", () => {
         Partner._views.kanban = `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <div><field name="foo"/></div>
-                            <button name="sitting_on_a_park_bench" type="object">Eying little girls with bad intent</button>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="foo"/>
+                        <button name="sitting_on_a_park_bench" type="object">Eying little girls with bad intent</button>
                     </t>
                 </templates>
             </kanban>`;

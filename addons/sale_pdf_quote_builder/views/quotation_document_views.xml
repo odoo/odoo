@@ -73,7 +73,7 @@
                 <field name="active"/>
                 <templates>
                     <t t-name="kanban-menu">
-                        <a t-if="widget.editable" type="edit" class="dropdown-item">Edit</a>
+                        <a t-if="widget.editable" type="open" class="dropdown-item">Edit</a>
                         <a t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
                         <a
                             t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=true"
