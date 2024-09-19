@@ -239,11 +239,6 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="create_date">2010-01-01 00:00:00</field>
         </record>
 
-        <record id="work_contact_qdp" model="res.partner">
-            <field name="name">Marc Demo</field>
-            <field name="email">m.demo@fake.odoo.com</field>
-        </record>
-
         <record id="employee_qdp" model="hr.employee">
             <field name="name">Marc Demo</field>
             <field name="user_id" ref="base.user_demo"/>
@@ -260,7 +255,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="category_ids" eval="[Command.set([ref('employee_category_4')])]"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="work_phone">+3281813700</field>
-            <field name="work_contact_id" ref="hr.work_contact_qdp"/>
+            <field name="work_contact_id" ref="base.partner_demo"/>
             <field name="create_date">2010-01-01 00:00:00</field>
         </record>
 

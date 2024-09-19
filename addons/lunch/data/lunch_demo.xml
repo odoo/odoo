@@ -117,14 +117,17 @@
             <field name="street2">Kati.1, Laprakë, Tirana, Shqipëri</field>
             <field name="email">coin.gourmand@yourcompany.example.com</field>
             <field name="phone">+32485562388</field>
+            <field name="company_type">company</field>
         </record>
 
         <record id="partner_pizza_inn" model="res.partner">
             <field name="name">Pizza Inn</field>
-            <field name="city">New Delhi TN</field>
-            <field name="country_id" ref="base.us"/>
+            <field name="city">Gandhi Nagar</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="company_type">company</field>
+            <field name="image_1920" type="base64" file="lunch/static/img/pizza.jpeg"/>
             <field name="street">#8, 1 st Floor,iscore complex</field>
-            <field name="street2">Gandhi Gramam,Gandhi Nagar</field>
+            <field name="street2">Gandhi Gramam</field>
             <field name="zip">607308</field>
             <field name="email">pizza.inn@yourcompany.example.com</field>
             <field name="phone">+32456325289</field>
@@ -138,6 +141,7 @@
             <field name="zip">607409</field>
             <field name="email">info@corner.com</field>
             <field name="phone">+32654321515</field>
+            <field name="company_type">company</field>
         </record>
 
         <record model="res.partner" id="partner_sushi_shop">
@@ -148,6 +152,7 @@
             <field name="zip">486624</field>
             <field name="email">order@sushi.com</field>
             <field name="phone">+32498859912</field>
+            <field name="company_type">company</field>
         </record>
 
         <record model="lunch.supplier" id="supplier_coin_gourmand">
