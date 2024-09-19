@@ -68,10 +68,6 @@ class AccountEdiProxyClientUser(models.Model):
          'This company has an active user already created for this EDI type'),
     ]
 
-    def _compute_private_key_filename(self):
-        for record in self:
-            record.private_key_filename = f'{record.id_client}_{record.edi_identification}.key'
-
     def _get_proxy_urls(self):
         # To extend
         return {}
