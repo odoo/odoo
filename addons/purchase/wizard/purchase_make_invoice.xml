@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_advance_payment_inv" model="ir.ui.view">
+        <field name="name">Invoice Orders</field>
+        <field name="model">purchase.advance.payment.inv</field>
+        <field name="arch" type="xml">
+            <form string="Invoice Purchase Order">
+                <group>
+                    <field name="purchase_order_ids" invisible="1"/>
+                    <field name="count"/>
+                    <field name="consolidated_billing" invisible="count == 1"/>
+                </group>
+                <footer>
+                    <button name="create_invoices" type="object"
+                        id="create_invoice_open"
+                        string="Create Draft Invoice"
+                        class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_purchase_advance_payment_inv" model="ir.actions.act_window">
+        <field name="name">Create invoice(s)</field>
+        <field name="res_model">purchase.advance.payment.inv</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>
