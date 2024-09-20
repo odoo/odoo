@@ -552,26 +552,26 @@ test("view button and string interpolated attribute in kanban", async () => {
             </kanban>`,
     });
     expect.verifySteps([
-        "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
-        "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
-        "[sri] className: 'hola oe_kanban_action oe_kanban_action_a yop'",
-        "[foa] className: 'hola oe_kanban_action oe_kanban_action_a yop olleh'",
-        "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello yop'",
-        "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
-        "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
-        "[sri] className: 'hola oe_kanban_action oe_kanban_action_a blip'",
-        "[foa] className: 'hola oe_kanban_action oe_kanban_action_a blip olleh'",
-        "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello blip'",
-        "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
-        "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
-        "[sri] className: 'hola oe_kanban_action oe_kanban_action_a gnap'",
-        "[foa] className: 'hola oe_kanban_action oe_kanban_action_a gnap olleh'",
-        "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello gnap'",
-        "[one] className: 'hola oe_kanban_action oe_kanban_action_a'",
-        "[two] className: 'hola oe_kanban_action oe_kanban_action_a hello'",
-        "[sri] className: 'hola oe_kanban_action oe_kanban_action_a blip'",
-        "[foa] className: 'hola oe_kanban_action oe_kanban_action_a blip olleh'",
-        "[fye] className: 'hola oe_kanban_action oe_kanban_action_a hello blip'",
+        "[one] className: 'hola oe_kanban_action'",
+        "[two] className: 'hola oe_kanban_action hello'",
+        "[sri] className: 'hola oe_kanban_action yop'",
+        "[foa] className: 'hola oe_kanban_action yop olleh'",
+        "[fye] className: 'hola oe_kanban_action hello yop'",
+        "[one] className: 'hola oe_kanban_action'",
+        "[two] className: 'hola oe_kanban_action hello'",
+        "[sri] className: 'hola oe_kanban_action blip'",
+        "[foa] className: 'hola oe_kanban_action blip olleh'",
+        "[fye] className: 'hola oe_kanban_action hello blip'",
+        "[one] className: 'hola oe_kanban_action'",
+        "[two] className: 'hola oe_kanban_action hello'",
+        "[sri] className: 'hola oe_kanban_action gnap'",
+        "[foa] className: 'hola oe_kanban_action gnap olleh'",
+        "[fye] className: 'hola oe_kanban_action hello gnap'",
+        "[one] className: 'hola oe_kanban_action'",
+        "[two] className: 'hola oe_kanban_action hello'",
+        "[sri] className: 'hola oe_kanban_action blip'",
+        "[foa] className: 'hola oe_kanban_action blip olleh'",
+        "[fye] className: 'hola oe_kanban_action hello blip'",
     ]);
 });
 
@@ -1248,7 +1248,7 @@ test("properly evaluate more complex domains", async () => {
             </kanban>`,
     });
 
-    expect("button.float-end.oe_kanban_action_button").toHaveCount(1, {
+    expect("button.float-end.oe_kanban_action").toHaveCount(1, {
         message: "only one button should be visible",
     });
 });

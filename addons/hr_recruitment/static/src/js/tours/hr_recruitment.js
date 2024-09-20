@@ -70,7 +70,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     trigger: ".o_hr_recruitment_kanban",
 },
 {
-    trigger: ".oe_kanban_action_button",
+    trigger: "button.oe_kanban_action",
     content: markup(_t("<b>Did you apply by sending an email?</b> Check incoming applications.")),
     tooltipPosition: "bottom",
     run: "click",
