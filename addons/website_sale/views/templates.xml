@@ -2457,7 +2457,10 @@
     <template id="total">
         <div id="cart_total" t-if="website_sale_order and website_sale_order.website_order_line" t-att-class="_cart_total_classes">
             <table class="table mb-0">
-                <tr t-if="website_sale_order._has_deliverable_products()" id="order_delivery">
+                <tr
+                    t-if="website_sale_order._has_deliverable_products() and website_sale_order.carrier_id"
+                    id="order_delivery"
+                >
                     <td
                         class="ps-0 pt-0 pb-2 border-0 text-muted"
                         colspan="2"
