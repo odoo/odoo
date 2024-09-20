@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//div[@name='o_kanban_primary_right']" position="inside">
+                <xpath expr="//div[@name='kanban_primary_right']" position="inside">
                     <div t-if="record.new_applicant_count.raw_value > 0" class="row g-0 ml32" groups="hr_recruitment.group_hr_recruitment_user">
                         <a name="%(hr_applicant_action_from_department)d" class="col" type="action">
                             <field name="new_applicant_count"/> New Applicants
