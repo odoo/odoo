@@ -56,7 +56,13 @@
     padding-bottom: 10px;
     padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
     padding-right: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+
     line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
+
+    .o-mail-Composer.o-chatWindow & {
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
 
     .o-mail-Composer.o-editing & {
         padding-left: map-get($spacers, 2);
@@ -74,6 +80,7 @@
     }
 
     &::placeholder {
+        opacity: 75%;
         @include text-truncate();
     }
 }
