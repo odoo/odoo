@@ -157,7 +157,10 @@ class ChannelController(http.Controller):
         if not channel:
             raise NotFound()
         sub_channel = channel._create_sub_channel(from_message_id, name)
-        return Store(sub_channel).add(sub_channel, {"forceOpen": True}).get_result()
+        return {
+            "data": Store(sub_channel).add(sub_channel).get_result(),
+            "sub_channel": Store.one_id(sub_channel),
+        }
 
     @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
