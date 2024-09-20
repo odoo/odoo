@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import "@crm/../tests/mock_server";
+import "@crm/../tests/legacy/mock_server";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,

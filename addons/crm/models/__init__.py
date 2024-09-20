@@ -16,3 +16,4 @@ from . import crm_lead_scoring_frequency
 from . import utm
 from . import crm_recurring_plan
 from . import mail_activity
+from . import discuss_channel
