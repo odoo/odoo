@@ -265,7 +265,7 @@ export class AddPageTemplatePreview extends Component {
             return;
         }
         const wrapEl = this.iframeRef.el.contentDocument.getElementById("wrap").cloneNode(true);
-        for (const previewEl of wrapEl.querySelectorAll(".o_new_page_snippet_preview")) {
+        for (const previewEl of wrapEl.querySelectorAll(".o_new_page_snippet_preview, .s_dialog_preview")) {
             previewEl.remove();
         }
         this.env.addPage(wrapEl.innerHTML, this.props.template.name && _t("Copy of %s", this.props.template.name));

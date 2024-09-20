@@ -773,6 +773,11 @@ class Website(models.Model):
                     # for compatibility code
                     el.attrib['data-snippet'] = snippet
 
+                    # Remove the previews needed for the snippets dialog
+                    dialog_preview_els = el.find_class('s_dialog_preview')
+                    for preview_el in dialog_preview_els:
+                        preview_el.getparent().remove(preview_el)
+
                     # Tweak the shape of the first snippet to connect it
                     # properly with the header color in some themes
                     if i == 1:
