@@ -1,9 +1,11 @@
 .o_blockUI {
-	cursor: wait;
-	-webkit-backdrop-filter: blur(2px);
-	backdrop-filter: blur(2px);
-	background: rgba(#000, .5);
-	color: #fff;
-	// NOTE: The value of the z-index below mirrors the $zindex-tooltip one
-	z-index: 1070 !important;
+    cursor: wait;
+    z-index: $zindex-popover !important;
+
+    &:not(.o_blockUI_invisible) {
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
+        background: rgba(#000, .5);
+        color: #fff;
+    }
 }

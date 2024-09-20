@@ -464,7 +464,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         onMounted(async () => {
             // Add a loading effect during the loading of the images inside the
             // svgs.
-            this.uiService.block();
+            this.uiService.block({delay: 400});
             this.state.themes.forEach((theme, idx) => {
                 // Transform the text svg into a svg element.
                 const svgEl = new DOMParser().parseFromString(theme.svg, 'image/svg+xml').documentElement;
