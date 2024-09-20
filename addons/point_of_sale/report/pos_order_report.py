@@ -45,7 +45,7 @@ class PosOrderReport(models.Model):
                 s.date_order AS date,
                 SUM(l.qty) AS product_qty,
                 SUM(l.qty * l.price_unit / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS price_sub_total,
-                SUM(ROUND((l.price_subtotal_incl) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END, cu.decimal_places)) AS price_total,
+                ROUND(SUM(l.price_subtotal_incl / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END), cu.decimal_places) AS price_total,
                 SUM((l.qty * l.price_unit) * (l.discount / 100) / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS total_discount,
                 CASE
                     WHEN SUM(l.qty * u.factor) = 0 THEN NULL
@@ -84,13 +84,14 @@ class PosOrderReport(models.Model):
     def _group_by(self):
         return """
             GROUP BY
-                s.id, s.date_order, s.partner_id,s.state, pt.categ_id,
+                s.id, s.date_order, s.partner_id, s.state, pt.categ_id,
                 s.user_id, s.company_id, s.sale_journal,
                 s.pricelist_id, s.account_move, s.create_date, s.session_id,
                 l.product_id,
                 pt.categ_id, pt.pos_categ_id,
                 p.product_tmpl_id,
-                ps.config_id
+                ps.config_id,
+                cu.decimal_places
         """
 
     def init(self):
