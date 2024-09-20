@@ -108,3 +108,18 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
             PosHr.loginScreenIsShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
+    test: true,
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickInfoProduct("product_a"),
+            Dialog.confirm("Ok"),
+            Dialog.isNot(),
+        ].flat(),
+});
