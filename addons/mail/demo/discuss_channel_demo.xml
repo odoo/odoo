@@ -155,5 +155,84 @@
             <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
+        <!-- sub-threads setup -->
+        <record model="discuss.channel" id="mail.from_notification_message">
+            <field name="parent_channel_id" ref="mail.channel_all_employees"/>
+            <field name="from_message_id" ref="mail.module_install_notification"/>
+            <field name="name">Welcome to the #general channel</field>
+        </record>
+        <record model="discuss.channel.member" id="mail.admin_member_from_notification">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="mail.from_notification_message"/>
+        </record>
+        <record model="discuss.channel" id="mail.idea_suggestions_sub">
+            <field name="parent_channel_id" ref="mail.channel_all_employees"/>
+            <field name="name">Ideas &amp; Suggestions</field>
+        </record>
+        <record model="discuss.channel.member" id="mail.admin_member_idea_suggestions">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="mail.idea_suggestions_sub"/>
+        </record>
+        <record model="discuss.channel.member" id="mail.demo_member_idea_suggestions">
+            <field name="partner_id" ref="base.partner_demo"/>
+            <field name="channel_id" ref="mail.idea_suggestions_sub"/>
+        </record>
+        <record model="mail.message" id="mail.idea_suggestions_message_0">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.idea_suggestions_sub"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="body"><![CDATA[<p>Hey team, I was thinking it might be
+            helpful to set up a weekly brainstorming session where we can
+            discuss new strategies for improving customer engagement. What do
+            you all think?</p>]]></field>
+        </record>
+        <record model="discuss.channel" id="mail.troubleshooting_sub">
+            <field name="parent_channel_id" ref="mail.channel_all_employees"/>
+            <field name="name">Troubleshooting</field>
+        </record>
+        <record model="mail.message" id="mail.troubleshooting_message_0">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.troubleshooting_sub"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="body"><![CDATA[<p>I can’t seem to access the team
+            calendar. It keeps saying ‘access denied.’ Has anyone else run into
+            this?</p>]]></field>
+        </record>
+        <record model="mail.message" id="mail.troubleshooting_message_1">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.troubleshooting_sub"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="body"><![CDATA[<p>Did you try unplugging it and plugging
+            it back in? Classic IT solution, right?</p>]]></field>
+        </record>
+        <record model="mail.message" id="mail.troubleshooting_message_2">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.troubleshooting_sub"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="body"><![CDATA[<p>Haha, good one! I’ll check my
+            permissions first, but that’s a solid backup plan!</p>]]></field>
+        </record>
+        <record model="discuss.channel.member" id="mail.admin_member_troubleshooting">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="mail.troubleshooting_sub"/>
+            <field name="fetched_message_id" ref="mail.troubleshooting_message_2"/>
+            <field name="seen_message_id" ref="mail.troubleshooting_message_2"/>
+            <field name="new_message_separator" eval="ref('mail.troubleshooting_message_2') + 1"/>
+        </record>
+        <record model="discuss.channel.member" id="mail.demo_member_troubleshooting">
+            <field name="partner_id" ref="base.partner_demo"/>
+            <field name="channel_id" ref="mail.troubleshooting_sub"/>
+            <field name="fetched_message_id" ref="mail.troubleshooting_message_2"/>
+            <field name="seen_message_id" ref="mail.troubleshooting_message_2"/>
+            <field name="new_message_separator" eval="ref('mail.troubleshooting_message_2') + 1"/>
+        </record>
     </data>
 </odoo>
