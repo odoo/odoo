@@ -31,6 +31,7 @@ export class TaskStageWithStateSelection extends Component {
             ...this.stageProps,
             name: "state",
             readonly: this.props.stateReadonly,
+            autosave: !this.props.stateReadonly,
             viewType: this.props.viewType,
             showLabel: false,
         };
@@ -47,7 +48,7 @@ export const taskStageWithStateSelection = {
             default: true,
         },
     ],
-    fieldDependencies: [{ name: "state", type: "selection" }],
+    fieldDependencies: [{ name: "state", type: "selection", readonly: false }],
     supportedTypes: ["many2one"],
     extractProps({ options, viewType }) {
         return {

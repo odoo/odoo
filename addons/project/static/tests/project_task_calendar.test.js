@@ -86,6 +86,13 @@ test("test task_stage_with_state_selection widget with non-editable state", asyn
 });
 
 test("test task_stage_with_state_selection widget with editable state", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].state).toBe("03_approved", {
+            message: "The task should be approved",
+        });
+        expect.step("web_save");
+    });
+
     await mountView({
         ...calendarMountParams,
         arch: `
@@ -110,4 +117,5 @@ test("test task_stage_with_state_selection widget with editable state", async ()
     await click(".o_status_green"); // Checking if click on the state in selection menu works(changes in record)
     await animationFrame();
     expect(".o-dropdown .o_status").toHaveStyle({ color: "rgb(0, 136, 24)" });
+    expect.verifySteps(["web_save"]);
 });
