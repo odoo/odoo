@@ -1,26 +1,25 @@
+import { user } from "@web/core/user";
 import { registry } from "../registry";
-import { memoize } from "../utils/functions";
 
 import { useEffect, useEnv, useSubEnv } from "@odoo/owl";
 const debugRegistry = registry.category("debug");
 
-const getAccessRights = memoize(async function getAccessRights(orm) {
+const getAccessRights = async () => {
     const rightsToCheck = {
         "ir.ui.view": "write",
         "ir.rule": "read",
         "ir.model.access": "read",
     };
     const proms = Object.entries(rightsToCheck).map(([model, operation]) => {
-        return orm.call(model, "has_access", [[], operation]);
+        return user.checkAccessRight(model, operation);
     });
     const [canEditView, canSeeRecordRules, canSeeModelAccess] = await Promise.all(proms);
     const accessRights = { canEditView, canSeeRecordRules, canSeeModelAccess };
     return accessRights;
-});
+};
 
 class DebugContext {
-    constructor(env, defaultCategories) {
-        this.orm = env.services.orm;
+    constructor(defaultCategories) {
         this.categories = new Map(defaultCategories.map((cat) => [cat, [{}]]));
     }
 
@@ -38,7 +37,7 @@ class DebugContext {
     }
 
     async getItems(env) {
-        const accessRights = await getAccessRights(this.orm);
+        const accessRights = await getAccessRights();
         return [...this.categories.entries()]
             .flatMap(([category, contexts]) => {
                 return debugRegistry
@@ -56,12 +55,12 @@ class DebugContext {
 }
 
 const debugContextSymbol = Symbol("debugContext");
-export function createDebugContext(env, { categories = [] } = {}) {
-    return { [debugContextSymbol]: new DebugContext(env, categories) };
+export function createDebugContext({ categories = [] } = {}) {
+    return { [debugContextSymbol]: new DebugContext(categories) };
 }
 
 export function useOwnDebugContext({ categories = [] } = {}) {
-    useSubEnv(createDebugContext(useEnv(), { categories }));
+    useSubEnv(createDebugContext({ categories }));
 }
 
 export function useEnvDebugContext() {
