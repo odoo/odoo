@@ -505,6 +505,30 @@ class TestProcRule(TransactionCase):
         # opening the replenishment should not raise a KeyError even if the location is archived
         self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
+    def test_compute_qty_to_order(self):
+        """
+        Check that the quantity to order is updated in the orderpoint when a new demand is created.
+        """
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'auto orderpoint',
+            'product_id': self.product.id,
+            'product_min_qty': 5,
+            'product_max_qty': 5,
+            'qty_to_order': 5,
+            'trigger': 'auto',
+        })
+        self.assertEqual(orderpoint.qty_to_order, 5)
+        stock_move = self.env['stock.move'].create({
+            'name': 'Test Move',
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        stock_move._action_confirm()
+        self.assertEqual(orderpoint.qty_to_order, 6)
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
