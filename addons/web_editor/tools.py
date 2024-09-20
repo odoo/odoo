@@ -29,6 +29,7 @@ player_regexes = {
     'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
     'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
     'youku': r'(?:(https?:\/\/)?(v\.youku\.com/v_show/id_|player\.youku\.com/player\.php/sid/|player\.youku\.com/embed/|cloud\.youku\.com/services/sharev\?vid=|video\.tudou\.com/v/)|youku:)(?P<id>[A-Za-z0-9]+)(?:\.html|/v\.swf|)',
+    'tiktok': r'(?:(.*)tiktok.com)/(@(.[a-zA-Z0-9-_\.]*)/video|embed)/(.[a-zA-Z0-9-_\.]*)',
 }
 
 
@@ -57,6 +58,9 @@ def get_video_source_data(video_url):
         youku_match = re.search(player_regexes['youku'], video_url)
         if youku_match:
             return ('youku', youku_match.group("id"), youku_match)
+        tiktok_match = re.search(player_regexes['tiktok'], video_url)
+        if tiktok_match:
+            return ('tiktok', tiktok_match[4], tiktok_match)
     return None
 
 
@@ -127,6 +131,8 @@ def get_video_url_data(video_url, autoplay=False, loop=False, hide_controls=Fals
         embed_url = f'//www.instagram.com/p/{video_id}/embed/'
     elif platform == 'youku':
         embed_url = f'//player.youku.com/embed/{video_id}'
+    elif platform == 'tiktok':
+        embed_url = f'//www.tiktok.com/embed/{video_id}'
 
     if params:
         embed_url = f'{embed_url}?{url_encode(params)}'

@@ -218,6 +218,9 @@ export class VideoSelector extends Component {
         return selectedMedia.map(video => {
             const div = document.createElement('div');
             div.dataset.oeExpression = video.src;
+            if (video.platform == "tiktok") {
+                div.style = "width: 100%; max-height: 800px; aspect-ratio: 9 / 16;"
+            }
             div.innerHTML = `
                 <div class="css_editable_mode_display"></div>
                 <div class="media_iframe_video_size" contenteditable="false"></div>
