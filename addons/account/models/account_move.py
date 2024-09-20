@@ -1918,11 +1918,9 @@ class AccountMove(models.Model):
             move.next_payment_date = min([line.payment_date for line in move.line_ids.filtered(lambda l: l.payment_date and not l.reconciled)], default=False)
 
     def _search_next_payment_date(self, operator, value):
-        lines_before_date = self.env['account.move.line'].search([
-            ('reconciled', '=', False),
-            ('payment_date', operator, value)
-        ])
-        return [('line_ids', 'in', lines_before_date.ids)]
+        if operator not in ('=', '<', '<='):
+            raise UserError(self.env._('Operation not supported'))
+        return [('line_ids', 'any', [('reconciled', '=', False), ('payment_date', operator, value)])]
 
     # -------------------------------------------------------------------------
     # SEARCH METHODS
