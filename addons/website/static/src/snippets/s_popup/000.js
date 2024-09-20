@@ -453,7 +453,11 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      * @param ev
      */
     _onAcceptClick(ev) {
-        this.cookieValue = `{"required": true, "optional": ${ev.target.id === 'cookies-consent-all'}}`;
+        const isFullConsent = ev.target.id === "cookies-consent-all";
+        this.cookieValue = `{"required": true, "optional": ${isFullConsent}}`;
+        if (isFullConsent) {
+            document.dispatchEvent(new Event("optionalCookiesAccepted"));
+        }
         this._onHideModal();
         this.toggleEl && this.toggleEl.remove();
     },
