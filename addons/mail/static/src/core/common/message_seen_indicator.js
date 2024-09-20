@@ -42,6 +42,9 @@ export class MessageSeenIndicator extends Component {
 
     get summary() {
         if (this.props.message.hasEveryoneSeen) {
+            if (this.props.thread.channelMembers.length === 2) {
+                return _t("Seen by %(user)s", { user: this.props.thread.correspondent.name });
+            }
             return _t("Seen by everyone");
         }
         const seenMembers = this.props.message.channelMemberHaveSeen;

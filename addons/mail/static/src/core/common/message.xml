@@ -68,7 +68,7 @@
                                     <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing or message.edited)">
                                         <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
                                         <t t-else="">
-                                            <div class="position-relative overflow-x-auto d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
+                                            <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block" t-att-class="{ 'w-100': state.isEditing }">
                                                 <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                     'border': state.isEditing and !message.is_note,
                                                     'o-blue border border-info': message.bubbleColor === 'blue',
@@ -101,7 +101,7 @@
                                                         <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
                                                     </t>
                                                 </div>
-                                                <div class="o-mail-Message-seenContainer position-absolute bottom-0">
+                                                <div class="o-mail-Message-seenContainer position-absolute">
                                                     <MessageSeenIndicator
                                                         t-if="showSeenIndicator"
                                                         message="props.message"
