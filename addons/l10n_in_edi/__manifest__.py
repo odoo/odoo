@@ -24,7 +24,6 @@ For the creation of API username and password please ref this document: <https:/
     """,
     "data": [
         "data/account_edi_data.xml",
-        "data/iap_service_data.xml",
         "views/res_config_settings_views.xml",
         "views/edi_pdf_report.xml",
         "views/account_move_views.xml",
