@@ -12,6 +12,7 @@ class PurchaseOrder(models.Model):
         super()._compute_sale_order_count()
 
     def _get_sale_orders(self):
+<<<<<<< master
         linked_so = self.order_line.move_dest_ids.group_id.sale_id \
                   | self.env['stock.move'].browse(self.order_line.move_ids._rollup_move_dests()).group_id.sale_id
         group_so = self.order_line.group_id.sale_id
@@ -46,3 +47,10 @@ class PurchaseOrderLine(models.Model):
         res = super()._prepare_purchase_order_line_from_procurement(product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po)
         res['sale_line_id'] = values.get('sale_line_id', False)
         return res
+||||||| 74f5a3e58616c1e78d10a13b9c8d814e64a553ff
+        return super(PurchaseOrder, self)._get_sale_orders() | self.order_line.move_dest_ids.group_id.sale_id | self.order_line.move_ids.move_dest_ids.group_id.sale_id
+=======
+        return super()._get_sale_orders() \
+            | self.order_line.move_dest_ids.group_id.sale_id \
+            | self.env['stock.move'].browse(self.order_line.move_ids._rollup_move_dests()).group_id.sale_id
+>>>>>>> 821522f547fac5043d0fc3a9b295944ddaeb3bb9

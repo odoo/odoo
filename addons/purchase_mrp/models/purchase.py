@@ -21,11 +21,18 @@ class PurchaseOrder(models.Model):
             purchase.mrp_production_count = len(purchase._get_mrp_productions())
 
     def _get_mrp_productions(self, **kwargs):
+<<<<<<< master
         linked_mo = self.order_line.move_dest_ids.group_id.mrp_production_ids \
                   | self.env['stock.move'].browse(self.order_line.move_ids._rollup_move_dests()).group_id.mrp_production_ids
         group_mo = self.order_line.group_id.mrp_production_ids
 
         return linked_mo | group_mo
+||||||| 74f5a3e58616c1e78d10a13b9c8d814e64a553ff
+        return self.order_line.move_dest_ids.group_id.mrp_production_ids | self.order_line.move_ids.move_dest_ids.group_id.mrp_production_ids
+=======
+        return self.order_line.move_dest_ids.group_id.mrp_production_ids \
+            | self.env['stock.move'].browse(self.order_line.move_ids._rollup_move_dests()).group_id.mrp_production_ids
+>>>>>>> 821522f547fac5043d0fc3a9b295944ddaeb3bb9
 
     def action_view_mrp_productions(self):
         self.ensure_one()

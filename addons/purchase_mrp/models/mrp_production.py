@@ -45,11 +45,17 @@ class MrpProduction(models.Model):
 
     def _get_purchase_orders(self):
         self.ensure_one()
+<<<<<<< master
         linked_po = self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id \
                   | self.env['stock.move'].browse(self.procurement_group_id.stock_move_ids._rollup_move_origs()).purchase_line_id.order_id
         group_po = self.procurement_group_id.purchase_line_ids.order_id
 
         return linked_po | group_po
+||||||| 74f5a3e58616c1e78d10a13b9c8d814e64a553ff
+=======
+        return self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id \
+            | self.env['stock.move'].browse(self.procurement_group_id.stock_move_ids._rollup_move_origs()).purchase_line_id.order_id
+>>>>>>> 821522f547fac5043d0fc3a9b295944ddaeb3bb9
 
     def _prepare_merge_orig_links(self):
         origs = super()._prepare_merge_orig_links()
