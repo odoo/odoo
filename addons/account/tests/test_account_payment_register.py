@@ -1776,3 +1776,25 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'installments_switch_amount': 57.83,  # The previous 'next' amount
             'communication': Like(f'BATCH/{self.current_year}/...'),
         }])
+
+    def test_payment_register_with_next_payment_date(self):
+        invoice_2 = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'invoice_payment_term_id': self.term_0_5_10_days.id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1000.0, 'tax_ids': []})],
+        })
+        wizard = self.env['account.payment.register'].with_context(
+            active_domain=[['next_payment_date', '=', '2017-01-07']],  # To mimick next_payment date in the search
+            active_model='account.move', active_ids=invoice_2.ids
+        ).create({'payment_date': '2017-01-01'})
+
+        # as we have next_payment_date in the search domain, we go in before_date and pay all installments before this
+        # date (and not taken the payment_date into account there)
+        self.assertRecordValues(wizard, [{
+            'amount': 400,  # The switch amount computed above
+            'installments_mode': 'before_date',
+            'installments_switch_amount': 1000,  # The full amount
+        }])
