@@ -372,7 +372,7 @@ export class KanbanRecord extends Component {
     }
 
     /**
-     * Returns the kanban-box template's rendering context.
+     * Returns the card template's rendering context.
      *
      * Note: the keys answer to outdated standards but should not be altered for
      * the sake of compatibility.

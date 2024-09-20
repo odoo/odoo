@@ -184,6 +184,16 @@ defineModels([Partner, Product, Category, Currency, IrAttachment]);
 
 beforeEach(() => {
     patchWithCleanup(AnimatedNumber, { enableAnimations: false });
+
+    // avoid "kanban-box" deprecation warnings in this suite, which defines legacy kanban on purpose
+    const originalConsoleWarn = console.warn;
+    patchWithCleanup(console, {
+        warn: (msg) => {
+            if (msg !== "'kanban-box' is deprecated, use 'kanban-card' API instead") {
+                originalConsoleWarn(msg);
+            }
+        },
+    });
 });
 
 test("display full is supported on fields", async () => {
@@ -2099,7 +2109,13 @@ test("action/type attributes on kanban arch, type='action'", async () => {
 });
 
 test("Missing t-key is automatically filled with a warning", async () => {
-    patchWithCleanup(console, { warn: () => expect.step("warning") });
+    patchWithCleanup(console, {
+        warn: (msg) => {
+            if (msg !== "'kanban-box' is deprecated, use 'kanban-card' API instead") {
+                expect.step("warning");
+            }
+        },
+    });
 
     await mountView({
         type: "kanban",
