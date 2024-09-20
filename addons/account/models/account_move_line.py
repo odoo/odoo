@@ -3121,7 +3121,7 @@ class AccountMoveLine(models.Model):
     # INSTALLMENTS
     # -------------------------------------------------------------------------
 
-    def _get_installments_data(self, payment_currency=None, payment_date=None):
+    def _get_installments_data(self, payment_currency=None, payment_date=None, next_payment_date=None):
         move = self.move_id
         move.ensure_one()
 
@@ -3168,7 +3168,9 @@ class AccountMoveLine(models.Model):
             # In case of overdue, all of them are sum as a default amount to be paid.
             # The next installment is added for the difference.
             if line.display_type == 'payment_term':
-                if (line.date_maturity or line.date) < payment_date:
+                if next_payment_date and (line.date_maturity or line.date) <= next_payment_date:
+                    current_installment_mode = 'before_date'
+                elif (line.date_maturity or line.date) < payment_date:
                     # Collect all overdue installments.
                     first_installment_mode = current_installment_mode = 'overdue'
                 elif not first_installment_mode:
