@@ -5,7 +5,7 @@
         <field name="model">stock.picking.type</field>
         <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//t[@t-name='kanban-menu']" position="inside">
+            <xpath expr="//t[@t-name='menu']" position="inside">
                 <div class="container" t-if="record.code.raw_value == 'mrp_operation'">
                     <div class="row">
                         <div class="col-6" name="picking_left_manage_pane">

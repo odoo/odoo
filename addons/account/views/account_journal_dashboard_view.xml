@@ -15,7 +15,7 @@
                 <field name="alias_domain_id"/>
                 <field name="bank_account_id"/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                         <t t-value="record.type.raw_value" t-set="journal_type"/>
                         <t t-value="!record.has_entries.raw_value" t-set="journal_is_empty"/>
@@ -56,7 +56,7 @@
                         </t>
                     </t>
 
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                         <t t-value="record.type.raw_value" t-set="journal_type"/>
                         <div class="container">

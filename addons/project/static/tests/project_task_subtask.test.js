@@ -96,7 +96,7 @@ beforeEach(() => {
                 <field name="user_ids"/>
                 <field name="state"/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div>
                             <field name="display_name" widget="name_with_subtask_count"/>
                             <t t-if="record.project_id.raw_value and record.subtask_count.raw_value">

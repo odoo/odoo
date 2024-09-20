@@ -21,12 +21,12 @@
                 <field name="state"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                         <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <t t-set="todoHasAssignees" t-value="record.user_ids.raw_value.length &gt; 1"/>
                         <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
                             <field name="name" class="fw-bolder fs-5" widget="name_with_subtask_count"/>

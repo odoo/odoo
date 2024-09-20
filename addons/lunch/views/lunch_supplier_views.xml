@@ -117,7 +117,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <main>
                             <field name="display_name" class="fw-bold fs-5"/>
                             <field t-if="record.city.raw_value and !record.country_id.raw_value" name="city"/>

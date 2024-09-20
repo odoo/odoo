@@ -119,7 +119,7 @@
                 <field name="color"/>
                 <field name="company_id"/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <a role="menuitem" name="action_create_meeting" type="object" class="dropdown-item">Schedule Interview</a>
                         <a t-if="record.active.raw_value" role="menuitem" type="archive" class="dropdown-item">Archive</a>
                         <a t-if="!record.active.raw_value" role="menuitem" type="unarchive" class="dropdown-item">Unarchive</a>
@@ -127,7 +127,7 @@
                         <div role="separator" class="dropdown-divider"></div>
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field t-if="record.partner_name.raw_value" class="fw-bold fs-5" name="partner_name"/>
                         <field t-else="" class="fw-bold fs-5" name="partner_id"/>
                         <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

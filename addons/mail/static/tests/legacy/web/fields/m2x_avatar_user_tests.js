@@ -60,7 +60,7 @@ test("many2many_avatar_user in kanban view", async () => {
         "m2x.avatar.user,false,kanban": `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="user_id"/>
                         <field name="user_ids" widget="many2many_avatar_user"/>
                     </t>
@@ -331,7 +331,7 @@ test("avatar_user widget displays the appropriate user image in kanban view", as
         "m2x.avatar.user,false,kanban": `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="user_id" widget="many2one_avatar_user"/>
                         </t>
                     </templates>
@@ -374,7 +374,7 @@ test("avatar card preview", async (assert) => {
         "m2x.avatar.user,false,kanban": `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="user_id" widget="many2one_avatar_user"/>
                         </t>
                     </templates>

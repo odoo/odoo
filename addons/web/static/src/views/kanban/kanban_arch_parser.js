@@ -9,7 +9,7 @@ import { Widget } from "@web/views/widgets/widget";
  * NOTE ON 't-name="kanban-box"':
  *
  * "kanban-box" is deprecated. Kanban archs converted to the new (v18) API must
- * define a "kanban-card" template instead.
+ * define a "card" template instead.
  *
  * Multiple roots are supported in kanban box template definitions, however there
  * are a few things to keep in mind when doing so:
@@ -23,8 +23,8 @@ import { Widget } from "@web/views/widgets/widget";
  */
 
 export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
-export const KANBAN_CARD_ATTRIBUTE = "kanban-card";
-export const KANBAN_MENU_ATTRIBUTE = "kanban-menu";
+export const KANBAN_CARD_ATTRIBUTE = "card";
+export const KANBAN_MENU_ATTRIBUTE = "menu";
 
 export class KanbanArchParser {
     parse(xmlDoc, models, modelName) {

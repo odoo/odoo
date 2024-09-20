@@ -99,7 +99,7 @@
                     <field name="product_qty" readonly="1" force_save="0"/>
                     <field name="is_inventory"/>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="product_id" readonly="state == 'done'" class="fw-bold fs-5"/>
                             <div invisible="not is_inventory">
                                 <span>Initial Demand <field name="product_uom_qty" readonly="state == 'done'"/></span><br/>

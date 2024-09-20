@@ -76,7 +76,7 @@
                             <field name="vendors">
                                 <kanban quick_create="false" create="true">
                                     <templates>
-                                        <t t-name="kanban-card" class="flex-row fw-bold">
+                                        <t t-name="card" class="flex-row fw-bold">
                                             <field name="name"/>
                                             <div class="text-muted ms-auto">
                                                 <t t-if="record.phone.raw_value"><field name="phone"/><br/></t>
@@ -115,7 +115,7 @@
         <field name="arch" type="xml">
             <kanban string="Models">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field class="fw-bold" name="name"/>
                         <field name="brand_id"/>
                     </t>
@@ -199,7 +199,7 @@
             <kanban default_order="name">
                 <field name="active"/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <a role="menuitem" type="open" class="dropdown-item">Configuration</a>
                         <a role="menuitem" type="object" name="toggle_active" class="dropdown-item">
                             <t t-if="record.active.raw_value">Archive</t>
@@ -207,7 +207,7 @@
                         </a>
                         <a role="menuitem" t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
                     </t>
-                    <t t-name="kanban-card" class="flex-row p-1">
+                    <t t-name="card" class="flex-row p-1">
                         <aside>
                             <field name="image_128" widget="image" options="{'img_class': 'object-fit-contain'}"/>
                         </aside>

@@ -34,7 +34,7 @@ beforeEach(() => {
         kanban: `
             <kanban>
                 <template>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="state" widget="todo_done_checkmark"/>
                     </t>
                 </template>

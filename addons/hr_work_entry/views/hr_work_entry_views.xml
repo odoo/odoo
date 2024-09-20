@@ -214,10 +214,10 @@
         <field name="arch" type="xml">
             <kanban highlight_color="color">
                 <templates>
-                    <t t-name="kanban-menu" t-if="!selection_mode">
+                    <t t-name="menu" t-if="!selection_mode">
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-card" t-attf-class="#{!selection_mode ? record.color.raw_value : ''}">
+                    <t t-name="card" t-attf-class="#{!selection_mode ? record.color.raw_value : ''}">
                         <field class="fw-bold fs-5" name="name"/>
                         <field class="text-muted" name="code"/>
                     </t>

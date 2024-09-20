@@ -38,13 +38,13 @@
                 <field name="legend_done"/>
                 <templates>
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
-                    <t t-name="kanban-menu" groups="base.group_user">
+                    <t t-name="menu" groups="base.group_user">
                         <a role="menuitem" t-att-href="record.website_url.value" class="dropdown-item">View Track</a>
                         <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit Track</a></t>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name" class="fw-medium fs-5"/>
                         <div t-if="duration" class="d-flex"><field name="duration" widget="float_time"/>hours</div>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>

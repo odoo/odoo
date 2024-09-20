@@ -21,7 +21,7 @@ class LunchProduct extends models.Model {
         "kanban,false": `
             <kanban class="o_kanban_test" edit="0">
                 <template>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="is_favorite" widget="lunch_is_favorite" nolabel="1"/>
                         <field name="name"/>
                     </t>

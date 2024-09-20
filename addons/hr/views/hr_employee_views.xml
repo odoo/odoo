@@ -294,7 +294,7 @@
                     <field name="image_128" />
                     <field name="company_id"/>
                     <templates>
-                        <t t-name="kanban-card" class="flex-row">
+                        <t t-name="card" class="flex-row">
                             <aside class="o_kanban_aside_full">
                                 <t t-if="record.image_1024.raw_value">
                                     <field name="image_1024" widget="background_image" options="{'zoom': true, 'zoom_delay': 1000, 'preview_image':'image_128'}" class="d-block position-relative"/>

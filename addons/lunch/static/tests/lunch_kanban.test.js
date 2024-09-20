@@ -32,7 +32,7 @@ async function mountLunchView() {
             arch: `
             <kanban js_class="lunch_kanban">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name"/>
                         <field name="price"/>
                     </t>

@@ -241,7 +241,7 @@ test.tags("desktop")("many2many kanban: edition", async () => {
                 <field name="timmy">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <div>
                                     <a
                                         t-if="!read_only_mode"
@@ -341,7 +341,7 @@ test("many2many kanban(editable): properly handle add-label node attribute", asy
                     <field name="timmy" add-label="Add timmy" mode="kanban">
                         <kanban>
                             <templates>
-                                <t t-name="kanban-card">
+                                <t t-name="card">
                                     <field name="name"/>
                                 </t>
                             </templates>
@@ -410,7 +410,7 @@ test("many2many kanban: create action disabled", async () => {
                 <field name="timmy">
                     <kanban create="0">
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <div>
                                     <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
                                     <field name="name"/>
@@ -447,7 +447,7 @@ test("many2many kanban: conditional create/delete actions", async () => {
                 <field name="timmy" options="{'create': [('color', '=', 'red')], 'delete': [('color', '=', 'red')]}">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="name"/>
                             </t>
                         </templates>
@@ -987,7 +987,7 @@ test("many2many field with link option (kanban)", async () => {
                 <field name="timmy" options="{'link': [('color', '=', 'red')]}">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="name"/>
                             </t>
                         </templates>
@@ -1028,7 +1028,7 @@ test('many2many field with link option (kanban, create="0")', async () => {
                 <field name="timmy" options="{'link': [('color', '=', 'red')]}">
                     <kanban create="0">
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="name"/>
                             </t>
                         </templates>
@@ -1194,12 +1194,11 @@ test("many2many with a domain", async () => {
 test("many2many list (editable): edition concurrence", async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._records.push({ id: 15, name: "bronze", color: 6 });
-    PartnerType._fields.float_field = fields.Float({string: "Float"});
+    PartnerType._fields.float_field = fields.Float({ string: "Float" });
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
         search: '<search><field name="name" string="Name"/></search>',
     };
-
 
     onRpc((args) => {
         expect.step(args.method);
@@ -1404,7 +1403,7 @@ test("onchange with 40+ commands for a many2many", async () => {
                 <field name="timmy">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="name"/>
                             </t>
                         </templates>
@@ -1463,7 +1462,7 @@ test.tags("desktop")("onchange with 40+ commands for a many2many on desktop", as
                 <field name="timmy">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="name"/>
                             </t>
                         </templates>
@@ -1631,7 +1630,7 @@ test("many2many kanban: action/type attribute", async () => {
                 <field name="timmy">
                     <kanban action="a1" type="object">
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="name"/>
                             </t>
                         </templates>

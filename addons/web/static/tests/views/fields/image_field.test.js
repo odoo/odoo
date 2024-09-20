@@ -543,7 +543,7 @@ test("ImageField in subviews is loaded correctly", async () => {
                 <field name="timmy" widget="many2many" mode="kanban">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="name" />
                             </t>
                         </templates>
@@ -779,7 +779,7 @@ test("convert image to webp", async () => {
             expect(args[0][0].mimetype).toBe("image/jpeg");
             return true;
         }
-    })
+    });
 
     const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
     await mountView({
@@ -799,4 +799,4 @@ test("convert image to webp", async () => {
         { message: "image field should not be set" }
     );
     await setFiles(imageFile);
-})
+});

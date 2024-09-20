@@ -104,7 +104,7 @@ QUnit.module("Project", (hooks) => {
         const views = {
             "project.task,false,kanban": `<kanban js_class="project_task_kanban" default_group_by="project_id">
                     <templates>
-                        <t t-name="kanban-card"/>
+                        <t t-name="card"/>
                     </templates>
                 </kanban>`,
         };
@@ -125,7 +125,7 @@ QUnit.module("Project", (hooks) => {
         const views = {
             "project.task,false,kanban": `<kanban js_class="project_task_kanban" default_group_by="user_ids">
                     <templates>
-                        <t t-name="kanban-card"/>
+                        <t t-name="card"/>
                     </templates>
                 </kanban>`,
         };
@@ -146,7 +146,7 @@ QUnit.module("Project", (hooks) => {
         const views = {
             "project.task,false,kanban": `<kanban js_class="project_task_kanban" default_group_by="date_deadline">
                     <templates>
-                        <t t-name="kanban-card"/>
+                        <t t-name="card"/>
                     </templates>
                 </kanban>`,
         };

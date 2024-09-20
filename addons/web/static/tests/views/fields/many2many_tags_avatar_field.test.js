@@ -238,7 +238,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name"/>
                         <footer>
                             <field name="partner_ids" widget="many2many_tags_avatar"/>
@@ -321,7 +321,7 @@ test("widget many2many_tags_avatar add/remove tags in kanban view", async () => 
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name"/>
                         <footer>
                             <field name="partner_ids" widget="many2many_tags_avatar"/>
@@ -368,7 +368,7 @@ test("widget many2many_tags_avatar quick add tags and close in kanban view with 
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name"/>
                         <footer>
                             <field name="partner_ids" widget="many2many_tags_avatar"/>
@@ -394,7 +394,7 @@ test("widget many2many_tags_avatar in kanban view missing access rights", async 
         arch: `
             <kanban edit="0" create="0">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name"/>
                         <footer>
                             <field name="partner_ids" widget="many2many_tags_avatar"/>

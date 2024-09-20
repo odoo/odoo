@@ -305,7 +305,7 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="name" class="fw-bolder" string="Project Name"/>
                             <div class="d-flex">
                                 <field name="partner_id" string="Contact"/>
@@ -388,7 +388,7 @@
                     <progressbar field="last_update_status" colors='{"on_track": "success", "at_risk": "warning", "off_track": "danger", "on_hold": "info", "done": "purple"}'/>
                     <field name="sequence" widget="handle"/>
                     <templates>
-                        <t t-name="kanban-menu" groups="base.group_user">
+                        <t t-name="menu" groups="base.group_user">
                             <div class="container">
                                 <div class="row">
                                     <div name="card_menu_view" class="col-6">
@@ -432,7 +432,7 @@
                                 </div>
                             </div>
                         </t>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <div class="o_project_kanban_main d-flex align-items-baseline gap-1 ms-1">
                                 <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
                                 <div class="mw-100 pb-4 me-5">

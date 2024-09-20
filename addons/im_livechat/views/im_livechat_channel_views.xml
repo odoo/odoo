@@ -26,13 +26,13 @@
                     <field name="are_you_inside"/>
                     <field name="rating_count"/>
                     <templates>
-                        <t t-name="kanban-menu">
+                        <t t-name="menu">
                             <div class="container">
                                 <a type="object" name="action_view_rating" class="dropdown-item" role="menuitem">Ratings</a>
                                 <a type="open" class="dropdown-item" role="menuitem">Configure Channel</a>
                             </div>
                         </t>
-                        <t t-name="kanban-card" class="p-0 row g-0">
+                        <t t-name="card" class="p-0 row g-0">
                             <aside t-if="record.image_128.raw_value" class="ps-4 col-3" t-att-class="{'o-livechat-ChannelKanban-highlighted': record.available_operator_ids.raw_value.length > 0}">
                                 <field  name="image_128" widget="image" options="{'img_class': 'object-fit-contain'}" alt="Channel"/>
                             </aside>
@@ -96,7 +96,7 @@
                                     <field name="user_ids" nolabel="1" colspan="2" domain="[['groups_id', 'not in', %(base.group_portal)d]]">
                                         <kanban>
                                             <templates>
-                                                <t t-name="kanban-card" class="flex-row">
+                                                <t t-name="card" class="flex-row">
                                                     <aside>
                                                         <field name="avatar_1024" widget="image" alt="User"/>
                                                     </aside>
@@ -197,7 +197,7 @@
             <field name="arch" type="xml">
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="action"/>
                             <field name="regex_url" />
                             <field name="country_ids" widget="many2many_tags" />
