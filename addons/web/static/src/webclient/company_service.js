@@ -124,10 +124,10 @@ export const companyService = {
                 const state = {};
                 const options = { reload: true };
                 if (controller?.props.resId && controller?.props.resModel) {
-                    let hasReadRights = await orm.call(
+                    const hasReadRights = await user.checkAccessRight(
                         controller.props.resModel,
-                        "has_access",
-                        [[controller.props.resId], "read"]
+                        "read",
+                        controller.props.resId
                     );
 
                     if (!hasReadRights) {

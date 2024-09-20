@@ -161,10 +161,10 @@ export class CalendarModel extends Model {
         }
 
         const normalizedFilterValue = Array.isArray(filterValue) ? filterValue : [filterValue];
-        const dataArray = normalizedFilterValue.map(value => {
+        const dataArray = normalizedFilterValue.map((value) => {
             const data = {
                 user_id: user.userId,
-                [info.writeFieldName]: value
+                [info.writeFieldName]: value,
             };
             if (info.filterFieldName) {
                 data[info.filterFieldName] = true;
@@ -319,9 +319,7 @@ export class CalendarModel extends Model {
      */
     async updateData(data) {
         if (data.hasCreateRight === null) {
-            data.hasCreateRight = await this.orm.call(this.meta.resModel, "has_access", [
-                [], "create",
-            ]);
+            data.hasCreateRight = await user.checkAccessRight(this.meta.resModel, "create");
         }
         data.range = this.computeRange();
         if (this.meta.showUnusualDays) {

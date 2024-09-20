@@ -645,10 +645,10 @@ export class PropertiesField extends Component {
             return false;
         }
 
-        return await this.orm.call(
+        return await user.checkAccessRight(
             this.definitionRecordModel,
-            "has_access",
-            [[this.definitionRecordId], "write"]
+            "write",
+            this.definitionRecordId
         );
     }
 

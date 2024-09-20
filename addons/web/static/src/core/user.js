@@ -3,6 +3,7 @@ import { pyToJsLocale } from "@web/core/l10n/utils/locales";
 import { rpc } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
 import { session } from "@web/session";
+import { ensureArray } from "./utils/arrays";
 
 // This file exports an object containing user-related information and functions
 // allowing to obtain/alter user-related information from the server.
@@ -63,16 +64,17 @@ export function _makeUser(session) {
     const groupCache = new Cache(getGroupCacheValue, getGroupCacheKey);
     groupCache.cache["base.group_user"] = Promise.resolve(isInternalUser);
     groupCache.cache["base.group_system"] = Promise.resolve(isSystem);
-    const getAccessRightCacheValue = (model, operation, context) => {
+    const getAccessRightCacheValue = (model, operation, ids, context) => {
         const url = `/web/dataset/call_kw/${model}/has_access`;
         return rpc(url, {
             model,
             method: "has_access",
-            args: [[], operation],
+            args: [ids, operation],
             kwargs: { context },
         });
     };
-    const getAccessRightCacheKey = (model, operation) => `${model}/${operation}`;
+    const getAccessRightCacheKey = (model, operation, ids) =>
+        JSON.stringify([model, operation, ids]);
     const accessRightCache = new Cache(getAccessRightCacheValue, getAccessRightCacheKey);
     const lang = pyToJsLocale(context?.lang);
 
@@ -104,8 +106,8 @@ export function _makeUser(session) {
         hasGroup(group) {
             return groupCache.read(group, this.context);
         },
-        checkAccessRight(model, operation) {
-            return accessRightCache.read(model, operation, this.context);
+        checkAccessRight(model, operation, ids = []) {
+            return accessRightCache.read(model, operation, ensureArray(ids), this.context);
         },
         async setUserSettings(key, value) {
             const model = "res.users.settings";
