@@ -756,3 +756,35 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         order = self.env['pos.order'].search([])
         self.assertEqual(len(order), 1)
         self.assertEqual(order.crm_team_id, sale_team)
+
+    def test_show_orders_for_pos_currency_only(self):
+        currency = self.env['res.currency'].create({
+            'name': 'C',
+            'symbol': 'C',
+            'rounding': 0.01,
+            'currency_unit_label': 'Curr',
+            'rate': 1,
+        })
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Pricelist Different Currency',
+            'currency_id': currency.id,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'lst_price': 10,
+            'taxes_id': False,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'name': product.name,
+                'product_uom_qty': 4,
+                'price_unit': product.lst_price,
+            })],
+            'pricelist_id': pricelist.id
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosOrdersListDifferentCurrency', login="pos_admin")
