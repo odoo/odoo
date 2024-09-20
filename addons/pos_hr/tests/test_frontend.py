@@ -65,3 +65,14 @@ class TestUi(TestPosHrHttpCommon):
             "CashierStayLogged",
             login="pos_admin",
         )
+
+    def test_cashier_can_see_product_info(self):
+        # open a session, the /pos/ui controller will redirect to it
+        self.product_a.available_in_pos = True
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "CashierCanSeeProductInfo",
+            login="pos_admin",
+        )
