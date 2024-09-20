@@ -96,7 +96,7 @@
                 <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" onCloseFullComposerCallback.bind="onCloseFullComposerCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
             </t>
         </div>
-        <div class="o-mail-Chatter-content">
+        <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1">
             <div t-if="state.isSearchOpen" class="o-mail-Chatter-search">
                 <SearchMessagesPanel
                     closeSearch.bind="closeSearch"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.Thread" t-inherit-mode="extension">
-        <xpath expr="//*[@t-ref='empty-message']" position="replace">
+        <xpath expr="//*[@name='empty-message']" position="replace">
             <t t-if="props.thread.isEmpty and props.thread.model === 'mail.box'">
                 <t t-if="props.thread.id === 'inbox' and state.mountedAndLoaded">
                     <div t-if="store.self.notification_preference !== 'inbox'" class="align-items-center text-center">
