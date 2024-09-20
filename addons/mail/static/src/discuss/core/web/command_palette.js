@@ -19,6 +19,7 @@ class DiscussCommand extends Component {
         imgUrl: String,
         name: String,
         persona: { type: Object, optional: true },
+        channel: { type: Object, optional: true },
         searchValue: String,
         slots: Object,
     };
@@ -142,6 +143,7 @@ commandProviderRegistry.add("discuss.channel", {
                         name: channel.displayName,
                         category: "discuss_recent",
                         props: {
+                            channel,
                             imgUrl: channel.avatarUrl,
                             counter: channel.importantCounter,
                         },
@@ -155,12 +157,23 @@ commandProviderRegistry.add("discuss.channel", {
         const channelsData = await env.services.orm.searchRead(
             "discuss.channel",
             domain,
-            ["channel_type", "name", "avatar_cache_key"],
+            ["channel_type", "name", "avatar_cache_key", "parent_channel_id"],
             { limit: 10 }
         );
         channelsData
             .filter((data) => !shownChannels.has(data.id))
             .map((data) => {
+                const channel = store.Thread.insert({
+                    ...data,
+                    model: "discuss.channel",
+                    parent_channel_id: data.parent_channel_id
+                        ? {
+                              id: data.parent_channel_id[0],
+                              model: "discuss.channel",
+                              name: data.parent_channel_id[1],
+                          }
+                        : null,
+                });
                 commands.push({
                     Component: DiscussCommand,
                     async action() {
@@ -169,6 +182,7 @@ commandProviderRegistry.add("discuss.channel", {
                     },
                     name: data.name,
                     props: {
+                        channel,
                         imgUrl: imageUrl("discuss.channel", data.id, "avatar_128", {
                             unique: data.avatar_cache_key,
                         }),
