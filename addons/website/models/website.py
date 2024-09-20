@@ -2030,7 +2030,11 @@ class Website(models.Model):
         user implemented his own consent behavior through custom code / app.
         That custom code / app is able to override this function as desired and
         xpath the `tracking_code_config` script in `website.layout`.
+<<<<<<< master
 
+||||||| 5324442475fc6f73ed2349e926c95cf812ee4e96
+=======
+>>>>>>> 7bedaa27385dab12f63cbb302850c811aec75bcc
         :return: True if all consents have been granted, False otherwise
         """
         self.ensure_one()
