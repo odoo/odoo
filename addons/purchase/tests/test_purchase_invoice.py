@@ -847,7 +847,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
 
     def test_invoice_user_id_on_bill(self):
         """
-        Test that the invoice_user_id field is set to current user when creating a vendor bill from a PO
+        Test that the invoice_user_id field is False when creating a vendor bill from a PO
         or when using Auto-Complete feature of a vendor bill.
         """
         group_purchase_user = self.env.ref('purchase.group_purchase_user')
@@ -878,9 +878,9 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         po1.order_line.qty_received = 1
         po1.action_create_invoice()
         invoice1 = po1.invoice_ids
-        self.assertEqual(invoice1.invoice_user_id, self.env.user)
+        self.assertFalse(invoice1.invoice_user_id)
         # creating bill with Auto_complete feature
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice2 = move_form.save()
-        self.assertEqual(invoice2.invoice_user_id, self.env.user)
+        self.assertFalse(invoice2.invoice_user_id)
