@@ -18,7 +18,7 @@ beforeEach(() => {
         "kanban,false": `
             <kanban class="o_kanban_test" edit="0">
                 <template>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
                         <field name="name"/>
                     </t>

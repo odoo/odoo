@@ -74,7 +74,7 @@
                 <progressbar field="activity_state"
                     colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div class="d-flex mb-2">
                             <field name="partner_id" class="fw-bolder fs-5" />
                             <field name="amount_total" widget="monetary" class="fw-bolder ms-auto"/>
@@ -678,7 +678,7 @@
                                             class="btn-secondary"/>
                                 </control>
                                 <templates>
-                                    <t t-name="kanban-card" class="row g-0 ps-0 pe-0">
+                                    <t t-name="card" class="row g-0 ps-0 pe-0">
                                         <t t-if="!record.display_type.raw_value">
                                             <aside class="col-2 p-1">
                                                 <span t-att-title="record.product_id.value">

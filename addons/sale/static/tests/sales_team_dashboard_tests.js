@@ -59,7 +59,7 @@ QUnit.test("edit progressbar target", async (assert) => {
             <kanban>
                 <field name="invoiced_target"/>
                 <templates>
-                    <div t-name="kanban-card">
+                    <div t-name="card">
                         <field name="invoiced" widget="sales_team_progressbar" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true}"/>
                     </div>
                 </templates>

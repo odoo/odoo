@@ -262,7 +262,7 @@
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
 
                 <templates>
-                    <t t-name="kanban-card" class="flex-row">
+                    <t t-name="card" class="flex-row">
                         <aside class="d-flex align-items-center me-2">
                             <field name="image_128" widget="image" options="{'img_class': 'object-fit-cover'}"/>
                         </aside>
@@ -395,7 +395,7 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div class="d-flex">
                             <field class="fw-bold" name="vehicle_id"/>
                             <field class="fw-bold ms-auto" name="date"/>

@@ -5559,7 +5559,7 @@ test(`Navigate between the list and kanban view using the command palette`, asyn
         list: `<list><field name="display_name"/></list>`,
         kanban: `
             <kanban class="o_kanban_test">
-                <templates><t t-name="kanban-card">
+                <templates><t t-name="card">
                     <field name="foo"/>
                 </t></templates>
             </kanban>
@@ -13321,7 +13321,7 @@ test(`change the viewType of the current action`, async () => {
         "kanban,1": `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>

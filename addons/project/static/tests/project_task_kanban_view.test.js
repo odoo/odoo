@@ -16,7 +16,7 @@ test("shadow stages should be displayed in the project Kanban", async () => {
         arch: `
             <kanban default_group_by="stage_id" js_class="project_task_kanban">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name"/>
                     </t>
                 </templates>

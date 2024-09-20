@@ -116,7 +116,7 @@ test(
                         <field name="partner_ids">
                         <kanban>
                             <templates>
-                                <t t-name="kanban-card">
+                                <t t-name="card">
                                     <field name="display_name"/>
                                 </t>
                             </templates>

@@ -111,11 +111,11 @@
             <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="supported_attachment_ids_count"/>
                 <templates>
-                    <t t-name="kanban-menu" groups="base.group_user">
+                    <t t-name="menu" groups="base.group_user">
                         <a t-if="widget.editable" role="menuitem" type="open" class="dropdown-item">Edit Time Off</a>
                         <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                     </t>
-                    <t t-name="kanban-card" class="row g-0">
+                    <t t-name="card" class="row g-0">
                         <div class="ms-3 col">
                             <span class="badge rounded-pill float-end"><field name="number_of_days"/> days</span>
                             <field class="fw-bold fs-5" name="employee_id"/>

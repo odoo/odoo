@@ -80,7 +80,7 @@ QUnit.module('Crm Kanban Progressbar', {
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"/>
                     <templates>
-                        <t t-name="kanban-card" class="flex-row justify-content-between">
+                        <t t-name="card" class="flex-row justify-content-between">
                             <field name="name" class="p-2"/>
                             <field name="recurring_revenue_monthly" class="p-2"/>
                         </t>
@@ -106,7 +106,7 @@ QUnit.module('Crm Kanban Progressbar', {
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"/>
                     <templates>
-                        <t t-name="kanban-card" class="flex-row justify-content-between">
+                        <t t-name="card" class="flex-row justify-content-between">
                             <field name="name" class="p-2"/>
                             <field name="recurring_revenue_monthly" class="p-2"/>
                         </t>
@@ -134,7 +134,7 @@ QUnit.module('Crm Kanban Progressbar', {
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"/>
                     <templates>
-                        <t t-name="kanban-card" class="flex-row justify-content-between">
+                        <t t-name="card" class="flex-row justify-content-between">
                             <field name="name" class="p-2"/>
                             <field name="expected_revenue" class="p-2"/>
                             <field name="recurring_revenue_monthly" class="p-2"/>
@@ -182,7 +182,7 @@ QUnit.module('Crm Kanban Progressbar', {
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"/>
                     <templates>
-                        <t t-name="kanban-card" class="flex-row justify-content-between">
+                        <t t-name="card" class="flex-row justify-content-between">
                             <field name="name" class="p-2"/>
                             <field name="expected_revenue" class="p-2"/>
                             <field name="recurring_revenue_monthly" class="p-2"/>

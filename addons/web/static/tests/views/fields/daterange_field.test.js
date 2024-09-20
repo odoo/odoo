@@ -1077,7 +1077,7 @@ test("daterange field in kanban with show_time option", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="datetime" widget="daterange" options="{'show_time': false, 'end_date_field': 'datetime_end'}"/>
                     </t>
                 </templates>

@@ -31,7 +31,7 @@ test("FavoriteField in kanban view", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="bar" widget="boolean_favorite"/>
                     </t>
                 </templates>
@@ -68,7 +68,7 @@ test("FavoriteField saves changes by default", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="bar" widget="boolean_favorite"/>
                     </t>
                 </templates>
@@ -99,7 +99,7 @@ test("FavoriteField does not save if autosave option is set to false", async () 
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="bar" widget="boolean_favorite" options="{'autosave': False}"/>
                     </t>
                 </templates>
@@ -229,7 +229,7 @@ test("FavoriteField in kanban view with readonly attribute", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="bar" widget="boolean_favorite" readonly="1"/>
                     </t>
                 </templates>

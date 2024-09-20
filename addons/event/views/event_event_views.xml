@@ -233,7 +233,7 @@
                 <field name="date_end"/>
                 <field name="legend_done"/>
                 <templates>
-                    <t t-name="kanban-card" class="p-0 row">
+                    <t t-name="card" class="p-0 row">
                         <aside class="col-4 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
                             <div t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="fs-1"/>
                             <div>

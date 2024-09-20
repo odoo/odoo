@@ -84,7 +84,7 @@
                                     <kanban class="o_kanban_mobile">
                                         <field name="icon"/>
                                         <templates>
-                                            <t t-name="kanban-card">
+                                            <t t-name="card">
                                                 <div class="fw-bold fs-5">
                                                     <i t-if="record.icon.value"
                                                         t-attf-class="fa #{record.icon.value} fa-fw "
@@ -117,7 +117,7 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="name" class="fw-bolder"/>
                             <field name="res_model_id"/>
                             <div>

@@ -105,7 +105,7 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field class="fw-bolder fs-5" name="name"/>
                             <field t-if="!widget.isHtmlEmpty(record.note.raw_value)" name="note"/>
                         </t>

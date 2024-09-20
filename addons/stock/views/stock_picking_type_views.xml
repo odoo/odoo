@@ -181,7 +181,7 @@
                 <field name="count_move_ready"/>
                 <field name="show_picking_type" invisible="1"/>
                 <templates>
-                    <t t-name="kanban-menu" t-if="!selection_mode">
+                    <t t-name="menu" t-if="!selection_mode">
                         <div class="container" t-if="record.show_picking_type.raw_value">
                             <div class="row">
                                 <div class="col-6">
@@ -223,7 +223,7 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div t-if="record.show_picking_type.raw_value" name="stock_picking" class="px-2">
                             <a t-if="!selection_mode" type="object" name="get_stock_picking_action_picking_type">
                                 <field class="fw-bold fs-4" name="name"/>

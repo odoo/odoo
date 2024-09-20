@@ -87,7 +87,7 @@
             <field name="arch" type="xml">
                 <kanban create="false" sample="1">
                     <templates>
-                        <t t-name="kanban-card" class="row g-0">
+                        <t t-name="card" class="row g-0">
                             <aside class="col-4 my-auto align-self-center">
                                 <field name="rating_image" widget="image" class="bg-view ms-3" />
                             </aside>
@@ -126,7 +126,7 @@
                 <kanban create="false" class="o_rating_rating_kanban">
                     <field name="rating"/>
                     <templates>
-                        <t t-name="kanban-card" class="row g-0">
+                        <t t-name="card" class="row g-0">
                             <t t-set="val_stars" t-value="Math.round(record.rating.raw_value * 10) / 10"/>
                             <t t-set="val_integer" t-value="Math.floor(val_stars)"/>
                             <t t-set="val_decimal" t-value="val_stars - val_integer"/>

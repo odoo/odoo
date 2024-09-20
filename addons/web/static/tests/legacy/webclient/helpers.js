@@ -336,7 +336,7 @@ export function getActionManagerServerData() {
     const archs = {
         // kanban views
         "partner,1,kanban":
-            '<kanban><templates><t t-name="kanban-card">' +
+            '<kanban><templates><t t-name="card">' +
             '<field name="foo"/>' +
             "</t></templates></kanban>",
         // list views

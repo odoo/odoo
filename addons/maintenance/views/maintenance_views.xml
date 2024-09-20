@@ -160,12 +160,12 @@
                 <field name="archive" />
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit...</a></t>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name" class="fw-bold fs-5"/>
                         <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id"/></span>
                         <span t-if="record.equipment_id.raw_value"><field name="equipment_id"/><span t-if="record.category_id.raw_value"> (<field name="category_id"/>)</span></span>
@@ -460,14 +460,14 @@
             <kanban highlight_color="color" sample="1">
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit...</a></t>
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                         <div role="separator" class="dropdown-divider"></div>
                         <div role="separator" class="dropdown-header">Record Colour</div>
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div>
                             <field name="name" class="fw-bold fs-5"/>
                             <span t-if="record.model.raw_value" class="fw-bold small"> (<field name="model"/>)</span>
@@ -663,7 +663,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name" class="fw-bolder mb-1"/>
                         <div class="d-flex mt-1 align-items-center smaller">
                             <strong>Equipment:</strong><field name="equipment_count" class="ms-1"/>
@@ -720,7 +720,7 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name" class="fw-bolder"/>
                     </t>
                 </templates>
@@ -786,7 +786,7 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name" class="fw-bold"/>
                     </t>
                 </templates>
@@ -800,7 +800,7 @@
         <field name="arch" type="xml">
             <kanban highlight_color="color" class="o_maintenance_team_kanban" create="0" can_open="0">
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <div class="container">
                             <div class="row">
                                 <div class="col-6">
@@ -849,7 +849,7 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
                             <field name="name" class="fw-bold fs-4 ms-2"/>
                         </a>

@@ -64,7 +64,7 @@
                 <field name="pos_session_duration"/>
                 <field name="currency_id"/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <div class="container dropdown-pos-config">
                             <div class="row" style="min-width:200px">
                                 <div class="col-6 o_kanban_manage_view">
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div name="card_title" class="mb-4 ms-2">
                             <field name="name" class="fw-bold fs-4 d-block"/>
                             <div t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="badge text-bg-info d-inline-block">Opened by <field name="pos_session_username"/></div>

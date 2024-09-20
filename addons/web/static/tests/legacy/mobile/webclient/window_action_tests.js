@@ -31,7 +31,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "project,false,kanban": `
                 <kanban>
                     <templates>
-                        <t t-name='kanban-card'>
+                        <t t-name='card'>
                             <field name='foo' />
                         </t>
                     </templates>

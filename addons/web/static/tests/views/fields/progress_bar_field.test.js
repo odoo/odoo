@@ -215,7 +215,7 @@ test("ProgressBarField: field is editable in kanban", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="int_field" title="ProgressBarTitle" widget="progressbar" options="{'editable': true, 'max_value': 'float_field'}" />
                         </t>
                     </templates>
@@ -254,7 +254,7 @@ test("force readonly in kanban", async (assert) => {
         arch: /* xml */ `
         <kanban>
             <templates>
-                <t t-name="kanban-card">
+                <t t-name="card">
                     <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field', 'readonly': True}" />
                 </t>
             </templates>
@@ -277,7 +277,7 @@ test("ProgressBarField: readonly and editable attrs/options in kanban", async ()
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="int_field" readonly="1" widget="progressbar" options="{'max_value': 'float_field'}" />
                         <field name="int_field2" widget="progressbar" options="{'max_value': 'float_field'}" />
                         <field name="int_field3" widget="progressbar" options="{'editable': true, 'max_value': 'float_field'}" />

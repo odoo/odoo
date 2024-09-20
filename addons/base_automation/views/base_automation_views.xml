@@ -140,7 +140,7 @@
                                         <field name="update_field_type"/>
                                         <field name="update_m2m_operation"/>
                                         <templates>
-                                            <t t-name="kanban-card" class="flex-row align-items-center gap-1">
+                                            <t t-name="card" class="flex-row align-items-center gap-1">
                                                 <field name="sequence" widget="handle" class="px-1" />
                                                 <!-- Icon section -->
                                                 <i
@@ -229,7 +229,7 @@
                 >
                     <field name="active"/>
                     <templates>
-                        <t t-name="kanban-card" class="flex-md-row">
+                        <t t-name="card" class="flex-md-row">
                             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
                             <div class="d-flex align-items-center w-100 w-md-25 o_automation_base_info">
                                 <div class="d-flex flex-column">

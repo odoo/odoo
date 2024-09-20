@@ -135,7 +135,7 @@
         <kanban js_class="website_pages_kanban" create="false" action="go_to_website" type="object" sample="1">
             <field name="parent_id"/>
             <templates>
-                <t t-name="kanban-card">
+                <t t-name="card">
                     <field name="name" class="text-truncate fw-bold"/>
                     <div class="text-muted text-truncate fw-bold" t-if="record.website_id.value" groups="website.group_multi_website">
                         <i class="fa fa-globe me-1" title="Website"/>

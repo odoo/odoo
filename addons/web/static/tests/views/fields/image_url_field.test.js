@@ -81,7 +81,7 @@ test("ImageUrlField in subviews are loaded correctly", async () => {
                 <field name="timmy" widget="many2many" mode="kanban">
                     <kanban>
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="display_name"/>
                             </t>
                         </templates>
@@ -152,7 +152,7 @@ test("image url fields in kanban don't stop opening record", async () => {
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="foo" widget="image_url"/>
                     </t>
                 </templates>

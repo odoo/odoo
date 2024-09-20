@@ -68,7 +68,7 @@ QUnit.module("Fields", (hooks) => {
             },
             views: {
                 "product.product,false,kanban": `
-                    <kanban><templates><t t-name="kanban-card">
+                    <kanban><templates><t t-name="card">
                         <field name="id"/>
                         <field name="name"/>
                         <field name="barcode"/>

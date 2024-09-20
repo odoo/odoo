@@ -47,7 +47,7 @@ class BaseAutomationTestUi(HttpCase):
                 "arch": """
                     <kanban default_group_by="tag_ids">
                         <templates>
-                            <t t-name="kanban-card">
+                            <t t-name="card">
                                 <field name="name" />
                             </t>
                         </templates>

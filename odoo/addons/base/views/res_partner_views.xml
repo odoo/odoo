@@ -220,7 +220,7 @@
                                     <field name="type"/>
                                     <field name="is_company"/>
                                     <templates>
-                                        <t t-name="kanban-card" class="flex-row">
+                                        <t t-name="card" class="flex-row">
                                             <aside class="o_kanban_aside_full">
                                                 <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-cover'}" alt="Contact image"/>
                                             </aside>
@@ -401,7 +401,7 @@
                     <field name="is_company"/>
                     <field name="active"/>
                     <templates>
-                        <t t-name="kanban-card" class="flex-row">
+                        <t t-name="card" class="flex-row">
                             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                             <aside class="o_kanban_aside_full">
                                 <t t-if="!record.is_company.raw_value">

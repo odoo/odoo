@@ -158,14 +158,14 @@
                   <field name="website"/>
                   <field name="application"/>
                   <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <a type="open" class="dropdown-item">Module Info</a>
                         <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item o-hidden-ios" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
                         <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Upgrade</a>
                         <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item" groups="base.group_system">Uninstall</a>
                     </t>
-                    <t t-name="kanban-card" class="flex-row align-items-center">
+                    <t t-name="card" class="flex-row align-items-center">
                         <aside>
                             <field name="icon" widget="image_url" options="{'size': [50, 50]}" alt="Icon"/>
                             <field t-if="record.icon_flag" name="icon_flag" class="oe_module_flag"/>
