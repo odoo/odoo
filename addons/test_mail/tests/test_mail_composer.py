@@ -2962,7 +2962,7 @@ class TestComposerResultsMass(TestMailComposer):
             composer = composer_form.save()
             self.assertTrue(composer.composition_batch)
             self.assertEqual(composer.composition_mode, 'mass_mail')
-            self.assertFalse(composer.res_ids)
+            self.assertEqual(sorted(literal_eval(composer.res_ids)), sorted(self.test_records.ids))
 
             with self.mock_mail_gateway(mail_unlink_sent=True):
                 composer._action_send_mail()
