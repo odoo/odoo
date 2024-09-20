@@ -177,9 +177,7 @@ test("chat window: basic rendering", async () => {
     await contains("[title='Open Actions Menu']");
     await contains("[title='Fold']");
     await contains("[title*='Close Chat Window']");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", {
-        text: "There are no messages in this conversation.",
-    });
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { text: "The conversation is empty." });
     await click("[title='Open Actions Menu']");
     await contains(".o-mail-ChatWindow-command", { count: 14 });
     await contains(".o-dropdown-item", { text: "Attachments" });

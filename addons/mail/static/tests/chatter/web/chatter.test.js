@@ -245,7 +245,7 @@ test("should not display user notification messages in chatter", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await contains(".o-mail-Message", { count: 0 });
 });
 

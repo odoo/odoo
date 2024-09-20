@@ -200,7 +200,7 @@ test("default thread rendering", async () => {
     });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread", { text: "The conversation is empty." });
 });
 
 test("sidebar quick search at 20 or more pinned channels", async () => {
