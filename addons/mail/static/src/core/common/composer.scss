@@ -32,18 +32,25 @@
     }
 }
 
-.o-mail-Composer-actions button {
-    opacity: 75%;
-    @media (hover: hover) {
-        &:hover {
-            background-color: $gray-200;
-            opacity: 100%;
-        }
+.o-mail-Composer-actions {
+    &.o-extended {
+        margin-left: map-get($spacers, 2) + map-get($spacers, 1);
+        margin-right: map-get($spacers, 2) + map-get($spacers, 1);
     }
-    &:disabled {
-        --btn-active-color: var(--btn-disabled-color);
-        --btn-hover-color: var(--btn-disabled-color);
-        opacity: var(--btn-disabled-opacity);
+
+    button {
+        opacity: 75%;
+        @media (hover: hover) {
+            &:hover {
+                background-color: $gray-200;
+                opacity: 100%;
+            }
+        }
+        &:disabled {
+            --btn-active-color: var(--btn-disabled-color);
+            --btn-hover-color: var(--btn-disabled-color);
+            opacity: var(--btn-disabled-opacity);
+        }
     }
 }
 
