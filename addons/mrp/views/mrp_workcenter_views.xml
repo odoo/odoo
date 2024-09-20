@@ -216,19 +216,19 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="row" t-if="record.workorder_ready_count.raw_value &gt; 0">
-                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_ready': 1}">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_ready': 1, 'desktop_list_view': 1}">
                                             To Launch
                                         </a>
                                         <field name="workorder_ready_count" class="col-4 text-end"/>
                                     </div>
                                     <div class="row" t-if="record.workorder_progress_count.raw_value &gt; 0">
-                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_progress': 1}">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_progress': 1, 'desktop_list_view': 1}">
                                             In Progress
                                         </a>
                                         <field name="workorder_progress_count" class="col-4 text-end"/>
                                     </div>
                                     <div class="row" t-if="record.workorder_late_count.raw_value &gt; 0">
-                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_late': 1}">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_late': 1, 'desktop_list_view': 1}">
                                             Late
                                         </a>
                                         <field name="workorder_late_count" class="col-4 text-end"/>
@@ -245,7 +245,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mt-auto">
                                 <field name="kanban_dashboard_graph" graph_type="bar" widget="workcenter_dashboard_graph"/>
                             </div>
                         </t>
