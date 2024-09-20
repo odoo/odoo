@@ -957,3 +957,86 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             self.fail(
                 "ValidationError raised unexpectedly for single-line payment term with EPD"
             )
+
+    def test_epd_entry_tag_invert_with_distinct_negative_invoice_line(self):
+        """
+        `tax_tag_invert` should be the same for all Early Payment Discount lines of a single entry
+        """
+
+        analytic_plan = self.env['account.analytic.plan'].create({
+            'name': 'existential plan',
+        })
+        analytic_account_a = self.env['account.analytic.account'].create({
+            'name': 'positive_account',
+            'plan_id': analytic_plan.id,
+        })
+        analytic_account_b = self.env['account.analytic.account'].create({
+            'name': 'negative_account',
+            'plan_id': analytic_plan.id,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-10',
+            'date': '2019-01-10',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'price_unit': 2000,
+                    'tax_ids': self.tax_sale_a,
+                    'analytic_distribution': {str(analytic_account_a.id): 100},
+                }),
+                Command.create({
+                    'name': 'line',
+                    'price_unit': -1500,
+                    'tax_ids': self.tax_sale_a,
+                    'analytic_distribution': {str(analytic_account_b.id): 100},
+                }),
+            ],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        invoice.action_post()
+
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_b.id,
+            'invoice_date': '2019-01-10',
+            'date': '2019-01-10',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'price_unit': 3000,
+                    'tax_ids': self.tax_purchase_a,
+                    'analytic_distribution': {str(analytic_account_a.id): 100},
+                }),
+                Command.create({
+                    'name': 'line',
+                    'price_unit': -2250,
+                    'tax_ids': self.tax_purchase_a,
+                    'analytic_distribution': {str(analytic_account_b.id): 100},
+                }),
+            ],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        bill.action_post()
+
+        payments = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'payment_date': '2019-01-01',
+        })._create_payments()
+
+        for line in payments.line_ids.filtered(lambda line: line.tax_repartition_line_id or line.tax_ids):
+            self.assertFalse(line.tax_tag_invert)
+
+        payments = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=bill.ids,
+        ).create({
+            'payment_date': '2019-01-01',
+        })._create_payments()
+
+        for line in payments.line_ids.filtered(lambda line: line.tax_repartition_line_id or line.tax_ids):
+            self.assertTrue(line.tax_tag_invert)
