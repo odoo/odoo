@@ -18,6 +18,7 @@
                       invisible="move_type not in ['out_invoice', 'out_refund'] or country_code != 'VN'">
                     <group>
                         <field name="l10n_vn_edi_replacement_origin_id" invisible="1"/>
+                        <field name="l10n_vn_edi_reversed_entry_invoice_number" invisible="1"/>
                         <group>
                             <field name="l10n_vn_edi_invoice_symbol" readonly="l10n_vn_edi_invoice_number"/>
                             <field name="l10n_vn_edi_issue_date" invisible="not l10n_vn_edi_invoice_number"/>
@@ -28,8 +29,8 @@
                             <field name="l10n_vn_edi_reservation_code" invisible="not l10n_vn_edi_invoice_number"/>
                         </group>
                         <group string="Agreement"
-                               invisible="(not l10n_vn_edi_replacement_origin_id or not l10n_vn_edi_replacement_origin_id.l10n_vn_edi_invoice_number)
-                               and (not reversed_entry_id or not reversed_entry_id.l10n_vn_edi_invoice_number)">
+                               invisible="not l10n_vn_edi_replacement_origin_id
+                               and (not reversed_entry_id or not l10n_vn_edi_reversed_entry_invoice_number)">
                             <field name="l10n_vn_edi_adjustment_type" readonly="l10n_vn_edi_invoice_number"/>
                             <field name="l10n_vn_edi_agreement_document_name" readonly="l10n_vn_edi_invoice_number"/>
                             <field name="l10n_vn_edi_agreement_document_date" readonly="l10n_vn_edi_invoice_number"/>
