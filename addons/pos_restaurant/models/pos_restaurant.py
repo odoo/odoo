@@ -101,6 +101,11 @@ class RestaurantTable(models.Model):
     parent_id = fields.Many2one('restaurant.table', string='Parent Table', help="The parent table if this table is part of a group of tables")
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
 
+    @api.depends('table_number', 'floor_id')
+    def _compute_display_name(self):
+        for table in self:
+            table.display_name = f"{table.floor_id.name}, {table.table_number}"
+
     @api.model
     def _load_pos_data_domain(self, data):
         return [('active', '=', True), ('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']['data']])]
