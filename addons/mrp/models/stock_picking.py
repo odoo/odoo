@@ -152,6 +152,7 @@ class StockPicking(models.Model):
     def action_view_mrp_production(self):
         self.ensure_one()
         action = {
+            'name': _("Manufacturing Orders"),
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.production_ids.ids)],
