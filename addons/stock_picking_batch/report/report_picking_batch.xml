@@ -33,7 +33,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="o.picking_ids" t-as="pick">
+                                    <tr t-foreach="o.picking_ids.sorted(lambda p: p.batch_sequence)" t-as="pick">
                                         <td>
                                             <span t-field="pick.name">Transfer Name</span>
                                         </td>
@@ -77,7 +77,7 @@
                                 <t t-foreach="locations" t-as="location_from">
                                     <t t-set="loc_move_line" t-value="move_line_ids.filtered(lambda x: x.location_id==location_from)"/>
                                     <t t-foreach="loc_move_line.location_dest_id" t-as="location_dest">
-                                        <t t-set="move_lines" t-value="loc_move_line.filtered(lambda x: x.location_dest_id==location_dest)"/>
+                                        <t t-set="move_lines" t-value="loc_move_line.filtered(lambda x: x.location_dest_id==location_dest).sorted(lambda ml: ml.picking_id.batch_sequence)"/>
                                         <t t-set="products" t-value="move_lines.product_id"/>
                                         <tbody>
                                             <tr>
