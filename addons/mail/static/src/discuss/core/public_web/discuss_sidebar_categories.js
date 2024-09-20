@@ -68,8 +68,9 @@ export class DiscussSidebarChannel extends Component {
             "o-unread": this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
             "border-bottom-0 rounded-bottom-0": this.bordered,
             "opacity-50": this.thread.isMuted,
-            "position-relative justify-content-center o-compact mt-0":
+            "position-relative justify-content-center o-compact mt-0 p-1":
                 this.store.discuss.isSidebarCompact,
+            "p-0": !this.store.discuss.isSidebarCompact,
         };
     }
 
