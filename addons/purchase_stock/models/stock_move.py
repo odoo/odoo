@@ -254,7 +254,7 @@ class StockMove(models.Model):
 
     def _is_purchase_return(self):
         self.ensure_one()
-        return self.location_dest_id.usage == "supplier"
+        return self.location_dest_id.usage == "supplier" or (self.origin_returned_move_id and self.location_dest_id == self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False))
 
     def _get_all_related_aml(self):
         # The back and for between account_move and account_move_line is necessary to catch the
