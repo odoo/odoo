@@ -187,13 +187,13 @@ test("toolbar link buttons react to selection change", async () => {
     expect(".btn[name='unlink']").toHaveCount(0);
 
     setContent(el, "<p>th[is is a <a>li]nk</a> test!</p>");
-    await animationFrame();
+    await waitFor(".btn[name='link'].active");
     expect(".btn[name='link']").toHaveCount(1);
     expect(".btn[name='link']").toHaveClass("active");
     expect(".btn[name='unlink']").toHaveCount(1);
 
     setContent(el, "<p>th[is is a <a>link</a> tes]t!</p>");
-    await animationFrame();
+    await waitFor(".btn[name='link']:not(.active)");
     expect(".btn[name='link']").toHaveCount(1);
     expect(".btn[name='link']").not.toHaveClass("active");
     expect(".btn[name='unlink']").toHaveCount(1);
