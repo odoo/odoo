@@ -80,7 +80,7 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
                 LEFT JOIN res_company co ON (s.company_id=co.id)
                 LEFT JOIN res_currency cu ON (co.currency_id=cu.id)
-                LEFT JOIN pos_payment pm ON (pm.pos_order_id=s.id)
+                LEFT JOIN (SELECT DISTINCT ON (pos_order_id) * FROM pos_payment) pm ON (pm.pos_order_id=s.id)
                 LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
         """
 
