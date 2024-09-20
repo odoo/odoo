@@ -28,7 +28,7 @@
                     </t>
                 </xpath>
 
-                <xpath expr="//div[@name='o_kanban_primary_right']" position="inside">
+                <xpath expr="//div[@name='kanban_primary_right']" position="inside">
                     <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml32 g-0" groups="hr_holidays.group_hr_holidays_user">
                         <a name="action_open_leave_department" class="col" type="object">
                             <field name="leave_to_approve_count" groups="hr_holidays.group_hr_holidays_user"/> Time Off Requests
@@ -41,7 +41,7 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//div[@name='o_kanban_card_lower_content']" position="inside">
+                <xpath expr="//div[@name='kanban_card_lower_content']" position="inside">
                     <div class="row g-0 border-top border-1 mt-2 pt-2 mx-n2 bg-view"
                             t-if="record.absence_of_today.raw_value > 0" groups="hr_holidays.group_hr_holidays_user">
                         <div class="col-3 ms-3">
