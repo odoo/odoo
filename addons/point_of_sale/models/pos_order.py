@@ -246,11 +246,11 @@ class PosOrder(models.Model):
                 self.pricelist_id.item_ids.filtered(
                     lambda rule: rule.compute_price == "percentage")
             )
-            if is_percentage and float_compare(line.price_subtotal_incl, line.product_id.lst_price * line.qty, precision_rounding=self.currency_id.rounding) < 0:
+            if is_percentage and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %(original_price)s to %(discounted_price)s',
-                              original_price=float_repr(line.product_id.lst_price * line.qty, self.currency_id.decimal_places),
-                              discounted_price=float_repr(line.price_subtotal_incl, self.currency_id.decimal_places)),
+                              original_price=float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
+                              discounted_price=float_repr(line.price_unit, self.currency_id.decimal_places)),
                     'display_type': 'line_note',
                 }))
             if line.customer_note:
