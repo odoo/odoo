@@ -600,3 +600,40 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
 
         self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to collect TCS u/s 206C(1G) Remittance on this transaction.")
+
+    def test_previous_moves_for_tds_tcs_aggregate_limit(self):
+
+        move1 = self.create_invoice(
+            partner=self.partner_a,
+            invoice_date='2024-05-14',
+            amounts=[25000],
+            company=self.branch_a,
+        )
+        self.assertFalse(move1.invoice_line_ids.l10n_in_suggested_tds_tcs_section_id)
+
+        move2 = self.create_invoice(
+            partner=self.partner_b,
+            invoice_date='2024-05-14',
+            amounts=[25000],
+            company=self.branch_b,
+        )
+        self.assertFalse(move2.invoice_line_ids.l10n_in_suggested_tds_tcs_section_id)
+
+        move3 = self.create_invoice(
+            partner=self.partner_b,
+            invoice_date='2024-05-14',
+            amounts=[25000],
+            company=self.branch_c,
+        )
+        self.assertFalse(move3.invoice_line_ids.l10n_in_suggested_tds_tcs_section_id)
+
+        move4 = self.create_invoice(
+            partner=self.partner_a,
+            invoice_date='2024-05-14',
+            amounts=[28000],
+            company=self.branch_a,
+        )
+        self.assertTrue(move4.invoice_line_ids.l10n_in_suggested_tds_tcs_section_id)
+        self.assertTrue(move3.invoice_line_ids.l10n_in_suggested_tds_tcs_section_id)
+        self.assertTrue(move2.invoice_line_ids.l10n_in_suggested_tds_tcs_section_id)
+        self.assertTrue(move1.invoice_line_ids.l10n_in_suggested_tds_tcs_section_id)
