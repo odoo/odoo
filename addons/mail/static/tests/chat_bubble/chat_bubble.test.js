@@ -57,7 +57,7 @@ test("'New message' chat window can only be open [REQUIRE FOCUS]", async () => {
     await click(".o-discuss-ChannelSelector-suggestion");
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-Thread-empty", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread-empty", { text: "The conversation is empty." });
     await click(".o-mail-ChatWindow-command[title='Fold']");
     await contains(".o-mail-ChatBubble", { count: 1 }); // can fold chat
 });
@@ -74,7 +74,7 @@ test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
     await click(".o-discuss-ChannelSelector-suggestion");
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "John" });
-    await contains(".o-mail-ChatWindow", { text: "There are no messages in this conversation." }); // wait fully loaded
+    await contains(".o-mail-ChatWindow", { text: "The conversation is empty." }); // wait fully loaded
     await click("button[title='Fold']");
     await contains(".o-mail-ChatBubble[name='John']");
     // Make bubble of "John" chat again

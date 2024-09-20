@@ -171,7 +171,7 @@ test("do not display day separator if all messages of the day are empty", async 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await contains(".o-mail-DateSection", { count: 0 });
 });
 
@@ -448,7 +448,7 @@ test("show empty placeholder when thread contains no message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await contains(".o-mail-Message", { count: 0 });
 });
 
@@ -458,7 +458,7 @@ test("show empty placeholder when thread contains only empty messages", async ()
     pyEnv["mail.message"].create({ model: "discuss.channel", res_id: channelId });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await contains(".o-mail-Message", { count: 0 });
 });
 

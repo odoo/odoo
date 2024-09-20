@@ -1590,7 +1590,7 @@ test("message considered empty", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "There are no messages in this conversation." });
+    await contains(".o-mail-Thread", { text: "The conversation is empty." });
     await contains(".o-mail-Message", { count: 0 });
 });
 
