@@ -678,7 +678,7 @@ export function makeDraggableHook(hookParams) {
 
                 // In FireFox: elements with `overflow: hidden` will prevent mouseenter and mouseleave
                 // events from firing on elements underneath them. This is the case when dragging a card
-                // by the `.o_kanban_record_headings` element. In such cases, we can prevent the default
+                // by the heading. In such cases, we can prevent the default
                 // action on the pointerdown event to allow pointer events to fire properly.
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=1352061
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=339293
