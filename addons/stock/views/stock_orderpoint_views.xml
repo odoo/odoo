@@ -46,7 +46,7 @@
                 <field name="product_min_qty" string="Min" optional="show"/>
                 <field name="product_max_qty" string="Max" optional="show"/>
                 <field name="qty_multiple" optional="hide"/>
-                <field name="qty_to_order"/>
+                <field name="qty_to_order" readonly="trigger == 'auto'"/>
                 <field name="qty_to_order_manual" column_invisible="True"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="Remove manually entered value and replace by the quantity to order based on the forecasted quantities" invisible="not qty_to_order_manual"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="-" class="disabled opacity-0" invisible="qty_to_order_manual"/>

@@ -317,7 +317,10 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _inverse_qty_to_order(self):
         for orderpoint in self:
-            orderpoint.qty_to_order_manual = orderpoint.qty_to_order
+            if orderpoint.trigger == 'auto':
+                orderpoint.qty_to_order_manual = 0
+            elif orderpoint.qty_to_order != orderpoint.qty_to_order_computed:
+                orderpoint.qty_to_order_manual = orderpoint.qty_to_order
 
     def _search_qty_to_order(self, operator, value):
         records = self.search_fetch([('qty_to_order_manual', 'in', [0, False])], ['qty_to_order_computed'])
