@@ -201,13 +201,37 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <t t-if="website and website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
+        <t t-if="website and website.google_analytics_key and not editable">
             <script id="tracking_code" async="1" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}"></script>
-            <script>
+            <script id="tracking_code_config">
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
+                gtag('consent', 'default', {
+                    'ad_storage': 'denied',
+                    'ad_user_data': 'denied',
+                    'ad_personalization': 'denied',
+                    'analytics_storage': 'denied',
+                });
                 gtag('js', new Date());
                 gtag('config', '<t t-esc="website.google_analytics_key"/>');
+                function allConsentsGranted() {
+                    gtag('consent', 'update', {
+                        'ad_storage': 'granted',
+                        'ad_user_data': 'granted',
+                        'ad_personalization': 'granted',
+                        'analytics_storage': 'granted',
+                    });
+                }
+                <t t-if="website._allConsentsGranted()">
+                    allConsentsGranted();
+                </t>
+                <t t-else="">
+                    document.addEventListener(
+                        "optionalCookiesAccepted",
+                        allConsentsGranted,
+                        {once: true}
+                    );
+                </t>
             </script>
         </t>
         <t t-if="website and website.plausible_shared_key and not editable">
