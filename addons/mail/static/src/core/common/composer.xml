@@ -16,6 +16,8 @@
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
                     'o-chatWindow': env.inChatWindow,
+                    'o-chatWindowBig': store.chatHub.isBig,
+                    'o-discussApp': env.inDiscussApp,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>

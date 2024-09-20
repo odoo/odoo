@@ -79,10 +79,27 @@
 
 .o-mail-Composer-input {
     font-family: "text-emoji", $font-family-base;
-    max-height: 100px;
+    max-height: Min(100px, 60vh);
     resize: none;
 
-    .o-extended & {
+    .o-mail-Composer.o-chatWindow & {
+        @media (min-height: 325px) {
+            max-height: Min(350px, 70vh);
+        }
+    }
+    .o-mail-Composer.o-chatWindowBig & {
+        @media (min-height: 325px) {
+            max-height: Min(550px, 70vh);
+        }
+    }
+
+    .o-mail-Composer.o-discussApp & {
+        @media (min-height: 425px) {
+            max-height: 50vh;
+        }
+    }
+
+    .o-mail-Composer.o-extended & {
         max-height: Min(400px, 30vh);
     }
 
