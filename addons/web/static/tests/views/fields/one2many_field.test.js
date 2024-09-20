@@ -5727,7 +5727,7 @@ test("one2many kanban with action button", async () => {
         resId: 1,
     });
 
-    await contains(".oe_kanban_action_button").click();
+    await contains("button.oe_kanban_action").click();
 });
 
 test("one2many without inline tree arch", async () => {

@@ -47,14 +47,11 @@ export class KanbanCompiler extends ViewCompiler {
     compileButton(el, params) {
         const type = el.getAttribute("type");
         if (!SPECIAL_TYPES.includes(type)) {
-            // Not a supported action type.
+            // Not a kanban-specific action type.
             return super.compileButton(el, params);
         }
 
-        combineAttributes(el, "class", [
-            "oe_kanban_action",
-            `oe_kanban_action_${getTag(el, true)}`,
-        ]);
+        combineAttributes(el, "class", ["oe_kanban_action"]);
 
         if (ACTION_TYPES.includes(type)) {
             if (!el.hasAttribute("debounce")) {
