@@ -101,7 +101,6 @@
                             <span class='d-block d-md-none'>Ref.</span>
                         </th>
                         <th class="text-end">Order Date</th>
-                        <th class="text-center"/>
                         <th class="text-end">Total</th>
                     </tr>
                 </thead>
@@ -111,11 +110,6 @@
                         <td class="text-end">
                             <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
                             <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
-                        </td>
-                        <td class="text-center">
-                            <span t-if="order.locked"  class="badge rounded-pill text-bg-success">
-                                <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"/>Done
-                            </span>
                         </td>
                         <td class="text-end"><span t-field="order.amount_total"/></td>
                     </tr>
