@@ -328,7 +328,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_1': {
                 "ref": "test_invoice_1: Invoice to gritti support service, vat 21",
                 "partner_id": self.res_partner_gritti_mono,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
                 "invoice_date": "2021-03-01",
@@ -340,7 +339,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_2': {
                 "ref": "test_invoice_2: Invoice to Servicios Globales with vat 21, 27 and 10,5",
                 "partner_id": self.res_partner_servicios_globales,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
                 "invoice_date": "2021-03-05",
@@ -354,7 +352,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_3': {
                 "ref": "test_invoice_3: Invoice to ADHOC with vat cero and 21",
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-01",
@@ -367,7 +364,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_4': {
                 'ref': 'test_invoice_4: Invoice to ADHOC with vat exempt and 21',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-01",
@@ -380,7 +376,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_5': {
                 'ref': 'test_invoice_5: Invoice to ADHOC with all type of taxes',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -398,7 +393,6 @@ class TestAr(AccountTestInvoicingCommon):
                 'ref': 'test_invoice_6: Invoice to Montana Sur, fiscal position changes taxes to exempt',
                 "partner_id": self.res_partner_montana_sur,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-03",
@@ -417,7 +411,6 @@ class TestAr(AccountTestInvoicingCommon):
                 'ref': 'test_invoice_7: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 4 because it have services)',
                 "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-03",
@@ -435,7 +428,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_8': {
                 'ref': 'test_invoice_8: Invoice to consumidor final',
                 "partner_id": self.partner_cf,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -447,7 +439,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_10': {
                 'ref': 'test_invoice_10; Invoice to ADHOC in USD and vat 21',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -460,7 +451,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_11': {
                 'ref': 'test_invoice_11: Invoice to ADHOC with many lines in order to prove rounding error, with 4 decimals of precision for the currency and 2 decimals for the product the error apperar',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -475,7 +465,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_12': {
                 'ref': 'test_invoice_12: Invoice to ADHOC with many lines in order to test rounding error, it is required to use a 4 decimal precision in prodct in order to the error occur',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -490,7 +479,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_13': {
                 'ref': 'test_invoice_13: Invoice to ADHOC with many lines in order to test zero amount invoices y rounding error. it is required to set the product decimal precision to 4 and change 260.59 for 260.60 in order to reproduce the error',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -510,7 +498,6 @@ class TestAr(AccountTestInvoicingCommon):
                 'ref': 'test_invoice_14: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because only products)',
                 "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-20",
@@ -524,7 +511,6 @@ class TestAr(AccountTestInvoicingCommon):
                 'ref': 'test_invoice_15: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 2 because only service)',
                 "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-20",
@@ -538,7 +524,6 @@ class TestAr(AccountTestInvoicingCommon):
                 'ref': 'test_invoice_16: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)',
                 "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-22",
@@ -551,7 +536,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_17': {
                 'ref': 'test_invoice_17: Invoice to ADHOC with 100%% of discount',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -563,7 +547,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_18': {
                 'ref': 'test_invoice_18: Invoice to ADHOC with 100%% of discount and with different VAT aliquots',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -577,7 +560,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_19': {
                 'ref': 'test_invoice_19: Invoice to ADHOC with multiple taxes and perceptions',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -594,7 +576,6 @@ class TestAr(AccountTestInvoicingCommon):
             with Form(self.env['account.move'].with_context(default_move_type=values['move_type'])) as invoice_form:
                 invoice_form.ref = values['ref']
                 invoice_form.partner_id = values['partner_id']
-                invoice_form.invoice_user_id = values['invoice_user_id']
                 invoice_form.invoice_payment_term_id = values['invoice_payment_term_id']
                 if not use_current_date:
                     invoice_form.invoice_date = values['invoice_date']
