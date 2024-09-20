@@ -13084,13 +13084,11 @@ QUnit.module("Fields", (hooks) => {
                 document.querySelector(".o_selected_row .o_data_cell").dataset.tooltip,
                 "qux"
             );
-            // debugger
             triggerHotkey("Tab");
             assert.strictEqual(
                 document.querySelector(".o_selected_row .o_data_cell").dataset.tooltip,
                 "qux"
             );
-            // debugger
             triggerHotkey("Shift+Tab");
             await nextTick();
             assert.strictEqual(
