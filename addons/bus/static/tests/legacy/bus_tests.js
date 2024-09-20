@@ -11,7 +11,7 @@ import {
     waitForWorkerEvent,
 } from "@bus/../tests/helpers/websocket_event_deferred";
 import { busParametersService } from "@bus/bus_parameters_service";
-import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
+import { WEBSOCKET_CLOSE_CODES, WORKER_STATE } from "@bus/workers/websocket_worker";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -497,4 +497,21 @@ QUnit.test("subscribe message is sent first", async () => {
     await assertSteps([]);
     env.services.bus_service.start();
     await assertSteps(["subscribe", "some_event", "some_other_event"]);
+});
+
+QUnit.test("worker state is available from the bus service", async (assert) => {
+    addBusServicesToRegistry();
+    const worker = patchWebsocketWorkerWithCleanup();
+    const env = await makeTestEnv({ activateMockServer: true });
+    env.services.bus_service.addEventListener("connect", () => step("connect"));
+    env.services.bus_service.addEventListener("disconnect", () => step("disconnect"));
+    env.services.bus_service.start();
+    await assertSteps(["connect"]);
+    assert.strictEqual(env.services.bus_service.workerState, WORKER_STATE.CONNECTED);
+    worker.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
+    await assertSteps(["disconnect"]);
+    assert.strictEqual(env.services.bus_service.workerState, WORKER_STATE.DISCONNECTED);
+    env.services.bus_service.start();
+    await assertSteps(["connect"]);
+    assert.strictEqual(env.services.bus_service.workerState, WORKER_STATE.CONNECTED);
 });

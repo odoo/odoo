@@ -8,7 +8,7 @@ import { EventBus } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification"]);
+const INTERNAL_EVENTS = new Set(["initialized", "outdated", "notification", "update_state"]);
 /**
  * Communicate with a SharedWorker in order to provide a single websocket
  * connection shared across multiple tabs.
@@ -26,6 +26,11 @@ export const busService = {
         const notificationBus = new EventBus();
         const subscribeFnToWrapper = new Map();
         let worker;
+        /**
+         * @typedef {typeof import("@bus/workers/websocket_worker").WORKER_STATE} WORKER_STATE
+         * @type {WORKER_STATE[keyof WORKER_STATE]}
+         */
+        let workerState;
         let isActive = false;
         let isInitialized = false;
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
@@ -76,6 +81,9 @@ export const busService = {
                     connectionInitializedDeferred.resolve();
                     break;
                 }
+                case "update_state":
+                    workerState = data;
+                    break;
                 case "outdated": {
                     multiTab.unregister();
                     notification.add(
@@ -247,6 +255,9 @@ export const busService = {
                 subscribeFnToWrapper.delete(callback);
             },
             startedAt,
+            get workerState() {
+                return workerState;
+            },
         };
     },
     /** Overriden to provide logs in tests. Use subscribe() in production. */
