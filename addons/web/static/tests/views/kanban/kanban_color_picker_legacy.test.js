@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { KanbanArchParser } from "@web/views/kanban/kanban_arch_parser";
 import { parseXML } from "@web/core/utils/xml";
 import {
@@ -10,6 +10,7 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
     toggleKanbanRecordDropdown,
 } from "../../web_test_helpers";
 import { queryAll } from "@odoo/hoot-dom";
@@ -33,6 +34,18 @@ class Category extends models.Model {
 }
 
 defineModels([Category]);
+
+// avoid "kanban-box" deprecation warnings in this suite, which defines legacy kanban on purpose
+beforeEach(() => {
+    const originalConsoleWarn = console.warn;
+    patchWithCleanup(console, {
+        warn: (msg) => {
+            if (msg !== "'kanban-box' is deprecated, use 'kanban-card' API instead") {
+                originalConsoleWarn(msg);
+            }
+        },
+    });
+});
 
 test("oe_kanban_colorpicker in menu and kanban-box", async () => {
     const archInfo = parseArch(`
