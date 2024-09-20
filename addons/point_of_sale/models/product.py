@@ -79,12 +79,9 @@ class ProductProduct(models.Model):
             products = config.with_context(display_default_code=False).get_limited_products_loading(fields)
         else:
             domain = self._load_pos_data_domain(data)
-            products = self.with_context(display_default_code=False).search_read(
-                domain,
-                fields,
-                order='sequence,default_code,name',
-                load=False,
-            )
+            products = self._load_product_with_domain(domain, config.id)
+
+        self._add_missing_products(products, config.id, data)
 
         data['pos.config']['data'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
@@ -94,6 +91,20 @@ class ProductProduct(models.Model):
             'data': products,
             'fields': fields,
         }
+
+    def _add_missing_products(self, products, config_id, data):
+        product_ids_in_loaded_lines = {line['product_id'] for line in data['pos.order.line']['data']}
+        not_loaded_product_ids = product_ids_in_loaded_lines - {product['id'] for product in products}
+        products.extend(self._load_product_with_domain([('id', 'in', list(not_loaded_product_ids))], config_id, True))
+
+    def _load_product_with_domain(self, domain, config_id, load_archived=False):
+        fields = self._load_pos_data_fields(config_id)
+        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
+        return self.with_context(context).search_read(
+            domain,
+            fields,
+            order='sequence,default_code,name',
+            load=False)
 
     def _process_pos_ui_product_product(self, products, config_id):
 
