@@ -15,7 +15,6 @@
                     body="message?.inlineBody or message?.subtype_description"
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
-                    displayName="thread.displayName"
                     iconSrc="thread.avatarUrl"
                     hasMarkAsReadButton="thread.isUnread"
                     muted="thread.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
@@ -23,6 +22,14 @@
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
                     onSwipeLeft="hasTouch() and thread.canUnpin ? { action: () => thread.unpin(), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                 >
+                    <t t-set-slot="name">
+                        <div t-if="thread.parent_channel_id" class="d-flex align-items-center">
+                            <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-esc="thread.parent_channel_id.displayName"/>
+                            <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                            <span class="text-truncate min-w-0" t-esc="thread.displayName"/>
+                        </div>
+                        <t t-else="" t-esc="thread.displayName"/>
+                    </t>
                     <t t-set-slot="icon">
                         <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" member="thread.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                         <CountryFlag t-if="thread.anonymous_country" country="thread.anonymous_country" class="'o-mail-NotificationItem-country position-absolute border'"/>

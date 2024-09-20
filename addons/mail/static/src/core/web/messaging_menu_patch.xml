@@ -15,7 +15,7 @@
             </div>
         </xpath>
     </t>
-    
+
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='notification-list']" position="before">
             <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
@@ -43,11 +43,11 @@
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
                     body="installationRequest.body"
-                    displayName="installationRequest.displayName"
                     iconSrc="installationRequest.iconSrc"
                     onClick="installationRequest.onClick"
                     onSwipeRight="hasTouch() ? { action: () => this.pwa.decline(), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
                 >
+                    <t t-set-slot="name"><t  t-esc="installationRequest.displayName"/></t>
                     <t t-set-slot="icon">
                         <ImStatus persona="installationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
@@ -65,10 +65,10 @@
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
                     body="notificationRequest.body"
-                    displayName="notificationRequest.displayName"
                     iconSrc="notificationRequest.iconSrc"
                     onClick="() => notification.requestPermission()"
                 >
+                    <t t-set-slot="name"><t t-esc="notificationRequest.displayName"/></t>
                     <t t-set-slot="icon">
                         <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
                     </t>
@@ -82,12 +82,13 @@
                         body="failure.body"
                         counter="failure.notifications.length > 1 ? failure.notifications.length : undefined"
                         datetime="failure.datetime"
-                        displayName="failure.modelName"
                         iconSrc="failure.iconSrc"
                         hasMarkAsReadButton="true"
                         onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
                         onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
-                    />
+                    >
+                        <t t-set-slot="name"><t t-esc="failure.modelName"/></t>
+                    </NotificationItem>
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>
             </t>
