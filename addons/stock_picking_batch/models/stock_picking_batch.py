@@ -71,7 +71,7 @@ class StockPickingBatch(models.Model):
         if not self.env.context.get('add_to_existing_batch'):
             return super()._compute_display_name()
         for batch in self:
-            batch.display_name = f"{batch.display_name}: {batch.description}" if batch.description else batch.display_name
+            batch.display_name = f"{batch.name}: {batch.description}" if batch.description else batch.name
 
     @api.depends('picking_type_id')
     def _compute_show_lots_text(self):
