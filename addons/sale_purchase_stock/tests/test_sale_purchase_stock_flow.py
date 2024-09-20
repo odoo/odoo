@@ -175,9 +175,14 @@ class TestSalePurchaseStockFlow(TransactionCase):
         sale.action_confirm()
         self.assertEqual(sale.purchase_order_count, 1)
         purchase = sale._get_purchase_orders()
+        self.assertEqual(purchase.sale_order_count, 1)
         purchase.button_confirm()
+        # Re-check it as it's using a different link field
+        self.assertEqual(sale.purchase_order_count, 1)
+        self.assertEqual(purchase.sale_order_count, 1)
 
         receipt = purchase.picking_ids
         receipt.move_ids.write({'quantity': 1, 'picked': True})
         receipt._action_done()
         self.assertEqual(sale.purchase_order_count, 1)
+        self.assertEqual(purchase.sale_order_count, 1)

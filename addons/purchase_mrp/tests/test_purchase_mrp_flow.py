@@ -1173,6 +1173,16 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(len(replenishments), 1)
         self.assertEqual(replenishments[0]['summary']['name'], purchase.name)
 
+        purchase.button_confirm()
+        self.assertEqual(production.purchase_order_count, 1)
+        self.assertEqual(purchase.mrp_production_count, 2)
+
+        receipt = purchase.picking_ids
+        receipt.move_ids.write({'quantity': 6, 'picked': True})
+        receipt._action_done()
+        self.assertEqual(production.purchase_order_count, 1)
+        self.assertEqual(purchase.mrp_production_count, 2)
+
     def test_total_cost_share_rounded_to_precision(self):
         kit, compo01, compo02 = self.env['product.product'].create([{
             'name': name,
