@@ -45,14 +45,6 @@
                 right: auto;
             }
 
-            .o_kanban_record_headings {
-                line-height: 1.2;
-                flex: 1 1 auto;
-                // Ensure long word doesn't break out of container
-                word-wrap: break-word;
-                overflow: hidden;
-            }
-            
             .o_field_priority {
                 margin: auto;
             }
@@ -62,15 +54,6 @@
             @include o-kanban-record-title();
             overflow-wrap: break-word;
             word-wrap: break-word;
-        }
-
-        .o_kanban_record_subtitle {
-            display: block;
-            margin-top: calc(var(--KanbanRecord-gap-v) * 0.5);
-
-            i.fa[role="img"] {
-                margin-right: 2px;
-            }
         }
 
         .o_kanban_record_bottom {
@@ -287,18 +270,6 @@
 
             img {
                 max-width: 100%;
-            }
-        }
-
-        .o_kanban_button {
-            margin-top: 15px;
-
-            > button,
-            > a {
-                @include o-position-absolute(
-                    $right: var(--KanbanRecord-padding-h),
-                    $bottom: var(--KanbanRecord-padding-v)
-                );
             }
         }
 
