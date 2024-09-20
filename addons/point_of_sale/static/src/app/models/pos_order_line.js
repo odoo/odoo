@@ -706,6 +706,21 @@ export class PosOrderline extends Base {
     isSelected() {
         return this.order_id?.uiState?.selected_orderline_uuid === this.uuid;
     }
+    setDirty(processedLines = new Set()) {
+        if (processedLines.has(this)) {
+            return;
+        }
+        processedLines.add(this);
+        super.setDirty();
+        const linesToSetDirty = [
+            this.combo_parent_id,
+            ...(this.combo_parent_id?.combo_line_ids || []),
+            ...(this.combo_line_ids || []),
+        ].filter(Boolean);
+        for (const line of linesToSetDirty) {
+            line.setDirty(processedLines);
+        }
+    }
 }
 
 registry.category("pos_available_models").add(PosOrderline.pythonModel, PosOrderline);
