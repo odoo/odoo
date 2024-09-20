@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessageSeenIndicator">
-        <span class="o-mail-MessageSeenIndicator position-relative" t-att-class="{ 'opacity-50': !props.message.hasEveryoneSeen, 'o-all-seen text-primary': props.message.hasEveryoneSeen, 'cursor-pointer': props.message.channelMemberHaveSeen.length }" t-att-title="summary" t-attf-class="{{ props.className }}" t-on-click="openDialog">
+        <span class="o-mail-MessageSeenIndicator position-relative" t-att-class="{ 'opacity-50': !props.message.hasEveryoneSeen, 'text-primary opacity-75': props.message.hasEveryoneSeen, 'cursor-pointer': props.message.channelMemberHaveSeen.length }" t-att-title="summary" t-attf-class="{{ props.className }}" t-on-click="openDialog">
             <t t-if="!props.message.isMessagePreviousToLastSelfMessageSeenByEveryone">
                 <i t-if="props.message.hasSomeoneFetched or props.message.hasSomeoneSeen" class="fa fa-check ps-1"/>
                 <i t-if="props.message.hasSomeoneSeen" class="o-second start-0 fa fa-check position-absolute"/>
