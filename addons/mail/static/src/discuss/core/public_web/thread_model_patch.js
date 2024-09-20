@@ -63,14 +63,6 @@ patch(Thread.prototype, {
                 );
             },
         });
-        this.forceOpen = Record.attr(false, {
-            onUpdate() {
-                if (this.forceOpen) {
-                    this.open();
-                    this.forceOpen = false;
-                }
-            },
-        });
         this.loadSubChannelsDone = false;
         this.lastSubChannelLoaded = null;
     },
@@ -98,12 +90,13 @@ patch(Thread.prototype, {
      * @param {string} [param0.searchTerm]
      */
     async createSubChannel({ initialMessage, name } = {}) {
-        const data = await rpc("/discuss/channel/sub_channel/create", {
+        const { data, sub_channel } = await rpc("/discuss/channel/sub_channel/create", {
             parent_channel_id: this.id,
             from_message_id: initialMessage?.id,
             name,
         });
         this.store.insert(data);
+        this.store.Thread.get(sub_channel).open();
     },
     /**
      * @param {*} param0
