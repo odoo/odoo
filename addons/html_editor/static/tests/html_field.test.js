@@ -311,7 +311,7 @@ test("create new record and load it correctly", async () => {
             "kanban,false": `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="name"/>
                         </t>
                     </templates>

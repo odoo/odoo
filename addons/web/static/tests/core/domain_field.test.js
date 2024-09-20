@@ -700,7 +700,7 @@ test.tags("desktop")("domain field in kanban view", async function () {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="foo" widget="domain" options="{'model': 'partner.type'}" />
                     </t>
                 </templates>

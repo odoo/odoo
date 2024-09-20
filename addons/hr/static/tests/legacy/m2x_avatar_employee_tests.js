@@ -155,7 +155,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         const views = {
             "m2x.avatar.employee,false,kanban": `<kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="employee_id" widget="many2one_avatar_employee"/>
                     </t>
                 </templates>
@@ -228,7 +228,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             const views = {
                 "m2x.avatar.employee,false,kanban": `<kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="employee_id" widget="many2one_avatar_employee"/>
                         </t>
                     </templates>
@@ -267,7 +267,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         const views = {
             "m2x.avatar.employee,false,kanban": `<kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="employee_id" widget="many2one_avatar_employee" options="{'relation': 'hr.employee.public'}"/>
                         </t>
                     </templates>
@@ -619,7 +619,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
         const views = {
             "m2x.avatar.employee,false,kanban": `<kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <footer>
                             <field name="employee_ids" widget="many2many_avatar_employee"/>
                         </footer>

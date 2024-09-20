@@ -18,7 +18,7 @@ class Foo extends models.Model {
     _views = {
         search: `<search/>`,
         list: `<list/>`,
-        kanban: `<kanban><t t-name="kanban-card"></t></kanban>`,
+        kanban: `<kanban><t t-name="card"></t></kanban>`,
     };
 }
 defineModels([Foo]);
@@ -41,8 +41,16 @@ test.tags`desktop`("breadcrumbs", async () => {
         { resModel: "foo" },
         {
             breadcrumbs: [
-                { jsId: "controller_7", name: "Previous", onSelected: () => expect.step("controller_7") },
-                { jsId: "controller_9", name: "Current", onSelected: () => expect.step("controller_9") },
+                {
+                    jsId: "controller_7",
+                    name: "Previous",
+                    onSelected: () => expect.step("controller_7"),
+                },
+                {
+                    jsId: "controller_9",
+                    name: "Current",
+                    onSelected: () => expect.step("controller_9"),
+                },
             ],
         }
     );

@@ -315,7 +315,7 @@ test("SelectionField in kanban view", async () => {
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="color" widget="selection" />
                     </t>
                 </templates>
@@ -346,7 +346,7 @@ test("SelectionField - auto save record in kanban view", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="color" widget="selection" />
                         </t>
                     </templates>
@@ -366,7 +366,7 @@ test("SelectionField don't open form view on click in kanban view", async functi
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="color" widget="selection" />
                         </t>
                     </templates>
@@ -399,7 +399,7 @@ test("SelectionField is disabled if field readonly", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="color" widget="selection" />
                         </t>
                     </templates>
@@ -420,7 +420,7 @@ test("SelectionField is disabled with a readonly attribute", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="color" widget="selection" readonly="1" />
                         </t>
                     </templates>
@@ -446,7 +446,7 @@ test("SelectionField in kanban view with handle widget", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="color" widget="selection"/>
                         </t>
                     </templates>

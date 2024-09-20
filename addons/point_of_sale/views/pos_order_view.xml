@@ -62,7 +62,7 @@
                     <page string="Products" name="products">
                       <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" mode="list,kanban">
                             <kanban class="o_kanban_mobile">
-                                <t t-name="kanban-card" class="row g-0">
+                                <t t-name="card" class="row g-0">
                                     <aside class="col-2 pe-3">
                                         <field name="product_id" widget="image" options="{'preview_image': 'image_128'}"/>
                                     </aside>
@@ -216,7 +216,7 @@
             <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="currency_id"/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                             <div class="d-flex mb-1">
                                 <span t-if="record.partner_id.value">
                                     <field name="partner_id" class="fw-bolder"/>

@@ -29,7 +29,7 @@ QUnit.module('Project', {
             "project.task,false,kanban":
                 `<kanban js_class="project_task_kanban">
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="name"/>
                         </t>
                     </templates>

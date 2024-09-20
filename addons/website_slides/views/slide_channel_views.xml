@@ -245,7 +245,7 @@
                 <kanban highlight_color="color" string="eLearning Overview" class="o_slide_kanban o_slide_channel_kanban" edit="false" sample="1">
                     <field name="website_published"/>
                     <templates>
-                        <t t-name="kanban-menu">
+                        <t t-name="menu">
                             <div role="menuitem" aria-haspopup="true">
                                 <field name="color" widget="kanban_color_picker"/>
                             </div>
@@ -258,7 +258,7 @@
                                 <a role="menuitem" name="action_channel_invite" class="dropdown-item" type="object">Invite</a>
                             </div>
                         </t>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                             <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published or not active"/>
                             <field name="name" class="fw-bold fs-4 me-auto ms-1"/>

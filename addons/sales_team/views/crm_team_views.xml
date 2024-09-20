@@ -56,7 +56,7 @@
                                 class="w-100">
                                 <kanban>
                                     <templates>
-                                        <t t-name="kanban-card" class="flex-row">
+                                        <t t-name="card" class="flex-row">
                                             <aside>
                                                 <field name="avatar_128" widget="image" class="o_image_64_cover" alt="Avatar"/>
                                             </aside>
@@ -108,7 +108,7 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" sample="1">
                 <templates>
-                    <t t-name="kanban-card" class="row g-0">
+                    <t t-name="card" class="row g-0">
                         <field name="name" class="col-6 fw-bold"/>
                         <div class="col-6">
                             <field name="user_id" class="float-end"/>
@@ -127,7 +127,7 @@
         <field name="arch" type="xml">
             <kanban class="o_crm_team_kanban" highlight_color="color" create="0" can_open="0" sample="1">
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <div class="container">
                             <div class="row">
                                 <div name="manage_view" class="col-4">
@@ -158,7 +158,7 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="name" class="fw-bold text-truncate fs-4 ms-2"/>
                         <div class="row mt-3 px-2">
                             <div class="col-4" name="to_replace_in_sale_crm">

@@ -1375,7 +1375,7 @@ test("properties: kanban view", async () => {
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="company_id"/> <hr/>
                         <field name="display_name"/> <hr/>
                         <field name="properties" widget="properties"/>
@@ -1428,7 +1428,7 @@ test("properties: kanban view with date and datetime property fields", async () 
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="company_id"/> <hr/>
                         <field name="display_name"/> <hr/>
                         <field name="properties" widget="properties"/>
@@ -1476,7 +1476,7 @@ test("properties: kanban view with multiple sources of properties definitions", 
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="company_id"/> <hr/>
                         <field name="display_name"/> <hr/>
                         <field name="properties" widget="properties"/>
@@ -1549,7 +1549,7 @@ test("properties: kanban view with label and border", async () => {
         arch: /* xml */ `
                 <kanban>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="company_id"/> <hr/>
                             <field name="display_name"/> <hr/>
                             <field name="properties" widget="properties"/>
@@ -1596,7 +1596,7 @@ test("properties: kanban view without properties", async () => {
         arch: /* xml */ `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="company_id"/> <hr/>
                         <field name="display_name"/> <hr/>
                         <field name="properties" widget="properties"/>
@@ -1614,7 +1614,7 @@ test.tags("desktop")("properties: switch view on desktop", async () => {
     Partner._views[["search", false]] = /* xml */ `<search/>`;
     Partner._views[["kanban", 99]] = /* xml */ `<kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="company_id"/> <hr/>
                         <field name="display_name"/> <hr/>
                         <field name="properties" widget="properties"/>
@@ -1647,7 +1647,7 @@ test.tags("mobile")("properties: switch view on mobile", async () => {
     Partner._views[["search", false]] = /* xml */ `<search/>`;
     Partner._views[["kanban", 99]] = /* xml */ `<kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="company_id"/> <hr/>
                         <field name="display_name"/> <hr/>
                         <field name="properties" widget="properties"/>

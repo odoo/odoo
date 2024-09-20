@@ -229,7 +229,7 @@
                 <field name="session_state"/>
                 <field name="session_available"/>
                 <templates>
-                    <div t-name="kanban-menu" t-if="widget.editable">
+                    <div t-name="menu" t-if="widget.editable">
                         <a role="menuitem" type="open" class="dropdown-item">Edit Survey</a>
                         <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
                         <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
@@ -237,7 +237,7 @@
                         <div role="separator" class="dropdown-item-text">Color</div>
                         <field name="color" widget="kanban_color_picker"/>
                     </div>
-                    <div t-name="kanban-card"
+                    <div t-name="card"
                         t-attf-class="o_survey_kanban_card #{record.certification.raw_value ? 'o_survey_kanban_card_certification' : ''}" class="px-0">
                         <!-- displayed in ungrouped mode -->
                         <div class="o_survey_kanban_card_ungrouped row mx-4">

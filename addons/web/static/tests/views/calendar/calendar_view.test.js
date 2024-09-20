@@ -613,7 +613,7 @@ test(`filter panel autocomplete: updates when typing`, async () => {
 test(`check the avatar of the attendee in the calendar filter panel`, async () => {
     CalendarPartner._views = {
         list: `<list><field name="name"/></list>`,
-        kanban: `<kanban><templates><t name="kanban-card"><field name="name"/></t></templates></kanban>`,
+        kanban: `<kanban><templates><t name="card"><field name="name"/></t></templates></kanban>`,
         search: `<search/>`,
     };
     CalendarPartner._records.push(
@@ -907,7 +907,7 @@ test.tags("desktop")(`add a filter with the search more dialog on desktop`, asyn
 test.tags("mobile")(`add a filter with the search more dialog on mobile`, async () => {
     CalendarPartner._views = {
         list: `<list><field name="name"/></list>`,
-        kanban: `<kanban><templates><t t-name="kanban-card"><field class="o_data_row" name="name"/></t></templates></kanban>`,
+        kanban: `<kanban><templates><t t-name="card"><field class="o_data_row" name="name"/></t></templates></kanban>`,
         search: `<search/>`,
     };
     CalendarPartner._records.push(
@@ -3092,7 +3092,7 @@ test.tags("desktop")(`Update event with filters on desktop`, async () => {
 test.tags("mobile")(`Update event with filters on mobile`, async () => {
     CalendarUsers._records.push({ id: 5, name: "user 5", partner_id: 3 });
     CalendarUsers._views = {
-        kanban: `<kanban><templates><t t-name="kanban-card"><field name="name"/></t></templates></kanban>`,
+        kanban: `<kanban><templates><t t-name="card"><field name="name"/></t></templates></kanban>`,
         search: `<search/>`,
     };
     Event._views = {

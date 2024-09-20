@@ -98,7 +98,7 @@
                                     <field name="event_id"/>
                                     <field name="question_type"/>
                                     <templates>
-                                        <t t-name="kanban-card" class="justify-content-between">
+                                        <t t-name="card" class="justify-content-between">
                                             <field class="fw-bold fs-5" name="question_id" domain="[('event_id', '=', event_id)]"/>
                                             <field name="value_answer_id"
                                                 invisible="question_type != 'simple_choice'"
@@ -157,7 +157,7 @@
                             </t>
                         </div>
                     </t>
-                    <t t-name="kanban-card" class="row g-0">
+                    <t t-name="card" class="row g-0">
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="col-8 col-md-9">
                             <field class="d-block fw-bold fs-5" name="name"/>

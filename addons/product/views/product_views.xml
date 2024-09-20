@@ -551,7 +551,7 @@
                     <field name="color"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
-                        <t t-name="kanban-card" class="row g-0">
+                        <t t-name="card" class="row g-0">
                             <main class="col-10 pe-2">
                                 <div class="d-flex mb-1 h5">
                                     <field class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
@@ -638,12 +638,12 @@ action = {
             <kanban records_draggable="0" js_class="product_kanban_catalog">
                 <field name="id"/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <div class="o_product_catalog_cancel_global_click">
                             <a role="menuitem" type="open" class="dropdown-item border-top-0">Edit</a>
                         </div>
                     </t>
-                    <t t-name="kanban-card" class="p-0">
+                    <t t-name="card" class="p-0">
                     <!-- TODO : not getting border when select record -->
                         <div class="d-flex flex-grow-1 m-2">
                             <div class="p-2 pt-1 d-flex flex-column m-0"

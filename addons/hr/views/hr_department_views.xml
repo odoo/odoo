@@ -79,7 +79,7 @@
                 <kanban highlight_color="color" class="o_hr_department_kanban o_kanban_small_column" can_open="0" sample="1">
                     <field name="active"/>
                     <templates>
-                        <t t-name="kanban-menu" t-if="!selection_mode">
+                        <t t-name="menu" t-if="!selection_mode">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-6">
@@ -111,7 +111,7 @@
                                 </div>
                             </div>
                         </t>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <a type="open"><field name="name" class="fw-bold fs-4 d-bolck ms-2"/></a>
                             <field name="manager_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" readonly="1" class="text-muted ms-2"/>
                             <div class="small mt-1 ms-2" groups="base.group_multi_company">

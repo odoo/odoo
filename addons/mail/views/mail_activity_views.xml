@@ -109,7 +109,7 @@
             <kanban class="o_kanban_mobile">
                 <field name="icon"/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div class="fw-bold fs-5">
                             <i t-if="record.icon.value" t-attf-class="fa #{record.icon.value} fa-fw"
                                role="img" aria-label="Activity Type Name" title="Activity Type Name"/>
@@ -352,7 +352,7 @@
             <kanban string="Activity" action="action_open_document" type="object">
                 <templates>
                     <field name="active" invisible="1"/>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div class="d-flex justify-content-between">
                             <span>
                                 <field name="res_name" class="fw-bold" />

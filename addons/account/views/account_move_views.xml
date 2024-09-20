@@ -92,7 +92,7 @@
                 <kanban class="o_kanban_mobile" create="false" group_create="false">
                     <field name="company_currency_id"/>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <div class="row mb4">
                                 <div class="col-8">
                                     <field name="account_id"/>
@@ -668,7 +668,7 @@
                 <kanban class="o_kanban_mobile" sample="1" js_class="account_documents_kanban">
                     <field name="currency_id"/>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <div class="row mb4">
                                 <div class="col-6">
                                     <field class="fw-bold" name="partner_id" invisible="not partner_id" readonly="state != 'draft'" />
@@ -1156,7 +1156,7 @@
                                     <kanban class="o_kanban_mobile">
                                         <!-- Displayed fields -->
                                         <templates>
-                                            <t t-name="kanban-card">
+                                            <t t-name="card">
                                                 <div t-attf-class="ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
                                                     <t t-if="!['line_note', 'line_section'].includes(record.display_type.raw_value)">
                                                         <div class="row g-0">

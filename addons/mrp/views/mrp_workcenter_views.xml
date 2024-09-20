@@ -57,7 +57,7 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="name" class="fw-bolder"/>
                             <field t-if="record.code.raw_value" name="code"/>
                         </t>
@@ -146,7 +146,7 @@
                     <field name="working_state"/>
                     <field name="oee_target"/>
                     <templates>
-                        <t t-name="kanban-menu">
+                        <t t-name="menu">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-6">
@@ -185,7 +185,7 @@
                                 </div>
                             </div>
                         </t>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <div class="ms-1">
                                 <div style="display: inline-block" name="wc_stages">
                                     <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
@@ -460,7 +460,7 @@
         <field name="arch" type="xml">
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div>
                             <strong>Reason: </strong><field name="name"/>
                         </div>

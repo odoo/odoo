@@ -8,7 +8,7 @@
     <field name="arch" type="xml">
         <kanban js_class="website_pages_kanban" class="o_kanban_mobile" action="open_website_url" type="object" sample="1">
             <templates>
-                <t t-name="kanban-card">
+                <t t-name="card">
                     <field name="name" class="text-truncate fw-bolder mb-auto"/>
                     <div class="text-muted fw-bolder" t-if="record.website_id.value" groups="website.group_multi_website">
                         <i class="fa fa-globe me-1" title="Website"/>

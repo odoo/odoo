@@ -183,7 +183,7 @@ test("PriorityField can write after adding a record -- kanban", async () => {
         arch: /* xml */ `
             <kanban on_create="quick_create" quick_create_view="myquickview">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="selection" widget="priority"/>
                     </t>
                 </templates>

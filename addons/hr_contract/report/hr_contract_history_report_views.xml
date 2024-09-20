@@ -177,7 +177,7 @@
             <kanban default_order="date_end" sample="1" create="0">
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field class="fw-bold fs-5" name="display_name"/>
                         <field class="text-muted" name="job_id"/>
                         <field class="ms-auto" name="employee_id" widget="many2one_avatar_employee"/>

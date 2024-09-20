@@ -298,7 +298,7 @@
                         </list>
                         <kanban class="o_kanban_mobile">
                             <templates>
-                                <t t-name="kanban-card">
+                                <t t-name="card">
                                     <field name="product_id" class="fw-bold"/>
                                     <field name="lot_id"/>
                                     <div class="d-flex">
@@ -334,7 +334,7 @@
         <field name="arch" type="xml">
             <kanban sample="1" group_create="0">
                 <templates>
-                    <t t-name="kanban-card" class="row g-0">
+                    <t t-name="card" class="row g-0">
                         <field name="name" class="col-6 fw-bold fs-5"/>
                         <field name="package_type_id" class="col-6"/>
                     </t>

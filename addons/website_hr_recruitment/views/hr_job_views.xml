@@ -8,7 +8,7 @@
             <xpath expr="//kanban" position="attributes">
                 <attribute name="default_order">is_published desc, is_favorite desc, create_date DESC</attribute>
             </xpath>
-            <xpath expr="//t[@t-name='kanban-card']/div" position="before">
+            <xpath expr="//t[@t-name='card']/div" position="before">
                 <field name="website_published" invisible="1"/>
                 <widget name="web_ribbon" title="Published" bg_color="text-bg-success" invisible="not website_published"/>
             </xpath>

@@ -67,7 +67,7 @@
     <field name="model">website.controller.page</field>
     <field name="arch" type="xml">
         <kanban class="o-website-controller-page-kanban">
-            <t t-name="kanban-card">
+            <t t-name="card">
                 <field name="website_published" invisible="1" />
                 <widget name="web_ribbon" text="Published" invisible="not website_published" />
                 <widget name="web_ribbon" text="Unpublished" invisible="website_published" bg_color="text-bg-danger" />

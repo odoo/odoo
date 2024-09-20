@@ -66,7 +66,7 @@ class Partner extends models.Model {
         "kanban,1": `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="foo"/>
                     </t>
                 </templates>
@@ -89,7 +89,7 @@ class Pony extends models.Model {
         "list,false": `<list><field name="name"/></list>`,
         "kanban,false": `<kanban>
                             <templates>
-                                <t t-name="kanban-card">
+                                <t t-name="card">
                                     <field name="name"/>
                                 </t>
                             </templates>
@@ -205,9 +205,7 @@ test("can click on a embedded action and execute the corresponding action (with 
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
-    await contains(
-        ".o_embedded_actions > button > span:contains('Embedded Action 2')"
-    ).click();
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 2')").click();
     await runAllTimers();
     expect(router.current.action).toBe(3, {
         message: "the current action should be the one of the embedded action previously clicked",
@@ -237,9 +235,7 @@ test("can click on a embedded action and execute the corresponding action (with 
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 3')"
     ).click();
-    await contains(
-        ".o_embedded_actions > button > span:contains('Embedded Action 3')"
-    ).click();
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 3')").click();
     await runAllTimers();
     expect(router.current.action).toBe(4, {
         message: "the current action should be the one of the embedded action previously clicked",
@@ -274,9 +270,7 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
     ).click();
     expect(".o_control_panel .breadcrumb-item").toHaveCount(0);
     expect(".o_control_panel .o_breadcrumb .active").toHaveText("Partners Action 1");
-    await contains(
-        ".o_embedded_actions > button > span:contains('Embedded Action 2')"
-    ).click();
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 2')").click();
     await runAllTimers();
     expect(router.current.action).toBe(3, {
         message: "the current action should be the one of the embedded action previously clicked",
@@ -285,9 +279,7 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
         "Partners Action 1",
         "Favorite Ponies",
     ]);
-    await contains(
-        ".o_embedded_actions > button > span:contains('Embedded Action 3')"
-    ).click();
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 3')").click();
     await runAllTimers();
     expect(router.current.action).toBe(4, {
         message: "the current action should be the one of the embedded action previously clicked",
@@ -317,9 +309,7 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     await contains(
         ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
     ).click();
-    await contains(
-        ".o_embedded_actions > button > span:contains('Embedded Action 2')"
-    ).click();
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 2')").click();
     await runAllTimers();
     expect(router.current.action).toBe(3, {
         message: "the current action should be the one of the embedded action previously clicked",

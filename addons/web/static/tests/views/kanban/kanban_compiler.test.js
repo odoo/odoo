@@ -13,7 +13,7 @@ test("bootstrap dropdowns with kanban_ignore_dropdown class should be left as is
     const arch = `
         <kanban>
             <templates>
-                <t t-name="kanban-card">
+                <t t-name="card">
                     <button name="dropdown" class="kanban_ignore_dropdown" type="button" data-bs-toggle="dropdown">Boostrap dropdown</button>
                     <div class="dropdown-menu kanban_ignore_dropdown" role="menu">
                         <span>Dropdown content</span>
@@ -25,7 +25,7 @@ test("bootstrap dropdowns with kanban_ignore_dropdown class should be left as is
         <t t-translation="off">
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <button name="dropdown" class="kanban_ignore_dropdown" type="button" data-bs-toggle="dropdown">Boostrap dropdown</button>
                         <div class="dropdown-menu kanban_ignore_dropdown" role="menu">
                             <span>Dropdown content</span>

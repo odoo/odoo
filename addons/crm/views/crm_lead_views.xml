@@ -391,7 +391,7 @@
                 <kanban class="o_kanban_mobile" archivable="false" js_class="crm_kanban" sample="1">
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="name" class="fw-bold fs-5"/>
                             <field name="contact_name"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -527,12 +527,12 @@
                         sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"
                         help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
-                        <t t-name="kanban-menu">
+                        <t t-name="menu">
                             <t t-if="widget.editable"><a role="menuitem" type="open" class="dropdown-item">Edit</a></t>
                             <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                             <field name="color" widget="kanban_color_picker"/>
                         </t>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <t t-set="lost_ribbon" t-value="!record.active.raw_value and record.probability and record.probability.raw_value == 0"/>
                             <widget name="web_ribbon" title="lost" bg_color="text-bg-danger" invisible="probability &gt; 0 or active"/>
                             <field class="fw-bold fs-5" name="name"/>

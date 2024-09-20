@@ -10,10 +10,10 @@
                     <field colspan="4" name="auth_passkey_key_ids" string="">
                         <kanban create="false" can_open="false">
                             <templates>
-                                <t t-name="kanban-menu">
+                                <t t-name="menu">
                                     <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                 </t>
-                                <t t-name="kanban-card">
+                                <t t-name="card">
                                     <field name="name" class="fw-bold fs-5"/>
                                     <small>Created: <field name="create_date"/></small>
                                     <small>Last used: <field name="write_date"/></small>
@@ -43,11 +43,11 @@
                         <field colspan="4" name="auth_passkey_key_ids">
                             <kanban create="false" can_open="false">
                                 <templates>
-                                    <t t-name="kanban-menu">
+                                    <t t-name="menu">
                                         <a role="menuitem" type="object" name="action_rename_passkey" class="dropdown-item">Rename</a>
                                         <a role="menuitem" type="object" name="action_delete_passkey" class="dropdown-item">Delete</a>
                                     </t>
-                                    <t t-name="kanban-card">
+                                    <t t-name="card">
                                         <field name="name" class="fw-bold fs-5"/>
                                         <small>Created: <field name="create_date"/></small>
                                         <small>Last used: <field name="write_date"/></small>

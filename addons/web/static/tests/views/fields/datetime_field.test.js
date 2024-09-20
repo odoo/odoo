@@ -556,7 +556,7 @@ test("datetime field (with widget) in kanban with show_time option", async () =>
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="datetime" widget="datetime" options="{'show_time': false}"/>
                     </t>
                 </templates>
@@ -625,7 +625,7 @@ test("datetime field in kanban view with condensed option", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <field name="datetime" options="{'condensed': true}"/>
                     </t>
                 </templates>

@@ -72,7 +72,7 @@
                 <field name="name"/>
                 <field name="active"/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <a t-if="widget.editable" type="open" class="dropdown-item">Edit</a>
                         <a t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
                         <a
@@ -81,7 +81,7 @@
                             class="dropdown-item"
                         >Download</a>
                     </t>
-                    <t t-name="kanban-card" class="o_kanban_attachment flex-row">
+                    <t t-name="card" class="o_kanban_attachment flex-row">
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <aside>
                             <div class="o_image ms-3" t-att-data-mimetype="record.mimetype.value"/>

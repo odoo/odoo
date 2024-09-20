@@ -324,7 +324,7 @@ test.tags("desktop")("widget many2one_avatar in kanban view (load more dialog)",
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <footer>
                             <field name="user_id" widget="many2one_avatar"/>
                         </footer>
@@ -355,7 +355,7 @@ test("widget many2one_avatar in kanban view", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <footer>
                             <field name="user_id" widget="many2one_avatar"/>
                         </footer>
@@ -392,7 +392,7 @@ test("widget many2one_avatar in kanban view without access rights", async () => 
         arch: `
             <kanban edit="0" create="0">
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <footer>
                             <field name="user_id" widget="many2one_avatar"/>
                         </footer>

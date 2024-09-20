@@ -34,11 +34,11 @@ class Category extends models.Model {
 
 defineModels([Category]);
 
-test("oe_kanban_colorpicker in kanban-menu and kanban-box", async () => {
+test("oe_kanban_colorpicker in menu and kanban-box", async () => {
     const archInfo = parseArch(`
         <kanban>
             <templates>
-                <t t-name="kanban-menu">
+                <t t-name="menu">
                     <ul class="oe_kanban_colorpicker" data-field="kanban_menu_colorpicker" role="menu"/>
                 </t>
                 <t t-name="kanban-box"/>
@@ -52,7 +52,7 @@ test("oe_kanban_colorpicker in kanban-menu and kanban-box", async () => {
     const archInfo_1 = parseArch(`
         <kanban>
             <templates>
-                <t t-name="kanban-menu"/>
+                <t t-name="menu"/>
                 <t t-name="kanban-box">
                     <ul class="oe_kanban_colorpicker" data-field="kanban_box_color" role="menu"/>
                 </t>
@@ -79,7 +79,7 @@ test("kanban with colorpicker and node with color attribute", async () => {
             <kanban>
                 <field name="colorpickerField"/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <div class="oe_kanban_colorpicker" data-field="colorpickerField"/>
                     </t>
                     <t t-name="kanban-box">
@@ -112,7 +112,7 @@ test("edit the kanban color with the colorpicker", async () => {
             <kanban>
                 <field name="color"/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <div class="oe_kanban_colorpicker"/>
                     </t>
                     <t t-name="kanban-box">
@@ -153,7 +153,7 @@ test("colorpicker doesn't appear when missing access rights", async () => {
             <kanban edit="0">
                 <field name="color"/>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <div class="oe_kanban_colorpicker"/>
                     </t>
                     <t t-name="kanban-box">

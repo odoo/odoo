@@ -18,7 +18,7 @@ describe.current.tags("desktop");
 defineMrpModels();
 
 const newArchs = {
-    "product.document,false,kanban": `<kanban js_class="product_documents_kanban" create="false"><templates><t t-name="kanban-card">
+    "product.document,false,kanban": `<kanban js_class="product_documents_kanban" create="false"><templates><t t-name="card">
                     <field name="name"/>
                 </t></templates></kanban>`,
 };
@@ -74,7 +74,7 @@ test("mrp: click on image opens attachment viewer", async () => {
         "product.document,false,kanban": `
                 <kanban js_class="product_documents_kanban" create="false">
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <div class="o_kanban_previewer" t-if="record.ir_attachment_id.raw_value">
                                 <field name="ir_attachment_id" invisible="1"/>
                                 <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>

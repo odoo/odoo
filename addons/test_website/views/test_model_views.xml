@@ -8,7 +8,7 @@
     <field name="arch" type="xml">
         <kanban js_class="website_pages_kanban" class="o_kanban_mobile" action="open_website_url" type="object" sample="1">
             <templates>
-                <t t-name="kanban-card">
+                <t t-name="card">
                     <field class="text-truncate mb-auto fw-bolder" name="name"/>
                     <div class="d-flex border-top mt-2 pt-2">
                         <field name="is_published" widget="boolean_toggle"/>

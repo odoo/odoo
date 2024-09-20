@@ -1557,7 +1557,7 @@ test.tags("desktop")("set cover image", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
                     </t>
                     <t t-name="kanban-box">
@@ -1643,7 +1643,7 @@ test.tags("desktop")("open file explorer if no cover image", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
                     </t>
                     <t t-name="kanban-box">
@@ -1712,7 +1712,7 @@ test.tags("desktop")("unset cover image", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-menu">
+                    <t t-name="menu">
                         <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
                     </t>
                     <t t-name="kanban-box">

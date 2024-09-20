@@ -97,7 +97,7 @@
             <kanban class="o_kanban_mobile" sample="1">
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div class="d-flex justify-content-between align-items-center">
                             <field name="vehicle_id" class="fw-bold" widget="res_partner_many2one"/>
                             <field class="badge text-bg-secondary" name="state"/>
@@ -265,7 +265,7 @@
                 <field name="currency_id"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div class="flex-row">
                             <field name="vehicle_id" widget="image" options="{'preview_image': 'image_128'}" class="float-start col-2 pe-2"/>
                             <div class="col-10 pe-2 text-truncate">

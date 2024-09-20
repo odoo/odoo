@@ -370,11 +370,11 @@
             <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="can_approve"/>
                 <templates>
-                    <t t-name="kanban-menu" groups="base.group_user">
+                    <t t-name="menu" groups="base.group_user">
                         <a t-if="widget.editable" role="menuitem" type="open" class="dropdown-item">Edit Allocation</a>
                         <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                     </t>
-                    <t t-name="kanban-card" class="flex-row">
+                    <t t-name="card" class="flex-row">
                         <aside>
                             <field name="employee_id"
                                 widget="image"

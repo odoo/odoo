@@ -19,7 +19,7 @@ import {
 import { WebClient } from "@web/webclient/webclient";
 
 const hideTab = async () => {
-    const prop = Object.getOwnPropertyDescriptor(Document.prototype, "visibilityState")
+    const prop = Object.getOwnPropertyDescriptor(Document.prototype, "visibilityState");
     Object.defineProperty(document, "visibilityState", {
         value: "hidden",
         configurable: true,
@@ -284,7 +284,7 @@ test.tags("desktop")(`save when action changed`, async () => {
         kanban: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card"/>
+                    <t t-name="card"/>
                 </templates>
             </kanban>
         `,

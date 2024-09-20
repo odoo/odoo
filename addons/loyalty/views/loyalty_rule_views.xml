@@ -63,7 +63,7 @@
                 <field name="program_type"/>
                 <field name="user_has_debug"/>
                 <templates>
-                    <t t-name="kanban-card" class="flex-row">
+                    <t t-name="card" class="flex-row">
                         <div class="mw-75 flex-grow-1">
                             <div t-if="record.code.raw_value">Discount code <field name="code"/></div>
                             <div t-if="record.minimum_qty.raw_value > 0">If minimum <field name="minimum_qty"/> item(s) bought</div>

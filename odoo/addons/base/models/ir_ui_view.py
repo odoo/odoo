@@ -2481,7 +2481,7 @@ class Model(models.AbstractModel):
         """
 
         field = E.field(name=self._rec_name_fallback())
-        kanban_card = E.t(field, {'t-name': "kanban-card"})
+        kanban_card = E.t(field, {'t-name': "card"})
         templates = E.templates(kanban_card)
         return E.kanban(templates, string=self._description)
 

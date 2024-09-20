@@ -403,7 +403,7 @@
                     <field name='next_departure'/>
                     <field name='active'/>
                     <templates>
-                        <t t-name="kanban-menu" t-if="!selection_mode">
+                        <t t-name="menu" t-if="!selection_mode">
                             <field name="color" widget="kanban_color_picker"/>
                             <t t-if="widget.deletable">
                                 <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
@@ -413,7 +413,7 @@
                                 <t t-if="!record.active.raw_value">Restore</t>
                             </a>
                         </t>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="subject" class="my-1 text-truncate fs-3 fw-bold"/>
                             <field name="campaign_id" invisible="not sent_date" class="fw-bold fs-5" groups="mass_mailing.group_mass_mailing_campaign"/>
                             <div>

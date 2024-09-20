@@ -322,7 +322,7 @@
                                      <field name="display_type"/>
                                      <field name="tax_calculation_rounding_method"/>
                                      <templates>
-                                         <t t-name="kanban-card">
+                                         <t t-name="card">
                                             <t t-if="!record.display_type.raw_value">
                                                 <div class="row">
                                                     <field name="product_id" class="fw-bold col-8"/>
@@ -480,7 +480,7 @@
                     <field name="currency_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <div class="d-flex mb-3">
                                 <field name="priority" widget="priority" class="mt-1 me-1"/>
                                 <field name="partner_id" class="fw-bolder fs-5"/>

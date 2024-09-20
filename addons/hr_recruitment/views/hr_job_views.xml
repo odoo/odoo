@@ -23,7 +23,7 @@
                 <field name="active"/>
                 <field name="alias_email"/>
                 <templates>
-                    <t t-name="kanban-menu" groups="hr_recruitment.group_hr_recruitment_user">
+                    <t t-name="menu" groups="hr_recruitment.group_hr_recruitment_user">
                         <div class="container">
                             <div class="row">
                                 <div class="col-6">
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div class="d-flex align-items-baseline gap-1 ms-2">
                             <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                             <div class="o_kanban_card_header_title d-flex flex-column">

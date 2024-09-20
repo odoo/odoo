@@ -206,7 +206,7 @@
             <kanban class="o_kanban_mobile" sample="1" quick_create="false">
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div class="row">
                             <field name="name" class="col-6 fw-bolder mb-1"/>
                             <field name="state" class="col-6 text-end mb-1" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'secondary'}}"/>

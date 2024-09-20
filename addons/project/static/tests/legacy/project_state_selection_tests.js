@@ -40,7 +40,7 @@ QUnit.module("Project", (hooks) => {
             arch: `
                 <kanban  class="o_kanban_test">
                     <template>
-                        <t t-name="kanban-card">
+                        <t t-name="card">
                             <field name="last_update_status" widget="project_state_selection"/>
                         </t>
                     </template>

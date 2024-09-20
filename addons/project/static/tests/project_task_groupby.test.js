@@ -53,7 +53,7 @@ test("project.task (kanban): check group label for no project", async () => {
         arch: `
             <kanban js_class="project_task_kanban" default_group_by="project_id">
                 <templates>
-                    <t t-name="kanban-card"/>
+                    <t t-name="card"/>
                 </templates>
             </kanban>
         `,
@@ -68,7 +68,7 @@ test("project.task (kanban): check group label for no assignees", async () => {
         arch: `
             <kanban js_class="project_task_kanban" default_group_by="user_ids">
                 <templates>
-                    <t t-name="kanban-card"/>
+                    <t t-name="card"/>
                 </templates>
             </kanban>
         `,
@@ -83,7 +83,7 @@ test("project.task (kanban): check group label for no deadline", async () => {
         arch: `
             <kanban js_class="project_task_kanban" default_group_by="date_deadline">
                 <templates>
-                    <t t-name="kanban-card"/>
+                    <t t-name="card"/>
                 </templates>
             </kanban>
         `,

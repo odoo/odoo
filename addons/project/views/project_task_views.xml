@@ -668,13 +668,13 @@
                     <field name="subtask_count"/>
                     <progressbar field="state" colors='{"1_done": "success-done", "1_canceled": "danger", "03_approved": "success", "02_changes_requested": "warning", "04_waiting_normal": "info", "01_in_progress": "200" }'/>
                     <templates>
-                    <t t-name="kanban-menu" t-if="!selection_mode" groups="base.group_user">
+                    <t t-name="menu" t-if="!selection_mode" groups="base.group_user">
                         <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                         <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item" context="{'dialog_size': 'medium'}">Share Task</a>
                         <div role="separator" class="dropdown-divider"></div>
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                         <div t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                             <field name="name" class="fw-bold fs-5"/>
                             <div class="text-muted">

@@ -41,13 +41,13 @@ QUnit.module("ViewDialogs", (hooks) => {
             },
             views: {
                 "product,false,kanban": `
-                    <kanban><templates><t t-name="kanban-card">
+                    <kanban><templates><t t-name="card">
                         <field name="id"/>
                         <field name="name"/>
                     </t></templates></kanban>
                 `,
                 "sale_order_line,false,kanban": `
-                    <kanban><templates><t t-name="kanban-card">
+                    <kanban><templates><t t-name="card">
                         <field name="id"/>
                     </t></templates></kanban>
                 `,
@@ -105,7 +105,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         serverData.views["product,false,kanban"] = `
             <kanban>
                 <templates>
-                    <t t-name="kanban-card">
+                    <t t-name="card">
                          <div class="o_primary" t-if="!selection_mode">
                             <a type="object" name="some_action">
                                 <field name="name"/>

@@ -140,11 +140,11 @@
                     <field name="mimetype"/>
                     <field name="type"/>
                     <templates>
-                        <t t-name="kanban-menu">
+                        <t t-name="menu">
                             <a t-attf-href="/web/content/ir.attachment/#{record.id.raw_value}/datas?download=true" download="" class="dropdown-item">Download</a>
                             <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         </t>
-                        <t t-name="kanban-card" class="o_kanban_attachment flex-row">
+                        <t t-name="card" class="o_kanban_attachment flex-row">
                             <aside class="o_kanban_image m-1">
                                 <div class="o_kanban_image_wrapper d-flex align-items-center justify-content-center">
                                     <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
