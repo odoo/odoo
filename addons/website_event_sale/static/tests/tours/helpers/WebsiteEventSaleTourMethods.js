@@ -1,6 +1,12 @@
 /** @odoo-module **/
 import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 
+const closeModal = {
+    content: "Close the ticket picking modal",
+    trigger: `.modal-content button:contains("Close")`,
+    run: "click",
+};
+
 export function changePricelist(pricelistName) {
     return [
         {
@@ -24,8 +30,8 @@ export function changePricelist(pricelistName) {
         },
     ];
 }
-function checkPriceEvent(eventName, price) {
-    return [
+function checkPriceEvent(eventName, price, close = true) {
+    const steps = [
         {
             content: "Go to page Event",
             trigger: '.nav-link:contains("Event")',
@@ -45,21 +51,21 @@ function checkPriceEvent(eventName, price) {
             content: "Verify Price",
             trigger: `.oe_currency_value:contains(${price})`,
         },
-        {
-            content: "Open the ticket picking modal",
-            trigger: `.modal-content button:contains("Close")`,
-            run: "click",
-        },
-    ]
+    ];
+    if (close) {
+        steps.push(closeModal);
+    }
+    return steps;
 }
 function checkPriceDiscountEvent(eventName, price, discount) {
     return [
-        ...checkPriceEvent(eventName, price),
+        ...checkPriceEvent(eventName, price, false),
         {
             content: "Verify Price before discount",
             trigger: `del:contains(${discount})`,
         },
-    ]
+        closeModal,
+    ];
 }
 export function checkPriceCart(price) {
     return [
