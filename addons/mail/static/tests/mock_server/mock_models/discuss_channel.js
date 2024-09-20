@@ -587,7 +587,6 @@ export class DiscussChannel extends models.ServerModel {
             })
         );
         const store = new mailDataHelpers.Store(subChannels);
-        store.add(subChannels, { forceOpen: true });
         BusBus._sendone(partner, "mail.record/insert", store.get_result());
         this.message_post(
             self.id,
@@ -597,7 +596,10 @@ export class DiscussChannel extends models.ServerModel {
                 subtype_xmlid: "mail.mt_comment",
             })
         );
-        return store.get_result();
+        return {
+            data: store.get_result(),
+            sub_channel: mailDataHelpers.Store.one_id(subChannels),
+        };
     }
 
     /** @param {number} id */
