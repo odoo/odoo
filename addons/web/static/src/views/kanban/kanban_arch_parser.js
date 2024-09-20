@@ -148,6 +148,9 @@ export class KanbanArchParser {
         // Concrete kanban box elements in the template
         let cardDoc = templateDocs[KANBAN_CARD_ATTRIBUTE];
         const isLegacyArch = !cardDoc;
+        if (isLegacyArch) {
+            console.warn("'kanban-box' is deprecated, use 'kanban-card' API instead");
+        }
         if (!cardDoc) {
             cardDoc = templateDocs[KANBAN_BOX_ATTRIBUTE];
             if (!cardDoc) {
