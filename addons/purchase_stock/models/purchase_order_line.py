@@ -328,6 +328,11 @@ class PurchaseOrderLine(models.Model):
         res['propagate_cancel'] = values.get('propagate_cancel')
         res['product_description_variants'] = values.get('product_description_variants')
         res['product_no_variant_attribute_value_ids'] = values.get('never_product_template_attribute_value_ids')
+
+        # Need to attach purchase order to procurement group for mtso
+        group = values.get('group_id')
+        if group:
+            group.purchase_order_ids = [Command.link(po.id)]
         return res
 
     def _create_stock_moves(self, picking):

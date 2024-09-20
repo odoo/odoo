@@ -156,6 +156,10 @@ class PurchaseOrder(models.Model):
                 else:
                     moves_to_recompute_ids.update(move_dest_ids.ids)
 
+        linked_groups = self.env['procurement.group'].search([('purchase_order_ids', 'in', self.ids)])
+        if linked_groups:
+            linked_groups.purchase_order_ids = [Command.unlink(order_id) for order_id in self.ids]
+
         if moves_to_cancel_ids:
             moves_to_cancel = self.env['stock.move'].browse(moves_to_cancel_ids)
             moves_to_cancel._action_cancel()

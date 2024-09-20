@@ -272,6 +272,10 @@ class StockLot(models.Model):
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
+    purchase_order_ids = fields.Many2many(
+        'purchase.order', 'procurement_group_purchase_order_rel',
+        'group_id', 'purchase_order_id', 'Linked Purchase Orders', copy=False)
+
     @api.model
     def run(self, procurements, raise_user_error=True):
         wh_by_comp = dict()
