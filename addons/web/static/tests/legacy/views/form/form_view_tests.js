@@ -5442,6 +5442,135 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_data_row");
     });
 
+    QUnit.test("discard changes on relational data on existing record", async function (assert) {
+        serverData.models.partner.records[0].product_ids = [37];
+        serverData.models.partner.records[0].bar = false;
+        serverData.models.partner.onchanges = {
+            bar(record) {
+                // when bar changes, push another record in product_ids.
+                record.product_ids = [[4, 41]];
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="product_ids" widget="one2many">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xphone"]);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+
+        // Click on bar
+        await click(target.querySelector(".o_field_widget[name=bar] input"));
+        assert.containsOnce(target, ".o_field_widget[name=bar] input:checked");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "xphone",
+            "xpad",
+        ]);
+
+        // click on discard
+        await clickDiscard(target);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xphone"]);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+    });
+
+    QUnit.test("discard changes on relational data on new record (1)", async function (assert) {
+        // When bar is changed, it pushes a record in product_ids
+        // After discarding, product_ids should be empty
+        serverData.models.partner.onchanges = {
+            bar(record) {
+                if (record.bar) {
+                    // when bar changes, push another record in product_ids.
+                    record.product_ids = [[4, 41]];
+                }
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="product_ids" widget="one2many">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), []);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+
+        // Click on bar
+        await click(target.querySelector(".o_field_widget[name=bar] input"));
+        assert.containsOnce(target, ".o_field_widget[name=bar] input:checked");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xpad"]);
+
+        // click on discard
+        await clickDiscard(target);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), []);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+    });
+
+    QUnit.test("discard changes on relational data on new record (2)", async function (assert) {
+        // An initial onChange push a record in product_ids
+        // When bar is changed, it pushes a second record in product_ids
+        // After discarding, product_ids should contain the inital record pushed by the inital onChange
+        serverData.models.partner.onchanges = {
+            product_ids(record) {
+                record.product_ids = [[4, 41]];
+            },
+            bar(record) {
+                // when bar changes, push another record in product_ids.
+                if (record.bar) {
+                    record.product_ids = [[4, 37]];
+                }
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="product_ids" widget="one2many">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xpad"]);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+
+        // Click on bar
+        await click(target.querySelector(".o_field_widget[name=bar] input"));
+        assert.containsOnce(target, ".o_field_widget[name=bar] input:checked");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+            "xpad",
+            "xphone",
+        ]);
+
+        // click on discard
+        await clickDiscard(target);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["xpad"]);
+        assert.containsNone(target, ".o_field_widget[name=bar] input:checked");
+    });
+
     QUnit.test(
         "discard changes on a new (non dirty, except for defaults) form view",
         async function (assert) {
