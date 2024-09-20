@@ -297,13 +297,13 @@
                             </t>
                             <t t-if="journal_type == 'purchase'">
                                 <div t-if="!journal_is_empty" class="d-flex">
-                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
+                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action"/>
                                     <div class="ms-1">
                                         <button type="object" name="action_create_new" class="btn-secondary " groups="account.group_account_invoice">New</button>
                                     </div>
                                 </div>
                                 <div t-else="">
-                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
+                                    <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action"/>
                                     <widget name="bill_upload_guide"/>
                                 </div>
                             </t>
