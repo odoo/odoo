@@ -1242,8 +1242,6 @@ Please change the quantity done or the rounding precision of your unit of measur
     def _onchange_product_id(self):
         product = self.product_id.with_context(lang=self._get_lang())
         self.name = product.partner_ref
-        if product:
-            self.description_picking = product._get_description(self.picking_type_id)
 
     @api.onchange('product_id', 'product_qty', 'product_uom')
     def _onchange_suggest_packaging(self):

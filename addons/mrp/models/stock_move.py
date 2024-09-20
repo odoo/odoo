@@ -573,6 +573,7 @@ class StockMove(models.Model):
             'name': self.name,
             'picked': self.picked,
             'bom_line_id': bom_line.id,
+            'description_picking': self.product_id.display_name,
         }
 
     def _generate_move_phantom(self, bom_line, product_qty, quantity_done):
