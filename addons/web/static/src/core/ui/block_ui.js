@@ -9,17 +9,25 @@ export class BlockUI extends Component {
     };
 
     static template = xml`
-        <div t-att-class="state.blockUI ? 'o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100' : ''">
-          <t t-if="state.blockUI">
-            <div class="o_spinner mb-4">
-                <img src="/web/static/img/spin.svg" alt="Loading..."/>
+        <t t-if="state.blockState === BLOCK_STATES.UNBLOCKED">
+            <div/>
+        </t>
+        <t t-else="">
+            <t t-set="visiblyBlocked" t-value="state.blockState === BLOCK_STATES.VISIBLY_BLOCKED"/>
+            <div class="o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100"
+                 t-att-class="visiblyBlocked ? '' : 'o_blockUI_invisible'">
+                <t t-if="visiblyBlocked">
+                    <div class="o_spinner mb-4">
+                        <img src="/web/static/img/spin.svg" alt="Loading..."/>
+                    </div>
+                    <div class="o_message text-center px-4">
+                        <t t-esc="state.line1"/><br/>
+                        <t t-esc="state.line2"/>
+                    </div>
+                </t>
             </div>
-            <div class="o_message text-center px-4">
-                <t t-esc="state.line1"/> <br/>
-                <t t-esc="state.line2"/>
-            </div>
-          </t>
-        </div>`;
+        </t>
+    `;
 
     setup() {
         this.messagesByDuration = [
@@ -50,8 +58,9 @@ export class BlockUI extends Component {
                 l1: _t("Maybe you should consider reloading the application by pressing F5..."),
             },
         ];
+        this.BLOCK_STATES = { UNBLOCKED: 0, BLOCKED: 1, VISIBLY_BLOCKED: 2 };
         this.state = useState({
-            blockUI: false,
+            blockState: this.BLOCK_STATES.UNBLOCKED,
             line1: "",
             line2: "",
         });
@@ -72,7 +81,15 @@ export class BlockUI extends Component {
     }
 
     block(ev) {
-        this.state.blockUI = true;
+        const showBlockedUI = () => (this.state.blockState = this.BLOCK_STATES.VISIBLY_BLOCKED);
+        const delay = ev.detail?.delay;
+        if (delay) {
+            this.state.blockState = this.BLOCK_STATES.BLOCKED;
+            this.showBlockedUITimer = setTimeout(showBlockedUI, delay);
+        } else {
+            showBlockedUI();
+        }
+
         if (ev.detail?.message) {
             this.state.line1 = ev.detail.message;
         } else {
@@ -81,7 +98,8 @@ export class BlockUI extends Component {
     }
 
     unblock() {
-        this.state.blockUI = false;
+        this.state.blockState = this.BLOCK_STATES.UNBLOCKED;
+        clearTimeout(this.showBlockedUITimer);
         clearTimeout(this.msgTimer);
         this.state.line1 = "";
         this.state.line2 = "";
