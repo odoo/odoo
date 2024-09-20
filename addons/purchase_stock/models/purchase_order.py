@@ -155,6 +155,8 @@ class PurchaseOrder(models.Model):
                     moves_to_cancel_ids.update(move_dest_ids.ids)
                 else:
                     moves_to_recompute_ids.update(move_dest_ids.ids)
+            if order_line.group_id:
+                order_line.group_id.purchase_line_ids = [Command.unlink(order_line.id)]
 
         if moves_to_cancel_ids:
             moves_to_cancel = self.env['stock.move'].browse(moves_to_cancel_ids)
