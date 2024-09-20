@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <xpath expr="//footer/div" position="inside">
                 <a t-if="record.click_count" href="#" title="Clicks" role="button"
-                    data-type="action" data-name="%(link_tracker_action_campaign)d"
+                    type="action" name="%(link_tracker_action_campaign)d"
                     class="btn-outline-primary rounded-pill me-1 order-4">
                     <span class="badge">
                         <i class="fa fa-fw fa-mouse-pointer" aria-label="Clicks" role="img"/>

@@ -45,18 +45,6 @@ export class KanbanCompiler extends ViewCompiler {
      * @override
      */
     compileButton(el, params) {
-        /**
-         * WOWL FIXME
-         * For some reason, buttons in some arch have a data-something instead of just a normal attribute.
-         * The new system only uses normal attributes.
-         * This is an ugly small compatibility trick to fix this.
-         */
-        if (el.hasAttribute("data-type")) {
-            for (const { name, value } of el.attributes) {
-                el.setAttribute(name.replace(/^data-/, ""), value);
-            }
-        }
-
         const type = el.getAttribute("type");
         if (!SPECIAL_TYPES.includes(type)) {
             // Not a supported action type.
