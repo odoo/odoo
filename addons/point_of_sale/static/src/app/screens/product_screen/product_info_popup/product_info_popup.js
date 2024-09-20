@@ -19,7 +19,7 @@ export class ProductInfoPopup extends Component {
     }
     _hasMarginsCostsAccessRights() {
         const isAccessibleToEveryUser = this.pos.config.is_margins_costs_accessible_to_every_user;
-        const isCashierManager = this.pos.get_cashier().raw.role === "manager";
+        const isCashierManager = this.pos.get_cashier().role === "manager";
         return isAccessibleToEveryUser || isCashierManager;
     }
 }

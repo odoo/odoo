@@ -692,6 +692,7 @@ export class PosStore extends Reactive {
      * @returns {name: string, id: int, role: string}
      */
     get_cashier() {
+        this.user.role = this.user._raw.role;
         return this.user;
     }
     get_cashier_user_id() {
