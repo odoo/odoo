@@ -121,9 +121,9 @@ test("sort first pivot column (ascending)", async () => {
                 domain: [],
                 measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                sortedColumn: {
-                    groupId: [[], [1]],
-                    measure: "probability:avg",
+                sortedCol: {
+                    domain: [{ field: "foo", type: "integer", value: 1 }],
+                    measure: "probability:sum",
                     order: "asc",
                 },
             },
@@ -159,9 +159,9 @@ test("sort first pivot column (descending)", async () => {
                 domain: [],
                 measures: [{ id: "probability:sum", fieldName: "probability", aggregator: "sum" }],
                 model: "partner",
-                sortedColumn: {
-                    groupId: [[], [1]],
-                    measure: "probability",
+                sortedCol: {
+                    domain: [{ field: "foo", type: "integer", value: 1 }],
+                    measure: "probability:sum",
                     order: "desc",
                 },
             },
@@ -198,9 +198,9 @@ test("sort second pivot column (ascending)", async () => {
                 model: "partner",
                 rows: [{ fieldName: "bar" }],
                 name: "Partners by Foo",
-                sortedColumn: {
-                    groupId: [[], [2]],
-                    measure: "probability",
+                sortedCol: {
+                    domain: [{ field: "foo", type: "integer", value: 2 }],
+                    measure: "probability:sum",
                     order: "asc",
                 },
             },
@@ -237,9 +237,9 @@ test("sort second pivot column (descending)", async () => {
                 model: "partner",
                 rows: [{ fieldName: "bar" }],
                 name: "Partners by Foo",
-                sortedColumn: {
-                    groupId: [[], [2]],
-                    measure: "probability",
+                sortedCol: {
+                    domain: [{ field: "foo", type: "integer", value: 2 }],
+                    measure: "probability:sum",
                     order: "desc",
                 },
             },
@@ -278,9 +278,9 @@ test("sort second pivot measure (ascending)", async () => {
                     { id: "foo:sum", fieldName: "foo", aggregator: "sum" },
                 ],
                 model: "partner",
-                sortedColumn: {
-                    groupId: [[], []],
-                    measure: "foo",
+                sortedCol: {
+                    domain: [],
+                    measure: "foo:sum",
                     order: "asc",
                 },
             },
@@ -315,9 +315,9 @@ test("sort second pivot measure (descending)", async () => {
                 ],
                 model: "partner",
                 rows: [{ fieldName: "product_id" }],
-                sortedColumn: {
-                    groupId: [[], []],
-                    measure: "foo",
+                sortedCol: {
+                    domain: [],
+                    measure: "foo:sum",
                     order: "desc",
                 },
             },

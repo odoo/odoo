@@ -90,7 +90,7 @@ def pivot_fields(pivot):
         + pivot_measure_fields(pivot)
         + domain_fields(pivot["domain"])
     )
-    measure = pivot.get("sortedColumn") and pivot["sortedColumn"]["measure"]
+    measure = pivot.get("sortedCol") and pivot["sortedCol"]["measure"]
     if measure and measure != "__count":
         fields.add(measure)
     return model, fields
