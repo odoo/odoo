@@ -16,7 +16,7 @@
                     <t t-set="crm_lead_count_label">Opportunities</t>
                 </t>
                 <a t-if="record.crm_lead_count" href="#" t-att-title="crm_lead_count_label" role="button"
-                    groups="sales_team.group_sale_salesman" data-type="object" data-name="action_redirect_to_leads_opportunities"
+                    groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_leads_opportunities"
                     class="btn-outline-primary rounded-pill me-1 order-3">
                     <span class="badge">
                         <i class="fa fa-fw fa-star" t-att-aria-label="crm_lead_count_label" role="img"/>

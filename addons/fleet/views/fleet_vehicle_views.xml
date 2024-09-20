@@ -282,8 +282,8 @@
                             <field name="vehicle_properties" widget="properties"/>
                             <footer class="pt-0 mt-0" t-if="!selection_mode">
                                 <div class="d-flex fs-6">
-                                    <a t-if="record.contract_count.raw_value>0" data-type="object"
-                                        data-name="return_action_to_open" href="#" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
+                                    <a t-if="record.contract_count.raw_value>0" type="object"
+                                        name="return_action_to_open" href="#" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
                                         <field name="contract_count"/>
                                         Contract(s)
                                         <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"

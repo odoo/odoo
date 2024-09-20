@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//footer/div" position="inside">
                 <a t-if="record.invoiced_amount" href="#" title="Revenues" role="button"
-                    groups="sales_team.group_sale_salesman" data-type="object" data-name="action_redirect_to_invoiced"
+                    groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_invoiced"
                     class="btn-outline-primary rounded-pill me-1 order-1">
                     <span class="badge">
                         <field name="currency_id" invisible="True"/>
@@ -16,7 +16,7 @@
                     </span>
                 </a>
                 <a t-if="record.quotation_count" href="#" title="Quotations" role="button"
-                    groups="sales_team.group_sale_salesman" data-type="object" data-name="action_redirect_to_quotations"
+                    groups="sales_team.group_sale_salesman" type="object" name="action_redirect_to_quotations"
                     class="btn-outline-primary rounded-pill me-1 order-2">
                     <span class="badge">
                         <i class="fa fa-fw fa-money me-1" aria-label="Quotations" role="img"/>
