@@ -62,6 +62,7 @@ class AccountPaymentRegister(models.TransientModel):
         selection=[
             ('next', "Next Installment"),
             ('overdue', "Overdue Amount"),
+            ('before_date', "Before Next Payment Date"),
             ('full', "Full Amount"),
         ],
         compute='_compute_installments_mode',
@@ -605,6 +606,7 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _get_total_amounts_to_pay(self, batch_results):
         self.ensure_one()
+        next_payment_date = self._get_next_payment_date_in_context()
         amount_per_line_common = []
         amount_per_line_by_default = []
         amount_per_line_full_amount = []
@@ -616,7 +618,7 @@ class AccountPaymentRegister(models.TransientModel):
             all_lines |= batch_result['lines']
         all_lines = all_lines.sorted(key=lambda line: (line.move_id, line.date_maturity))
         for move, lines in all_lines.grouped('move_id').items():
-            installments = lines._get_installments_data(payment_currency=self.currency_id, payment_date=self.payment_date)
+            installments = lines._get_installments_data(payment_currency=self.currency_id, payment_date=self.payment_date, next_payment_date=next_payment_date)
             last_installment_mode = False
             for installment in installments:
                 line = installment['line']
@@ -635,12 +637,15 @@ class AccountPaymentRegister(models.TransientModel):
                 # The next installment is added for the difference.
                 if (
                     line.display_type == 'payment_term'
-                    and installment['type'] in ('overdue', 'next')
+                    and installment['type'] in ('overdue', 'next', 'before_date')
                 ):
                     if installment['type'] == 'overdue':
                         amount_per_line_common.append(installment)
+                    elif installment['type'] == 'before_date':
+                        amount_per_line_common.append(installment)
+                        first_installment_mode = 'before_date'
                     elif installment['type'] == 'next':
-                        if last_installment_mode in ('next', 'overdue'):
+                        if last_installment_mode in ('next', 'overdue', 'before_date'):
                             amount_per_line_full_amount.append(installment)
                         elif not last_installment_mode:
                             amount_per_line_common.append(installment)
@@ -761,6 +766,13 @@ class AccountPaymentRegister(models.TransientModel):
                         _("This is the overdue amount."),
                         _("Consider paying the %(btn_start)sfull amount%(btn_end)s."),
                     ]
+                elif wizard.installments_mode == 'before_date':
+                    wizard.installments_switch_amount = total_amount_values['full_amount']
+                    next_payment_date = self._get_next_payment_date_in_context()
+                    html_lines += [
+                        _("Total for the installments before %(date)s.", date=(next_payment_date or fields.Date.context_today(self))),
+                        _("Consider paying the %(btn_start)sfull amount%(btn_end)s."),
+                    ]
                 elif wizard.installments_mode == 'next':
                     wizard.installments_switch_amount = total_amount_values['full_amount']
                     html_lines += [
@@ -798,7 +810,7 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             if wizard.payment_date:
                 total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
-                if wizard.installments_mode in ('overdue', 'next'):
+                if wizard.installments_mode in ('overdue', 'next', 'before_date'):
                     wizard.payment_difference = total_amount_values['amount_for_difference'] - wizard.amount
                 elif wizard.installments_mode == 'full':
                     wizard.payment_difference = total_amount_values['full_amount_for_difference'] - wizard.amount
@@ -1210,9 +1222,9 @@ class AccountPaymentRegister(models.TransientModel):
 
             to_process.append(to_process_values)
         else:
-            # Don't group payments: Create one batch per move.
             if not self.group_payment:
-                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue') else self.line_ids
+                # Don't group payments: Create one batch per move.
+                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
                 new_batches = []
                 for batch_result in batches:
                     for line in batch_result['lines']:
@@ -1239,6 +1251,13 @@ class AccountPaymentRegister(models.TransientModel):
         self._post_payments(to_process, edit_mode=edit_mode)
         self._reconcile_payments(to_process, edit_mode=edit_mode)
         return payments
+
+    def _get_next_payment_date_in_context(self):
+        if active_domain := self.env.context.get('active_domain'):
+            for domain_elem in active_domain:
+                if isinstance(domain_elem, (list, tuple)) and domain_elem[0] == 'next_payment_date' and len(domain_elem) == 3 and isinstance(domain_elem[2], str):
+                    return fields.Date.to_date(domain_elem[2])
+        return False
 
     def action_create_payments(self):
         if self.is_register_payment_on_draft:
