@@ -568,7 +568,6 @@ class ResPartner(models.Model):
         string="eInvoice format",
         selection=[],  # to extend
         compute='_compute_invoice_edi_format',
-        search='_search_invoice_edi_format',
         inverse='_inverse_invoice_edi_format',
     )
     display_invoice_edi_format = fields.Boolean(compute='_compute_display_invoice_edi_format')
@@ -648,9 +647,6 @@ class ResPartner(models.Model):
                 partner.invoice_edi_format = partner._get_suggested_invoice_edi_format()
             else:
                 partner.invoice_edi_format = values[partner.id]
-
-    def _search_invoice_edi_format(self, operator, value):
-        return self._fields['invoice_edi_format']._search_company_dependent(self.with_company(self.env.company.root_id), operator, value)
 
     def _inverse_invoice_edi_format(self):
         values = {

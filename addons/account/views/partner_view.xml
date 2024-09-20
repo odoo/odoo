@@ -293,9 +293,6 @@
                    <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
                    <separator/>
                 </xpath>
-                <xpath expr="//group[@name='group_by']" position="after">
-                    <filter name="invoice_edi_format" string="EDI Format" context="{'group_by':'invoice_edi_format'}"/>
-                </xpath>
             </field>
         </record>
 
