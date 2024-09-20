@@ -15,6 +15,7 @@
                     'o-hasSelfAvatar': !env.inChatWindow and thread,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
+                    'o-chatWindow': env.inChatWindow,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
@@ -41,7 +42,6 @@
                     <div class="position-relative flex-grow-1">
                         <textarea class="o-mail-Composer-input o-mail-Composer-inputStyle form-control o-mail-Composer-bg border-0 rounded-3 shadow-none overflow-auto"
                             t-ref="textarea"
-                            style="height:40px;"
                             t-on-keydown="onKeydown"
                             t-on-focusin="onFocusin"
                             t-on-focusout="() => this.props.composer.isFocused = false"
@@ -73,7 +73,7 @@
                             'rounded': !props.composer.message,
                         }"
                     >
-                        <div class="d-flex flex-grow-1 align-items-baseline" t-att-class="{ 'mt-1': !props.composer.message }" t-ref="main-actions">
+                        <div class="d-flex flex-grow-1 align-items-baseline" t-att-class="{ 'mt-1': !props.composer.message and !env.inChatWindow }" t-ref="main-actions">
                             <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button>
                             <FileUploader t-if="allowUpload" multiUpload="true" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                                 <t t-set-slot="toggler">
