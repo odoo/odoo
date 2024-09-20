@@ -119,17 +119,27 @@ class ProductProduct(models.Model):
             products = config_id.with_context({**self.env.context, 'display_default_code': False}).get_limited_products_loading(fields)
         else:
             domain = self._load_pos_data_domain(data)
-            products = self.with_context({**self.env.context, 'display_default_code': False}).search_read(
-                domain,
-                fields,
-                order='sequence,default_code,name',
-                load=False)
-
+            products = self._load_product_with_domain(domain, config_id.id)
+        self._add_missing_products(products, config_id.id, data)
         self._process_pos_ui_product_product(products, config_id)
         return {
             'data': products,
             'fields': fields,
         }
+
+    def _add_missing_products(self, products, config_id, data):
+        product_ids_in_loaded_lines = {line['product_id'] for line in data['pos.order.line']['data']}
+        not_loaded_product_ids = product_ids_in_loaded_lines - {product['id'] for product in products}
+        products.extend(self._load_product_with_domain([('id', 'in', list(not_loaded_product_ids))], config_id, True))
+
+    def _load_product_with_domain(self, domain, config_id, load_archived=False):
+        fields = self._load_pos_data_fields(config_id)
+        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
+        return self.with_context(context).search_read(
+            domain,
+            fields,
+            order='sequence,default_code,name',
+            load=False)
 
     def _process_pos_ui_product_product(self, products, config_id):
 
