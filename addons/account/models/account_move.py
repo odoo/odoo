@@ -501,7 +501,8 @@ class AccountMove(models.Model):
         comodel_name='res.users',
         copy=False,
         tracking=True,
-        default=lambda self: self.env.user,
+        compute='_compute_invoice_default_sale_person',
+        store=True,
     )
     # Technical field used to fit the generic behavior in mail templates.
     user_id = fields.Many2one(string='User', related='invoice_user_id')
@@ -571,6 +572,16 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('move_type')
+    def _compute_invoice_default_sale_person(self):
+        # We want to modify the sale person only when we don't have one and if the move type corresponds to this condition
+        # If the move doesn't correspond, we remove the sale person
+        for move in self:
+            if move.is_sale_document(include_receipts=True):
+                move.invoice_user_id = move.invoice_user_id or self.env.user
+            else:
+                move.invoice_user_id = False
 
     def _compute_payment_reference(self):
         for move in self.filtered(lambda m: (
