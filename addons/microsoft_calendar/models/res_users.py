@@ -9,7 +9,7 @@ from datetime import timedelta
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
-from odoo.addons.microsoft_account.models.microsoft_service import DEFAULT_MICROSOFT_TOKEN_ENDPOINT, _get_microsoft_client_secret
+from odoo.addons.microsoft_account.models import microsoft_service
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
 from odoo.tools import str2bool
 
@@ -42,7 +42,7 @@ class User(models.Model):
         self.ensure_one()
         ICP_sudo = self.env['ir.config_parameter'].sudo()
         client_id = self.env['microsoft.service']._get_microsoft_client_id('calendar')
-        client_secret = _get_microsoft_client_secret(ICP_sudo, 'calendar')
+        client_secret = microsoft_service._get_microsoft_client_secret(ICP_sudo, 'calendar')
 
         if not client_id or not client_secret:
             raise UserError(_("The account for the Outlook Calendar service is not configured."))
@@ -57,7 +57,7 @@ class User(models.Model):
 
         try:
             dummy, response, dummy = self.env['microsoft.service']._do_request(
-                DEFAULT_MICROSOFT_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri=''
+                microsoft_service.DEFAULT_MICROSOFT_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri=''
             )
             ttl = response.get('expires_in')
             self.sudo().write({
@@ -161,7 +161,7 @@ class User(models.Model):
         """ Checks if both Client ID and Client Secret are defined in the database. """
         ICP_sudo = self.env['ir.config_parameter'].sudo()
         client_id = self.env['microsoft.service']._get_microsoft_client_id('calendar')
-        client_secret = _get_microsoft_client_secret(ICP_sudo, 'calendar')
+        client_secret = microsoft_service._get_microsoft_client_secret(ICP_sudo, 'calendar')
         return bool(client_id and client_secret)
 
     @api.model
