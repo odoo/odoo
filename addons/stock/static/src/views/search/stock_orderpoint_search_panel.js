@@ -10,6 +10,7 @@ export class StockOrderpointSearchPanel extends SearchPanel {
     setup() {
         super.setup(...arguments);
         this.globalVisibilityDays = useState({value: 0});
+        this.state.sidebarExpanded = false;
     }
 
     async applyGlobalVisibilityDays(ev) {
