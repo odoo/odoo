@@ -164,6 +164,9 @@ export class NavigableList extends Component {
             default:
                 return;
         }
+        if (this.props.options.length !== 0) {
+            ev.stopPropagation();
+        }
         ev.preventDefault();
     }
 

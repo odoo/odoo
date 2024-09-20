@@ -18,7 +18,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -1048,4 +1048,42 @@ test("ENTER closes canned response suggestions", async () => {
     await contains(".o-mail-NavigableList-active", { count: 0 });
     await triggerHotkey("Enter");
     await contains(".o-mail-NavigableList-item", { count: 0 });
+});
+
+test("Tab to select of canned response suggestion works in chat window", async () => {
+    // This might conflict with focusing next chat window
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        {
+            name: "General",
+            channel_member_ids: [
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
+            ],
+        },
+        {
+            name: "Extra",
+            channel_member_ids: [
+                Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
+            ],
+        },
+    ]);
+    pyEnv["mail.canned.response"].create([
+        { source: "Hello", substitution: "Hello! How are you?" },
+        { source: "Goodbye", substitution: "Goodbye! See you soon!" },
+    ]);
+    await start();
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await insertText(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", ":");
+    // Assuming the suggestions are displayed in alphabetical order
+    await contains(".o-mail-NavigableList-item", {
+        text: "GoodbyeGoodbye! See you soon!",
+        before: [".o-mail-NavigableList-item", { text: "HelloHello! How are you?" }],
+    });
+    await triggerHotkey("Tab");
+    await contains(".o-mail-NavigableList-active", { text: "GoodbyeGoodbye! See you soon!" });
+    await animationFrame();
+    await triggerHotkey("Enter");
+    await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", {
+        value: "Goodbye! See you soon! ",
+    });
 });
