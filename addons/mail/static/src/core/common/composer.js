@@ -100,6 +100,7 @@ export class Composer extends Component {
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
         this.emojiButton = useRef("emoji-button");
+        this.inputContainerRef = useRef("input-container");
         this.state = useState({
             active: true,
         });
@@ -326,7 +327,7 @@ export class Composer extends Component {
 
     get navigableListProps() {
         const props = {
-            anchorRef: this.ref.el,
+            anchorRef: this.inputContainerRef.el,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
