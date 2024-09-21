@@ -536,11 +536,13 @@ class Environment(Mapping):
     names to models. It also holds a cache for records, and a data
     structure to manage recomputations.
     """
+    __slots__ = ('__weakref__', '_cache_key', '_lazy__lang', '_lazy_companies', '_lazy_company', '_lazy_lang', '_lazy_user', '_protected', 'cache', 'context', 'cr', 'registry', 'su', 'transaction', 'uid', 'uid_origin')
 
     cr: BaseCursor
     uid: int
     context: frozendict
     su: bool
+    uid_origin: int
     registry: Registry
     cache: Cache
     transaction: Transaction
@@ -580,6 +582,7 @@ class Environment(Mapping):
         self._cache_key = {}                    # memo {field: cache_key}
         self._protected = transaction.protected
 
+        lazy_property.reset_all(self, ('lang', '_lang', 'companies', 'company', 'user'))
         transaction.envs.add(self)
         return self
 
@@ -665,7 +668,7 @@ class Environment(Mapping):
             superuser mode. """
         return self.su or self.user._is_system()
 
-    @lazy_property
+    @lazy_property.slot('_lazy_user')
     def user(self):
         """Return the current user (as an instance).
 
@@ -673,7 +676,7 @@ class Environment(Mapping):
         :rtype: :class:`res.users record<~odoo.addons.base.models.res_users.Users>`"""
         return self(su=True)['res.users'].browse(self.uid)
 
-    @lazy_property
+    @lazy_property.slot('_lazy_company')
     def company(self):
         """Return the current company (as an instance).
 
@@ -703,7 +706,7 @@ class Environment(Mapping):
             return self['res.company'].browse(company_ids[0])
         return self.user.company_id.with_env(self)
 
-    @lazy_property
+    @lazy_property.slot('_lazy_companies')
     def companies(self):
         """Return a recordset of the enabled companies by the user.
 
@@ -743,7 +746,7 @@ class Environment(Mapping):
         #   - when loading an binary image on a template
         return self['res.company'].browse(user_company_ids)
 
-    @lazy_property
+    @lazy_property.slot('_lazy_lang')
     def lang(self):
         """Return the current language code.
 
@@ -755,7 +758,7 @@ class Environment(Mapping):
             raise UserError(f'Invalid language code: {lang}')  # pylint: disable
         return lang or None
 
-    @lazy_property
+    @lazy_property.slot('_lazy__lang')
     def _lang(self):
         """Return the technical language code of the current context for **model_terms** translated field
 

@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
+
+import functools
 import typing
 from inspect import Parameter, getsourcefile, signature
+from .misc import SENTINEL
 
 from decorator import decorator
 
@@ -26,10 +29,17 @@ class lazy_property(typing.Generic[T]):
         reevaluate the property, simply delete the attribute on the object, and
         get it again.
     """
+    attr_name: str
+
     def __init__(self, fget: Callable[[typing.Any], T]):
-        assert not fget.__name__.startswith('__'),\
-            "lazy_property does not support mangled names"
         self.fget = fget
+
+    def __set_name__(self, owner, name: str):
+        assert not name.startswith('__'),\
+            "lazy_property does not support mangled names"
+        assert not getattr(owner, '__slots__', None),\
+            "lazy_property does not support slotted classes"
+        self.attr_name = name
 
     @typing.overload
     def __get__(self, obj: None, cls: typing.Any, /) -> typing.Any: ...
@@ -40,21 +50,69 @@ class lazy_property(typing.Generic[T]):
         if obj is None:
             return self
         value = self.fget(obj)
-        setattr(obj, self.fget.__name__, value)
+        setattr(obj, self.attr_name, value)
         return value
+
+    # there are no __set__ or __delete__ methods
+    # because it is a read-only descriptor, vars(obj) is resolved first
+    # so we set the value in the object directly
 
     @property
     def __doc__(self):
         return self.fget.__doc__
 
     @staticmethod
-    def reset_all(obj) -> None:
+    def reset_all(obj, names=()) -> None:
         """ Reset all lazy properties on the instance `obj`. """
-        cls = type(obj)
-        obj_dict = vars(obj)
-        for name in list(obj_dict):
-            if isinstance(getattr(cls, name, None), lazy_property):
-                obj_dict.pop(name)
+        owner = type(obj)
+        if hasattr(obj, '__dict__'):
+            obj_dict = vars(obj)
+            for name in names or list(obj_dict):
+                if isinstance(prop := getattr(owner, name, None), lazy_property):
+                    if isinstance(prop, lazy_property_slot):
+                        prop.__delete__(obj)
+                    else:
+                        obj_dict.pop(name)
+        else:
+            for name in names or dir(obj):
+                if isinstance(prop := getattr(owner, name, None), lazy_property_slot):
+                    prop.__delete__(obj)
+
+    @staticmethod
+    def slot(name: str):
+        """Create a slotted version of a lazy_property"""
+        return functools.partial(lazy_property_slot, name)
+
+
+class lazy_property_slot(lazy_property):
+    """ Decorator for a lazy property of an object, i.e., an object attribute
+        that is determined by the result of a method call evaluated once. To
+        reevaluate the property, simply delete the attribute on the object, and
+        get it again.
+        This version stores the result on the object in a given slot.
+    """
+    def __init__(self, slot_name, fget: Callable[[typing.Any], T]):
+        self.attr_name = slot_name
+        super().__init__(fget)
+
+    def __set_name__(self, owner, name: str):
+        # the name is already set in the constructor
+        assert name != self.attr_name, "lazy_property_slot name and attr_name must be different"
+
+    def __get__(self, obj, owner=None, /):
+        if obj is None:
+            return self
+        value = getattr(obj, self.attr_name)
+        if value is SENTINEL:
+            value = self.fget(obj)
+            setattr(obj, self.attr_name, value)
+        return value
+
+    def __set__(self, obj, value):
+        raise NotImplementedError("Cannot set a lazy_property_slot")
+
+    def __delete__(self, obj):
+        setattr(obj, self.attr_name, SENTINEL)
 
 
 def conditional(condition, decorator):
