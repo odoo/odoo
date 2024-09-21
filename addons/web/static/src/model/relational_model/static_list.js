@@ -875,6 +875,10 @@ export class StaticList extends DataPoint {
                     // on a view button in the x2many dialog), so replace the CREATE command by a
                     // LINK
                     commands.push([LINK, record.resId]);
+                } else if (command[0] === UPDATE && record.evalContext.id && record._virtualId) {
+                    // while adding a new record in x2many dialog, saving the parent record can lead to 
+                    // dirty state of children record to be saved with virtualId while previously saved.
+                    continue;
                 } else {
                     const values = record._getChanges(record._changes, { withReadonly });
                     if (command[0] === CREATE || Object.keys(values).length) {
