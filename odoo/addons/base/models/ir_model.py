@@ -167,7 +167,18 @@ def upsert_en(model, fnames, rows, conflict):
         cols=comma(SQL.identifier(fname) for fname in fnames),
         values=comma(values),
         conflict=comma(SQL.identifier(fname) for fname in conflict),
-        excluded=comma(SQL("EXCLUDED.%s", SQL.identifier(fname)) for fname in fnames),
+        excluded=comma(
+            (
+                SQL(
+                    "COALESCE(%s, '{}'::jsonb) || EXCLUDED.%s",
+                    SQL.identifier(model._table, fname),
+                    SQL.identifier(fname),
+                )
+                if model._fields[fname].translate is True
+                else SQL("EXCLUDED.%s", SQL.identifier(fname))
+            )
+            for fname in fnames
+        ),
     )
     return [id_ for id_, in model.env.execute_query(query)]
 
