@@ -129,7 +129,14 @@ def upsert_en(model, fnames, rows, conflict):
     cols = ", ".join(quote(fname) for fname in fnames)
     values = ", ".join("%s" for row in rows)
     conf = ", ".join(conflict)
-    excluded = ", ".join(f"EXCLUDED.{quote(fname)}" for fname in fnames)
+    excluded = ", ".join(
+        (
+            f"COALESCE({table}.{quote(fname)}, '{{}}'::jsonb) || EXCLUDED.{quote(fname)}"
+            if model._fields[fname].translate is True
+            else f"EXCLUDED.{quote(fname)}"
+        )
+        for fname in fnames
+    )
     query = f"""
         INSERT INTO {table} ({cols}) VALUES {values}
         ON CONFLICT ({conf}) DO UPDATE SET ({cols}) = ({excluded})
