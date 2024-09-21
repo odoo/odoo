@@ -23,7 +23,7 @@ class TestOrmCache(TransactionCase):
         # disabling autoretry to avoid hidding "real" errrors
         cls._retry = False
 
-    def test_ormcache(self):
+    def test_orm_cache(self):
         """ Test the effectiveness of the ormcache() decorator. """
         IMD = self.env['ir.model.data']
         XMLID = 'base.group_no_one'

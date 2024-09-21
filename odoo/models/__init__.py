@@ -5,7 +5,7 @@
 # TODO we should only expose *Model objects here, maybe check_comp*
 from odoo.tools import _
 
-from odoo._orm.fields import Command
+from odoo._orm.commands import Command
 from odoo._orm.identifiers import NewId
 from odoo._orm.models import (
     LOG_ACCESS_COLUMNS,

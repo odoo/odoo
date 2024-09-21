@@ -23,8 +23,15 @@ import directly from here.
 
 from . import registry
 from . import environments
+
+# setup Field definition
+# you may now import scalar field types (optional)
 from . import fields
+
+# setup models
 from . import models
+
+# you may now import relational field types (optional)
 
 # TODO future: import domains manipulation
 # from odoo.osv import expression is not importing directly from orm

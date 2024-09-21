@@ -63,13 +63,14 @@ from odoo.tools.translate import _, LazyTranslate
 
 from . import fields
 from . import decorators as api
-from .fields import Field, Datetime, Command
-<<<<<<< HEAD
-from .utils import expand_ids, check_pg_name, check_object_name, check_property_field_value_name, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
-=======
+from .basic_fields import Id
+from .commands import Command
+from .date_fields import Datetime
+from .fields import Field
+from .text_fields import Char
+
 from .identifiers import NewId
-from .util import expand_ids, check_pg_name, check_object_name, check_property_field_value_name, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
->>>>>>> c76c59a9d7d ([REF] core: separated odoo.orm.identifier)
+from .utils import expand_ids, check_pg_name, check_object_name, check_property_field_value_name, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
 from odoo.osv import expression
 
 import typing
@@ -238,21 +239,22 @@ class MetaModel(api.Meta):
                     setattr(self, name, field)
                     field.__set_name__(self, name)
 
-            add('id', fields.Id(automatic=True))
-            add_default('display_name', fields.Char(
+            add('id', Id(automatic=True))
+            add_default('display_name', Char(
                 string='Display Name', automatic=True,
                 compute='_compute_display_name',
                 search='_search_display_name',
             ))
 
             if attrs.get('_log_access', self._auto):
-                add_default('create_uid', fields.Many2one(
+                from .relational_fields import Many2one  # noqa: PLC0415
+                add_default('create_uid', Many2one(
                     'res.users', string='Created by', automatic=True, readonly=True))
-                add_default('create_date', fields.Datetime(
+                add_default('create_date', Datetime(
                     string='Created on', automatic=True, readonly=True))
-                add_default('write_uid', fields.Many2one(
+                add_default('write_uid', Many2one(
                     'res.users', string='Last Updated by', automatic=True, readonly=True))
-                add_default('write_date', fields.Datetime(
+                add_default('write_date', Datetime(
                     string='Last Updated on', automatic=True, readonly=True))
 
 
