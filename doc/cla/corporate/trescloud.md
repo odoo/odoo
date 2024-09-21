@@ -18,3 +18,4 @@ Steven Luna steven.luna@trescloud.com https://github.com/stevTresCloud
 Raúl Ruilova raul.ruilova@trescloud.com https://github.com/rrvc12
 Angel Parra arpr18@gmail.com https://github.com/aparragithub
 Ken Luzuriaga ken.luzuriaga@trescloud.com https://github.com/kenluzuriaga0
+Reinier Quevedo desarrollo57@trescloud.com https://github.com/rquevedo
