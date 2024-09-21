@@ -63,7 +63,12 @@ from odoo.tools.translate import _, LazyTranslate
 
 from . import fields
 from . import decorators as api
-from .fields import Field, Datetime, Command
+from .commands import Command
+from .fields import Field
+from .fields_misc import Id
+from .fields_temporal import Datetime
+from .fields_textual import Char
+
 from .identifiers import NewId
 from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
 from odoo.osv import expression
@@ -242,21 +247,22 @@ class MetaModel(api.Meta):
                     setattr(self, name, field)
                     field.__set_name__(self, name)
 
-            add('id', fields.Id(automatic=True))
-            add_default('display_name', fields.Char(
+            add('id', Id(automatic=True))
+            add_default('display_name', Char(
                 string='Display Name', automatic=True,
                 compute='_compute_display_name',
                 search='_search_display_name',
             ))
 
             if attrs.get('_log_access', self._auto):
-                add_default('create_uid', fields.Many2one(
+                from .fields_relational import Many2one  # noqa: PLC0415
+                add_default('create_uid', Many2one(
                     'res.users', string='Created by', automatic=True, readonly=True))
-                add_default('create_date', fields.Datetime(
+                add_default('create_date', Datetime(
                     string='Created on', automatic=True, readonly=True))
-                add_default('write_uid', fields.Many2one(
+                add_default('write_uid', Many2one(
                     'res.users', string='Last Updated by', automatic=True, readonly=True))
-                add_default('write_date', fields.Datetime(
+                add_default('write_date', Datetime(
                     string='Last Updated on', automatic=True, readonly=True))
 
 
@@ -7251,7 +7257,6 @@ class RecordCache(MutableMapping):
 
 
 AbstractModel = BaseModel
-fields._Fields_BaseModel = BaseModel
 
 
 class Model(AbstractModel):

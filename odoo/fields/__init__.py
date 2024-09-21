@@ -4,20 +4,19 @@
 
 from odoo.orm.fields import Field
 
-from odoo.orm.fields import Id, Json
-from odoo.orm.fields import Boolean
-from odoo.orm.fields import Integer, Float, Monetary
-from odoo.orm.fields import Char, Text, Html
-from odoo.orm.fields import Selection
-from odoo.orm.fields import Date, Datetime
+from odoo.orm.fields_misc import Id, Json, Boolean
+from odoo.orm.fields_numeric import Integer, Float, Monetary
+from odoo.orm.fields_textual import Char, Text, Html
+from odoo.orm.fields_selection import Selection
+from odoo.orm.fields_temporal import Date, Datetime
 
-from odoo.orm.fields import Many2one, Many2many, One2many
-from odoo.orm.fields import Many2oneReference, Reference
+from odoo.orm.fields_relational import Many2one, Many2many, One2many
+from odoo.orm.fields_reference import Many2oneReference, Reference
 
-from odoo.orm.fields import Properties, PropertiesDefinition
-from odoo.orm.fields import Binary, Image
+from odoo.orm.fields_properties import Properties, PropertiesDefinition
+from odoo.orm.fields_binary import Binary, Image
 
-from odoo.orm.fields import Command
+from odoo.orm.commands import Command
 
 # TODO these should not be exposed here
 from odoo.orm.fields import determine, first, NO_ACCESS
