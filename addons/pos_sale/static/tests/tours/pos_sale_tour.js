@@ -295,3 +295,17 @@ registry.category("web_tour.tours").add("PosSaleTeam", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosOrdersListDifferentCurrency", {
+    test: true,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickControlButton("Quotation/Order"),
+            {
+                content: "Check that no orders are displayed",
+                trigger: '.o_nocontent_help p:contains("No record found")',
+            },
+        ].flat(),
+});
