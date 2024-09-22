@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -1401,7 +1401,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr "Ya existe una posición fiscal con un RFC extranjero en esta región."
+msgstr "Ya existe una posición fiscal con IVA extranjero en esta región."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -2055,13 +2055,13 @@ msgstr "Prefijo de cuentas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
-msgstr "Cuenta acumulada"
+msgstr "Cuenta devengada"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrual Moves"
-msgstr "Movimientos acumulados"
+msgstr "Movimientos devengados"
 
 #. module: account
 #. odoo-python
@@ -2070,14 +2070,14 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                    And"
 " its reverse entry: %(reverse_entry)s."
 msgstr ""
-"Asiento de acumulación creado el %(date)s: %(accrual_entry)s."
+"Asiento de devengo creado el %(date)s: %(accrual_entry)s."
 "                    Y su asiento de reversión: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued %s entry as of %s"
-msgstr "Asiento %s de acumulación desde el %s"
+msgstr "Asiento %s devengado desde el %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2093,7 +2093,7 @@ msgstr "Asistente de órdenes acumuladas"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Accrued total"
-msgstr "Total acumulado"
+msgstr "Total devengado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -4152,7 +4152,7 @@ msgstr "País de la empresa"
 #: model:ir.model.fields,field_description:account.field_account_payment__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__company_currency_id
 msgid "Company Currency"
-msgstr "Divisa de la empresa"
+msgstr "Moneda de la empresa"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
@@ -10010,7 +10010,7 @@ msgstr "No contiene"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Not Due"
-msgstr "No vencido"
+msgstr "No adeudado "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
@@ -15285,6 +15285,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Este diario está asociado con un método de pago, no puede archivarlo. "
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
 msgstr "Este diario no está restringido"
@@ -15864,7 +15873,7 @@ msgstr "Unidad de medida"
 #: code:addons/account/models/template_generic_coa.py:0
 #, python-format
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "Estados Unidos de América (genérico)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
