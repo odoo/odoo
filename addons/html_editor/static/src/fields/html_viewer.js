@@ -33,19 +33,23 @@ export class HtmlViewer extends Component {
 
         this.state = useState({
             iframeVisible: false,
+            value: this.formatValue(this.props.value),
+        });
+
+        onWillUpdateProps((newProps) => {
+            this.state.value = this.formatValue(newProps.value);
+            if (this.showIframe) {
+                this.updateIframeContent(this.state.value);
+            }
         });
 
         if (this.showIframe) {
             onMounted(() => {
-                const onLoadIframe = () => this.onLoadIframe(this.props.value);
+                const onLoadIframe = () => this.onLoadIframe(this.state.value);
                 this.iframeRef.el.addEventListener("load", onLoadIframe, { once: true });
                 // Force the iframe to call the `load` event. Without this line, the
                 // event 'load' might never trigger.
                 this.iframeRef.el.after(this.iframeRef.el);
-            });
-
-            onWillUpdateProps((nextProps) => {
-                this.updateIframeContent(nextProps.value);
             });
         } else {
             this.readonlyElementRef = useRef("readonlyContent");
@@ -63,6 +67,16 @@ export class HtmlViewer extends Component {
 
     get showIframe() {
         return this.props.hasFullHtml || this.props.cssAssetId;
+    }
+
+    /**
+     * Allows overrides to process the value used in the Html Viewer.
+     *
+     * @param { Markup } value
+     * @returns { Markup }
+     */
+    formatValue(value) {
+        return value;
     }
 
     updateIframeContent(content) {
@@ -101,7 +115,7 @@ export class HtmlViewer extends Component {
             }
         }
 
-        this.updateIframeContent(this.props.value);
+        this.updateIframeContent(this.state.value);
         this.state.iframeVisible = true;
     }
 }
