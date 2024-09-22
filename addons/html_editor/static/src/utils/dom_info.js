@@ -463,7 +463,7 @@ export function allowsParagraphRelatedElements(node) {
     return isBlock(node) && !paragraphRelatedElements.includes(node.nodeName);
 }
 
-const phrasingContent = new Set(["#text", ...phrasingTagNames]);
+export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
 const flowContent = new Set([...phrasingContent, ...paragraphRelatedElements, "DIV", "HR"]);
 const listItem = new Set(["LI"]);
 
