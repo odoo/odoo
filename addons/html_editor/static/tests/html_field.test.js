@@ -1,7 +1,7 @@
 import { HtmlField } from "@html_editor/fields/html_field";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
-import { parseHTML } from "@html_editor/utils/html";
+import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
@@ -31,7 +31,7 @@ import { assets } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { FormController } from "@web/views/form/form_controller";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
-import { insertText, pasteText, undo } from "./_helpers/user_actions";
+import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -232,6 +232,43 @@ test("edit and save a html field", async () => {
     expect.verifySteps(["web_save"]);
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_save`).not.toBeVisible();
+});
+
+test("edit and save a html field containing JSON as some attribute values should keep the same wysiwyg", async () => {
+    patchWithCleanup(Wysiwyg.prototype, {
+        setup() {
+            super.setup();
+            expect.step("Setup Wysiwyg");
+        },
+    });
+    onRpc("partner", "web_save", ({ args }) => {
+        expect.step("web_save");
+        // server representation does not have HTML entities
+        args[1].txt = `<div data-value='{"myString":"myString"}'><p>content</p></div><p>first</p>`;
+    });
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    const value = JSON.stringify({
+        myString: "myString",
+    });
+    pasteOdooEditorHtml(htmlEditor, `<div data-value=${value}><p>content</p></div>`);
+    const txtField = queryOne('.o_field_html[name="txt"] .odoo-editor-editable');
+    expect(txtField).toHaveInnerHTML(
+        `<div data-value="{&quot;myString&quot;:&quot;myString&quot;}"><p>content</p></div><p>first</p>`
+    );
+    expect.verifySteps(["Setup Wysiwyg"]);
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
 });
 
 test("edit a html field in new form view dialog and close the dialog with 'escape'", async () => {
@@ -1078,7 +1115,7 @@ test("edit and save a html field in collaborative should keep the same wysiwyg",
 
     onRpc("partner", "web_save", ({ args }) => {
         const txt = args[1].txt;
-        expect(stripHistoryIds(txt)).toBe("<p>Hello first</p>");
+        expect(normalizeHTML(txt, stripHistoryIds)).toBe("<p>Hello first</p>");
         expect.step("web_save");
         args[1].txt = txt.replace(
             /\sdata-last-history-steps="[^"]*?"/,
