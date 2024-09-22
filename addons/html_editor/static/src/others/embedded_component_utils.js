@@ -1,5 +1,6 @@
 import {
     onMounted,
+    onRendered,
     onPatched,
     onWillDestroy,
     reactive,
@@ -92,10 +93,23 @@ export function useEditableDescendants(host) {
         refs[name] = useRef(name);
         renders[name] = () => refs[name].el.replaceChildren(editableDescendants[name]);
     }
+    let _restoreSelection;
+    const restoreSelection = () => {
+        if (_restoreSelection) {
+            _restoreSelection();
+            _restoreSelection = undefined;
+        }
+    };
+    if (component.env.editorShared?.preserveSelection) {
+        onRendered(() => {
+            _restoreSelection = component.env.editorShared.preserveSelection().restore;
+        });
+    }
     onMounted(() => {
         for (const render of Object.values(renders)) {
             render();
         }
+        restoreSelection();
     });
     onPatched(() => {
         for (const [name, render] of Object.entries(renders)) {
@@ -104,6 +118,7 @@ export function useEditableDescendants(host) {
                 render();
             }
         }
+        restoreSelection();
     });
     return editableDescendants;
 }

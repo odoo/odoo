@@ -51,6 +51,7 @@ import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/colla
 import { CollaborationSelectionPlugin } from "./others/collaboration/collaboration_selection_plugin";
 import { EmbeddedComponentPlugin } from "./others/embedded_component_plugin";
 import { ExcalidrawPlugin } from "@html_editor/others/embedded_components/plugins/excalidraw_plugin/excalidraw_plugin";
+import { FilePlugin } from "@html_editor/others/embedded_components/plugins/file_plugin/file_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 
 export const CORE_PLUGINS = [
@@ -116,6 +117,7 @@ export const COLLABORATION_PLUGINS = [
 export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedComponentPlugin,
     ExcalidrawPlugin,
+    FilePlugin,
 ];
 
 export const DYNAMIC_PLACEHOLDER_PLUGINS = [DynamicPlaceholderPlugin, QWebPlugin];

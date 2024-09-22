@@ -305,6 +305,9 @@ export const htmlField = {
         if ("disableVideo" in options) {
             editorConfig.disableVideo = Boolean(options.disableVideo);
         }
+        if ("disableFile" in options) {
+            editorConfig.disableFile = Boolean(options.disableFile);
+        }
         return {
             editorConfig,
             isCollaborative: options.collaborative,
