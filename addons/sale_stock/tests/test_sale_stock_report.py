@@ -291,6 +291,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         # Return delivery01 (-> 10 x LOT0001)
         return_form = Form(self.env['stock.return.picking'].with_context(active_ids=[delivery01.id], active_id=delivery01.id, active_model='stock.picking'))
         return_wizard = return_form.save()
+        return_wizard.product_return_moves.quantity = 10
         action = return_wizard.action_create_returns()
         pick_return = self.env['stock.picking'].browse(action['res_id'])
 
@@ -305,6 +306,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         # Return pick_return
         return_form = Form(self.env['stock.return.picking'].with_context(active_ids=[pick_return.id], active_id=pick_return.id, active_model='stock.picking'))
         return_wizard = return_form.save()
+        return_wizard.product_return_moves.quantity = 10
         action = return_wizard.action_create_returns()
         delivery02 = self.env['stock.picking'].browse(action['res_id'])
 
@@ -400,6 +402,7 @@ class TestSaleStockInvoices(TestSaleCommon):
         # recieve the returned product
         stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.sorted().ids[0], active_model='stock.picking'))
         return_wiz = stock_return_picking_form.save()
+        return_wiz.product_return_moves.quantity = 2
         res = return_wiz.action_create_returns()
         pick_return = self.env['stock.picking'].browse(res['res_id'])
 

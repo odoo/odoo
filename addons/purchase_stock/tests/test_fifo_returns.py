@@ -74,6 +74,7 @@ class TestFifoReturns(ValuationReconciliationTestCommon):
             .with_context(active_ids=picking.ids, active_id=picking.ids[0],
             active_model='stock.picking'))
         return_pick_wiz = stock_return_picking_form.save()
+        return_pick_wiz.product_return_moves.quantity = 30.0
         return_picking = return_pick_wiz.with_context(active_id=picking.id)._create_return()
 
         # Important to pass through confirmation and assignation

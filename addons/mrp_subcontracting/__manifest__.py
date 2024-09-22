@@ -23,7 +23,6 @@
         'views/subcontracting_portal_views.xml',
         'views/subcontracting_portal_templates.xml',
         'views/stock_location_views.xml',
-        'wizard/stock_picking_return_views.xml',
     ],
     'demo': [
         'data/mrp_subcontracting_demo.xml',

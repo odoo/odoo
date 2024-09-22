@@ -42,7 +42,6 @@
             <field name="name">Vendors</field>
             <field name="location_id" ref="stock_location_locations_partner"/>
             <field name="usage">supplier</field>
-            <field name="return_location">True</field>
             <field name="company_id"></field>
         </record>
         <record id="stock_location_customers" model="stock.location">
@@ -51,7 +50,7 @@
             <field name="usage">customer</field>
             <field name="company_id"></field>
         </record>
-        
+
         <record id="stock_location_inter_company" model="stock.location">
             <field name="name">Inter-company transit</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>

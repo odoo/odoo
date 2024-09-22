@@ -186,7 +186,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         receipt.button_validate()
 
         return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
-        return_form.location_id = self.env.company.subcontracting_location_id
         return_wizard = return_form.save()
         return_wizard.product_return_moves.quantity = 3
         return_wizard.product_return_moves.to_refund = False
@@ -915,7 +914,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         return_form = Form(self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking'))
         wizard = return_form.save()
         wizard.product_return_moves.quantity = 2.0
-        wizard.location_id = supplier_location
         return_picking = wizard._create_return()
+        return_picking.location_dest_id = supplier_location
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')

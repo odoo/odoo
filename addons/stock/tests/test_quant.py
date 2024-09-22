@@ -934,6 +934,7 @@ class StockQuant(TransactionCase):
         def _get_relocate_wizard(quant_ids):
             return Form.from_action(self.env, quant_ids.action_stock_quant_relocate())
 
+        self.env['stock.quant.package'].search([]).unlink()
         self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
         package_01 = self.env['stock.quant.package'].create({})
         package_02 = self.env['stock.quant.package'].create({})

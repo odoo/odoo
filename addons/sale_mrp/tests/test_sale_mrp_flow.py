@@ -2110,6 +2110,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         ctx = {'active_ids':picking.ids, 'active_id': picking.ids[0], 'active_model': 'stock.picking'}
         return_picking_wizard_form = Form(self.env['stock.return.picking'].with_context(ctx))
         return_picking_wizard = return_picking_wizard_form.save()
+        return_picking_wizard.product_return_moves.quantity = 1
         return_picking_wizard.action_create_returns()
 
         price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
@@ -2259,6 +2260,8 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         ctx = {'active_id': delivery.id, 'active_model': 'stock.picking'}
         return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        for line in return_wizard.product_return_moves:
+            line.quantity = line.move_id.quantity
         return_picking = return_wizard._create_return()
         for m in return_picking.move_ids:
             m.write({'quantity': m.product_uom_qty, 'picked': True})

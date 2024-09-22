@@ -654,6 +654,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         receipt01.button_validate()
 
         wizard = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.id, active_model='stock.picking')).save()
+        wizard.product_return_moves.quantity = 5
         wizard.product_return_moves.to_refund = False
         res = wizard.action_create_returns()
 
@@ -662,6 +663,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         return_pick.button_validate()
 
         wizard = Form(self.env['stock.return.picking'].with_context(active_ids=return_pick.ids, active_id=return_pick.id, active_model='stock.picking')).save()
+        wizard.product_return_moves.quantity = 5
         wizard.product_return_moves.to_refund = False
         res = wizard.action_create_returns()
 
