@@ -40,7 +40,7 @@
                 <separator/>
                 <filter string="Checks on hand" name="checks_on_hand"
                     domain="[('state', '=', 'posted'),
-                                ('l10n_latam_check_current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
+                                ('l10n_latam_check_current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', 'in', ['new_third_party_checks', 'in_third_party_checks'])]"/>
             </filter>
             <filter name="journal" position="after">
                 <filter name="groupby_third_party_check_current_journal"

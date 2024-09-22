@@ -1861,3 +1861,58 @@ class TestReports(TestReportsCommon):
         self.assertEqual(mto_move.product_uom_qty, incoming_qty, "Move quantities should be unchanged")
         self.assertEqual(mto_move.procure_method, 'make_to_stock', "Procure method not correctly reset")
         self.assertEqual(mto_move.state, 'assigned', "Unassigning receipt move shouldn't affect the out move reservation")
+
+    def test_report_reception_immediate_transfer(self):
+        """ Having a delivery, a receipt with a move line created before the move
+        (i.e., an immediate transfer) for the product of the SO should have the delivery in its
+        'Allocation' entries.
+        """
+        Report = self.env['report.stock.report_reception']
+
+        planned_delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'move_ids': [(0, 0, {
+                'name': 'TRRIT move',
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        planned_delivery.action_confirm()
+
+        immediate_receipt_transfer = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        self.env['stock.move.line'].create({
+            'picking_id': immediate_receipt_transfer.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'quantity': 1,
+        })
+
+        sources_to_lines = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines']
+        for _, lines in sources_to_lines.items():
+            for line in lines:
+                self.assertFalse(line['is_qty_assignable'])
+
+        immediate_receipt_transfer.button_validate()
+        out_move = planned_delivery.move_ids
+        in_move = immediate_receipt_transfer.move_ids
+
+        sources_lines_items, = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines'].items()
+        sources, lines = sources_lines_items
+        (source,), = sources
+        self.assertEqual(source, planned_delivery)
+        self.assertEqual(lines[0]['quantity'], out_move.quantity)
+
+        Report.action_assign(out_move.ids, [out_move.quantity], [in_move.ids])
+        self.assertEqual(out_move.procure_method, 'make_to_order')
+
+        Report.action_unassign(out_move.id, out_move.quantity, in_move.ids)
+        self.assertEqual(out_move.procure_method, 'make_to_stock')
