@@ -528,13 +528,15 @@ class TestSaleMrpKitBom(TransactionCase):
         self.assertFalse(keys, "All keys should be in the report with the defined order")
 
     def test_sale_multistep_kit_qty_change(self):
-        self.env['stock.warehouse'].search([], limit=1).write({'delivery_steps': 'pick_ship'})
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        warehouse.write({'delivery_steps': 'pick_ship'})
         self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
 
         kit_prod = self._create_product('kit_prod', 'product', 0.00)
         sub_kit = self._create_product('sub_kit', 'product', 0.00)
         component = self._create_product('component', 'product', 0.00)
         component.uom_id = self.env.ref('uom.product_uom_dozen')
+        self.env['stock.quant']._update_available_quantity(component, warehouse.lot_stock_id, 30)
         # 6 kit_prod == 5 component
         self.env['mrp.bom'].create([{  # 2 kit_prod == 5 sub_kit
             'product_tmpl_id': kit_prod.product_tmpl_id.id,

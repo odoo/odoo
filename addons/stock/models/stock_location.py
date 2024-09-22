@@ -69,7 +69,6 @@ class Location(models.Model):
         default=lambda self: self.env.company, index=True,
         help='Let this field empty if this location is shared between companies')
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
-    return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
     replenish_location = fields.Boolean('Replenish Location', copy=False, compute="_compute_replenish_location", readonly=False, store=True,
                                         help='Activate this function to get all quantities to replenish at this particular location')
     removal_strategy_id = fields.Many2one(

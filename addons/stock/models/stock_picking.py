@@ -38,9 +38,6 @@ class PickingType(models.Model):
         'stock.location', 'Destination Location', compute='_compute_default_location_dest_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
         help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location.")
-    default_location_return_id = fields.Many2one('stock.location', 'Return Location', check_company=True,
-        help="This is the default location for returns created from a picking with this operation type.",
-        domain="[('return_location', '=', True)]")
     code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', required=True)
     return_picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type for Returns',
@@ -2121,3 +2118,7 @@ class Picking(models.Model):
                 clean_action(action, self.env)
                 report_actions.append(action)
         return report_actions
+
+    def _can_return(self):
+        self.ensure_one()
+        return self.state == 'done'

@@ -109,6 +109,8 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             delivered_before_case = 1.0 if case == 'return' else 0.0
             delivered_after_case = 0.0 if case == 'return' else 1.0
             return_form = Form(self.env['stock.return.picking'].with_context(active_ids=[picking.id], active_id=picking.id, active_model='stock.picking'))
+            with return_form.product_return_moves.edit(0) as line_form:
+                line_form.quantity = 1.0
             return_wizard = return_form.save()
             action = return_wizard.action_create_returns()
             picking = self.env['stock.picking'].browse(action['res_id'])

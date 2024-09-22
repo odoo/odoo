@@ -1350,9 +1350,9 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
             .with_context(active_ids=[move1.picking_id.id], active_id=move1.picking_id.id, active_model='stock.picking'))
         stock_return_picking = stock_return_picking.save()
         stock_return_picking.product_return_moves.quantity = 2
-        stock_return_picking.location_id = self.stock_location
         stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.location_dest_id = self.stock_location
         return_pick.move_ids[0].move_line_ids[0].quantity = 2
         return_pick.move_ids[0].picked = True
         return_pick._action_done()
