@@ -926,7 +926,7 @@ test("'Video' command is available by default", async () => {
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video"]);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video", "Video Link"]);
 });
 
 test("'Video' command is not available when 'disableVideo' = true", async () => {
@@ -942,8 +942,8 @@ test("'Video' command is not available when 'disableVideo' = true", async () => 
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
-    expect(queryAllTexts(".o-we-command-name")).toEqual([]);
+    expect(".o-we-powerbox").toHaveCount(1);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
 });
 
 test("'Video' command is not available by default when sanitize_tags = true", async () => {
@@ -967,8 +967,8 @@ test("'Video' command is not available by default when sanitize_tags = true", as
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
-    expect(queryAllTexts(".o-we-command-name")).toEqual([]);
+    expect(".o-we-powerbox").toHaveCount(1);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
 });
 
 test("'Video' command is not available by default when sanitize = true", async () => {
@@ -992,8 +992,8 @@ test("'Video' command is not available by default when sanitize = true", async (
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
-    expect(queryAllTexts(".o-we-command-name")).toEqual([]);
+    expect(".o-we-powerbox").toHaveCount(1);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
 });
 
 test("'Video' command is available when sanitize_tags = true and 'disableVideo' = false", async () => {
@@ -1018,7 +1018,7 @@ test("'Video' command is available when sanitize_tags = true and 'disableVideo' 
     await insertText(htmlEditor, "/video");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(1);
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video"]);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video", "Video Link"]);
 });
 
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {
