@@ -5,6 +5,7 @@ import { isTextNode, isVisible } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
 import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
+import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
 export class SplitPlugin extends Plugin {
     static dependencies = ["selection"];
@@ -116,7 +117,10 @@ export class SplitPlugin extends Plugin {
         );
         restore();
         const removeEmptyAndFill = (node) => {
-            if (!isBlock(node) && !isVisible(node)) {
+            if (isProtecting(node) || isProtected(node)) {
+                // TODO ABD: add test
+                return;
+            } else if (!isBlock(node) && !isVisible(node)) {
                 const parent = node.parentElement;
                 node.remove();
                 removeEmptyAndFill(parent);
