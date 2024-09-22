@@ -653,15 +653,7 @@ export class Thread extends Record {
             return [];
         }
         try {
-            // ordered messages received: newest to oldest
-            const { data, messages } = await rpc(this.getFetchRoute(), {
-                ...this.getFetchParams(),
-                limit:
-                    !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
-                after,
-                around,
-                before,
-            });
+            const { data, messages } = await this.fetchMessagesData({ after, around, before });
             this.store.insert(data, { html: true });
             this.isLoaded = true;
             return this.store.Message.insert(messages.reverse());
@@ -671,6 +663,18 @@ export class Thread extends Record {
         } finally {
             this.status = "ready";
         }
+    }
+
+    /** @param {{after: Number, before: Number}} */
+    async fetchMessagesData({ after, around, before } = {}) {
+        // ordered messages received: newest to oldest
+        return await rpc(this.getFetchRoute(), {
+            ...this.getFetchParams(),
+            limit: !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
+            after,
+            around,
+            before,
+        });
     }
 
     /** @param {"older"|"newer"} epoch */
