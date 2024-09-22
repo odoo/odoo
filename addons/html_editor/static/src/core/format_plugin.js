@@ -41,7 +41,8 @@ function hasFormat(formatPlugin) {
 export class FormatPlugin extends Plugin {
     static name = "format";
     static dependencies = ["selection", "split", "delete"];
-    static shared = ["isSelectionFormat", "insertAndSelectZws"];
+    // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
+    static shared = ["isSelectionFormat", "insertAndSelectZws", "mergeAdjacentInlines"];
     /** @type { (p: FormatPlugin) => Record<string, any> } */
     static resources = (p) => ({
         shortcuts: [
