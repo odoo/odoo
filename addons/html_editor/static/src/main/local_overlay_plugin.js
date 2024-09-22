@@ -9,7 +9,7 @@ export class LocalOverlayPlugin extends Plugin {
     static shared = ["makeLocalOverlay"];
 
     setup() {
-        this.localOverlayContainer = this.config.getLocalOverlayContainer?.();
+        this.localOverlayContainer = this.config.localOverlayContainers?.ref.el;
     }
 
     /**

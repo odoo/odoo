@@ -1,6 +1,9 @@
-import { Component, onMounted, onWillDestroy, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useRef, useState, useSubEnv } from "@odoo/owl";
 import { Editor } from "./editor";
 import { Toolbar } from "./main/toolbar/toolbar";
+import { useChildRef } from "@web/core/utils/hooks";
+import { LocalOverlayContainer } from "./local_overlay_container";
+import { uniqueId } from "@web/core/utils/functions";
 
 /**
  * @typedef { import("./editor").EditorConfig } EditorConfig
@@ -21,7 +24,7 @@ function copyCssRules(sourceDoc, targetDoc) {
 
 export class Wysiwyg extends Component {
     static template = "html_editor.Wysiwyg";
-    static components = { Toolbar };
+    static components = { Toolbar, LocalOverlayContainer };
     static props = {
         config: { type: Object, optional: true },
         class: { type: String, optional: true },
@@ -44,7 +47,10 @@ export class Wysiwyg extends Component {
         this.state = useState({
             showToolbar: false,
         });
-        const overlayRef = useRef("localOverlay");
+        this.overlayRef = useChildRef();
+        useSubEnv({
+            localOverlayContainerKey: uniqueId("wysiwyg"),
+        });
         const contentRef = useRef("content");
         this.editor = this.props.editor;
         const config = {
@@ -55,7 +61,10 @@ export class Wysiwyg extends Component {
             // -> it will override the one one from the parent => OK.
             // -> it will not => the embedded component still has X in env because of its ancestors => Issue.
             embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
-            getLocalOverlayContainer: () => overlayRef?.el,
+            localOverlayContainers: {
+                key: this.env.localOverlayContainerKey,
+                ref: this.overlayRef,
+            },
             disableFloatingToolbar: this.props.toolbar,
         };
         this.editor = new Editor(config, this.env.services);
