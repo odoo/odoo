@@ -28,6 +28,8 @@ export class EmbeddedComponentPlugin extends Plugin {
         this.embeddedComponents = memoize((embeddedComponents = []) => {
             const result = {};
             for (const embedding of embeddedComponents) {
+                // TODO ABD: Any embedding with the same name as another will overwrite it.
+                // File currently relies on this system. Change it ?
                 result[embedding.name] = embedding;
             }
             return result;
