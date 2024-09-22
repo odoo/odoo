@@ -24,7 +24,7 @@ import { initElementForEdition } from "./utils/sanitize";
  * @property { PluginConstructor[] } [Plugins]
  * @property { boolean } [disableFloatingToolbar]
  * @property { string[] } [classList]
- * @property { Function } [getLocalOverlayContainer]
+ * @property { Object } [localOverlayContainers]
  * @property { Object } [embeddedComponentInfo]
  * @property { Object } [resources]
  * @property { string } [direction="ltr"]

@@ -1,6 +1,7 @@
 import { ancestors } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
+import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrolling";
 
 /**
  * This plugins provides a way to create a "local" overlays so that their
@@ -24,15 +25,14 @@ export class PositionPlugin extends Plugin {
         if (this.document.defaultView !== window) {
             this.addDomListener(this.document.defaultView, "resize", this.layoutGeometryChange);
         }
-
         const scrollableElements = [this.editable, ...ancestors(this.editable)].filter((node) => {
-            const style = getComputedStyle(node);
-            return style.overflowY === "auto" || style.overflowY === "scroll";
+            return couldBeScrollableX(node) || couldBeScrollableY(node);
         });
         for (const scrollableElement of scrollableElements) {
             this.addDomListener(scrollableElement, "scroll", () => {
                 this.layoutGeometryChange();
             });
+            this.resizeObserver.observe(scrollableElement);
         }
     }
 

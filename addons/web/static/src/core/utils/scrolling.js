@@ -1,3 +1,20 @@
+export function isScrollableX(el) {
+    if (el.scrollWidth > el.clientWidth && el.clientWidth > 0) {
+        return couldBeScrollableX(el);
+    }
+    return false;
+}
+
+export function couldBeScrollableX(el) {
+    if (el) {
+        const overflow = getComputedStyle(el).getPropertyValue("overflow-x");
+        if (/\bauto\b|\bscroll\b/.test(overflow)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * Get the closest horizontally scrollable for a given element.
  *
@@ -8,17 +25,21 @@ export function closestScrollableX(el) {
     if (!el) {
         return null;
     }
-    if (el.scrollWidth > el.clientWidth && el.clientWidth > 0) {
-        const overflow = getComputedStyle(el).getPropertyValue("overflow-x");
-        if (/\bauto\b|\bscroll\b/.test(overflow)) {
-            return el;
-        }
+    if (isScrollableX(el)) {
+        return el;
     }
     return closestScrollableX(el.parentElement);
 }
 
-function isScrollableY(el) {
+export function isScrollableY(el) {
     if (el && el.scrollHeight > el.clientHeight && el.clientHeight > 0) {
+        return couldBeScrollableY(el);
+    }
+    return false;
+}
+
+export function couldBeScrollableY(el) {
+    if (el) {
         const overflow = getComputedStyle(el).getPropertyValue("overflow-y");
         if (/\bauto\b|\bscroll\b/.test(overflow)) {
             return true;
