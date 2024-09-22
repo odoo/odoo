@@ -130,7 +130,10 @@ function embeddedStateProxyHandler(state, stateChangeManager) {
         // the target through serialization, which will be used as a reference
         // point for a comparison (before <-> after).
         set(target, key, value, receiver) {
-            if (!stateChangeManager.previousEmbeddedState) {
+            if (
+                value !== Reflect.get(target, key, receiver) &&
+                !stateChangeManager.previousEmbeddedState
+            ) {
                 stateChangeManager.previousEmbeddedState = JSON.parse(
                     JSON.stringify(stateChangeManager.embeddedState)
                 );
@@ -138,7 +141,7 @@ function embeddedStateProxyHandler(state, stateChangeManager) {
             return Reflect.set(target, key, value, receiver);
         },
         deleteProperty(target, key) {
-            if (!stateChangeManager.previousEmbeddedState) {
+            if (Reflect.has(target, key) && !stateChangeManager.previousEmbeddedState) {
                 stateChangeManager.previousEmbeddedState = JSON.parse(
                     JSON.stringify(stateChangeManager.embeddedState)
                 );
