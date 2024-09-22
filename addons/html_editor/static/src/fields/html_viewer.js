@@ -11,6 +11,7 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -85,6 +86,7 @@ export class HtmlViewer extends Component {
                 },
                 () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
             );
+            this.tocManager = new TableOfContentManager(this.readonlyElementRef);
         }
     }
 
@@ -191,6 +193,14 @@ export class HtmlViewer extends Component {
 
     getEmbedding(host) {
         return this.embeddedComponents(this.props.config.embeddedComponents)[host.dataset.embedded];
+    }
+
+    setupNewComponent({ name, env, props }) {
+        if (name === "tableOfContent") {
+            Object.assign(props, {
+                manager: this.tocManager,
+            });
+        }
     }
 
     mountComponent(host, { Component, getEditableDescendants, getProps, name }) {
