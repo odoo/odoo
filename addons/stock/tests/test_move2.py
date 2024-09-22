@@ -561,9 +561,11 @@ class TestPickShip(TestStockCommon):
     def test_pick_ship_return(self):
         """ Create pick and ship. Bring it to the customer and then return
         it to stock. This test check the state and the quantity after each move in
-        order to ensure that it is correct.
+        order to ensure that it is correct. No return picking type is provided to invert the
+        delivery pickings.
         """
         picking_pick, picking_ship = self.create_pick_ship()
+        picking_ship.picking_type_id.return_picking_type_id = False
         stock_location = self.env['stock.location'].browse(self.stock_location)
         pack_location = self.env['stock.location'].browse(self.pack_location)
         customer_location = self.env['stock.location'].browse(self.customer_location)
@@ -646,7 +648,8 @@ class TestPickShip(TestStockCommon):
 
     def test_pick_pack_ship_return(self):
         """ This test do a pick pack ship delivery to customer and then
-        return it to stock. Once everything is done, this test will check
+        return it to stock following the receipt picking_type_id.
+        Once everything is done, this test will check
         if all the link orgini/destination between moves are correct.
         """
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
@@ -688,61 +691,32 @@ class TestPickShip(TestStockCommon):
         return_ship_picking.move_ids[0].picked = True
         return_ship_picking._action_done()
 
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking_pack.ids, active_id=picking_pack.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pack_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-
-        return_pack_picking.move_ids[0].move_line_ids[0].quantity = 1.0
-        return_pack_picking.move_ids[0].picked = True
-        return_pack_picking._action_done()
-
-        stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0],
-            active_model='stock.picking'))
-        stock_return_picking = stock_return_picking_form.save()
-        stock_return_picking.product_return_moves.quantity = 1.0
-        stock_return_picking_action = stock_return_picking.action_create_returns()
-        return_pick_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-
-        return_pick_picking.move_ids[0].move_line_ids[0].quantity = 1.0
-        return_pick_picking.move_ids[0].picked = True
-        return_pick_picking._action_done()
+        stock_quant = self.env['stock.quant']._gather(self.productA, stock_location, lot_id=lot)
+        self.assertEqual(stock_quant.quantity, 1)
 
         # Now that everything is returned we will check if the return moves are correctly linked between them.
         # +--------------------------------------------------------------------------------------------------------+
         # |         -- picking_pick(1) -->       -- picking_pack(2) -->         -- picking_ship(3) -->
         # | Stock                          Pack                         Output                          Customer
-        # |         <--- return pick(6) --      <--- return pack(5) --          <--- return ship(4) --
+        # |         <------------------------------ return in one step(4)  ----------------------------->
         # +--------------------------------------------------------------------------------------------------------+
         # Recaps of final link (MO = move_orig_ids, MD = move_dest_ids)
         # picking_pick(1) : MO = (), MD = (2,6)
         # picking_pack(2) : MO = (1), MD = (3,5)
         # picking ship(3) : MO = (2), MD = (4)
         # return ship(4) : MO = (3), MD = (5)
-        # return pack(5) : MO = (2, 4), MD = (6)
-        # return pick(6) : MO = (1, 5), MD = ()
 
         self.assertEqual(len(picking_pick.move_ids.move_orig_ids), 0, 'Picking pick should not have origin moves')
-        self.assertEqual(set(picking_pick.move_ids.move_dest_ids.ids), set((picking_pack.move_ids | return_pick_picking.move_ids).ids))
+        self.assertEqual(set(picking_pick.move_ids.move_dest_ids.ids), set(picking_pack.move_ids.ids))
 
         self.assertEqual(set(picking_pack.move_ids.move_orig_ids.ids), set(picking_pick.move_ids.ids))
-        self.assertEqual(set(picking_pack.move_ids.move_dest_ids.ids), set((picking_ship.move_ids | return_pack_picking.move_ids).ids))
+        self.assertEqual(set(picking_pack.move_ids.move_dest_ids.ids), set(picking_ship.move_ids.ids))
 
         self.assertEqual(set(picking_ship.move_ids.move_orig_ids.ids), set(picking_pack.move_ids.ids))
         self.assertEqual(set(picking_ship.move_ids.move_dest_ids.ids), set(return_ship_picking.move_ids.ids))
 
         self.assertEqual(set(return_ship_picking.move_ids.move_orig_ids.ids), set(picking_ship.move_ids.ids))
-        self.assertEqual(set(return_ship_picking.move_ids.move_dest_ids.ids), set(return_pack_picking.move_ids.ids))
-
-        self.assertEqual(set(return_pack_picking.move_ids.move_orig_ids.ids), set((picking_pack.move_ids | return_ship_picking.move_ids).ids))
-        self.assertEqual(set(return_pack_picking.move_ids.move_dest_ids.ids), set(return_pick_picking.move_ids.ids))
-
-        self.assertEqual(set(return_pick_picking.move_ids.move_orig_ids.ids), set((picking_pick.move_ids | return_pack_picking.move_ids).ids))
-        self.assertEqual(len(return_pick_picking.move_ids.move_dest_ids), 0)
+        self.assertEqual(len(return_ship_picking.move_ids.move_dest_ids), 0)
 
     def test_merge_move_mto_mts(self):
         """ Create 2 moves of the same product in the same picking with
@@ -827,7 +801,6 @@ class TestPickShip(TestStockCommon):
         location and one in a return location that is located in another warehouse.
         """
         pick_location = self.env['stock.location'].browse(self.stock_location)
-        pick_location.return_location = True
 
         return_warehouse = self.env['stock.warehouse'].create({'name': 'return warehouse', 'code': 'rw'})
         return_location = self.env['stock.location'].create({
@@ -854,7 +827,6 @@ class TestPickShip(TestStockCommon):
             active_model='stock.picking'))
         return1 = stock_return_picking_form.save()
         return1.product_return_moves.quantity = 5.0
-        return1.location_id = pick_location.id
         return_to_pick_picking_action = return1.action_create_returns()
 
         return_to_pick_picking = self.env['stock.picking'].browse(return_to_pick_picking_action['res_id'])
@@ -868,10 +840,10 @@ class TestPickShip(TestStockCommon):
             active_model='stock.picking'))
         return2 = stock_return_picking_form.save()
         return2.product_return_moves.quantity = 5.0
-        return2.location_id = return_location.id
         return_to_return_picking_action = return2.action_create_returns()
 
         return_to_return_picking = self.env['stock.picking'].browse(return_to_return_picking_action['res_id'])
+        return_to_return_picking.location_dest_id = return_location
         return_to_return_picking.move_ids[0].move_line_ids[0].quantity = 5.0
         return_to_return_picking.move_ids[0].picked = True
         return_to_return_picking._action_done()

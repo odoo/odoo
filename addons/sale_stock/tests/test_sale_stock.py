@@ -635,9 +635,10 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_wizard = return_picking_form.save()
         # Checks the field `to_refund` is checked (must be checked by default).
         self.assertEqual(return_wizard.product_return_moves.to_refund, True)
-        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        self.assertEqual(return_wizard.product_return_moves.quantity, 0)
 
         # Valids the return picking.
+        return_wizard.product_return_moves.quantity = 10
         res = return_wizard.action_create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.move_ids.write({'quantity': 10, 'picked': True})
@@ -669,8 +670,9 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_wizard = return_picking_form.save()
         # Checks the field `to_refund` is checked, then unchecks it.
         self.assertEqual(return_wizard.product_return_moves.to_refund, True)
-        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        self.assertEqual(return_wizard.product_return_moves.quantity, 0)
         return_wizard.product_return_moves.to_refund = False
+        return_wizard.product_return_moves.quantity = 10
         # Valids the return picking.
         res = return_wizard.action_create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
@@ -1213,21 +1215,13 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             active_model='stock.picking'))
         return_wizard = return_picking_form.save()
         # Check that the correct quantity is set on the retrun
-        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        self.assertEqual(return_wizard.product_return_moves.quantity, 0)
         return_wizard.product_return_moves.quantity = 2
         # Valids the return picking.
         res = return_wizard.action_create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.move_ids.write({'quantity': 2, 'picked': True})
         return_picking.button_validate()
-
-        # Creates a second return from the delivery picking.
-        return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.id,
-            active_model='stock.picking'))
-        return_wizard = return_picking_form.save()
-        # Check that the remaining quantity is set on the retrun
-        self.assertEqual(return_wizard.product_return_moves.quantity, 8)
 
     def test_return_with_mto_and_multisteps(self):
         """
@@ -1608,7 +1602,8 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             .with_context(active_ids=picking.ids, active_id=picking.id,
             active_model='stock.picking'))
         return_wizard = return_picking_form.save()
-        self.assertEqual(return_wizard.product_return_moves.quantity, 1)
+        self.assertEqual(return_wizard.product_return_moves.quantity, 0)
+        return_wizard.product_return_moves.quantity = 1
 
         # validates the return picking.
         res = return_wizard.action_create_returns()
@@ -1620,13 +1615,13 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             .with_context(active_ids=return_picking.ids, active_id=return_picking.id,
             active_model='stock.picking'))
         return_wizard = return_picking_form.save()
-        self.assertEqual(return_wizard.product_return_moves.quantity, 1)
+        self.assertEqual(return_wizard.product_return_moves.quantity, 0)
+        return_wizard.product_return_moves.quantity = 1
 
         # validates the return picking.
         res = return_wizard.action_create_returns()
         return_picking_2 = self.env['stock.picking'].browse(res['res_id'])
         return_picking_2.button_validate()
-        self.assertEqual(return_wizard.product_return_moves.quantity, 1)
 
     def test_2_steps_pull_and_decrease_sol_qty_to_zero(self):
         """

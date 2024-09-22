@@ -697,12 +697,12 @@ class TestCreatePicking(common.TestProductCommon):
                 active_model='stock.picking'
             )
         )
-        stock_return_picking_form.location_id = vendor_returns_loc
         stock_return_picking_form.product_return_moves._records[0]['quantity'] = 2
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
+        return_pick.location_dest_id = vendor_returns_loc
         return_pick.move_ids.quantity = 2
         return_pick.move_ids.picked = True
         return_pick._action_done()

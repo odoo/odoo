@@ -1417,6 +1417,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         # Return the second picking (i.e. 1@20)
         ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
         return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_wizard.product_return_moves.quantity = 1
         return_picking = return_wizard._create_return()
         return_picking.move_ids.write({'quantity': 1, 'picked': True})
         return_picking.button_validate()
@@ -1509,6 +1510,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         # Return the second picking (i.e. 1@20)
         ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
         return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_wizard.product_return_moves.quantity = 1
         return_picking = return_wizard._create_return()
         return_picking.move_ids.write({'quantity': 1, 'picked': True})
         return_picking.button_validate()

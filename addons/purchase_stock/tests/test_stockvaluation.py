@@ -412,8 +412,9 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
     def _return(self, picking, qty=None):
         wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.id, active_model='stock.picking'))
         wizard = wizard_form.save()
-        qty = qty or wizard.product_return_moves.quantity
-        wizard.product_return_moves.quantity = qty
+        qty = qty or picking.move_ids.quantity
+        for line in wizard.product_return_moves:
+            line.quantity = qty
         action = wizard.action_create_returns()
         return_picking = self.env["stock.picking"].browse(action["res_id"])
         return_picking.move_ids.move_line_ids.quantity = qty

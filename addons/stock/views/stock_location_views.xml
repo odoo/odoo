@@ -40,7 +40,6 @@
                             <field name="storage_category_id" invisible="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="scrap_location" invisible="usage not in ('inventory', 'internal')"/>
-                            <field name="return_location"/>
                             <field name="replenish_location" invisible="usage != 'internal'"/>
                         </group>
                         <group string="Cyclic Counting" invisible="usage not in ('internal', 'transit') or not company_id">
