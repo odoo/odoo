@@ -4,6 +4,7 @@ import {
     DYNAMIC_PLACEHOLDER_PLUGINS,
     MAIN_PLUGINS,
 } from "@html_editor/plugin_sets";
+import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { Component, status, useRef, useState } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
@@ -70,16 +71,17 @@ export class HtmlField extends Component {
         this.state = useState({
             key: 0,
             showCodeView: false,
-            containsComplexHTML: computeContainsComplexHTML(
-                this.props.record.data[this.props.name]
-            ),
+            containsComplexHTML: computeContainsComplexHTML(this.value),
         });
 
         useRecordObserver((record) => {
             // Reset Wysiwyg when we discard or onchange value
             const newValue = record.data[this.props.name];
             if (!this.isDirty) {
-                const value = this.clearValueToCompare(newValue.toString());
+                const value = normalizeHTML(
+                    newValue.toString(),
+                    this.clearElementToCompare.bind(this)
+                );
                 if (this.lastValue !== value) {
                     this.state.key++;
                     this.state.containsComplexHTML = computeContainsComplexHTML(
@@ -119,17 +121,16 @@ export class HtmlField extends Component {
         return this.props.record.fields[this.props.name].translate;
     }
 
-    clearValueToCompare(value) {
+    clearElementToCompare(element) {
         if (this.props.isCollaborative) {
-            value = stripHistoryIds(value);
+            stripHistoryIds(element);
         }
-        return value;
     }
 
     async updateValue(value) {
-        this.lastValue = this.clearValueToCompare(value);
+        this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         this.isDirty = false;
-        await this.props.record.update({ [this.props.name]: this.lastValue }).catch(() => {
+        await this.props.record.update({ [this.props.name]: value }).catch(() => {
             this.isDirty = true;
         });
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
@@ -149,13 +150,14 @@ export class HtmlField extends Component {
                 await this.updateValue(this.codeViewRef.el.value);
                 return;
             }
-
             if (urgent) {
                 await this.updateValue(this.editor.getContent());
             }
             const el = await this.getEditorContent();
             const content = el.innerHTML;
-            if (!urgent || (urgent && this.lastValue !== content)) {
+            this.clearElementToCompare(el);
+            const comparisonValue = el.innerHTML;
+            if (!urgent || (urgent && this.lastValue !== comparisonValue)) {
                 await this.updateValue(content);
             }
         }
@@ -193,7 +195,7 @@ export class HtmlField extends Component {
 
     getConfig() {
         const config = {
-            content: this.props.record.data[this.props.name],
+            content: this.value,
             Plugins: [
                 ...MAIN_PLUGINS,
                 ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
