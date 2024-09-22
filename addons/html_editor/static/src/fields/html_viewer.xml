@@ -6,7 +6,7 @@
                 t-att-sandbox="props.hasFullHtml ? 'allow-same-origin allow-popups allow-popups-to-escape-sandbox' : false"/>
         </t>
         <t t-else="">
-            <div t-ref="readonlyContent"  class="o_readonly" t-out="props.value" />
+            <div t-ref="readonlyContent"  class="o_readonly" t-out="state.value" />
         </t>
     </t>
 </templates>
