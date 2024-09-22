@@ -20,6 +20,7 @@
 # Wil Odoo, 2023
 # Tomáš Píšek, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Štefan Janoťák, 2024
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Last-Translator: Štefan Janoťák, 2024\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,6 +81,9 @@ msgid ""
 "\n"
 "Transfers %s: You need to supply a Lot/Serial number for products %s."
 msgstr ""
+"\n"
+"\n"
+"Prenos %s: Je potrebné zadať Šaržu/Sériové číslo pre produkty %s."
 
 #. module: stock
 #. odoo-python
@@ -89,6 +93,8 @@ msgid ""
 "\n"
 "(%s) exists in location %s"
 msgstr ""
+"\n"
+"(%s) existuje na pozícii %s"
 
 #. module: stock
 #. odoo-python
@@ -114,6 +120,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
+"* Koncept: Prevod ešte nie je potvrdený. Rezervácia neplatí.\n"
+"* Čaká sa na ďalšiu operáciu: Tento prenos čaká na ďalšiu operáciu, kým bude pripravený.\n"
+"* Čaká sa: Prenos čaká na dostupnosť niektorých produktov.\n"
+"(a) Dodacie podmienky sú „Čo najskôr“: žiadny produkt nie je možné rezervovať.\n"
+"(b) Pravidlá prepravy sú „Keď sú všetky produkty pripravené“: nie všetky produkty je možné rezervovať.\n"
+"* Pripravený: Prenos je pripravený na spracovanie.\n"
+"(a) Pravidlá prepravy sú \"Čo najskôr\": aspoň jeden produkt bol rezervovaný.\n"
+"(b) Dodacie podmienky sú „Keď sú všetky produkty pripravené“: všetky produkty sú rezervované.\n"
+"* Hotovo: Prenos bol spracovaný.\n"
+"* Zrušené: Prenos bol zrušený."
 
 #. module: stock
 #. odoo-python
@@ -129,6 +145,8 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
+"Ak je iná ako 0, dátum sčítania zásob pre produkty uložené na tomto mieste "
+"sa automaticky nastaví s definovanou frekvenciou."
 
 #. module: stock
 #. odoo-python
@@ -1850,6 +1868,8 @@ msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
 msgstr ""
+"Vytvorte nové pravidlá pre skladovanie na automatické odosielanie "
+"špecifických produktov na ich vhodné cieľové miesto po prijatí."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
@@ -2212,6 +2232,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
+"Definujte pravidlo minimálnej zásoby, aby Odoo automaticky vytváralo "
+"požiadavky na cenové ponuky alebo potvrdené výrobné objednávky na doplnenie "
+"zásob."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -10102,17 +10125,17 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Spare Stock"
-msgstr ""
+msgstr "napr. Sklad náhradnych dielov"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "e.g. Two-steps reception"
-msgstr ""
+msgstr "Dvoj-krokový príjem"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr ""
+msgstr "z pozície"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -10136,7 +10159,7 @@ msgstr "pravidlá doobjednania spustiť ručne teraz"
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "minimum of"
-msgstr ""
+msgstr "minimálne"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -10148,7 +10171,7 @@ msgstr "z"
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 #, python-format
 msgid "planned on"
-msgstr ""
+msgstr "plánované na"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -10165,7 +10188,7 @@ msgstr ""
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "should be replenished"
-msgstr ""
+msgstr "treba doplniť zásobu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id
@@ -10179,7 +10202,7 @@ msgstr ""
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 #, python-format
 msgid "to reach the maximum of"
-msgstr ""
+msgstr "dosiahni maximum"
 
 #. module: stock
 #. odoo-python
