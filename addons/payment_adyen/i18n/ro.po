@@ -27,6 +27,8 @@ msgid ""
 "<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
 "                    the Capture Delay to manual on your Adyen account settings."
 msgstr ""
+"<strong>Alertă:</strong> Dacă doriți să efectuați transferul manual, trebuie"
+" să setați Capture Delay din contul dvs Adyen în modul manual."
 
 #. module: payment_adyen
 #. odoo-python
@@ -44,7 +46,7 @@ msgstr "Cheie API"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "API URL Prefix"
-msgstr ""
+msgstr "Prefix URL API"
 
 #. module: payment_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
@@ -57,6 +59,7 @@ msgstr "Adyen"
 msgid ""
 "An error occurred during the processing of your payment. Please try again."
 msgstr ""
+"O eroare a apărut pe durata procesării tranzacției. Vă rugăm să reîcercați."
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -67,7 +70,7 @@ msgstr "Nu se poate afișa formularul de plată"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
 msgid "Client Key"
-msgstr ""
+msgstr "Cheie client"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__code
@@ -83,12 +86,12 @@ msgstr "Nu s-a putut stabili conexiunea cu API-ul."
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "HMAC Key"
-msgstr ""
+msgstr "Cheie HMAC"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Are Tx Adyen"
 
 #. module: payment_adyen
 #. odoo-javascript
@@ -142,13 +145,13 @@ msgstr "Procesarea plății a eșuat"
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data for child transaction with missing transaction values"
-msgstr ""
+msgstr "Date primite pentru tranzacție copil cu date tranzacționale lipsă"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with invalid payment state: %s"
-msgstr ""
+msgstr "Date primite cu un status de plată invalid: %s"
 
 #. module: payment_adyen
 #. odoo-python
@@ -160,18 +163,18 @@ msgstr "Date primite fără referință de comerciant"
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "Date primite fără status de plată."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Primit date despre cerere de plată manipulate"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "Shopper Reference"
-msgstr ""
+msgstr "Referință Cumpărător"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_key
@@ -190,11 +193,13 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"Valoarea procesată de Adyen pe tranzacție %s este diferită de cea cerută. A "
+"fost creată o nouă tranzacție cu valoarea corectă."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "The base URL for the API endpoints"
-msgstr ""
+msgstr "URL de bază pentru terminale API"
 
 #. module: payment_adyen
 #. odoo-python
@@ -225,13 +230,13 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "Codul contului de vânzător folosit de acest furnizor"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_provider.py:0
 msgid "The communication with the API failed. Details: %s"
-msgstr ""
+msgstr "Comunicarea cu API-ul a eșuat. Detalii: %s"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code

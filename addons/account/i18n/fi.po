@@ -44,8 +44,8 @@
 # Joakim Weckman, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # Jessica Jakara, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # 
 msgid ""
 msgstr ""
@@ -53,7 +53,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-12 07:44+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6931,6 +6931,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Kaava muodossa line_code.expression_label. Tämän avulla voidaan määrittää "
+"tämän lausekkeen siirtokohde (_carryover_*-merkityssä lausekkeessa), jos se "
+"on eri kuin kantarivi."
 
 #. module: account
 msgid ""
@@ -9957,6 +9960,7 @@ msgstr "Liitettä ei toimitettu"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_journal_dashboard.py:0
 msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
@@ -15238,6 +15242,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
 msgstr ""
@@ -15844,7 +15856,7 @@ msgstr "Mittayksikkö"
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "Yhdysvallat (Yleinen)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16471,6 +16483,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"Kun kohdistat lausekkeen siirtoa varten, kyseisen lausekkeen nimikkeen on "
+"alettava sanalla _applied_carryover_"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -17197,6 +17211,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"Kenttää carryover_target ei voi käyttää lausekkeessa, jonka nimike ei ala "
+"_carryover_ -alkuisella kirjaimella"
 
 #. module: account
 #. odoo-python

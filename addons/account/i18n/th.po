@@ -650,6 +650,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        เรียน\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        นี่คือ\n"
+"        <t t-if=\"object.name\">\n"
+"            ใบแจ้งหนี้ของคุณ <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ใบแจ้งหนี้\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (การอ้างอิง: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        เป็นจำนวน <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        จาก <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            ใบแจ้งหนี้นี้ได้รับการชำระเงินแล้ว\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            กรุณาชำระเงินโดยเร็วที่สุด\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                กรุณาใช้การสื่อสารต่อไปนี้สำหรับการชำระเงินของคุณ:<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                <t t-if=\"object.partner_bank_id\">\n"
+"                    ในบัญชี <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                </t>\n"
+"                .\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"            <br><br>\n"
+"            เพิ่มเติม: คุณสามารถตรวจสอบตารางเวลาของคุณ <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">ได้จากพอร์ทัล</a>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        โปรดอย่าลังเลที่จะติดต่อเราหากคุณมีคำถาม\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -9901,6 +9950,7 @@ msgstr "ไม่มีไฟล์แนบมา"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_journal_dashboard.py:0
 msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
@@ -15151,6 +15201,14 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr "นี่เป็นวงเงินเครดิตเริ่มต้นที่จะใช้กับพาร์ทเนอร์ที่ไม่มีขีดจำกัดเฉพาะ"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
 
 #. module: account
 #. odoo-python

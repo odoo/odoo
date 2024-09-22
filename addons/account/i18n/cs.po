@@ -8655,13 +8655,13 @@ msgstr "Účetní položka"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr ""
+msgstr "Položka deníku %s vytvořena"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr ""
+msgstr "Položka deníku %s smazána"
 
 #. module: account
 #. odoo-python
@@ -9899,6 +9899,7 @@ msgstr "Nebyla poskytnuta žádná příloha"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_journal_dashboard.py:0
 msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
@@ -14238,7 +14239,7 @@ msgstr "Vybrané datum je chráněno datem uzamčení"
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid "The days added must be a number and has to be between 0 and 31."
-msgstr ""
+msgstr "Přidané dny musí být číslo a musí být v rozmezí 0 až 31."
 
 #. module: account
 #. odoo-python
@@ -15190,6 +15191,14 @@ msgid ""
 msgstr ""
 "Toto je výchozí kreditní limit, který bude použit pro partnery, kteří nemají"
 " nastavení vlastní kreditní limit."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
 
 #. module: account
 #. odoo-python

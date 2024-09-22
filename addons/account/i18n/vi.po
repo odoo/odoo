@@ -9195,12 +9195,12 @@ msgstr "Trái"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_legal_notes
 msgid "Legal Notes"
-msgstr "Ghi Chú Pháp Lý"
+msgstr "Ghi chú pháp lý"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr "Ghi chú mang tính pháp lý..."
+msgstr "Ghi chú pháp lý..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__note
@@ -10027,6 +10027,7 @@ msgstr "Không có tệp đính kèm nào"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_journal_dashboard.py:0
 msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
@@ -13881,7 +13882,7 @@ msgstr "Thuế được áp dụng"
 #: model:ir.model.fields,field_description:account.field_account_move__taxes_legal_notes
 #: model:ir.model.fields,field_description:account.field_account_payment__taxes_legal_notes
 msgid "Taxes Legal Notes"
-msgstr "Ghi Chú Pháp Lý về Thuế"
+msgstr "Ghi chú pháp lý về thuế"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15349,6 +15350,14 @@ msgid ""
 msgstr ""
 "Đây là hạn mức tín dụng mặc định sẽ được sử dụng cho các đối tác không có "
 "hạn mức cụ thể."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
 
 #. module: account
 #. odoo-python

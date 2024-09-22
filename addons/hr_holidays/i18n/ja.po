@@ -91,7 +91,7 @@ msgstr "%(employee_name)s -  %(date_from)s から %(date_to)s まで- %(state)s"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(holiday_name)s has been refused."
-msgstr "%(holiday_name)sは拒否されました。 "
+msgstr "%(holiday_name)sは否認されました。 "
 
 #. module: hr_holidays
 #. odoo-python
@@ -999,7 +999,7 @@ msgstr "休暇申請を拒否するには、確認済、２次承認または検
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation state must be \"Refused\" in order to be reset to \"To Approve\"."
-msgstr "\"未承認\"に再設定するには、休暇割当ステータスが \"未承認\"である必要があります。"
+msgstr "\"否認\"に再設定するには、休暇割当ステータスが \"未承認\"である必要があります。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -1776,7 +1776,7 @@ msgid ""
 "Due to a change in global time offs, this leave no longer has the required "
 "amount of available allocation and has been set to refused. Please review "
 "this leave."
-msgstr "全体休暇の変更により、この休暇は必要な割当がなくなり否認済に設定されました。この休暇を見直して下さい。"
+msgstr "全体休暇の変更により、この休暇は必要な割当がなくなり否認に設定されました。この休暇を見直して下さい。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -3082,13 +3082,13 @@ msgstr "否認"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Refused"
-msgstr "却下済"
+msgstr "否認"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Refused Time Off"
-msgstr "却下された休暇"
+msgstr "否認された休暇"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
@@ -3623,7 +3623,7 @@ msgid ""
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
 "休暇申請が作成されると、ステータスは'未承認'となります。\n"
-"マネジャーにより休暇申請が却下された場合、ステータスは'却下済'となります。\n"
+"マネジャーにより休暇申請が却下された場合、ステータスは'否認'となります。\n"
 "休暇申請がマネジャーに承認されると、ステータスは'承認済'となります。"
 
 #. module: hr_holidays

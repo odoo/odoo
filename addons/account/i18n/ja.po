@@ -9765,6 +9765,7 @@ msgstr "添付がありません"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_journal_dashboard.py:0
 msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
@@ -14852,6 +14853,14 @@ msgstr "与信限度額が指定されていない取引先に対して、この
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr "この仕訳帳は支払方法に関連付けられています。アーカイブできません。"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
 msgstr "この仕訳帳は制限されていません。"
@@ -15437,7 +15446,7 @@ msgstr "単位"
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "アメリカ合衆国 (汎用)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

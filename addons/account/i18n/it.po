@@ -10094,6 +10094,7 @@ msgstr "Non è stato fornito alcun allegato"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_journal_dashboard.py:0
 msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
@@ -15471,6 +15472,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Questo registro è associato a un metodo di pagamento. Non è possibile "
+"archiviarlo"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "This journal is not restricted"
 msgstr "Il registro non è riservato"
@@ -16088,7 +16099,7 @@ msgstr "Unità di misura"
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "United States of America (Generic)"
-msgstr ""
+msgstr "Stati Uniti d'America (Generico)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
