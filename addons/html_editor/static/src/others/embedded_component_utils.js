@@ -385,7 +385,7 @@ export class StateChangeManager {
         let scheduled = false;
         const batchId = this.batchId;
         return async () => {
-            if (!scheduled) {
+            if (this.isLiveComponent && !scheduled) {
                 scheduled = true;
                 await Promise.resolve();
                 scheduled = false;
