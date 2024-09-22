@@ -2,9 +2,7 @@
     <t t-name="html_editor.HtmlField">
         <t t-if="this.displayReadonly">
             <HtmlViewer
-                value="this.value"
-                cssAssetId="props.cssReadonlyAssetId"
-                hasFullHtml="sandboxedPreview"/>
+                config="getReadonlyConfig()"/>
         </t>
         <div t-else="" class="h-100" t-att-class="{'o_show_codeview': state.showCodeView, 'o_field_translate': isTranslatable}">
             <t t-if="state.showCodeView">
