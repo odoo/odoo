@@ -1241,7 +1241,7 @@ patch(PosOrder.prototype, {
                 reward.program_id.applies_on !== "future"
             ) {
                 const line = this.get_orderlines().find(
-                    (line) => line._reward_product_id === product.id
+                    (line) => line._reward_product_id?.id === product.id
                 );
                 // Compute the correction points once even if there are multiple reward lines.
                 // This is because _getPointsCorrection is taking into account all the lines already.
