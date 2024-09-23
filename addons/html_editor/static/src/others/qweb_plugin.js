@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
 
 const isUnsplittableQWebElement = (element) =>
@@ -71,7 +72,9 @@ export class QWebPlugin extends Plugin {
             closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
         if (qwebNode && this.editable.contains(qwebNode)) {
             // select the whole qweb node
-            this.shared.setSelection(selection);
+            const [anchorNode, anchorOffset] = leftPos(qwebNode);
+            const [focusNode, focusOffset] = rightPos(qwebNode);
+            this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
         }
     }
 

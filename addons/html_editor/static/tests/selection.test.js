@@ -210,3 +210,12 @@ test("restore a selection when you are not in the editable shouldn't move the fo
     cursors.restore();
     expect(getActiveElement()).toBe(queryOne("input.test"));
 });
+
+test("set a collapse selection in a contenteditable false should move it after this node", async () => {
+    const { el, editor } = await setupEditor(`<p>ab<span contenteditable="false">cd</span>ef</p>`);
+    editor.shared.setSelection({
+        anchorNode: queryOne("span[contenteditable='false']"),
+        anchorOffset: 1,
+    });
+    expect(getContent(el)).toBe(`<p>ab<span contenteditable="false">cd</span>[]ef</p>`);
+});

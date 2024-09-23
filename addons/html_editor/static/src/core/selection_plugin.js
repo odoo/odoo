@@ -417,10 +417,12 @@ export class SelectionPlugin extends Plugin {
         if (!this.isSelectionInEditable({ anchorNode, focusNode })) {
             throw new Error("Selection is not in editor");
         }
-        [anchorNode, anchorOffset] = normalizeCursorPosition(anchorNode, anchorOffset, "left");
+        const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
         [focusNode, focusOffset] = normalizeCursorPosition(focusNode, focusOffset, "right");
+        [anchorNode, anchorOffset] = isCollapsed
+            ? [focusNode, focusOffset]
+            : normalizeCursorPosition(anchorNode, anchorOffset, "left");
         if (normalize) {
-            const isCollapsed = anchorNode === focusNode && anchorOffset === focusOffset;
             // normalize selection
             [anchorNode, anchorOffset] = normalizeDeepCursorPosition(anchorNode, anchorOffset);
             [focusNode, focusOffset] = isCollapsed
