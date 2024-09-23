@@ -6,7 +6,7 @@
 
     registry.category("web_tour.tours").add('website_sale_tour_1', {
         test: true,
-        checkDelay: 250,
+        checkDelay: 150,
         url: '/shop?search=Storage Box Test',
         steps: () => [
     // Testing b2c with Tax-Excluded Prices
@@ -31,20 +31,20 @@
     },
         tourUtils.goToCart({quantity: 2}),
     {
-        isActive: ["auto"],
+        content: "Check for 2 products in cart",
         trigger:
             '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
-    },
-    {
-        content: "Check for 2 products in cart and proceed to checkout",
-        trigger: 'a[href*="/shop/checkout"]',
-        run: "click",
     },
     ...tourUtils.assertCartAmounts({
         taxes: '23.70',
         untaxed: '158.00',
         total: '181.70',
     }),
+    {
+        content: "Proceed to checkout",
+        trigger: 'a[href*="/shop/checkout"]',
+        run: "click",
+    },
     {
         content: "Fulfill delivery address form",
         trigger: 'select[name="country_id"]',
@@ -95,7 +95,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: 'h3:contains("Billing address")',
     },
     {
@@ -151,7 +150,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: 'h3:contains("Billing address")',
     },
     {
@@ -190,7 +188,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger:
             'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
     },
@@ -224,7 +221,6 @@
     },
     // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
     {
-        isActive: ["auto"],
         trigger: ".o_header_standard:not(.o_transitioning)",
     },
     {
@@ -262,7 +258,6 @@
         run: "click"
     },
     {
-        isActive: ["auto"],
         trigger: ".o_frontend_to_backend_nav", // Check if the user is connected
     },
     {
@@ -313,7 +308,6 @@
     },
         tourUtils.goToCart({quantity: 2}),
         {
-            isActive: ["auto"],
             trigger:
                 '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         },
@@ -386,7 +380,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
     },
     {
@@ -395,7 +388,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: '.oe_cart .oe_website_sale_tx_status',
     },
     {
@@ -404,7 +396,6 @@
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: "header#top li.dropdown .js_usermenu.show",
     },
     {
@@ -415,7 +406,6 @@
 
     // enable extra step on website checkout and check extra step on checkout process
     {
-        isActive: ["auto"],
         trigger: ".o_header_standard:not(.o_transitioning)",
     },
     {
@@ -456,9 +446,9 @@
     registry.category("web_tour.tours").add('website_sale_tour_2', {
         test: true,
         url: '/shop/cart',
+        checkDelay: 150,
         steps: () => [
     {
-        isActive: ["auto"],
         trigger: '.o_wizard:contains("Extra Info")',
     },
     {
