@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosResTicketScreenTour", {
     test: true,
+    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -37,6 +38,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
 
 registry.category("web_tour.tours").add("OrderNumberConflictTour", {
     test: true,
+    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
