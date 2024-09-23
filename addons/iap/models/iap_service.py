@@ -12,6 +12,7 @@ class IapService(models.Model):
     unit_name = fields.Char(required=True, translate=True)
     integer_balance = fields.Boolean(required=True)
 
-    _sql_constraints = [
-        ('unique_technical_name', 'UNIQUE(technical_name)', 'Only one service can exist with a specific technical_name')
-    ]
+    _unique_technical_name = models.Constraint(
+        'UNIQUE(technical_name)',
+        'Only one service can exist with a specific technical_name',
+    )

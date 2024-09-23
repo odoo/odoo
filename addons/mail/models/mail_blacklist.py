@@ -15,9 +15,10 @@ class MailBlacklist(models.Model):
                         tracking=1)
     active = fields.Boolean(default=True, tracking=2)
 
-    _sql_constraints = [
-        ('unique_email', 'unique (email)', 'Email address already exists!')
-    ]
+    _unique_email = models.Constraint(
+        'unique (email)',
+        'Email address already exists!',
+    )
 
     @api.model_create_multi
     def create(self, values):

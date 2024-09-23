@@ -16,9 +16,10 @@ class HrEmployeeLocation(models.Model):
     date = fields.Date(string="Date")
     day_week_string = fields.Char(compute="_compute_day_week_string")
 
-    _sql_constraints = [
-        ('uniq_exceptional_per_day', 'unique(employee_id, date)', 'Only one default work location and one exceptional work location per day per employee.'),
-    ]
+    _uniq_exceptional_per_day = models.Constraint(
+        'unique(employee_id, date)',
+        'Only one default work location and one exceptional work location per day per employee.',
+    )
 
     @api.depends('date')
     def _compute_day_week_string(self):

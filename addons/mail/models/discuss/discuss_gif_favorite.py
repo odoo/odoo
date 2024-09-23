@@ -8,10 +8,7 @@ class DiscussGifFavorite(models.Model):
 
     tenor_gif_id = fields.Char("GIF id from Tenor", required=True)
 
-    _sql_constraints = [
-        (
-            "user_gif_favorite",
-            "unique(create_uid,tenor_gif_id)",
-            "User should not have duplicated favorite GIF",
-        ),
-    ]
+    _user_gif_favorite = models.Constraint(
+        'unique(create_uid,tenor_gif_id)',
+        'User should not have duplicated favorite GIF',
+    )

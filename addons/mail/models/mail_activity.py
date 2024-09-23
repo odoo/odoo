@@ -111,14 +111,10 @@ class MailActivity(models.Model):
     can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        # Required on a Many2one reference field is not sufficient as actually
-        # writing 0 is considered as a valid value, because this is an integer field.
-        # We therefore need a specific constraint check.
-        ('check_res_id_is_set',
-         'CHECK(res_id IS NOT NULL AND res_id !=0 )',
-         'Activities have to be linked to records with a not null res_id.')
-    ]
+    _check_res_id_is_set = models.Constraint(
+        'CHECK(res_id IS NOT NULL AND res_id !=0 )',
+        'Activities have to be linked to records with a not null res_id.',
+    )
 
     @api.onchange('previous_activity_type_id')
     def _compute_has_recommended_activities(self):

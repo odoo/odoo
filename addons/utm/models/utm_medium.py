@@ -13,9 +13,10 @@ class UtmMedium(models.Model):
     name = fields.Char(string='Medium Name', required=True, translate=False)
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ('unique_name', 'UNIQUE(name)', 'The name must be unique'),
-    ]
+    _unique_name = models.Constraint(
+        'UNIQUE(name)',
+        'The name must be unique',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -78,9 +78,10 @@ class ResCompany(models.Model):
     layout_background = fields.Selection([('Blank', 'Blank'), ('Demo logo', 'Demo logo'), ('Custom', 'Custom')], default="Blank", required=True)
     layout_background_image = fields.Binary("Background Image")
     uninstalled_l10n_module_ids = fields.Many2many('ir.module.module', compute='_compute_uninstalled_l10n_module_ids')
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The company name must be unique!')
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        "The company name must be unique!",
+    )
 
     def init(self):
         for company in self.search([('paperformat_id', '=', False)]):

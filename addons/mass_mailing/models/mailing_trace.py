@@ -112,14 +112,10 @@ class MailingTrace(models.Model):
     links_click_ids = fields.One2many('link.tracker.click', 'mailing_trace_id', string='Links click')
     links_click_datetime = fields.Datetime('Clicked On', help='Stores last click datetime in case of multi clicks.')
 
-    _sql_constraints = [
-        # Required on a Many2one reference field is not sufficient as actually
-        # writing 0 is considered as a valid value, because this is an integer field.
-        # We therefore need a specific constraint check.
-        ('check_res_id_is_set',
-         'CHECK(res_id IS NOT NULL AND res_id !=0 )',
-         'Traces have to be linked to records with a not null res_id.')
-    ]
+    _check_res_id_is_set = models.Constraint(
+        'CHECK(res_id IS NOT NULL AND res_id !=0 )',
+        'Traces have to be linked to records with a not null res_id.',
+    )
 
     @api.depends('trace_type', 'mass_mailing_id')
     def _compute_display_name(self):

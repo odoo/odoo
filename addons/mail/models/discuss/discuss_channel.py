@@ -78,19 +78,26 @@ class DiscussChannel(models.Model):
     group_public_id = fields.Many2one('res.groups', string='Authorized Group', compute='_compute_group_public_id', readonly=False, store=True)
     invitation_url = fields.Char('Invitation URL', compute='_compute_invitation_url')
     allow_public_upload = fields.Boolean(default=False)
-    _sql_constraints = [
-        ('channel_type_not_null', 'CHECK(channel_type IS NOT NULL)', 'The channel type cannot be empty'),
-        ("from_message_id_unique", "UNIQUE(from_message_id)", "Messages can only be linked to one sub-channel"),
-        (
-            "sub_channel_no_group_public_id",
-            "CHECK(parent_channel_id IS NULL OR group_public_id IS NULL)",
-            "Group public id should not be set on sub-channels as access is based on parent channel",
-        ),
-        ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
-        ('group_public_id_check',
-         "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
-         'Group authorization and group auto-subscription are only supported on channels.')
-    ]
+    _channel_type_not_null = models.Constraint(
+        'CHECK(channel_type IS NOT NULL)',
+        'The channel type cannot be empty',
+    )
+    _from_message_id_unique = models.Constraint(
+        'UNIQUE(from_message_id)',
+        'Messages can only be linked to one sub-channel',
+    )
+    _sub_channel_no_group_public_id = models.Constraint(
+        'CHECK(parent_channel_id IS NULL OR group_public_id IS NULL)',
+        'Group public id should not be set on sub-channels as access is based on parent channel',
+    )
+    _uuid_unique = models.Constraint(
+        'UNIQUE(uuid)',
+        'The channel UUID must be unique',
+    )
+    _group_public_id_check = models.Constraint(
+        "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
+        'Group authorization and group auto-subscription are only supported on channels.',
+    )
 
     # CONSTRAINTS
     @api.constrains("from_message_id")

@@ -112,11 +112,10 @@ class LunchSupplier(models.Model):
     show_order_button = fields.Boolean(compute='_compute_buttons')
     show_confirm_button = fields.Boolean(compute='_compute_buttons')
 
-    _sql_constraints = [
-        ('automatic_email_time_range',
-         'CHECK(automatic_email_time >= 0 AND automatic_email_time <= 12)',
-         'Automatic Email Sending Time should be between 0 and 12'),
-    ]
+    _automatic_email_time_range = models.Constraint(
+        'CHECK(automatic_email_time >= 0 AND automatic_email_time <= 12)',
+        'Automatic Email Sending Time should be between 0 and 12',
+    )
 
     @api.depends('phone')
     def _compute_display_name(self):

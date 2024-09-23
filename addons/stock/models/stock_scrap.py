@@ -234,6 +234,7 @@ class StockScrapReasonTag(models.Model):
     sequence = fields.Integer(default=10)
     color = fields.Char(string="Color", default='#3C3C3C')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists!"),
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        'Tag name already exists!',
+    )

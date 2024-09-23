@@ -62,9 +62,10 @@ class CrmRevealRule(models.Model):
 
     # This limits the number of extra contact.
     # Even if more than 5 extra contacts provided service will return only 5 contacts (see service module for more)
-    _sql_constraints = [
-        ('limit_extra_contacts', 'check(extra_contacts >= 1 and extra_contacts <= 5)', 'Maximum 5 contacts are allowed!'),
-    ]
+    _limit_extra_contacts = models.Constraint(
+        'check(extra_contacts >= 1 and extra_contacts <= 5)',
+        'Maximum 5 contacts are allowed!',
+    )
 
     def _compute_lead_count(self):
         leads = self.env['crm.lead']._read_group([

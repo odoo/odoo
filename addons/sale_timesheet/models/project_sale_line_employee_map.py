@@ -37,9 +37,10 @@ class ProjectSaleLineEmployeeMap(models.Model):
     cost_currency_id = fields.Many2one('res.currency', string="Cost Currency", related='employee_id.currency_id', readonly=True, export_string_translation=False)
     is_cost_changed = fields.Boolean('Is Cost Manually Changed', compute='_compute_is_cost_changed', store=True, export_string_translation=False)
 
-    _sql_constraints = [
-        ('uniqueness_employee', 'UNIQUE(project_id,employee_id)', 'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.'),
-    ]
+    _uniqueness_employee = models.Constraint(
+        'UNIQUE(project_id,employee_id)',
+        'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.',
+    )
 
     @api.depends('employee_id', 'project_id.sale_line_employee_ids.employee_id')
     def _compute_existing_employee_ids(self):

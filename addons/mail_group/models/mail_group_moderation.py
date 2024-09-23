@@ -16,11 +16,10 @@ class MailGroupModeration(models.Model):
         string='Status', required=True, default='ban')
     mail_group_id = fields.Many2one('mail.group', string='Group', required=True, ondelete='cascade')
 
-    _sql_constraints = [(
-        'mail_group_email_uniq',
+    _mail_group_email_uniq = models.Constraint(
         'UNIQUE(mail_group_id, email)',
         'You can create only one rule for a given email address in a group.',
-    )]
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -18,10 +18,10 @@ class CardCard(models.Model):
         ('visited', 'Visited'),
     ])
 
-    _sql_constraints = [
-        ('campaign_record_unique', 'unique(campaign_id, res_id)',
-         'Each record should be unique for a campaign'),
-    ]
+    _campaign_record_unique = models.Constraint(
+        'unique(campaign_id, res_id)',
+        'Each record should be unique for a campaign',
+    )
 
     @api.depends('res_model', 'res_id')
     def _compute_display_name(self):

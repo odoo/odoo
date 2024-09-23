@@ -23,9 +23,10 @@ class SlideChannel(models.Model):
         groups="sales_team.group_sale_salesman")
     currency_id = fields.Many2one(related='product_id.currency_id')
 
-    _sql_constraints = [
-        ('product_id_check', "CHECK( enroll!='payment' OR product_id IS NOT NULL )", "Product is required for on payment channels.")
-    ]
+    _product_id_check = models.Constraint(
+        "CHECK( enroll!='payment' OR product_id IS NOT NULL )",
+        'Product is required for on payment channels.',
+    )
 
     @api.depends('product_id')
     def _compute_product_sale_revenues(self):

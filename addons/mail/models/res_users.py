@@ -25,11 +25,10 @@ class ResUsers(models.Model):
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
 
-    _sql_constraints = [(
-        "notification_type",
+    _notification_type = models.Constraint(
         "CHECK (notification_type = 'email' OR NOT share)",
-        "Only internal user can receive notifications in Odoo",
-    )]
+        'Only internal user can receive notifications in Odoo',
+    )
 
     @api.depends('share', 'groups_id')
     def _compute_notification_type(self):

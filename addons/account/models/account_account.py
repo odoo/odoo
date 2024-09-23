@@ -1408,13 +1408,10 @@ class AccountGroup(models.Model):
     code_prefix_end = fields.Char(compute='_compute_code_prefix_end', readonly=False, store=True, precompute=True)
     company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
 
-    _sql_constraints = [
-        (
-            'check_length_prefix',
-            'CHECK(char_length(COALESCE(code_prefix_start, \'\')) = char_length(COALESCE(code_prefix_end, \'\')))',
-            'The length of the starting and the ending code prefix must be the same'
-        ),
-    ]
+    _check_length_prefix = models.Constraint(
+        "CHECK(char_length(COALESCE(code_prefix_start, '')) = char_length(COALESCE(code_prefix_end, '')))",
+        'The length of the starting and the ending code prefix must be the same',
+    )
 
     @api.depends('code_prefix_start')
     def _compute_code_prefix_end(self):

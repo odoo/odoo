@@ -30,9 +30,10 @@ class SmsTracker(models.Model):
     sms_uuid = fields.Char('SMS uuid', required=True)
     mail_notification_id = fields.Many2one('mail.notification', ondelete='cascade')
 
-    _sql_constraints = [
-        ('sms_uuid_unique', 'unique(sms_uuid)', 'A record for this UUID already exists'),
-    ]
+    _sms_uuid_unique = models.Constraint(
+        'unique(sms_uuid)',
+        'A record for this UUID already exists',
+    )
 
     def _action_update_from_provider_error(self, provider_error):
         """

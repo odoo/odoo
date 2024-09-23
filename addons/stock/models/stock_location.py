@@ -96,8 +96,14 @@ class StockLocation(models.Model):
     forecast_weight = fields.Float('Forecasted Weight', compute="_compute_weight")
     is_empty = fields.Boolean('Is Empty', compute='_compute_is_empty', search='_search_is_empty')
 
-    _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company!'),
-                        ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
+    _barcode_company_uniq = models.Constraint(
+        'unique (barcode,company_id)',
+        'The barcode for a location must be unique per company!',
+    )
+    _inventory_freq_nonneg = models.Constraint(
+        'check(cyclic_inventory_frequency >= 0)',
+        'The inventory frequency (days) for a location must be non-negative',
+    )
 
     @api.depends('outgoing_move_line_ids.quantity_product_uom', 'incoming_move_line_ids.quantity_product_uom',
                  'outgoing_move_line_ids.state', 'incoming_move_line_ids.state',
