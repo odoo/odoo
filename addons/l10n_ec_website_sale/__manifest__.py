@@ -6,7 +6,7 @@
     'description': """Make ecommerce work for Ecuador.""",
     'depends': [
         'website_sale',
-        'l10n_ec',
+        'l10n_ec_sale',
     ],
     'data': [
         'data/ir_model_fields.xml',
