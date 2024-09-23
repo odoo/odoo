@@ -108,14 +108,16 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
     @include rfs($btn-font-size-sm, $btn-font-size-sm);
     border-radius: $btn-border-radius-sm;
     padding: 0rem 0.1875rem;
+    border: 1px solid;
+    font-weight: $font-weight-bold;
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
+    @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .2), rgba($primary, .5), darken($primary, 15%));
 }
 
 a.o-discuss-mention {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%));
+    @include o-mention-variant(rgba($primary, .15), rgba($primary, .25), darken($primary, 10%), rgba($primary, .15), rgba($primary, .25), darken($primary, 10%));
     cursor: default !important;
 }
 
