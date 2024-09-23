@@ -118,11 +118,11 @@
                 <templates>
                     <t t-name="kanban-card" class="row g-0">
                         <aside class="col-2">
-                            <field name="image_1024" widget="image" t-att-title="name" t-att-alt="name"/>
+                            <field name="image_1024" widget="image" t-att-alt="record.name.value"/>
                         </aside>
                         <main class="col ps-2">
                             <span>
-                                <field class="fw-bold fs-5" name="name"/>
+                                <field class="fw-bold fs-5 me-1" name="name"/>
                                 <t t-if="record.remaining_sending.value != -1">
                                     <field name="stat_my_monthly_sending"/>/<field name="rule_max_number"/>
                                 </t>
