@@ -307,7 +307,8 @@ export class FormController extends Component {
 
         if (!this.env.inDialog) {
             useExternalListener(document, "visibilitychange", () => {
-                if (document.visibilityState === "hidden") {
+                const isDialogOpen = document.querySelector(".o_dialog");
+                if (document.visibilityState === "hidden" && !isDialogOpen) {
                     this.model.root.save();
                 }
             });
