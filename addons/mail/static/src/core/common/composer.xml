@@ -150,7 +150,12 @@
 
     <t t-name="mail.Composer.suggestionThread">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            #<t t-esc="option.label"/>
+            <i t-attf-class="fa #{option.thread.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
+            <t t-if="option.thread.parent_channel_id">
+                <t t-esc="option.thread.parent_channel_id.displayName"/>
+                <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+            </t>
+            <t t-esc="option.thread.displayName"/>
         </strong>
     </t>
 

@@ -179,9 +179,16 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
     }
     for (const thread of threads) {
         const placeholder = `#-mention-channel-${thread.id}`;
-        const text = `#${escape(thread.displayName)}`;
+        let className, text;
+        if (thread.parent_channel_id) {
+            className = "o_channel_redirect o_channel_redirect_asThread";
+            text = escape(`#${thread.parent_channel_id.displayName} > ${thread.displayName}`);
+        } else {
+            className = "o_channel_redirect";
+            text = escape(`#${thread.displayName}`);
+        }
         mentions.push({
-            class: "o_channel_redirect",
+            class: className,
             id: thread.id,
             model: "discuss.channel",
             placeholder,

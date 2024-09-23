@@ -485,9 +485,14 @@ export class Store extends BaseStore {
         { mentionedChannels = [], mentionedPartners = [], specialMentions = [] } = {}
     ) {
         const validMentions = {};
-        validMentions.threads = mentionedChannels.filter((thread) =>
-            body.includes(`#${thread.displayName}`)
-        );
+        validMentions.threads = mentionedChannels.filter((thread) => {
+            if (thread.parent_channel_id) {
+                return body.includes(
+                    `#${thread.parent_channel_id.displayName} > ${thread.displayName}`
+                );
+            }
+            return body.includes(`#${thread.displayName}`);
+        });
         validMentions.partners = mentionedPartners.filter((partner) =>
             body.includes(`@${partner.name}`)
         );

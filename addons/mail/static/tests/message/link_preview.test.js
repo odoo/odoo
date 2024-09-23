@@ -392,9 +392,9 @@ test("link preview request is only made when message contains URL", async () => 
     });
     await assertSteps([]);
     await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-NavigableList-item", { text: "#Sales" });
+    await click(".o-mail-NavigableList-item", { text: "Sales" });
     await click("button[aria-label='Send']:enabled");
-    await contains(".o-mail-Message", { text: "#Sales" });
+    await contains(".o-mail-Message", { text: "Sales" });
     await assertSteps([]);
     await insertText(".o-mail-Composer-input", "https://www.odoo.com");
     await click("button[aria-label='Send']:enabled");
