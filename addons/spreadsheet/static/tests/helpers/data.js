@@ -476,10 +476,8 @@ export function getBasicData() {
     return {
         "documents.document": {},
         "ir.model": {},
-        "documents.folder": {},
+        "ir.embedded.actions": {},
         "documents.tag": {},
-        "documents.workflow.rule": {},
-        "documents.share": {},
         "spreadsheet.template": {},
         "res.currency": {},
         "res.users": {},
