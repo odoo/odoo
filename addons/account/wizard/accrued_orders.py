@@ -242,6 +242,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         move_type = _('Expense') if is_purchase else _('Revenue')
         move_vals = {
             'ref': _('Accrued %(entry_type)s entry as of %(date)s', entry_type=move_type, date=format_date(self.env, self.date)),
+            'name': '/',
             'journal_id': self.journal_id.id,
             'date': self.date,
             'line_ids': move_lines,
@@ -259,6 +260,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         move._post()
         reverse_move = move._reverse_moves(default_values_list=[{
             'ref': _('Reversal of: %s', move.ref),
+            'name': '/',
             'date': self.reversal_date,
         }])
         reverse_move._post()
