@@ -200,6 +200,14 @@ test("can get a listId from cell formula with other numerical values", async fun
     expect(listId).toBe("1");
 });
 
+test("can get a listId from a vectorized cell formula", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const sheetId = model.getters.getActiveSheetId();
+    setCellContent(model, "G1", '=LIST(1,SEQUENCE(10),"foo")');
+    expect(model.getters.getListIdFromPosition({ sheetId, col: 0, row: 0 })).toBe("1");
+    expect(model.getters.getListIdFromPosition({ sheetId, col: 0, row: 5 })).toBe("1");
+});
+
 test("List datasource is loaded with correct linesNumber", async function () {
     const { model } = await createSpreadsheetWithList({ linesNumber: 2 });
     const [listId] = model.getters.getListIds();
