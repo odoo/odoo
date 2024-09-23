@@ -75,10 +75,12 @@ export class LinkPopoverWidget {
         this.$copyLink.on("click", this._onCopyLinkClick.bind(this));
 
         // init tooltips & popovers
-        this.$el.find('[data-bs-toggle="tooltip"]').tooltip({
-            delay: 0,
-            placement: 'bottom',
-            container: this.container,
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => {
+            Tooltip.getOrCreateInstance(el, {
+                delay: 0,
+                placement: "bottom",
+                container: this.container,
+            });
         });
         const tooltips = [];
         for (const el of this.$el.find('[data-bs-toggle="tooltip"]').toArray()) {
@@ -321,7 +323,8 @@ export class LinkPopoverWidget {
     async _onCopyLinkClick(ev) {
         ev.preventDefault();
         await browser.navigator.clipboard.writeText(this.target.href);
-        this.$copyLink.tooltip('hide');
+        const tooltip = Tooltip.getOrCreateInstance(this.$copyLink[0]);
+        tooltip.hide();
         this.notify(_t("Link copied to clipboard."), {
             type: 'success',
         });

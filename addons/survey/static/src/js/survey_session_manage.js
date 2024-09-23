@@ -68,7 +68,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             // Background Management
             self.refreshBackground = self.$el.data('refreshBackground');
             // Copy link tooltip
-            self.$('.o_survey_session_copy').tooltip({delay: 0, title: 'Click to copy link', placement: 'right'});
+            Tooltip.getOrCreateInstance(document.querySelector(".o_survey_session_copy"), {
+                delay: 0,
+                title: "Click to copy link",
+                placement: "right",
+            });
 
             var isRpcCall = self.$el.data('isRpcCall');
             if (!isRpcCall) {
@@ -102,7 +106,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         ev.preventDefault();
 
         const clipboardBtnEl = document.querySelector(".o_survey_session_copy");
-        clipboardBtnEl.tooltip('dispose');
+        const tooltip = Tooltip.getOrCreateInstance(clipboardBtnEl);
+        tooltip.dispose();
 
         const popover = Popover.getOrCreateInstance(clipboardBtnEl, {
             placement: "right",
