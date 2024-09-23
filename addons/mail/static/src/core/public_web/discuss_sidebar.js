@@ -30,9 +30,9 @@ export class DiscussSidebar extends Component {
 
     get compactBtnText() {
         if (this.store.discuss.isSidebarCompact) {
-            return _t("Make panel bigger");
+            return _t("Expand");
         }
-        return _t("Make panel smaller");
+        return _t("Collapse");
     }
 
     get discussSidebarItems() {
