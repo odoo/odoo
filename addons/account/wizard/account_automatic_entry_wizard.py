@@ -251,6 +251,7 @@ class AutomaticEntryWizard(models.TransientModel):
         return [{
             'currency_id': self.journal_id.currency_id.id or self.journal_id.company_id.currency_id.id,
             'move_type': 'entry',
+            'name': '/',
             'journal_id': self.journal_id.id,
             'company_id': lowest_child_company.id,
             'date': fields.Date.to_string(self.date),
