@@ -308,19 +308,20 @@
     },
         tourUtils.goToCart({quantity: 2}),
         {
+            content: "Check for 2 products in cart",
             trigger:
                 '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         },
-    {
-        content: "Check for 2 products in cart and proceed to checkout",
-        trigger: 'a[href*="/shop/checkout"]',
-        run: "click",
-    },
-    ...tourUtils.assertCartAmounts({
-        taxes: '23.70',
-        untaxed: '158.00',
-        total: '181.70',
-    }),
+        ...tourUtils.assertCartAmounts({
+            taxes: "23.70",
+            untaxed: "158.00",
+            total: "181.70",
+        }),
+        {
+            content: "Proceed to checkout",
+            trigger: 'a[href*="/shop/checkout"]',
+            run: "click",
+        },
     {
         content: "Click on Sign in Button",
         trigger: `.oe_cart a:contains(Sign in)`,
