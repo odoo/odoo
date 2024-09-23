@@ -921,18 +921,25 @@ patch(PosOrder.prototype, {
         return { discountable, discountablePerTax };
     },
     /**
-     * @returns the order's cheapest line
+     * @param {loyalty.reward} reward
+     * @returns the cheapest line from all the lines where the program is applicable
      */
-    _getCheapestLine() {
+    _getCheapestLine(reward) {
         let cheapestLine;
+        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
         for (const line of this.get_orderlines().filter(
             (line) => line.combo_line_ids?.length === 0
         )) {
             if (line.reward_id || !line.get_quantity()) {
                 continue;
             }
-            if (!cheapestLine || cheapestLine.price_unit > line.price_unit) {
-                cheapestLine = line;
+            if (applicableProductIds.has(line.get_product().id)) {
+                if (
+                    !cheapestLine ||
+                    cheapestLine.product_id.lst_price > line.product_id.lst_price
+                ) {
+                    cheapestLine = line;
+                }
             }
         }
         return cheapestLine;
@@ -942,7 +949,7 @@ patch(PosOrder.prototype, {
      * @returns the discountable and discountable per tax for this discount on cheapest reward.
      */
     _getDiscountableOnCheapest(reward) {
-        const cheapestLine = this._getCheapestLine();
+        const cheapestLine = this._getCheapestLine(reward);
         if (!cheapestLine) {
             return { discountable: 0, discountablePerTax: {} };
         }
@@ -1026,7 +1033,7 @@ patch(PosOrder.prototype, {
             }
             let discountedLines = orderLines;
             if (lineReward.discount_applicability === "cheapest") {
-                cheapestLine = cheapestLine || this._getCheapestLine();
+                cheapestLine = cheapestLine || this._getCheapestLine(lineReward);
                 discountedLines = [cheapestLine];
             } else if (lineReward.discount_applicability === "specific") {
                 discountedLines = this._getSpecificDiscountableLines(lineReward);
