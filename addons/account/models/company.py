@@ -703,6 +703,21 @@ class ResCompany(models.Model):
         }
 
     @api.model
+    def setting_init_credit_card_account_action(self):
+        """ Called by the Financial configuration menu 'Add a credit card account' """
+        view_id = self.env.ref('account.setup_credit_card_account_wizard').id
+        context = {'dialog_size': 'medium', **self.env.context}
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Setup Credit Card Account'),
+            'res_model': 'account.setup.bank.manual.config',
+            'target': 'new',
+            'view_mode': 'form',
+            'views': [[view_id, 'form']],
+            'context': context,
+        }
+
+    @api.model
     def _get_default_opening_move_values(self):
         """ Get the default values to create the opening move.
 

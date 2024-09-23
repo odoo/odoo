@@ -12,7 +12,7 @@ class TestSetupWizard(AccountTestInvoicingCommon):
         """
         wizard = self.env['account.setup.bank.manual.config'].create([
             {
-                'num_journals_without_account': 1,
+                'num_journals_without_account_bank': 1,
                 'linked_journal_id': False,
                 'acc_number': 'BE15001559627230',
                 'bank_id': self.env['res.bank'].create({'name': 'Test bank'}).id,
