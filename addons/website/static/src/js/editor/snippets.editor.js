@@ -204,7 +204,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             for (const el of getFromEditable('.o_translation_without_style')) {
                 el.classList.remove('o_translation_without_style');
                 if (el.dataset.oeTranslationSaveSha) {
-                    el.dataset.oeTranslationInitialSha = el.dataset.oeTranslationSaveSha;
+                    el.dataset.oeTranslationSourceSha = el.dataset.oeTranslationSaveSha;
                     delete el.dataset.oeTranslationSaveSha;
                 }
             }
