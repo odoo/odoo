@@ -10,10 +10,10 @@
                 <templates>
                     <t t-name="card" class="row g-0">
                         <aside class="col-2">
-                            <field name="badge_id" widget="image" options="{'preview_image': 'image_1024'}" t-att-title="badge_name" t-att-alt="badge_name" />
+                            <field name="badge_id" widget="image" options="{'preview_image': 'image_1024'}" t-att-alt="record.badge_name.value" />
                         </aside>
                         <main class="col ps-2">
-                            <field class="fw-bold fs-5 mt0 mb0" type="open" name="badge_name"/>
+                            <field class="fw-bold fs-5" type="open" name="badge_name"/>
                             <field name="comment"/>
                             <p>Granted by <field name="create_uid" /> the <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')" /></p>
                         </main>
