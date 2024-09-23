@@ -173,7 +173,9 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         this.$indicator.on('click.gallery_slider', '> li:not([data-bs-slide-to])', function () {
             page += ($(this).hasClass('o_indicators_left') ? -1 : 1);
             page = Math.max(0, Math.min(nbPages - 1, page)); // should not be necessary
-            self.$carousel.carousel(page * realNbPerPage);
+            // TODO: visp test it correctly
+            const carousel = window.Carousel.getOrCreateInstance(self.$carousel[0]);
+            carousel.to(page * realNbPerPage);
             // We dont use hide() before the slide animation in the editor because there is a traceback
             // TO DO: fix this traceback
             if (!self.editableMode) {
