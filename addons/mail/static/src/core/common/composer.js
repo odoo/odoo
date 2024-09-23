@@ -137,9 +137,10 @@ export class Composer extends Component {
         if (this.props.messageEdition) {
             this.props.messageEdition.composerOfThread = this;
         }
-        useChildSubEnv({
-            inComposer: true,
-        });
+        if (this.env.messageComposerResize) {
+            this.env.messageComposerResize.invoke = this.resize.bind(this);
+        }
+        useChildSubEnv({ inComposer: true });
         this.picker = usePicker(this.pickerSettings);
         useEffect(
             (focus) => {
@@ -160,10 +161,7 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
-                if (this.fakeTextarea.el.scrollHeight) {
-                    this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
-                }
-                this.saveContentDebounced();
+                this.resize();
             },
             () => [this.props.composer.text, this.ref.el]
         );
@@ -183,6 +181,13 @@ export class Composer extends Component {
                 this.restoreContent();
             }
         });
+    }
+
+    resize() {
+        if (this.fakeTextarea.el?.scrollHeight) {
+            this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+        }
+        this.saveContentDebounced();
     }
 
     get pickerSettings() {

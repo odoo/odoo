@@ -23,6 +23,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useSubEnv,
 } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
@@ -128,6 +129,21 @@ export class Message extends Component {
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        useSubEnv({ messageComposerResize: {} }); // sub-composer expected to register its resize function as `invoke`
+        const messageBodyResizeObserver = new ResizeObserver(() => {
+            if (this.messageBody.el) {
+                this.shrinkWrap(this.messageBody.el);
+            }
+        });
+        useEffect(
+            (el) => {
+                messageBodyResizeObserver.observe(el);
+                return () => {
+                    messageBodyResizeObserver.unobserve(el);
+                };
+            },
+            () => [this.root.el]
+        );
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
@@ -190,6 +206,27 @@ export class Message extends Component {
                 this.message.body,
             ]
         );
+    }
+
+    /** Courtesy of https://stackoverflow.com/a/78307608 */
+    shrinkWrap(element) {
+        const { firstChild, lastChild } = element;
+        if (!element || !firstChild || !lastChild) {
+            return;
+        }
+        element.style.width = "auto";
+        element.style.boxSizing = "auto";
+        if (this.state.isEditing) {
+            // Composer resize happens before message resize, so need to resize composer again
+            this.env.messageComposerResize?.invoke();
+            return;
+        }
+        const range = document.createRange();
+        range.setStartBefore(firstChild);
+        range.setEndAfter(lastChild);
+        const { width } = range.getBoundingClientRect();
+        element.style.width = width + "px";
+        element.style.boxSizing = "content-box";
     }
 
     get attClass() {
