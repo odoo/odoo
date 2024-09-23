@@ -3,11 +3,11 @@
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%), rgba($primary, .3), rgba($primary, .3), lighten($link-color, 10%));
+    @include o-mention-variant(rgba(lighten($o-action, 5%), .1), rgba(lighten($o-action, 5%), .15), lighten($o-action, 5%), rgba(lighten($o-action, 5%), .2), rgba(lighten($o-action, 5%), .3), lighten($o-action, 10%));
 }
 
 a.o-discuss-mention {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%), rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%));
+    @include o-mention-variant(rgba(lighten($o-action, 5%), .1), rgba(lighten($o-action, 5%), .15), lighten($o-action, 5%), rgba(lighten($o-action, 5%), .1), rgba(lighten($o-action, 5%), .15), lighten($o-action, 5%));
 }
 
 .o-mail-DiscussSystray-class {
