@@ -555,6 +555,10 @@
                     background: $o-we-dropdown-item-bg-hover;
                     color: $o-we-dropdown-item-hover-color;
                 }
+                &.active {
+                    background: $o-we-dropdown-item-active-bg;
+                    color: $o-we-dropdown-item-active-color;
+                }
             }
 
             .o_we_font_size_badge {
@@ -725,6 +729,8 @@
                     justify-content: space-between;
 
                     span {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                         color: white;
 
                         pre, blockquote {
