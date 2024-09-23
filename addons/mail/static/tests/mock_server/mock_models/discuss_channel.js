@@ -752,6 +752,7 @@ export class DiscussChannel extends models.ServerModel {
                 })
                 .map((channel) => {
                     // expected format
+                    const parentChannel = this.browse(channel.parent_channel_id);
                     return {
                         authorizedGroupFullName: channel.group_public_id
                             ? channel.group_public_id.name
@@ -760,6 +761,9 @@ export class DiscussChannel extends models.ServerModel {
                         id: channel.id,
                         model: "discuss.channel",
                         name: channel.name,
+                        parent_channel_id: parentChannel.length
+                            ? { id: parentChannel[0].id, model: "discuss.channel" }
+                            : false,
                     };
                 });
             // reduce results to max limit
