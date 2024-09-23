@@ -47,7 +47,7 @@ class ProductProduct(models.Model):
 
         qty_by_product_location, qty_by_product_wh = super()._get_quantity_in_progress(location_ids, warehouse_ids)
         domain = self._get_lines_domain(location_ids, warehouse_ids)
-        groups = self.env['purchase.order.line']._read_group(domain,
+        groups = self.env['purchase.order.line'].sudo()._read_group(domain,
             ['order_id', 'product_id', 'product_uom', 'orderpoint_id', 'location_final_id'],
             ['product_qty:sum'])
         for order, product, uom, orderpoint, location_final, product_qty_sum in groups:
