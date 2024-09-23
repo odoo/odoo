@@ -161,7 +161,7 @@ class Department(models.Model):
             'name': _("Employees"),
             'type': 'ir.actions.act_window',
             'res_model': res_model,
-            'view_mode': 'tree,kanban,form',
+            'view_mode': 'list,kanban,form',
             'search_view_id': [search_view_id, 'search'],
             'context': {
                 'searchpanel_default_department_id': self.id,
