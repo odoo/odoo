@@ -9,7 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.addons.account.models.account_tax import TYPE_TAX_USE
 from odoo.addons.account.models.account_account import ACCOUNT_CODE_REGEX
-from odoo.tools import html_escape
+from odoo.tools import float_compare, html_escape
 
 import logging
 import re
@@ -138,11 +138,15 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
             return (
                     tax.amount_type == template.amount_type
-                    and tax.amount == template.amount
+                    and float_compare(tax.amount, template.amount, precision_digits=4) == 0
                     and (
                          len(tax_rep_lines) == len(template_rep_lines)
                          and all(
-                             rep_line_tax.factor_percent == rep_line_template.factor_percent
+                             float_compare(
+                                 rep_line_tax.factor_percent,
+                                 rep_line_template.factor_percent,
+                                 precision_digits=4
+                             ) == 0
                              for rep_line_tax, rep_line_template in zip(tax_rep_lines, template_rep_lines)
                          )
                     )
