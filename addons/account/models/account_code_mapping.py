@@ -36,7 +36,7 @@ class AccountCodeMapping(models.Model):
             case [('account_id', 'in', account_ids)]:
                 self_ids = {
                     f'{account_id},{company.id}'
-                    for company in self.env.companies
+                    for company in self.env.user.company_ids
                     for account_id in account_ids
                 }
                 return self.browse(sorted(self_ids))._as_query()

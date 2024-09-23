@@ -138,6 +138,9 @@ class AccountAccount(models.Model):
                                help="If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
                                     "If not, this account will belong to Trade Receivable/Payable in reports and filters.")
 
+    # Form view: show code mapping tab or not
+    display_mapping_tab = fields.Boolean(default=lambda self: len(self.env.user.company_ids) > 1, store=False)
+
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         if fname == 'internal_group':
             return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
@@ -242,13 +245,16 @@ class AccountAccount(models.Model):
                 account=account.display_name
             ))
 
-    @api.constrains('company_ids')
+    @api.constrains('company_ids', 'account_type')
     def _check_company_consistency(self):
         if accounts_without_company := self.filtered(lambda a: not a.sudo().company_ids):
             raise ValidationError(
                 _("The following accounts must be assigned to at least one company:")
                 + "\n" + "\n".join(f"- {account.display_name}" for account in accounts_without_company)
             )
+        if self.filtered(lambda a: a.account_type == 'asset_cash' and len(a.company_ids) > 1):
+            raise ValidationError(_("Bank & Cash accounts cannot be shared between companies."))
+
         for companies, accounts in self.grouped(lambda a: a.company_ids).items():
             if self.env['account.move.line'].sudo().search_count([
                 ('account_id', 'in', accounts.ids),
@@ -952,10 +958,10 @@ class AccountAccount(models.Model):
             for company in account.company_ids:
                 if not account.with_company(company).code:
                     raise ValidationError(_("The code must be set for every company to which this account belongs."))
-        accounts_with_code = accounts.filtered(lambda a: a.code)
-        accounts_by_code = accounts_with_code.grouped('code')
+        accounts_to_check = accounts.filtered(lambda a: a.code and self.env.company in a.company_ids)
+        accounts_by_code = accounts_to_check.grouped('code')
         duplicate_codes = None
-        if len(accounts_by_code) < len(accounts_with_code):
+        if len(accounts_by_code) < len(accounts_to_check):
             duplicate_codes = [code for code, accounts in accounts_by_code.items() if len(accounts) > 1]
         # search for duplicates of self in database
         elif duplicates := self.sudo().search_fetch(
