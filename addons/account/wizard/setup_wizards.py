@@ -79,16 +79,17 @@ class AccountSetupBankManualConfig(models.TransientModel):
         comodel_name='account.journal', inverse='set_linked_journal_id',
         compute="_compute_linked_journal_id",
         check_company=True,
-        domain=[('type', '=', 'bank'), ('bank_account_id', '=', False)])
+    )
     bank_bic = fields.Char(related='bank_id.bic', readonly=False, string="Bic")
-    num_journals_without_account = fields.Integer(default=lambda self: self._number_unlinked_journal())
+    num_journals_without_account_bank = fields.Integer(default=lambda self: self._number_unlinked_journal('bank'))
+    num_journals_without_account_credit = fields.Integer(default=lambda self: self._number_unlinked_journal('credit'))
     company_id = fields.Many2one('res.company', required=True, compute='_compute_company_id')
 
-    def _number_unlinked_journal(self):
+    def _number_unlinked_journal(self, journal_type):
         return self.env['account.journal'].search_count([
-            ('type', '=', 'bank'),
+            ('type', '=', journal_type),
             ('bank_account_id', '=', False),
-            ('id', '!=', self.default_linked_journal_id()),
+            ('id', '!=', self.default_linked_journal_id(journal_type)),
         ])
 
     @api.onchange('acc_number')
@@ -107,7 +108,7 @@ class AccountSetupBankManualConfig(models.TransientModel):
             vals['new_journal_name'] = vals['acc_number']
 
             # If no bank has been selected, but we have a bic, we are using it to find or create the bank
-            if not vals['bank_id'] and vals['bank_bic']:
+            if not vals.get('bank_id') and vals.get('bank_bic'):
                 vals['bank_id'] = self.env['res.bank'].search([('bic', '=', vals['bank_bic'])], limit=1).id \
                                   or self.env['res.bank'].create({'name': vals['bank_bic'], 'bic': vals['bank_bic']}).id
 
@@ -121,28 +122,41 @@ class AccountSetupBankManualConfig(models.TransientModel):
 
     @api.depends('journal_id')  # Despite its name, journal_id is actually a One2many field
     def _compute_linked_journal_id(self):
+        journal_type = self.env.context.get('journal_type', 'bank')
         for record in self:
-            record.linked_journal_id = record.journal_id and record.journal_id[0] or record.default_linked_journal_id()
+            record.linked_journal_id = record.journal_id and record.journal_id[0] or record.default_linked_journal_id(journal_type)
 
-    def default_linked_journal_id(self):
-        for journal_id in self.env['account.journal'].search([('type', '=', 'bank'), ('bank_account_id', '=', False)]):
-            empty_journal_count = self.env['account.move'].search_count([('journal_id', '=', journal_id.id)])
-            if empty_journal_count == 0:
-                return journal_id.id
-        return False
+    def default_linked_journal_id(self, journal_type):
+        journals_with_moves = self.env['account.move'].search_fetch(
+            [
+                ('journal_id', '!=', False),
+                ('journal_id.type', '=', journal_type),
+            ],
+            ['journal_id'],
+        ).journal_id
+
+        return self.env['account.journal'].search(
+            [
+                ('type', '=', journal_type),
+                ('bank_account_id', '=', False),
+                ('id', 'not in', journals_with_moves.ids),
+            ],
+            limit=1,
+        ).id
 
     def set_linked_journal_id(self):
         """ Called when saving the wizard.
         """
+        journal_type = self.env.context.get('journal_type', 'bank')
         for record in self:
             selected_journal = record.linked_journal_id
             if not selected_journal:
-                new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company)
+                new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code(journal_type, self.env.company)
                 company = self.env.company
                 record.linked_journal_id = self.env['account.journal'].create({
                     'name': record.new_journal_name,
                     'code': new_journal_code,
-                    'type': 'bank',
+                    'type': journal_type,
                     'company_id': company.id,
                     'bank_account_id': record.res_partner_bank_id.id,
                     'bank_statements_source': 'undefined',
