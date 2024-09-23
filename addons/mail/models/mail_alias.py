@@ -94,9 +94,7 @@ class Alias(models.Model):
         ], compute='_compute_alias_status', store=True,
         help='Alias status assessed on the last message received.')
 
-    _sql_constraints = [
-        ('name_domain_unique', 'UNIQUE INDEX (alias_name, COALESCE(alias_domain_id, 0))'),
-    ]
+    _name_domain_unique = models.UniqueIndex('(alias_name, COALESCE(alias_domain_id, 0))')
 
     @api.constrains('alias_domain_id', 'alias_force_thread_id', 'alias_parent_model_id',
                     'alias_parent_thread_id', 'alias_model_id')

@@ -56,17 +56,18 @@ class AccountEdiProxyClientUser(models.Model):
         string='EDI operating mode',
     )
 
-    _sql_constraints = [
-        ('unique_id_client',
-         'unique(id_client)',
-         'This id_client is already used on another user.'),
-        ('unique_active_edi_identification',
-         'unique index (edi_identification, proxy_type, edi_mode) WHERE (active = TRUE)',
-         'This edi identification is already assigned to an active user'),
-        ('unique_active_company_proxy',
-         'unique index (company_id, proxy_type, edi_mode) WHERE (active = TRUE)',
-         'This company has an active user already created for this EDI type'),
-    ]
+    _unique_id_client = models.Constraint(
+        'unique(id_client)',
+        'This id_client is already used on another user.',
+    )
+    _unique_active_edi_identification = models.UniqueIndex(
+        '(edi_identification, proxy_type, edi_mode) WHERE (active = TRUE)',
+        'This edi identification is already assigned to an active user',
+    )
+    _unique_active_company_proxy = models.UniqueIndex(
+        '(company_id, proxy_type, edi_mode) WHERE (active = TRUE)',
+        'This company has an active user already created for this EDI type',
+    )
 
     def _get_proxy_urls(self):
         # To extend

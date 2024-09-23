@@ -11,22 +11,14 @@ class AccountMove(models.Model):
 
     _inherit = "account.move"
 
-    _sql_constraints = [
-        (
-            'unique_name',
-            "UNIQUE INDEX (name, journal_id)"
-            " WHERE (state = 'posted' AND name != '/'"
-            " AND (l10n_latam_document_type_id IS NULL OR move_type NOT IN ('in_invoice', 'in_refund', 'in_receipt')))",
-            "Another entry with the same name already exists.",
-        ),
-        (
-            'unique_name_latam',
-            "UNIQUE INDEX (name, commercial_partner_id, l10n_latam_document_type_id, company_id)"
-            " WHERE (state = 'posted' AND name != '/'"
-            " AND (l10n_latam_document_type_id IS NOT NULL AND move_type IN ('in_invoice', 'in_refund', 'in_receipt')))",
-            "Another entry with the same name already exists.",
-        ),
-    ]
+    _unique_name = models.UniqueIndex(
+        "(name, journal_id) WHERE (state = 'posted' AND name != '/' AND (l10n_latam_document_type_id IS NULL OR move_type NOT IN ('in_invoice', 'in_refund', 'in_receipt')))",
+        'Another entry with the same name already exists.',
+    )
+    _unique_name_latam = models.UniqueIndex(
+        "(name, commercial_partner_id, l10n_latam_document_type_id, company_id) WHERE (state = 'posted' AND name != '/' AND (l10n_latam_document_type_id IS NOT NULL AND move_type IN ('in_invoice', 'in_refund', 'in_receipt')))",
+        'Another entry with the same name already exists.',
+    )
 
     def _auto_init(self):
         # Skip the computation of the field `l10n_latam_document_type_id` at the module installation

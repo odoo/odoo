@@ -17,9 +17,10 @@ class Tour(models.Model):
     custom = fields.Boolean(string="Custom")
     user_consumed_ids = fields.Many2many("res.users")
 
-    _sql_constraints = [
-        ('uniq_name', 'unique(name)', "A tour already exists with this name . Tour's name must be unique!"),
-    ]
+    _uniq_name = models.Constraint(
+        'unique(name)',
+        "A tour already exists with this name . Tour's name must be unique!",
+    )
 
     @api.depends("name")
     def _compute_sharing_url(self):

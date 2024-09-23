@@ -687,21 +687,15 @@ class AccountMove(models.Model):
         search='_search_next_payment_date',
     )
 
-    _sql_constraints = [
-        ('checked_idx', "INDEX (journal_id) WHERE (checked = FALSE)"),
-        ('payment_idx', "INDEX (journal_id, state, payment_state, move_type, date)"),
-        (
-            'unique_name',
-            "UNIQUE INDEX (name, journal_id) WHERE (state = 'posted'AND name != '/')",
-            "Another entry with the same name already exists.",
-        ),
-        ('journal_id_company_id_idx', "INDEX (journal_id, company_id, date)"),
-        (
-            # used in <account.journal>._query_has_sequence_holes
-            'made_gaps',
-            "INDEX (journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap = TRUE)",
-        ),
-    ]
+    _checked_idx = models.Index('(journal_id) WHERE (checked = FALSE)')
+    _payment_idx = models.Index('(journal_id, state, payment_state, move_type, date)')
+    _unique_name = models.UniqueIndex(
+        "(name, journal_id) WHERE (state = 'posted'AND name != '/')",
+        'Another entry with the same name already exists.',
+    )
+    _journal_id_company_id_idx = models.Index('(journal_id, company_id, date)')
+    _made_gaps = models.Index(
+        '(journal_id, state, payment_state, move_type, date) WHERE (made_sequence_gap = TRUE)')
 
     def _auto_init(self):
         super()._auto_init()

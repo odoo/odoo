@@ -37,9 +37,10 @@ class IrConfigParameter(models.Model):
     key = fields.Char(required=True)
     value = fields.Text(required=True)
 
-    _sql_constraints = [
-        ('key_uniq', 'unique (key)', 'Key must be unique.')
-    ]
+    _key_uniq = models.Constraint(
+        'unique (key)',
+        'Key must be unique.',
+    )
 
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):

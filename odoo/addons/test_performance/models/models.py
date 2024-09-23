@@ -54,9 +54,10 @@ class LineModel(models.Model):
     base_id = fields.Many2one('test_performance.base', required=True, ondelete='cascade')
     value = fields.Integer()
 
-    _sql_constraints = [
-        ('line_uniq', 'UNIQUE INDEX (base_id, value)', "base_id and value should be unique"),
-    ]
+    _line_uniq = models.UniqueIndex(
+        '(base_id, value)',
+        'base_id and value should be unique',
+    )
 
 
 class TagModel(models.Model):

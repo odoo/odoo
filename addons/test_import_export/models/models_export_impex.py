@@ -162,10 +162,8 @@ class OnlyOne(models.Model):
     value2 = fields.Integer()
     value3 = fields.Integer()
 
-    _sql_constraints = [
-        ('value_unique', 'unique (value)', ""),
-        ('pair_unique', 'unique (value2, value3)', ""),
-    ]
+    _value_unique = models.Constraint('unique (value)')
+    _pair_unique = models.Constraint('unique (value2, value3)')
 
 
 class InheritsParent(models.Model):

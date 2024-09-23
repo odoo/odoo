@@ -18,9 +18,7 @@ class OnboardingProgressStep(models.Model):
 
     company_id = fields.Many2one('res.company', ondelete='cascade')
 
-    _sql_constraints = [
-        ('company_uniq', 'UNIQUE INDEX (step_id, COALESCE(company_id, 0))'),
-    ]
+    _company_uniq = models.UniqueIndex('(step_id, COALESCE(company_id, 0))')
 
     def action_consolidate_just_done(self):
         was_just_done = self.filtered(lambda progress: progress.step_state == 'just_done')

@@ -56,7 +56,10 @@ class IrActions(models.Model):
     _order = 'name'
     _allow_sudo_commands = False
 
-    _sql_constraints = [('path_unique', 'unique(path)', "Path to show in the URL must be unique! Please choose another one.")]
+    _path_unique = models.Constraint(
+        'unique(path)',
+        'Path to show in the URL must be unique! Please choose another one.',
+    )
 
     name = fields.Char(string='Action Name', required=True, translate=True)
     type = fields.Char(string='Action Type', required=True)
@@ -413,9 +416,7 @@ class IrActionsActWindowView(models.Model):
     _order = 'sequence,id'
     _allow_sudo_commands = False
 
-    _sql_constraints = [
-        ('unique_mode_per_action', 'UNIQUE INDEX (act_window_id, view_mode)'),
-    ]
+    _unique_mode_per_action = models.UniqueIndex('(act_window_id, view_mode)')
 
     sequence = fields.Integer()
     view_id = fields.Many2one('ir.ui.view', string='View')

@@ -49,12 +49,10 @@ class MailNotification(models.Model):
         ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 
-    _sql_constraints = [
-        # email notification: partner is required
-        ('notification_partner_required',
-         "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
-         'Customer is required for inbox / email notification'),
-    ]
+    _notification_partner_required = models.Constraint(
+        "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
+        'Customer is required for inbox / email notification',
+    )
 
     # ------------------------------------------------------------
     # CRUD
