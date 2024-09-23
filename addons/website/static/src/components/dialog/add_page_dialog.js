@@ -190,6 +190,10 @@ export class AddPageTemplatePreview extends Component {
                     /* Avoid the zoom's missing pixel. */
                     transform: scale(101%);
                 }
+                .o_animate {
+                    visibility: visible;
+                    animation-name: none;
+                }
             `;
             const cssText = document.createTextNode(css);
             styleEl.appendChild(cssText);
