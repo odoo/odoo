@@ -10,7 +10,10 @@ class PosNote(models.Model):
     name = fields.Char(required=True)
     sequence = fields.Integer('Sequence', default=1)
 
-    _sql_constraints = [('name_unique', 'unique (name)', "A note with this name already exists")]
+    _name_unique = models.Constraint(
+        'unique (name)',
+        'A note with this name already exists',
+    )
 
     @api.model
     def _load_pos_data_domain(self, data):

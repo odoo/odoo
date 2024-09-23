@@ -109,14 +109,18 @@ class LoyaltyReward(models.Model):
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     clear_wallet = fields.Boolean(default=False)
 
-    _sql_constraints = [
-        ('required_points_positive', 'CHECK (required_points > 0)',
-            'The required points for a reward must be strictly positive.'),
-        ('product_qty_positive', "CHECK (reward_type != 'product' OR reward_product_qty > 0)",
-            'The reward product quantity must be strictly positive.'),
-        ('discount_positive', "CHECK (reward_type != 'discount' OR discount > 0)",
-            'The discount must be strictly positive.'),
-    ]
+    _required_points_positive = models.Constraint(
+        'CHECK (required_points > 0)',
+        'The required points for a reward must be strictly positive.',
+    )
+    _product_qty_positive = models.Constraint(
+        "CHECK (reward_type != 'product' OR reward_product_qty > 0)",
+        'The reward product quantity must be strictly positive.',
+    )
+    _discount_positive = models.Constraint(
+        "CHECK (reward_type != 'discount' OR discount > 0)",
+        'The discount must be strictly positive.',
+    )
 
     @api.depends('reward_product_id.product_tmpl_id.uom_id', 'reward_product_tag_id')
     def _compute_reward_product_uom_id(self):

@@ -19,8 +19,10 @@ class EventBoothRegistration(models.Model):
     contact_email = fields.Char(string='Contact Email', compute='_compute_contact_email', readonly=False, store=True)
     contact_phone = fields.Char(string='Contact Phone', compute='_compute_contact_phone', readonly=False, store=True)
 
-    _sql_constraints = [('unique_registration', 'unique(sale_order_line_id, event_booth_id)',
-                         'There can be only one registration for a booth by sale order line')]
+    _unique_registration = models.Constraint(
+        'unique(sale_order_line_id, event_booth_id)',
+        'There can be only one registration for a booth by sale order line',
+    )
 
     @api.depends('partner_id')
     def _compute_contact_name(self):

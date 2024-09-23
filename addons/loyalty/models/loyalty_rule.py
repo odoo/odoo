@@ -74,9 +74,10 @@ class LoyaltyRule(models.Model):
     ], string="Application", compute='_compute_mode', store=True, readonly=False)
     code = fields.Char(string='Discount code', compute='_compute_code', store=True, readonly=False)
 
-    _sql_constraints = [
-        ('reward_point_amount_positive', 'CHECK (reward_point_amount > 0)', 'Rule points reward must be strictly positive.'),
-    ]
+    _reward_point_amount_positive = models.Constraint(
+        'CHECK (reward_point_amount > 0)',
+        'Rule points reward must be strictly positive.',
+    )
 
     @api.constrains('reward_point_split')
     def _constraint_trigger_multi(self):

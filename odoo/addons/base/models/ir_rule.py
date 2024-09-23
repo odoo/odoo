@@ -27,11 +27,10 @@ class IrRule(models.Model):
     perm_create = fields.Boolean(string='Create', default=True)
     perm_unlink = fields.Boolean(string='Delete', default=True)
 
-    _sql_constraints = [
-        ('no_access_rights',
-         'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)',
-         'Rule must have at least one checked access right!'),
-    ]
+    _no_access_rights = models.Constraint(
+        'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)',
+        "Rule must have at least one checked access right!",
+    )
 
     @api.model
     def _eval_context(self):

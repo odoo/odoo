@@ -702,9 +702,10 @@ class StockPicking(models.Model):
         search='_search_date_category', readonly=True
     )
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique(name, company_id)',
+        'Reference must be unique per company!',
+    )
 
     def _compute_has_tracking(self):
         for picking in self:

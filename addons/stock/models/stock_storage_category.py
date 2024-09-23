@@ -21,9 +21,10 @@ class StockStorageCategory(models.Model):
     company_id = fields.Many2one('res.company', 'Company')
     weight_uom_name = fields.Char(string='Weight unit', compute='_compute_weight_uom_name')
 
-    _sql_constraints = [
-        ('positive_max_weight', 'CHECK(max_weight >= 0)', 'Max weight should be a positive number.'),
-    ]
+    _positive_max_weight = models.Constraint(
+        'CHECK(max_weight >= 0)',
+        'Max weight should be a positive number.',
+    )
 
     @api.depends('capacity_ids')
     def _compute_storage_capacity_ids(self):
@@ -58,8 +59,15 @@ class StockStorageCategoryCapacity(models.Model):
     product_uom_id = fields.Many2one(related='product_id.uom_id')
     company_id = fields.Many2one('res.company', 'Company', related="storage_category_id.company_id")
 
-    _sql_constraints = [
-        ('positive_quantity', 'CHECK(quantity > 0)', 'Quantity should be a positive number.'),
-        ('unique_product', 'UNIQUE(product_id, storage_category_id)', 'Multiple capacity rules for one product.'),
-        ('unique_package_type', 'UNIQUE(package_type_id, storage_category_id)', 'Multiple capacity rules for one package type.'),
-    ]
+    _positive_quantity = models.Constraint(
+        'CHECK(quantity > 0)',
+        'Quantity should be a positive number.',
+    )
+    _unique_product = models.Constraint(
+        'UNIQUE(product_id, storage_category_id)',
+        'Multiple capacity rules for one product.',
+    )
+    _unique_package_type = models.Constraint(
+        'UNIQUE(package_type_id, storage_category_id)',
+        'Multiple capacity rules for one package type.',
+    )

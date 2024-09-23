@@ -432,15 +432,14 @@ actual arch.
         if self._has_cycle('inherit_id'):
             raise ValidationError(_('You cannot create recursive inherited views.'))
 
-    _sql_constraints = [
-        ('inheritance_mode',
-         "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
-         "Invalid inheritance mode: if the mode is 'extension', the view must"
-         " extend an other view"),
-        ('qweb_required_key',
-         "CHECK (type != 'qweb' OR key IS NOT NULL)",
-         "Invalid key: QWeb view should have a key"),
-    ]
+    _inheritance_mode = models.Constraint(
+        "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
+        "Invalid inheritance mode: if the mode is 'extension', the view must extend an other view",
+    )
+    _qweb_required_key = models.Constraint(
+        "CHECK (type != 'qweb' OR key IS NOT NULL)",
+        "Invalid key: QWeb view should have a key",
+    )
     _model_type_inherit_id = models.Index('(model, inherit_id)')
 
     def _compute_defaults(self, values):

@@ -17,6 +17,7 @@ class HrEmployeeCategory(models.Model):
     color = fields.Integer(string='Color Index', default=_get_default_color)
     employee_ids = fields.Many2many('hr.employee', 'employee_category_rel', 'category_id', 'employee_id', string='Employees')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists!"),
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        'Tag name already exists!',
+    )

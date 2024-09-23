@@ -28,10 +28,10 @@ class MailingSubscription(models.Model):
     message_bounce = fields.Integer(related='contact_id.message_bounce', store=False, readonly=False)
     is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False, readonly=False)
 
-    _sql_constraints = [
-        ('unique_contact_list', 'unique (contact_id, list_id)',
-         'A mailing contact cannot subscribe to the same mailing list multiple times.')
-    ]
+    _unique_contact_list = models.Constraint(
+        'unique (contact_id, list_id)',
+        'A mailing contact cannot subscribe to the same mailing list multiple times.',
+    )
 
     @api.depends('opt_out')
     def _compute_opt_out_datetime(self):

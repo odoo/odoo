@@ -24,9 +24,10 @@ class AccountEdiFormat(models.Model):
     name = fields.Char()
     code = fields.Char(required=True)
 
-    _sql_constraints = [
-        ('unique_code', 'unique (code)', 'This code already exists')
-    ]
+    _unique_code = models.Constraint(
+        'unique (code)',
+        'This code already exists',
+    )
 
     ####################################################
     # Low-level methods

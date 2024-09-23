@@ -56,11 +56,10 @@ class LunchAlert(models.Model):
 
     location_ids = fields.Many2many('lunch.location', string='Location')
 
-    _sql_constraints = [
-        ('notification_time_range',
-            'CHECK(notification_time >= 0 and notification_time <= 12)',
-            'Notification time must be between 0 and 12')
-    ]
+    _notification_time_range = models.Constraint(
+        'CHECK(notification_time >= 0 and notification_time <= 12)',
+        'Notification time must be between 0 and 12',
+    )
 
     @api.depends('mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun')
     def _compute_available_today(self):

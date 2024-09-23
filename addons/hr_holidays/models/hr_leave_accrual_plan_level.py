@@ -136,23 +136,22 @@ class HrLeaveAccrualLevel(models.Model):
         default='day', string="Accrual Validity Type", required=True,
         help="This field defines the unit of time after which the accrual ends.")
 
-    _sql_constraints = [
-        ('check_dates',
-         "CHECK( (frequency IN ('daily', 'hourly')) or"
-         "(week_day IS NOT NULL AND frequency = 'weekly') or "
-         "(first_day > 0 AND second_day > first_day AND first_day <= 31 AND second_day <= 31 AND frequency = 'bimonthly') or "
-         "(first_day > 0 AND first_day <= 31 AND frequency = 'monthly')or "
-         "(first_month_day > 0 AND first_month_day <= 31 AND second_month_day > 0 AND second_month_day <= 31 AND frequency = 'biyearly') or "
-         "(yearly_day > 0 AND yearly_day <= 31 AND frequency = 'yearly'))",
-         "The dates you've set up aren't correct. Please check them."),
-        ('start_count_check', "CHECK( start_count >= 0 )", "You can not start an accrual in the past."),
-        ('added_value_greater_than_zero', 'CHECK(added_value > 0)', "You must give a rate greater than 0 in accrual plan levels."),
-        (
-            'valid_yearly_cap_value',
-            'CHECK(cap_accrued_time_yearly IS NOT TRUE OR COALESCE(maximum_leave_yearly, 0) > 0)',
-            "You cannot have a cap on yearly accrued time without setting a maximum amount."
-        ),
-    ]
+    _check_dates = models.Constraint(
+        "CHECK( (frequency IN ('daily', 'hourly')) or(week_day IS NOT NULL AND frequency = 'weekly') or (first_day > 0 AND second_day > first_day AND first_day <= 31 AND second_day <= 31 AND frequency = 'bimonthly') or (first_day > 0 AND first_day <= 31 AND frequency = 'monthly')or (first_month_day > 0 AND first_month_day <= 31 AND second_month_day > 0 AND second_month_day <= 31 AND frequency = 'biyearly') or (yearly_day > 0 AND yearly_day <= 31 AND frequency = 'yearly'))",
+        "The dates you've set up aren't correct. Please check them.",
+    )
+    _start_count_check = models.Constraint(
+        'CHECK( start_count >= 0 )',
+        'You can not start an accrual in the past.',
+    )
+    _added_value_greater_than_zero = models.Constraint(
+        'CHECK(added_value > 0)',
+        'You must give a rate greater than 0 in accrual plan levels.',
+    )
+    _valid_yearly_cap_value = models.Constraint(
+        'CHECK(cap_accrued_time_yearly IS NOT TRUE OR COALESCE(maximum_leave_yearly, 0) > 0)',
+        'You cannot have a cap on yearly accrued time without setting a maximum amount.',
+    )
 
     @api.constrains('cap_accrued_time', 'maximum_leave')
     def _check_maximum_leave(self):

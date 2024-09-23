@@ -83,13 +83,10 @@ class IrCron(models.Model):
     failure_count = fields.Integer(default=0, help="The number of consecutive failures of this job. It is automatically reset on success.")
     first_failure_date = fields.Datetime(string='First Failure Date', help="The first time the cron failed. It is automatically reset on success.")
 
-    _sql_constraints = [
-        (
-            'check_strictly_positive_interval',
-            'CHECK(interval_number > 0)',
-            'The interval number must be a strictly positive number.'
-        ),
-    ]
+    _check_strictly_positive_interval = models.Constraint(
+        'CHECK(interval_number > 0)',
+        "The interval number must be a strictly positive number.",
+    )
 
     @api.depends('ir_actions_server_id.name')
     def _compute_cron_name(self):

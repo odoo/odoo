@@ -124,9 +124,10 @@ class HrLeaveAllocation(models.Model):
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     expiring_carryover_days = fields.Float("The number of carried over days that will expire on carried_over_days_expiration_date")
     carried_over_days_expiration_date = fields.Date("Carried over days expiration date")
-    _sql_constraints = [
-        ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
-    ]
+    _duration_check = models.Constraint(
+        "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))",
+        'The duration must be greater than 0.',
+    )
 
     @api.constrains('date_from', 'date_to')
     def _check_date_from_date_to(self):

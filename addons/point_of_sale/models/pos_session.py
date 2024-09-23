@@ -92,7 +92,10 @@ class PosSession(models.Model):
     update_stock_at_closing = fields.Boolean('Stock should be updated at closing')
     bank_payment_ids = fields.One2many('account.payment', 'pos_session_id', 'Bank Payments', help='Account payments representing aggregated and bank split payments.')
 
-    _sql_constraints = [('uniq_name', 'unique(name)', "The name of this POS Session must be unique!")]
+    _uniq_name = models.Constraint(
+        'unique(name)',
+        'The name of this POS Session must be unique!',
+    )
 
     @api.model
     def _load_pos_data_relations(self, model, response):

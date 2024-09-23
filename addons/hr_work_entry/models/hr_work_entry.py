@@ -288,6 +288,7 @@ class HrUserWorkEntryEmployee(models.Model):
     employee_id = fields.Many2one('hr.employee', 'Employee', required=True)
     active = fields.Boolean('Active', default=True)
 
-    _sql_constraints = [
-        ('user_id_employee_id_unique', 'UNIQUE(user_id,employee_id)', 'You cannot have the same employee twice.')
-    ]
+    _user_id_employee_id_unique = models.Constraint(
+        'UNIQUE(user_id,employee_id)',
+        'You cannot have the same employee twice.',
+    )

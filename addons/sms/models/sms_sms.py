@@ -70,9 +70,10 @@ class SmsSms(models.Model):
         help='Will automatically be deleted, while notifications will not be deleted in any case.'
     )
 
-    _sql_constraints = [
-        ('uuid_unique', 'unique(uuid)', 'UUID must be unique'),
-    ]
+    _uuid_unique = models.Constraint(
+        'unique(uuid)',
+        'UUID must be unique',
+    )
 
     @api.depends('uuid')
     def _compute_sms_tracker_id(self):

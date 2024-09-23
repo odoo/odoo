@@ -22,15 +22,14 @@ class ResPartner(models.Model):
              "with receiving (and processing) the invoice.",
     )
 
-    _sql_constraints = [
-        ('l10n_it_codice_fiscale',
-            "CHECK(l10n_it_codice_fiscale IS NULL OR l10n_it_codice_fiscale = '' OR LENGTH(l10n_it_codice_fiscale) >= 11)",
-            "Codice fiscale must have between 11 and 16 characters."),
-
-        ('l10n_it_pa_index',
-            "CHECK(l10n_it_pa_index IS NULL OR l10n_it_pa_index = '' OR LENGTH(l10n_it_pa_index) >= 6)",
-            "Destination Code must have between 6 and 7 characters."),
-    ]
+    _l10n_it_codice_fiscale = models.Constraint(
+        "CHECK(l10n_it_codice_fiscale IS NULL OR l10n_it_codice_fiscale = '' OR LENGTH(l10n_it_codice_fiscale) >= 11)",
+        'Codice fiscale must have between 11 and 16 characters.',
+    )
+    _l10n_it_pa_index = models.Constraint(
+        "CHECK(l10n_it_pa_index IS NULL OR l10n_it_pa_index = '' OR LENGTH(l10n_it_pa_index) >= 6)",
+        'Destination Code must have between 6 and 7 characters.',
+    )
 
     def _l10n_it_edi_is_public_administration(self):
         """ Returns True if the destination of the FatturaPA belongs to the Public Administration. """

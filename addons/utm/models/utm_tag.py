@@ -20,6 +20,7 @@ class UtmTag(models.Model):
         string='Color Index', default=lambda self: self._default_color(),
         help='Tag color. No color means no display in kanban to distinguish internal tags from public categorization tags.')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists!"),
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        'Tag name already exists!',
+    )

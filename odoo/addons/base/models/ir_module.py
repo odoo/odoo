@@ -304,9 +304,10 @@ class IrModuleModule(models.Model):
     to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
     has_iap = fields.Boolean(compute='_compute_has_iap')
 
-    _sql_constraints = [
-        ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
-    ]
+    _name_uniq = models.Constraint(
+        'UNIQUE (name)',
+        "The name of the module must be unique!",
+    )
 
     def _compute_has_iap(self):
         for module in self:

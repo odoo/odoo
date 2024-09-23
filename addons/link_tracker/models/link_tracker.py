@@ -296,9 +296,10 @@ class LinkTrackerCode(models.Model):
     code = fields.Char(string='Short URL Code', required=True, store=True)
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
 
-    _sql_constraints = [
-        ('code', 'unique( code )', 'Code must be unique.')
-    ]
+    _code = models.Constraint(
+        'unique( code )',
+        'Code must be unique.',
+    )
 
     @api.model
     def _get_random_code_strings(self, n=1):
