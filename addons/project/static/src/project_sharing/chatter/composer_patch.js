@@ -12,10 +12,16 @@ patch(Composer.prototype, {
     },
 
     get isSendButtonDisabled() {
-        return !this.thread?.id || super.isSendButtonDisabled;
+        if (this.thread && !this.thread.id) {
+            return true;
+        }
+        return super.isSendButtonDisabled;
     },
 
     get allowUpload() {
-        return this.thread?.id && super.allowUpload;
+        if (this.thread && !this.thread.id) {
+            return false;
+        }
+        return super.allowUpload;
     },
 });
