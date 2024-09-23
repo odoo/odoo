@@ -131,9 +131,10 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             if (toastType === 'success') {
                 self._updateSubscribeControlsStatus(true);
 
-                const $popup = self.$el.closest('.o_newsletter_modal');
-                if ($popup.length) {
-                    $popup.modal('hide');
+                const popupEl = self.el.closest(".o_newsletter_modal");
+                if (popupEl) {
+                    const modal = Modal.getOrCreateInstance(popupEl);
+                    modal.hide();
                 }
             }
             self.notification.add(result.toast_content, {

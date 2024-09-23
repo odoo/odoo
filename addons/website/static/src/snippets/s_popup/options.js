@@ -75,7 +75,8 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     onTargetShow: async function () {
-        this.$bsTarget.modal('show');
+        const modal = Modal.getOrCreateInstance(this.$bsTarget[0]);
+        modal.show();
         $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
     },
     /**
@@ -94,7 +95,8 @@ options.registry.SnippetPopup = options.Class.extend({
             // The following line is in charge of hiding .s_popup at the same
             // time the modal is closed when the page is saved in edit mode.
             this.$target[0].closest('.s_popup').classList.add('d-none');
-            this.$bsTarget.modal('hide');
+            const modal = Modal.getOrCreateInstance(this.$bsTarget[0]);
+            modal.hide();
         });
     },
 
