@@ -23,6 +23,7 @@
                             >
                                 <div class="mb-3 rounded shadow" style="height:80px">
                                     <img
+                                        t-if="category.image_1920"
                                         t-att-src="image_data_uri(category.image_1920)"
                                         class="img-fluid w-100 h-100 object-fit-cover"
                                         alt=""

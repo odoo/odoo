@@ -397,14 +397,15 @@
         </div>
     </xpath>
     <xpath expr="//div[@data-js='MegaMenuLayout']" position="inside">
-        <we-row>
+        <t t-set="categories" t-value="request.env['product.public.category'].search([])"/>
+        <we-row t-if="categories">
             <we-title class="o_long_title">eCommerce Categories</we-title>
             <div class="o_switch ms-4">
                 <we-checkbox
                     class="o_mega_menu"
                     data-name="fetch_ecom_categories_opt"
                     data-select-class="fetchEcomCategories"
-                    data-refresh-mega-menu-template=""
+                    data-toggle-fetch-ecom-categories=""
                     data-no-preview="true"
                 />
             </div>
