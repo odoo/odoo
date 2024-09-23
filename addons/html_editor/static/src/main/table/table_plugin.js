@@ -704,6 +704,25 @@ export class TablePlugin extends Plugin {
                 this.selectTableCells(selection);
             }
         } else if (!traversedNodes.every((node) => closestElement(node.parentElement, "table"))) {
+            const endSelectionTable = closestElement(selection.focusNode, "table");
+            const endSelectionTableTds = endSelectionTable && getTableCells(endSelectionTable);
+            const traversedTds = new Set(traversedNodes.map((node) => closestElement(node, "td")));
+            const isTableFullySelected = endSelectionTableTds?.every((td) => traversedTds.has(td));
+            if (endSelectionTable && !isTableFullySelected) {
+                // Make sure all the cells are traversed in actual selection
+                // when selecting full table. If not, they will be selected
+                // forcefully and updateSelectionTable will be called again.
+                const targetTd =
+                    selection.direction === DIRECTIONS.RIGHT
+                        ? endSelectionTableTds.pop()
+                        : endSelectionTableTds.shift();
+                this.dependencies.selection.setSelection({
+                    anchorNode: selection.anchorNode,
+                    anchorOffset: selection.anchorOffset,
+                    focusNode: targetTd,
+                    focusOffset: selection.direction === DIRECTIONS.RIGHT ? nodeSize(targetTd) : 0,
+                });
+            }
             const traversedTables = new Set(
                 traversedNodes
                     .map((node) => closestElement(node, "table"))
