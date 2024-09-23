@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("EWalletProgramTour1", {
     test: true,
+    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -34,6 +35,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
 registry.category("web_tour.tours").add("EWalletProgramTour2", {
     test: true,
+    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -100,6 +102,7 @@ registry.category("web_tour.tours").add("EWalletProgramTour2", {
 
 registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
     test: true,
+    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -116,6 +119,7 @@ registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
 
 registry.category("web_tour.tours").add("PosLoyaltyPointsEwallet", {
     test: true,
+    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
