@@ -173,8 +173,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='number_of_days']/../.." position='before'>
                 <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}"
-                    t-att-title="record.employee_id.value"
-                    t-att-alt="record.employee_id.value"
                     class="o_image_64_cover float-start me-2 col-3"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="replace"/>
