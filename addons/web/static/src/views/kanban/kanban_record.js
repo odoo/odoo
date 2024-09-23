@@ -246,8 +246,10 @@ export class KanbanRecord extends Component {
         this.dataState.widget = {
             deletable,
             editable,
-            isHtmlEmpty,
         };
+        if (archInfo.isLegacyArch) {
+            this.dataState.widget.isHtmlEmpty = isHtmlEmpty;
+        }
     }
 
     getRecordClasses() {

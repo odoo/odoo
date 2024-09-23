@@ -10704,47 +10704,6 @@ test.tags("desktop")("quick create: keyboard navigation to buttons", async () =>
     expect(".o_kanban_edit").toBeFocused();
 });
 
-test("kanban with isHtmlEmpty method", async () => {
-    Product._fields.description = fields.Html();
-    Product._records.push({
-        id: 11,
-        name: "product 11",
-        description: "<span class='text-info'>hello</hello>",
-    });
-    Product._records.push({
-        id: 12,
-        name: "product 12",
-        description: "<p class='a'><span style='color:red;'/><br/></p>",
-    });
-
-    await mountView({
-        type: "kanban",
-        resModel: "product",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="display_name"/>
-                        <div class="test" t-if="!widget.isHtmlEmpty(record.description.raw_value)">
-                            <field name="description"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-        domain: [["id", "in", [11, 12]]],
-    });
-    expect(".o_kanban_record:first-child div.test").toHaveCount(1, {
-        message: "the container is displayed if description have actual content",
-    });
-    expect(queryText("span.text-info", { root: getKanbanRecord({ index: 0 }) })).toBe("hello", {
-        message: "the inner html content is rendered properly",
-    });
-    expect(".o_kanban_record:last-child div.test").toHaveCount(0, {
-        message:
-            "the container is not displayed if description just have formatting tags and no actual content",
-    });
-});
-
 test("progressbar filter state is kept unchanged when domain is updated (records still in group)", async () => {
     stepAllNetworkCalls();
 
