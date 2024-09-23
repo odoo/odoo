@@ -50,15 +50,6 @@ export function useActionLinks({ resModel, reload }) {
     const orm = useService("orm");
     const { doAction } = useService("action");
 
-    function checkAndCollapseBootstrap(target) {
-        // the handler should have stopped the Event
-        // But we still need to alert bootstrap if we need to
-        // This function should be removed when we get rid of bootstrap as a JS framework
-        if (target.dataset.bsToggle === "collapse") {
-            $(target).trigger("click.bs.collapse.data-api");
-        }
-    }
-
     async function handler(ev) {
         ev.preventDefault();
         ev.stopPropagation();
@@ -114,7 +105,6 @@ export function useActionLinks({ resModel, reload }) {
             }
             keepLast.add(doAction(action, options));
         }
-        checkAndCollapseBootstrap(target);
     }
 
     return (ev) => {
