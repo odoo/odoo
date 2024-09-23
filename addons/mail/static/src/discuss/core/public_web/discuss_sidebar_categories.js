@@ -2,6 +2,7 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_sidebar";
+import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_sidebar_channel_actions";
 import { useHover } from "@mail/utils/common/hooks";
 
 import { Component, useSubEnv } from "@odoo/owl";
@@ -20,39 +21,34 @@ export const discussSidebarChannelIndicatorsRegistry = registry.category(
 export class DiscussSidebarSubchannel extends Component {
     static template = "mail.DiscussSidebarSubchannel";
     static props = ["thread", "isFirst?"];
-    static components = { Dropdown };
+    static components = { DiscussSidebarChannelActions, Dropdown };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.hover = useHover(["root", "floating*"], {
-            onHover: () => (this.floating.isOpen = true),
-            onAway: () => (this.floating.isOpen = false),
+            onHover: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.floating.isOpen = true;
+                }
+            },
+            onAway: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.floating.isOpen = false;
+                }
+            },
+            stateObserver: () => [this.floating?.isOpen],
         });
         this.floating = useDropdownState();
+        this.showingActions = useDropdownState();
+    }
+
+    get actionsTitle() {
+        return _t("Threads Actions");
     }
 
     get thread() {
         return this.props.thread;
-    }
-
-    get commands() {
-        const commands = [];
-        if (this.thread.canUnpin) {
-            commands.push({
-                onSelect: () => this.thread.unpin(),
-                label: _t("Unpin Thread"),
-                icon: "oi oi-close",
-                sequence: 20,
-            });
-        }
-        return commands;
-    }
-
-    get sortedCommands() {
-        const commands = [...this.commands];
-        commands.sort((c1, c2) => c1.sequence - c2.sequence);
-        return commands;
     }
 
     /** @param {MouseEvent} ev */
@@ -65,16 +61,40 @@ export class DiscussSidebarSubchannel extends Component {
 export class DiscussSidebarChannel extends Component {
     static template = "mail.DiscussSidebarChannel";
     static props = ["thread"];
-    static components = { CountryFlag, DiscussSidebarSubchannel, Dropdown, ImStatus, ThreadIcon };
+    static components = {
+        CountryFlag,
+        DiscussSidebarChannelActions,
+        DiscussSidebarSubchannel,
+        Dropdown,
+        ImStatus,
+        ThreadIcon,
+    };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.hover = useHover(["root", "floating*"], {
-            onHover: () => (this.floating.isOpen = true),
-            onAway: () => (this.floating.isOpen = false),
+            onHover: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.floating.isOpen = true;
+                }
+            },
+            onAway: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.floating.isOpen = false;
+                }
+            },
+            stateObserver: () => [this.floating?.isOpen],
         });
         this.floating = useDropdownState();
+        this.showingActions = useDropdownState();
+    }
+
+    get actionsTitle() {
+        if (this.thread.channel_type === "channel") {
+            return _t("Channel Actions");
+        }
+        return _t("Chat Actions");
     }
 
     get attClass() {
@@ -106,33 +126,6 @@ export class DiscussSidebarChannel extends Component {
 
     get indicators() {
         return discussSidebarChannelIndicatorsRegistry.getAll();
-    }
-
-    get commands() {
-        const commands = [];
-        if (this.thread.canLeave) {
-            commands.push({
-                onSelect: () => this.thread.leaveChannel(),
-                label: _t("Leave Channel"),
-                icon: "oi oi-close",
-                sequence: 20,
-            });
-        }
-        if (this.thread.canUnpin) {
-            commands.push({
-                onSelect: () => this.thread.unpin(),
-                label: _t("Unpin Conversation"),
-                icon: "oi oi-close",
-                sequence: 20,
-            });
-        }
-        return commands;
-    }
-
-    get sortedCommands() {
-        const commands = [...this.commands];
-        commands.sort((c1, c2) => c1.sequence - c2.sequence);
-        return commands;
     }
 
     /** @returns {import("models").Thread} */
@@ -181,8 +174,16 @@ export class DiscussSidebarCategory extends Component {
         this.store = useService("mail.store");
         this.discusscorePublicWebService = useService("discuss.core.public.web");
         this.hover = useHover(["root", "floating*"], {
-            onHover: () => this.onHover(true),
-            onAway: () => this.onHover(false),
+            onHover: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.onHover(true);
+                }
+            },
+            onAway: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.onHover(false);
+                }
+            },
         });
         this.floating = useDropdownState();
     }
@@ -230,8 +231,16 @@ export class DiscussSidebarCategories extends Component {
         this.ui = useService("ui");
         this.command = useService("command");
         this.searchHover = useHover(["search-btn", "search-floating*"], {
-            onHover: () => (this.searchFloating.isOpen = true),
-            onAway: () => (this.searchFloating.isOpen = false),
+            onHover: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.searchFloating.isOpen = true;
+                }
+            },
+            onAway: () => {
+                if (this.store.discuss.isSidebarCompact) {
+                    this.searchFloating.isOpen = false;
+                }
+            },
         });
         this.searchFloating = useDropdownState();
         useSubEnv({

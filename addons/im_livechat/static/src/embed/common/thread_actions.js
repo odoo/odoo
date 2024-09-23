@@ -18,7 +18,7 @@ threadActionsRegistry.add("restart", {
     sequenceQuick: 15,
 });
 
-const callSettingsAction = threadActionsRegistry.get("settings");
+const callSettingsAction = threadActionsRegistry.get("call-settings");
 patch(callSettingsAction, {
     condition(component) {
         return component.thread?.channel_type === "livechat"

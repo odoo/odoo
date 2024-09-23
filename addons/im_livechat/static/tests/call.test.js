@@ -38,6 +38,6 @@ test("should display started a call message with operator livechat username", as
     setupChatHub({ opened: [channelId] });
     await start();
     await contains(".o-mail-ChatWindow", { text: "Visitor" });
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-mail-NotificationMessage", { text: "mitchell boss started a call.1:00 PM" });
 });

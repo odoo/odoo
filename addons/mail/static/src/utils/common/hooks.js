@@ -195,8 +195,11 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
     }
 
     if (stateObserver) {
-        useEffect(() => {
-            if (lastHoveredTarget && !lastHoveredTarget.ref.el) {
+        useEffect((open) => {
+            // Note: stateObserver is essentially used with useDropdownState()?.isOpen.
+            // While isOpen can become false, the ref.el can still be there for a short period of time.
+            // Relying on isOpen becoming false forces good syncing of isHover state on dropdown close.
+            if ((lastHoveredTarget && !lastHoveredTarget.ref.el) || !open) {
                 setHover(false);
                 lastHoveredTarget = null;
             }

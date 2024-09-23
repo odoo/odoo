@@ -56,7 +56,7 @@ test("can invite users in channel from chat window", async () => {
     await click(".o-dropdown-item", { text: "Invite People" });
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
-    await click("[title='Invite to Channel']:enabled");
+    await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(".o-mail-Thread .o-mail-NotificationMessage", {
         text: "Mitchell Admin invited TestPartner to the channel1:00 PM",
