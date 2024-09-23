@@ -1456,7 +1456,9 @@ class HolidaysRequest(models.Model):
                     holiday.check_access_rule('write')
 
                     # This handles states validate1 validate and refuse
-                    if holiday.employee_id == current_employee:
+                    if holiday.employee_id == current_employee\
+                            and self.env.user != holiday.employee_id.leave_manager_id\
+                            and not is_officer:
                         raise UserError(_('Only a Time Off Manager can approve/refuse its own requests.'))
 
                     if (state == 'validate1' and val_type == 'both') and holiday.holiday_type == 'employee':
