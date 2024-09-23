@@ -58,9 +58,9 @@ describe("select a full table on cross over", () => {
                 contentAfterEdit:
                     "<p>a[bc</p>" +
                     '<table class="o_selected_table"><tbody><tr>' +
-                    '<td class="o_selected_td">a]b</td>' +
+                    '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td>' +
+                    '<td class="o_selected_td">ef]</td>' +
                     "</tr></tbody></table>",
             });
         });
@@ -99,9 +99,9 @@ describe("select a full table on cross over", () => {
                     '<td class="o_selected_td">cd</td>' +
                     '<td class="o_selected_td">ef</td></tr></tbody></table>' +
                     '<p>abc</p><table class="o_selected_table"><tbody><tr>' +
-                    '<td class="o_selected_td">a]b</td>' +
+                    '<td class="o_selected_td">ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">ef</td></tr></tbody></table>',
+                    '<td class="o_selected_td">ef]</td></tr></tbody></table>',
             });
         });
 
@@ -273,13 +273,13 @@ describe("select a full table on cross over", () => {
                         <tbody>
                             <tr>
                                 <td class="o_selected_td">
-                                    <font style="color: aquamarine;">a]b</font>
+                                    <font style="color: aquamarine;">ab</font>
                                 </td>
                                 <td class="o_selected_td">
                                     <font style="color: aquamarine;">cd</font>
                                 </td>
                                 <td class="o_selected_td">
-                                    <font style="color: aquamarine;">ef</font>
+                                    <font style="color: aquamarine;">ef]</font>
                                 </td>
                             </tr>
                         </tbody>
@@ -389,13 +389,13 @@ describe("select a full table on cross over", () => {
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">a]b</font>
+                                <font style="color: aquamarine;">ab</font>
                             </td>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">cd</font>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef</font>
+                                <font style="color: aquamarine;">ef]</font>
                             </td>
                         </tr></tbody>
                     </table>`),
