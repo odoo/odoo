@@ -296,10 +296,14 @@ class ProjectTask(models.Model):
     )
     link_preview_name = fields.Char(compute='_compute_link_preview_name', export_string_translation=False)
 
-    _sql_constraints = [
-        ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent."),
-        ('private_task_has_no_parent', 'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL))', "A private task cannot have a parent."),
-    ]
+    _recurring_task_has_no_parent = models.Constraint(
+        'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))',
+        'A subtask cannot be recurrent.',
+    )
+    _private_task_has_no_parent = models.Constraint(
+        'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL))',
+        'A private task cannot have a parent.',
+    )
 
     @api.constrains('company_id', 'partner_id')
     def _ensure_company_consistency_with_partner(self):

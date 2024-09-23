@@ -17,6 +17,7 @@ class HrEmployeeSkillLog(models.Model):
     level_progress = fields.Integer(related='skill_level_id.level_progress', store=True, aggregator="avg")
     date = fields.Date(default=fields.Date.context_today)
 
-    _sql_constraints = [
-        ('_unique_skill_log', 'unique (employee_id, department_id, skill_id, date)', "Two levels for the same skill on the same day is not allowed"),
-    ]
+    __unique_skill_log = models.Constraint(
+        'unique (employee_id, department_id, skill_id, date)',
+        'Two levels for the same skill on the same day is not allowed',
+    )

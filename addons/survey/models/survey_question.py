@@ -177,23 +177,50 @@ class SurveyQuestion(models.Model):
         ]"""
     )
 
-    _sql_constraints = [
-        ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
-        ('positive_len_max', 'CHECK (validation_length_max >= 0)', 'A length must be positive!'),
-        ('validation_length', 'CHECK (validation_length_min <= validation_length_max)', 'Max length cannot be smaller than min length!'),
-        ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
-        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!'),
-        ('validation_datetime', 'CHECK (validation_min_datetime <= validation_max_datetime)', 'Max datetime cannot be smaller than min datetime!'),
-        ('positive_answer_score', 'CHECK (answer_score >= 0)', 'An answer score for a non-multiple choice question cannot be negative!'),
-        ('scored_datetime_have_answers', "CHECK (is_scored_question != True OR question_type != 'datetime' OR answer_datetime is not null)",
-            'All "Is a scored question = True" and "Question Type: Datetime" questions need an answer'),
-        ('scored_date_have_answers', "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
-            'All "Is a scored question = True" and "Question Type: Date" questions need an answer'),
-        ('scale', "CHECK (question_type != 'scale' OR (scale_min >= 0 AND scale_max <= 10 AND scale_min < scale_max))",
-            'The scale must be a growing non-empty range between 0 and 10 (inclusive)'),
-        ('is_time_limited_have_time_limit', "CHECK (is_time_limited != TRUE OR time_limit IS NOT NULL AND time_limit > 0)",
-            'All time-limited questions need a positive time limit'),
-    ]
+    _positive_len_min = models.Constraint(
+        'CHECK (validation_length_min >= 0)',
+        'A length must be positive!',
+    )
+    _positive_len_max = models.Constraint(
+        'CHECK (validation_length_max >= 0)',
+        'A length must be positive!',
+    )
+    _validation_length = models.Constraint(
+        'CHECK (validation_length_min <= validation_length_max)',
+        'Max length cannot be smaller than min length!',
+    )
+    _validation_float = models.Constraint(
+        'CHECK (validation_min_float_value <= validation_max_float_value)',
+        'Max value cannot be smaller than min value!',
+    )
+    _validation_date = models.Constraint(
+        'CHECK (validation_min_date <= validation_max_date)',
+        'Max date cannot be smaller than min date!',
+    )
+    _validation_datetime = models.Constraint(
+        'CHECK (validation_min_datetime <= validation_max_datetime)',
+        'Max datetime cannot be smaller than min datetime!',
+    )
+    _positive_answer_score = models.Constraint(
+        'CHECK (answer_score >= 0)',
+        'An answer score for a non-multiple choice question cannot be negative!',
+    )
+    _scored_datetime_have_answers = models.Constraint(
+        "CHECK (is_scored_question != True OR question_type != 'datetime' OR answer_datetime is not null)",
+        'All "Is a scored question = True" and "Question Type: Datetime" questions need an answer',
+    )
+    _scored_date_have_answers = models.Constraint(
+        "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
+        'All "Is a scored question = True" and "Question Type: Date" questions need an answer',
+    )
+    _scale = models.Constraint(
+        "CHECK (question_type != 'scale' OR (scale_min >= 0 AND scale_max <= 10 AND scale_min < scale_max))",
+        'The scale must be a growing non-empty range between 0 and 10 (inclusive)',
+    )
+    _is_time_limited_have_time_limit = models.Constraint(
+        'CHECK (is_time_limited != TRUE OR time_limit IS NOT NULL AND time_limit > 0)',
+        'All time-limited questions need a positive time limit',
+    )
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -813,10 +840,10 @@ class SurveyQuestionAnswer(models.Model):
     is_correct = fields.Boolean('Correct')
     answer_score = fields.Float('Score', help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer")
 
-    _sql_constraints = [
-        ('value_not_empty', "CHECK (value IS NOT NULL OR value_image_filename IS NOT NULL)",
-         'Suggested answer value must not be empty (a text and/or an image must be provided).'),
-    ]
+    _value_not_empty = models.Constraint(
+        'CHECK (value IS NOT NULL OR value_image_filename IS NOT NULL)',
+        'Suggested answer value must not be empty (a text and/or an image must be provided).',
+    )
 
     @api.depends('value_label', 'question_id.question_type', 'question_id.title', 'matrix_question_id')
     def _compute_display_name(self):

@@ -410,10 +410,10 @@ class MrpWorkcenterTag(models.Model):
     name = fields.Char("Tag Name", required=True)
     color = fields.Integer("Color Index", default=_get_default_color)
 
-    _sql_constraints = [
-        ('tag_name_unique', 'unique(name)',
-         'The tag name must be unique.'),
-    ]
+    _tag_name_unique = models.Constraint(
+        'unique(name)',
+        'The tag name must be unique.',
+    )
 
 
 class MrpWorkcenterProductivityLossType(models.Model):
@@ -586,7 +586,11 @@ class MrpWorkcenterCapacity(models.Model):
     time_start = fields.Float('Setup Time (minutes)', default=_default_time_start, help="Time in minutes for the setup.")
     time_stop = fields.Float('Cleanup Time (minutes)', default=_default_time_stop, help="Time in minutes for the cleaning.")
 
-    _sql_constraints = [
-        ('positive_capacity', 'CHECK(capacity > 0)', 'Capacity should be a positive number.'),
-        ('unique_product', 'UNIQUE(workcenter_id, product_id)', 'Product capacity should be unique for each workcenter.'),
-    ]
+    _positive_capacity = models.Constraint(
+        'CHECK(capacity > 0)',
+        'Capacity should be a positive number.',
+    )
+    _unique_product = models.Constraint(
+        'UNIQUE(workcenter_id, product_id)',
+        'Product capacity should be unique for each workcenter.',
+    )

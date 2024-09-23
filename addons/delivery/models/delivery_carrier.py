@@ -104,10 +104,14 @@ class DeliveryCarrier(models.Model):
         'delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True
     )
 
-    _sql_constraints = [
-        ('margin_not_under_100_percent', 'CHECK (margin >= -1)', 'Margin cannot be lower than -100%'),
-        ('shipping_insurance_is_percentage', 'CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)', "The shipping insurance must be a percentage between 0 and 100."),
-    ]
+    _margin_not_under_100_percent = models.Constraint(
+        'CHECK (margin >= -1)',
+        'Margin cannot be lower than -100%',
+    )
+    _shipping_insurance_is_percentage = models.Constraint(
+        'CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)',
+        'The shipping insurance must be a percentage between 0 and 100.',
+    )
 
     @api.constrains('must_have_tag_ids', 'excluded_tag_ids')
     def _check_tags(self):

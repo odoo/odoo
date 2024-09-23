@@ -234,11 +234,10 @@ class MailingMailing(models.Model):
         'Warning Message', compute='_compute_warning_message',
         help='Warning message displayed in the mailing form view')
 
-    _sql_constraints = [(
-        'percentage_valid',
+    _percentage_valid = models.Constraint(
         'CHECK(ab_testing_pc >= 0 AND ab_testing_pc <= 100)',
-        'The A/B Testing Percentage needs to be between 0 and 100%'
-    )]
+        'The A/B Testing Percentage needs to be between 0 and 100%',
+    )
 
     @api.constrains('mailing_model_id', 'mailing_filter_id')
     def _check_mailing_filter_model(self):

@@ -10,9 +10,10 @@ class SlideChannel(models.Model):
     forum_id = fields.Many2one('forum.forum', 'Course Forum', copy=False)
     forum_total_posts = fields.Integer('Number of active forum posts', related="forum_id.total_posts")
 
-    _sql_constraints = [
-        ('forum_uniq', 'unique (forum_id)', "Only one course per forum!"),
-    ]
+    _forum_uniq = models.Constraint(
+        'unique (forum_id)',
+        'Only one course per forum!',
+    )
 
     def action_redirect_to_forum(self):
         self.ensure_one()

@@ -47,11 +47,10 @@ class SaleOrder(models.Model):
     _order = 'date_order desc, id desc'
     _check_company_auto = True
 
-    _sql_constraints = [
-        ('date_order_conditional_required',
-         "CHECK((state = 'sale' AND date_order IS NOT NULL) OR state != 'sale')",
-         "A confirmed sales order requires a confirmation date."),
-    ]
+    _date_order_conditional_required = models.Constraint(
+        "CHECK((state = 'sale' AND date_order IS NOT NULL) OR state != 'sale')",
+        'A confirmed sales order requires a confirmation date.',
+    )
 
     @property
     def _rec_names_search(self):

@@ -46,16 +46,14 @@ class SlideChannelPartner(models.Model):
     invitation_link = fields.Char('Invitation Link', compute="_compute_invitation_link")
     last_invitation_date = fields.Datetime('Last Invitation Date')
 
-    _sql_constraints = [
-        ('channel_partner_uniq',
-         'unique(channel_id, partner_id)',
-         'A partner membership to a channel must be unique!'
-        ),
-        ('check_completion',
-         'check(completion >= 0 and completion <= 100)',
-         'The completion of a channel is a percentage and should be between 0% and 100.'
-        )
-    ]
+    _channel_partner_uniq = models.Constraint(
+        'unique(channel_id, partner_id)',
+        'A partner membership to a channel must be unique!',
+    )
+    _check_completion = models.Constraint(
+        'check(completion >= 0 and completion <= 100)',
+        'The completion of a channel is a percentage and should be between 0% and 100.',
+    )
 
     @api.depends('channel_id', 'partner_id')
     def _compute_invitation_link(self):
@@ -445,13 +443,10 @@ class SlideChannel(models.Model):
     prerequisite_user_has_completed = fields.Boolean(
         'Has Completed Prerequisite', compute='_compute_prerequisite_user_has_completed')
 
-    _sql_constraints = [
-        (
-            "check_enroll",
-            "CHECK(visibility != 'members' OR enroll = 'invite')",
-            "The Enroll Policy should be set to 'On Invitation' when visibility is set to 'Course Attendees'"
-        ),
-    ]
+    _check_enroll = models.Constraint(
+        "CHECK(visibility != 'members' OR enroll = 'invite')",
+        "The Enroll Policy should be set to 'On Invitation' when visibility is set to 'Course Attendees'",
+    )
 
     @api.depends('visibility')
     def _compute_enroll(self):

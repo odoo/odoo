@@ -14,6 +14,7 @@ class CrmIapLeadIndustry(models.Model):
     color = fields.Integer(string='Color Index')
     sequence = fields.Integer('Sequence')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Industry name already exists!'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        'Industry name already exists!',
+    )

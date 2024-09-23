@@ -128,9 +128,10 @@ class BlogTagCategory(models.Model):
     name = fields.Char('Name', required=True, translate=True)
     tag_ids = fields.One2many('blog.tag', 'category_id', string='Tags')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag category already exists!"),
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        'Tag category already exists!',
+    )
 
 
 class BlogTag(models.Model):
@@ -143,9 +144,10 @@ class BlogTag(models.Model):
     color = fields.Integer('Color')
     post_ids = fields.Many2many('blog.post', string='Posts')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists!"),
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        'Tag name already exists!',
+    )
 
 
 class BlogPost(models.Model):

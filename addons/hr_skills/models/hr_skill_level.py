@@ -13,9 +13,10 @@ class HrSkillLevel(models.Model):
     level_progress = fields.Integer(string="Progress", help="Progress from zero knowledge (0%) to fully mastered (100%).")
     default_level = fields.Boolean(help="If checked, this level will be the default one selected when choosing this skill.")
 
-    _sql_constraints = [
-        ('check_level_progress', 'CHECK(level_progress BETWEEN 0 AND 100)', "Progress should be a number between 0 and 100."),
-    ]
+    _check_level_progress = models.Constraint(
+        'CHECK(level_progress BETWEEN 0 AND 100)',
+        'Progress should be a number between 0 and 100.',
+    )
 
     @api.depends('level_progress')
     @api.depends_context('from_skill_level_dropdown')

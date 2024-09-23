@@ -25,8 +25,10 @@ class DiscussChannel(models.Model):
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
 
-    _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
-                         'Livechat Operator ID is required for a channel of type livechat.')]
+    _livechat_operator_id = models.Constraint(
+        "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
+        'Livechat Operator ID is required for a channel of type livechat.',
+    )
 
     @api.depends('message_ids')
     def _compute_duration(self):

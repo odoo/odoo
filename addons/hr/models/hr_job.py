@@ -26,10 +26,14 @@ class HrJob(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     contract_type_id = fields.Many2one('hr.contract.type', string='Employment Type')
 
-    _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
-        ('no_of_recruitment_positive', 'CHECK(no_of_recruitment >= 0)', 'The expected number of new employees must be positive.')
-    ]
+    _name_company_uniq = models.Constraint(
+        'unique(name, company_id, department_id)',
+        'The name of the job position must be unique per department in company!',
+    )
+    _no_of_recruitment_positive = models.Constraint(
+        'CHECK(no_of_recruitment >= 0)',
+        'The expected number of new employees must be positive.',
+    )
 
     @api.depends('no_of_recruitment', 'employee_ids.job_id', 'employee_ids.active')
     def _compute_employees(self):

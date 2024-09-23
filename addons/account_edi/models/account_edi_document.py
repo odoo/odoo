@@ -39,13 +39,10 @@ class AccountEdiDocument(models.Model):
     edi_format_name = fields.Char(string='Format Name', related='edi_format_id.name')
     edi_content = fields.Binary(compute='_compute_edi_content', compute_sudo=True)
 
-    _sql_constraints = [
-        (
-            'unique_edi_document_by_move_by_format',
-            'UNIQUE(edi_format_id, move_id)',
-            'Only one edi document by move by format',
-        ),
-    ]
+    _unique_edi_document_by_move_by_format = models.Constraint(
+        'UNIQUE(edi_format_id, move_id)',
+        'Only one edi document by move by format',
+    )
 
     @api.depends('move_id', 'error', 'state')
     def _compute_edi_content(self):

@@ -22,10 +22,14 @@ class ProductPackaging(models.Model):
     product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', index=True)
 
-    _sql_constraints = [
-        ('positive_qty', 'CHECK(qty > 0)', 'Contained Quantity should be positive.'),
-        ('barcode_uniq', 'unique(barcode)', 'A barcode can only be assigned to one packaging.'),
-    ]
+    _positive_qty = models.Constraint(
+        'CHECK(qty > 0)',
+        'Contained Quantity should be positive.',
+    )
+    _barcode_uniq = models.Constraint(
+        'unique(barcode)',
+        'A barcode can only be assigned to one packaging.',
+    )
 
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):

@@ -66,9 +66,10 @@ class MailFollowers(models.Model):
         self._invalidate_documents()
         return super().unlink()
 
-    _sql_constraints = [
-        ('mail_followers_res_partner_res_model_id_uniq', 'unique(res_model,res_id,partner_id)', 'Error, a partner cannot follow twice the same object.'),
-    ]
+    _mail_followers_res_partner_res_model_id_uniq = models.Constraint(
+        'unique(res_model,res_id,partner_id)',
+        'Error, a partner cannot follow twice the same object.',
+    )
 
     # --------------------------------------------------
     # Private tools methods to fetch followers data

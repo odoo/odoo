@@ -21,9 +21,10 @@ class ResUsers(models.Model):
     oauth_uid = fields.Char(string='OAuth User ID', help="Oauth Provider user_id", copy=False)
     oauth_access_token = fields.Char(string='OAuth Access Token', readonly=True, copy=False, prefetch=False)
 
-    _sql_constraints = [
-        ('uniq_users_oauth_provider_oauth_uid', 'unique(oauth_provider_id, oauth_uid)', 'OAuth UID must be unique per provider'),
-    ]
+    _uniq_users_oauth_provider_oauth_uid = models.Constraint(
+        'unique(oauth_provider_id, oauth_uid)',
+        'OAuth UID must be unique per provider',
+    )
 
     def _auth_oauth_rpc(self, endpoint, access_token):
         if self.env['ir.config_parameter'].sudo().get_param('auth_oauth.authorization_header'):

@@ -61,11 +61,10 @@ class ProductTemplateAttributeValue(models.Model):
     color = fields.Integer(string="Color", default=_get_default_color)
     image = fields.Image(related='product_attribute_value_id.image')
 
-    _sql_constraints = [
-        ('attribute_value_unique',
-         'unique(attribute_line_id, product_attribute_value_id)',
-         "Each value should be defined only once per attribute per product."),
-    ]
+    _attribute_value_unique = models.Constraint(
+        'unique(attribute_line_id, product_attribute_value_id)',
+        'Each value should be defined only once per attribute per product.',
+    )
 
     @api.constrains('attribute_line_id', 'product_attribute_value_id')
     def _check_valid_values(self):

@@ -21,7 +21,7 @@ class ChatbotMessage(models.Model):
     user_script_answer_id = fields.Many2one('chatbot.script.answer', string="User's answer", ondelete="set null")
     user_raw_answer = fields.Html(string="User's raw answer")
 
-    _sql_constraints = [
-        ('_unique_mail_message_id', 'unique (mail_message_id)',
-         "A mail.message can only be linked to a single chatbot message"),
-    ]
+    __unique_mail_message_id = models.Constraint(
+        'unique (mail_message_id)',
+        'A mail.message can only be linked to a single chatbot message',
+    )

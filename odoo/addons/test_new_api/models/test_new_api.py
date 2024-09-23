@@ -33,9 +33,10 @@ class Test_New_ApiCategory(models.Model):
     discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
                                    'category', 'discussion')
 
-    _sql_constraints = [
-        ('positive_color', 'CHECK(color >= 0)', 'The color code must be positive!')
-    ]
+    _positive_color = models.Constraint(
+        'CHECK(color >= 0)',
+        "The color code must be positive!",
+    )
 
     @api.depends('name', 'parent.display_name')     # this definition is recursive
     def _compute_display_name(self):

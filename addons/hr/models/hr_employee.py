@@ -180,10 +180,14 @@ class HrEmployee(models.Model):
     message_has_error_counter = fields.Integer(groups="hr.group_hr_user")
     message_attachment_count = fields.Integer(groups="hr.group_hr_user")
 
-    _sql_constraints = [
-        ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
-        ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
-    ]
+    _barcode_uniq = models.Constraint(
+        'unique (barcode)',
+        'The Badge ID must be unique, this one is already assigned to another employee.',
+    )
+    _user_uniq = models.Constraint(
+        'unique (user_id, company_id)',
+        'A user cannot be linked to multiple employees in the same company.',
+    )
 
     @api.model
     def check_field_access_rights(self, operation, field_names):

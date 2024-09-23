@@ -39,18 +39,14 @@ class MailAliasDomain(models.Model):
              "'notifications@example.com' to override all outgoing emails.")
     default_from_email = fields.Char('Default From', compute='_compute_default_from_email')
 
-    _sql_constraints = [
-        (
-            'bounce_email_uniques',
-            'UNIQUE(bounce_alias, name)',
-            'Bounce emails should be unique'
-        ),
-        (
-            'catchall_email_uniques',
-            'UNIQUE(catchall_alias, name)',
-            'Catchall emails should be unique'
-        ),
-    ]
+    _bounce_email_uniques = models.Constraint(
+        'UNIQUE(bounce_alias, name)',
+        'Bounce emails should be unique',
+    )
+    _catchall_email_uniques = models.Constraint(
+        'UNIQUE(catchall_alias, name)',
+        'Catchall emails should be unique',
+    )
 
     @api.depends('bounce_alias', 'name')
     def _compute_bounce_email(self):

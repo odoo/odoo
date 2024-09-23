@@ -90,10 +90,14 @@ class StockWarehouse(models.Model):
         help="Routes will be created for these resupply warehouses and you can select them on products and product categories", copy=False)
     sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the warehouses.")
-    _sql_constraints = [
-        ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
-        ('warehouse_code_uniq', 'unique(code, company_id)', 'The short name of the warehouse must be unique per company!'),
-    ]
+    _warehouse_name_uniq = models.Constraint(
+        'unique(name, company_id)',
+        'The name of the warehouse must be unique per company!',
+    )
+    _warehouse_code_uniq = models.Constraint(
+        'unique(code, company_id)',
+        'The short name of the warehouse must be unique per company!',
+    )
 
     @api.onchange('company_id')
     def _onchange_company_id(self):

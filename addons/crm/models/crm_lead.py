@@ -240,9 +240,10 @@ class CrmLead(models.Model):
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
 
-    _sql_constraints = [
-        ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
-    ]
+    _check_probability = models.Constraint(
+        'check(probability >= 0 and probability <= 100)',
+        'The probability of closing the deal should be between 0% and 100%!',
+    )
 
     @api.depends('company_id')
     def _compute_user_company_ids(self):

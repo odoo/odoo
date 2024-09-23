@@ -194,13 +194,10 @@ class AccountPayment(models.Model):
     duplicate_payment_ids = fields.Many2many(comodel_name='account.payment', compute='_compute_duplicate_payment_ids')
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
 
-    _sql_constraints = [
-        (
-            'check_amount_not_negative',
-            'CHECK(amount >= 0.0)',
-            "The payment amount cannot be negative.",
-        ),
-    ]
+    _check_amount_not_negative = models.Constraint(
+        'CHECK(amount >= 0.0)',
+        'The payment amount cannot be negative.',
+    )
 
     def init(self):
         super().init()

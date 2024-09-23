@@ -84,9 +84,10 @@ class EventRegistration(models.Model):
     registration_properties = fields.Properties(
         'Properties', definition='event_id.registration_properties_definition', copy=True)
 
-    _sql_constraints = [
-        ('barcode_event_uniq', 'unique(barcode)', "Barcode should be unique")
-    ]
+    _barcode_event_uniq = models.Constraint(
+        'unique(barcode)',
+        'Barcode should be unique',
+    )
 
     @api.constrains('state', 'event_id', 'event_ticket_id')
     def _check_seats_availability(self):

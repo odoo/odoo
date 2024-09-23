@@ -55,7 +55,10 @@ class IrActionsActions(models.Model):
     _order = 'name'
     _allow_sudo_commands = False
 
-    _sql_constraints = [('path_unique', 'unique(path)', "Path to show in the URL must be unique! Please choose another one.")]
+    _path_unique = models.Constraint(
+        'unique(path)',
+        "Path to show in the URL must be unique! Please choose another one.",
+    )
 
     name = fields.Char(string='Action Name', required=True, translate=True)
     type = fields.Char(string='Action Type', required=True)

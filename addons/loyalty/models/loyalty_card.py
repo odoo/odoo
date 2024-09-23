@@ -45,9 +45,10 @@ class LoyaltyCard(models.Model):
         readonly=True,
     )
 
-    _sql_constraints = [
-        ('card_code_unique', 'UNIQUE(code)', 'A coupon/loyalty card must have a unique code.')
-    ]
+    _card_code_unique = models.Constraint(
+        'UNIQUE(code)',
+        'A coupon/loyalty card must have a unique code.',
+    )
 
     @api.constrains('code')
     def _contrains_code(self):

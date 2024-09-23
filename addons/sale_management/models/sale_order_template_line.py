@@ -8,15 +8,14 @@ class SaleOrderTemplateLine(models.Model):
     _description = "Quotation Template Line"
     _order = 'sale_order_template_id, sequence, id'
 
-    _sql_constraints = [
-        ('accountable_product_id_required',
-            "CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))",
-            "Missing required product and UoM on accountable sale quote line."),
-
-        ('non_accountable_fields_null',
-            "CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))",
-            "Forbidden product, quantity and UoM on non-accountable sale quote line"),
-    ]
+    _accountable_product_id_required = models.Constraint(
+        'CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))',
+        'Missing required product and UoM on accountable sale quote line.',
+    )
+    _non_accountable_fields_null = models.Constraint(
+        'CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))',
+        'Forbidden product, quantity and UoM on non-accountable sale quote line',
+    )
 
     sale_order_template_id = fields.Many2one(
         comodel_name='sale.order.template',

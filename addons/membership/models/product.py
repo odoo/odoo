@@ -13,6 +13,7 @@ class ProductTemplate(models.Model):
     membership_date_to = fields.Date(string='Membership End Date',
         help='Date until which membership remains active.')
 
-    _sql_constraints = [
-        ('membership_date_greater', 'check(membership_date_to >= membership_date_from)', 'Error! Ending Date cannot be set before Beginning Date.')
-    ]
+    _membership_date_greater = models.Constraint(
+        'check(membership_date_to >= membership_date_from)',
+        'Error! Ending Date cannot be set before Beginning Date.',
+    )

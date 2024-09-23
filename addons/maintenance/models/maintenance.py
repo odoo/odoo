@@ -157,9 +157,10 @@ class MaintenanceEquipment(models.Model):
     def _onchange_category_id(self):
         self.technician_user_id = self.category_id.technician_user_id
 
-    _sql_constraints = [
-        ('serial_no', 'unique(serial_no)', "Another asset already exists with this serial number!"),
-    ]
+    _serial_no = models.Constraint(
+        'unique(serial_no)',
+        'Another asset already exists with this serial number!',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

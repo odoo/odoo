@@ -15,17 +15,28 @@ class Test_UninstallModel(models.Model):
     ref = fields.Many2one('res.users', string='User')
     rel = fields.Many2many('res.users', string='Users')
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Each name must be unique.'),
-    ]
+    _name_uniq = models.Constraint(
+        'unique (name)',
+        "Each name must be unique.",
+    )
 
 
 class ResUsers(models.Model):
     _inherit = ['res.users']
 
-    _sql_constraints = [
-        ('test_uninstall_res_user_unique_constraint', 'unique (password)', 'Test uninstall unique constraint'),
-        ('test_uninstall_res_user_check_constraint', 'check (true)', 'Test uninstall check constraint'),
-        ('test_uninstall_res_user_exclude_constraint', 'exclude (password with =)', 'Test uninstall exclude constraint'),
-        ('test_uninstall_res_user_exclude_constraint_looooooooooooong_name', 'exclude (password with =)', 'Test uninstall exclude constraint'),
-    ]
+    _test_uninstall_res_user_unique_constraint = models.Constraint(
+        'unique (password)',
+        "Test uninstall unique constraint",
+    )
+    _test_uninstall_res_user_check_constraint = models.Constraint(
+        'check (true)',
+        "Test uninstall check constraint",
+    )
+    _test_uninstall_res_user_exclude_constraint = models.Constraint(
+        'exclude (password with =)',
+        "Test uninstall exclude constraint",
+    )
+    _test_uninstall_res_user_exclude_constraint_looooooooooooong_name = models.Constraint(
+        'exclude (password with =)',
+        "Test uninstall exclude constraint",
+    )

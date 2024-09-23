@@ -75,9 +75,10 @@ class WebsiteVisitor(models.Model):
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
     is_connected = fields.Boolean('Is connected?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
 
-    _sql_constraints = [
-        ('access_token_unique', 'unique(access_token)', 'Access token should be unique.'),
-    ]
+    _access_token_unique = models.Constraint(
+        'unique(access_token)',
+        'Access token should be unique.',
+    )
 
     @api.depends('partner_id')
     def _compute_display_name(self):

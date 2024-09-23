@@ -14,9 +14,10 @@ class PhoneBlacklist(models.Model):
     number = fields.Char(string='Phone Number', required=True, tracking=True, help='Number should be E164 formatted')
     active = fields.Boolean(default=True, tracking=True)
 
-    _sql_constraints = [
-        ('unique_number', 'unique (number)', 'Number already exists')
-    ]
+    _unique_number = models.Constraint(
+        'unique (number)',
+        'Number already exists',
+    )
 
     @api.model_create_multi
     def create(self, values):

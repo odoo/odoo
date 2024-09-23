@@ -21,9 +21,10 @@ class L10n_Eg_EdiThumbDrive(models.Model):
     pin = fields.Char('ETA USB Pin', required=True)
     access_token = fields.Char(required=True)
 
-    _sql_constraints = [
-        ('user_drive_uniq', 'unique (user_id, company_id)', 'You can only have one thumb drive per user per company!'),
-    ]
+    _user_drive_uniq = models.Constraint(
+        'unique (user_id, company_id)',
+        'You can only have one thumb drive per user per company!',
+    )
 
     def action_sign_invoices(self, invoice_ids):
         self.ensure_one()

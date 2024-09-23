@@ -77,14 +77,14 @@ class PurchaseOrderLine(models.Model):
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
     is_downpayment = fields.Boolean()
 
-    _sql_constraints = [
-        ('accountable_required_fields',
-            "CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom IS NOT NULL AND date_planned IS NOT NULL))",
-            "Missing required fields on accountable purchase order line."),
-        ('non_accountable_null_fields',
-            "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND date_planned is NULL))",
-            "Forbidden values on non-accountable purchase order line"),
-    ]
+    _accountable_required_fields = models.Constraint(
+        'CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom IS NOT NULL AND date_planned IS NOT NULL))',
+        'Missing required fields on accountable purchase order line.',
+    )
+    _non_accountable_null_fields = models.Constraint(
+        'CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom IS NULL AND date_planned is NULL))',
+        'Forbidden values on non-accountable purchase order line',
+    )
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants', ondelete='restrict')
 

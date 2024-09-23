@@ -13,9 +13,10 @@ class HrJobPlatform(models.Model):
     regex = fields.Char(help="The regex facilitates to extract information from the subject or body "
                              "of the received email to autopopulate the Applicant's name field")
 
-    _sql_constraints = [
-        ('email_uniq', 'unique (email)', "The Email must be unique, this one already corresponds to another Job Platform."),
-    ]
+    _email_uniq = models.Constraint(
+        'unique (email)',
+        'The Email must be unique, this one already corresponds to another Job Platform.',
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

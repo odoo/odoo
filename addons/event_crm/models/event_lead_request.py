@@ -26,9 +26,10 @@ class EventLeadRequest(models.Model):
     processed_registration_id = fields.Integer("Processed Registration",
         help="The ID of the last processed event.registration, used to know where to resume.")
 
-    _sql_constraints = [
-        ('uniq_event', 'unique(event_id)', 'You can only have one generation request per event at a time.'),
-    ]
+    _uniq_event = models.Constraint(
+        'unique(event_id)',
+        'You can only have one generation request per event at a time.',
+    )
 
     @api.model
     def _cron_generate_leads(self, job_limit=100, registrations_batch_size=None):
