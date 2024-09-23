@@ -30,7 +30,10 @@ export class NumberPopup extends Component {
 
     setup() {
         this.numberBuffer = useService("number_buffer");
-        this.numberBuffer.use();
+        this.numberBuffer.use({
+            triggerAtEnter: () => this.confirm(),
+            triggerAtEscape: () => this.cancel(),
+        });
         this.state = useState({
             buffer: this.props.startingValue,
         });
