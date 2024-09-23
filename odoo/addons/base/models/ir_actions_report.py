@@ -23,6 +23,7 @@ import json
 from lxml import etree
 from contextlib import closing
 from reportlab.graphics.barcode import createBarcodeDrawing
+from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from collections import OrderedDict
 from collections.abc import Iterable
@@ -42,8 +43,17 @@ _logger = logging.getLogger(__name__)
 # before rendering a barcode (done in a C extension) and this part is not thread safe. We attempt
 # here to init the T1 fonts cache at the start-up of Odoo so that rendering of barcode in multiple
 # thread does not lock the server.
+_DEFAULT_BARCODE_FONT = 'Courier'
 try:
-    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1).asString('png')
+    available = TypeFace(_DEFAULT_BARCODE_FONT).findT1File()
+    if not available:
+        substitution_font = 'NimbusMonoPS-Regular'
+        fnt = getFont(substitution_font)
+        if fnt:
+            _DEFAULT_BARCODE_FONT = substitution_font
+            fnt.ascent = 629
+            fnt.descent = -157
+    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1, fontName=_DEFAULT_BARCODE_FONT).asString('png')
 except Exception:
     pass
 
@@ -558,6 +568,8 @@ class IrActionsReport(models.Model):
         }
         kwargs = {k: validator(kwargs.get(k, v)) for k, (v, validator) in defaults.items()}
         kwargs['humanReadable'] = kwargs.pop('humanreadable')
+        if kwargs['humanReadable']:
+            kwargs['fontName'] = _DEFAULT_BARCODE_FONT
 
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
