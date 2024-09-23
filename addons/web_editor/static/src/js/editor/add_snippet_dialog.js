@@ -174,7 +174,7 @@ export class AddSnippetDialog extends Component {
             }
             clonedSnippetEl.classList.remove("oe_snippet_body");
             const snippetPreviewWrapEl = document.createElement("div");
-            snippetPreviewWrapEl.classList.add("o_snippet_preview_wrap", "position-relative", "fade");
+            snippetPreviewWrapEl.classList.add("o_snippet_preview_wrap", "position-relative", "d-none");
             snippetPreviewWrapEl.dataset.snippetId = snippet.name;
             snippetPreviewWrapEl.dataset.snippetKey = snippet.key;
             snippetPreviewWrapEl.appendChild(clonedSnippetEl);
@@ -258,11 +258,14 @@ export class AddSnippetDialog extends Component {
                         resolve();
                     } else {
                         imgEl.onload = () => resolve();
+                        // If the image could not be loaded, we still want the
+                        // "d-none" class to be removed.
+                        imgEl.onerror = () => resolve();
                     }
                 });
             }));
 
-            snippetPreviewWrapEl.classList.add("show");
+            snippetPreviewWrapEl.classList.remove("d-none");
         };
     }
     /**
