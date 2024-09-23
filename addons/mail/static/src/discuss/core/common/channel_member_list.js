@@ -2,6 +2,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -22,6 +23,18 @@ export class ChannelMemberList extends Component {
             if (nextProps.thread.fetchMembersState === "not_fetched") {
                 nextProps.thread.fetchChannelMembers();
             }
+        });
+    }
+
+    get onlineSectionText() {
+        return _t("Online - %(online_count)s", {
+            online_count: this.props.thread.onlineMembers.length,
+        });
+    }
+
+    get offlineSectionText() {
+        return _t("Offline - %(offline_count)s", {
+            offline_count: this.props.thread.offlineMembers.length,
         });
     }
 
