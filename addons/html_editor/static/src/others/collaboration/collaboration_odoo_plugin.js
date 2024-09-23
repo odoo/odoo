@@ -772,9 +772,9 @@ export class CollaborationOdooPlugin extends Plugin {
         );
     }
     async getCurrentRecord() {
-        const [record] = await this.options.collaboration.ormService.read(
-            this.options.collaboration.collaborationChannel.collaborationModelName,
-            [this.options.collaboration.collaborationChannel.collaborationResId],
+        const [record] = await this.config.collaboration.ormService.read(
+            this.config.collaboration.collaborationChannel.collaborationModelName,
+            [this.config.collaboration.collaborationChannel.collaborationResId],
             [this.config.collaboration.collaborationChannel.collaborationFieldName]
         );
         return record;
