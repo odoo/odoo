@@ -9874,7 +9874,10 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
         const carouselEl = this.$target[0].classList.contains("carousel") ? this.$target[0]
             : this.$target[0].querySelector(".carousel");
         carouselEl.classList.remove("slide");
-        $(carouselEl).carousel(position);
+        // TODO:visp; test it properly
+        const carousel = window.Carousel.getOrCreateInstance(carouselEl);
+        // Move the carousel to the specific position (0-based index)
+        carousel.to(position);
         for (const indicatorEl of this.$target[0].querySelectorAll(".carousel-indicators button")) {
             indicatorEl.classList.remove("active");
         }
