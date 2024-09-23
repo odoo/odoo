@@ -135,7 +135,7 @@
                                 <field class="fw-bold" name="granted_count"/> granted,
                                 <field class="fw-bold" name="stat_this_month"/> this month
                             </div>
-                            <div t-if="!widget.isHtmlEmpty(record.description.value)">
+                            <div>
                                 <field class="fst-italic" name="description"/>
                                 <field name="unique_owner_ids" widget="many2many_avatar_user"/>
                             </div>
