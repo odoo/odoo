@@ -310,7 +310,9 @@ export function insertSnippet(snippet, position = "bottom") {
         },
         {
             content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
-            trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="${snippet.id}"]`,
+            // FIXME `:not(.d-none)` should obviously not be needed but it seems
+            // currently needed when using a tour in user/interactive mode.
+            trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="${snippet.id}"]:not(.d-none)`,
             noPrepend: true,
             tooltipPosition: "top",
             run: "click",
