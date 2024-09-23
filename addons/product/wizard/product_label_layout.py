@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -19,6 +17,8 @@ class ProductLabelLayout(models.TransientModel):
     custom_quantity = fields.Integer('Quantity', default=1, required=True)
     product_ids = fields.Many2many('product.product')
     product_tmpl_ids = fields.Many2many('product.template')
+    product_packaging_ids = fields.One2many('product.packaging', compute='_compute_product_packaging_ids')
+    packaging_id = fields.Many2one('product.packaging', string="", domain="[('id', 'in', product_packaging_ids)]")
     extra_html = fields.Html('Extra Content', default='')
     rows = fields.Integer(compute='_compute_dimensions')
     columns = fields.Integer(compute='_compute_dimensions')
@@ -34,42 +34,55 @@ class ProductLabelLayout(models.TransientModel):
             else:
                 wizard.columns, wizard.rows = 1, 1
 
-    def _prepare_report_data(self):
-        if self.custom_quantity <= 0:
-            raise UserError(_('You need to set a positive quantity.'))
+    @api.depends('product_ids', 'product_tmpl_ids')
+    def _compute_product_packaging_ids(self):
+        for wizard in self:
+            wizard.product_packaging_ids = wizard.product_ids.packaging_ids | wizard.product_tmpl_ids.packaging_ids
 
+    def _get_report_template(self):
         # Get layout grid
+        xml_id = ''
         if self.print_format == 'dymo':
             xml_id = 'product.report_product_template_label_dymo'
         elif 'x' in self.print_format:
             xml_id = 'product.report_product_template_label_%sx%s' % (self.columns, self.rows)
             if 'xprice' not in self.print_format:
                 xml_id += '_noprice'
-        else:
-            xml_id = ''
+        return xml_id
 
-        active_model = ''
-        if self.product_tmpl_ids:
-            products = self.product_tmpl_ids.ids
-            active_model = 'product.template'
-        elif self.product_ids:
-            products = self.product_ids.ids
-            active_model = 'product.product'
-        else:
+    def _get_quantity_by_packaging(self):
+        if not self.packaging_id:
+            return {}
+        quantity_by_packaging = {self.packaging_id.id: self.custom_quantity}
+        return {'quantity_by_packaging': quantity_by_packaging}
+
+    def _get_quantity_by_product(self):
+        if self.packaging_id:
+            return {}
+        product_ids = self.product_tmpl_ids.ids if self.product_tmpl_ids else self.product_ids.ids
+        return {'quantity_by_product': dict.fromkeys(product_ids, self.custom_quantity)}
+
+    def _prepare_report_data(self):
+        if self.custom_quantity <= 0:
+            raise UserError(_('You need to set a positive quantity.'))
+        if not self.product_tmpl_ids and not self.product_ids:
             raise UserError(_("No product to print, if the product is archived please unarchive it before printing its label."))
 
         # Build data to pass to the report
+        active_model = 'product.template' if self.product_tmpl_ids else 'product.product'
         data = {
             'active_model': active_model,
-            'quantity_by_product': {p: self.custom_quantity for p in products},
             'layout_wizard': self.id,
             'price_included': 'xprice' in self.print_format,
+            **self._get_quantity_by_packaging(),
+            **self._get_quantity_by_product(),
         }
-        return xml_id, data
+        return data
 
     def process(self):
         self.ensure_one()
-        xml_id, data = self._prepare_report_data()
+        data = self._prepare_report_data()
+        xml_id = self._get_report_template()
         if not xml_id:
             raise UserError(_('Unable to find report template for %s format', self.print_format))
         report_action = self.env.ref(xml_id).report_action(None, data=data, config=False)

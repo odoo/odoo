@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
 
 
 from odoo.tools import float_compare, float_round
@@ -27,6 +25,14 @@ class ProductPackaging(models.Model):
         ('positive_qty', 'CHECK(qty > 0)', 'Contained Quantity should be positive.'),
         ('barcode_uniq', 'unique(barcode)', 'A barcode can only be assigned to one packaging.'),
     ]
+
+    @api.depends('name', 'product_id')
+    def _compute_display_name(self):
+        for packaging in self:
+            if packaging.product_id:
+                packaging.display_name = f'{packaging.product_id.display_name} - {packaging.name}'
+            else:
+                packaging.display_name = packaging.name
 
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
