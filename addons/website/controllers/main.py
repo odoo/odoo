@@ -405,8 +405,11 @@ class Website(Home):
 
     @http.route('/website/snippet/options_filters', type='json', auth='user', website=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.NotFound()
         domain = request.website.website_domain()
         if search_domain:
+            assert all(leaf[0] in request.env['website.snippet.filter']._fields for leaf in search_domain)
             domain = expression.AND([domain, search_domain])
         if model_name:
             domain = expression.AND([
