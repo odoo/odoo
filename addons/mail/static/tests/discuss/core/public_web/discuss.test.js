@@ -29,7 +29,8 @@ test("bus subscription updated when joining/leaving thread as non member", async
     await start();
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
-    await click("[title='Leave Channel']");
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button", { text: "Leave Conversation" });
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });
@@ -47,7 +48,7 @@ test("bus subscription updated when joining locally pinned thread", async () => 
     await click(".o-discuss-ChannelInvitation-selectable", {
         text: "Mitchell Admin",
     });
-    await click("button", { text: "Invite to Channel" });
+    await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });
 

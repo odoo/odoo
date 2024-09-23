@@ -354,7 +354,8 @@ test("Clicking on leave button leaves the channel", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
-    await click(".o-mail-DiscussSidebarChannel [title='Leave Channel']");
+    await click("[title='Chat Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button:contains(Leave Conversation)");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Visitor 11" });
 });
@@ -421,9 +422,8 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await waitForSteps(["discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
-    await click("[title='Leave Channel']", {
-        parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
-    });
+    await click("[title='Chat Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button:contains('Leave Conversation')");
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });

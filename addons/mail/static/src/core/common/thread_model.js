@@ -74,16 +74,23 @@ export class Thread extends Record {
          */
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
+    get allowedToLeaveChannelTypes() {
+        return ["channel", "group"];
+    }
     get canLeave() {
         return (
-            ["channel", "group"].includes(this.channel_type) &&
-            !this.message_needaction_counter &&
+            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
             !this.group_based_subscription &&
             this.store.self?.type === "partner"
         );
     }
+    get allowedToUnpinChannelTypes() {
+        return ["chat"];
+    }
     get canUnpin() {
-        return this.channel_type === "chat" && this.importantCounter === 0;
+        return (
+            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
+        );
     }
     /** @type {boolean} */
     can_react = true;
