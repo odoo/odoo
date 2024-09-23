@@ -5361,7 +5361,7 @@ class AccountMove(models.Model):
 
         if not qr_code_method:
             # No eligible method could be found; we can't generate the QR-code
-            return None
+            return self._generate_portal_qr()
 
         unstruct_ref = self.ref if self.ref else self.name
         rslt = self.partner_bank_id.build_qr_code_base64(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=silent_errors)
@@ -5372,6 +5372,10 @@ class AccountMove(models.Model):
         self.qr_code_method = qr_code_method
 
         return rslt
+
+    def _generate_portal_qr(self):
+        self.ensure_one()
+        return None
 
     def _get_pdf_and_send_invoice_vals(self, template, **kwargs):
         return {
