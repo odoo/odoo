@@ -200,7 +200,7 @@ var RecentLinks = publicWidget.Widget.extend({
         var nbLinks = this.getChildren().length;
         var recentLinkBox = new RecentLinkBox(this, link);
         recentLinkBox.prependTo(this.$el);
-        $('.link-tooltip').tooltip();
+        Tooltip.getOrCreateInstance(document.querySelector(".link-tooltip"));
 
         if (nbLinks === 0) {
             this._updateNotification();
@@ -288,7 +288,9 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         defs.push(this.recentLinks.appendTo($('#o_website_links_recent_links')));
         this.recentLinks.getRecentLinks('newest');
 
-        $('[data-bs-toggle="tooltip"]').tooltip();
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => {
+            Tooltip.getOrCreateInstance(el);
+        });
 
         return Promise.all(defs);
     },

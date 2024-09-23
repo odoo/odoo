@@ -8997,7 +8997,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 
             $(document).off('click.bgposition');
             if (this.$bgDragger) {
-                this.$bgDragger.tooltip('dispose');
+                this.tooltip.dispose();
             }
             return;
         }
@@ -9020,17 +9020,18 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         // css into $bgDragger will not work since it will change overlay content style too).
         this.$bgDragger.css('background-attachment', this.$target.css('background-attachment'));
         this.$bgDragger.on('mousedown', this._onDragBackgroundStart.bind(this));
-        this.$bgDragger.tooltip({
-            title: 'Click and drag the background to adjust its position!',
-            trigger: 'manual',
-            container: this.$backgroundOverlay
-        });
+
+        this.tooltip = Tooltip.getOrCreateInstance(this.$bgDragger[0], {
+            title: "Click and drag the background to adjust its position!",
+            trigger: "manual",
+            container: this.$backgroundOverlay[0],
+        })
 
         // Replace content of overlayBackground, activate the overlay and give it the right dimensions.
         this.$overlayBackground.empty().append(this.$bgDragger);
         this.$backgroundOverlay.addClass('oe_active');
         this._dimensionOverlay();
-        this.$bgDragger.tooltip('show');
+        this.tooltip.show();
 
         // Needs to be deferred or the click event that activated the overlay deactivates it as well.
         // This is caused by the click event which we are currently handling bubbling up to the document.

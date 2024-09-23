@@ -127,7 +127,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         $('.forum_register_url').attr('href', forumLogin);
 
         // Initialize forum's tooltips
-        this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => {
+            Tooltip.getOrCreateInstance(el, {
+                delay: 0,
+            });
+        });
         document.querySelectorAll('[data-bs-toggle="popover"]').forEach((el) => {
             Popover.getOrCreateInstance(el, {
                 offset: [0, 8], // Adjusting offset, format is [skidding, distance]
