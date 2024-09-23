@@ -22,7 +22,8 @@ import { Widget } from "@web/views/widgets/widget";
  * fields within all roots to avoid inconsistencies.
  */
 
-export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
+export const LEGACY_KANBAN_BOX_ATTRIBUTE = "kanban-box";
+export const LEGACY_KANBAN_MENU_ATTRIBUTE = "kanban-menu";
 export const KANBAN_CARD_ATTRIBUTE = "card";
 export const KANBAN_MENU_ATTRIBUTE = "menu";
 
@@ -152,7 +153,7 @@ export class KanbanArchParser {
             console.warn("'kanban-box' is deprecated, use 'kanban-card' API instead");
         }
         if (!cardDoc) {
-            cardDoc = templateDocs[KANBAN_BOX_ATTRIBUTE];
+            cardDoc = templateDocs[LEGACY_KANBAN_BOX_ATTRIBUTE];
             if (!cardDoc) {
                 throw new Error(`Missing '${KANBAN_CARD_ATTRIBUTE}' template.`);
             }
