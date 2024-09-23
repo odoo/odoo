@@ -24,6 +24,7 @@
         <field name="type">list</field>
         <field name="arch" type="xml">
             <list string="Payment Method" create="0" edit="0">
+                <field name="sequence" widget="handle"/>
                 <field name="code"/>
                 <field name="name"/>
                 <field name="active" widget="boolean_toggle"/>
