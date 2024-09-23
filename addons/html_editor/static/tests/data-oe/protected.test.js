@@ -146,9 +146,9 @@ test("should handle table selection in unprotected elements", async () => {
                     <div data-oe-protected="false" contenteditable="true">
                         <p>a[bc</p>
                         <table class="o_selected_table"><tbody><tr>
-                            <td class="o_selected_td">a]b</td>
+                            <td class="o_selected_td">ab</td>
                             <td class="o_selected_td">cd</td>
-                            <td class="o_selected_td">ef</td>
+                            <td class="o_selected_td">ef]</td>
                         </tr></tbody></table>
                     </div>
                 </div>
