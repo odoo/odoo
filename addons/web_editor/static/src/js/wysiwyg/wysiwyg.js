@@ -1323,7 +1323,7 @@ export class Wysiwyg extends Component {
                         // Exclude inner translation fields observers. They
                         // still handle translation synchronization inside the
                         // targeted field.
-                        observerData => !observerData.field.dataset.oeTranslationInitialSha ||
+                        observerData => !observerData.field.dataset.oeTranslationSourceSha ||
                             !field.contains(observerData.field)
                     );
                     this._pauseOdooFieldObservers();

@@ -296,15 +296,15 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 const href = translationEl.closest('a').getAttribute('href');
                 const headerEl = translationEl.closest('.s_table_of_content').querySelector(`${href} [data-oe-translation-source-sha]`);
                 if (headerEl) {
-                    if (translationEl.dataset.oeTranslationInitialSha !== headerEl.dataset.oeTranslationInitialSha) {
+                    if (translationEl.dataset.oeTranslationSourceSha !== headerEl.dataset.oeTranslationSourceSha) {
                         // Use the same identifier for the generated navigation
                         // label and its associated header so that the general
                         // synchronization mechanism kicks in.
                         // The initial value is kept to be restored before save
                         // in order to keep the translation of the unstyled
                         // label distinct from the one of the header.
-                        translationEl.dataset.oeTranslationSaveSha = translationEl.dataset.oeTranslationInitialSha;
-                        translationEl.dataset.oeTranslationInitialSha = headerEl.dataset.oeTranslationInitialSha;
+                        translationEl.dataset.oeTranslationSaveSha = translationEl.dataset.oeTranslationSourceSha;
+                        translationEl.dataset.oeTranslationSourceSha = headerEl.dataset.oeTranslationSourceSha;
                     }
                     translationEl.classList.add('o_translation_without_style');
                 }
