@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="resource.ResourceAvatar">
+        <img t-if="props.record.data.resource_type == 'user'" class="o_avatar me-2 rounded"
+            t-attf-src="/web/image/{{props.record.resModel}}/{{props.record.resId}}/avatar_128"/>
+        <i t-else="" t-attf-class="fa fa-wrench p-1 me-2 rounded o_colorlist_item_color_#{props.record.data.color}"/>
+        <span t-out="props.record.data.name"></span>
+    </t>
+</templates>

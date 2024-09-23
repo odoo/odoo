@@ -1,4 +1,4 @@
-import { defineResourceModels } from "@resource/../tests/resource_test_helpers";
+import { defineResourceModels } from "@resource_mail/../tests/resource_mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import {
