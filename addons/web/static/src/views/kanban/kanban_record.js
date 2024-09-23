@@ -15,7 +15,8 @@ import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
 import {
-    KANBAN_BOX_ATTRIBUTE,
+    LEGACY_KANBAN_BOX_ATTRIBUTE,
+    LEGACY_KANBAN_MENU_ATTRIBUTE,
     KANBAN_CARD_ATTRIBUTE,
     KANBAN_MENU_ATTRIBUTE,
 } from "./kanban_arch_parser";
@@ -191,7 +192,8 @@ export class KanbanRecord extends Component {
         "progressBarState?",
     ];
     static Compiler = KanbanCompiler;
-    static KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
+    static LEGACY_KANBAN_BOX_ATTRIBUTE = LEGACY_KANBAN_BOX_ATTRIBUTE;
+    static LEGACY_KANBAN_MENU_ATTRIBUTE = LEGACY_KANBAN_MENU_ATTRIBUTE;
     static KANBAN_CARD_ATTRIBUTE = KANBAN_CARD_ATTRIBUTE;
     static KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
     static menuTemplate = "web.KanbanRecordMenu";
@@ -208,9 +210,10 @@ export class KanbanRecord extends Component {
 
         this.templates = useViewCompiler(ViewCompiler, templates);
 
-        if (this.constructor.KANBAN_MENU_ATTRIBUTE in templates) {
-            this.showMenu = true;
-        }
+        this.menuTemplateName = this.props.archInfo.isLegacyArch
+            ? this.constructor.LEGACY_KANBAN_MENU_ATTRIBUTE
+            : this.constructor.KANBAN_MENU_ATTRIBUTE;
+        this.showMenu = this.menuTemplateName in templates;
 
         this.dataState = useState({ record: {}, widget: {} });
         this.createWidget(this.props);
@@ -369,7 +372,7 @@ export class KanbanRecord extends Component {
 
     get mainTemplate() {
         return this.props.archInfo.isLegacyArch
-            ? this.templates[this.constructor.KANBAN_BOX_ATTRIBUTE]
+            ? this.templates[this.constructor.LEGACY_KANBAN_BOX_ATTRIBUTE]
             : this.templates[this.constructor.KANBAN_CARD_ATTRIBUTE];
     }
 

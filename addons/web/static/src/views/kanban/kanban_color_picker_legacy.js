@@ -2,7 +2,7 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 import { patch } from "@web/core/utils/patch";
 import { createElement } from "@web/core/utils/xml";
 
-import { KANBAN_BOX_ATTRIBUTE, KanbanArchParser } from "./kanban_arch_parser";
+import { LEGACY_KANBAN_BOX_ATTRIBUTE, KanbanArchParser } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanRecord, getColorIndex } from "./kanban_record";
 
@@ -13,7 +13,7 @@ patch(KanbanArchParser.prototype, {
         const archInfo = super.parse(xmlDoc, models, modelName);
 
         // Color and color picker (first node found is taken for each)
-        const legacyCardDoc = archInfo.templateDocs[KANBAN_BOX_ATTRIBUTE];
+        const legacyCardDoc = archInfo.templateDocs[LEGACY_KANBAN_BOX_ATTRIBUTE];
         if (legacyCardDoc) {
             const cardColorEl = legacyCardDoc.querySelector("[color]");
             const cardColorField = cardColorEl && cardColorEl.getAttribute("color");

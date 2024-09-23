@@ -21,7 +21,7 @@
                 </button>
                 <t t-set-slot="content">
                     <KanbanDropdownMenuWrapper>
-                        <t t-call="{{ templates[this.constructor.KANBAN_MENU_ATTRIBUTE] }}" t-call-context="renderingContext"/>
+                        <t t-call="{{ templates[this.menuTemplateName] }}" t-call-context="renderingContext"/>
                     </KanbanDropdownMenuWrapper>
                 </t>
             </Dropdown>
