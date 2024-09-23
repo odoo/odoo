@@ -5972,6 +5972,7 @@ class BaseModel(metaclass=MetaModel):
 
     def toggle_active(self):
         "Inverses the value of :attr:`active` on the records in ``self``."
+        assert self._active_name, f"No 'active' field on model {self._name}"
         active_recs = self.filtered(self._active_name)
         active_recs[self._active_name] = False
         (self - active_recs)[self._active_name] = True
@@ -5980,12 +5981,14 @@ class BaseModel(metaclass=MetaModel):
         """Sets :attr:`active` to ``False`` on a recordset, by calling
          :meth:`toggle_active` on its currently active records.
         """
+        assert self._active_name, f"No 'active' field on model {self._name}"
         return self.filtered(lambda record: record[self._active_name]).toggle_active()
 
     def action_unarchive(self):
         """Sets :attr:`active` to ``True`` on a recordset, by calling
         :meth:`toggle_active` on its currently inactive records.
         """
+        assert self._active_name, f"No 'active' field on model {self._name}"
         return self.filtered(lambda record: not record[self._active_name]).toggle_active()
 
     def _register_hook(self):
