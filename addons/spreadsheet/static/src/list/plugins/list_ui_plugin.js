@@ -289,7 +289,7 @@ export class ListUIPlugin extends OdooUIPlugin {
      * @returns {string|undefined}
      */
     getListIdFromPosition(position) {
-        const cell = this.getters.getCell(position);
+        const cell = this.getters.getCorrespondingFormulaCell(position);
         const sheetId = position.sheetId;
         if (cell && cell.isFormula) {
             const listFunction = getFirstListFunction(cell.compiledFormula.tokens);
