@@ -168,7 +168,10 @@ class GoogleSync(models.AbstractModel):
         """
         write_dates = dict(write_dates or {})
         existing = google_events.exists(self.env)
-        new = google_events - existing - google_events.cancelled()
+
+        # Pre-process new google events and filter existing, cancelled and specific events.
+        self._pre_process_google_events(google_events)
+        new = google_events - existing - google_events.cancelled() - self._get_skipped_google_events(google_events)
 
         odoo_values = [
             dict(self._odoo_values(e, default_reminders), need_sync=False)
@@ -191,7 +194,11 @@ class GoogleSync(models.AbstractModel):
 
         cancelled_odoo.exists()._cancel()
         synced_records = new_odoo + cancelled_odoo
-        pending = existing - cancelled
+
+        # Pre-process existing google events and filter cancelled and specific events.
+        self._pre_process_google_events(existing)
+        pending = existing - cancelled - self._get_skipped_google_events(existing)
+
         pending_odoo = self.browse(pending.odoo_ids(self.env)).exists()
         for gevent in pending:
             odoo_record = self.browse(gevent.odoo_id(self.env))
@@ -210,6 +217,14 @@ class GoogleSync(models.AbstractModel):
                 synced_records |= odoo_record
 
         return synced_records
+
+    def _pre_process_google_events(self, existing_gevents):
+        """ Overridable method for pre-processing existing google events. """
+        return
+
+    def _get_skipped_google_events(self, existing_gevents):
+        """ Overridable method for filtering existing google events. """
+        return []
 
     def _google_error_handling(self, http_error):
         # We only handle the most problematic errors of sync events.
