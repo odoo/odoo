@@ -86,6 +86,16 @@ action = model.setting_init_bank_account_action()
             <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
         </record>
 
+        <record id="action_new_credit_card_setting" model="ir.actions.server">
+            <field name="name">Add a Credit Card Account</field>
+            <field name="model_id" ref="model_res_company"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model.setting_init_credit_card_account_action()
+            </field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+        </record>
+
         <record id="action_account_supplier_accounts" model="ir.actions.act_window">
             <field name="name">Bank Accounts</field>
             <field name="type">ir.actions.act_window</field>
