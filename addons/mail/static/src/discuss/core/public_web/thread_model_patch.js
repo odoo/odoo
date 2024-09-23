@@ -44,9 +44,6 @@ const threadPatch = {
     get canLeave() {
         return !this.parent_channel_id && super.canLeave;
     },
-    get canUnpin() {
-        return (this.parent_channel_id && this.importantCounter === 0) || super.canUnpin;
-    },
     _computeDiscussAppCategory() {
         if (this.parent_channel_id) {
             return;

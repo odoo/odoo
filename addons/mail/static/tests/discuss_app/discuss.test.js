@@ -567,13 +567,9 @@ test("sidebar: basic channel rendering", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
-    await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands.d-none");
-    await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
-    );
-    await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave Channel']"
-    );
+    await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-actions.d-none");
+    await click("[title='Channel Actions']");
+    await contains(".o-dropdown-item:contains('Leave Channel')");
 });
 
 test("channel become active", async () => {
@@ -616,28 +612,6 @@ test("sidebar: channel rendering with needaction counter", async () => {
         contains: [
             ["span", { text: "general" }],
             [".badge", { text: "1" }],
-        ],
-    });
-});
-
-test("sidebar: chat rendering with unread counter", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    for (let i = 0; i < 100; ++i) {
-        pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
-            body: `message ${i}`,
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-    }
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", {
-        contains: [
-            [".badge", { text: "100" }],
-            [".o-mail-DiscussSidebarChannel-commands", { text: "Unpin Conversation", count: 0 }], // weak test, no guarantee this selector is valid in the first place
         ],
     });
 });
@@ -1978,7 +1952,9 @@ test("composer state: attachments save and restore", async () => {
         ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]",
         files
     );
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", { count: 3 });
+    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", {
+        count: 3,
+    });
     // Switch back to #general
     await click("button", { text: "General" });
     await contains(".o-mail-Composer .o-mail-AttachmentCard");
@@ -2100,9 +2076,10 @@ test("Correct breadcrumb when open discuss from chat window then see settings", 
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Open in Discuss" });
-    await click("[title='Channel settings']", {
+    await click("[title='Channel Actions']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "General" }],
     });
+    await click(".o-dropdown-item:contains('Advanced Settings')");
     await contains(".o_breadcrumb", { text: "GeneralGeneral" });
 });
 

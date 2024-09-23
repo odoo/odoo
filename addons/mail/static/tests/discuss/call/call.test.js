@@ -41,7 +41,7 @@ test("basic rendering", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
     await contains(".o-discuss-CallActionList");
@@ -68,7 +68,7 @@ test("keep the `more` popover active when hovering it", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     await contains(".o-discuss-CallActionList");
     await click("[title='More']");
@@ -90,7 +90,7 @@ test("no call with odoobot", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Discuss-header");
-    await contains("[title='Start a Call']", { count: 0 });
+    await contains("[title='Start Call']", { count: 0 });
 });
 
 test("should not display call UI when no more members (self disconnect)", async () => {
@@ -99,7 +99,7 @@ test("should not display call UI when no more members (self disconnect)", async 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await contains(".o-discuss-Call", { count: 0 });
@@ -114,9 +114,9 @@ test("show call UI in chat window when in call", async () => {
     await click(".o-mail-NotificationItem", { text: "General" });
     await contains(".o-mail-ChatWindow");
     await contains(".o-discuss-Call", { count: 0 });
-    await click(".o-mail-ChatWindow-command[title='Start a Call']");
+    await click(".o-mail-ChatWindow-command[title='Start Call']");
     await contains(".o-discuss-Call");
-    await contains(".o-mail-ChatWindow-command[title='Start a Call']", { count: 0 });
+    await contains(".o-mail-ChatWindow-command[title='Start Call']", { count: 0 });
 });
 
 test("should disconnect when closing page while in call", async () => {
@@ -133,7 +133,7 @@ test("should disconnect when closing page while in call", async () => {
         }
     });
 
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     // simulate page close
     await manuallyDispatchProgrammaticEvent(window, "pagehide");
@@ -201,7 +201,7 @@ test("can share screen", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await click("[title='More']");
     await click("[title='Share Screen']");
     await contains("video");
@@ -217,7 +217,7 @@ test("can share user camera", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await click("[title='Turn camera on']");
     await contains("video");
     await click("[title='Stop camera']");
@@ -230,7 +230,7 @@ test("Camera video stream stays in focus when on/off", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await click(".o-discuss-CallParticipantCard-avatar");
     await click("[title='Turn camera on']");
     await click("[title='Stop camera']");
@@ -260,7 +260,7 @@ test("Can share user camera and screen together", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await click("[title='More']");
     await click("[title='Share Screen']");
     await click("[title='Turn camera on']");
@@ -273,7 +273,7 @@ test("Click on inset card should replace the inset and active stream together", 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await click("[title='More']");
     await click("[title='Share Screen']");
     await click("[title='Turn camera on']");
@@ -301,7 +301,7 @@ test("join/leave sounds are only played on main tab", async () => {
     });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await click("[title='Start a Call']", { target: env1 });
+    await click("[title='Start Call']", { target: env1 });
     await contains(".o-discuss-Call", { target: env1 });
     await contains(".o-discuss-Call", { target: env2 });
     await waitForSteps(["tab1 - play - call-join"]);
@@ -339,7 +339,7 @@ test("Systray icon shows latest action", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
     await click("[title='Mute (shift+m)']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone-slash");
@@ -362,7 +362,7 @@ test("Systray icon keeps track of earlier actions", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-discuss-CallMenu-buttonContent .fa-microphone");
     await click("[title='More']");
     await click("[title='Share Screen']");
@@ -389,7 +389,7 @@ test("show call participants in discuss sidebar", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-mail-DiscussSidebar", {
         contains: [
             ".o-mail-DiscussSidebarChannel:contains('General') ~ .o-mail-DiscussSidebarCallParticipants:contains(Mitchell Admin)",
@@ -547,7 +547,7 @@ test("show call participants after stopping screen share", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await click("[title='Share Screen']");
     await contains("video");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
@@ -563,7 +563,7 @@ test("show call participants after stopping camera share", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await click("[title='Turn camera on']");
     await contains("video");
     await click("[title='Stop camera']");
@@ -643,11 +643,24 @@ test("should also invite to the call when inviting to the channel", async () => 
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     await click(".o-mail-Discuss-header button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
-    await click("[title='Invite to Channel']:enabled");
+    await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await contains(".o-discuss-CallParticipantCard.o-isInvitation");
+});
+
+test("can join / leave call from discuss sidebar actions", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Start Call')");
+    await contains(".o-discuss-Call");
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Disconnect')");
+    await contains(".o-discuss-Call", { count: 0 });
 });

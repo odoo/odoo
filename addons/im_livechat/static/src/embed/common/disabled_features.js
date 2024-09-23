@@ -12,7 +12,7 @@ patch(Thread.prototype, {
     },
 });
 
-const allowedThreadActions = new Set(["fold-chat-window", "close", "restart", "settings"]);
+const allowedThreadActions = new Set(["fold-chat-window", "close", "restart", "call-settings"]);
 for (const [actionName] of threadActionsRegistry.getEntries()) {
     if (!allowedThreadActions.has(actionName)) {
         threadActionsRegistry.remove(actionName);

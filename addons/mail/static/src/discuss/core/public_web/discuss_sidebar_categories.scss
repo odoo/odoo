@@ -27,12 +27,30 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
     --border-opacity: 0.5;
 }
 
+.o-mail-DiscussSidebarChannel-floatingName {
+    --border-opacity: 0.5;
+    background-color: var(---mail-DiscussSidebarChannel-floatingNameBgColor, mix($gray-100, $gray-200));
+}
+
 .o-mail-DiscussSidebar-item {
     line-height: 2; // so that same height as actions
     background-color: inherit !important;
 
-    &:hover .o-mail-DiscussSidebarChannel-commands {
+    &:hover .o-mail-DiscussSidebarChannel-actions {
         display: flex !important;
+    }
+}
+
+.o-mail-DiscussSidebarChannel-actions button {
+    opacity: 35%;
+
+    &:hover {
+        opacity: 100%;
+    }
+
+    &.o-showingActions {
+        opacity: 100%;
+        --border-opacity: .25;
     }
 }
 

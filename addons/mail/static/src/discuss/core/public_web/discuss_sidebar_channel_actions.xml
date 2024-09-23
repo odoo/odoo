@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarChannelActions">
+        <div class="o-mail-DiscussSidebarChannelActions d-flex flex-column o-gap-0_5" t-att-class="{ 'px-1 pt-1 pb-2': store.discuss.isSidebarCompact, 'p-1': !store.discuss.isSidebarCompact }">
+            <t t-call="mail.ThreadActionsAsDropdownContent">
+                <t t-set="group" t-value="threadActions.sidebarActions"/>
+            </t>
+        </div>
+    </t>
+</templates>

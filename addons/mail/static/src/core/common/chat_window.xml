@@ -25,35 +25,10 @@
                         </button>
                         <t t-set-slot="content">
                             <t t-set="quickActionsInDropdown" t-value="partitionedActions.quick.slice(ui.isSmall ? 2 : 4)"/>
-                            <t t-if="quickActionsInDropdown.length > 0">
-                                <t t-set="groupBefore" t-value="true"/>
-                                <t t-foreach="quickActionsInDropdown" t-as="action" t-key="action.id">
-                                    <t t-call="mail.ChatWindow.dropdownAction">
-                                        <t t-set="action" t-value="action"/>
-                                    </t>
-                                </t>
-                            </t>
-                            <t t-else="" t-set="groupBefore" t-value="false"/>
-                            <t t-if="partitionedActions.group.length > 0">
-                                <hr t-if="groupBefore" class="mx-2 my-1"/>
-                                <t t-set="groupBefore" t-value="true"/>
-                                <t t-foreach="partitionedActions.group" t-as="group" t-key="group_index">
-                                    <t t-foreach="group" t-as="action" t-key="action.id">
-                                        <t t-call="mail.ChatWindow.dropdownAction">
-                                            <t t-set="action" t-value="action"/>
-                                        </t>
-                                    </t>
-                                    <hr t-if="!group_last" class="mx-2 my-1"/>
-                                </t>
-                            </t>
-                            <t t-else="" t-set="groupBefore" t-value="false"/>
-                            <t t-if="partitionedActions.other.length">
-                                <hr t-if="groupBefore" class="mx-2 my-1"/>
-                                <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id">
-                                    <t t-call="mail.ChatWindow.dropdownAction">
-                                        <t t-set="action" t-value="action"/>
-                                    </t>
-                                </t>
+                            <t t-call="mail.ThreadActionsAsDropdownContent">
+                                <t t-set="quick" t-value="quickActionsInDropdown"/>
+                                <t t-set="group" t-value="partitionedActions.group"/>
+                                <t t-set="other" t-value="partitionedActions.other"/>
                             </t>
                         </t>
                     </Dropdown>
@@ -116,13 +91,6 @@
     <button class="o-mail-ChatWindow-command btn d-flex opacity-100-hover align-items-center p-0 o-quick rounded-3" style="aspect-ratio: 1;" t-att-class="{ 'o-small p-2 my-1': ui.isSmall }" t-attf-class="{{ itemClass }}" t-att-title="action.name" t-att-disabled="props.chatWindow.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i class="fa-lg" t-attf-class="{{ action.icon }}"/></button>
 </t>
 
-<t t-name="mail.ChatWindow.dropdownAction">
-    <DropdownItem class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-baseline p-2 m-0'" onSelected="() => action.onSelect()">
-        <i t-att-class="action.icon"/>
-        <span class="mx-2" t-att-class="action.nameClass" t-out="action.name"/>
-    </DropdownItem>
-</t>
-
 <t t-name="mail.ChatWindow.headerContent">
     <div class="o-mail-ChatWindow-threadAvatar position-relative bg-inherit my-0 me-1" t-att-class="{
         'py-1': !thread or threadActions.actions.length gt 3,
@@ -141,4 +109,45 @@
     <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
     <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent mx-1 my-0 py-1" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
 </t>
+
+<t t-name="mail.ThreadActionsAsDropdownContent">
+    <t t-if="quick?.length > 0">
+        <t t-set="groupBefore" t-value="true"/>
+        <t t-foreach="quick" t-as="action" t-key="action.id">
+            <t t-call="mail.ThreadActionsAsDropdownContent.action">
+                <t t-set="action" t-value="action"/>
+            </t>
+        </t>
+    </t>
+    <t t-else="" t-set="groupBefore" t-value="false"/>
+    <t t-if="group?.length > 0">
+        <hr t-if="groupBefore" class="mx-2 my-1"/>
+        <t t-set="groupBefore" t-value="true"/>
+        <t t-foreach="group" t-as="group" t-key="group_index">
+            <t t-foreach="group" t-as="action" t-key="action.id">
+                <t t-call="mail.ThreadActionsAsDropdownContent.action">
+                    <t t-set="action" t-value="action"/>
+                </t>
+            </t>
+            <hr t-if="!group_last" class="mx-2 my-1"/>
+        </t>
+    </t>
+    <t t-else="" t-set="groupBefore" t-value="false"/>
+    <t t-if="other?.length">
+        <hr t-if="groupBefore" class="mx-2 my-1"/>
+        <t t-foreach="other" t-as="action" t-key="action.id">
+            <t t-call="mail.ThreadActionsAsDropdownContent.action">
+                <t t-set="action" t-value="action"/>
+            </t>
+        </t>
+    </t>
+</t>
+
+<t t-name="mail.ThreadActionsAsDropdownContent.action">
+    <DropdownItem class="'btn d-flex align-items-baseline m-0 rounded-0 ' + (env.inChatWindow ? 'o-mail-ChatWindow-command p-2' : 'rounded-4 px-2 py-1 smaller')" onSelected="() => action.onSelect()">
+        <i t-att-class="action.icon"/>
+        <span t-att-class="{ 'mx-2': env.inChatWindow, 'mx-1': !env.inChatWindow }" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
+    </DropdownItem>
+</t>
+
 </templates>

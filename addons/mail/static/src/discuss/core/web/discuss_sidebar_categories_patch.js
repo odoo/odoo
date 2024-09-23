@@ -1,41 +1,7 @@
 import { patch } from "@web/core/utils/patch";
-import {
-    DiscussSidebarCategory,
-    DiscussSidebarChannel,
-} from "../public_web/discuss_sidebar_categories";
+import { DiscussSidebarCategory } from "../public_web/discuss_sidebar_categories";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-
-/** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarChannel} */
-const DiscussSidebarChannelPatch = {
-    setup() {
-        super.setup();
-        this.actionService = useService("action");
-    },
-    get commands() {
-        const commands = super.commands;
-        if (this.thread.channel_type === "channel") {
-            commands.push({
-                onSelect: () => this.openSettings(),
-                label: _t("Channel settings"),
-                icon: "fa fa-cog",
-                sequence: 10,
-            });
-        }
-        return commands;
-    },
-    openSettings() {
-        if (this.thread.channel_type === "channel") {
-            this.actionService.doAction({
-                type: "ir.actions.act_window",
-                res_model: "discuss.channel",
-                res_id: this.thread.id,
-                views: [[false, "form"]],
-                target: "current",
-            });
-        }
-    },
-};
 
 /** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarCategory} */
 const DiscussSidebarCategoryPatch = {
@@ -74,5 +40,4 @@ const DiscussSidebarCategoryPatch = {
     },
 };
 
-patch(DiscussSidebarChannel.prototype, DiscussSidebarChannelPatch);
 patch(DiscussSidebarCategory.prototype, DiscussSidebarCategoryPatch);

@@ -246,7 +246,7 @@ export function useComposerActions() {
             }
             const group = sortedGroups.map(([groupId, actions]) => actions);
             const other = actions
-                .filter((a) => !a.sequenceQuick & !a.sequenceGroup)
+                .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
                 .sort((a1, a2) => a1.sequence - a2.sequence);
             return { quick, group, other, pickers };
         },
