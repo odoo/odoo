@@ -58,7 +58,7 @@ WebsiteSaleCheckout.include({
                 this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass(
                     'disabled', !result.mondial_relay.current
                 );
-                this.$modal_mondialrelay.modal('show');
+                this.modalMondialRelayBS.show();
             }
         }
         this._adaptUseDeliveryAsBillingToggle();
@@ -148,7 +148,8 @@ WebsiteSaleCheckout.include({
                 },
             };
             this.$modal_mondialrelay.find('#o_zone_widget').MR_ParcelShopPicker(params);
-            this.$modal_mondialrelay.modal('show');
+            this.modalMondialRelayBS = Modal.getOrCreateInstance(this.modalMondialRelayEl);
+            this.modalMondialRelayBS.show();
             this.$modal_mondialrelay.find('#o_zone_widget').trigger("MR_RebindMap");
         };
         document.body.appendChild(script);

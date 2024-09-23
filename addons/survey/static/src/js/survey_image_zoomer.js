@@ -27,7 +27,8 @@ export const SurveyImageZoomer = publicWidget.Widget.extend({
         const superResult = await this._super(...arguments);
         // Prevent having hidden modal in the view.
         this.$el.on('hidden.bs.modal', () => this.destroy());
-        this.$el.modal('show');
+        const modal = Modal.getOrCreateInstance(this.el);
+        modal.show();
         return superResult;
     },
 
@@ -57,7 +58,8 @@ export const SurveyImageZoomer = publicWidget.Widget.extend({
      */
      _onZoomerClick(e) {
         e.preventDefault();
-        this.$el.modal('hide');
+        const modal = Modal.getOrCreateInstance(this.el);
+        modal.hide();
     },
     /**
      * @private

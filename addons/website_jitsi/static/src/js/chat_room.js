@@ -86,13 +86,17 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
             // create a model and append the Jitsi iframe in it
             let $jitsiModal = $(renderToElement('chat_room_modal', {}));
             $("body").append($jitsiModal);
-            $jitsiModal.modal('show');
+            const modal = Modal.getOrCreateInstance($jitsiModal[0]);
+            modal.show();
 
             let jitsiRoom = await this._joinJitsiRoom($jitsiModal.find('.modal-body'));
 
             // close the modal when hanging up
             jitsiRoom.addEventListener('videoConferenceLeft', async () => {
-                $('.o_wjitsi_room_modal').modal('hide');
+                const modal = Modal.getOrCreateInstance(
+                    document.querySelector(".o_wjitsi_room_modal")
+                );
+                modal.hide();
             });
 
             // when the modal is closed, delete the Jitsi room object and clear the DOM

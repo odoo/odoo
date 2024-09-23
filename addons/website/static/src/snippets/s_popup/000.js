@@ -125,7 +125,10 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
-        this.$el.find('.modal').modal('hide');
+        this.el.querySelectorAll(".modal").forEach((el) => {
+            const modal = Modal.getOrCreateInstance(el);
+            modal.hide();
+        });
         clearTimeout(this.timeout);
         if (this.modalShownOnClickEl) {
             window.removeEventListener('hashchange', this.__onHashChange);
@@ -168,7 +171,10 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
      * @private
      */
     _hidePopup: function () {
-        this.$el.find('.modal').modal('hide');
+        this.el.querySelectorAll(".modal").forEach((el) => {
+            const modal = Modal.getOrCreateInstance(el);
+            modal.hide();
+        });
     },
     /**
      * @private
@@ -177,7 +183,10 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
         if (this._popupAlreadyShown || !this._canShowPopup()) {
             return;
         }
-        this.$el.find('.modal').modal('show');
+        this.el.querySelectorAll(".modal").forEach((el) => {
+            const modal = Modal.getOrCreateInstance(el);
+            modal.show();
+        });
     },
     /**
      * @private
@@ -413,7 +422,8 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      */
     _toggleCookiesBar() {
         const popupEl = this.el.querySelector(".modal");
-        $(popupEl).modal("toggle");
+        const modal = Modal.getOrCreateInstance(popupEl);
+        modal.toggle();
         // As we're using Bootstrap's events, the PopupWidget prevents the modal
         // from being shown after hiding it: override that behavior.
         this._popupAlreadyShown = false;
@@ -492,7 +502,8 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         if (currCookie && JSON.parse(currCookie).optional || !this._popupAlreadyShown) {
             return;
         }
-        $(modalEl).modal("show");
+        const modal = Modal.getOrCreateInstance(modalEl);
+        modal.show();
 
         // The cookies bar remains hidden, most probably because of the browser
         // or an extension: notify the user because "nothing happens when I
