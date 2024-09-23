@@ -44,8 +44,8 @@
                 <section class="s_text_block pt40 pb40 o_colored_level " data-snippet="s_text_block">
                     <div class="container s_allow_columns">
                         <div class="row">
-                            <div class="col-lg-8 mt-4 mt-lg-0">
-                                <p>
+                            <div class="col-lg-7 mt-4 mt-lg-0">
+                                <p class="lead">
                                     Contact us about anything related to our company or services.<br/>
                                     We'll do our best to get back to you as soon as possible.
                                 </p>
@@ -53,71 +53,47 @@
                                     <div class="container">
                                         <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-pre-fill="true">
                                             <div class="s_website_form_rows row s_col_no_bgcolor">
-                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
-                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact1">
-                                                            <span class="s_website_form_label_content">Name</span>
-                                                            <span class="s_website_form_mark"> *</span>
-                                                        </label>
-                                                        <div class="col-sm">
-                                                            <input id="contact1" type="text" class="form-control s_website_form_input" name="name" required="" data-fill-with="name"/>
-                                                        </div>
-                                                    </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact1">
+                                                        <span class="s_website_form_label_content">Name</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact1" type="text" class="form-control s_website_form_input" name="name" required="" data-fill-with="name"/>
                                                 </div>
-                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
-                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact2">
-                                                            <span class="s_website_form_label_content">Phone Number</span>
-                                                        </label>
-                                                        <div class="col-sm">
-                                                            <input id="contact2" type="tel" class="form-control s_website_form_input" name="phone" data-fill-with="phone"/>
-                                                        </div>
-                                                    </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact2">
+                                                        <span class="s_website_form_label_content">Phone Number</span>
+                                                    </label>
+                                                    <input id="contact2" type="tel" class="form-control s_website_form_input" name="phone" data-fill-with="phone"/>
                                                 </div>
-                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="email" data-name="Field">
-                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact3">
-                                                            <span class="s_website_form_label_content">Email</span>
-                                                            <span class="s_website_form_mark"> *</span>
-                                                        </label>
-                                                        <div class="col-sm">
-                                                            <input id="contact3" type="email" class="form-control s_website_form_input" name="email_from" required="" data-fill-with="email"/>
-                                                        </div>
-                                                    </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_required s_website_form_model_required" data-type="email" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact3">
+                                                        <span class="s_website_form_label_content">Email</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact3" type="email" class="form-control s_website_form_input" name="email_from" required="" data-fill-with="email"/>
                                                 </div>
-                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
-                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact4">
-                                                            <span class="s_website_form_label_content">Company</span>
-                                                        </label>
-                                                        <div class="col-sm">
-                                                            <input id="contact4" type="text" class="form-control s_website_form_input" name="company" data-fill-with="commercial_company_name"/>
-                                                        </div>
-                                                    </div>
+                                                <div class="mb-3 col-lg-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact4">
+                                                        <span class="s_website_form_label_content">Company</span>
+                                                    </label>
+                                                    <input id="contact4" type="text" class="form-control s_website_form_input" name="company" data-fill-with="commercial_company_name"/>
                                                 </div>
-                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
-                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact5">
-                                                            <span class="s_website_form_label_content">Subject</span>
-                                                            <span class="s_website_form_mark"> *</span>
-                                                        </label>
-                                                        <div class="col-sm">
-                                                            <input id="contact5" type="text" class="form-control s_website_form_input" name="subject" required=""/>
-                                                        </div>
-                                                    </div>
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact5">
+                                                        <span class="s_website_form_label_content">Subject</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <input id="contact5" type="text" class="form-control s_website_form_input" name="subject" required=""/>
                                                 </div>
-                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
-                                                    <div class="row s_col_no_resize s_col_no_bgcolor">
-                                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact6">
-                                                            <span class="s_website_form_label_content">Question</span>
-                                                            <span class="s_website_form_mark"> *</span>
-                                                        </label>
-                                                        <div class="col-sm">
-                                                            <textarea id="contact6" class="form-control s_website_form_input" name="description" required=""></textarea>
-                                                        </div>
-                                                    </div>
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
+                                                    <label class="s_website_form_label" style="width: 200px" for="contact6">
+                                                        <span class="s_website_form_label_content">Question</span>
+                                                        <span class="s_website_form_mark"> *</span>
+                                                    </label>
+                                                    <textarea id="contact6" class="form-control s_website_form_input" name="description" required="" rows="8"></textarea>
                                                 </div>
-                                                <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_dnone">
+                                                <div class="mb-3 col-12 s_website_form_field s_website_form_dnone">
                                                     <div class="row s_col_no_resize s_col_no_bgcolor">
                                                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact7">
                                                             <span class="s_website_form_label_content">Email To</span>
@@ -137,9 +113,9 @@
                                     </div>
                                 </section>
                             </div>
-                            <div class="col-lg-4 mt-4 mt-lg-0">
+                            <div class="col-lg-4 offset-lg-1 mt-4 mt-lg-0">
+                                <h5>My Company</h5>
                                 <ul class="list-unstyled mb-0 ps-2">
-                                    <li>My Company</li>
                                     <li><i class="fa fa-map-marker fa-fw me-2"/><span class="o_force_ltr">3575 Fake Buena Vista Avenue</span></li>
                                     <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr">+1 555-555-5556</span></li>
                                     <li><i class="fa fa-1x fa-fw fa-envelope me-2"/><span>info@yourcompany.example.com</span></li>
@@ -166,7 +142,7 @@
                         <section class="s_text_block pt40 pb40 o_colored_level " data-snippet="s_text_block">
                             <div class="container s_allow_columns">
                                 <div class="row">
-                                    <div class="col-lg-7 col-xl-6 me-lg-auto text-center">
+                                    <div class="col-lg-6 offset-lg-1 text-center">
                                         <div class="d-inline-block mx-auto p-4">
                                             <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
                                             <h1 class="fw-bolder">Thank You!</h1>
@@ -175,9 +151,9 @@
                                             <a href="/">Go to Homepage</a>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-4 offset-lg-1">
+                                        <h5>My Company</h5>
                                         <ul class="list-unstyled mb-0 ps-2">
-                                            <li>My Company</li>
                                             <li><i class="fa fa-map-marker fa-fw me-2"/><span class="o_force_ltr">3575 Fake Buena Vista Avenue</span></li>
                                             <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr">+1 555-555-5556</span></li>
                                             <li><i class="fa fa-1x fa-fw fa-envelope me-2"/><span>info@yourcompany.example.com</span></li>
