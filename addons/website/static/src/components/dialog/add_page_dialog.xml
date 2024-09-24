@@ -53,7 +53,7 @@
             <div t-if="this.props.isCustom and !this.props.templates.length" class="col-12 alert alert-info d-flex">
                 <i class="fa fa-2x fa-info-circle me-3"/>
                 To add your page to this category, open the page properties: "Site -> Properties".<br/>
-                Then, in the Publish tab, enable "New Page Template".
+                Then enable the "Is a Template" option.
             </div>
             <t t-foreach="[...this.columns.entries()]" t-as="column" t-key="column[0]">
                 <div class="col-lg-4 col-12">
