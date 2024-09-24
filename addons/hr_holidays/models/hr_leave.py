@@ -1207,7 +1207,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def open_pending_requests(self):
         user_employee = self.env.user.employee_id
         employee = self.env['hr.employee']._get_contextual_employee()
-        context = {'search_default_second_approval': True}
+        context = {'search_default_approve': True, 'search_default_second_approval': True}
         domain = []
         if employee != user_employee:
             view_name = 'hr_holidays.hr_leave_allocation_view_tree'
