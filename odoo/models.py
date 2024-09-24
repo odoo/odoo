@@ -6147,8 +6147,8 @@ class BaseModel(metaclass=MetaModel):
 
         Return a new version of this recordset with a modified context, such that::
 
-            result.env.company = company
-            result.env.companies = self.env.companies | company
+            result.env.company == company
+            result.env.companies == self.env.companies | company
 
         :param company: main company of the new environment.
         :type company: :class:`~odoo.addons.base.models.res_company` or int

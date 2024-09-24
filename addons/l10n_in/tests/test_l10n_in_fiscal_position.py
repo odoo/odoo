@@ -76,7 +76,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
             state_id=self.partner_b.state_id.id,  # Setting Partner B state will be now Intra State for branch 1
             account_fiscal_country_id=self.country_in.id,
         )
-        self.env.company = self.outside_in_company
+        self.env = self.env['res.company'].with_company(self.outside_in_company).env
         branch_2 = self.env['res.company'].create({
             'name': 'Branch 2',
             'parent_id': self.default_company.id,
@@ -89,7 +89,7 @@ class TestFiscal(L10nInTestInvoicingCommon):
         branch_2.write({'state_id': self.env.ref('base.state_in_mp').id})
         self._assert_in_intra_state_fiscal_with_company(branch_1 + branch_2)
         # Invoice fiscal test with branch
-        self.env.company = branch_1
+        self.env = self.env['res.company'].with_company(branch_1).env
         self._assert_invoice_fiscal_position(
             fiscal_position_ref='fiscal_position_in_intra_state',
             partner=self.partner_b,

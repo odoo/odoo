@@ -489,7 +489,7 @@ class TestSaleOrder(SaleCommon):
         company_2 = self.env['res.company'].create({
             'name': 'Company 2'
         })
-        self.env.companies = [self.env.company, company_2]
+        self.env = company_2.with_context(allowed_company_ids=[self.env.company.id, company_2.id]).env
         so_form = Form(self.env['sale.order'])
         with self.assertRaises(ValidationError):
             so_form.company_id = self.env['res.company']
