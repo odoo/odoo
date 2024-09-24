@@ -9,6 +9,7 @@ patch(ReceiptScreen.prototype, {
         super.setup(...arguments);
 
         this.report = useService("report");
+        this.orm = useService("orm");
         this.doPrintEventFull = useTrackedAsync(() => this.printEventFull());
         this.doPrintEventBadge = useTrackedAsync(() => this.printEventBadge());
     },
@@ -48,6 +49,12 @@ patch(ReceiptScreen.prototype, {
                 "event.action_report_event_registration_badge_96x82",
                 smallBadgeRegistrations.map((reg) => reg.id)
             );
+        }
+
+        // Update the status to "attended" if we print the attendee badge
+        if (registrations.length > 0) {
+            const registrationIds = registrations.map((registration) => registration.id);
+            await this.orm.write("event.registration", registrationIds, { state: "done" });
         }
     },
 });
