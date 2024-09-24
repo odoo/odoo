@@ -563,4 +563,18 @@ export class Thread extends Component {
         this.lastSetValue = value;
         this.saveScroll();
     }
+
+    get showWelcomeMessage() {
+        return (
+            this.props.thread.model !== "mail.box" && this.props.thread.channel_type === "channel"
+        );
+    }
+
+    get threadCreatorName() {
+        return (
+            Object.values(this.store.Persona.records).find(
+                (persona) => persona.userId === this.props.thread.create_uid
+            )?.name || "OdooBot"
+        );
+    }
 }
