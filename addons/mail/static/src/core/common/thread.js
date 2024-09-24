@@ -564,4 +564,11 @@ export class Thread extends Component {
             ? [...this.props.thread.nonEmptyMessages]
             : [...this.props.thread.nonEmptyMessages].reverse();
     }
+
+    get showWelcomeMessage() {
+        return (
+            (!this.props.thread.isEmpty || this.props.thread.model !== "mail.box") &&
+            this.props.thread.channel_type === "channel"
+        );
+    }
 }
