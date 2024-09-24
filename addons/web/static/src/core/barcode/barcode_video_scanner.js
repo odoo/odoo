@@ -21,6 +21,7 @@ export class BarcodeVideoScanner extends Component {
             validate: (fm) => ["environment", "left", "right", "user"].includes(fm),
         },
         close: { type: Function, optional: true },
+        onReady: { type: Function, optional: true },
         onResult: Function,
         onError: Function,
         delayBetweenScan: { type: Number, optional: true },
@@ -77,6 +78,12 @@ export class BarcodeVideoScanner extends Component {
                 this.props.onError(new Error(errorMessage));
                 return;
             }
+            if (!this.videoPreviewRef.el) {
+                this.cleanStreamAndTimeout();
+                const errorMessage = _t("Barcode Video Scanner could not be mounted properly.");
+                this.props.onError(new Error(errorMessage));
+                return;
+            }
             this.videoPreviewRef.el.srcObject = this.stream;
             await this.isVideoReady();
             const { height, width } = getComputedStyle(this.videoPreviewRef.el);
@@ -91,14 +98,16 @@ export class BarcodeVideoScanner extends Component {
             this.detectorTimeout = setTimeout(this.detectCode.bind(this), 100);
         });
 
-        onWillUnmount(() => {
-            clearTimeout(this.detectorTimeout);
-            this.detectorTimeout = null;
-            if (this.stream) {
-                this.stream.getTracks().forEach((track) => track.stop());
-                this.stream = null;
-            }
-        });
+        onWillUnmount(() => this.cleanStreamAndTimeout());
+    }
+
+    cleanStreamAndTimeout() {
+        clearTimeout(this.detectorTimeout);
+        this.detectorTimeout = null;
+        if (this.stream) {
+            this.stream.getTracks().forEach((track) => track.stop());
+            this.stream = null;
+        }
     }
 
     isZXingBarcodeDetector() {
@@ -116,6 +125,9 @@ export class BarcodeVideoScanner extends Component {
             await delay(10);
         }
         this.state.isReady = true;
+        if (this.props.onReady) {
+            this.props.onReady();
+        }
     }
 
     onResize(overlayInfo) {
@@ -157,7 +169,7 @@ export class BarcodeVideoScanner extends Component {
         } catch (err) {
             this.props.onError(err);
         }
-        if (!barcodeDetected || !this.props.delayBetweenScan) {
+        if (this.stream && (!barcodeDetected || !this.props.delayBetweenScan)) {
             this.detectorTimeout = setTimeout(this.detectCode.bind(this), 100);
         }
     }
