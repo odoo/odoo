@@ -45,7 +45,7 @@ test("displays figures in first sheet", async () => {
             dataSets: [{ dataRange: "A1" }],
             legendPosition: "top",
             verticalAxisPosition: "left",
-            title: { text: "" },
+            title: { type: "string", text: "" },
         },
     };
     const spreadsheetData = {
@@ -94,7 +94,7 @@ test("double clicking on a figure doesn't open the side panel", async () => {
             dataSets: [{ dataRange: "A1" }],
             legendPosition: "top",
             verticalAxisPosition: "left",
-            title: { text: "" },
+            title: { type: "string", text: "" },
         },
     };
     const spreadsheetData = {

@@ -1,7 +1,9 @@
 /** @odoo-module */
 
-import { AbstractChart, CommandResult } from "@odoo/o-spreadsheet";
+import { AbstractChart, CommandResult, helpers } from "@odoo/o-spreadsheet";
 import { ChartDataSource } from "../data_source/chart_data_source";
+
+const { getChartTitleWithRangeString } = helpers;
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
@@ -82,7 +84,7 @@ export class OdooChart extends AbstractChart {
     getDefinition() {
         return {
             //@ts-ignore Defined in the parent class
-            title: this.title,
+            title: getChartTitleWithRangeString(this.getters, this.sheetId, this.title),
             background: this.background,
             legendPosition: this.legendPosition,
             metaData: this.metaData,
