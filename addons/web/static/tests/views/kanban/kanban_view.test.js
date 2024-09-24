@@ -70,7 +70,6 @@ import { FileInput } from "@web/core/file_input/file_input";
 
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { SampleServer } from "@web/model/sample_server";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
@@ -755,27 +754,6 @@ test("context can be used in kanban template", async () => {
                 </templates>
             </kanban>`,
         context: { some_key: 1 },
-        domain: [["id", "=", 1]],
-    });
-
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(".o_kanban_record span:contains(yop)").toHaveCount(1);
-});
-
-test("user context can be used in kanban template", async () => {
-    patchWithCleanup(user, { context: { some_key: true } });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <div t-name="card">
-                        <field t-if="user_context.some_key" name="foo"/>
-                    </div>
-                </templates>
-            </kanban>`,
         domain: [["id", "=", 1]],
     });
 

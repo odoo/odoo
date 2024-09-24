@@ -389,7 +389,6 @@ export class KanbanRecord extends Component {
             read_only_mode: this.props.readonly,
             record: this.dataState.record,
             selection_mode: this.props.forceGlobalClick,
-            user_context: user.context,
             widget: this.dataState.widget,
             __comp__: Object.assign(Object.create(this), { this: this }),
         };
@@ -397,6 +396,8 @@ export class KanbanRecord extends Component {
             // deprecated, use <field name="" widget="image"/>
             renderingContext.kanban_image = (...args) =>
                 getImageSrcFromRecordInfo(this.props.record, ...args);
+            // deprecated, use context instead
+            renderingContext.user_context = user.context;
         }
         return renderingContext;
     }
