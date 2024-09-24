@@ -662,19 +662,23 @@ class AccountAccount(models.Model):
         """If we're creating a new account through a many2one, there are chances that we typed the account code
         instead of its name. In that case, switch both fields values.
         """
-        if 'name' not in default_fields and 'code' not in default_fields:
-            return super().default_get(default_fields)
-        default_name = self._context.get('default_name')
-        default_code = self._context.get('default_code')
-        if default_name and not default_code:
-            try:
-                default_code = int(default_name)
-            except ValueError:
-                pass
-            if default_code:
-                default_name = False
-        contextual_self = self.with_context(default_name=default_name, default_code=default_code)
-        return super(AccountAccount, contextual_self).default_get(default_fields)
+        context = {}
+        if 'name' in default_fields or 'code' in default_fields:
+            default_name = self.env.context.get('default_name')
+            default_code = self.env.context.get('default_code')
+            if default_name and not default_code:
+                with contextlib.suppress(ValueError):
+                    default_code = int(default_name)
+                if default_code:
+                    default_name = False
+            context.update({'default_name': default_name, 'default_code': default_code})
+
+        defaults = super(AccountAccount, self.with_context(**context)).default_get(default_fields)
+
+        if 'code_mapping_ids' in default_fields and 'code_mapping_ids' not in defaults:
+            defaults['code_mapping_ids'] = [Command.create({'company_id': c.id}) for c in self.env.user.company_ids]
+
+        return defaults
 
     @api.model
     def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None):
@@ -788,14 +792,14 @@ class AccountAccount(models.Model):
             company_ids = self._fields['company_ids'].convert_to_cache(vals['company_ids'], account)
             companies = self.env['res.company'].browse(company_ids)
 
-            if 'code_by_company' not in default and ('code' not in default or len(companies) > 1):
+            if 'code_mapping_ids' not in default and ('code' not in default or len(companies) > 1):
                 companies_to_get_new_account_codes = companies if 'code' not in default else companies[1:]
-                vals['code_by_company'] = {}
+                vals['code_mapping_ids'] = []
 
                 for company in companies_to_get_new_account_codes:
                     start_code = account.with_company(company).code or account.with_company(account.company_ids[0]).code
                     new_code = account.with_company(company)._search_new_account_code(start_code, cache[company.id])
-                    vals['code_by_company'][company.id] = new_code
+                    vals['code_mapping_ids'].append(Command.create({'company_id': company.id, 'code': new_code}))
                     cache[company.id].add(new_code)
 
             if 'name' not in default:
@@ -902,17 +906,24 @@ class AccountAccount(models.Model):
             companies = self.env['res.company'].browse(company_ids) or self.env.company
 
             # Create the accounts with a single company and a single code.
+            code_by_company_list = []
             for vals in vals_list_for_company:
                 if 'prefix' in vals:
                     prefix, digits = vals.pop('prefix'), vals.pop('code_digits')
                     start_code = prefix.ljust(digits - 1, '0') + '1' if len(prefix) < digits else prefix
                     vals['code'] = self.with_company(companies[0])._search_new_account_code(start_code, cache)
                     cache.add(vals['code'])
-                elif 'code' not in vals and 'code_by_company' in vals:
-                    vals['code'] = vals['code_by_company'][companies[0].id]
+
+                # Intercept any values in `code_mapping_ids` to write the codes on the newly-created accounts.
+                # note: 'code_mapping_ids' should contain only CREATEs.
+                code_by_company = {v[2]['company_id']: v[2]['code'] for v in vals.get('code_mapping_ids', [])}
+                vals['code_mapping_ids'] = []  # Prevent requesting a default for `code_mapping_ids` in super().create()
+                if code_by_company and 'code' not in vals:
+                    vals['code'] = code_by_company[companies[0].id]
+                code_by_company_list.append(code_by_company)
+
                 vals['company_ids'] = [Command.set(companies[0].ids)]
 
-            code_by_company_list = [vals.pop('code_by_company', {}) for vals in vals_list_for_company]
             check_company_vals_list = [{fname: vals.pop(fname) for fname in check_company_fields if fname in vals} for vals in vals_list_for_company]
 
             new_accounts = super(AccountAccount, self.with_context({**self.env.context, 'allowed_company_ids': companies.ids})) \
