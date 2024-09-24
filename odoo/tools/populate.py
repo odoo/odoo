@@ -36,6 +36,8 @@ Key Features:
 from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime
+
+from psycopg2.errors import InsufficientPrivilege
 from dateutil.relativedelta import relativedelta
 import logging
 
@@ -138,9 +140,14 @@ def ignore_fkey_constraints(model: Model):
     """
     Disable Fkey constraints checks by setting the session to replica.
     """
-    model.env.cr.execute('SET session_replication_role TO replica')
-    yield
-    model.env.cr.execute('RESET session_replication_role')
+    try:
+        model.env.cr.execute('SET session_replication_role TO replica')
+        yield
+        model.env.cr.execute('RESET session_replication_role')
+    except InsufficientPrivilege:
+        _logger.warning("Cannot ignore Fkey constraints during insertion due to insufficient privileges for current pg_role."
+                        "The bulk insertion will be vastly slower than anticipated.")
+        yield
 
 
 def field_needs_variation(model: Model, field: Field) -> bool:
