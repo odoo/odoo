@@ -4,7 +4,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import float_is_zero, is_html_empty
+from odoo.tools import float_compare, float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
@@ -293,7 +293,7 @@ class ProductTemplate(models.Model):
                     uom=template.uom_id,
                     currency=currency,
                 )
-                if pricelist_base_price != pricelist_price:
+                if float_compare(pricelist_base_price, pricelist_price, precision_rounding=currency.rounding) > 0:
                     base_price = pricelist_base_price
                     template_price_vals['base_price'] = self._apply_taxes_to_price(
                         base_price, currency, product_taxes, taxes, self, website=website,
