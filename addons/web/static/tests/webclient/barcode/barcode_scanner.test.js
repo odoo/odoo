@@ -104,3 +104,34 @@ test("Barcode scanner crop overlay", async () => {
         { x: 0, y: 0, width: 250, height: 250 },
     ]);
 });
+
+test("BarcodeVideoScanner onReady props", async () => {
+    function mockUserMedia() {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const stream = canvas.captureStream();
+        canvas.width = 250;
+        canvas.height = 250;
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        return stream;
+    }
+    // Simulate an environment with a camera/webcam.
+    patchWithCleanup(browser.navigator, {
+        mediaDevices: {
+            getUserMedia: mockUserMedia,
+        },
+    });
+    const resolvedOnReadyPromise = new Promise((resolve) => {
+        mountWithCleanup(BarcodeVideoScanner, {
+            props: {
+                facingMode: "environment",
+                onReady: () => resolve(true),
+                onResult: () => {},
+                onError: () => {},
+            },
+        });
+    });
+    expect(await resolvedOnReadyPromise).toBe(true);
+});
