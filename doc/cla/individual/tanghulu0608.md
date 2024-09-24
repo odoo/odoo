@@ -8,5 +8,4 @@ declaration.
 
 Signed,
 
-wang ting wt@wangting.name https://github.com/tanghulu0608
-wang ting 39181819@qq.com https://github.com/tanghulu0608
+wang ting wt@cnie.tech https://github.com/tanghulu0608
