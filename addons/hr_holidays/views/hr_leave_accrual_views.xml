@@ -176,6 +176,7 @@
                                 <field name="accrual_validity_count"/>
                                 <field name="accrual_validity_type"/>
                                 <field name="cap_accrued_time"/>
+                                <field name="accrual_validity"/>
                                 <templates>
                                     <div t-name="card" class="bg-transparent border-0">
                                         <div class="o_hr_holidays_body">
@@ -242,9 +243,16 @@
                                                         Carry over:
                                                     </div>
                                                     <div class="col-6 m-0 ps-1">
-                                                        <t t-if="record.action_with_unused_accruals.raw_value === 'all'">all - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/></t>
+                                                        <t t-if="record.action_with_unused_accruals.raw_value === 'all'">all
+                                                            <span invisible="not accrual_validity">
+                                                                - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/>
+                                                            </span>
+                                                        </t>
                                                         <t t-elif="record.action_with_unused_accruals.raw_value === 'maximum'">up to <field name="postpone_max_days" /> <t t-esc="record.added_value_type.raw_value" />
-                                                        - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/></t>
+                                                            <span invisible="not accrual_validity">
+                                                                - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/>
+                                                            </span>
+                                                        </t>
                                                         <t t-else="">no</t>
                                                     </div>
                                                 </div>
