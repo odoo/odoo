@@ -33,7 +33,9 @@
                 <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
             </xpath>
             <xpath expr="//group/filter[@name='customer']" position="after">
-                <filter name="sale_order_id" string="Sales Order Id" context="{'group_by': 'sale_order_id'}" />
+                <!-- TODO: Remove me in master -->
+                <filter name="sale_order_id" string="Sales Order Id" invisible="1" />
+                <filter name="group_by_sale_order" string="Sales Order" context="{'group_by': 'sale_order_id'}" />
             </xpath>
         </field>
     </record>
