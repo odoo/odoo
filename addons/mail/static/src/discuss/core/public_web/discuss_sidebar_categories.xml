@@ -34,6 +34,7 @@
             <DiscussSidebarChannel t-foreach="filteredThreads(category.threads)" t-as="thread" t-key="thread.localId" thread="thread"/>
         </t>
         <DiscussSidebarChannel t-elif="store.discuss.thread?.in(category.threads)" thread="store.discuss.thread"/>
+        <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.in(category.threads)" thread="store.discuss.thread.parent_channel_id" />
     </t>
 
     <t t-name="mail.DiscussSidebarCategory">
@@ -101,9 +102,10 @@
                 </Dropdown>
                 <t t-else="" t-call="mail.DiscussSidebarChannel.main"/>
                 <t t-set="subChannels" t-value="env.filteredThreads?.(thread.sub_channel_ids) ?? []"/>
+                <t t-set="isCategoryOpen" t-value="thread.discussAppCategory.open" />
                 <ul t-if="subChannels.length > 0" class="list-unstyled position-relative flex-grow-1" t-att-class="{ 'my-1 d-flex flex-column gap-1': store.discuss.isSidebarCompact, 'mt-1 mb-0': !store.discuss.isSidebarCompact }">
                     <t t-foreach="subChannels" t-as="sub" t-key="sub.localId">
-                        <DiscussSidebarSubchannel thread="sub" isFirst="sub_first"/>
+                        <DiscussSidebarSubchannel t-if="isCategoryOpen or sub.eq(store.discuss.thread)" thread="sub" isFirst="sub_first or !isCategoryOpen"/>
                     </t>
                 </ul>
             </t>
