@@ -214,15 +214,15 @@ describe("pivot time adapters formatted value", () => {
         const adapter = pivotTimeAdapter("day");
         expect(adapter.toValueAndFormat("11/12/2020", DEFAULT_LOCALE)).toEqual({
             value: 44147,
-            format: "m/d/yyyy",
+            format: "dd mmm yyyy",
         });
         expect(adapter.toValueAndFormat("01/11/2020", DEFAULT_LOCALE)).toEqual({
             value: 43841,
-            format: "m/d/yyyy",
+            format: "dd mmm yyyy",
         });
         expect(adapter.toValueAndFormat("12/05/2020", DEFAULT_LOCALE)).toEqual({
             value: 44170,
-            format: "m/d/yyyy",
+            format: "dd mmm yyyy",
         });
     });
 
