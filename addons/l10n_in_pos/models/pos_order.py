@@ -7,6 +7,8 @@ from odoo import api, fields, models
 class PosOrder(models.Model):
     _inherit = 'pos.order'
 
+    l10n_in_state_id = fields.Many2one('res.country.state', string='Place of supply')
+
     def _prepare_invoice_vals(self):
         vals = super()._prepare_invoice_vals()
         if self.session_id.company_id.country_id.code == 'IN':
@@ -17,4 +19,6 @@ class PosOrder(models.Model):
             if not l10n_in_gst_treatment:
                 l10n_in_gst_treatment = partner.vat and 'regular' or 'consumer'
             vals['l10n_in_gst_treatment'] = l10n_in_gst_treatment
+            if self.l10n_in_state_id:
+                vals['l10n_in_state_id'] = self.l10n_in_state_id.id
         return vals
