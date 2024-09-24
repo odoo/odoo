@@ -572,4 +572,46 @@ export class Thread extends Component {
         this.lastSetValue = value;
         this.saveScroll();
     }
+
+    get showStartMessage() {
+        return (
+            ["channel", "group"].includes(this.props.thread.channel_type) ||
+            this.props.thread.channel_type === "chat"
+        );
+    }
+
+    get startMessageTitle() {
+        const channelName = this.props.thread.name;
+        if (this.props.thread.parent_channel_id) {
+            return channelName;
+        }
+        if (this.props.thread.channel_type === "channel") {
+            return _t("Welcome to #%(channelName)s!", { channelName });
+        }
+        return this.props.thread.displayName;
+    }
+
+    get startMessageSubtitle() {
+        if (this.props.thread.parent_channel_id) {
+            const authorName = Object.values(this.store.Persona.records).find(
+                (persona) => persona.userId === this.props.thread.create_uid
+            )?.name;
+            if (authorName) {
+                return _t("Started by %(authorName)s", { authorName });
+            }
+        }
+        if (this.props.thread.channel_type === "channel") {
+            return _t("This is the start of #%(channelName)s channel", {
+                channelName: this.props.thread.name,
+            });
+        }
+        if (this.props.thread.channel_type === "channel") {
+            return _t("This is the start of %(conversationName)s group", {
+                conversationName: this.props.thread.displayName,
+            });
+        }
+        return _t("This is the start of direct chat with %(userName)s", {
+            userName: this.props.thread.displayName,
+        });
+    }
 }

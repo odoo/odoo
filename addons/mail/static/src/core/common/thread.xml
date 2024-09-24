@@ -9,7 +9,8 @@
                 <t t-set="currentDay" t-value="0"/>
                 <t t-if="props.order === 'asc'">
                     <t t-if="props.thread.loadOlder and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.Thread.loadOlder"/>
-                    <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
+                    <t t-elif="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
+                    <t t-elif="showStartMessage" t-call="mail.Thread.startMessage"/>
                 </t>
                 <span t-else="" class="pt-1" t-ref="load-newer"/>
                 <t t-set="messages" t-value="orderedMessages"/>
@@ -47,11 +48,19 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o-mail-Thread-empty d-flex flex-column align-items-center justify-content-center text-muted h-100 opacity-75" t-att-class="{'p-4': props.showEmptyMessage}">
+            <div class="o-mail-Thread-empty d-flex flex-column text-muted h-100"
+                t-att-class="{
+                    'p-4': props.showEmptyMessage and !showStartMessage,
+                    'align-items-start justify-content-end': showStartMessage,
+                    'align-items-center justify-content-center opacity-75': !showStartMessage
+                }">
                 <t t-if="props.thread.isLoaded and props.showEmptyMessage">
                     <t name="empty-message">
-                        <span class="fs-1" style="filter: grayscale(1);">😶</span>
-                        <span>The conversation is empty.</span>
+                        <t t-if="showStartMessage" t-call="mail.Thread.startMessage"/>
+                        <div t-else="" class="d-flex flex-column align-items-center">
+                            <span class="fs-1" style="filter: grayscale(1);">😶</span>
+                            <span>The conversation is empty.</span>
+                        </div>
                     </t>
                 </t>
             </div>
@@ -91,4 +100,21 @@
     </span>
 </t>
 
+<t t-name="mail.Thread.startMessage">
+    <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-1': !env.inChatWindow }">
+        <div class="d-flex align-items-end" t-att-class="{
+            'mt-2 mb-1': !props.thread.parent_channel_id,
+            'mt-1': props.thread.parent_channel_id,
+            'gap-1': env.inChatWindow,
+            'gap-2': !env.inChatWindow,
+        }">
+            <div class="o-mail-Thread-avatar d-inline" t-att-class="{'o-mail-Thread-avatarChatWindow': env.inChatWindow }">
+                <img t-if="!props.thread.parent_channel_id" class="rounded o_object_fit_cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
+                <i t-else="" class="fa fa-comments-o opacity-75"/>
+            </div>
+            <h1 class="opacity-75" t-att-class="{ 'fs-3': env.inChatWindow, 'mb-0': env.inChatWindow, 'mb-1': !env.inChatWindow }" t-esc="startMessageTitle"/>
+        </div>
+        <p class="text-muted mb-0 small opacity-75" t-esc="startMessageSubtitle"/>
+    </div>
+</t>
 </templates>

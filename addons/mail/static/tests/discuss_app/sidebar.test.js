@@ -189,13 +189,24 @@ test("sidebar: inbox with counter", async () => {
 
 test("default thread rendering", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["discuss.channel"].create([
+        { name: "General", channel_type: "channel" },
+        { name: "MyGroup", channel_type: "group" },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
     await start();
     await openDiscuss();
     await contains("button", { text: "Inbox" });
     await contains("button", { text: "Starred" });
     await contains("button", { text: "History" });
-    await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains(".o-mail-DiscussSidebar-item", { text: "General" });
     await contains("button.o-active", { text: "Inbox" });
     await contains(".o-mail-Thread", {
         text: "Your inbox is emptyChange your preferences to receive new notifications in your inbox.",
@@ -210,9 +221,14 @@ test("default thread rendering", async () => {
     await contains(".o-mail-Thread", {
         text: "No history messages Messages marked as read will appear in the history.",
     });
-    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await click(".o-mail-DiscussSidebar-item", { text: "General" });
+    await contains(".o-mail-DiscussSidebar-item.o-active", { text: "General" });
+    await contains(".o-mail-Thread", { text: "Welcome to #General!" });
+    await click(".o-mail-DiscussSidebar-item", { text: "MyGroup" });
+    await contains(".o-mail-DiscussSidebar-item.o-active", { text: "MyGroup" });
+    await click(".o-mail-DiscussSidebar-item", { text: "Demo" });
+    await contains(".o-mail-DiscussSidebar-item.o-active", { text: "Demo" });
+    await contains(".o-mail-Thread", { text: "Demo" });
 });
 
 test("sidebar: basic chat rendering", async () => {
@@ -708,7 +724,7 @@ test("channel - avatar: should update avatar url from bus", async () => {
     const newCacheKey = result[0]["avatar_cache_key"];
     await contains(
         `img[data-src='${getOrigin()}/web/image/discuss.channel/${channelId}/avatar_128?unique=${newCacheKey}']`,
-        { count: 2 }
+        { count: 3 }
     );
 });
 

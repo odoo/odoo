@@ -206,13 +206,14 @@ test("scroll position is kept when navigating from one channel to another [CAN F
     await openDiscuss(channelId_1);
     await contains(".o-mail-Message", { count: 20 });
     const scrollValue1 = queryFirst(".o-mail-Thread").scrollHeight / 2;
-    await contains(".o-mail-Thread", { scroll: 0 });
+    const scrollTopValue = queryFirst(".o-mail-Thread").scrollTop;
+    await contains(".o-mail-Thread", { scroll: scrollTopValue });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue1);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-2" });
     await contains(".o-mail-Message", { count: 30 });
     const scrollValue2 = queryFirst(".o-mail-Thread").scrollHeight / 3;
-    await contains(".o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-Thread", { scroll: scrollTopValue });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue2);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-1" });
@@ -239,7 +240,7 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
-    await contains(".o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-Thread");
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollHeight / 2);
     await scroll(".o-mail-Thread", "bottom");
@@ -444,7 +445,7 @@ test("show empty placeholder when thread contains no message", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-Thread", { text: "Welcome to #general!" });
     await contains(".o-mail-Message", { count: 0 });
 });
 

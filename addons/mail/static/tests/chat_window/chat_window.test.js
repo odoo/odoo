@@ -183,7 +183,7 @@ test("chat window: basic rendering", async () => {
     await contains("[title='Open Actions Menu']");
     await contains("[title='Fold']");
     await contains("[title*='Close Chat Window']");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { text: "The conversation is empty." });
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { text: "Welcome to #General!" });
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");

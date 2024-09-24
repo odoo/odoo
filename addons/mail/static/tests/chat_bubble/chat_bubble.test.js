@@ -48,7 +48,7 @@ test("No duplicated chat bubbles", async () => {
     await insertText("input[placeholder='Search a conversation']", "John");
     await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
-    await contains(".o-mail-ChatWindow", { text: "The conversation is empty." }); // wait fully loaded
+    await contains(".o-mail-ChatWindow", { text: "This is the start of direct chat with John" }); // wait fully loaded
     await click("button[title='Fold']");
     await contains(".o-mail-ChatBubble[name='John']");
     // Make bubble of "John" chat again
