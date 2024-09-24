@@ -121,6 +121,19 @@ class WebsiteEventController(http.Controller):
 
         searches['search'] = fuzzy_search_term or search
 
+        layout_mode = request.session.get('website_event_layout_mode')
+
+        if (layout_mode == 'list' and not website.is_view_active('website_event.opt_events_list_rows')) \
+        or (layout_mode == 'grid' and not website.is_view_active('website_event.opt_events_list_columns')):
+            layout_mode = False
+
+        if not layout_mode:
+            if website.is_view_active('website_event.opt_events_list_columns'):
+                layout_mode = 'grid'
+            else:
+                layout_mode = 'list'
+            request.session['website_event_layout_mode'] = layout_mode
+
         values = {
             'current_date': current_date,
             'current_country': current_country,
@@ -137,6 +150,7 @@ class WebsiteEventController(http.Controller):
             'keep': keep,
             'search_count': event_count,
             'original_search': fuzzy_search_term and search,
+            'layout_mode': layout_mode,
             'website': website
         }
 
@@ -389,6 +403,11 @@ class WebsiteEventController(http.Controller):
         ])
         return request.render("website_event.registration_complete",
             self._get_registration_confirm_values(event, attendees_sudo))
+
+    @http.route('/event/save_event_layout_mode', type='json', auth='public', website=True)
+    def save_event_layout_mode(self, layout_mode):
+        assert layout_mode in ('grid', 'list'), _("Invalid event layout mode")
+        request.session['website_event_layout_mode'] = layout_mode
 
     def _get_registration_confirm_values(self, event, attendees_sudo):
         urls = event._get_event_resource_urls()
