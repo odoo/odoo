@@ -348,5 +348,5 @@ test("Formatting a pivot positional preserves the interval", async () => {
                 </pivot>`,
     });
     setCellContent(model, "A1", `=PIVOT.HEADER(1,"#date:day",1)`);
-    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("4/14/2016");
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("14 Apr 2016");
 });

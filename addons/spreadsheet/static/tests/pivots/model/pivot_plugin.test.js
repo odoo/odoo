@@ -38,7 +38,6 @@ import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_fi
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-const { DEFAULT_LOCALE } = spreadsheet.constants;
 const { toZone } = spreadsheet.helpers;
 
 describe.current.tags("headless");
@@ -1014,9 +1013,9 @@ test("PIVOT day are correctly formatted at evaluation", async function () {
                     <field name="probability" type="measure"/>
                 </pivot>`,
     });
-    expect(getEvaluatedCell(model, "B1").format).toBe("m/d/yyyy");
+    expect(getEvaluatedCell(model, "B1").format).toBe("dd mmm yyyy");
     expect(getEvaluatedCell(model, "B1").value).toBe(42474);
-    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("4/14/2016");
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("14 Apr 2016");
     expect(getEvaluatedCell(model, "B3").format).toBe("#,##0.00");
     expect(getEvaluatedCell(model, "B3").value).toBe(10);
     expect(getEvaluatedCell(model, "B3").formattedValue).toBe("10.00");
@@ -1162,23 +1161,8 @@ test("PIVOT.HEADER formulas are correctly formatted at evaluation", async functi
                 </pivot>`,
     });
     expect(getEvaluatedCell(model, "A3").format).toBe("#,##0.00");
-    expect(getEvaluatedCell(model, "B1").format).toBe("m/d/yyyy");
+    expect(getEvaluatedCell(model, "B1").format).toBe("dd mmm yyyy");
     expect(getEvaluatedCell(model, "B2").format).toBe(undefined);
-});
-
-test("PIVOT.HEADER date formats are locale dependant", async function () {
-    const { model } = await createSpreadsheetWithPivot({
-        arch: /* xml */ `
-                <pivot>
-                    <field name="date" interval="day" type="col"/>
-                    <field name="probability" type="row"/>
-                    <field name="foo" type="measure"/>
-                </pivot>`,
-    });
-    model.dispatch("UPDATE_LOCALE", {
-        locale: { ...DEFAULT_LOCALE, dateFormat: "dd/mm/yyyy" },
-    });
-    expect(getEvaluatedCell(model, "B1").format).toBe("dd/mm/yyyy");
 });
 
 test("can edit pivot domain with UPDATE_ODOO_PIVOT_DOMAIN", async () => {
