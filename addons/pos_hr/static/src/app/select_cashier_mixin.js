@@ -61,17 +61,12 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
      * Select a cashier, the returning value will either be an object or nothing (undefined)
      */
     return async function selectCashier(pin = false, login = false, list = false) {
-        let employee = false;
         if (!pos.config.module_pos_hr) {
             return;
         }
-        const employeesList = pos.models["hr.employee"]
-            .filter(
-                (employee) =>
-                    employee.id !== pos.get_cashier()?.id &&
-                    (!pin || Sha1.hash(pin) === employee._pin)
-            )
-            .map((employee) => {
+
+        const prepareList = (employees) => {
+            return employees.map((employee) => {
                 return {
                     id: employee.id,
                     item: employee,
@@ -79,27 +74,50 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
                     isSelected: false,
                 };
             });
-        if (!employeesList.length && !pin) {
+        };
+
+        const wrongPinNotification = () => {
+            notification.add(_t("PIN not found"), {
+                type: "warning",
+                title: _t(`Wrong PIN`),
+            });
+        };
+
+        let employee = false;
+        const allEmployees = pos.models["hr.employee"].filter(
+            (employee) => employee.id !== pos.get_cashier()?.id
+        );
+        const pinMatchEmployees = allEmployees.filter(
+            (employee) => !pin || Sha1.hash(pin) === employee._pin
+        );
+
+        if (!pinMatchEmployees.length && !pin) {
             await ask(this.dialog, {
                 title: _t("No Cashiers"),
                 body: _t("There is no cashier available."),
             });
             return;
-        } else if (pin && !employeesList.length) {
-            notification.add(_t("PIN not found"), {
-                type: "warning",
-                title: _t(`Wrong PIN`),
-            });
+        } else if (pin && !pinMatchEmployees.length) {
+            wrongPinNotification();
             return;
         }
 
-        if (employeesList.length > 1 || list) {
+        if (pinMatchEmployees.length > 1 || list) {
             employee = await makeAwaitable(dialog, SelectionPopup, {
                 title: _t("Change Cashier"),
-                list: employeesList,
+                list: prepareList(allEmployees),
             });
-        } else if (employeesList.length === 1) {
-            employee = employeesList[0].item;
+
+            if (!employee) {
+                return;
+            }
+
+            if (pin && Sha1.hash(pin) !== employee._pin) {
+                wrongPinNotification();
+                return;
+            }
+        } else if (pinMatchEmployees.length === 1) {
+            employee = pinMatchEmployees[0].item;
         }
 
         if (!pin && employee && employee._pin) {
