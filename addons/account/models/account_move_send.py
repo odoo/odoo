@@ -599,7 +599,7 @@ class AccountMoveSend(models.AbstractModel):
         assert custom_settings['pdf_report'].is_invoice_report if custom_settings.get('pdf_report') else True
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
-            for sending_method in custom_settings['sending_methods']
+            for sending_method in custom_settings.get('sending_methods', [])
         ) if 'sending_methods' in custom_settings else True
 
     @api.model
