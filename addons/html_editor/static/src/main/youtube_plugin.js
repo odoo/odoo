@@ -10,12 +10,9 @@ export class YoutubePlugin extends Plugin {
     static name = "youtube";
     static dependencies = ["history", "powerbox", "link", "dom"];
     static shared = [];
-    /** @type { (p: YoutubePlugin) => Record<string, any> } */
-    static resources(p) {
-        return {
-            handle_paste_url: p.handlePasteUrl.bind(p),
-        };
-    }
+    resources = {
+        handle_paste_url: this.handlePasteUrl.bind(this),
+    };
     /**
      * @param {string} text
      * @param {string} url
