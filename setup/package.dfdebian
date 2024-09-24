@@ -1,7 +1,9 @@
 # Please note that this Dockerfile is used for testing nightly builds and should
 # not be used to deploy Odoo
-FROM debian:bookworm
+FROM ubuntu:noble
 MAINTAINER Odoo S.A. <info@odoo.com>
+
+RUN userdel -r ubuntu
 
 RUN apt-get update && \
     apt-get install -y locales && \
@@ -35,6 +37,7 @@ RUN apt-get update -qq &&  \
         python3-jinja2 \
         python3-libsass \
         python3-lxml \
+        python3-lxml-html-clean \
         python3-ofxparse \
         python3-openpyxl \
         python3-passlib \
