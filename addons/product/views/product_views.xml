@@ -252,8 +252,8 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group expand="1" string="Group By">
-                    <filter string="Product Type" name="type" context="{'group_by':'type'}"/>
-                    <filter string="Product Category" name="categ_id" context="{'group_by':'categ_id'}"/>
+                    <filter string="Product Type" name="group_by_type" context="{'group_by':'type'}"/>
+                    <filter string="Product Category" name="group_by_categ_id" context="{'group_by':'categ_id'}"/>
                 </group>
             </search>
         </field>
@@ -287,7 +287,7 @@
                     <field name="product_template_attribute_value_ids" groups="product.group_product_variant"/>
                     <field name="product_tmpl_id" string="Product Template"/>
                 </field>
-                <filter name="categ_id" position="after">
+                <filter name="group_by_categ_id" position="after">
                     <filter string="Product Template" name="group_by_product_tmpl_id" context="{'group_by':'product_tmpl_id'}"/>
                 </filter>
             </field>
