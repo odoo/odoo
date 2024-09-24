@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_access_rights
@@ -26,3 +25,4 @@ from . import test_timeoff_event
 from . import test_working_hours
 from . import test_dashboard
 from . import test_expiring_leaves
+from . import test_hr_departure_wizard
