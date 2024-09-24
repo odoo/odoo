@@ -5,7 +5,7 @@
     <img t-att-src="companyImageUrl" alt="Company Logo" class="o_hr_attendance_kiosk_company_image align-self-center"/>
 </t>
 
-<t t-inherit="barcodes.BarcodeScanner" t-inherit-mode="extension">
+<t t-name="hr_attendance.BarcodeScanner" t-inherit="barcodes.BarcodeScanner" t-inherit-mode="primary">
     <xpath expr="//div[hasclass('o_barcode_mobile_container')]" position="replace">
         <button t-if="isBarcodeScannerSupported" t-on-click="openMobileScanner" class="o_mobile_barcode btn btn-light btn-lg p-5 rounded-3">
             <i class="fa fa-3x fa-barcode mb-3"/>
