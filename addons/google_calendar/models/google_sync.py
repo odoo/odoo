@@ -70,7 +70,7 @@ class GoogleSync(models.AbstractModel):
 
         result = super().write(vals)
         for record in self.filtered('need_sync'):
-            if record.google_id:
+            if record.id and record.google_id:
                 record.with_user(record._get_event_user())._google_patch(google_service, record.google_id, record._google_values(), timeout=3)
 
         return result
