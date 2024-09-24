@@ -35,6 +35,9 @@ class HrCandidate(models.Model):
             candidate.skill_ids = candidate.candidate_skill_ids.skill_id
 
     def _update_employee_from_candidate(self):
+        if self.env.context.get('creating_employee'):
+            return super()._update_employee_from_candidate()
+
         vals_list = []
         for candidate in self:
             existing_skills = candidate.employee_id.employee_skill_ids.skill_id
