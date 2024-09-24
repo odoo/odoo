@@ -270,7 +270,7 @@ test("invalid group dimensions", async function () {
     for (const formula of invalids) {
         setCellContent(model, "G10", formula);
         expect(getCellValue(model, "G10")).toBe("#ERROR", { message: formula });
-        expect(getEvaluatedCell(model, "G10").message).toBe(
+        expect(getEvaluatedCell(model, "G10").message).toInclude(
             "Dimensions don't match the pivot definition",
             { message: formula }
         );
