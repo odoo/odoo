@@ -365,3 +365,13 @@ class PosConfig(models.Model):
             'module_pos_restaurant': True,
             'self_ordering_mode': 'kiosk',
         })
+
+    @api.model
+    def get_self_order_trusted_configs(self):
+        """ Returns the pos.config records with open session where self (or kiosk) orders can be paid.
+        """
+        return self.env['pos.session'].search([
+            ('state', '=', 'opened'),
+            ('config_id.module_pos_restaurant', '=', True),
+            ('config_id.self_ordering_mode', '=', 'nothing'),
+        ]).mapped('config_id')
