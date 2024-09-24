@@ -27,9 +27,19 @@
             <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="after">
                 <field name="allow_billable" invisible="1"/>
             </xpath>
+<<<<<<< 17.0
             <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
                 <attribute name="column_invisible">not parent.allow_billable</attribute>
                 <attribute name="invisible">not allow_billable</attribute>
+||||||| 6ff600271171054033a33d375b6d07e4649a1a5d
+            <xpath expr="//group/filter[@name='customer']" position="after">
+                <filter name="sale_order_id" string="Sales Order Id" context="{'group_by': 'sale_order_id'}" />
+=======
+            <xpath expr="//group/filter[@name='customer']" position="after">
+                <!-- TODO: Remove me in master -->
+                <filter name="sale_order_id" string="Sales Order Id" invisible="1" />
+                <filter name="group_by_sale_order" string="Sales Order" context="{'group_by': 'sale_order_id'}" />
+>>>>>>> fd3a7c2c41334dffd0a4ce0f3f33b11be74456ac
             </xpath>
         </field>
     </record>
