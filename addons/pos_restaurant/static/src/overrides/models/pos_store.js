@@ -283,7 +283,11 @@ patch(PosStore.prototype, {
             if (orders.length > 0) {
                 this.set_order(orders[0]);
                 this.orderToTransferUuid = null;
-                this.showScreen(orders[0].get_screen_data().name);
+                const props = {};
+                if (orders[0].get_screen_data().name === "PaymentScreen") {
+                    props.orderUuid = orders[0].uuid;
+                }
+                this.showScreen(orders[0].get_screen_data().name, props);
             } else {
                 this.add_new_order();
                 this.showScreen("ProductScreen");
