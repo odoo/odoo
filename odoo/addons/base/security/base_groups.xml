@@ -89,6 +89,7 @@
             <field name="login">portaltemplate</field>
             <field name="active" eval="False"/>
             <field name="groups_id" eval="[Command.set([ref('base.group_portal')])]"/>
+            <field name="signature" /> <!-- Needed for avoiding the _compute_signature triggering on each update -->
         </record>
 
         <record id="default_template_user_config" model="ir.config_parameter">
