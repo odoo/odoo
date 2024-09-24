@@ -2,7 +2,7 @@ import { Component, xml } from "@odoo/owl";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { describe, expect, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { hover, press } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -163,4 +163,27 @@ test("navigation with virtual focus", async () => {
     await press("enter");
     await animationFrame();
     expect.verifySteps([2]);
+});
+
+test("hovering an item makes it active but doesn't focus", async () => {
+    await mountWithCleanup(BasicHookParent);
+
+    await press("arrowdown");
+
+    expect(".two").toBeFocused();
+    expect(".two").toHaveClass("focus");
+
+    hover(".three");
+    await animationFrame();
+
+    expect(".two").toBeFocused();
+    expect(".two").not.toHaveClass("focus");
+
+    expect(".three").not.toBeFocused();
+    expect(".three").toHaveClass("focus");
+
+    press("arrowdown");
+    await animationFrame();
+    expect(".four").toBeFocused();
+    expect(".four").toHaveClass("focus");
 });
