@@ -113,7 +113,7 @@ export function useDropdownNesting(state) {
         navigationOptions: {
             onEnabled: (items) => {
                 if (current.parent) {
-                    items[0]?.focus();
+                    items[0]?.setActive();
                 }
             },
             onMouseEnter: (item) => {

@@ -25,28 +25,28 @@ class NavigationItem {
             this.target = el;
         }
 
-        const focus = (ev) => this.focus(ev);
-        const onMouseEnter = (ev) => this.onMouseEnter(ev);
+        const onFocus = () => this.setActive(false);
+        const onMouseEnter = () => this.onMouseEnter();
 
-        this.target.addEventListener("focus", focus);
+        this.target.addEventListener("focus", onFocus);
         this.target.addEventListener("mouseenter", onMouseEnter);
         this.removeListeners = () => {
-            this.target.removeEventListener("focus", focus);
+            this.target.removeEventListener("focus", onFocus);
             this.target.removeEventListener("mouseenter", onMouseEnter);
         };
     }
 
     select() {
-        this.focus();
+        this.setActive();
         this.target.click();
     }
 
-    focus(event = undefined) {
+    setActive(focus = true) {
         scrollTo(this.target);
         this.setActiveItem(this.index, this);
         this.target.classList.add(ACTIVE_ELEMENT_CLASS);
 
-        if (!event && !this.options.virtualFocus) {
+        if (focus && !this.options.virtualFocus) {
             focusElement(this.target);
         }
     }
@@ -56,7 +56,7 @@ class NavigationItem {
     }
 
     onMouseEnter() {
-        this.focus();
+        this.setActive(false);
         this.options.onMouseEnter?.(this);
     }
 }
@@ -74,11 +74,11 @@ class Navigator {
             const isFocused = this.activeItem?.el.isConnected;
             const index = this.currentActiveIndex + increment;
             if (isFocused && index >= 0) {
-                return this.items[index % this.items.length]?.focus();
+                return this.items[index % this.items.length]?.setActive();
             } else if (!isFocused && increment >= 0) {
-                return this.items[0]?.focus();
+                return this.items[0]?.setActive();
             } else {
-                return this.items.at(-1)?.focus();
+                return this.items.at(-1)?.setActive();
             }
         };
 
@@ -90,8 +90,8 @@ class Navigator {
             ...options,
 
             hotkeys: {
-                home: (index, items) => items[0]?.focus(),
-                end: (index, items) => items.at(-1)?.focus(),
+                home: (index, items) => items[0]?.setActive(),
+                end: (index, items) => items.at(-1)?.setActive(),
                 tab: () => focusAt(+1),
                 "shift+tab": () => focusAt(-1),
                 arrowdown: () => focusAt(+1),
@@ -155,7 +155,7 @@ class Navigator {
         if (this.options.onEnabled) {
             this.options.onEnabled(this.items);
         } else if (this.items.length > 0) {
-            this.items[0]?.focus();
+            this.items[0]?.setActive();
         }
 
         this.enabled = true;
@@ -202,7 +202,7 @@ class Navigator {
         });
 
         if (oldItemsLength != this.items.length && this.currentActiveIndex >= this.items.length) {
-            this.items.at(-1)?.focus();
+            this.items.at(-1)?.setActive();
         }
     }
 
