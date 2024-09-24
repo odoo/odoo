@@ -994,7 +994,7 @@ test("Notification settings rendering in chatwindow", async () => {
     await contains("button", { text: "All Messages" });
     await contains("button", { text: "Mentions Only", count: 2 }); // the extra is in the Use Default as subtitle
     await contains("button", { text: "Nothing" });
-    await click("button", { text: "Mute Channel" });
+    await click("button", { text: "Mute Conversation" });
     await contains("button", { text: "For 15 minutes" });
     await contains("button", { text: "For 1 hour" });
     await contains("button", { text: "For 3 hours" });
