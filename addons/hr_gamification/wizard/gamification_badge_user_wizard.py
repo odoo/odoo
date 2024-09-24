@@ -8,9 +8,10 @@ from odoo.exceptions import UserError, AccessError
 class GamificationBadgeUserWizard(models.TransientModel):
     _inherit = 'gamification.badge.user.wizard'
 
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=False)
-    user_id = fields.Many2one('res.users', string='User', compute='_compute_user_id',
-        store=True, readonly=False, compute_sudo=True)
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=False,
+        compute='_compute_eployee_id', store=True)
+    user_id = fields.Many2one('res.users', string='User',
+        store=True, readonly=False)
 
     def action_grant_badge(self):
         """Wizard action for sending a badge to a chosen employee"""
@@ -26,7 +27,7 @@ class GamificationBadgeUserWizard(models.TransientModel):
 
         return self.env['gamification.badge.user'].create(values)._send_badge()
 
-    @api.depends('employee_id')
-    def _compute_user_id(self):
+    @api.depends('user_id')
+    def _compute_eployee_id(self):
         for wizard in self:
-            wizard.user_id = wizard.employee_id.user_id
+            wizard.employee_id = wizard.user_id.employee_id

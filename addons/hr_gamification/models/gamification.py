@@ -27,17 +27,17 @@ class GamificationBadgeUser(models.Model):
             'res_id': self.badge_id.id,
         }
 
+
 class GamificationBadge(models.Model):
     _inherit = 'gamification.badge'
 
-    granted_employees_count = fields.Integer(compute="_compute_granted_employees_count")
+    granted_users_count = fields.Integer(compute="_compute_granted_users_count")
 
-    @api.depends('owner_ids.employee_id')
-    def _compute_granted_employees_count(self):
+    @api.depends('owner_ids.user_id')
+    def _compute_granted_users_count(self):
         for badge in self:
-            badge.granted_employees_count = self.env['gamification.badge.user'].search_count([
+            badge.granted_users_count = self.env['gamification.badge.user'].search_count([
                 ('badge_id', '=', badge.id),
-                ('employee_id', '!=', False)
             ])
 
     def get_granted_employees(self):
