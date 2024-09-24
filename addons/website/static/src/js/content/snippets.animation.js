@@ -13,6 +13,7 @@ const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
 const wUtils = require('website.utils');
+const { generateVideoIframe } = require("@website/js/content/generate_video_iframe");
 
 var qweb = core.qweb;
 
@@ -742,6 +743,7 @@ const MobileYoutubeAutoplayMixin = {
 
 registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.media_iframe_video',
+    disabledInEditableMode: false,
 
     /**
      * @override
@@ -757,7 +759,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         // videos added before bug fixes or new Odoo versions where the
         // <iframe/> element is properly saved.
         if (!iframeEl) {
-            iframeEl = this._generateIframe();
+            iframeEl = generateVideoIframe(this.$target[0]);
         }
 
         // We don't want to cause an error that would prevent entering edit mode
@@ -774,49 +776,15 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             this._triggerAutoplay(iframeEl);
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
-     * @private
+     * @override
      */
-    _generateIframe: function () {
-        // Bug fix / compatibility: empty the <div/> element as all information
-        // to rebuild the iframe should have been saved on the <div/> element
-        this.$target.empty();
-
-        // Add extra content for size / edition
-        this.$target.append(
-            '<div class="css_editable_mode_display">&nbsp;</div>' +
-            '<div class="media_iframe_video_size">&nbsp;</div>'
-        );
-
-        // Rebuild the iframe. Depending on version / compatibility / instance,
-        // the src is saved in the 'data-src' attribute or the
-        // 'data-oe-expression' one (the latter is used as a workaround in 10.0
-        // system but should obviously be reviewed in master).
-        var src = _.escape(this.$target.data('oe-expression') || this.$target.data('src'));
-        // Validate the src to only accept supported domains we can trust
-        var m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
-        if (!m) {
-            // Unsupported protocol or wrong URL format, don't inject iframe
-            return;
+    destroy() {
+        if (this.editableMode) {
+            // Destroy video iframes so they are never saved in the DOM.
+            this.el.replaceChildren();
         }
-        var domain = m[1].replace(/^www\./, '');
-        var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
-        if (!_.contains(supportedDomains, domain)) {
-            // Unsupported domain, don't inject iframe
-            return;
-        }
-        const iframeEl = $('<iframe/>', {
-            src: src,
-            frameborder: '0',
-            allowfullscreen: 'allowfullscreen',
-        })[0];
-        this.$target.append(iframeEl);
-        return iframeEl;
+        this._super(...arguments);
     },
 });
 

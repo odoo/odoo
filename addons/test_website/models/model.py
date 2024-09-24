@@ -14,6 +14,9 @@ class TestModel(models.Model):
     _description = 'Website Model Test'
 
     name = fields.Char(required=1)
+    website_description = fields.Html(
+        sanitize_overridable=True,
+        sanitize_attributes=False)
 
     @api.model
     def _search_get_detail(self, website, order, options):
