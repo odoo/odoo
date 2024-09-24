@@ -206,6 +206,7 @@ class AccountMove(models.Model):
         relation='account_move__account_payment',
         column1='invoice_id',
         column2='payment_id',
+        copy=False,
     )
     payment_count = fields.Integer(compute='_compute_payment_count')
 
