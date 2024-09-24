@@ -11,6 +11,8 @@ import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { switchTextHighlight } from "@website/js/text_processing";
 import { registry } from "@web/core/registry";
+import weUtils from "@web_editor/js/common/utils";
+import { adaptFormLabel } from "@website/js/content/form_processing";
 
 const snippetsEditorRegistry = registry.category("snippets_editor");
 snippetsEditorRegistry.add("no_parent_editor_snippets", ["s_popup", "o_mega_menu"]);
@@ -544,6 +546,19 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         $dropzone.attr('data-editor-message', $hookParent.attr('data-editor-message'));
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;
+    }
+    /**
+     * @override
+     */
+    _adaptSnippetContent($html) {
+        // Apply the default form label style.
+        for (const snippetFormEl of $html[0].querySelectorAll('[data-snippet="s_website_form"] form')) {
+            adaptFormLabel(
+                snippetFormEl,
+                weUtils.getCSSVariableValue("input-label-position").replaceAll("'", ""),
+                weUtils.getCSSVariableValue("input-label-width")
+            );
+        }
     }
 
     //--------------------------------------------------------------------------

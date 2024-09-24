@@ -9,6 +9,9 @@
             <xpath expr="//label[@for='password']" position="inside">
                 <a t-if="reset_password_enabled" class="btn btn-link btn-sm" tabindex="1" t-attf-href="/web/reset_password?{{ keep_query() }}">Reset Password</a>
             </xpath>
+            <xpath expr="//form" position="attributes">
+                <attribute name="t-attf-class" add="o_custom_label_position" separator=" "/>
+            </xpath>
         </template>
 
         <template id="auth_signup.fields" name="Auth Signup/ResetPassword form fields">

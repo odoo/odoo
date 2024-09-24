@@ -61,14 +61,13 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 <template id="s_newsletter_block_form_template" groups="base.group_user">
     <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
         <div class="o_container_small">
-            <form id="newsletter_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required"
-                  data-mark="*" data-model_name="mailing.contact" data-success-mode="message" hide-change-model="true">
+            <form id="newsletter_form" action="/website/form/" method="post" enctype="multipart/form-data"
+                  data-model_name="mailing.contact" data-success-mode="message" hide-change-model="true">
                 <div class="s_website_form_rows row s_col_no_bgcolor">
                     <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="char" data-name="Field">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 250px" for="mailing_sub1">
                                 <span class="s_website_form_label_content">Name</span>
-                                <span class="s_website_form_mark"> *</span>
                             </label>
                             <div t-if="request.env['mailing.contact']._is_name_split_activated()" class="col-sm row">
                                 <div class="col-sm-6">
@@ -89,7 +88,6 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 250px" for="mailing_sub2">
                                 <span class="s_website_form_label_content">Email</span>
-                                <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
                                 <input id="mailing_sub2" type='email' class='form-control s_website_form_input' name="email" placeholder="johnsmith@example.com"/>
@@ -100,7 +98,6 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-sm-auto s_website_form_label" style="width: 250px" for="mailing_list_">
                                 <span class="s_website_form_label_content">Subscribe to</span>
-                                <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
                                 <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="list_ids" data-display="horizontal">
@@ -123,7 +120,6 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-sm-auto s_website_form_label" style="width: 250px;" for="mailing_sub3">
                                 <span class="s_website_form_label_content">I agree to receive updates</span>
-                                <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
                                 <div class="form-check">

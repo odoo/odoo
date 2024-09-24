@@ -3185,6 +3185,7 @@ class SnippetsMenu extends Component {
     _computeSnippetTemplates(html) {
         var self = this;
         var $html = $(html);
+        this._adaptSnippetContent($html);
 
         this.templateOptions = [];
         var selectors = [];
@@ -3348,6 +3349,14 @@ class SnippetsMenu extends Component {
         this._disableUndroppableSnippets();
 
     }
+    /**
+     * Used to customize the snippets content before being dropped.
+     *
+     * @private
+     * @abstract
+     * @param {jQuery} $html
+     */
+    _adaptSnippetContent($html) {}
     /**
      * Creates a snippet editor to associated to the given snippet. If the given
      * snippet already has a linked snippet editor, the function only returns

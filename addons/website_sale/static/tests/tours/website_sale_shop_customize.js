@@ -17,12 +17,12 @@ registerWebsitePreviewTour('shop_customize', {
         ...clickOnSave(),
         {
             content: "select product attribute Steel",
-            trigger: ':iframe form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
+            trigger: ":iframe form.js_attributes div:has(input:not(:checked)) label:contains(Steel - Test)",
             run: "click",
         },
         {
             content: "check the selection",
-            trigger: ':iframe form.js_attributes input:checked + label:contains(Steel - Test)',
+            trigger: ":iframe form.js_attributes div:has(input:checked) label:contains(Steel - Test)",
         },
         {
             trigger: ":iframe body:not(:has(.oe_website_sale .oe_product_cart:eq(3)))",
