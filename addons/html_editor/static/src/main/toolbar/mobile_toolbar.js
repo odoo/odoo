@@ -11,6 +11,7 @@ export class ToolbarMobile extends Component {
     setup() {
         this.toolbar = useRef("toolbarWrapper");
         useExternalListener(window.visualViewport, "resize", this.fixToolbarPosition);
+        useExternalListener(window.visualViewport, "scroll", this.fixToolbarPosition);
         onMounted(() => {
             this.fixToolbarPosition();
         });
@@ -20,7 +21,8 @@ export class ToolbarMobile extends Component {
      * Fixes the position of the toolbar for the keyboard height.
      */
     fixToolbarPosition() {
-        const keyboardHeight = window.innerHeight - window.visualViewport.height;
+        const keyboardHeight =
+            window.innerHeight - (window.visualViewport.height + window.visualViewport.offsetTop);
         if (keyboardHeight > 0) {
             this.toolbar.el.style.bottom = `${keyboardHeight}px`;
         } else {
