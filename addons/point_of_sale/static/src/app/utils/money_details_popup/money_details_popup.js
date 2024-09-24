@@ -10,7 +10,7 @@ export class MoneyDetailsPopup extends Component {
     static template = "point_of_sale.MoneyDetailsPopup";
     static components = { NumericInput, Dialog };
     static props = {
-        moneyDetails: { type: Object, optional: true },
+        moneyDetails: { type: [Object, { value: null }], optional: true },
         action: String,
         getPayload: Function,
         close: Function,
