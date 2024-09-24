@@ -221,11 +221,23 @@ export class SelfOrder extends Reactive {
         };
 
         if (Object.entries(selectedValues).length > 0) {
-            values.attribute_value_ids = Object.values(selectedValues).map((a) => {
-                const attrVal = this.models["product.template.attribute.value"].get(a);
-                values.price_extra += attrVal.price_extra;
-                return ["link", attrVal];
-            });
+            values.attribute_value_ids = Object.entries(selectedValues).reduce(
+                (acc, [attributeId, options]) => {
+                    const optionEntries = Object.entries(
+                        typeof options === "object" ? options : { [options]: true }
+                    ).filter(([, isSelected]) => isSelected); // Only true values
+
+                    optionEntries.forEach(([optionId]) => {
+                        const attrVal = this.models["product.template.attribute.value"].get(
+                            Number(optionId)
+                        );
+                        values.price_extra += attrVal.price_extra;
+                        acc.push(["link", attrVal]);
+                    });
+                    return acc;
+                },
+                []
+            );
 
             if (Object.values(customValues).length > 0) {
                 values.custom_attribute_value_ids = Object.values(customValues)
