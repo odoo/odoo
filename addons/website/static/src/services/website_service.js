@@ -186,6 +186,21 @@ export const websiteService = {
             get isDesigner() {
                 return isDesigner === true;
             },
+            get is404() {
+                return currentMetadata.viewXmlid === "website.page_404";
+            },
+            get currentLocation() {
+                // If the website is translatable, remove the /lang in the
+                // location pathname
+                // e.g. /fr/hello-page -> /hello-page
+                // e.g. /ar/hello-page -> /hello-page
+                if (this.currentWebsite.metadata.translatable) {
+                    const path = this.contentWindow.location.pathname;
+                    const lang = path.split("/")[1];
+                    return path.slice(lang.length + 1);
+                }
+                return this.contentWindow.location.pathname;
+            },
             get hasMultiWebsites() {
                 return hasMultiWebsites === true;
             },
