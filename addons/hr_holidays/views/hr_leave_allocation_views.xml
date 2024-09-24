@@ -183,13 +183,13 @@
         <field name="arch" type="xml">
             <field name="state" position="before">
                 <button string="Approve" name="action_approve"
-                    invisible="not can_approve or state != 'confirm'" type="object" class="oe_highlight"/>
+                    invisible="not can_approve or state != 'confirm' or not active_employee" type="object" class="oe_highlight"/>
                 <button string="Validate" name="action_validate"
-                    invisible="state != 'validate1'" type="object" class="oe_highlight"/>
+                    invisible="state != 'validate1' or not active_employee" type="object" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" type="object"
-                    invisible="not can_approve or state not in ('confirm', 'validate1','validate')"/>
+                    invisible="not can_approve or state not in ('confirm', 'validate1','validate') or not active_employee"/>
                 <button string="Mark as ready to approve" name="action_set_to_confirm" type="object"
-                        invisible="not can_approve or state != 'refuse'"/>
+                        invisible="not can_approve or state != 'refuse' or not active_employee"/>
             </field>
             <div id="title" position="replace">
                 <div class="oe_title">
