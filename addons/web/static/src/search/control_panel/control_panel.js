@@ -445,25 +445,32 @@ export class ControlPanel extends Component {
         }
         const userId = newActionIsShared ? false : user.userId;
 
-        const extractValues = ({ parent_action_id, action_id, parent_res_model }) => ({
+        const {
+            parent_action_id,
+            action_id,
+            parent_res_model,
+            python_method,
+            domain,
+            context,
+            groups_ids,
+        } = currentEmbeddedAction;
+        const values = {
             parent_action_id: parent_action_id[0],
-            action_id: action_id[0] || this.env.config.actionId,
             parent_res_model,
             parent_res_id: this.env.searchModel.globalContext.active_id,
             user_id: userId,
             is_deletable: true,
             default_view_mode: this.env.config.viewType,
-        });
-        const { parent_action_id, action_id, python_method, domain, context, groups_ids } =
-            currentEmbeddedAction;
-        const values = {
-            ...extractValues(currentEmbeddedAction),
-            python_method,
             domain,
             context,
             groups_ids,
             name: newActionName,
         };
+        if (python_method) {
+            values.python_method = python_method;
+        } else {
+            values.action_id = action_id[0] || this.env.config.actionId;
+        }
         const embeddedActionId = await this.orm.create("ir.embedded.actions", [values]);
         const description = `${newActionName}`;
         this.env.searchModel.createNewFavorite({

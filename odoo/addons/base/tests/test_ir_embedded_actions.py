@@ -121,3 +121,25 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
         self.assertEqual(len(res), 3, "There should be 3 embedded records linked to the parent action")
         self.assertTrue(self.embedded_action_1.id in res and self.embedded_action_2.id in res and embedded_action_custo.id in res, "The correct embedded actions\
                         should be in embedded_actions")
+
+    def test_create_embedded_action_with_action_and_python_method(self):
+        embedded_action1, embedded_action2 = self.env['ir.embedded.actions'].create([
+            {
+                'name': 'EmbeddedActionCustom',
+                'action_id': self.action_2.id,
+                'parent_action_id': self.parent_action.id,
+                'parent_res_model': 'res.partner',
+                'python_method': "action_python_method",
+            },
+            {
+                'name': 'EmbeddedActionCustom2',
+                'action_id': self.action_2.id,
+                'python_method': "",
+                'parent_action_id': self.parent_action.id,
+                'parent_res_model': 'res.partner',
+            }
+        ])
+        self.assertEqual(embedded_action1.python_method, "action_python_method")
+        self.assertFalse(embedded_action1.action_id)
+        self.assertEqual(embedded_action2.action_id, self.env['ir.actions.actions'].browse(self.action_2.id))
+        self.assertFalse(embedded_action2.python_method)
