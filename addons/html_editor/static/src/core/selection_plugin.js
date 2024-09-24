@@ -4,10 +4,11 @@ import {
     isMediaElement,
     isProtected,
     isProtecting,
+    isUnprotecting,
     paragraphRelatedElements,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
-import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
+import { childNodes, closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
 import { DIRECTIONS, boundariesIn, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
@@ -775,18 +776,40 @@ export class SelectionPlugin extends Plugin {
         if (!this.isSelectionInEditable(selection)) {
             return null;
         }
-        const anchorSize = nodeSize(selection.anchorNode);
-        const focusSize = nodeSize(selection.focusNode);
-        if (anchorSize < selection.anchorOffset || focusSize < selection.focusOffset) {
-            return this.setSelection({
-                anchorNode: selection.anchorNode,
-                anchorOffset: anchorSize,
-                focusNode: selection.focusNode,
-                focusOffset: focusSize,
-            });
-        } else {
-            return this.setSelection(selection);
+        const anchorNode = selection.anchorNode;
+        let anchorOffset = selection.anchorOffset;
+        const focusNode = selection.focusNode;
+        let focusOffset = selection.focusOffset;
+        const anchorSize = nodeSize(anchorNode);
+        const focusSize = nodeSize(focusNode);
+        if (anchorSize < anchorOffset) {
+            anchorOffset = anchorSize;
         }
+        if (focusSize < focusOffset) {
+            focusOffset = focusSize;
+        }
+        const anchorTarget = childNodes(anchorNode).at(anchorOffset);
+        const focusTarget = childNodes(focusNode).at(focusOffset);
+        const protectionCheck = (node) =>
+            isProtecting(node) || (isProtected(node) && !isUnprotecting(node));
+        if (
+            focusTarget !== anchorTarget &&
+            focusTarget.previousSibling === anchorTarget &&
+            protectionCheck(anchorTarget)
+        ) {
+            return;
+        }
+        if (protectionCheck(anchorNode) || protectionCheck(focusNode)) {
+            // TODO @phoenix, TODO ABD: better handle setSelection on protected
+            // elements
+            return;
+        }
+        return this.setSelection({
+            anchorNode,
+            anchorOffset,
+            focusNode,
+            focusOffset,
+        });
     }
 
     /**
