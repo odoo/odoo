@@ -4,6 +4,7 @@
 import { EvaluationError } from "@odoo/o-spreadsheet";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { _t } from "@web/core/l10n/translation";
+import { deepCopy } from "@web/core/utils/objects";
 import { camelToSnakeObject, toServerDateString } from "@spreadsheet/helpers/helpers";
 
 /**
@@ -102,6 +103,7 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @returns {{ debit: number, credit: number }}
      */
     _fetchAccountData(codes, dateRange, offset, companyId, includeUnposted) {
+        dateRange = deepCopy(dateRange);
         dateRange.year += offset;
         // Excel dates start at 1899-12-30, we should not support date ranges
         // that do not cover dates prior to it.
