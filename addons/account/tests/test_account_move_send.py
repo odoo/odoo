@@ -999,3 +999,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(pdf_report)
         invoice.invoice_pdf_report_id.unlink()
         self.assertTrue(invoice.is_move_sent)
+
+    def test_no_sending_method_selected(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        self.assertFalse(invoice.invoice_pdf_report_id)
+        wizard = self.create_send_and_print(invoice, sending_methods=[])
+        wizard.action_send_and_print()
+        self.assertTrue(invoice.is_move_sent)
+        self.assertTrue(invoice.invoice_pdf_report_id)

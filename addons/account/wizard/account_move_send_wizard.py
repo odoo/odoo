@@ -118,7 +118,7 @@ class AccountMoveSendWizard(models.TransientModel):
 
     def _inverse_sending_methods(self):
         for wizard in self:
-            wizard.sending_method_checkboxes = {method_key: {'checked': True} for method_key in wizard.sending_methods}
+            wizard.sending_method_checkboxes = {method_key: {'checked': True} for method_key in wizard.sending_methods or {}}
 
     @api.depends('move_id')
     def _compute_sending_method_checkboxes(self):
@@ -233,14 +233,14 @@ class AccountMoveSendWizard(models.TransientModel):
     def _get_sending_settings(self):
         self.ensure_one()
         send_settings = {
-            'sending_methods': self.sending_methods,
+            'sending_methods': self.sending_methods or [],
             'invoice_edi_format': self.invoice_edi_format,
-            'extra_edis': self.extra_edis,
+            'extra_edis': self.extra_edis or [],
             'pdf_report': self.pdf_report_id,
             'author_user_id': self.env.user.partner_id.id,
             'author_partner_id': self.env.user.id,
         }
-        if 'email' in self.sending_methods:
+        if self.sending_methods and 'email' in self.sending_methods:
             send_settings.update({
                 'mail_template': self.mail_template_id,
                 'mail_lang': self.mail_lang,
@@ -254,7 +254,11 @@ class AccountMoveSendWizard(models.TransientModel):
     def _update_preferred_settings(self):
         """If the partner's settings are not set, we use them as partner's default."""
         self.ensure_one()
-        if not self.move_id.partner_id.with_company(self.company_id).invoice_sending_method and len(self.sending_methods) == 1:
+        if (
+            self.sending_methods
+            and len(self.sending_methods) == 1
+            and not self.move_id.partner_id.with_company(self.company_id).invoice_sending_method
+        ):
             self.move_id.partner_id.with_company(self.company_id).invoice_sending_method = self.sending_methods[0]
         if not self.move_id.partner_id.invoice_template_pdf_report_id and self.pdf_report_id != self._get_default_pdf_report_id(self.move_id):
             self.move_id.partner_id.invoice_template_pdf_report_id = self.pdf_report_id
@@ -283,7 +287,7 @@ class AccountMoveSendWizard(models.TransientModel):
             **self._get_sending_settings(),
             allow_fallback_pdf=allow_fallback_pdf,
         )
-        if attachments and 'manual' in self.sending_methods:
+        if attachments and self.sending_methods and 'manual' in self.sending_methods:
             return self._action_download(attachments)
         else:
             return {'type': 'ir.actions.act_window_close'}
