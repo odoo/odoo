@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, {
     get placeholder() {
-        if (this.env.inPortalChatter) {
+        if (this.env.inFrontendPortalChatter) {
             return _t("Write a message…");
         }
         return super.placeholder;

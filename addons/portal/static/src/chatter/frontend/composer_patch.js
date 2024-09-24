@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Composer.prototype, {
     setup() {
         super.setup();
-        if (this.env.inPortalChatter) {
+        if (this.env.inFrontendPortalChatter) {
             this.suggestion = undefined;
         }
     },
