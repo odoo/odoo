@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <hr/>
-                <div class="mb-3">
+                <div t-if="pos.config.cash_control" class="mb-3">
                     <label class="form-label">Cash Count</label>
                     <div class="d-flex w-100 gap-2 mt-1">
                         <Input tModel="[state.payments[props.default_cash_details.id], 'counted']"
