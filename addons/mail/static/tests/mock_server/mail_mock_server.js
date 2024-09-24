@@ -69,12 +69,12 @@ export const parseRequestParams = async (request) => {
     return response.params;
 };
 
-const onRpcBeforeGlobal = {
-    cb: (route, args) => {},
-};
+const onRpcBeforeGlobal = { cb: (route, args) => {} };
+const onRpcAfterGlobal = { cb: (route, args) => {} };
 // using a registry category to not expose for manual import
-// We should use `onRpcBefore` with 1st parameter being (route, args) callback function
+// We should use `onRpcBefore`/`onRpcAfter` with 1st parameter being (route, args) callback function
 registry.category("mail.on_rpc_before_global").add(true, onRpcBeforeGlobal);
+registry.category("mail.on_rpc_after_global").add(true, onRpcAfterGlobal);
 export function registerRoute(route, handler) {
     const beforeCallableHandler = async function (request) {
         let args;
@@ -91,7 +91,12 @@ export function registerRoute(route, handler) {
         if (res !== undefined) {
             return res;
         }
-        return handler.call(this, request);
+        const response = handler.call(this, request);
+        res = await beforeCallableHandler.after?.(response);
+        if (res !== undefined) {
+            return res;
+        }
+        return response;
     };
     registry.category("mock_rpc").add(route, beforeCallableHandler);
 }

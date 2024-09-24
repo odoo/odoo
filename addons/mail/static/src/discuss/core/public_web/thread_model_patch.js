@@ -85,9 +85,9 @@ patch(Thread.prototype, {
         return super.notifyOnLeave && !this.parent_channel_id;
     },
     /**
-     * @param {*} param0
+     * @param {Object} [param0={}]
      * @param {import("models").Message} [param0.initialMessage]
-     * @param {string} [param0.searchTerm]
+     * @param {string} [param0.name]
      */
     async createSubChannel({ initialMessage, name } = {}) {
         const { data, sub_channel } = await rpc("/discuss/channel/sub_channel/create", {
@@ -95,7 +95,7 @@ patch(Thread.prototype, {
             from_message_id: initialMessage?.id,
             name,
         });
-        this.store.insert(data);
+        this.store.insert(data, { html: true });
         this.store.Thread.get(sub_channel).open();
     },
     /**
