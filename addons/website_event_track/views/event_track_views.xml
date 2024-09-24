@@ -48,7 +48,7 @@
                         <field name="name" class="fw-medium fs-5"/>
                         <div t-if="duration" class="d-flex"><field name="duration" widget="float_time"/>hours</div>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                        <footer class="fs-6 pt-0">
+                        <footer class="pt-0">
                             <div class="d-flex align-items-center">
                                 <field name="priority" widget="priority"/>
                                 <field name="activity_ids" widget="kanban_activity" class="ms-1"/>

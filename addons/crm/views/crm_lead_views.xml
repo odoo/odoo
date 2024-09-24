@@ -395,7 +395,7 @@
                             <field name="name" class="fw-bold fs-5"/>
                             <field name="contact_name"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <footer class="pt-1 mt-0 fs-6">
+                            <footer class="pt-1 mt-0">
                                 <div class="d-flex mt-auto">
                                     <field name="priority" widget="priority" class="me-2"/>
                                     <field name="activity_ids" widget="kanban_activity"/>
@@ -549,7 +549,7 @@
                             <field name="partner_id" class="text-truncate" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="lead_properties" widget="properties"/>
-                            <footer class="fs-6 pt-1">
+                            <footer class="pt-1">
                                 <div class="d-flex mt-auto align-items-center">
                                     <field name="priority" widget="priority" groups="base.group_user" class="me-2"/>
                                     <field name="activity_ids" widget="kanban_activity"/>

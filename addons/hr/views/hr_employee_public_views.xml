@@ -150,13 +150,13 @@
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email"/>
                                 </div>
-                                <div t-if="record.work_phone.raw_value">
-                                    <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
-                                    <field name="work_phone"/>
+                                <div class="d-flex">
+                                    <div t-if="record.work_phone.raw_value">
+                                        <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
+                                        <field name="work_phone"/>
+                                    </div>
+                                    <field name="user_id" widget="many2one_avatar_user" readonly="1" class="ms-auto"/>
                                 </div>
-                                <footer class="fs-6 position-absolute bottom-0 end-0">
-                                    <field name="user_id" widget="many2one_avatar_user" readonly="1" class="mb-2 ms-auto me-2"/>
-                                </footer>
                             </main>
                         </t>
                     </templates>

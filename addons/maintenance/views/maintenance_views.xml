@@ -170,7 +170,7 @@
                         <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id"/></span>
                         <span t-if="record.equipment_id.raw_value"><field name="equipment_id"/><span t-if="record.category_id.raw_value"> (<field name="category_id"/>)</span></span>
                         <field name="schedule_date"/>
-                        <footer class="fs-6">
+                        <footer>
                             <div class="d-flex">
                                 <field name="priority" widget="priority"/>
                                 <field name="activity_ids" widget="kanban_activity" class="ms-3"/>
@@ -473,7 +473,7 @@
                             <span t-if="record.model.raw_value" class="fw-bold small"> (<field name="model"/>)</span>
                         </div>
                         <field t-if="record.serial_no.raw_value" name="serial_no"/>
-                        <footer class="fs-6">
+                        <footer>
                             <div class="badge text-bg-danger" t-if="record.maintenance_open_count.raw_value">
                                 <field name="maintenance_open_count" /> Request
                             </div>
