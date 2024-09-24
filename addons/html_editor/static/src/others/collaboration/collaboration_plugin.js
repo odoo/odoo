@@ -166,8 +166,9 @@ export class CollaborationPlugin extends Plugin {
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.
 
-        // todo: send a signal for the html_field to inform that the
-        // field is probably dirty
+        if (stepIndex) {
+            this.config.onChange?.();
+        }
     }
 
     /**
