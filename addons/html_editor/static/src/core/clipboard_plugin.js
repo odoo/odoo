@@ -560,6 +560,7 @@ export class ClipboardPlugin extends Plugin {
         const { odooHtml, odooText } = this.createClipboardData(selection, clonedContents);
         ev.dataTransfer.setData("text/plain", odooText);
         ev.dataTransfer.setData("text/html", odooHtml);
+        ev.dataTransfer.setData("application/vnd.odoo.odoo-editor", odooHtml);
         if (ev.target.nodeName === "IMG") {
             this.dragImage = ev.target instanceof HTMLElement && ev.target;
             ev.dataTransfer.setData(
@@ -600,6 +601,7 @@ export class ClipboardPlugin extends Plugin {
 
         const fileTransferItems = getImageFiles(dataTransfer);
         const htmlTransferItem = [...dataTransfer.items].find((item) => item.type === "text/html");
+        const odooEditorHtml = dataTransfer.getData("application/vnd.odoo.odoo-editor");
         if (image || fileTransferItems.length || htmlTransferItem) {
             if (this.document.caretPositionFromPoint) {
                 const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
@@ -626,6 +628,12 @@ export class ClipboardPlugin extends Plugin {
             const html = await this.addImagesFiles(fileTransferItems);
             this.shared.domInsert(html);
             this.dispatch("ADD_STEP");
+        } else if (odooEditorHtml) {
+            const fragment = parseHTML(this.document, odooEditorHtml);
+            this.shared.sanitize(fragment);
+            if (fragment.hasChildNodes()) {
+                this.shared.domInsert(fragment);
+            }
         } else if (htmlTransferItem) {
             htmlTransferItem.getAsString((pastedText) => {
                 this.shared.domInsert(this.prepareClipboardData(pastedText));
