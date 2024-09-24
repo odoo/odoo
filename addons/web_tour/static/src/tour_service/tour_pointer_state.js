@@ -128,7 +128,16 @@ export function createPointerState() {
                         setState({ anchor, content, onClick: null, position, isVisible: true });
                         return;
                     }
-                    const { x, y, width, height } = scrollParent.getBoundingClientRect();
+                    let { x, y, width, height } = scrollParent.getBoundingClientRect();
+
+                    // If the scrolling element is within an iframe the offsets
+                    // must be computed taking into account the iframe.
+                    const iframeEl = scrollParent.ownerDocument.defaultView.frameElement;
+                    if (iframeEl) {
+                        const iframeOffset = iframeEl.getBoundingClientRect();
+                        x += iframeOffset.x;
+                        y += iframeOffset.y;
+                    }
                     floatingAnchor.style.left = `${x + width / 2}px`;
                     if (intersection.targetPosition === "out-below") {
                         position = "top";
