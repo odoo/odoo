@@ -499,6 +499,39 @@ test("receive new needaction messages", async () => {
     await contains(".o-mail-Message-content", { text: "not empty 2" });
 });
 
+test("receive a message that is not linked to thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
+    await start();
+    await openDiscuss();
+    await contains("button.o-active", { text: "Inbox", contains: [".badge", { count: 0 }] });
+    await contains(".o-mail-Thread .o-mail-Message", { count: 0 });
+    // simulate receiving a new needaction message that is not linked to thread
+    const messageId_1 = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "needaction message",
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId_1,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(
+        partner,
+        "mail.message/inbox",
+        new mailDataHelpers.Store(
+            pyEnv["mail.message"].browse(messageId_1),
+            makeKwArgs({ for_current_user: true, add_followers: true })
+        ).get_result()
+    );
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message-content", { text: "needaction message" });
+});
+
 test("basic rendering", async () => {
     await start();
     await openDiscuss();
