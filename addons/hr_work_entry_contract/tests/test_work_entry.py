@@ -277,8 +277,8 @@ class TestWorkEntry(TestWorkEntryBase):
         })
 
         entry_type_1, entry_type_2 = self.env['hr.work.entry.type'].create([
-            {'name': 'Work type 1', 'is_leave': False, 'code': 'ENTRY_TYPE1'},
-            {'name': 'Work type 2', 'is_leave': False, 'code': 'ENTRY_TYPE2'},
+            {'name': 'Work type 1', 'code': 'ENTRY_TYPE1'},
+            {'name': 'Work type 2', 'code': 'ENTRY_TYPE2'},
         ])
 
         self.env['resource.calendar.attendance'].create([
