@@ -176,4 +176,31 @@ QUnit.module("Hooks", ({ beforeEach }) => {
         await triggerHotkey("enter");
         assert.verifySteps(["2"]);
     });
+
+    QUnit.test("hovering an item makes it active but doesn't focus", async (assert) => {
+        const env = await makeTestEnv();
+        await mount(createNavComponent(), target, { env });
+
+        await triggerHotkey("arrowdown");
+
+        assert.strictEqual(document.activeElement, target.querySelector(".two"));
+        assert.hasClass(target.querySelector(".two"), "focus");
+
+
+        const event = new MouseEvent('mouseenter', {
+            'view': window,
+            'bubbles': true,
+            'cancelable': true
+        });
+        document.querySelector(".three").dispatchEvent(event);
+
+        assert.strictEqual(document.activeElement, target.querySelector(".two"));
+        assert.hasClass(target.querySelector(".three"), "focus");
+        assert.notStrictEqual(document.activeElement, target.querySelector(".three"));
+        assert.hasClass(target.querySelector(".three"), "focus");
+
+        await triggerHotkey("arrowdown");
+        assert.strictEqual(document.activeElement, target.querySelector(".four"));
+        assert.hasClass(target.querySelector(".four"), "focus");
+    });
 });
