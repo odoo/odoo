@@ -360,11 +360,15 @@ class SaleProductConfiguratorController(Controller):
                 )
         return dict(
             **basic_information,
-            price=pricelist._get_product_price(
+            price=request.env['product.template']._get_configurator_display_price(
                 product_or_template.with_context(
                     **product_or_template._get_product_price_context(combination)
                 ),
+                pricelist=pricelist,
                 **kwargs,
+            ),
+            **request.env['product.template']._get_additional_configurator_data(
+                product_or_template, pricelist=pricelist, **kwargs
             ),
         )
 

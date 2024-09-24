@@ -20,7 +20,7 @@ export class ComboConfiguratorDialog extends Component {
         quantity: Number,
         price: Number,
         combos: { type: Array, element: ProductCombo },
-        currency_id: { type: Number, optional: true },
+        currency_id: Number,
         company_id: { type: Number, optional: true },
         pricelist_id: { type: Number, optional: true },
         date: String,
