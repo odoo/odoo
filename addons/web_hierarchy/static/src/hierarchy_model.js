@@ -90,13 +90,17 @@ export class HierarchyNode {
         return this.model.parentFieldName;
     }
 
+    get parentFieldIsMany2many() {
+        return this.model.parentFieldIsMany2many;
+    }
+
     /**
      * Get parent res id
      *
      * @returns {Number}
      */
     get parentResId() {
-        return this.parentNode?.resId || getIdOfMany2oneField(this.data[this.parentFieldName]);
+        return this.parentNode?.resId || (this.parentFieldIsMany2many ? (this.data[this.parentFieldName]?.[0] || false):  getIdOfMany2oneField(this.data[this.parentFieldName]));
     }
 
     /**
@@ -231,12 +235,6 @@ export class HierarchyNode {
                     this
                 )
         );
-    }
-
-    removeParentNode() {
-        this.parentNode?.removeChildNode(this);
-        this.parentNode = null;
-        this.data[this.parentFieldName] = false;
     }
 
     /**
@@ -449,17 +447,6 @@ export class HierarchyForest {
         );
     }
 
-    addNewRootNode(node) {
-        const tree = new HierarchyTree(this.model, this._config, null, this);
-        tree.root = node;
-        node.tree = tree;
-        tree.addNode(node);
-        for (const subNode of node.descendantNodes) {
-            tree.addNode(subNode);
-        }
-        this.trees.push(tree);
-    }
-
     removeTree(tree) {
         this.nodePerNodeId = Object.fromEntries(
             Object.entries(this.nodePerNodeId)
@@ -497,6 +484,10 @@ export class HierarchyModel extends Model {
      */
     get parentField() {
         return this.fields[this.parentFieldName];
+    }
+
+    get parentFieldIsMany2many() {
+        return this.parentField.type === "many2many";
     }
 
     /**
@@ -813,7 +804,7 @@ export class HierarchyModel extends Model {
         const recordPerId = {};
         for (const record of data) {
             recordPerId[record.id] = record;
-            const parentId = getIdOfMany2oneField(record[this.parentFieldName]);
+            const parentId = this.parentFieldIsMany2many ? (record[this.parentFieldName]?.[0] || false) : getIdOfMany2oneField(record[this.parentFieldName]);
             if (!(parentId.toString() in recordsPerParentId)) {
                 recordsPerParentId[parentId] = [];
             }
