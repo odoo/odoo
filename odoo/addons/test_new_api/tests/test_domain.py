@@ -100,8 +100,8 @@ class TestDomain(TransactionExpressionCase):
             {'name': False},   # stored as null (explicitly asked)
             {},                # stored as null
         ])
-        # check read
-        self.assertListEqual(records.mapped('name'), ['name', '', False, False])
+        # check read (NULL is returned as '')
+        self.assertListEqual(records.mapped('name'), ['name', '', '', ''])
 
         # check database value
         self.env.flush_all()
@@ -111,27 +111,25 @@ class TestDomain(TransactionExpressionCase):
         self.assertEqual([row[0] for row in rows], ['name', '', None, None])
 
         self.assertListEqual(self._search(EmptyChar, [('name', '=', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, [('name', '!=', 'name')]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', '!=', 'name')]).mapped('name'), ['', '', ''])
         self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', 'name')]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', 'name')]).mapped('name'), ['', '', ''])
 
-        self.assertListEqual(self._search(EmptyChar, [('name', '=', '')]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', '=', '')]).mapped('name'), ['', '', ''])
         self.assertListEqual(self._search(EmptyChar, [('name', '!=', '')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', '')]).mapped('name'), ['name', '', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', '')]).mapped('name'), ['name', '', '', ''])
         self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', '')]).mapped('name'), [])
 
-        self.assertListEqual(self._search(EmptyChar, [('name', '=', False)]).mapped('name'), ['', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', '=', False)]).mapped('name'), ['', '', ''])
         self.assertListEqual(self._search(EmptyChar, [('name', '!=', False)]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', False)]).mapped('name'), ['name', '', False, False])
+        self.assertListEqual(self._search(EmptyChar, [('name', 'ilike', False)]).mapped('name'), ['name', '', '', ''])
         self.assertListEqual(self._search(EmptyChar, [('name', 'not ilike', False)]).mapped('name'), [])
 
         values = ['name', '', False]
         for length in range(len(values) + 1):
             for subset in combinations(values, length):
                 # check against a subset containg both values for empty strings
-                subset_check = set(subset)
-                if {False, ""} & subset_check:
-                    subset_check |= {False, ""}
+                subset_check = {s or '' for s in subset}
                 self.assertEqual(
                     self._search(EmptyChar, [('name', 'in', list(subset))]),
                     records.filtered(lambda record: record.name in subset_check),
@@ -154,31 +152,29 @@ class TestDomain(TransactionExpressionCase):
         records_fr[0].name = 'name'
         records_fr[1].name = ''
         records_fr[2].name = False
-        self.assertListEqual(records_en.mapped('name'), ['English', 'English', False])
-        self.assertListEqual(records_fr.mapped('name'), ['name', '', False])
+        self.assertListEqual(records_en.mapped('name'), ['English', 'English', ''])
+        self.assertListEqual(records_fr.mapped('name'), ['name', '', ''])
 
         self.assertListEqual(self._search(records_fr, [('name', '=', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(records_fr, [('name', '!=', 'name')]).mapped('name'), ['', False])
+        self.assertListEqual(self._search(records_fr, [('name', '!=', 'name')]).mapped('name'), ['', ''])
         self.assertListEqual(self._search(records_fr, [('name', 'ilike', 'name')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(records_fr, [('name', 'not ilike', 'name')]).mapped('name'), ['', False])
+        self.assertListEqual(self._search(records_fr, [('name', 'not ilike', 'name')]).mapped('name'), ['', ''])
 
-        self.assertListEqual(self._search(records_fr, [('name', '=', '')]).mapped('name'), ['', False])
+        self.assertListEqual(self._search(records_fr, [('name', '=', '')]).mapped('name'), ['', ''])
         self.assertListEqual(self._search(records_fr, [('name', '!=', '')]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(records_fr, [('name', 'ilike', '')]).mapped('name'), ['name', '', False])
+        self.assertListEqual(self._search(records_fr, [('name', 'ilike', '')]).mapped('name'), ['name', '', ''])
         self.assertListEqual(self._search(records_fr, [('name', 'not ilike', '')]).mapped('name'), [])
 
-        self.assertListEqual(self._search(records_fr, [('name', '=', False)]).mapped('name'), ['', False])
+        self.assertListEqual(self._search(records_fr, [('name', '=', False)]).mapped('name'), ['', ''])
         self.assertListEqual(self._search(records_fr, [('name', '!=', False)]).mapped('name'), ['name'])
-        self.assertListEqual(self._search(records_fr, [('name', 'ilike', False)]).mapped('name'), ['name', '', False])
+        self.assertListEqual(self._search(records_fr, [('name', 'ilike', False)]).mapped('name'), ['name', '', ''])
         self.assertListEqual(self._search(records_fr, [('name', 'not ilike', False)]).mapped('name'), [])
 
         values = ['name', '', False]
         for length in range(len(values) + 1):
             for subset in combinations(values, length):
                 # check against a subset containg both values for empty strings
-                subset_check = set(subset)
-                if {False, ""} & subset_check:
-                    subset_check |= {False, ""}
+                subset_check = {s or '' for s in subset}
                 self.assertEqual(
                     self._search(records_fr, [('name', 'in', list(subset))]),
                     records_fr.filtered(lambda record: record.name in subset_check),

@@ -876,7 +876,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
                 move.quantity = 3
             picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
-        self.assertEqual(picking_form.json_popover, False)
+        self.assertEqual(picking_form.json_popover, '')
 
         subcontract = picking_receipt._get_subcontract_production()
         self.assertEqual(subcontract.date_start, picking_receipt.scheduled_date)

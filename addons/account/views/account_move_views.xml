@@ -1014,7 +1014,7 @@
                                        readonly="state != 'draft'"/>
                                 <field name="payment_reference"
                                        invisible="move_type not in ('in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
-                                       readonly="inalterable_hash != False"
+                                       readonly="inalterable_hash"
                                        placeholder="Use Bill Reference"/>
                                 <field name="partner_bank_id"
                                        context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"

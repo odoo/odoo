@@ -22,7 +22,7 @@ class TOTPWizard(models.TransientModel):
     _description = "2-Factor Setup Wizard"
 
     user_id = fields.Many2one('res.users', required=True, readonly=True)
-    secret = fields.Char(required=True, readonly=True)
+    secret = fields.Char(required=True, readonly=True, write_empty_string=True)
     url = fields.Char(store=True, readonly=True, compute='_compute_qrcode')
     qrcode = fields.Binary(
         attachment=False, store=True, readonly=True,

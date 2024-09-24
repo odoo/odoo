@@ -550,7 +550,7 @@ class TestTrackingInternals(MailCommon):
             new_message,
             [
                 ('boolean_field', 'boolean', 0, 1),
-                ('char_field', 'char', False, 'char_value'),
+                ('char_field', 'char', '', 'char_value'),
                 ('date_field', 'date', False, today_dt),
                 ('datetime_field', 'datetime', False, now),
                 ('float_field', 'float', 0, 3.22),
@@ -558,7 +558,7 @@ class TestTrackingInternals(MailCommon):
                 ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
                 ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
                 ('selection_field', 'selection', '', 'FIRST'),
-                ('text_field', 'text', False, 'text_value'),
+                ('text_field', 'text', '', 'text_value'),
             ],
             strict=True
         )
@@ -586,9 +586,9 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(compute_record.message_ids.author_id, self.partner_employee)
         self.assertTracking(compute_record.message_ids[0], [
             ('partner_id', 'many2one', False, partner_su),
-            ('partner_name', 'char', False, 'Foo'),
-            ('partner_email', 'char', False, 'foo@example.com'),
-            ('partner_phone', 'char', False, '1234567890'),
+            ('partner_name', 'char', '', 'Foo'),
+            ('partner_email', 'char', '', 'foo@example.com'),
+            ('partner_phone', 'char', '', '1234567890'),
         ])
 
         # modify partner: one tracking message for the only recomputed field
@@ -707,7 +707,7 @@ class TestTrackingInternals(MailCommon):
             },
             'oldValue': {
                 'currencyId': False,
-                'value': False,
+                'value': '',
             },
         }]
         self.assertEqual(
@@ -792,7 +792,7 @@ class TestTrackingInternals(MailCommon):
                 (0, 0, {
                     'field_id': self.env['ir.model.fields']._get(sub_track._name, 'secret').id,
                     'new_value_char': 'secret',
-                    'old_value_char': False,
+                    'old_value_char': '',
                 }),
                 (0, 0, {
                     'field_id': False,
@@ -834,7 +834,7 @@ class TestTrackingInternals(MailCommon):
                     'fieldName': 'secret',
                     'fieldType': 'char',
                     'newValue': {'currencyId': False, 'value': 'secret'},
-                    'oldValue': {'currencyId': False, 'value': False}
+                    'oldValue': {'currencyId': False, 'value': ''}
                 }, {
                     'changedField': 'Old integer',
                     'id': trackings[2].id,
@@ -847,8 +847,8 @@ class TestTrackingInternals(MailCommon):
                     'id': trackings[1].id,
                     'fieldName': 'unknown',
                     'fieldType': 'char',
-                    'newValue': {'currencyId': False, 'value': False},
-                    'oldValue': {'currencyId': False, 'value': False}
+                    'newValue': {'currencyId': False, 'value': ''},
+                    'oldValue': {'currencyId': False, 'value': ''}
                 }
             ]
         )
@@ -935,7 +935,7 @@ class TestTrackingInternals(MailCommon):
 
         self.assertTracking(
             record.message_ids[0],
-            [('email_from', 'char', False, 'new_value')],
+            [('email_from', 'char', '', 'new_value')],
             strict=True,
         )
         self.assertTracking(
@@ -947,7 +947,7 @@ class TestTrackingInternals(MailCommon):
         )
         self.assertTracking(
             record_other.message_ids[1],
-            [('email_from', 'char', False, 'email.from.1@example.com')],
+            [('email_from', 'char', '', 'email.from.1@example.com')],
             strict=True,
         )
 
@@ -970,9 +970,9 @@ class TestTrackingInternals(MailCommon):
         values_info = [
             ('', self.env.user.name),
             ('', self.test_partner.name),
-            (False, 'new_value'),
+            ('', 'new_value'),
             ('email.from.1@example.com', 'email.from.2@example.com'),
-            (False, 'email.from.1@example.com'),
+            ('', 'email.from.1@example.com'),
         ]
         formatted = trackings_all._tracking_value_format()
         self.assertEqual(

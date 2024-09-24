@@ -43,9 +43,9 @@ class TestMailThread(MailCommon, TestRecipients):
             ('test.😊@example.com', 'test.😊@example.com'),
             ('"Name 😊" <test.😊@example.com>', 'test.😊@example.com'),
         ]
-        void_pairs = [(False, False),
-                      ('', False),
-                      (' ', False)]
+        void_pairs = [(False, ''),
+                      ('', ''),
+                      (' ', '')]
         multi_pairs = [
             (f'{base_email}, other.email@test.example.com',
              base_email),  # multi supports first found

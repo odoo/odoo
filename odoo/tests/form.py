@@ -495,7 +495,10 @@ class Form:
             # note: maybe `invisible` should not skip `required` if model attribute
             if (
                 mode == 'save'
-                and value is False
+                and (
+                    value is False
+                    or (field_info['type'] in ('char', 'html', 'text') and not value)
+                )
                 and field_name != parent_link
                 and field_info['type'] != 'boolean'
                 and not self._get_modifier(field_name, 'invisible', view=view, vals=modifiers_values)
@@ -685,7 +688,11 @@ class O2MForm(Form):
                 self._get_modifier(field_name, 'column_invisible')
                 or self._get_modifier(field_name, 'invisible')
             ):
-                assert values[field_name] is not False, f"{field_name!r} is a required field"
+                is_missing = (
+                    values[field_name] is False
+                    or (self._record._fields[field_name].type in ('char', 'html', 'text') and not values[field_name])
+                )
+                assert not is_missing, f"{field_name!r} is a required field"
 
         return values
 

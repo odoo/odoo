@@ -63,7 +63,7 @@ class TestTrackData(TestEventOnlineCommon):
             'partner_biography': test_bio,
         })
         self.assertEqual(new_track.partner_name, 'Nibbler In Space')
-        self.assertEqual(new_track.partner_email, False)
+        self.assertEqual(new_track.partner_email, '')
         self.assertEqual(new_track.partner_phone, test_phone)
         self.assertEqual(new_track.partner_biography, test_bio)
         new_track.write({'partner_id': customer.id})
@@ -84,7 +84,7 @@ class TestTrackData(TestEventOnlineCommon):
             'name': 'Mega Track',
             'contact_phone': test_phone,
         })
-        self.assertEqual(new_track.contact_email, False)
+        self.assertEqual(new_track.contact_email, '')
         self.assertEqual(new_track.contact_phone, test_phone)
         new_track.write({'partner_id': customer.id})
         self.assertEqual(new_track.partner_id, customer)

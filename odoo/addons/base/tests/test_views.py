@@ -776,7 +776,7 @@ class TestNoModel(ViewCase):
             'type': 'qweb',
             'priority': 16,
             'inherit_id': False,
-            'model': False,
+            'model': '',
         })
 
     text_para = E.p("", {'class': 'legalese'})

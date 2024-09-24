@@ -124,7 +124,7 @@ And here is the same: <a href="{self.base_url}/r/(\w+)+"><img src="https://www.o
             [("url", "=", "https://www.odoo.com"), ("label", "=", "blurp")],
             [("url", "=", "https://www.odoo.com"), ("label", "=", '[media] "scary"')],
             [("url", "=", "https://www.odoo.com"), ("label", "=", "[media] ins ' ide")],
-            [("url", "=", "https://www.odoo.com"), ("label", "=", False)],
+            [("url", "=", "https://www.odoo.com"), ("label", "=", "")],
             [("url", "=", "https://www.odoo.com"), ("label", "=", "[media] logo.png")],
         ]
         for tracker_to_find in trackers_to_find:

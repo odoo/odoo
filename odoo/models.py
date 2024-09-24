@@ -2156,6 +2156,10 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields[fname]
         if (not func or func == 'recordset') and (field.relational or fname == 'id'):
             return self.env[field.comodel_name] if field.relational else self.env[self._name]
+        if field.type in ('char', 'html', 'text'):
+            return ''
+        if field.type in ('integer', 'float', 'monetary'):
+            return 0
         return False
 
     def _read_group_postprocess_groupby(self, groupby_spec, raw_values):
@@ -3037,9 +3041,15 @@ class BaseModel(metaclass=MetaModel):
         sql_field = self._field_to_sql(alias, fname, query)
 
         field = self._fields[fname]
-        is_number_field = field.type in ('integer', 'float', 'monetary') and field.name != 'id'
-        is_char_field = field.type in ('char', 'text', 'html')
         sql_operator = expression.SQL_OPERATORS[operator]
+
+        if field.type in ('integer', 'float', 'monetary') and field.name != 'id':
+            null_value = 0
+        elif field.type in ('char', 'text', 'html'):
+            null_value = ''
+        else:
+            null_value = None
+        assert not null_value, "null must be falsy"
 
         if operator in ('in', 'not in'):
             # Two cases: value is a boolean or a list. The boolean case is an
@@ -3065,14 +3075,12 @@ class BaseModel(metaclass=MetaModel):
                     params = [True] if any(params) else []
                     if check_null:
                         params.append(False)
-                elif is_number_field:
-                    if check_null and 0 not in params:
-                        params.append(0)
-                    check_null = check_null or (0 in params)
-                elif is_char_field:
-                    if check_null and '' not in params:
-                        params.append('')
-                    check_null = check_null or ('' in params)
+                elif null_value is not None:
+                    if check_null:
+                        if null_value not in params:
+                            params.append(null_value)
+                    else:
+                        check_null = null_value in params
 
                 if params:
                     if fname != 'id':
@@ -3109,10 +3117,8 @@ class BaseModel(metaclass=MetaModel):
             value = False
 
         if operator in ('=', '!=') and (value is False or value is None):
-            if is_number_field:
-                value = 0  # generates (fname = 0 OR fname IS NULL)
-            elif is_char_field:
-                value = ''  # generates (fname = '' OR fname IS NULL)
+            if null_value is not None:
+                value = null_value  # generates (fname = null_value OR fname IS NULL)
             elif operator == '=':
                 return SQL("%s IS NULL", sql_field)
             elif operator == '!=':
@@ -3126,7 +3132,10 @@ class BaseModel(metaclass=MetaModel):
         elif need_wildcard:
             sql_value = SQL("%s", f"%{value}%")
         else:
-            sql_value = SQL("%s", field.convert_to_column(value, self, validate=False))
+            param_value = field.convert_to_column(value, self, validate=False)
+            if param_value is None and null_value is not None:
+                param_value = null_value
+            sql_value = SQL("%s", param_value)
 
         sql_left = sql_field
         if operator.endswith('like') and field.type not in ('char', 'text', 'html'):
@@ -3146,13 +3155,13 @@ class BaseModel(metaclass=MetaModel):
         ):
             sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
 
-        if not need_wildcard and is_number_field and not field.company_dependent:
-            cmp_value = field.convert_to_record(field.convert_to_cache(value, self), self)
+        if not need_wildcard and not field.company_dependent:
+            cmp_value = field.convert_to_record(field.convert_to_cache(value, self), self) or null_value
             if (
-                operator == '>=' and cmp_value <= 0
-                or operator == '<=' and cmp_value >= 0
-                or operator == '<' and cmp_value > 0
-                or operator == '>' and cmp_value < 0
+                operator == '>=' and cmp_value <= null_value
+                or operator == '<=' and cmp_value >= null_value
+                or operator == '<' and cmp_value > null_value
+                or operator == '>' and cmp_value < null_value
             ):
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
 
@@ -3785,6 +3794,7 @@ class BaseModel(metaclass=MetaModel):
             # falsy values (except emtpy str) are used to void the corresponding translation
             if any(translation and not isinstance(translation, str) for translation in translations.values()):
                 raise UserError(_("Translations for model translated fields only accept falsy values and str"))
+            write_value = translations.get(self.env.lang)
             value_en = translations.get('en_US', True)
             if not value_en and value_en != '':
                 translations.pop('en_US')
@@ -3813,6 +3823,8 @@ class BaseModel(metaclass=MetaModel):
                 id=self.id,
             ))
             self.modified([field_name])
+            if write_value is None:
+                write_value = self[field_name]
         else:
             old_values = field._get_stored_translations(self)
             if not old_values:
@@ -3856,13 +3868,14 @@ class BaseModel(metaclass=MetaModel):
                 _new_translations = {**_old_translations, **_translations}
                 new_values[lang] = field.translate(_new_translations.get, old_source_lang_value)
             self.env.cache.update_raw(self, field, [new_values], dirty=True)
+            write_value = self[field_name]
 
         # the following write is incharge of
         # 1. mark field as modified
         # 2. execute logics in the override `write` method
         # 3. update write_date of the record if exists to support 't-cache'
         # even if the value in cache is the same as the value written
-        self[field_name] = self[field_name]
+        self[field_name] = write_value
         return True
 
     def get_field_translations(self, field_name, langs=None):
@@ -6460,10 +6473,9 @@ class BaseModel(metaclass=MetaModel):
                         # no need to match r'.*' in else because we only use .match()
 
                     like_regex = re.compile("".join(build_like_regex(unaccent(value), comparator.startswith("="))))
-                if comparator in ('=', '!=') and field.type in ('char', 'text', 'html') and not value:
-                    # use the comparator 'in' for falsy comparison of strings
-                    comparator = 'in' if comparator == '=' else 'not in'
-                    value = ['', False]
+                if comparator in ('=', '!='):
+                    if field.type in ('char', 'text', 'html') and not value:
+                        value = ''
                 if comparator in ('in', 'not in'):
                     if isinstance(value, (list, tuple)):
                         value = set(value)
@@ -6471,9 +6483,9 @@ class BaseModel(metaclass=MetaModel):
                         value = {value}
                     if field.type in ('date', 'datetime'):
                         value = {Datetime.to_datetime(v) for v in value}
-                    elif field.type in ('char', 'text', 'html') and ({False, ""} & value):
-                        # compare string to both False and ""
-                        value |= {False, ""}
+                    elif field.type in ('char', 'text', 'html') and False in value:
+                        value.remove(False)
+                        value.add('')
                 elif field.type in ('date', 'datetime'):
                     value = Datetime.to_datetime(value)
 

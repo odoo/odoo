@@ -487,6 +487,8 @@ class MockSmtplibCase:
             raise ValueError('Invalid usage: use either from_filter either mail_server')
         if from_filter is None and mail_server is not None:
             from_filter = mail_server.from_filter
+        elif from_filter is False:
+            from_filter = ''
         matching_emails = filter(
             lambda email:
                 (smtp_from is None or smtp_from == email['smtp_from'])

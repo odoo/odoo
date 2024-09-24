@@ -53,7 +53,7 @@ class Alias(models.Model):
                                       # hack to only allow selecting mail_thread models (we might
                                       # (have a few false positives, though)
                                       domain="[('field_id.name', '=', 'message_ids')]")
-    alias_defaults = fields.Text('Default Values', required=True, default='{}',
+    alias_defaults = fields.Text('Default Values', required=True, default='{}', write_empty_string=True,
                                  help="A Python dictionary that will be evaluated to provide "
                                       "default values when creating new records for this alias.")
     alias_force_thread_id = fields.Integer(

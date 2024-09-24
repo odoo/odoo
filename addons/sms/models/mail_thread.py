@@ -281,7 +281,7 @@ class MailThread(models.AbstractModel):
                 partner_id=False,
                 number=n,
                 state='outgoing' if n else 'error',
-                failure_type='' if n else 'sms_number_missing',
+                failure_type=False if n else 'sms_number_missing',
             ) for n in tocreate_numbers if n not in existing_partners_numbers]
 
         # create sms and notification
@@ -312,7 +312,7 @@ class MailThread(models.AbstractModel):
                 'sms_tracker_ids': [Command.create({'sms_uuid': sms.uuid})] if sms.state == 'outgoing' else False,
                 'is_read': True,  # discard Inbox notification
                 'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
-                'failure_type': '' if sms.state == 'outgoing' else sms.failure_type,
+                'failure_type': False if sms.state == 'outgoing' else sms.failure_type,
             } for sms in sms_all if (sms.partner_id and sms.partner_id.id not in existing_pids) or (not sms.partner_id and sms.number not in existing_numbers)]
             if notif_create_values:
                 self.env['mail.notification'].sudo().create(notif_create_values)

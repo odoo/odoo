@@ -44,8 +44,8 @@ class TestRelatedReadGroup(common.TransactionCase):
                 },
                 {
                     '__count': 2,
-                    '__domain': [('foo_id_bar_id_name', '=', False)],
-                    'foo_id_bar_id_name': False,
+                    '__domain': [('foo_id_bar_id_name', '=', '')],
+                    'foo_id_bar_id_name': '',
                 },
             ],
         )

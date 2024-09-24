@@ -134,7 +134,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
         )
         # missing number
         self.assertSMSTraces(
-            [{'partner': self.env['res.partner'], 'number': False,
+            [{'partner': self.env['res.partner'], 'number': '',
               'content': 'Dear %s this is a mass SMS' % void_record.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_number_missing'}],
             mailing, void_record,

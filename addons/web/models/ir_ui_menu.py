@@ -33,7 +33,7 @@ class IrUiMenu(models.Model):
                     "actionID": False,
                     "actionModel": False,
                     "actionPath": False,
-                    "webIcon": None,
+                    "webIcon": '',
                     "webIconData": None,
                     "webIconDataMimetype": None,
                     "backgroundImage": menu.get('backgroundImage'),

@@ -35,7 +35,7 @@ class IrConfigParameter(models.Model):
     _allow_sudo_commands = False
 
     key = fields.Char(required=True)
-    value = fields.Text(required=True)
+    value = fields.Text(required=True, write_empty_string=True)
 
     _sql_constraints = [
         ('key_uniq', 'unique (key)', 'Key must be unique.')

@@ -417,7 +417,7 @@ class TestOldRules(TestStockCommon):
         # second out move, the "pick" picking should have lost its partner and origin
         move2._action_confirm()
         self.assertEqual(picking_pick.partner_id.id, False)
-        self.assertEqual(picking_pick.origin, False)
+        self.assertEqual(picking_pick.origin, '')
 
     def test_fixed_procurement_01(self):
         """ Run a procurement for 5 products when there are only 4 in stock then
@@ -604,4 +604,4 @@ class TestOldRules(TestStockCommon):
         # second out move, the "pick" picking should have lost its partner and origin
         move2._action_confirm()
         self.assertEqual(picking_pick.partner_id.id, False)
-        self.assertEqual(picking_pick.origin, False)
+        self.assertEqual(picking_pick.origin, '')

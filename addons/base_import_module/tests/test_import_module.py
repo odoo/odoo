@@ -246,7 +246,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         self.assertEqual(asset.path, path)
         self.assertEqual(asset.bundle, bundle)
         self.assertEqual(asset.directive, 'append')
-        self.assertEqual(asset.target, False)
+        self.assertEqual(asset.target, '')
 
         asset_data = self.env['ir.model.data'].search([('model', '=', 'ir.asset'), ('res_id', '=', asset.id)])
         self.assertEqual(asset_data.module, 'test_module')
@@ -304,7 +304,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         self.assertEqual(asset.path, f'/{path}')
         self.assertEqual(asset.bundle, bundle)
         self.assertEqual(asset.directive, 'append')
-        self.assertEqual(asset.target, False)
+        self.assertEqual(asset.target, '')
 
         asset_data = self.env['ir.model.data'].search([('model', '=', 'ir.asset'), ('res_id', '=', asset.id)])
         self.assertEqual(asset_data.module, 'test_module')
@@ -331,7 +331,7 @@ class TestImportModule(odoo.tests.TransactionCase):
         self.assertEqual(asset.path, f'/{path}')
         self.assertEqual(asset.bundle, bundle)
         self.assertEqual(asset.directive, 'append')
-        self.assertEqual(asset.target, False)
+        self.assertEqual(asset.target, '')
 
         asset_data = self.env['ir.model.data'].search([('model', '=', 'ir.asset'), ('res_id', '=', asset.id)])
         self.assertEqual(asset_data.module, 'test_module')

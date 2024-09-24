@@ -52,7 +52,7 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
             partner.company_registry = "turlututu"
 
         # No company_registry nor vat -> (0184, False)
-        with self.check_peppol_vals(partner, expected=("0184", False)):
+        with self.check_peppol_vals(partner, expected=("0184", "")):
             partner.write({
                 'company_registry': False,
                 'vat': False,

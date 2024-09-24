@@ -24,7 +24,7 @@ class LunchAlert(models.Model):
     _order = 'write_date desc, id'
 
     name = fields.Char('Alert Name', required=True, translate=True)
-    message = fields.Html('Message', required=True, translate=True)
+    message = fields.Html('Message', required=True, translate=True, write_empty_string=True)
 
     mode = fields.Selection([
         ('alert', 'Alert in app'),

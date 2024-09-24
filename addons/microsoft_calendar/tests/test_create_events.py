@@ -375,9 +375,9 @@ class TestCreateEvents(TestCommon):
                                 "Event creation must happen before last_sync_date")
 
             # Assert that the local event did not get synced after synchronization restart.
-            self.assertEqual(event.microsoft_id, False,
+            self.assertEqual(event.microsoft_id, '',
                             "Event should not be synchronized while sync is paused.")
-            self.assertEqual(event.ms_universal_event_id, False,
+            self.assertEqual(event.ms_universal_event_id, '',
                             "Event should not be synchronized while sync is paused.")
 
         # Update local event information.

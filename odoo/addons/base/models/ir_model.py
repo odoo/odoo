@@ -525,7 +525,7 @@ class IrModelFields(models.Model):
                                         store=True, ondelete='cascade', string='Relation field')
     model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade',
                                help="The model this field belongs to")
-    field_description = fields.Char(string='Field Label', default='', required=True, translate=True)
+    field_description = fields.Char(string='Field Label', default='', required=True, translate=True, write_empty_string=True)
     help = fields.Text(string='Field Help', translate=True)
     ttype = fields.Selection(selection=FIELD_TYPES, string='Field Type', required=True)
     selection = fields.Char(string="Selection Options (Deprecated)",
@@ -2158,7 +2158,7 @@ class IrModelData(models.Model):
                             "data integration with third-party systems")
     complete_name = fields.Char(compute='_compute_complete_name', string='Complete ID')
     model = fields.Char(string='Model Name', required=True)
-    module = fields.Char(default='', required=True)
+    module = fields.Char(default='', required=True, write_empty_string=True)
     res_id = fields.Many2oneReference(string='Record ID', help="ID of the target record in the database", model_field='model')
     noupdate = fields.Boolean(string='Non Updatable', default=False)
     reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)

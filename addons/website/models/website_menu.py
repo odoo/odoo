@@ -38,7 +38,7 @@ class Menu(models.Model):
                 menu.mega_menu_content = False
                 menu.mega_menu_classes = False
 
-    name = fields.Char('Menu', required=True, translate=True)
+    name = fields.Char('Menu', required=True, translate=True, write_empty_string=True)
     url = fields.Char('Url', default='')
     page_id = fields.Many2one('website.page', 'Related Page', ondelete='cascade')
     controller_page_id = fields.Many2one('website.controller.page', 'Related Model Page', ondelete='cascade')

@@ -181,7 +181,7 @@ class TestORM(TransactionCase):
             record = self.env['res.bank'].create(vals)
             self.assertEqual(len(record), 1)
             self.assertEqual(record.name, vals['name'])
-            self.assertEqual(record.email, vals.get('email', False))
+            self.assertEqual(record.email, vals.get('email', ''))
 
         records = self.env['res.bank'].create([])
         self.assertFalse(records)
@@ -190,7 +190,7 @@ class TestORM(TransactionCase):
         self.assertEqual(len(records), len(vals_list))
         for record, vals in zip(records, vals_list):
             self.assertEqual(record.name, vals['name'])
-            self.assertEqual(record.email, vals.get('email', False))
+            self.assertEqual(record.email, vals.get('email', ''))
 
         # create countries and states
         vals_list = [{

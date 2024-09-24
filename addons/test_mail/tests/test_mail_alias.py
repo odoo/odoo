@@ -282,9 +282,9 @@ class TestMailAlias(TestMailAliasCommon):
                 self.assertEqual(alias.alias_name, expected, msg)
 
     @users('admin')
-    def test_alias_name_sanitize_false(self):
-        """ Check empty-like aliases are forced to False, as otherwise unique
-        constraint might fail with empty strings. """
+    def test_alias_name_sanitize_empty(self):
+        """ Check empty-like aliases are forced to empty.
+        These are stored as null so that the constraints won't fail. """
         aliases = self.env['mail.alias'].create([
             {
                 'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
@@ -302,7 +302,7 @@ class TestMailAlias(TestMailAliasCommon):
             alias.write({'alias_name': f'unique-{idx}'})
         aliases.write({'alias_name': ''})
         for alias in aliases:
-            self.assertEqual(alias.alias_name, False)
+            self.assertEqual(alias.alias_name, "")
 
     @users('admin')
     def test_search(self):

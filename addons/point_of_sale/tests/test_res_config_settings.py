@@ -40,8 +40,8 @@ class TestConfigureShops(TestPoSCommon):
 
         pos_config1 = self.env['pos.config'].create({'name': 'Shop 1', 'module_pos_restaurant': False})
         pos_config2 = self.env['pos.config'].create({'name': 'Shop 2', 'module_pos_restaurant': False})
-        self.assertEqual(pos_config1.receipt_header, False)
-        self.assertEqual(pos_config2.receipt_header, False)
+        self.assertEqual(pos_config1.receipt_header, '')
+        self.assertEqual(pos_config2.receipt_header, '')
 
         # Modify Shop 1.
         with Form(self.env['res.config.settings']) as form:
@@ -50,7 +50,7 @@ class TestConfigureShops(TestPoSCommon):
             form.pos_receipt_header = 'xxxxx'
 
         self.assertEqual(pos_config1.receipt_header, 'xxxxx')
-        self.assertEqual(pos_config2.receipt_header, False)
+        self.assertEqual(pos_config2.receipt_header, '')
 
         # Modify Shop 2.
         with Form(self.env['res.config.settings']) as form:
@@ -76,8 +76,8 @@ class TestConfigureShops(TestPoSCommon):
             form.pos_config_id = pos_config
             form.pos_is_header_or_footer = False
 
-        self.assertEqual(pos_config.receipt_header, False)
-        self.assertEqual(pos_config.receipt_footer, False)
+        self.assertEqual(pos_config.receipt_header, '')
+        self.assertEqual(pos_config.receipt_footer, '')
 
     def test_properly_set_pos_config_x2many_fields(self):
         """Simulate what is done from the res.config.settings view when editing x2 many fields."""

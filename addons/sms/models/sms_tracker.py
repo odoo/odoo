@@ -41,7 +41,7 @@ class SmsTracker(models.Model):
             If provided, notification values will be derived from it.
             (see ``_get_tracker_values_from_provider_error``)
         """
-        failure_reason = False
+        failure_reason = ''
         failure_type = f'sms_{provider_error}'
         error_status = None
         if failure_type not in self.env['sms.sms'].DELIVERY_ERRORS:
@@ -53,11 +53,11 @@ class SmsTracker(models.Model):
         self._update_sms_notifications(error_status or 'exception', failure_type=failure_type, failure_reason=failure_reason)
         return error_status, failure_type, failure_reason
 
-    def _action_update_from_sms_state(self, sms_state, failure_type=False, failure_reason=False):
+    def _action_update_from_sms_state(self, sms_state, failure_type=False, failure_reason=''):
         notification_status = self.SMS_STATE_TO_NOTIFICATION_STATUS[sms_state]
         self._update_sms_notifications(notification_status, failure_type=failure_type, failure_reason=failure_reason)
 
-    def _update_sms_notifications(self, notification_status, failure_type=False, failure_reason=False):
+    def _update_sms_notifications(self, notification_status, failure_type=False, failure_reason=''):
         # canceled is a state which means that the SMS sending order should not be sent to the SMS service.
         # `process`, `pending` are sent to IAP which is not revertible (as `sent` which means "delivered").
         notifications_statuses_to_ignore = {

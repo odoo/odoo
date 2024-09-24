@@ -1129,7 +1129,7 @@ class MassMailing(models.Model):
     def convert_links(self):
         res = {}
         for mass_mailing in self:
-            html = mass_mailing.body_html if mass_mailing.body_html else ''
+            html = mass_mailing.body_html
 
             vals = {'mass_mailing_id': mass_mailing.id}
 

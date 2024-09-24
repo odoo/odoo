@@ -417,7 +417,7 @@ class test_string_field(ImporterCase):
         result = self.import_(['value'], [['']])
         self.assertEqual(len(result['ids']), 1)
         self.assertFalse(result['messages'])
-        self.assertEqual([False], values(self.read()))
+        self.assertEqual([''], values(self.read()))
 
     def test_imported(self):
         result = self.import_(
@@ -503,7 +503,7 @@ class test_text(ImporterCase):
         result = self.import_(['value'], [['']])
         self.assertEqual(len(result['ids']), 1)
         self.assertFalse(result['messages'])
-        self.assertEqual([False], values(self.read()))
+        self.assertEqual([''], values(self.read()))
 
     def test_imported(self):
         s = (

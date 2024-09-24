@@ -70,7 +70,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         view_key = intro_event_menu.view_id.key
         specific_view = website.with_context(website_id=website.id).viewref(view_key)
         self.assertEqual(specific_view.website_meta_title, "Hello, world!")
-        self.assertEqual(event.website_meta_title, False)
+        self.assertEqual(event.website_meta_title, '')
 
     def test_website_event_questions(self):
         """ Will execute the tour that fills up two tickets with a few questions answers

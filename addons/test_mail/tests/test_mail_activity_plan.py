@@ -168,8 +168,8 @@ class TestActivitySchedule(ActivityScheduleCase):
                         'activity_type_id': self.activity_type_call,
                         'automated': False,
                         'date_deadline': self.reference_now.date() + timedelta(days=5),  # both types delays
-                        'note': False,
-                        'summary': False,
+                        'note': '',
+                        'summary': '',
                         'user_id': self.env.user,
                     })
 

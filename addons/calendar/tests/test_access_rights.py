@@ -67,7 +67,7 @@ class TestAccessRights(TransactionCase):
             # other employees get an empty field
             (self.john, 'location', 'in the Sky', None),
             (self.george, 'location', 'in the Sky', None),
-            (self.raoul, 'location', False, None),
+            (self.raoul, 'location', '', None),
             (self.portal, 'location', None, AccessError),
             # non-substituted sequence field
             (self.john, 'partner_ids', self.george.partner_id, None),
@@ -229,7 +229,7 @@ class TestAccessRights(TransactionCase):
         self.env.invalidate_all()
 
         # For the private event, ensure that no private field can be read, such as: 'name', 'location' and 'description'.
-        for (field, value) in [('name', 'Busy'), ('location', False), ('description', False)]:
+        for (field, value) in [('name', 'Busy'), ('location', ''), ('description', '')]:
             hidden_information = self.read_event(self.admin_user, john_private_evt, field)
             self.assertEqual(hidden_information, value, "The field '%s' information must be hidden, even for uninvited admins." % field)
 

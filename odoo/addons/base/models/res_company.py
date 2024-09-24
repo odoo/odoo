@@ -275,7 +275,7 @@ class Company(models.Model):
         # In recent change when an html field is empty a <p> balise remains with a <br> in it,
         # but when company details is empty we want to put the info of the company
         for record in self:
-            record.is_company_details_empty = not html2plaintext(record.company_details or '')
+            record.is_company_details_empty = not html2plaintext(record.company_details)
 
     @api.model_create_multi
     def create(self, vals_list):

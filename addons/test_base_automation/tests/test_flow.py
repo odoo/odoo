@@ -1171,7 +1171,7 @@ class TestHttp(common.HttpCase):
             response = self.url_open(automation.url, data=json.dumps({}))
         self.assertEqual(response.json(), {"status": "error"})
         self.assertEqual(response.status_code, 500)
-        self.assertEqual(obj.another_field, False)
+        self.assertEqual(obj.another_field, '')
 
         response = self.url_open("/web/hook/0123456789", data=json.dumps({"name": "some name"}))
         self.assertEqual(response.json(), {"status": "error"})

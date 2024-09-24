@@ -689,7 +689,7 @@ class TestEventRegistrationData(TestEventInternalsCommon):
         })
         new_reg = event.registration_ids.sorted()[0]
         self.assertEqual(new_reg.name, 'Nibbler In Space')
-        self.assertEqual(new_reg.email, False)
+        self.assertEqual(new_reg.email, '')
         self.assertEqual(new_reg.phone, test_phone_fmt)
         new_reg.write({'partner_id': customer.id})
         self.assertEqual(new_reg.partner_id, customer)

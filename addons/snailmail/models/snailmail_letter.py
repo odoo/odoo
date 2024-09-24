@@ -395,7 +395,7 @@ class SnailmailLetter(models.Model):
                 notification_data = {
                     'notification_status': 'sent',
                     'failure_type': False,
-                    'failure_reason': False,
+                    'failure_reason': '',
                 }
             else:
                 error = doc['error'] if response['request_code'] == 200 else response['reason']
