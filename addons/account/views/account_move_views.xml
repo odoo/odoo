@@ -755,7 +755,7 @@
                         <button name="action_reverse" string='Credit Note'
                                 type='object' groups="account.group_account_invoice"
                                 invisible="move_type not in ('out_invoice', 'in_invoice') or state != 'posted'"
-                                data-hotkey="n"/>
+                                data-hotkey="shift+n"/>
                         <!-- Cancel -->
                         <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice" data-hotkey="x"
                                 invisible="not id or state != 'draft' or move_type != 'entry'"/>
