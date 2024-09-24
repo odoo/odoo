@@ -16,6 +16,25 @@
     }
 }
 
+.o-mail-Thread-avatar {
+    --avatar-size: 64px;
+    --icon-font-size: 4.5em;
+
+    &.o-mail-Thread-avatarChatWindow {
+        --avatar-size: 28px;
+        --icon-font-size: 1.5em;
+    }
+
+    img {
+        height: var(--avatar-size);
+        width: var(--avatar-size);
+    }
+
+    i::before {
+        font-size: var(--icon-font-size);
+    }
+}
+
 .o_mail_notification {
     & a:hover {
         text-decoration: underline;
