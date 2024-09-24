@@ -59,12 +59,26 @@ def get_field_variation_date(model: Model, field: Field, factor: int, series_ali
     setting duplicated records too far back in the past.
     """
     total_days = min((MAX_DATETIME - MIN_DATETIME).days, factor)
-    return SQL("""
-        %(field)s - (%(factor)s - %(series_alias)s) * floor(%(total_days)s/%(factor)s) * interval '1 days'
-    """, field=SQL.identifier(field.name),
-         factor=factor,
-         series_alias=SQL.identifier(series_alias),
-         total_days=total_days)
+    cast_type = SQL(field._column_type[1])
+
+    def redistribute(value):
+        return SQL(
+            "(%(value)s - (%(factor)s - %(series_alias)s) * floor(%(total_days)s/%(factor)s) * interval '1 days')::%(cast_type)s",
+            value=value,
+            factor=factor,
+            series_alias=SQL.identifier(series_alias),
+            total_days=total_days,
+            cast_type=cast_type,
+        )
+
+    if not field.company_dependent:
+        return redistribute(SQL.identifier(field.name))
+    # company_dependent -> jsonb
+    return SQL(
+        '(SELECT jsonb_object_agg(key, %(expr)s) FROM jsonb_each_text(%(field)s))',
+        expr=redistribute(SQL('value::%s', cast_type)),
+        field=SQL.identifier(field.name),
+    )
 
 
 def get_field_variation_char(field: Field, postfix: str | SQL | None = None) -> SQL:
@@ -78,16 +92,10 @@ def get_field_variation_char(field: Field, postfix: str | SQL | None = None) -> 
         postfix = SQL.identifier(postfix)
     # if the field is translatable, it's a JSONB column, we vary all values for each key
     if field.translate:
-        return SQL("""
-            CASE
-                WHEN %(field)s IS NOT NULL
-                THEN (
-                    SELECT jsonb_object_agg(key, value || %(postfix)s)
-                    FROM jsonb_each_text(%(field)s)
-                )
-                ELSE NULL
-            END
-        """, field=SQL.identifier(field.name), postfix=postfix)
+        return SQL("""(
+            SELECT jsonb_object_agg(key, value || %(postfix)s)
+            FROM jsonb_each_text(%(field)s)
+        )""", field=SQL.identifier(field.name), postfix=postfix)
     else:
         # no postfix for fields that are an '' (no point to)
         # or '/' (default/draft name for many model's records)
