@@ -61,6 +61,5 @@ class HrDepartureWizard(models.TransientModel):
             else:
                 to_modify |= allocation
                 allocation.message_post(body=allocation_msg, subtype_xmlid='mail.mt_comment')
-        to_delete.write({'state': 'confirm'}) # Needs to be confirmed before it can be unlinked
-        to_delete.unlink()
+        to_delete.with_context(allocation_skip_state_check=True).unlink()
         to_modify.date_to = self.departure_date

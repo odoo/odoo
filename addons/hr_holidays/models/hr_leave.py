@@ -811,7 +811,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        if default and 'request_date_from' in default and 'request_date_to' in default:
+        if self.env.context.get('skip_copy_check'):
             return vals_list
         if all(leave.state in ['cancel', 'refuse'] for leave in self):  # No overlap constraint in these cases
             return vals_list
@@ -997,18 +997,16 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             new_leave_vals = []
             target_leave_vals = []
             if leave.request_date_from < split_date_from:
-                new_leave_vals.append(leave.copy_data({
-                    'request_date_from': leave.request_date_from,
+                new_leave_vals.append(leave.with_context(skip_copy_check=True).copy_data({
                     'request_date_to': split_date_from + timedelta(days=-1),
                     'state': leave.state
                 })[0])
 
             # Do the same for the new leave after the split
             if leave.request_date_to >= split_date_to:
-                new_leave_vals.append(leave.copy_data({
+                new_leave_vals.append(leave.with_context(skip_copy_check=True).copy_data({
                     'request_date_from': split_date_to,
-                    'request_date_to': leave.request_date_to,
-                    'state': leave.state,
+                    'state': leave.state
                 })[0])
 
             # For those two new leaves, only create them if they actually have a non-zero duration.
