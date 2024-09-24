@@ -3,11 +3,13 @@ import {
     contains,
     defineMailModels,
     insertText,
+    onRpcAfter,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -62,7 +64,7 @@ test("create sub thread from existing message", async () => {
     pyEnv["mail.message"].create({
         model: "discuss.channel",
         res_id: channelId,
-        body: "Selling a training session and selling the products after the training session is more efficient.",
+        body: "<p>Selling a training session and selling the products after the training session is more efficient.</p>",
     });
     await start();
     await openDiscuss(channelId);
@@ -77,6 +79,28 @@ test("create sub thread from existing message", async () => {
     await contains("[title='Create Thread']", { count: 0 });
     await click("[title='View Thread']");
     await contains(".o-mail-Discuss-threadName", { value: "Selling a training session and" });
+});
+
+test("create sub thread from existing message (slow network)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: channelId,
+        body: "<p>Selling a training session and selling the products after the training session is more efficient.</p>",
+    });
+    const createSubChannelDef = new Deferred();
+    onRpcAfter("/discuss/channel/sub_channel/create", async () => await createSubChannelDef);
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message-actions [title='Expand']");
+    await click("[title='Create Thread']");
+    await animationFrame();
+    createSubChannelDef.resolve();
+    await contains(".o-mail-Discuss-threadName", { value: "Selling a training session and" });
+    await contains(".o-mail-Message", {
+        text: "Selling a training session and selling the products after the training session is more efficient.",
+    });
 });
 
 test("create sub thread from sub-thread list", async () => {
