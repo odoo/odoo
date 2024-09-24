@@ -35,9 +35,9 @@
                 <div class="d-flex o-mail-Composer-bg flex-grow-1 border"
                     t-att-class="{
                         'o-mail-Composer-compactContainer m-1 shadow-sm border-secondary': compact and !props.composer.message,
-                        'o-mobile rounded-3': isMobileOS,
-                        'rounded-3' : normal,
-                        'rounded-3 align-self-stretch' : extended,
+                        'o-iosPwa': isIosPwa,
+                        'rounded-3' : normal or isMobileOS or extended,
+                        'align-self-stretch' : extended,
                         'flex-column': extended or props.composer.message,
                     }"
                     t-ref="input-container"
