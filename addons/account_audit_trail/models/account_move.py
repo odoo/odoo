@@ -62,3 +62,8 @@ class AccountMove(models.Model):
         if logger_msg:
             _logger.info(logger_msg)
         return res
+
+    def _can_be_unlinked(self):
+        res = super()._can_be_unlinked()
+        is_part_of_audit_trail = self.posted_before and self.company_id.check_account_audit_trail
+        return res and not is_part_of_audit_trail
