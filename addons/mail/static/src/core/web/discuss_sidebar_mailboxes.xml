@@ -14,7 +14,7 @@
             <t t-call="mail.Mailbox.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden" t-ref="floating">
-                    <span class="fst-italic user-select-none" t-esc="mailbox.name"/>
+                    <span class="text-muted user-select-none" t-esc="mailbox.name"/>
                 </div>
             </t>
         </Dropdown>
