@@ -77,3 +77,26 @@ class PosOrder(models.Model):
                 'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(self.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
                 'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(order.config_id.id), load=False),
             })
+
+    def action_pos_order_paid(self):
+        res = super().action_pos_order_paid()
+        if self.pos_reference and 'Self-Order' in self.pos_reference:
+            self.config_id._notify(
+                'SELF_ORDERS_PAID', {'orders': self.read(['id', 'state'])}
+            )
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        new_pos_orders = super().create(vals_list)
+
+        if self.env.context.get('from_self'):
+            grouped_draft_orders = {}
+            for order in new_pos_orders.filtered(lambda order: order.state == 'draft'):
+                grouped_draft_orders.setdefault(order.session_id.config_id, self.env['pos.order'])
+                grouped_draft_orders[order.session_id.config_id] |= order
+
+            for config, orders in grouped_draft_orders.items():
+                config._notify("NEW_DRAFT_SELF_ORDERS", {'order_ids': orders.ids})
+
+        return new_pos_orders

@@ -25,6 +25,18 @@ patch(PosStore.prototype, {
         this.isEditMode = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
+
+        this.onNotified("NEW_DRAFT_SELF_ORDERS", async ({ order_ids }) => {
+            const orders = await this.data.read("pos.order", order_ids);
+            const notificationMessage = _t(
+                "New incoming orders: %s",
+                orders.map((o) => o.tracking_number)
+            );
+            this.sound.play("notification");
+            this.notification.add(notificationMessage, {
+                autocloseDelay: 7000,
+            });
+        });
     },
     get firstScreen() {
         const screen = super.firstScreen;
