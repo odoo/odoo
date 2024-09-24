@@ -627,6 +627,8 @@ class IrActionsServer(models.Model):
                                               "The name of the action that triggered the webhook is always sent as '_name'.")
     webhook_sample_payload = fields.Text(string='Sample Payload', compute='_compute_webhook_sample_payload')
 
+    _audit_fieldnames = {'name', 'type', 'usage', 'code', 'state', 'model_id', 'groups_id', 'model_name', 'code', 'binding_model_id'}
+
     @api.constrains('webhook_field_ids')
     def _check_webhook_field_ids(self):
         """Check that the selected fields don't have group restrictions"""

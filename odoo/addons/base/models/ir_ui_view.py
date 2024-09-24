@@ -206,6 +206,8 @@ actual arch.
          """)
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
+    _audit_fieldnames = {'name', 'model', 'key', 'priority', 'inherit_id', 'xml_id', 'groups_id', 'mode'}
+
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
     def _compute_arch(self):

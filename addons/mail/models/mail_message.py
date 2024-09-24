@@ -589,6 +589,13 @@ class Message(models.Model):
 
         return self.browse()
 
+    _audit_fieldnames = {'body', 'subject', 'date', 'author_id'}
+
+    def _filter_audit_records(self):
+        # Logging all the message modification would bloat the logs but logs messages from different user than the
+        # author_id seems a good tradeoff
+        return self.filtered(lambda m: 1 != self.env.user.id != m.author_id._uid)
+
     @api.model_create_multi
     def create(self, values_list):
         tracking_values_list = []
