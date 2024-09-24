@@ -139,7 +139,7 @@ class DiscussChannel(models.Model):
             # sudo: mail.message - posting visitor leave message is allowed
             self.sudo().message_post(
                 author_id=self.env.ref('base.partner_root').id,
-                body=Markup('<div class="o_mail_notification o_hide_author">%s</div>')
+                body=Markup('<div class="o_mail_notification">%s</div>')
                 % self._get_visitor_leave_message(**kwargs),
                 message_type='notification',
                 subtype_xmlid='mail.mt_comment'
@@ -309,3 +309,14 @@ class DiscussChannel(models.Model):
             self.sudo().livechat_active = False
             self._bus_send_store(Store(self, "livechat_active"))
         super()._action_unfollow(partner, guest, post_leave_message)
+
+    # -------------------------------------------------------------------------
+    # OVERRIDES
+    # -------------------------------------------------------------------------
+
+    def get_displayed_name(self, member=None, author=None):
+        if member.channel_id.channel_type != 'livechat':
+            return super().get_displayed_name(member, author)
+        member_name = member.partner_id.user_livechat_username or member.partner_id.name
+        author_name = author.user_id.livechat_username or author.name
+        return member_name, author_name

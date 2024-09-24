@@ -453,8 +453,8 @@ class DiscussChannel(models.Model):
             (partner or guest)._bus_send_store(custom_store)
             return
         if post_leave_message:
-            notification = Markup('<div class="o_mail_notification">%s</div>') % _(
-                "left the channel"
+            notification = Markup('<div class="o_mail_notification">%s</div>') % self.env._(
+                "%(user)s left the channel", user=member._get_html_link(for_persona=True)
             )
             # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
             member.channel_id.sudo().message_post(
@@ -470,6 +470,9 @@ class DiscussChannel(models.Model):
                 "member_count",
             ],
         )
+
+    def get_displayed_name(self, member=None, author=None):
+        return (member.partner_id.name, author.name)
 
     def add_members(
         self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, post_joined_message=True
@@ -512,10 +515,12 @@ class DiscussChannel(models.Model):
                     payload["invited_by_user_id"] = self.env.user.id
                 member._bus_send("discuss.channel/joined", payload)
                 if post_joined_message:
+                    message_author = current_partner if current_partner else current_guest
+                    __, author_name = self.get_displayed_name(member=member, author=message_author)
+                    _ = self.env._
                     notification = (
-                        _("joined the channel")
-                        if member.is_self
-                        else _("invited %s to the channel", member._get_html_link(for_persona=True))
+                        _("%(user)s joined the channel", user=member._get_html_link(for_persona=True)) if member.is_self else
+                        _("%(user1)s invited %(user2)s to the channel", user1=author_name, user2=member._get_html_link(for_persona=True))
                     )
                     member.channel_id.message_post(
                         body=Markup('<div class="o_mail_notification">%s</div>') % notification,
@@ -1194,7 +1199,8 @@ class DiscussChannel(models.Model):
         new_channel = self.create(vals)
         group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
         new_channel.group_public_id = group.id if group else None
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
+        author = next(persona for persona in self.env["res.partner"]._get_current_persona() if persona)
+        notification = Markup('<div class="o_mail_notification">%s</div>') % self.env._("%(user)s created this channel.", user=author.name)
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         self.env.user._bus_send_store(new_channel)
         return new_channel
