@@ -132,7 +132,7 @@ class AccountReport(models.Model):
         for report in self:
             if report.root_report_id and report.country_id:
                 report.availability_condition = 'country'
-            else:
+            elif not report.availability_condition:
                 report.availability_condition = 'always'
 
     @api.constrains('root_report_id')
