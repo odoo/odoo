@@ -20,7 +20,7 @@ export class ComboConfiguratorDialog extends Component {
         quantity: Number,
         price: Number,
         combos: { type: Array, element: ProductCombo },
-        currency_id: { type: Number, optional: true },
+        currency_id: Number,
         company_id: { type: Number, optional: true },
         pricelist_id: { type: Number, optional: true },
         date: String,
@@ -129,12 +129,13 @@ export class ComboConfiguratorDialog extends Component {
      * The total price is the sum of:
      * - The combo product's price,
      * - The selected combo items' extra price,
-     * - The selected `no_variant` attributes' extra price.
+     * - The selected `no_variant` attributes' extra price,
+     * Multiplied by the quantity.
      *
      * @return {String} The formatted total price.
      */
     get formattedTotalPrice() {
-        return formatCurrency(this._totalPrice, this.props.currency_id);
+        return formatCurrency(this.state.quantity * this._comboPrice, this.props.currency_id);
     }
 
     /**
@@ -186,12 +187,12 @@ export class ComboConfiguratorDialog extends Component {
         }
     }
 
-    get _totalPrice() {
+    get _comboPrice() {
         const extraPrice = Array.from(
             this.state.selectedComboItems.values(),
             comboItem => comboItem.extra_price + comboItem.product.selectedNoVariantPtavsPriceExtra,
         ).reduce((price, comboItemExtraPrice) => price + comboItemExtraPrice, 0);
-        return this.state.quantity * (this.state.basePrice + extraPrice);
+        return this.state.basePrice + extraPrice;
     }
 
     /**
