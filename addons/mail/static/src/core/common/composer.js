@@ -29,7 +29,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { escape, sprintf } from "@web/core/utils/strings";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isDisplayStandalone, isIOS, isMobileOS } from "@web/core/browser/feature_detection";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -87,6 +87,7 @@ export class Composer extends Component {
     setup() {
         super.setup();
         this.isMobileOS = isMobileOS();
+        this.isIosPwa = isIOS() && isDisplayStandalone();
         this.SEND_KEYBIND_TO_SEND = markup(
             _t("<samp>%(send_keybind)s</samp><i> to send</i>", { send_keybind: this.sendKeybind })
         );
@@ -563,7 +564,9 @@ export class Composer extends Component {
                     this.notifySendFromMailbox();
                 }
                 if (accidentalDiscard) {
-                    const editor = document.querySelector(".o_mail_composer_form_view .note-editable");
+                    const editor = document.querySelector(
+                        ".o_mail_composer_form_view .note-editable"
+                    );
                     const editorIsEmpty = !editor || !editor.innerText.replace(/^\s*$/gm, "");
                     if (!editorIsEmpty) {
                         this.saveContent();
