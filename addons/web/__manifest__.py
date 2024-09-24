@@ -94,6 +94,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/src/libs/bootstrap.js',
 
+            'web/static/lib/dompurify/DOMpurify.js',
+
             'base/static/src/css/modules.css',
 
             'web/static/src/core/utils/transitions.scss',
