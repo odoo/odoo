@@ -693,7 +693,7 @@
                             <field name="task_properties" widget="properties"/>
                             <field name="displayed_image_id" widget="attachment_image"/>
                         </div>
-                        <footer t-if="!selection_mode" class="fs-6 pt-1">
+                        <footer t-if="!selection_mode" class="pt-1">
                             <div class="d-flex align-items-center gap-1" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                 <field name="priority" widget="priority" style="margin-right: 5px;"/>
                                 <field name="activity_ids" widget="kanban_activity" style="margin-right: 2px"/>
