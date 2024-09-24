@@ -2859,12 +2859,13 @@ input[value*="data-oe-translation-source-sha"] {
     border-right-width: 0;
 }
 
-// `nav-link` and `btn` don't have the same padding.
-// In some cases, we need to apply the padding of `btn` with the color of `nav-link`.
-// For example in "Sign In" button of `template_header_sidebar`.
-// Adding the `btn` class to `nav-link` doesn't work, as `nav-link` padding takes
-// the priority over `btn`. This class forces to keep the `btn` padding for
-// specific `nav-link`.
+// The `nav-link` and `btn` classes do not induce the same padding and border
+// radius. However, in some cases, we need to apply these properties of `btn`
+// with the color of `nav-link` (e.g. for the "Sign In" button of the "sidebar"
+// header). Adding the `btn` class to the `.nav-link` element does not work, as
+// `nav-link` padding takes the priority over the `btn` one. This class forces
+// to keep the wanted `btn` properties for specific `.nav-link` elements.
 .o_nav_link_btn {
+    border-radius: $btn-border-radius;
     padding: $btn-padding-y $btn-padding-x;
 }

@@ -423,7 +423,7 @@
                         </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link o_nav_link_btn'}} w-100 border rounded text-center"/>
+                            <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link o_nav_link_btn'}} w-100 border text-center"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
@@ -523,7 +523,7 @@
                     </t>
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_link_class" t-value="_additional_btn_color or 'nav-link border rounded px-3'"/>
+                        <t t-set="_link_class" t-value="_additional_btn_color or 'o_nav_link_btn nav-link border px-3'"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
@@ -572,7 +572,7 @@
                 <ul class="o_header_hamburger_right_col navbar-nav flex-row gap-2 align-items-center ms-auto">
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_link_class" t-valuef="o_navlink_background_hover btn rounded-circle text-reset"/>
+                        <t t-set="_link_class" t-valuef="o_navlink_background_hover btn text-reset"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
@@ -797,20 +797,18 @@
                     <ul class="navbar-nav align-items-center gap-1 flex-wrap justify-content-end ms-auto">
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_link_class" t-valuef="o_navlink_background btn rounded-circle text-reset"/>
+                            <t t-set="_link_class" t-valuef="o_navlink_background btn border-0 text-reset"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
                             <t t-set="_icon" t-value="true"/>
                             <t t-set="_item_class" t-valuef="dropdown"/>
-                            <t t-set="_icon_class" t-valuef="fa-stack"/>
-                            <t t-set="_link_class" t-valuef="o_navlink_background btn d-flex align-items-center rounded-pill py-1 text-reset"/>
+                            <t t-set="_link_class" t-valuef="o_navlink_background btn d-flex align-items-center border-0 text-reset"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
                         <!-- Language Selector -->
                         <t t-call="website.placeholder_header_language_selector">
-                            <t t-set="_txt_class" t-valuef="small"/>
-                            <t t-set="_btn_class" t-valuef="o_navlink_background btn rounded-pill py-1 text-reset"/>
+                            <t t-set="_btn_class" t-valuef="o_navlink_background btn text-reset"/>
                             <t t-set="_flag_class" t-valuef="m-2"/>
                             <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                         </t>
@@ -1081,7 +1079,7 @@
                             </t>
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in">
-                                <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link'}} ms-2 rounded border px-3"/>
+                                <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link o_nav_link_btn'}} ms-2 border px-3"/>
                             </t>
                             <!-- User Dropdown -->
                             <t t-call="portal.user_dropdown">
@@ -1392,7 +1390,7 @@
                             </t>
                             <!-- Sign In -->
                             <t t-call="portal.placeholder_user_sign_in">
-                                <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link o_nav_link_btn'}} w-100 border rounded text-center"/>
+                                <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link o_nav_link_btn'}} w-100 border text-center"/>
                             </t>
                             <!-- User Dropdown -->
                             <t t-call="portal.user_dropdown">
@@ -1499,7 +1497,7 @@
                         </t>
                         <!-- Sign In -->
                         <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link'}} border rounded-pill px-3"/>
+                            <t t-set="_link_class" t-valuef="{{_additional_btn_color or 'nav-link o_nav_link_btn'}} border px-3"/>
                         </t>
                         <!-- User Dropdown -->
                         <t t-call="portal.user_dropdown">
