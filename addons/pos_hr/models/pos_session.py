@@ -78,5 +78,6 @@ class PosSession(models.Model):
 
     def _prepare_account_bank_statement_line_vals(self, session, sign, amount, reason, extras):
         vals = super()._prepare_account_bank_statement_line_vals(session, sign, amount, reason, extras)
-        vals['employee_id'] = extras['employee_id']
+        if extras.get('employee_id'):
+            vals['employee_id'] = extras['employee_id']
         return vals
