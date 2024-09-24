@@ -49,7 +49,7 @@ test("full PIVOT() formats", async function () {
     setCellContent(model, "A1", `=PIVOT("1")`, "42");
     // prettier-ignore
     expect(getEvaluatedFormatGrid(model, "A1:D7", "42")).toEqual([
-        [undefined, undefined,  undefined,  undefined],
+        [undefined, "@* ",      "@* ",      undefined],
         [undefined, undefined,  undefined,  undefined],
         ["0* ",     "#,##0.00", "#,##0.00", "#,##0.00"],
         ["0* ",     "#,##0.00", "#,##0.00", "#,##0.00"],
