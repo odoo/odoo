@@ -394,3 +394,28 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                 }])
 
                 sp.close()  # Rollback to ensure all subtests start in the same situation
+
+    def test_user_exception_remove_lock_date(self):
+        """
+        Test that an exception removing a lock date (instead of just decreasing it) works.
+        """
+        for lock_date_field, move_type in self.soft_lock_date_info:
+            with self.subTest(lock_date_field=lock_date_field, move_type=move_type), self.cr.savepoint() as sp:
+                move = self.init_invoice(move_type, invoice_date='2016-01-01', post=True, amounts=[1000.0], taxes=self.tax_sale_a)
+
+                # Lock the move
+                self.company[lock_date_field] = fields.Date.to_date('2020-01-01')
+                with self.assertRaises(UserError):
+                    move.button_draft()
+
+                # Add an exception removing the lock date
+                self.env['account.lock_exception'].create({
+                    'company_id': self.company.id,
+                    'user_id': self.env.user.id,
+                    lock_date_field: False,
+                    'end_datetime': self.fakenow + timedelta(hours=24),
+                    'reason': 'test_user_exception_move_edit_multi_user',
+                })
+                move.button_draft()
+
+                sp.close()  # Rollback to ensure all subtests start in the same situation
