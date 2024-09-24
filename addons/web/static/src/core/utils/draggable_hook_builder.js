@@ -660,8 +660,12 @@ export function makeDraggableHook(hookParams) {
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=1352061
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=339293
                 safePrevent(ev);
-                if (document.activeElement && !document.activeElement.contains(ev.target)) {
-                    document.activeElement.blur();
+                let activeElement = document.activeElement;
+                while (activeElement?.nodeName === "IFRAME") {
+                    activeElement = activeElement.contentDocument.activeElement;
+                }
+                if (activeElement && !activeElement.contains(ev.target)) {
+                    activeElement.blur();
                 }
 
                 const { currentTarget, pointerId, target } = ev;
