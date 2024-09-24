@@ -9,7 +9,7 @@
                             <button class="o-mail-DiscussSidebar-compactBtn btn btn-light py-1 align-items-center justify-content-center smaller" t-att-aria-label="compactBtnText" t-att-class="{ 'ms-auto me-0': !store.discuss.isSidebarCompact, 'position-absolute': !store.discuss.isSidebarCompact and !store.inPublicPage, 'o-compact': store.discuss.isSidebarCompact }" t-on-click="() => this.store.discuss.isSidebarCompact = !this.store.discuss.isSidebarCompact" t-ref="compact-btn"><i class="oi fa-fw" t-att-class="store.discuss.isSidebarCompact ? 'oi-arrow-right' : 'oi-arrow-left'"/></button>
                             <t t-set-slot="content">
                                 <div t-ref="compact-floating">
-                                    <span class="fst-italic user-select-none" t-esc="compactBtnText"/>
+                                    <span class="text-muted user-select-none" t-esc="compactBtnText"/>
                                 </div>
                             </t>
                         </Dropdown>

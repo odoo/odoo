@@ -6,7 +6,7 @@
                 <t t-call="mail.DiscussSidebar.startMeetingButton"/>
                 <t t-set-slot="content">
                     <div t-ref="meeting-floating">
-                        <span class="fst-italic user-select-none" t-esc="startMeetingText"/>
+                        <span class="text-muted user-select-none" t-esc="startMeetingText"/>
                     </div>
                 </t>
             </Dropdown>
