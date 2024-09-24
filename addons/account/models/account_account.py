@@ -931,9 +931,12 @@ class AccountGroup(models.Model):
               LEFT JOIN account_group agroup
                      ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
                     AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
-                    AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
+                    AND agroup.company_id::text = ANY(string_to_array(account_company.parent_path, '/'))
                   WHERE %s
-               ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
+               ORDER BY account.id,
+                        array_position(string_to_array(account_company.parent_path, '/'), agroup.company_id::text) DESC,
+                        char_length(agroup.code_prefix_start) DESC,
+                        agroup.id
             )
             UPDATE account_account
                SET group_id = rel.group_id
