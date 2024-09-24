@@ -3,7 +3,12 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { bold, resetSize, setColor } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
-import { press, queryAll } from "@odoo/hoot-dom";
+import { press, queryAll, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+
+function expectContentToBe(el, html) {
+    expect(getContent(el)).toBe(unformat(html));
+}
 
 describe("custom selection", () => {
     test("should indicate selected cells with blue background", async () => {
@@ -1495,5 +1500,97 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
+    });
+});
+
+describe("single cell selection", () => {
+    test("should select single empty cell on double click", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const firstTd = el.querySelector("td");
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", { detail: 2 });
+        await animationFrame();
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", { detail: 2 });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+    });
+
+    test("should select single cell containing text on triple click", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const firstTd = el.querySelector("td");
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", { detail: 3 });
+        await animationFrame();
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", { detail: 3 });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">ab[]c<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
+    });
+
+    test("should not select single cell containing text on double click", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>`
+            )
+        );
+
+        const firstTd = el.querySelector("td");
+        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", { detail: 2 });
+        await animationFrame();
+
+        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", { detail: 2 });
+        await animationFrame();
+
+        expectContentToBe(
+            el,
+            `<table class="table table-bordered o_table">
+                <tbody>
+                    <tr><td>ab[]c<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>`
+        );
     });
 });
