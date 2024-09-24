@@ -116,7 +116,7 @@ export class ProductProduct extends Base {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
+    get_price(pricelist, quantity, price_extra = 0, recurring = false, get_pricelist_item = false) {
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in the case where there is a pricelist item
         // but we can't load the base pricelist to get the price when calling this method again.
@@ -135,7 +135,7 @@ export class ProductProduct extends Base {
         let price = this.lst_price + (price_extra || 0);
         const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
         if (!rule) {
-            return price;
+            return get_pricelist_item ? { price: price, pricelist_item: rule } : price;
         }
 
         if (rule.base === "pricelist") {
@@ -171,7 +171,7 @@ export class ProductProduct extends Base {
         // being used further. Note that this cannot happen here,
         // because it would cause inconsistencies with the backend for
         // pricelist that have base == 'pricelist'.
-        return price;
+        return get_pricelist_item ? { price: price, pricelist_item: rule } : price;
     }
 
     getImageUrl() {

@@ -271,13 +271,16 @@ export class SelfOrder extends Reactive {
         }
 
         if (values.price_extra > 0) {
-            const price = values.product_id.get_price(
+            const { price, pricelist_item } = values.product_id.get_price(
                 this.currentOrder.pricelist_id,
                 values.qty,
-                values.price_extra
+                values.price_extra,
+                false,
+                true // Get pricelist_item
             );
 
             values.price_unit = price;
+            values.pricelist_item_id = pricelist_item;
         }
 
         const newLine = this.models["pos.order.line"].create(values);

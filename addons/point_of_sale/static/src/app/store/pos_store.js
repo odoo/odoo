@@ -813,17 +813,29 @@ export class PosStore extends Reactive {
 
         // Handle price unit
         if (!values.product_id.isCombo() && vals.price_unit === undefined) {
-            values.price_unit = values.product_id.get_price(order.pricelist_id, values.qty);
-        }
-        const isScannedProduct = opts.code && opts.code.type === "product";
-        if (values.price_extra && !isScannedProduct) {
-            const price = values.product_id.get_price(
+            const { price, pricelist_item } = values.product_id.get_price(
                 order.pricelist_id,
                 values.qty,
-                values.price_extra
+                0,
+                false,
+                true // Get pricelist_item
+            );
+            values.price_unit = price;
+            values.pricelist_item_id = pricelist_item;
+        }
+
+        const isScannedProduct = opts.code && opts.code.type === "product";
+        if (values.price_extra && !isScannedProduct) {
+            const { price, pricelist_item } = values.product_id.get_price(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                true // Get pricelist_item
             );
 
             values.price_unit = price;
+            values.pricelist_item_id = pricelist_item;
         }
 
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });

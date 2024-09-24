@@ -394,12 +394,15 @@ export class PosOrder extends Base {
         );
 
         for (const line of lines_to_recompute) {
-            const newPrice = line.product_id.get_price(
+            const { price, pricelist_item } = line.product_id.get_price(
                 pricelist,
                 line.get_quantity(),
-                line.get_price_extra()
+                line.get_price_extra(),
+                false,
+                true // Get pricelist_item
             );
-            line.set_unit_price(newPrice);
+            line.set_unit_price(price);
+            line.set_pricelist_item(pricelist_item);
         }
 
         const attributes_prices = {};

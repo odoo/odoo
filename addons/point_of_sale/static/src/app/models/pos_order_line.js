@@ -242,13 +242,15 @@ export class PosOrderline extends Base {
 
         // just like in sale.order changing the qty will recompute the unit price
         if (!keep_price && this.price_type === "original") {
-            this.set_unit_price(
-                this.product_id.get_price(
-                    this.order_id.pricelist_id,
-                    this.get_quantity(),
-                    this.get_price_extra()
-                )
+            const { price, pricelist_item } = this.product_id.get_price(
+                this.order_id.pricelist_id,
+                this.get_quantity(),
+                this.get_price_extra(),
+                false,
+                true // Get pricelist_item
             );
+            this.set_unit_price(price);
+            this.set_pricelist_item(pricelist_item);
         }
 
         this.setDirty();
@@ -340,6 +342,12 @@ export class PosOrderline extends Base {
         this.set_quantity(this.get_quantity() + orderline.get_quantity());
     }
 
+    set_pricelist_item(item) {
+        if (typeof item !== "undefined") {
+            this.pricelist_item_id = item;
+        }
+    }
+
     set_unit_price(price) {
         const parsed_price = !isNaN(price)
             ? price
@@ -351,6 +359,10 @@ export class PosOrderline extends Base {
             this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
         );
         this.setDirty();
+    }
+
+    get_pricelist_item() {
+        return this.pricelist_item_id;
     }
 
     get_unit_price() {
