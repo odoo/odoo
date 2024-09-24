@@ -247,3 +247,83 @@ class ProductTemplate(models.Model):
         product_accounts = super()._get_product_accounts()
         product_accounts['downpayment'] = self.categ_id.property_account_downpayment_categ_id
         return product_accounts
+
+    ####################################
+    # Product/combo configurator hooks #
+    ####################################
+
+    @api.model
+    def _get_configurator_display_price(
+        self, product_or_template, quantity, date, currency, pricelist, **kwargs
+    ):
+        """ Return the specified product's display price, to be used by the product and combo
+        configurators.
+
+        This is a hook meant to customize the display price computation in overriding modules.
+
+        :param product.product|product.template product_or_template: The product for which to get
+            the price.
+        :param int quantity: The quantity of the product.
+        :param datetime date: The date to use to compute the price.
+        :param res.currency currency: The currency to use to compute the price.
+        :param product.pricelist pricelist: The pricelist to use to compute the price.
+        :param dict kwargs: Locally unused data passed to `_get_configurator_price`.
+        :rtype: float
+        :return: The specified product's display price.
+        """
+        return self._get_configurator_price(
+            product_or_template, quantity, date, currency, pricelist, **kwargs
+        )
+
+    @api.model
+    def _get_configurator_price(
+        self, product_or_template, quantity, date, currency, pricelist, **kwargs
+    ):
+        """ Return the specified product's price, to be used by the product and combo configurators.
+
+        This is a hook meant to customize the price computation in overriding modules.
+
+        This hook has been extracted from `_get_configurator_display_price` because the price
+        computation can be overridden in 2 ways:
+
+        - Either by transforming super's price (e.g. in `website_sale`, we apply taxes to the
+          price),
+        - Or by computing a different price (e.g. in `sale_subscription`, we ignore super when
+          computing subscription prices).
+        In some cases, the order of the overrides matters, which is why we need 2 separate methods
+        (e.g. in `website_sale_subscription`, we must compute the subscription price before applying
+        taxes).
+
+        :param product.product|product.template product_or_template: The product for which to get
+            the price.
+        :param int quantity: The quantity of the product.
+        :param datetime date: The date to use to compute the price.
+        :param res.currency currency: The currency to use to compute the price.
+        :param product.pricelist pricelist: The pricelist to use to compute the price.
+        :param dict kwargs: Locally unused data passed to `_get_product_price`.
+        :rtype: float
+        :return: The specified product's price.
+        """
+        return pricelist._get_product_price(
+            product_or_template, quantity=quantity, currency=currency, date=date, **kwargs
+        )
+
+    @api.model
+    def _get_additional_configurator_data(
+        self, product_or_template, date, currency, pricelist, **kwargs
+    ):
+        """ Return additional data about the specified product, to be used by the product and combo
+        configurators.
+
+        This is a hook meant to append module-specific data in overriding modules.
+
+        :param product.product|product.template product_or_template: The product for which to get
+            additional data.
+        :param datetime date: The date to use to compute prices.
+        :param res.currency currency: The currency to use to compute prices.
+        :param product.pricelist pricelist: The pricelist to use to compute prices.
+        :param dict kwargs: Locally unused data passed to overrides.
+        :rtype: dict
+        :return: A dict containing additional data about the specified product.
+        """
+        return {}

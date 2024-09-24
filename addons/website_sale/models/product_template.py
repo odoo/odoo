@@ -850,3 +850,62 @@ class ProductTemplate(models.Model):
         # TODO VFE pass website as param and avoid existence check
         website = self.env['website'].get_current_website()
         return self.sale_ok and (not website.prevent_zero_price_sale or self._get_contextual_price())
+
+    @api.model
+    def _get_configurator_display_price(
+        self, product_or_template, quantity, date, currency, pricelist, **kwargs
+    ):
+        """ Override of `sale` to apply taxes.
+
+        :param product.product|product.template product_or_template: The product for which to get
+            the price.
+        :param int quantity: The quantity of the product.
+        :param datetime date: The date to use to compute the price.
+        :param res.currency currency: The currency to use to compute the price.
+        :param product.pricelist pricelist: The pricelist to use to compute the price.
+        :param dict kwargs: Locally unused data passed to `super`.
+        :rtype: float
+        :return: The specified product's display price.
+        """
+        price = super()._get_configurator_display_price(
+            product_or_template, quantity, date, currency, pricelist, **kwargs
+        )
+
+        if website := ir_http.get_request_website():
+            product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
+                self.env.company
+            )
+            if product_taxes:
+                fiscal_position = website.fiscal_position_id.sudo()
+                taxes = fiscal_position.map_tax(product_taxes)
+                return self._apply_taxes_to_price(
+                    price, currency, product_taxes, taxes, product_or_template, website=website
+                )
+        return price
+
+    @api.model
+    def _get_additional_configurator_data(
+        self, product_or_template, date, currency, pricelist, **kwargs
+    ):
+        """ Override of `sale` to append tracking data.
+
+        :param product.product|product.template product_or_template: The product for which to get
+            additional data.
+        :param datetime date: The date to use to compute prices.
+        :param res.currency currency: The currency to use to compute prices.
+        :param product.pricelist pricelist: The pricelist to use to compute prices.
+        :param dict kwargs: Locally unused data passed to `super`.
+        :rtype: dict
+        :return: A dict containing additional data about the specified product.
+        """
+        data = super()._get_additional_configurator_data(
+            product_or_template, date, currency, pricelist, **kwargs
+        )
+
+        if ir_http.get_request_website():
+            data.update({
+                # The following fields are needed for tracking.
+                'category_name': product_or_template.categ_id.name,
+                'currency_name': currency.name,
+            })
+        return data
