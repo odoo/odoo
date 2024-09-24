@@ -43,8 +43,6 @@ class CustomerPortal(payment_portal.PaymentPortal):
     def _get_sale_searchbar_sortings(self):
         return {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
         }
 
     def _prepare_sale_portal_rendering_values(
@@ -72,12 +70,17 @@ class CustomerPortal(payment_portal.PaymentPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        url_args = {'date_begin': date_begin, 'date_end': date_end}
+
+        if len(searchbar_sortings) > 1:
+            url_args['sortby'] = sortby
+
         pager_values = portal_pager(
             url=url,
             total=SaleOrder.search_count(domain),
             page=page,
             step=self._items_per_page,
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args=url_args,
         )
         orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset'])
 
@@ -88,9 +91,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
             'page_name': 'quote' if quotation_page else 'order',
             'pager': pager_values,
             'default_url': url,
-            'searchbar_sortings': searchbar_sortings,
-            'sortby': sortby,
         })
+
+        if len(searchbar_sortings) > 1:
+            values.update({
+                'sortby': sortby,
+                'searchbar_sortings': searchbar_sortings,
+            })
 
         return values
 
