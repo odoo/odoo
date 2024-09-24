@@ -1212,7 +1212,7 @@ class AccountPaymentRegister(models.TransientModel):
         else:
             # Don't group payments: Create one batch per move.
             if not self.group_payment:
-                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode == 'next' else self.line_ids
+                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue') else self.line_ids
                 new_batches = []
                 for batch_result in batches:
                     for line in batch_result['lines']:
