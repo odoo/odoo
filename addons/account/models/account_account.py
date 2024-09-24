@@ -20,7 +20,7 @@ class AccountAccount(models.Model):
     _name = "account.account"
     _inherit = ['mail.thread']
     _description = "Account"
-    _order = "code"
+    _order = "code, placeholder_code"
     _check_company_auto = True
     _check_company_domain = models.check_companies_domain_parent_of
 
@@ -48,7 +48,7 @@ class AccountAccount(models.Model):
     company_fiscal_country_code = fields.Char(compute='_compute_company_fiscal_country_code')
     code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', search='_search_code', inverse='_inverse_code')
     code_store = fields.Char(company_dependent=True)
-    placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code')
+    placeholder_code = fields.Char(string="Display code", compute='_compute_placeholder_code', search='_search_placeholder_code')
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     account_type = fields.Selection(
@@ -146,6 +146,41 @@ class AccountAccount(models.Model):
             return SQL("split_part(account_account.account_type, '_', 1)", to_flush=self._fields['account_type'])
         if fname == 'code':
             return self.with_company(self.env.company.root_id).sudo()._field_to_sql(alias, 'code_store', query, flush)
+        if fname == 'placeholder_code':
+            query.add_join(
+                'JOIN',
+                'account_first_company',
+                SQL(
+                    """(
+                        SELECT DISTINCT ON (rel.account_account_id)
+                               rel.account_account_id AS account_id,
+                               rel.res_company_id AS company_id,
+                               SPLIT_PART(res_company.parent_path, '/', 1) AS root_company_id,
+                               res_company.name AS company_name
+                          FROM account_account_res_company_rel rel
+                          JOIN res_company
+                            ON res_company.id = rel.res_company_id
+                         WHERE rel.res_company_id IN %(authorized_company_ids)s
+                      ORDER BY rel.account_account_id, company_id
+                    )""",
+                    authorized_company_ids=self.env.user._get_company_ids(),
+                ),
+                SQL('account_first_company.account_id = %(account_id)s', account_id=SQL.identifier(alias, 'id')),
+            )
+
+            # Can't have spaces because of how stupidly the `Model._read_group_orderby` method is written
+            # see https://github.com/odoo/odoo/blob/2a3466e8f86bc08594391658e08ba3416fb8307b/odoo/models.py#L2222
+            return SQL(
+                "COALESCE("
+                "%(code_store)s->>%(active_company_root_id)s,"
+                "%(code_store)s->>%(account_first_company_root_id)s||'('||%(account_first_company_name)s||')'"
+                ")",
+                code_store=SQL.identifier(alias, 'code_store'),
+                active_company_root_id=self.env.company.root_id.id,
+                account_first_company_name=SQL.identifier('account_first_company', 'company_name'),
+                account_first_company_root_id=SQL.identifier('account_first_company', 'root_company_id'),
+            )
+
         return super()._field_to_sql(alias, fname, query, flush)
 
     @api.constrains('reconcile', 'account_type', 'tax_ids')
@@ -358,21 +393,29 @@ class AccountAccount(models.Model):
         for record in self:
             if record.code:
                 record.placeholder_code = record.code
-            elif authorized_companies := (record.company_ids & self.env['res.company'].browse(self.env.user._get_company_ids())):
+            elif authorized_companies := (record.company_ids & self.env['res.company'].browse(self.env.user._get_company_ids())).sorted('id'):
                 company = authorized_companies[0]
                 if code := record.with_company(company).code:
                     record.placeholder_code = f'{code} ({company.name})'
+
+    def _search_placeholder_code(self, operator, value):
+        if operator != '=like':
+            raise NotImplementedError
+        query = Query(self.env, 'account_account')
+        placeholder_code_sql = self.env['account.account']._field_to_sql('account_account', 'placeholder_code', query)
+        query.add_where(SQL("%s LIKE %s", placeholder_code_sql, value))
+        return [('id', 'in', query)]
 
     @api.depends_context('company')
     @api.depends('code')
     def _compute_account_root(self):
         for record in self:
-            record.root_id = self.env['account.root']._from_account_code(record.code)
+            record.root_id = self.env['account.root']._from_account_code(record.placeholder_code)
 
     def _search_account_root(self, operator, value):
         if operator in ['=', 'child_of']:
             root = self.env['account.root'].browse(value)
-            return [('code', '=like', root.name + ('' if operator == '=' and not root.parent_id else '%'))]
+            return [('placeholder_code', '=like', root.name + ('' if operator == '=' and not root.parent_id else '%'))]
         raise NotImplementedError
 
     def _search_panel_domain_image(self, field_name, domain, set_count=False, limit=False):
@@ -383,12 +426,12 @@ class AccountAccount(models.Model):
             return {}
 
         query_account = self.env['account.account']._search(domain, limit=limit)
-        account_code_alias = self.env['account.account']._field_to_sql('account_account', 'code', query_account)
+        placeholder_code_alias = self.env['account.account']._field_to_sql('account_account', 'code', query_account)
 
-        account_codes = self.env.execute_query(query_account.select(account_code_alias))
+        placeholder_codes = self.env.execute_query(query_account.select(placeholder_code_alias))
         return {
             (root := self.env['account.root']._from_account_code(code)).id: {'id': root.id, 'display_name': root.display_name}
-            for code, in account_codes if code
+            for code, in placeholder_codes if code
         }
 
     @api.depends_context('company')
