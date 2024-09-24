@@ -311,16 +311,6 @@ class HrCandidate(models.Model):
         }
         return res
 
-    def write(self, vals):
-        res = super().write(vals)
-        if vals.get('employee_id'):
-            self._update_employee_from_candidate()
-        return res
-
-    def _update_employee_from_candidate(self):
-        # This method is to be overriden
-        return
-
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_employee(self):
         if self.employee_id:
@@ -340,7 +330,7 @@ class HrCandidate(models.Model):
             })
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
-        employee = self.env['hr.employee'].with_context(creating_employee=True).create(self._get_employee_create_vals())
+        employee = self.env['hr.employee'].create(self._get_employee_create_vals())
         action['res_id'] = employee.id
         return action
 
