@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
-import phonenumbers
+try:
+    import phonenumbers
+except ImportError:
+    phonenumbers = None
 
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
@@ -65,6 +68,7 @@ class PeppolRegistration(models.TransientModel):
     def _onchange_phone_number(self):
         for wizard in self:
             if wizard.phone_number:
+                wizard.company_id._sanitize_peppol_phone_number(wizard.phone_number)
                 with contextlib.suppress(phonenumbers.NumberParseException):
                     parsed_phone_number = phonenumbers.parse(
                         wizard.phone_number,
