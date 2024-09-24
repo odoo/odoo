@@ -310,16 +310,6 @@ class HrCandidate(models.Model):
         }
         return res
 
-    def write(self, vals):
-        res = super().write(vals)
-        if vals.get('employee_id'):
-            self._update_employee_from_candidate()
-        return res
-
-    def _update_employee_from_candidate(self):
-        # This method is to be overriden
-        return
-
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_employee(self):
         if self.employee_id:
