@@ -14,20 +14,9 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         auth='public',
         website=True,
     )
-    def website_sale_combo_configurator_get_data(self, product_tmpl_id, *args, **kwargs):
+    def website_sale_combo_configurator_get_data(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
-        data = super().sale_combo_configurator_get_data(product_tmpl_id, *args, **kwargs)
-        product_template = request.env['product.template'].browse(product_tmpl_id)
-        currency = request.env['res.currency'].browse(kwargs['currency_id'])
-
-        if request.is_frontend:
-            data.update({
-                'price': self._apply_taxes_to_price(data['price'], product_template, currency),
-                # The following fields are needed for tracking.
-                'category_name': product_template.categ_id.name,
-                'currency_name': currency.name,
-            })
-        return data
+        return super().sale_combo_configurator_get_data(*args, **kwargs)
 
     @route(
         route='/website_sale/combo_configurator/get_price',
@@ -35,18 +24,12 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         auth='public',
         website=True,
     )
-    def website_sale_combo_configurator_get_price(self, product_tmpl_id, *args, **kwargs):
+    def website_sale_combo_configurator_get_price(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
-        price = super().sale_combo_configurator_get_price(product_tmpl_id, *args, **kwargs)
-        product_template = request.env['product.template'].browse(product_tmpl_id)
-        currency = request.env['res.currency'].browse(kwargs['currency_id'])
-
-        if request.is_frontend:
-            return self._apply_taxes_to_price(price, product_template, currency)
-        return price
+        return super().sale_combo_configurator_get_price(*args, **kwargs)
 
     @route(
-        '/website_sale/combo_configurator/update_cart',
+        route='/website_sale/combo_configurator/update_cart',
         type='json',
         auth='public',
         methods=['POST'],
