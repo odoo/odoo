@@ -47,6 +47,20 @@ class PosSelfOrderController(http.Controller):
         })
 
         order_ids.send_table_count_notification(order_ids.mapped('table_id'))
+
+        if device_type == 'kiosk':
+            # Order from kiosk is not linked to a table, thus, we need to notify the open restaurant configs
+            # for the new draft orders. This will allow to automatically show these draft orders as floating.
+            open_restaurant_configs = pos_config.env['pos.session'].search([
+                ('state', '=', 'opened'),
+                ('config_id.module_pos_restaurant', '=', True),
+                ('config_id.self_ordering_mode', '=', 'nothing'),
+            ]).mapped('config_id')
+            draft_orders = order_ids.filtered(lambda order: order.state == 'draft')
+            for config in open_restaurant_configs:
+                if config.current_session_id and draft_orders:
+                    config._notify("NEW_DRAFT_KIOSK_ORDERS", {'order_ids': draft_orders.ids})
+
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config_id):

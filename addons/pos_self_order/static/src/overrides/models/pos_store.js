@@ -3,6 +3,12 @@ import { patch } from "@web/core/utils/patch";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 patch(PosStore.prototype, {
+    async setup() {
+        await super.setup(...arguments);
+        this.onNotified("SELF_ORDERS_PAID", ({ order_ids }) => {
+            return this.data.read("pos.order", order_ids, ["state"]);
+        });
+    },
     async getServerOrders() {
         if (this.session._self_ordering) {
             await this.loadServerOrders([
@@ -25,7 +31,10 @@ patch(PosStore.prototype, {
 patch(PosOrder.prototype, {
     setup() {
         super.setup(...arguments);
-        if (this.pos_reference?.startsWith("Self-Order")) {
+        if (
+            this.pos_reference?.startsWith("Self-Order") ||
+            this.pos_reference?.startsWith("Kiosk")
+        ) {
             this.tracking_number = "S" + this.tracking_number;
         }
     },

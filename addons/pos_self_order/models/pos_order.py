@@ -77,3 +77,15 @@ class PosOrder(models.Model):
                 'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(self.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
                 'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(order.config_id.id), load=False),
             })
+
+    def action_pos_order_paid(self):
+        super().action_pos_order_paid()
+        if 'Kiosk' in self.pos_reference or 'Self-Order' in self.pos_reference:
+            # find the open config that can host self-orders and notify them about the order
+            for config in self.env['pos.session'].search([
+                    ('state', '=', 'opened'),
+                    ('config_id.module_pos_restaurant', '=', True),
+                    ('config_id.self_ordering_mode', '=', 'nothing'),
+                ]).mapped('config_id'):
+                if config.current_session_id and self.session_id != config.current_session_id:
+                    config._notify("SELF_ORDERS_PAID", {'order_ids': self.ids})
