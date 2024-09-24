@@ -11,14 +11,7 @@ import { useService } from "@web/core/utils/hooks";
 export class ActionPanel extends Component {
     static template = "mail.ActionPanel";
     static components = { ResizablePanel };
-    static props = {
-        icon: { type: String, optional: true },
-        title: { type: String, optional: true },
-        resizable: { type: Boolean, optional: true },
-        slots: { type: Object, optional: true },
-        initialWidth: { type: Number, optional: true },
-        minWidth: { type: Number, optional: true },
-    };
+    static props = ["icon?", "title?", "resizable?", "slots?", "initialWidth?", "minWidth?"];
     static defaultProps = { resizable: true };
 
     setup() {
