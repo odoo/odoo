@@ -51,6 +51,12 @@ class IrEmbeddedActions(models.Model):
         for vals in vals_list:
             if "name" not in vals:
                 vals["name"] = self.env["ir.actions.actions"].browse(vals["action_id"]).name
+            if "python_method" in vals and "action_id" in vals:
+                if vals.get("python_method"):
+                    # then remove the action_id since the action surely given by the python method.
+                    del vals["action_id"]
+                else:  # remove python_method in the vals since the vals is falsy.
+                    del vals["python_method"]
         return super().create(vals_list)
 
     # The record is deletable if it hasn't been created from a xml record (i.e. is not a default embedded action)
