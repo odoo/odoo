@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { onWillStart, useState, onWillRender } from "@odoo/owl";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -56,6 +58,9 @@ export class PosKanbanRenderer extends KanbanRenderer {
         });
 
         onWillRender(() => this.checkDisplayedResult());
+        onWillStart(async () => {
+            this.isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
+        });
     }
 
     checkDisplayedResult() {
@@ -64,6 +69,15 @@ export class PosKanbanRenderer extends KanbanRenderer {
 
     async callWithViewUpdate(func) {
         try {
+            if (!this.isPosManager) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Access Denied"),
+                    body: _t(
+                        "It seems like you don't have enough rights to create point of sale configurations."
+                    ),
+                });
+                return;
+            }
             await func();
             await updatePosKanbanViewState(this.orm, this.posState);
         } finally {
