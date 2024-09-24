@@ -1,7 +1,6 @@
 import { charField, CharField } from "@web/views/fields/char/char_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { markup } from "@odoo/owl";
 
 export class TourStartWidget extends CharField {
     static template = "web_tour.TourStartWidget";
@@ -23,7 +22,7 @@ export class TourStartWidget extends CharField {
             mode: "manual",
             url: this.tourData.url,
             fromDB: this.tourData.custom,
-            rainbowManMessage: markup(this.tourData.rainbow_man_message),
+            rainbowManMessage: this.tourData.rainbow_man_message,
         });
     }
 
@@ -34,7 +33,7 @@ export class TourStartWidget extends CharField {
             fromDB: this.tourData.custom,
             stepDelay: 500,
             showPointerDuration: 250,
-            rainbowManMessage: markup(this.tourData.rainbow_man_message),
+            rainbowManMessage: this.tourData.rainbow_man_message,
         });
     }
 }

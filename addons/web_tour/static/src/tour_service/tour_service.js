@@ -203,15 +203,20 @@ export const tourService = {
                     endTour(tour);
 
                     if (tourConfig.rainbowManMessage) {
+                        const message = window.DOMPurify.sanitize(tourConfig.rainbowManMessage);
                         effect.add({
                             type: "rainbow_man",
-                            message: tourConfig.rainbowManMessage,
+                            message: markup(message),
                         });
                     }
 
                     const nextTour = await orm.call("web_tour.tour", "consume", [tour.name]);
                     if (nextTour) {
-                        startTour(nextTour.name, { mode: "manual", redirect: false });
+                        startTour(nextTour.name, {
+                            mode: "manual",
+                            redirect: false,
+                            rainbowManMessage: nextTour.rainbowManMessage,
+                        });
                     }
                 });
             }
@@ -245,7 +250,7 @@ export const tourService = {
                 startTour(session.current_tour.name, {
                     mode: "manual",
                     redirect: false,
-                    rainbowManMessage: markup(session.current_tour.rainbowManMessage),
+                    rainbowManMessage: session.current_tour.rainbowManMessage,
                 });
             }
 

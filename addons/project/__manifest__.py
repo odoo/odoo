@@ -158,6 +158,7 @@
             'web/static/lib/bootstrap/js/dist/scrollspy.js',
             'web/static/lib/bootstrap/js/dist/tab.js',
             'web/static/lib/bootstrap/js/dist/toast.js',
+            'web/static/lib/dompurify/DOMpurify.js',
             'web/static/src/libs/bootstrap.js',
             'web/static/src/libs/pdfjs.js',
             'web/static/src/legacy/js/libs/jquery.js',
@@ -202,7 +203,6 @@
             'bus/static/src/**/*.js',
 
             'html_editor/static/src/**/*',
-            'html_editor/static/lib/DOMpurify.js',
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',
