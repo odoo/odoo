@@ -308,7 +308,7 @@
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
                 <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="To Approve" name="to_approve" domain="[('overtime_status','=', 'to_approve')]"/>
+                <filter string="To Approve" name="to_approve" domain="[('overtime_status','=', 'to_approve'), ('overtime_hours', '!=', 0)]"/>
                 <filter string="Approved" name="approved" domain="[('overtime_status','=', 'approved')]"/>
                 <filter string="Refused" name="refused" domain="[('overtime_status','=', 'refused')]"/>
                 <group string="Group By">
