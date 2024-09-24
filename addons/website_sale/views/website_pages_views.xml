@@ -60,7 +60,7 @@
                 </div>
             </xpath>
             <xpath expr="//aside" position="after">
-                <footer class="justify-content-end flex-grow-1 fs-6">
+                <footer class="justify-content-end flex-grow-1">
                     <field name="is_published" widget="boolean_toggle"/>
                     <span t-if="record.is_published.raw_value">Published</span>
                     <span t-else="">Not Published</span>
