@@ -19,13 +19,12 @@ export class CollaborationSelectionPlugin extends Plugin {
         "collaboration_odoo",
         "local-overlay",
     ];
-    /** @type { (p: CollaborationSelectionPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        handleCollaborationNotification: p.handleCollaborationNotification.bind(p),
-        getCollaborationPeerMetadata: () => ({ selectionColor: p.selectionColor }),
-        layoutGeometryChange: p.refreshSelection.bind(p),
-        collaborativeSelectionUpdate: p.updateSelection.bind(p),
-    });
+    resources = {
+        handleCollaborationNotification: this.handleCollaborationNotification.bind(this),
+        getCollaborationPeerMetadata: () => ({ selectionColor: this.selectionColor }),
+        layoutGeometryChange: this.refreshSelection.bind(this),
+        collaborativeSelectionUpdate: this.updateSelection.bind(this),
+    };
     selectionInfos = new Map();
 
     setup() {

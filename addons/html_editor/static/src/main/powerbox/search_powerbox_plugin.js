@@ -9,21 +9,20 @@ import { Plugin } from "../../plugin";
 export class SearchPowerboxPlugin extends Plugin {
     static name = "search_powerbox";
     static dependencies = ["powerbox", "selection", "history"];
-    /** @type { (p: SearchPowerboxPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
-        onInput: { handler: p.onInput.bind(p) },
-    });
+    resources = {
+        onBeforeInput: this.onBeforeInput.bind(this),
+        onInput: this.onInput.bind(this),
+    };
     setup() {
         const categoryIds = new Set();
-        for (const category of this.resources.powerboxCategory) {
+        for (const category of this.getResource("powerboxCategory")) {
             if (categoryIds.has(category.id)) {
                 throw new Error(`Duplicate category id: ${category.id}`);
             }
             categoryIds.add(category.id);
         }
-        this.categories = this.resources.powerboxCategory.sort((a, b) => a.sequence - b.sequence);
-        this.commands = this.resources.powerboxItems.map((command) => ({
+        this.categories = this.getResource("powerboxCategory");
+        this.commands = this.getResource("powerboxItems").map((command) => ({
             ...command,
             categoryName: this.categories.find((category) => category.id === command.category).name,
         }));

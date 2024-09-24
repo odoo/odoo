@@ -13,12 +13,11 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
 export class CollaborationPlugin extends Plugin {
     static name = "collaboration";
     static dependencies = ["history", "selection", "sanitize"];
-    /** @type { (p: CollaborationPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        set_attribute: p.setAttribute.bind(p),
-        process_history_step: p.processHistoryStep.bind(p),
-        is_reversible_step: p.isReversibleStep.bind(p),
-    });
+    resources = {
+        set_attribute: this.setAttribute.bind(this),
+        process_history_step: this.processHistoryStep.bind(this),
+        is_reversible_step: this.isReversibleStep.bind(this),
+    };
     static shared = [
         //
         "onExternalHistorySteps",
@@ -161,7 +160,7 @@ export class CollaborationPlugin extends Plugin {
             this.shared.rectifySelection(selectionData.editableSelection);
         }
 
-        this.resources.onExternalHistorySteps?.forEach((cb) => cb());
+        this.getResource("onExternalHistorySteps").forEach((cb) => cb());
 
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.
@@ -295,7 +294,7 @@ export class CollaborationPlugin extends Plugin {
         // this.dispatchEvent(new Event("resetFromSteps"));
     }
     postProcessExternalSteps() {
-        const postProcessExternalSteps = this.resources["post_process_external_steps"]
+        const postProcessExternalSteps = this.getResource("post_process_external_steps")
             ?.map((cb) => cb(this.editable))
             ?.filter(Boolean);
         if (postProcessExternalSteps?.length) {
