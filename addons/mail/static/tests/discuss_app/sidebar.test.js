@@ -64,6 +64,22 @@ test("toggling category button does not hide active category items", async () =>
     await contains(".o-mail-DiscussSidebarChannel.o-active");
 });
 
+test("toggling category button does not hide active sub thread", async () => {
+    const pyEnv = await startServer();
+    const mainChannelId = pyEnv["discuss.channel"].create({ name: "Main Channel" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        name: "Sub Channel",
+        parent_channel_id: mainChannelId,
+    });
+    await start();
+    await openDiscuss(subChannelId);
+    await contains(".o-mail-DiscussSidebar-item", { text: "Main Channel" });
+    await contains(".o-mail-DiscussSidebar-item", { text: "Sub Channel" });
+    await click(".o-mail-DiscussSidebar button", { text: "Channels" });
+    await contains(".o-mail-DiscussSidebar-item", { text: "Main Channel" });
+    await contains(".o-mail-DiscussSidebar-item", { text: "Sub Channel" });
+});
+
 test("Closing a category sends the updated user setting to the server.", async () => {
     onRpc("/web/dataset/call_kw/res.users.settings/set_res_users_settings", async (request) => {
         const { params } = await request.json();
