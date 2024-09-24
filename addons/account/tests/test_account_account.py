@@ -52,13 +52,13 @@ class TestAccountAccount(TestAccountMergeCommon):
         })
         self.assertRecordValues(account, [{'code': '180011', 'company_ids': [company_1.id, company_2.id]}])
 
-        # Test that you can create an account with multiple codes and companies if you specify `code_by_company`.
+        # Test that you can create an account with multiple codes and companies if you specify the codes in `code_mapping_ids`
         account_2 = self.env['account.account'].create({
-            'code_by_company': {
-                company_1.id: '180021',
-                company_2.id: '180022',
-                company_3.id: '180023',
-            },
+            'code_mapping_ids': [
+                Command.create({'company_id': company_1.id, 'code': '180021'}),
+                Command.create({'company_id': company_2.id, 'code': '180022'}),
+                Command.create({'company_id': company_3.id, 'code': '180023'}),
+            ],
             'name': 'My second account',
             'account_type': 'asset_current',
             'company_ids': [Command.set([company_1.id, company_2.id, company_3.id])],
@@ -673,7 +673,7 @@ class TestAccountAccount(TestAccountMergeCommon):
         self.assertEqual(self.env['account.chart.template'].with_company(company_2).ref('test_account_2'), new_account)
 
     def test_account_code_mapping(self):
-        company_3 = self.env['res.company'].create({'name': 'Test Company 3'})
+        company_3 = self.env['res.company'].create({'name': 'company_3'})
         account = self.env['account.account'].create({
             'code': 'test1',
             'name': 'Test Account',
@@ -704,6 +704,48 @@ class TestAccountAccount(TestAccountMergeCommon):
             account_form.company_ids.add(self.company_data_2['company'])
             account_form.company_ids.add(company_3)
 
+        self.assertRecordValues(account.with_company(self.company_data_2['company'].id), [{'code': 'test2'}])
+        self.assertRecordValues(account.with_company(company_3.id), [{'code': 'test3'}])
+
+    def test_account_code_mapping_create(self):
+        """ Similar as above, except test that you can create an account while specifying multiple codes in the code mapping tab. """
+
+        company_3 = self.env['res.company'].create({'name': 'company_3'})
+
+        AccountAccount = self.env['account.account'].with_context(
+            {'allowed_company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, company_3.id]}
+        )
+
+        with Form(AccountAccount) as account_form:
+            expected_code_mapping_vals_list = [
+                {'company_id': self.company_data['company'].id, 'code': False},
+                {'company_id': self.company_data_2['company'].id, 'code': False},
+                {'company_id': company_3.id, 'code': False},
+            ]
+            actual_code_mapping_vals_list = account_form.code_mapping_ids._records
+
+            for expected_code_mapping_vals, actual_code_mapping_vals in zip(expected_code_mapping_vals_list, actual_code_mapping_vals_list):
+                for key, expected_val in expected_code_mapping_vals.items():
+                    self.assertEqual(actual_code_mapping_vals[key], expected_val)
+
+            account_form.name = "My Test Account"
+            account_form.code = 'test1'
+            with account_form.code_mapping_ids.edit(1) as code_mapping_form:
+                code_mapping_form.code = 'test2'
+            with account_form.code_mapping_ids.edit(2) as code_mapping_form:
+                code_mapping_form.code = 'test3'
+
+            # Test that writing codes and companies at the same time doesn't trigger the constraint
+            # that the code must be set for each company in company_ids
+            account_form.company_ids.add(self.company_data_2['company'])
+            account_form.company_ids.add(company_3)
+
+        account = account_form.record
+
+        self.assertRecordValues(account, [{
+            'company_ids': [self.company_data['company'].id, self.company_data_2['company'].id, company_3.id],
+            'code': 'test1'
+        }])
         self.assertRecordValues(account.with_company(self.company_data_2['company'].id), [{'code': 'test2'}])
         self.assertRecordValues(account.with_company(company_3.id), [{'code': 'test3'}])
 
