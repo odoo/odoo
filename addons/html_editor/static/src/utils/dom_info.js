@@ -402,6 +402,9 @@ export function isPhrasingContent(node) {
  * @returns {boolean}
  */
 export function isProtected(node) {
+    if (!node) {
+        return false;
+    }
     const candidate = node.parentElement
         ? closestElement(node.parentElement, "[data-oe-protected]")
         : null;
@@ -418,6 +421,9 @@ export function isProtected(node) {
  * @returns {boolean}
  */
 export function isProtecting(node) {
+    if (!node) {
+        return false;
+    }
     return (
         node.nodeType === Node.ELEMENT_NODE &&
         node.dataset.oeProtected !== "false" &&
@@ -426,6 +432,9 @@ export function isProtecting(node) {
 }
 
 export function isUnprotecting(node) {
+    if (!node) {
+        return false;
+    }
     return node.nodeType === Node.ELEMENT_NODE && node.dataset.oeProtected === "false";
 }
 
