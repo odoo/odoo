@@ -27,6 +27,9 @@ export class PAVListRenderer extends ListRenderer {
                 body: message,
             });
         }
+        if (record.isNew) {
+            return super.onDeleteRecord(...arguments);
+        }
         this.dialog.add(ConfirmationDialog, {
             title: _t("Bye-bye, record!"),
             body: deleteConfirmationMessage,
