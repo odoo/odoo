@@ -4,6 +4,7 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
+import { DIRECTIONS } from "../utils/position";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -566,6 +567,18 @@ export class ClipboardPlugin extends Plugin {
                 this.dragImage.outerHTML
             );
         }
+        const splitNode = (node, offset) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const selectionToRestore = this.shared.preserveSelection();
+                this.shared.splitTextNode(node, offset, DIRECTIONS.LEFT);
+                selectionToRestore.restore();
+            }
+        };
+        if (selection.direction) {
+            splitNode(selection.focusNode, selection.focusOffset);
+        } else {
+            splitNode(selection.anchorNode, selection.anchorOffset);
+        }
     }
     /**
      * Handle safe dropping of html into the editor.
@@ -590,12 +603,14 @@ export class ClipboardPlugin extends Plugin {
         if (image || fileTransferItems.length || htmlTransferItem) {
             if (this.document.caretPositionFromPoint) {
                 const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
+                this.dispatch("DELETE_SELECTION");
                 this.shared.setSelection({
                     anchorNode: range.offsetNode,
                     anchorOffset: range.offset,
                 });
             } else if (this.document.caretRangeFromPoint) {
                 const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
+                this.dispatch("DELETE_SELECTION");
                 this.shared.setSelection({
                     anchorNode: range.startContainer,
                     anchorOffset: range.startOffset,
