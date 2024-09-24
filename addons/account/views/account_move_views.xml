@@ -189,7 +189,7 @@
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
                     <field name="matching_number" string="Matching" readonly="1" optional="show"/>
                     <field name="amount_residual" sum="Total Residual" string="Residual" optional="hide" readonly="1" invisible="not is_account_reconcile"/>
-                    <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile"/>
+                    <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
                     <field name="move_type" column_invisible="True"/>
                     <field name="parent_state" column_invisible="True"/>
                     <field name="account_type" column_invisible="True"/>
@@ -405,7 +405,7 @@
                     <field name="name" optional="show"/>
                     <field name="discount_amount_currency" string="Discount Amount" optional="show" invisible="not discount_amount_currency"/>
                     <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
-                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile"/>
+                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="move_type" column_invisible="True"/>
