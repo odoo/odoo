@@ -25,22 +25,16 @@ export class TabulationPlugin extends Plugin {
     static name = "tabulation";
     static dependencies = ["dom", "selection", "delete", "split"];
     static shared = ["indentBlocks", "outdentBlocks"];
-    /** @type { (p: TabulationPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         handle_tab: [],
         handle_shift_tab: [],
-        handle_delete_forward: { callback: p.handleDeleteForward.bind(p), sequence: 20 },
+        handle_delete_forward: this.handleDeleteForward.bind(this),
         shortcuts: [
             { hotkey: "tab", command: "TAB" },
             { hotkey: "shift+tab", command: "SHIFT_TAB" },
         ],
         isUnsplittable: isEditorTab, // avoid merge
-    });
-
-    setup() {
-        this.resources["handle_tab"].sort((a, b) => a.sequence - b.sequence);
-        this.resources["handle_shift_tab"].sort((a, b) => a.sequence - b.sequence);
-    }
+    };
 
     handleCommand(command, payload) {
         switch (command) {
@@ -65,7 +59,7 @@ export class TabulationPlugin extends Plugin {
     }
 
     handleTab() {
-        for (const { callback } of this.resources["handle_tab"]) {
+        for (const callback of this.getResource("handle_tab")) {
             if (callback()) {
                 return;
             }
@@ -82,7 +76,7 @@ export class TabulationPlugin extends Plugin {
     }
 
     handleShiftTab() {
-        for (const { callback } of this.resources["handle_shift_tab"]) {
+        for (const callback of this.getResource("handle_shift_tab")) {
             if (callback()) {
                 return;
             }

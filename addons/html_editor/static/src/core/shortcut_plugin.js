@@ -11,7 +11,7 @@ export class ShortCutPlugin extends Plugin {
         if (document !== this.document) {
             hotkeyService.registerIframe({ contentWindow: this.document.defaultView });
         }
-        for (const shortcut of this.resources["shortcuts"]) {
+        for (const shortcut of this.getResource("shortcuts")) {
             this.addShortcut(shortcut.hotkey, () => {
                 this.dispatch(shortcut.command);
             });

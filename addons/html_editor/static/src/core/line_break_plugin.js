@@ -7,10 +7,9 @@ export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "split"];
     static name = "line_break";
     static shared = ["insertLineBreakElement"];
-    /** @type { (p: LineBreakPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
-    });
+    resources = {
+        onBeforeInput: this.onBeforeInput.bind(this),
+    };
 
     handleCommand(command, payload) {
         switch (command) {
@@ -48,7 +47,7 @@ export class LineBreakPlugin extends Plugin {
             targetNode = targetNode.parentElement;
         }
 
-        for (const { callback } of this.resources.handle_insert_line_break_element || []) {
+        for (const callback of this.getResource("handle_insert_line_break_element")) {
             if (callback({ targetNode, targetOffset })) {
                 return;
             }

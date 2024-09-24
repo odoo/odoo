@@ -1,3 +1,4 @@
+import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 
@@ -5,109 +6,105 @@ export class IconPlugin extends Plugin {
     static name = "icon";
     static dependencies = ["history", "link", "selection", "color"];
     /** @type { (p: IconPlugin) => Record<string, any> } */
-    static resources(p) {
-        return {
-            toolbarNamespace: [
-                {
-                    id: "icon",
-                    isApplied: (traversedNodes) =>
-                        traversedNodes.every(
-                            (node) =>
-                                // All nodes should be icons, its ZWS child or its ancestors
-                                node.classList?.contains("fa") ||
-                                node.parentElement.classList.contains("fa") ||
-                                (node.querySelector?.(".fa") && node.isContentEditable !== false)
-                        ),
+    resources = {
+        toolbarNamespace: [
+            {
+                id: "icon",
+                isApplied: (traversedNodes) =>
+                    traversedNodes.every(
+                        (node) =>
+                            // All nodes should be icons, its ZWS child or its ancestors
+                            node.classList?.contains("fa") ||
+                            node.parentElement.classList.contains("fa") ||
+                            (node.querySelector?.(".fa") && node.isContentEditable !== false)
+                    ),
+            },
+        ],
+        toolbarCategory: [
+            withSequence(1, {
+                id: "icon_color",
+                namespace: "icon",
+            }),
+            withSequence(1, {
+                id: "icon_size",
+                namespace: "icon",
+            }),
+            withSequence(3, { id: "icon_spin", namespace: "icon" }),
+        ],
+        toolbarItems: [
+            {
+                id: "icon_forecolor",
+                category: "icon_color",
+                inherit: "forecolor",
+            },
+            {
+                id: "icon_backcolor",
+                category: "icon_color",
+                inherit: "backcolor",
+            },
+            {
+                id: "icon_size_1",
+                category: "icon_size",
+                action(dispatch) {
+                    dispatch("RESIZE_ICON", "1");
                 },
-            ],
-            toolbarCategory: [
-                {
-                    id: "icon_color",
-                    sequence: 1,
-                    namespace: "icon",
+                text: "1x",
+                title: _t("Icon size 1x"),
+                isFormatApplied: () => this.hasIconSize("1"),
+            },
+            {
+                id: "icon_size_2",
+                category: "icon_size",
+                action(dispatch) {
+                    dispatch("RESIZE_ICON", "2");
                 },
-                {
-                    id: "icon_size",
-                    sequence: 1,
-                    namespace: "icon",
+                text: "2x",
+                title: _t("Icon size 2x"),
+                isFormatApplied: () => this.hasIconSize("2"),
+            },
+            {
+                id: "icon_size_3",
+                category: "icon_size",
+                action(dispatch) {
+                    dispatch("RESIZE_ICON", "3");
                 },
-                { id: "icon_spin", sequence: 3, namespace: "icon" },
-            ],
-            toolbarItems: [
-                {
-                    id: "icon_forecolor",
-                    category: "icon_color",
-                    inherit: "forecolor",
+                text: "3x",
+                title: _t("Icon size 3x"),
+                isFormatApplied: () => this.hasIconSize("3"),
+            },
+            {
+                id: "icon_size_4",
+                category: "icon_size",
+                action(dispatch) {
+                    dispatch("RESIZE_ICON", "4");
                 },
-                {
-                    id: "icon_backcolor",
-                    category: "icon_color",
-                    inherit: "backcolor",
+                text: "4x",
+                title: _t("Icon size 4x"),
+                isFormatApplied: () => this.hasIconSize("4"),
+            },
+            {
+                id: "icon_size_5",
+                category: "icon_size",
+                action(dispatch) {
+                    dispatch("RESIZE_ICON", "5");
                 },
-                {
-                    id: "icon_size_1",
-                    category: "icon_size",
-                    action(dispatch) {
-                        dispatch("RESIZE_ICON", "1");
-                    },
-                    text: "1x",
-                    title: _t("Icon size 1x"),
-                    isFormatApplied: () => p.hasIconSize("1"),
+                text: "5x",
+                title: _t("Icon size 5x"),
+                isFormatApplied: () => this.hasIconSize("5"),
+            },
+            {
+                id: "icon_spin",
+                category: "icon_spin",
+                action(dispatch) {
+                    dispatch("TOGGLE_SPIN_ICON");
                 },
-                {
-                    id: "icon_size_2",
-                    category: "icon_size",
-                    action(dispatch) {
-                        dispatch("RESIZE_ICON", "2");
-                    },
-                    text: "2x",
-                    title: _t("Icon size 2x"),
-                    isFormatApplied: () => p.hasIconSize("2"),
-                },
-                {
-                    id: "icon_size_3",
-                    category: "icon_size",
-                    action(dispatch) {
-                        dispatch("RESIZE_ICON", "3");
-                    },
-                    text: "3x",
-                    title: _t("Icon size 3x"),
-                    isFormatApplied: () => p.hasIconSize("3"),
-                },
-                {
-                    id: "icon_size_4",
-                    category: "icon_size",
-                    action(dispatch) {
-                        dispatch("RESIZE_ICON", "4");
-                    },
-                    text: "4x",
-                    title: _t("Icon size 4x"),
-                    isFormatApplied: () => p.hasIconSize("4"),
-                },
-                {
-                    id: "icon_size_5",
-                    category: "icon_size",
-                    action(dispatch) {
-                        dispatch("RESIZE_ICON", "5");
-                    },
-                    text: "5x",
-                    title: _t("Icon size 5x"),
-                    isFormatApplied: () => p.hasIconSize("5"),
-                },
-                {
-                    id: "icon_spin",
-                    category: "icon_spin",
-                    action(dispatch) {
-                        dispatch("TOGGLE_SPIN_ICON");
-                    },
-                    icon: "fa-play",
-                    title: _t("Toggle icon spin"),
-                    isFormatApplied: () => p.hasSpinIcon(),
-                },
-            ],
-            colorApply: p.applyIconColor.bind(p),
-        };
-    }
+                icon: "fa-play",
+                title: _t("Toggle icon spin"),
+                isFormatApplied: () => this.hasSpinIcon(),
+            },
+        ],
+        colorApply: this.applyIconColor.bind(this),
+    };
 
     getSelectedIcon() {
         const selectedNodes = this.shared.getSelectedNodes();

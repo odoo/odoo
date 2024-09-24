@@ -20,17 +20,16 @@ import { isCSSColor } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class ColorPlugin extends Plugin {
     static name = "color";
     static dependencies = ["selection", "split", "history", "format"];
     static shared = ["colorElement"];
-    /** @type { (p: ColorPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        toolbarCategory: {
+    resources = {
+        toolbarCategory: withSequence(25, {
             id: "color",
-            sequence: 25,
-        },
+        }),
         toolbarItems: [
             {
                 id: "forecolor",
@@ -39,9 +38,9 @@ export class ColorPlugin extends Plugin {
                 Component: ColorSelector,
                 props: {
                     type: "foreground",
-                    getUsedCustomColors: () => p.getUsedCustomColors("color"),
-                    getSelectedColors: () => p.selectedColors,
-                    focusEditable: () => p.shared.focusEditable(),
+                    getUsedCustomColors: () => this.getUsedCustomColors("color"),
+                    getSelectedColors: () => this.selectedColors,
+                    focusEditable: () => this.shared.focusEditable(),
                 },
             },
             {
@@ -52,16 +51,16 @@ export class ColorPlugin extends Plugin {
                 Component: ColorSelector,
                 props: {
                     type: "background",
-                    getUsedCustomColors: () => p.getUsedCustomColors("background"),
-                    getSelectedColors: () => p.selectedColors,
-                    focusEditable: () => p.shared.focusEditable(),
+                    getUsedCustomColors: () => this.getUsedCustomColors("background"),
+                    getSelectedColors: () => this.selectedColors,
+                    focusEditable: () => this.shared.focusEditable(),
                 },
             },
         ],
 
-        onSelectionChange: p.updateSelectedColor.bind(p),
-        removeFormat: p.removeAllColor.bind(p),
-    });
+        onSelectionChange: this.updateSelectedColor.bind(this),
+        removeFormat: this.removeAllColor.bind(this),
+    };
 
     setup() {
         this.selectedColors = reactive({ color: "", backgroundColor: "" });
@@ -140,7 +139,7 @@ export class ColorPlugin extends Plugin {
      * @param {string} mode 'color' or 'backgroundColor'
      */
     applyColor(color, mode) {
-        for (const cb of this.resources.colorApply || []) {
+        for (const cb of this.getResource("colorApply") || []) {
             if (cb(color, mode)) {
                 return;
             }

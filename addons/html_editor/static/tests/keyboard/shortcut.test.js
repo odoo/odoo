@@ -8,9 +8,9 @@ test("shortcut plugin allow registering shortcuts", async () => {
     let count = 0;
     class TestPlugin extends Plugin {
         static name = "test";
-        static resources = (p) => ({
+        resources = {
             shortcuts: [{ hotkey: "a", command: "TEST_CMD" }],
-        });
+        };
         handleCommand(command, payload) {
             if (command === "TEST_CMD") {
                 count++;
@@ -32,9 +32,9 @@ test.tags("iframe")("shortcut plugin allow registering shortcuts in iframe", asy
     let count = 0;
     class TestPlugin extends Plugin {
         static name = "test";
-        static resources = (p) => ({
+        resources = {
             shortcuts: [{ hotkey: "a", command: "TEST_CMD" }],
-        });
+        };
         handleCommand(command, payload) {
             if (command === "TEST_CMD") {
                 count++;
