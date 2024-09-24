@@ -187,7 +187,7 @@
         <field name="name">hr.attendance.graph</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <graph string="Worked Hours" type="line" stacked="0" sample="1">
+            <graph string="Worked Hours" type="line" stacked="0" sample="1" js_class="attendance_graph_view">
                 <field name="employee_id" type="row"/>
                 <field name="check_in" interval="week" type="col"/>
                 <field name="overtime_hours" widget="float_time"/>
@@ -200,7 +200,7 @@
         <field name="name">hr.attendance.pivot</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <pivot string="Worked Hours">
+            <pivot string="Worked Hours" js_class="attendance_pivot_view">
                 <field name="employee_id" type="row"/>
                 <field name="check_in" type="col" interval="month"/>
                 <field name="worked_hours" type="measure" widget="float_time"/>
@@ -229,6 +229,11 @@
                         domain="[('out_mode', '=', 'auto_check_out')]"/>
                 <separator/>
                 <filter string="Date" name="check_in_filter" date="check_in"/>
+                <separator/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
                 <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
                     'check_in','&gt;=', (
                         context_today() + datetime.timedelta(days=-90)
@@ -311,6 +316,11 @@
                 <filter string="To Approve" name="to_approve" domain="[('overtime_status','=', 'to_approve')]"/>
                 <filter string="Approved" name="approved" domain="[('overtime_status','=', 'approved')]"/>
                 <filter string="Refused" name="refused" domain="[('overtime_status','=', 'refused')]"/>
+                <separator/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
                 <group string="Group By">
                     <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
                 </group>
@@ -322,7 +332,7 @@
         <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <list string="Employee attendances" create="0">
+            <list string="Employee attendances" create="0" js_class="attendance_manager_list_view">
                 <header>
                     <button class="btn-secondary" string="Approve" name="action_approve_overtime" type="object"/>
                     <button class="btn-secondary" string="Refuse" name="action_refuse_overtime" type="object"/>

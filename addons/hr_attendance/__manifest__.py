@@ -36,7 +36,13 @@ actions(Check in/Check out) performed by them.
         'web.assets_backend': [
             'hr_attendance/static/src/**/*.js',
             'hr_attendance/static/src/**/*.xml',
-            'hr_attendance/static/src/scss/views/*.scss'
+            'hr_attendance/static/src/scss/views/*.scss',
+            ('remove', 'hr_attendance/static/src/views/attendance_graph_view.js'),
+            ('remove', 'hr_attendance/static/src/views/attendance_pivot_view.js'),
+        ],
+        'web.assets_backend_lazy': [
+            'hr_attendance/static/src/views/attendance_graph_view.js',
+            'hr_attendance/static/src/views/attendance_pivot_view.js',
         ],
         'web.qunit_suite_tests': [
             'hr_attendance/static/tests/hr_attendance_mock_server.js',
