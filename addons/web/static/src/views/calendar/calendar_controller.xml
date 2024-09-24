@@ -48,7 +48,7 @@
                                 <t t-esc="currentMonth"/>
                             </t>
                             <t t-elif="model.meta.scale === 'week'">
-                                <t t-esc="weekHeader"/> <span t-if="model.meta.scale === 'week'" class="badge bg-100 rounded px-1 ms-1">Week <t t-esc="currentWeek"/></span>
+                                <t t-esc="weekHeader"/> <span t-if="model.meta.scale === 'week'" class="o_current_week badge bg-100 rounded px-1 ms-1">Week <t t-esc="currentWeek"/></span>
                             </t>
                             <t t-else="">
                                 <t t-esc="dayHeader" />
