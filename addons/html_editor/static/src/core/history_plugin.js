@@ -95,16 +95,16 @@ export class HistoryPlugin extends Plugin {
         "serializeSelection",
         "getNodeById",
     ];
-    static resources = () => ({
+    resources = {
         shortcuts: [
             { hotkey: "control+z", command: "HISTORY_UNDO" },
             { hotkey: "control+y", command: "HISTORY_REDO" },
             { hotkey: "control+shift+z", command: "HISTORY_REDO" },
         ],
-    });
+    };
 
     setup() {
-        this.mutationFilteredClasses = new Set(this.resources["mutation_filtered_classes"]);
+        this.mutationFilteredClasses = new Set(this.getResource("mutation_filtered_classes"));
         this._onKeyupResetContenteditableNodes = [];
         this.addDomListener(this.document, "beforeinput", this._onDocumentBeforeInput.bind(this));
         this.addDomListener(this.document, "input", this._onDocumentInput.bind(this));
@@ -181,7 +181,7 @@ export class HistoryPlugin extends Plugin {
         }
         this.steps = steps;
         // todo: to test
-        this.resources.historyResetFromSteps?.forEach((cb) => cb());
+        this.getResource("historyResetFromSteps").forEach((cb) => cb());
 
         this.enableObserver();
         this.dispatch("HISTORY_RESET_FROM_STEPS");
@@ -212,7 +212,7 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryStep } step
      */
     processHistoryStep(step) {
-        for (const fn of this.resources["process_history_step"] || []) {
+        for (const fn of this.getResource("process_history_step")) {
             step = fn(step);
         }
         return step;
@@ -248,7 +248,7 @@ export class HistoryPlugin extends Plugin {
         if (!records.length) {
             return [];
         }
-        this.resources["handleNewRecords"]?.forEach((cb) => cb(records));
+        this.getResource("handleNewRecords").forEach((cb) => cb(records));
         this.stageRecords(records);
         return records;
     }
@@ -297,7 +297,7 @@ export class HistoryPlugin extends Plugin {
         this.dispatch("BEFORE_FILTERING_MUTATION_RECORDS", {
             records,
         });
-        for (const callback of this.resources["is_mutation_record_savable"]) {
+        for (const callback of this.getResource("is_mutation_record_savable")) {
             records = records.filter(callback);
         }
 
@@ -428,7 +428,7 @@ export class HistoryPlugin extends Plugin {
                         value: record.target.getAttribute(record.attributeName),
                         oldValue: record.oldValue,
                     });
-                    for (const cb of this.resources["on_change_attribute"] || []) {
+                    for (const cb of this.getResource("on_change_attribute")) {
                         cb({
                             target: record.target,
                             attributeName: record.attributeName,
@@ -651,7 +651,7 @@ export class HistoryPlugin extends Plugin {
      * @param { number } index
      */
     isReversibleStep(index) {
-        for (const cb of this.resources["is_reversible_step"] || []) {
+        for (const cb of this.getResource("is_reversible_step")) {
             const result = cb(index);
             if (typeof result !== "undefined") {
                 return result;
@@ -734,7 +734,7 @@ export class HistoryPlugin extends Plugin {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
                         let value = this.getAttributeValue(mutation.attributeName, mutation.value);
-                        for (const cb of this.resources["on_change_attribute"] || []) {
+                        for (const cb of this.getResource("on_change_attribute")) {
                             value =
                                 cb(
                                     {
@@ -803,7 +803,7 @@ export class HistoryPlugin extends Plugin {
                             mutation.attributeName,
                             mutation.oldValue
                         );
-                        for (const cb of this.resources["on_change_attribute"] || []) {
+                        for (const cb of this.getResource("on_change_attribute")) {
                             value =
                                 cb(
                                     {
@@ -1001,7 +1001,7 @@ export class HistoryPlugin extends Plugin {
      * @param { string } attributeValue
      */
     setAttribute(node, attributeName, attributeValue) {
-        for (const cb of this.resources["set_attribute"] || []) {
+        for (const cb of this.getResource("set_attribute")) {
             const result = cb(node, attributeName, attributeValue);
             if (result) {
                 return;
@@ -1068,7 +1068,7 @@ export class HistoryPlugin extends Plugin {
             result.textValue = node.nodeValue;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
             let childrenToSerialize;
-            for (const cb of this.resources["filter_descendants_to_serialize"] || []) {
+            for (const cb of this.getResource("filter_descendants_to_serialize")) {
                 childrenToSerialize = cb(node);
                 if (childrenToSerialize) {
                     break;

@@ -10,6 +10,7 @@ import {
 import { ancestors, closestElement, descendants, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
+import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 
@@ -34,19 +35,18 @@ function isUnremovableTableComponent(element, root) {
 export class TablePlugin extends Plugin {
     static name = "table";
     static dependencies = ["dom", "history", "selection", "delete", "split", "color"];
-    /** @type { (p: TablePlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        handle_tab: { callback: p.handleTab.bind(p), sequence: 20 },
-        handle_shift_tab: { callback: p.handleShiftTab.bind(p), sequence: 20 },
-        handle_delete_range: { callback: p.handleDeleteRange.bind(p) },
+    resources = {
+        handle_tab: withSequence(20, this.handleTab.bind(this)),
+        handle_shift_tab: withSequence(20, this.handleShiftTab.bind(this)),
+        handle_delete_range: this.handleDeleteRange.bind(this),
         isUnremovable: isUnremovableTableComponent,
         isUnsplittable: (element) =>
             element.tagName === "TABLE" || tableInnerComponents.has(element.tagName),
-        onSelectionChange: p.updateSelectionTable.bind(p),
-        colorApply: p.applyTableColor.bind(p),
-        modifyTraversedNodes: p.adjustTraversedNodes.bind(p),
+        onSelectionChange: this.updateSelectionTable.bind(this),
+        colorApply: this.applyTableColor.bind(this),
+        modifyTraversedNodes: this.adjustTraversedNodes.bind(this),
         considerNodeFullySelected: (node) => !!closestElement(node, ".o_selected_td"),
-    });
+    };
 
     setup() {
         this.addDomListener(this.editable, "mousedown", this.onMousedown);

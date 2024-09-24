@@ -9,12 +9,11 @@ import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrollin
  */
 export class PositionPlugin extends Plugin {
     static name = "position";
-    /** @type { (p: PositionPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         // todo: it is strange that the position plugin is aware of onExternalHistorySteps and historyResetFromSteps.
-        onExternalHistorySteps: p.layoutGeometryChange.bind(p),
-        historyResetFromSteps: p.layoutGeometryChange.bind(p),
-    });
+        onExternalHistorySteps: this.layoutGeometryChange.bind(this),
+        historyResetFromSteps: this.layoutGeometryChange.bind(this),
+    };
 
     setup() {
         this.layoutGeometryChange = throttleForAnimation(this.layoutGeometryChange.bind(this));
@@ -48,6 +47,6 @@ export class PositionPlugin extends Plugin {
         super.destroy();
     }
     layoutGeometryChange() {
-        this.resources.layoutGeometryChange?.forEach((cb) => cb());
+        this.getResource("layoutGeometryChange").forEach((cb) => cb());
     }
 }

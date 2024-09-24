@@ -123,9 +123,9 @@ export class SelectionPlugin extends Plugin {
         "focusEditable",
         // "collapseIfZWS",
     ];
-    static resources = () => ({
+    resources = {
         shortcuts: [{ hotkey: "control+a", command: "SELECT_ALL" }],
-    });
+    };
 
     setup() {
         this.resetSelection();
@@ -191,7 +191,7 @@ export class SelectionPlugin extends Plugin {
                 return;
             }
         }
-        for (const handler of this.resources.onSelectionChange || []) {
+        for (const handler of this.getResource("onSelectionChange")) {
             handler(selectionData);
         }
     }
@@ -554,7 +554,7 @@ export class SelectionPlugin extends Plugin {
         range.setEnd(selection.endContainer, selection.endOffset);
         const isNodeFullySelected = (node) =>
             // Custom rules
-            this.resources.considerNodeFullySelected?.some((cb) => cb(node, selection)) ||
+            this.getResource("considerNodeFullySelected").some((cb) => cb(node, selection)) ||
             // Default rule
             (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
         return this.getTraversedNodes().filter(isNodeFullySelected);
@@ -584,7 +584,7 @@ export class SelectionPlugin extends Plugin {
                 return nodes.filter((node) => !edgeNodes.has(node));
             },
             // Custom modifiers
-            ...(this.resources.modifyTraversedNodes || []),
+            ...this.getResource("modifyTraversedNodes"),
         ];
 
         for (const modifier of modifiers) {
@@ -856,7 +856,7 @@ export class SelectionPlugin extends Plugin {
         const domDirection = (screenDirection === "left") ^ isRtl ? "previous" : "next";
 
         // Whether the character next to the cursor should be skipped.
-        const shouldSkipCallbacks = this.resources.arrows_should_skip || [];
+        const shouldSkipCallbacks = this.getResource("arrows_should_skip");
         let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
         let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 

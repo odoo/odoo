@@ -15,32 +15,31 @@ export class ToolbarPlugin extends Plugin {
     static name = "toolbar";
     static dependencies = ["overlay", "selection"];
     static shared = ["getToolbarInfo"];
-    /** @type { (p: ToolbarPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        onSelectionChange: p.handleSelectionChange.bind(p),
-    });
+    resources = {
+        onSelectionChange: this.handleSelectionChange.bind(this),
+    };
 
     setup() {
         const categoryIds = new Set();
-        for (const category of this.resources.toolbarCategory) {
+        for (const category of this.getResource("toolbarCategory")) {
             if (categoryIds.has(category.id)) {
                 throw new Error(`Duplicate toolbar category id: ${category.id}`);
             }
             categoryIds.add(category.id);
         }
-        this.categories = this.resources.toolbarCategory.sort((a, b) => a.sequence - b.sequence);
+        this.categories = this.getResource("toolbarCategory");
         this.buttonGroups = [];
         for (const category of this.categories) {
             this.buttonGroups.push({
                 ...category,
-                buttons: this.resources.toolbarItems.filter(
+                buttons: this.getResource("toolbarItems").filter(
                     (command) => command.category === category.id
                 ),
             });
         }
         this.buttonsDict = Object.assign(
             {},
-            ...this.resources.toolbarItems.map((button) => ({ [button.id]: button }))
+            ...this.getResource("toolbarItems").map((button) => ({ [button.id]: button }))
         );
         this.isMobileToolbar = hasTouch() && window.visualViewport;
 
@@ -219,7 +218,7 @@ export class ToolbarPlugin extends Plugin {
 
     updateNamespace() {
         const traversedNodes = this.getFilterTraverseNodes();
-        for (const namespace of this.resources.toolbarNamespace || []) {
+        for (const namespace of this.getResource('toolbarNamespace') || []) {
             if (namespace.isApplied(traversedNodes)) {
                 this.state.namespace = namespace.id;
                 return;

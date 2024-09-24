@@ -23,6 +23,7 @@ import { insertText, redo, undo } from "./_helpers/user_actions";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "@html_editor/main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
 function commandNames() {
     return queryAllTexts(".o-we-command-name");
@@ -113,7 +114,7 @@ describe("search", () => {
     test("press 'backspace' should adapt adapt the search in the Powerbox", async () => {
         class TestPlugin extends Plugin {
             static name = "test";
-            static resources = () => ({
+            resources = {
                 powerboxCategory: { id: "test", name: "Test" },
                 powerboxItems: [
                     {
@@ -127,7 +128,7 @@ describe("search", () => {
                         category: "test",
                     },
                 ],
-            });
+            };
         }
         const { editor, el } = await setupEditor(`<p>[]</p>`, {
             config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
@@ -253,7 +254,7 @@ describe("search", () => {
         test("should search commands by optional keywords", async () => {
             class TestPlugin extends Plugin {
                 static name = "test";
-                static resources = () => ({
+                resources = {
                     powerboxCategory: { id: "test", name: "Test" },
                     powerboxItems: [
                         {
@@ -268,7 +269,7 @@ describe("search", () => {
                             category: "test",
                         },
                     ],
-                });
+                };
             }
             const { editor, el } = await setupEditor(`<p>[]</p>`, {
                 config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
@@ -300,7 +301,7 @@ describe("search", () => {
         test("match order: full match on keyword should come before partial matches on names or descriptions", async () => {
             class TestPlugin extends Plugin {
                 static name = "test";
-                static resources = () => ({
+                resources = {
                     powerboxCategory: { id: "test", name: "Test" },
                     powerboxItems: [
                         {
@@ -320,7 +321,7 @@ describe("search", () => {
                             searchKeywords: ["icon"],
                         },
                     ],
-                });
+                };
             }
             const { editor, el } = await setupEditor(`<p>[]</p>`, {
                 config: {
@@ -496,7 +497,7 @@ test("should toggle list on empty paragraph", async () => {
 
 class NoOpPlugin extends Plugin {
     static name = "no_op";
-    static resources = () => ({
+    resources = {
         powerboxCategory: { id: "no_op", name: "No-op" },
         powerboxItems: [
             {
@@ -509,7 +510,7 @@ class NoOpPlugin extends Plugin {
                 },
             },
         ],
-    });
+    };
 }
 
 test("should restore state before /command insertion when command is executed (1)", async () => {
@@ -722,14 +723,14 @@ test.todo("add plugins with the same powerboxCategory should crash", async () =>
         warn: (msg) => expect.step(msg),
     });
     class Plugin1 extends Plugin {
-        static resources = () => ({
-            powerboxCategory: { id: "test", name: "Test", sequence: 10 },
-        });
+        resources = {
+            powerboxCategory: withSequence(10, { id: "test", name: "Test" }),
+        };
     }
     class Plugin2 extends Plugin {
-        static resources = () => ({
-            powerboxCategory: { id: "test", name: "Test", sequence: 10 },
-        });
+        resources = {
+            powerboxCategory: withSequence(10, { id: "test", name: "Test" }),
+        };
     }
     await expect(
         setupEditor("<p>ab[]cd</p>", {

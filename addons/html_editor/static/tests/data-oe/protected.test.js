@@ -553,9 +553,9 @@ test("don't protect a node under data-oe-protected='false' through delete and un
 test("protected plugin is robust against other plugins which can filter mutations", async () => {
     class FilterPlugin extends Plugin {
         static name = "filter_plugin";
-        static resources(p) {
-            return { is_mutation_record_savable: p.isMutationRecordSavable.bind(this) };
-        }
+        resources = {
+            is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
+        };
         isMutationRecordSavable(record) {
             if (
                 record.type === "childList" &&

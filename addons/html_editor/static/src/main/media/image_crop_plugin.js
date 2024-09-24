@@ -3,31 +3,28 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ImageCrop } from "./image_crop";
 import { loadBundle } from "@web/core/assets";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
     static name = "image_crop";
     static dependencies = ["image", "selection"];
-    /** @type { (p: ImageCropPlugin) => Record<string, any> } */
-    static resources(p) {
-        return {
-            toolbarCategory: {
+    resources = {
+        toolbarCategory: withSequence(27, {
+            id: "image_crop",
+            namespace: "image",
+        }),
+        toolbarItems: [
+            {
                 id: "image_crop",
-                namespace: "image",
-                sequence: 27,
-            },
-            toolbarItems: [
-                {
-                    id: "image_crop",
-                    category: "image_crop",
-                    title: _t("Crop image"),
-                    icon: "fa-crop",
-                    action(dispatch) {
-                        dispatch("CROP_IMAGE");
-                    },
+                category: "image_crop",
+                title: _t("Crop image"),
+                icon: "fa-crop",
+                action(dispatch) {
+                    dispatch("CROP_IMAGE");
                 },
-            ],
-        };
-    }
+            },
+        ],
+    };
 
     setup() {
         this.imageCropProps = {

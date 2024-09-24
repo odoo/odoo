@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
+import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
 function isAvailable(node) {
@@ -9,9 +10,8 @@ function isAvailable(node) {
 export class BannerPlugin extends Plugin {
     static name = "banner";
     static dependencies = ["dom", "emoji", "selection"];
-    /** @type { (p: BannerPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        powerboxCategory: { id: "banner", name: _t("Banner"), sequence: 20 },
+    resources = {
+        powerboxCategory: withSequence(20, { id: "banner", name: _t("Banner") }),
         powerboxItems: [
             {
                 category: "banner",
@@ -19,8 +19,8 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert an info banner"),
                 fontawesome: "fa-info-circle",
                 isAvailable,
-                action() {
-                    p.insertBanner(_t("Banner Info"), "💡", "info");
+                action: () => {
+                    this.insertBanner(_t("Banner Info"), "💡", "info");
                 },
             },
             {
@@ -29,8 +29,8 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert an success banner"),
                 fontawesome: "fa-check-circle",
                 isAvailable,
-                action() {
-                    p.insertBanner(_t("Banner Success"), "✅", "success");
+                action: () => {
+                    this.insertBanner(_t("Banner Success"), "✅", "success");
                 },
             },
             {
@@ -39,8 +39,8 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert an warning banner"),
                 fontawesome: "fa-exclamation-triangle",
                 isAvailable,
-                action() {
-                    p.insertBanner(_t("Banner Warning"), "⚠️", "warning");
+                action: () => {
+                    this.insertBanner(_t("Banner Warning"), "⚠️", "warning");
                 },
             },
             {
@@ -49,12 +49,12 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert an danger banner"),
                 fontawesome: "fa-exclamation-circle",
                 isAvailable,
-                action() {
-                    p.insertBanner(_t("Banner Danger"), "❌", "danger");
+                action: () => {
+                    this.insertBanner(_t("Banner Danger"), "❌", "danger");
                 },
             },
         ],
-    });
+    };
 
     setup() {
         this.addDomListener(this.editable, "click", (e) => {

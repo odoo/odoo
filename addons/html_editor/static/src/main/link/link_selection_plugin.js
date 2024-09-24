@@ -52,15 +52,14 @@ export class LinkSelectionPlugin extends Plugin {
     static dependencies = ["selection"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing padLinkWithZwnbsp.
     static shared = ["padLinkWithZwnbsp"];
-    /** @type { (p: LinkSelectionPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         mutation_filtered_classes: ["o_link_in_selection"],
         link_ignore_classes: ["o_link_in_selection"],
-        onSelectionChange: p.resetLinkInSelection.bind(p),
+        onSelectionChange: this.resetLinkInSelection.bind(this),
         arrows_should_skip: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
-    });
+    };
 
     handleCommand(command, payload) {
         switch (command) {
@@ -175,14 +174,14 @@ export class LinkSelectionPlugin extends Plugin {
             this.editable.contains(link) &&
             !isProtected(link) &&
             !isProtecting(link) &&
-            !this.resources.excludeLinkZwnbsp?.some((callback) => callback(link))
+            !this.getResource("excludeLinkZwnbsp").some((callback) => callback(link))
         );
     }
 
     isLinkEligibleForVisualIndication(link) {
         return (
             this.isLinkEligibleForZwnbsp(link) &&
-            !this.resources.excludeLinkVisualIndication?.some((callback) => callback(link))
+            !this.getResource("excludeLinkVisualIndication").some((callback) => callback(link))
         );
     }
 

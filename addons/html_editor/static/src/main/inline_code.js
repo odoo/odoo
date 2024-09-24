@@ -5,10 +5,9 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 export class InlineCodePlugin extends Plugin {
     static name = "inline_code";
     static dependencies = ["selection", "split"];
-    /** @type { (p: InlineCodePlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        onInput: { handler: p.onInput.bind(p) },
-    });
+    resources = {
+        onInput: this.onInput.bind(this),
+    };
 
     onInput(ev) {
         const selection = this.shared.getEditableSelection();

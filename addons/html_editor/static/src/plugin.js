@@ -97,7 +97,10 @@ export class Plugin {
         this.shared = shared;
         this.dispatch = dispatch;
         this._cleanups = [];
-        this.resources = null; // set before start
+        /**
+         * The resources aggregated from all the plugins by the editor.
+         */
+        this._resources = null; // set before start
         this.isDestroyed = false;
     }
 
@@ -125,6 +128,13 @@ export class Plugin {
         };
         target.addEventListener(eventName, handler, capture);
         this._cleanups.push(() => target.removeEventListener(eventName, handler, capture));
+    }
+
+    /**
+     * @param {string} resourceId
+     */
+    getResource(resourceId) {
+        return this._resources[resourceId] || [];
     }
 
     destroy() {

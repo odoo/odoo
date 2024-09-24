@@ -3,12 +3,12 @@ import { MediaPlugin } from "@html_editor/main/media/media_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 export class ProjectSharingMediaPlugin extends MediaPlugin {
-    static resources = (p) => {
-        const resources = MediaPlugin.resources(p);
-        delete resources.toolbarCategory;
-        delete resources.toolbarItems;
-        return resources;
-    };
+    resources = {
+        ...this.resources,
+        toolbarItems: this.resources.toolbarItems.filter(
+            item => item.id !== "replace_image"
+        ),
+    }
     async createAttachment({ el, imageData, resId }) {
         const response = JSON.parse(
             await this.services.http.post(

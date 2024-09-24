@@ -25,25 +25,22 @@ function target(selectionData, editable) {
 export class HintPlugin extends Plugin {
     static name = "hint";
     static dependencies = ["history", "selection"];
-    /** @type { (p: HintPlugin) => Record<string, any> } */
-    static resources = (p) => {
-        const resources = {
-            mutation_filtered_classes: ["o-we-hint"],
-            is_mutation_record_savable: isMutationRecordSavable,
-            onSelectionChange: p.updateHints.bind(p),
-            onExternalHistorySteps: () => {
-                p.clearHints();
-                p.updateHints();
-            },
-        };
-        if (p.config.placeholder) {
-            resources.hints = {
-                text: p.config.placeholder,
-                target,
-            };
-        }
-
-        return resources;
+    resources = {
+        mutation_filtered_classes: ["o-we-hint"],
+        is_mutation_record_savable: isMutationRecordSavable,
+        onSelectionChange: this.updateHints.bind(this),
+        onExternalHistorySteps: () => {
+            this.clearHints();
+            this.updateHints();
+        },
+        ...(this.config.placeholder && {
+            hints: [
+                {
+                    text: this.config.placeholder,
+                    target,
+                },
+            ],
+        }),
     };
 
     setup() {
@@ -81,7 +78,7 @@ export class HintPlugin extends Plugin {
             this.removeHint(blockEl);
         }
         if (editableSelection.isCollapsed) {
-            for (const hint of this.resources["hints"]) {
+            for (const hint of this.getResource("hints")) {
                 if (hint.selector) {
                     const el = closestBlock(editableSelection.anchorNode);
                     if (el && el.matches(hint.selector) && !isProtected(el) && isEmptyBlock(el)) {

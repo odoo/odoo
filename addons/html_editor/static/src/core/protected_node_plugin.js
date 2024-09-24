@@ -7,15 +7,12 @@ const UNPROTECTED_SELECTOR = `[data-oe-protected="false"]`;
 
 export class ProtectedNodePlugin extends Plugin {
     static name = "protected_node";
-    /** @type { function(ProtectedNodePlugin):Record<string, any> } **/
-    static resources(p) {
-        return {
-            is_mutation_record_savable: p.isMutationRecordSavable.bind(p),
-            filter_descendants_to_remove: p.filterDescendantsToRemove.bind(p),
-            isUnsplittable: isProtecting, // avoid merge
-        };
-    }
     static shared = ["setProtectingNode"];
+    resources = {
+        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
+        filter_descendants_to_remove: this.filterDescendantsToRemove.bind(this),
+        isUnsplittable: isProtecting, // avoid merge
+    };
 
     setup() {
         this.protectedNodes = new WeakSet();

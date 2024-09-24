@@ -7,15 +7,10 @@ import { leftPos } from "@html_editor/utils/position";
 export class LinkPastePlugin extends Plugin {
     static name = "link_paste";
     static dependencies = ["link", "clipboard", "selection", "dom"];
-    /** @type { (p: LinkPastePlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        before_paste: p.removeFullySelectedLink.bind(p),
-        handle_paste_text: p.handlePasteText.bind(p),
-    });
-
-    setup() {
-        this.resources["handle_paste_url"] = this.resources["handle_paste_url"] || [];
-    }
+    resources = {
+        before_paste: this.removeFullySelectedLink.bind(this),
+        handle_paste_text: this.handlePasteText.bind(this),
+    };
 
     /**
      * @param {EditorSelection} selection
@@ -54,7 +49,9 @@ export class LinkPastePlugin extends Plugin {
             this.handlePasteTextUrlInsideLink(text, url);
             return;
         }
-        const isHandled = this.resources["handle_paste_url"].some((handler) => handler(text, url));
+        const isHandled = this.getResource("handle_paste_url").some((handler) =>
+            handler(text, url)
+        );
         if (isHandled) {
             return;
         }

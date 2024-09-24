@@ -12,13 +12,12 @@ const isUnsplittableQWebElement = (element) =>
 export class QWebPlugin extends Plugin {
     static name = "qweb";
     static dependencies = ["overlay", "selection"];
-    /** @type { (p: QWebPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        onSelectionChange: p.onSelectionChange.bind(p),
-        is_mutation_record_savable: p.isMutationRecordSavable.bind(p),
+    resources = {
+        onSelectionChange: this.onSelectionChange.bind(this),
+        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
         isUnremovable: (element) => element.getAttribute("t-set") || element.getAttribute("t-call"),
         isUnsplittable: isUnsplittableQWebElement,
-    });
+    };
 
     setup() {
         this.editable.classList.add("odoo-editor-qweb");

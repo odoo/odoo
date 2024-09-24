@@ -19,22 +19,21 @@ export class SplitPlugin extends Plugin {
         "splitSelection",
         "isUnsplittable",
     ];
-    /** @type { (p: SplitPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         isUnsplittable: [
             // An unremovable element is also unmergeable (as merging two
             // elements results in removing one of them).
             // An unmergeable element is unsplittable and vice-versa (as
             // split and merge are reverse operations from one another).
             // Therefore, unremovable nodes are also unsplittable.
-            (element) => p.resources.isUnremovable?.some((predicate) => predicate(element)),
+            (element) => this.getResource("isUnremovable").some((predicate) => predicate(element)),
             // "Unbreakable" is a legacy term that means unsplittable and
             // unmergeable.
             (element) => element.classList.contains("oe_unbreakable"),
             (element) => ["DIV", "SECTION"].includes(element.tagName),
         ],
-        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
-    });
+        onBeforeInput: this.onBeforeInput.bind(this),
+    };
 
     handleCommand(command, payload) {
         switch (command) {
@@ -83,7 +82,7 @@ export class SplitPlugin extends Plugin {
         }
         const blockToSplit = closestElement(targetNode, isBlock);
 
-        for (const { callback } of this.resources["split_element_block"]) {
+        for (const callback of this.getResource("split_element_block")) {
             if (callback({ targetNode, targetOffset, blockToSplit })) {
                 return [undefined, undefined];
             }
@@ -139,7 +138,7 @@ export class SplitPlugin extends Plugin {
     isUnsplittable(node) {
         return (
             node.nodeType === Node.ELEMENT_NODE &&
-            this.resources.isUnsplittable.some((predicate) => predicate(node))
+            this.getResource("isUnsplittable").some((predicate) => predicate(node))
         );
     }
 

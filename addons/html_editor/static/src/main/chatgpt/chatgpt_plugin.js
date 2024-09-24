@@ -5,16 +5,15 @@ import { ChatGPTPromptDialog } from "./chatgpt_prompt_dialog";
 import { ChatGPTAlternativesDialog } from "./chatgpt_alternatives_dialog";
 import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
     static dependencies = ["selection", "history", "dom", "sanitize", "dialog"];
-    /** @type { (p: ChatGPTPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        toolbarCategory: {
+    resources = {
+        toolbarCategory: withSequence(50, {
             id: "ai",
-            sequence: 50,
-        },
+        }),
         toolbarItems: [
             {
                 id: "translate",
@@ -37,7 +36,7 @@ export class ChatGPTPlugin extends Plugin {
             },
         ],
 
-        powerboxCategory: { id: "ai", name: _t("AI Tools"), sequence: 70 },
+        powerboxCategory: withSequence(70, { id: "ai", name: _t("AI Tools") }),
         powerboxItems: {
             name: _t("ChatGPT"),
             description: _t("Generate or transform content with AI."),
@@ -49,7 +48,7 @@ export class ChatGPTPlugin extends Plugin {
             },
             // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
-    });
+    };
 
     handleCommand(command, payload) {
         switch (command) {

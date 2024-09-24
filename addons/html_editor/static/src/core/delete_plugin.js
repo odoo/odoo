@@ -38,6 +38,7 @@ import {
     startPos,
 } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
+import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef {Object} RangeLike
@@ -53,11 +54,10 @@ export class DeletePlugin extends Plugin {
     static dependencies = ["selection"];
     static name = "delete";
     static shared = ["deleteRange", "isUnmergeable"];
-    /** @type { (p: DeletePlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         onBeforeInput: [
-            { handler: p.onBeforeInputDelete.bind(p) },
-            { handler: p.onBeforeInputInsertText.bind(p), sequence: 10 },
+            withSequence(5, this.onBeforeInputInsertText.bind(this)),
+            this.onBeforeInputDelete.bind(this),
         ],
         shortcuts: [
             { hotkey: "backspace", command: "DELETE_BACKWARD" },
@@ -67,18 +67,12 @@ export class DeletePlugin extends Plugin {
             { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
             { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
         ],
-        handle_delete_backward: [{ callback: p.deleteBackwardUnmergeable.bind(p), sequence: 30 }],
-        handle_delete_backward_word: {
-            callback: p.deleteBackwardUnmergeable.bind(p),
-            sequence: 30,
-        },
-        handle_delete_backward_line: {
-            callback: p.deleteBackwardUnmergeable.bind(p),
-            sequence: 30,
-        },
-        handle_delete_forward: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
-        handle_delete_forward_word: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
-        handle_delete_forward_line: { callback: p.deleteForwardUnmergeable.bind(p), sequence: 30 },
+        handle_delete_backward: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
+        handle_delete_backward_word: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
+        handle_delete_backward_line: this.deleteBackwardUnmergeable.bind(this),
+        handle_delete_forward: withSequence(20, this.deleteForwardUnmergeable.bind(this)),
+        handle_delete_forward_word: this.deleteForwardUnmergeable.bind(this),
+        handle_delete_forward_line: this.deleteForwardUnmergeable.bind(this),
 
         // @todo @phoenix: move these predicates to different plugins
         isUnremovable: [
@@ -88,22 +82,11 @@ export class DeletePlugin extends Plugin {
             // Monetary field
             (element) => element.matches("[data-oe-type='monetary'] > span"),
         ],
-    });
+    };
 
     setup() {
         this.findPreviousPosition = this.makeFindPositionFn("backward");
         this.findNextPosition = this.makeFindPositionFn("forward");
-
-        for (const key of [
-            "handle_delete_backward",
-            "handle_delete_backward_word",
-            "handle_delete_backward_line",
-            "handle_delete_forward",
-            "handle_delete_forward_word",
-            "handle_delete_forward_line",
-        ]) {
-            this.resources[key].sort((a, b) => a.sequence - b.sequence);
-        }
     }
 
     handleCommand(command, payload) {
@@ -156,7 +139,7 @@ export class DeletePlugin extends Plugin {
             this.fullyIncludeLinks,
         ]);
 
-        for (const { callback } of this.resources["handle_delete_range"]) {
+        for (const callback of this.getResource("handle_delete_range")) {
             if (callback(range)) {
                 return;
             }
@@ -200,13 +183,14 @@ export class DeletePlugin extends Plugin {
 
         let range = this.getRangeForDelete(endContainer, endOffset, "backward", granularity);
 
-        const resources = {
-            character: this.resources["handle_delete_backward"],
-            word: this.resources["handle_delete_backward_word"],
-            line: this.resources["handle_delete_backward_line"],
+        const resourceIds = {
+            character: "handle_delete_backward",
+            word: "handle_delete_backward_word",
+            line: "handle_delete_backward_line",
         };
-        for (const { callback } of resources[granularity]) {
-            if (callback(range)) {
+        const handlers = this.getResource(resourceIds[granularity]);
+        for (const handler of handlers) {
+            if (handler(range)) {
                 return;
             }
         }
@@ -230,13 +214,14 @@ export class DeletePlugin extends Plugin {
 
         let range = this.getRangeForDelete(startContainer, startOffset, "forward", granularity);
 
-        const resources = {
-            character: this.resources["handle_delete_forward"],
-            word: this.resources["handle_delete_forward_word"],
-            line: this.resources["handle_delete_forward_line"],
+        const resourceIds = {
+            character: "handle_delete_forward",
+            word: "handle_delete_forward_word",
+            line: "handle_delete_forward_line",
         };
-        for (const { callback } of resources[granularity]) {
-            if (callback(range)) {
+        const handlers = this.getResource(resourceIds[granularity]);
+        for (const handler of handlers) {
+            if (handler(range)) {
                 return;
             }
         }
@@ -545,7 +530,7 @@ export class DeletePlugin extends Plugin {
         if (node.nodeType !== Node.ELEMENT_NODE) {
             return true;
         }
-        return this.resources.isUnremovable.some((predicate) => predicate(node, root));
+        return this.getResource("isUnremovable").some((predicate) => predicate(node, root));
     }
 
     // Returns true if the entire subtree rooted at node was removed.
@@ -555,7 +540,7 @@ export class DeletePlugin extends Plugin {
         const remove = (node) => {
             let customHandling = false;
             let customIsUnremovable;
-            for (const cb of this.resources["filter_descendants_to_remove"] || []) {
+            for (const cb of this.getResource("filter_descendants_to_remove")) {
                 const descendantsToRemove = cb(node);
                 if (descendantsToRemove) {
                     for (const descendant of descendantsToRemove) {
@@ -663,7 +648,7 @@ export class DeletePlugin extends Plugin {
     isUnmergeable(node) {
         return (
             node.nodeType === Node.ELEMENT_NODE &&
-            this.resources.isUnsplittable.some((predicate) => predicate(node))
+            this.getResource("isUnsplittable").some((predicate) => predicate(node))
         );
     }
 

@@ -11,6 +11,7 @@ import { isVisible } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
+import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -99,90 +100,85 @@ async function fetchInternalMetaData(url) {
     return result;
 }
 
+const linkItem = {
+    id: "link",
+    title: _t("Link"),
+    action(dispatch) {
+        dispatch("CREATE_LINK_ON_SELECTION");
+    },
+    icon: "fa-link",
+    isFormatApplied: isLinkActive,
+};
+const unlinkItem = {
+    id: "unlink",
+    title: _t("Remove Link"),
+
+    action(dispatch) {
+        dispatch("REMOVE_LINK_FROM_SELECTION");
+    },
+    icon: "fa-unlink",
+    isAvailable: isSelectionHasLink,
+};
+
 export class LinkPlugin extends Plugin {
     static name = "link";
     static dependencies = ["dom", "selection", "split", "line_break", "overlay"];
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
-    /** @type { (p: LinkPlugin) => Record<string, any> } */
-    static resources = (p) => {
-        const linkItem = {
-            id: "link",
-            title: _t("Link"),
-            action(dispatch) {
-                dispatch("CREATE_LINK_ON_SELECTION");
+    resources = {
+        onBeforeInput: withSequence(5, this.onBeforeInput.bind(this)),
+        toolbarCategory: [
+            withSequence(40, {
+                id: "link",
+            }),
+            withSequence(30, {
+                id: "image_link",
+                namespace: "image",
+            }),
+        ],
+        toolbarItems: [
+            {
+                ...linkItem,
+                category: "link",
             },
-            icon: "fa-link",
-            isFormatApplied: isLinkActive,
-        };
-        const unlinkItem = {
-            id: "unlink",
-            title: _t("Remove Link"),
-
-            action(dispatch) {
-                dispatch("REMOVE_LINK_FROM_SELECTION");
+            {
+                ...unlinkItem,
+                category: "link",
             },
-            icon: "fa-unlink",
-            isAvailable: isSelectionHasLink,
-        };
+            {
+                ...linkItem,
+                category: "image_link",
+            },
+            {
+                ...unlinkItem,
+                category: "image_link",
+            },
+        ],
 
-        return {
-            onBeforeInput: { handler: p.onBeforeInput.bind(p), sequence: 10 },
-            toolbarCategory: [
-                {
-                    id: "link",
-                    sequence: 40,
+        powerboxCategory: withSequence(50, { id: "navigation", name: _t("Navigation") }),
+        powerboxItems: [
+            {
+                name: _t("Link"),
+                description: _t("Add a link"),
+                category: "navigation",
+                fontawesome: "fa-link",
+                action(dispatch) {
+                    dispatch("TOGGLE_LINK");
                 },
-                {
-                    id: "image_link",
-                    sequence: 30,
-                    namespace: "image",
+            },
+            {
+                name: _t("Button"),
+                description: _t("Add a button"),
+                category: "navigation",
+                fontawesome: "fa-link",
+                action(dispatch) {
+                    dispatch("TOGGLE_LINK");
                 },
-            ],
-            toolbarItems: [
-                {
-                    ...linkItem,
-                    category: "link",
-                },
-                {
-                    ...unlinkItem,
-                    category: "link",
-                },
-                {
-                    ...linkItem,
-                    category: "image_link",
-                },
-                {
-                    ...unlinkItem,
-                    category: "image_link",
-                },
-            ],
-
-            powerboxCategory: { id: "navigation", name: _t("Navigation"), sequence: 50 },
-            powerboxItems: [
-                {
-                    name: _t("Link"),
-                    description: _t("Add a link"),
-                    category: "navigation",
-                    fontawesome: "fa-link",
-                    action(dispatch) {
-                        dispatch("TOGGLE_LINK");
-                    },
-                },
-                {
-                    name: _t("Button"),
-                    description: _t("Add a button"),
-                    category: "navigation",
-                    fontawesome: "fa-link",
-                    action(dispatch) {
-                        dispatch("TOGGLE_LINK");
-                    },
-                },
-            ],
-            onSelectionChange: p.handleSelectionChange.bind(p),
-            split_element_block: { callback: p.handleSplitBlock.bind(p) },
-            handle_insert_line_break_element: { callback: p.handleInsertLineBreak.bind(p) },
-        };
+            },
+        ],
+        onSelectionChange: this.handleSelectionChange.bind(this),
+        split_element_block: this.handleSplitBlock.bind(this),
+        handle_insert_line_break_element: this.handleInsertLineBreak.bind(this),
     };
     setup() {
         this.overlay = this.shared.createOverlay(LinkPopover, {}, { sequence: 40 });
@@ -206,7 +202,7 @@ export class LinkPlugin extends Plugin {
                 isAvailable: () => this.shared.getSelectionData().documentSelectionIsInEditable,
             }
         );
-        this.ignoredClasses = new Set(this.resources["link_ignore_classes"] || []);
+        this.ignoredClasses = new Set(this.getResource("link_ignore_classes"));
 
         this.getExternalMetaData = memoize(fetchExternalMetaData);
         this.getInternalMetaData = memoize(fetchInternalMetaData);

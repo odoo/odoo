@@ -9,14 +9,11 @@ import { memoize } from "@web/core/utils/functions";
 export class EmbeddedComponentPlugin extends Plugin {
     static name = "embedded_components";
     static dependencies = ["history", "protected_node"];
-    /** @type { (p: EmbeddedComponentPlugin) => Record<string, any> } */
-    static resources(p) {
-        return {
-            filter_descendants_to_serialize: p.filterDescendantsToSerialize.bind(p),
-            is_mutation_record_savable: p.isMutationRecordSavable.bind(p),
-            on_change_attribute: p.onChangeAttribute.bind(p),
-        };
-    }
+    resources = {
+        filter_descendants_to_serialize: this.filterDescendantsToSerialize.bind(this),
+        is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
+        on_change_attribute: this.onChangeAttribute.bind(this),
+    };
 
     setup() {
         this.components = new Set();
@@ -109,7 +106,9 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     getEmbedding(host) {
-        return this.embeddedComponents(this.resources.embeddedComponents)[host.dataset.embedded];
+        return this.embeddedComponents(this.getResource("embeddedComponents"))[
+            host.dataset.embedded
+        ];
     }
 
     /**

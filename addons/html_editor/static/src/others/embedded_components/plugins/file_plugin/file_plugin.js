@@ -8,7 +8,7 @@ import { isBlock } from "@html_editor/utils/blocks";
 export class FilePlugin extends Plugin {
     static name = "file";
     static dependencies = ["embedded_components", "dom", "selection"];
-    static resources = (p) => ({
+    resources = {
         powerboxItems: [
             {
                 category: "media",
@@ -18,12 +18,12 @@ export class FilePlugin extends Plugin {
                 fontawesome: "fa-file",
                 isAvailable: (node) => {
                     return (
-                        !p.config.disableFile &&
+                        !this.config.disableFile &&
                         !!closestElement(node, "[data-embedded='clipboard']")
                     );
                 },
                 action: () => {
-                    p.openMediaDialog({
+                    this.openMediaDialog({
                         noVideos: true,
                         noImages: true,
                         noIcons: true,
@@ -32,7 +32,7 @@ export class FilePlugin extends Plugin {
                 },
             },
         ],
-    });
+    };
 
     handleCommand(command, payload) {
         switch (command) {

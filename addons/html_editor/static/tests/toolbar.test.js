@@ -27,6 +27,7 @@ import {
     setContent,
     setSelection,
 } from "./_helpers/selection";
+import { withSequence } from "@html_editor/utils/resource";
 import { strong } from "./_helpers/tags";
 
 test.tags("desktop")(
@@ -353,28 +354,26 @@ test("toolbar behave properly if selection has no range", async () => {
 test("toolbar correctly show namespace button group and stop showing when namespace change", async () => {
     class TestPlugin extends Plugin {
         static name = "TestPlugin";
-        static resources(p) {
-            return {
-                toolbarNamespace: [
-                    {
-                        id: "aNamespace",
-                        isApplied: (nodeList) => {
-                            return !!nodeList.find((node) => node.tagName === "DIV");
-                        },
+        resources = {
+            toolbarNamespace: [
+                {
+                    id: "aNamespace",
+                    isApplied: (nodeList) => {
+                        return !!nodeList.find((node) => node.tagName === "DIV");
                     },
-                ],
-                toolbarCategory: { id: "test_group", sequence: 24, namespace: "aNamespace" },
-                toolbarItems: [
-                    {
-                        id: "test_btn",
-                        category: "test_group",
-                        title: "Test Button",
-                        icon: "fa-square",
-                        action: () => null,
-                    },
-                ],
-            };
-        }
+                },
+            ],
+            toolbarCategory: withSequence(24, { id: "test_group", namespace: "aNamespace" }),
+            toolbarItems: [
+                {
+                    id: "test_btn",
+                    category: "test_group",
+                    title: "Test Button",
+                    icon: "fa-square",
+                    action: () => null,
+                },
+            ],
+        };
     }
     const { el } = await setupEditor("<div>[<section><p>abc</p></section><div>d]ef</div></div>", {
         config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
@@ -389,26 +388,24 @@ test("toolbar correctly show namespace button group and stop showing when namesp
 test("toolbar correctly process inheritance buttons chain", async () => {
     class TestPlugin extends Plugin {
         static name = "TestPlugin";
-        static resources(p) {
-            return {
-                toolbarCategory: { id: "test_group", sequence: 24 },
-                toolbarItems: [
-                    {
-                        id: "test_btn",
-                        category: "test_group",
-                        title: "Test Button",
-                        icon: "fa-square",
-                        action: () => null,
-                    },
-                    {
-                        id: "test_btn2",
-                        category: "test_group",
-                        inherit: "test_btn",
-                        title: "Test Button 2",
-                    },
-                ],
-            };
-        }
+        resources = {
+            toolbarCategory: withSequence(24, { id: "test_group" }),
+            toolbarItems: [
+                {
+                    id: "test_btn",
+                    category: "test_group",
+                    title: "Test Button",
+                    icon: "fa-square",
+                    action: () => null,
+                },
+                {
+                    id: "test_btn2",
+                    category: "test_group",
+                    inherit: "test_btn",
+                    title: "Test Button 2",
+                },
+            ],
+        };
     }
     await setupEditor("<p>[abc]</p>", {
         config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
@@ -427,23 +424,21 @@ test("toolbar correctly process inheritance buttons chain", async () => {
 test("toolbar does not evaluate isFormatApplied when namespace does not match", async () => {
     class TestPlugin extends Plugin {
         static name = "TestPlugin";
-        static resources(p) {
-            return {
-                toolbarCategory: { id: "test_group", sequence: 24, namespace: "image" },
-                toolbarItems: [
-                    {
-                        id: "test_btn",
-                        category: "test_group",
-                        action(dispatch) {
-                            dispatch("test_cmd");
-                        },
-                        title: "Test Button",
-                        icon: "fa-square",
-                        isFormatApplied: () => expect.step("image format evaluated"),
+        resources = {
+            toolbarCategory: withSequence(24, { id: "test_group", namespace: "image" }),
+            toolbarItems: [
+                {
+                    id: "test_btn",
+                    category: "test_group",
+                    action(dispatch) {
+                        dispatch("test_cmd");
                     },
-                ],
-            };
-        }
+                    title: "Test Button",
+                    icon: "fa-square",
+                    isFormatApplied: () => expect.step("image format evaluated"),
+                },
+            ],
+        };
     }
     await setupEditor(
         `
@@ -466,22 +461,20 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
 test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
         static name = "TestPlugin";
-        static resources(p) {
-            return {
-                toolbarCategory: { id: "test_group", sequence: 24 },
-                toolbarItems: [
-                    {
-                        id: "test_btn",
-                        category: "test_group",
-                        action(dispatch) {
-                            dispatch("test_cmd");
-                        },
-                        title: "Test Button",
-                        text: "Text button",
+        resources = {
+            toolbarCategory: withSequence(24, { id: "test_group" }),
+            toolbarItems: [
+                {
+                    id: "test_btn",
+                    category: "test_group",
+                    action(dispatch) {
+                        dispatch("test_cmd");
                     },
-                ],
-            };
-        }
+                    title: "Test Button",
+                    text: "Text button",
+                },
+            ],
+        };
     }
     await setupEditor(`<div> <p class="foo">[Foo]</p> </div>`, {
         config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
@@ -535,7 +528,8 @@ test("toolbar buttons should have title attribute", async () => {
 test("toolbar buttons should have title attribute with translated text", async () => {
     // Retrieve toolbar buttons descriptions in English
     const { editor } = await setupEditor("");
-    const titles = editor.resources.toolbarItems.map((item) => item.title);
+    // item.title could be a LazyTranslatedString so we ensure it is a string with toString()
+    const titles = editor.resources.toolbarItems.map((item) => item.title.toString());
     editor.destroy();
 
     // Patch translations to return "Translated" for these terms
@@ -546,7 +540,8 @@ test("toolbar buttons should have title attribute with translated text", async (
 
     // Check that every registered button has the result of the call to _t
     postPatchEditor.resources.toolbarItems.forEach((item) => {
-        expect(item.title).toBe("Translated");
+        // item.title could be a LazyTranslatedString so we ensure it is a string with toString()
+        expect(item.title.toString()).toBe("Translated");
     });
 
     await waitFor(".o-we-toolbar");

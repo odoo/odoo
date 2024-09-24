@@ -4,6 +4,7 @@ import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setContent } from "./_helpers/selection";
+import { withSequence } from "@html_editor/utils/resource";
 
 test("can instantiate a Editor", async () => {
     const { el, editor } = await setupEditor("<p>hel[lo] world</p>", {});
@@ -107,7 +108,7 @@ test("can give resources in config", async () => {
         static name = "test";
 
         setup() {
-            expect(this.resources.some).toEqual(["value"]);
+            expect(this.getResource("some")).toEqual(["value"]);
         }
     }
 
@@ -115,6 +116,36 @@ test("can give resources in config", async () => {
         config: {
             Plugins: [...MAIN_PLUGINS, TestPlugin],
             resources: { some: ["value"] },
+        },
+    });
+});
+
+test("resource can have sequence", async () => {
+    expect.assertions(1);
+    class TestPlugin extends Plugin {
+        static name = "test";
+        resources = {
+            test_resource: [
+                { value: 2 },
+                withSequence(20, { value: 4 }),
+                withSequence(5, { value: 1 }),
+                { value: 3 },
+            ],
+        };
+
+        setup() {
+            expect(this.getResource("test_resource")).toEqual([
+                { value: 1 },
+                { value: 2 },
+                { value: 3 },
+                { value: 4 },
+            ]);
+        }
+    }
+
+    await setupEditor("<p></p>", {
+        config: {
+            Plugins: [...MAIN_PLUGINS, TestPlugin],
         },
     });
 });

@@ -8,9 +8,9 @@ export class MentionPlugin extends Plugin {
     static name = "mention";
     static dependencies = ["overlay", "dom", "history", "selection"];
 
-    static resources = (p) => ({
-        onBeforeInput: { handler: p.onBeforeInput.bind(p) },
-    });
+    resources = {
+        onBeforeInput: this.onBeforeInput.bind(this),
+    };
 
     setup() {
         this.mentionList = this.shared.createOverlay(MentionList, {

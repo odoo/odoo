@@ -16,6 +16,7 @@ import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../u
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { withSequence } from "@html_editor/utils/resource";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -43,15 +44,14 @@ export class FormatPlugin extends Plugin {
     static dependencies = ["selection", "split", "delete"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = ["isSelectionFormat", "insertAndSelectZws", "mergeAdjacentInlines"];
-    /** @type { (p: FormatPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         shortcuts: [
             { hotkey: "control+b", command: "FORMAT_BOLD" },
             { hotkey: "control+i", command: "FORMAT_ITALIC" },
             { hotkey: "control+u", command: "FORMAT_UNDERLINE" },
             { hotkey: "control+5", command: "FORMAT_STRIKETHROUGH" },
         ],
-        toolbarCategory: { id: "decoration", sequence: 20 },
+        toolbarCategory: withSequence(20, { id: "decoration" }),
         toolbarItems: [
             {
                 id: "bold",
@@ -61,7 +61,7 @@ export class FormatPlugin extends Plugin {
                 },
                 icon: "fa-bold",
                 title: _t("Toggle bold"),
-                isFormatApplied: isFormatted(p, "bold"),
+                isFormatApplied: isFormatted(this, "bold"),
             },
             {
                 id: "italic",
@@ -71,7 +71,7 @@ export class FormatPlugin extends Plugin {
                 },
                 icon: "fa-italic",
                 title: _t("Toggle italic"),
-                isFormatApplied: isFormatted(p, "italic"),
+                isFormatApplied: isFormatted(this, "italic"),
             },
             {
                 id: "underline",
@@ -81,7 +81,7 @@ export class FormatPlugin extends Plugin {
                 },
                 icon: "fa-underline",
                 title: _t("Toggle underline"),
-                isFormatApplied: isFormatted(p, "underline"),
+                isFormatApplied: isFormatted(this, "underline"),
             },
             {
                 id: "strikethrough",
@@ -91,7 +91,7 @@ export class FormatPlugin extends Plugin {
                 },
                 icon: "fa-strikethrough",
                 title: _t("Toggle strikethrough"),
-                isFormatApplied: isFormatted(p, "strikeThrough"),
+                isFormatApplied: isFormatted(this, "strikeThrough"),
             },
             {
                 id: "remove_format",
@@ -101,12 +101,12 @@ export class FormatPlugin extends Plugin {
                 },
                 icon: "fa-eraser",
                 title: _t("Remove Format"),
-                hasFormat: hasFormat(p),
+                hasFormat: hasFormat(this),
             },
         ],
         arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
-        onBeforeInput: { handler: p.onBeforeInput.bind(p), sequence: 60 },
-    });
+        onBeforeInput: withSequence(20, this.onBeforeInput.bind(this)),
+    };
 
     handleCommand(command, payload) {
         switch (command) {
@@ -153,7 +153,7 @@ export class FormatPlugin extends Plugin {
             }
             this._formatSelection(format, { applyStyle: false });
         }
-        for (const callback of this.resources["removeFormat"] || []) {
+        for (const callback of this.getResource("removeFormat")) {
             callback();
         }
         this.dispatch("ADD_STEP");
@@ -388,7 +388,7 @@ export class FormatPlugin extends Plugin {
             this.cleanZWS(element, { preserveSelection });
             return;
         }
-        if (this.resources.isUnremovable.some((predicate) => predicate(element))) {
+        if (this.getResource("isUnremovable").some((predicate) => predicate(element))) {
             return;
         }
         if (element.classList.length) {

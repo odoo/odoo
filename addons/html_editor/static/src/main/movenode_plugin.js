@@ -12,15 +12,14 @@ const ALLOWED_ELEMENTS =
 export class MoveNodePlugin extends Plugin {
     static name = "movenode";
     static dependencies = ["selection", "position", "local-overlay"];
-    /** @type { (p: MoveNodePlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         layoutGeometryChange: () => {
-            if (p.currentMovableElement) {
-                p.setMovableElement(p.currentMovableElement);
+            if (this.currentMovableElement) {
+                this.setMovableElement(this.currentMovableElement);
             }
-            p.updateHooks();
+            this.updateHooks();
         },
-    });
+    };
 
     setup() {
         this.intersectionObserver = new IntersectionObserver(
@@ -209,7 +208,7 @@ export class MoveNodePlugin extends Plugin {
     setMovableElement(movableElement) {
         this.removeMoveWidget();
         this.currentMovableElement = movableElement;
-        this.resources.setMovableElement?.forEach((cb) => cb(movableElement));
+        this.getResource("setMovableElement").forEach((cb) => cb(movableElement));
 
         const containerRect = this.widgetContainer.getBoundingClientRect();
         const anchorBlockRect = this.currentMovableElement.getBoundingClientRect();
@@ -259,7 +258,7 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     removeMoveWidget() {
-        this.resources.unsetMovableElement?.forEach((cb) => cb());
+        this.getResource("unsetMovableElement").forEach((cb) => cb());
         this.moveWidget?.remove();
         this.moveWidget = undefined;
         this.currentMovableElement = undefined;
