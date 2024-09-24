@@ -6,7 +6,7 @@ import { renderToElement } from "@web/core/utils/render";
 export class VideoPlugin extends Plugin {
     static name = "video";
     static dependencies = ["embedded_components", "dom", "selection", "link"];
-    static resources = (p) => ({
+    resources = {
         powerboxItems: [
             {
                 category: "navigation",
@@ -15,13 +15,13 @@ export class VideoPlugin extends Plugin {
                 description: _t("Insert a Video"),
                 fontawesome: "fa-play",
                 action: () => {
-                    p.openVideoSelectorDialog((media) => {
-                        p.insertVideo(media);
+                    this.openVideoSelectorDialog((media) => {
+                        this.insertVideo(media);
                     });
                 },
             },
         ],
-    });
+    };
 
     /**
      * Inserts a video in the editor

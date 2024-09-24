@@ -28,7 +28,7 @@ export class DomPlugin extends Plugin {
     static name = "dom";
     static dependencies = ["selection", "split"];
     static shared = ["domInsert", "copyAttributes"];
-    static resources = () => ({
+    resources = {
         powerboxItems: {
             name: _t("Separator"),
             description: _t("Insert a horizontal rule separator"),
@@ -38,7 +38,7 @@ export class DomPlugin extends Plugin {
                 dispatch("INSERT_SEPARATOR");
             },
         },
-    });
+    };
     contentEditableToRemove = new Set();
 
     handleCommand(command, payload) {

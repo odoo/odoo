@@ -9,7 +9,7 @@ import {
 export class TableOfContentPlugin extends Plugin {
     static name = "tableOfContent";
     static dependencies = ["dom", "selection", "embedded_components", "link"];
-    static resources = (p) => ({
+    resources = {
         powerboxItems: [
             {
                 category: "navigation",
@@ -17,12 +17,12 @@ export class TableOfContentPlugin extends Plugin {
                 description: _t("Highlight the structure (headings) of this field"),
                 fontawesome: "fa-bookmark",
                 action: () => {
-                    p.insertTableOfContent();
+                    this.insertTableOfContent();
                 },
             },
         ],
         mutation_filtered_classes: ["o_embedded_toc_header_highlight"],
-    });
+    };
 
     setup() {
         this.manager = new TableOfContentManager({

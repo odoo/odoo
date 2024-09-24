@@ -30,9 +30,9 @@ test("plugins should be notified when ranges are removed", async () => {
     let count = 0;
     class TestPlugin extends Plugin {
         static name = "test";
-        static resources = (p) => ({
+        resources = {
             onSelectionChange: () => count++,
-        });
+        };
     }
 
     const { el } = await setupEditor("<p>a[b]</p>", {
@@ -174,18 +174,18 @@ test("restore a selection when you are not in the editable shouldn't move the fo
     class TestPlugin extends Plugin {
         static name = "test";
         static dependencies = ["overlay"];
-        static resources = (p) => ({
+        resources = {
             powerboxItems: [
                 {
                     category: "widget",
                     name: "Test",
                     description: "Test",
-                    action() {
-                        p.showOverlay();
+                    action: () => {
+                        this.showOverlay();
                     },
                 },
             ],
-        });
+        };
 
         setup() {
             this.overlay = this.shared.createOverlay(TestInput);

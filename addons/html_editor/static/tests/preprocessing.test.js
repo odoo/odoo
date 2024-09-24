@@ -29,9 +29,9 @@ const migrations = [
 
 class MigrationPlugin extends Plugin {
     static name = "knowledge_migrations_demo";
-    static resources = (p) => ({
-        preprocessDom: p.preprocessDom.bind(p),
-    });
+    resources = {
+        preprocessDom: this.preprocessDom.bind(this),
+    };
 
     preprocessDom(editable) {
         const elems = editable.querySelectorAll("[data-knowledge-version]");

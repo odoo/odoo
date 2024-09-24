@@ -40,18 +40,17 @@ export class CollaborationOdooPlugin extends Plugin {
     static name = "collaboration_odoo";
     static dependencies = ["history", "collaboration", "selection"];
     static shared = ["getPeerMetadata"];
-    /** @type { (p: CollaborationOdooPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         onSelectionChange: debounce(() => {
-            p.ptp?.notifyAllPeers(
+            this.ptp?.notifyAllPeers(
                 "oe_history_set_selection",
-                p.getCurrentCollaborativeSelection(),
+                this.getCurrentCollaborativeSelection(),
                 {
                     transport: "rtc",
                 }
             );
         }, 50),
-    });
+    };
 
     setup() {
         this.isDocumentStale = false;
@@ -270,7 +269,7 @@ export class CollaborationOdooPlugin extends Plugin {
                 },
             },
             onNotification: async (notification) => {
-                for (const cb of this.resources.handleCollaborationNotification || []) {
+                for (const cb of this.getResource("handleCollaborationNotification")) {
                     cb(notification);
                 }
                 let { fromPeerId, notificationName, notificationPayload } = notification;
@@ -362,7 +361,7 @@ export class CollaborationOdooPlugin extends Plugin {
      * @param {CollaborationSelection} selection
      */
     onExternalMultiselectionUpdate(selection) {
-        this.resources.collaborativeSelectionUpdate?.forEach((cb) => cb(selection));
+        this.getResource("collaborativeSelectionUpdate").forEach((cb) => cb(selection));
     }
 
     async requestPeer(peerId, requestName, requestPayload, params) {
@@ -379,7 +378,7 @@ export class CollaborationOdooPlugin extends Plugin {
             startTime: this.startCollaborationTime,
             peerName: user.name,
         };
-        for (const cb of this.resources.getCollaborationPeerMetadata || []) {
+        for (const cb of this.getResource("getCollaborationPeerMetadata")) {
             Object.assign(metadatas, cb());
         }
         return metadatas;

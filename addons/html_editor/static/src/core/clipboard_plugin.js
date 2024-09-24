@@ -89,8 +89,6 @@ export class ClipboardPlugin extends Plugin {
         this.addDomListener(this.editable, "paste", this.onPaste);
         this.addDomListener(this.editable, "dragstart", this.onDragStart);
         this.addDomListener(this.editable, "drop", this.onDrop);
-        this.resources["handle_paste_text"] = this.resources["handle_paste_text"] || [];
-        this.resources["before_paste"] = this.resources["before_paste"] || [];
     }
 
     onCut(ev) {
@@ -213,7 +211,7 @@ export class ClipboardPlugin extends Plugin {
 
         this.dispatch("HISTORY_STAGE_SELECTION");
 
-        this.resources["before_paste"].forEach((handler) => handler(selection));
+        this.getResource("before_paste").forEach((handler) => handler(selection));
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.shared.getEditableSelection();
 
@@ -286,7 +284,7 @@ export class ClipboardPlugin extends Plugin {
      */
     handlePasteText(selection, clipboardData) {
         const text = clipboardData.getData("text/plain");
-        if (this.resources["handle_paste_text"].some((handler) => handler(selection, text))) {
+        if (this.getResource("handle_paste_text").some((handler) => handler(selection, text))) {
             return;
         } else {
             this.pasteText(selection, text);

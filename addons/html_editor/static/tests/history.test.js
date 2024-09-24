@@ -256,9 +256,9 @@ describe("step", () => {
 describe("prevent mutationFilteredClasses to be set from history", () => {
     class TestMutationFilteredClassesPlugin extends Plugin {
         static name = "testRenderClasses";
-        static resources = () => ({
+        resources = {
             mutation_filtered_classes: ["x"],
-        });
+        };
     }
     const Plugins = [...MAIN_PLUGINS, TestMutationFilteredClassesPlugin];
     test("should prevent mutationFilteredClasses to be added", async () => {
@@ -564,9 +564,9 @@ describe("destroy", () => {
             // Added history dependency so that this plugin is loaded after and unloaded before.
             static dependencies = ["history", "dom"];
             static name = "test";
-            static resources(p) {
-                return { is_mutation_record_savable: p.isMutationRecordSavable.bind(p) };
-            }
+            resources = {
+                is_mutation_record_savable: this.isMutationRecordSavable.bind(this),
+            };
             isMutationRecordSavable(record) {
                 if (
                     record.type === "childList" &&
