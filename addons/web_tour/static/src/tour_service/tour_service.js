@@ -172,8 +172,12 @@ export const tourService = {
             let tour;
             if (tourConfig.fromDB) {
                 tour = await getTourFromDB(tourName);
-            } else {
+            } else if (tourRegistry.contains(tourName)) {
                 tour = getTourFromRegistry(tourName);
+            }
+
+            if (!tour) {
+                return;
             }
 
             tour.steps.forEach((step) => validateStep(step));
@@ -235,7 +239,7 @@ export const tourService = {
                 startTour(paramsTourName, { mode: "manual", fromDB: true });
             }
 
-            if (tourState.getCurrentTour() && tourRegistry.contains(tourState.getCurrentTour())) {
+            if (tourState.getCurrentTour()) {
                 resumeTour();
             } else if (session.current_tour) {
                 startTour(session.current_tour.name, {
