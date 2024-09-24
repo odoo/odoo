@@ -158,6 +158,18 @@ export function onRpcBefore(route, callback) {
     }
 }
 
+/**
+ * Register a callback to be executed just before end of an RPC request being processed.
+ * Useful to do all server processing but delay the response received by web client.
+ *
+ * @param {string} route the route to put callback just before returning response.
+ * @param {Function} callback - The function to execute just before the end of RPC call.
+ */
+export function onRpcAfter(route, callback) {
+    const handler = registry.category("mock_rpc").get(route);
+    patchWithCleanup(handler, { after: callback });
+}
+
 let archs = {};
 export function registerArchs(newArchs) {
     archs = newArchs;
