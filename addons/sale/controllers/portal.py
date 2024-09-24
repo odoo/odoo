@@ -40,20 +40,10 @@ class CustomerPortal(payment_portal.PaymentPortal):
             ('state', '=', 'sale'),
         ]
 
-    def _get_sale_searchbar_sortings(self):
-        return {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
-
     def _prepare_sale_portal_rendering_values(
-        self, page=1, date_begin=None, date_end=None, sortby=None, quotation_page=False, **kwargs
+        self, page=1, date_begin=None, date_end=None, quotation_page=False, **kwargs
     ):
         SaleOrder = request.env['sale.order']
-
-        if not sortby:
-            sortby = 'date'
 
         partner = request.env.user.partner_id
         values = self._prepare_portal_layout_values()
@@ -65,9 +55,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             url = "/my/orders"
             domain = self._prepare_orders_domain(partner)
 
-        searchbar_sortings = self._get_sale_searchbar_sortings()
-
-        sort_order = searchbar_sortings[sortby]['order']
+        sort_order = 'date_order desc'
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
@@ -77,7 +65,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             total=SaleOrder.search_count(domain),
             page=page,
             step=self._items_per_page,
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args={'date_begin': date_begin, 'date_end': date_end},
         )
         orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset'])
 
@@ -88,8 +76,6 @@ class CustomerPortal(payment_portal.PaymentPortal):
             'page_name': 'quote' if quotation_page else 'order',
             'pager': pager_values,
             'default_url': url,
-            'searchbar_sortings': searchbar_sortings,
-            'sortby': sortby,
         })
 
         return values
