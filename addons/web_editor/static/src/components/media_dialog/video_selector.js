@@ -219,7 +219,11 @@ export class VideoSelector extends Component {
             const div = document.createElement('div');
             div.dataset.oeExpression = video.src;
             if (video.platform == "tiktok") {
-                div.style = "width: 100%; max-height: 800px; aspect-ratio: 9 / 16;"
+                div.classList.remove("media_iframe_video_horizontal");
+                div.classList.add("media_iframe_video_vertical");
+            } else {
+                div.classList.remove("media_iframe_video_vertical");
+                div.classList.add("media_iframe_video_horizontal");
             }
             div.innerHTML = `
                 <div class="css_editable_mode_display"></div>
