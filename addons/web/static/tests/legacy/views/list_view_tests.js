@@ -11480,6 +11480,163 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("resequence with NULL values", async function (assert) {
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        if (params.name === "reload") {
+                            params.onClose();
+                        } else {
+                            throw makeServerError();
+                        }
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
+
+        serverData.models = {
+            // we want the data to be minimal to have a minimal test
+            foo: {
+                fields: { int_field: { string: "int_field", type: "integer", sortable: true } },
+                records: [
+                    { id: 1, int_field: 1 },
+                    { id: 2 },
+                    { id: 3, int_field: 3 },
+                    { id: 4, int_field: 2 },
+                ],
+            },
+        };
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree default_order="int_field">
+                    <field name="int_field" widget="handle"/>
+                    <field name="id"/>
+                    <button name="reload" class="reload" string="Confirm" type="object"/>
+                </tree>`,
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_search_read") {
+                    const res = await performRPC(route, args);
+                    const serverRecords = Object.fromEntries(
+                        Object.values(serverData.models.foo.records).map((e) => [e.id, e])
+                    );
+                    // when sorted, NULL values are last
+                    const getServerValue = (record) =>
+                        serverRecords[record.id].int_field === false
+                            ? Number.MAX_SAFE_INTEGER
+                            : serverRecords[record.id].int_field;
+
+                    res.records.sort((a, b) => getServerValue(a) - getServerValue(b));
+                    return res;
+                }
+            },
+        });
+        assert.deepEqual(
+            Array.from(document.querySelectorAll(".o_field_cell[name=id]")).map(
+                (e) => e.textContent
+            ),
+            ["1", "4", "3", "2"],
+            "2 should be the last one because NULL is sorted last in python"
+        );
+
+        // drag and drop the fourth line in third position
+        await dragAndDrop("tbody tr:nth-child(4) .o_handle_cell", "tbody tr:nth-child(3)");
+        assert.deepEqual(
+            Array.from(document.querySelectorAll(".o_field_cell[name=id]")).map(
+                (e) => e.textContent
+            ),
+            ["1", "4", "2", "3"]
+        );
+
+        await click(target.querySelector("button.reload"));
+        assert.deepEqual(
+            Array.from(document.querySelectorAll(".o_field_cell[name=id]")).map(
+                (e) => e.textContent
+            ),
+            ["1", "4", "2", "3"],
+            "The order should be kept"
+        );
+    });
+
+    QUnit.test("resequence with only NULL values", async function (assert) {
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        if (params.name === "reload") {
+                            params.onClose();
+                        } else {
+                            throw makeServerError();
+                        }
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
+
+        serverData.models = {
+            // we want the data to be minimal to have a minimal test
+            foo: {
+                fields: { int_field: { string: "int_field", type: "integer", sortable: true } },
+                records: [{ id: 1 }, { id: 2 }, { id: 3 }],
+            },
+        };
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree default_order="int_field">
+                    <field name="int_field" widget="handle"/>
+                    <field name="id"/>
+                    <button name="reload" class="reload" string="Confirm" type="object"/>
+                </tree>`,
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_search_read") {
+                    const res = await performRPC(route, args);
+                    const serverRecords = Object.fromEntries(
+                        Object.values(serverData.models.foo.records).map((e) => [e.id, e])
+                    );
+                    // when sorted, NULL values are last
+                    const getServerValue = (record) =>
+                        serverRecords[record.id].int_field === false
+                            ? Number.MAX_SAFE_INTEGER
+                            : serverRecords[record.id].int_field;
+
+                    res.records.sort((a, b) => getServerValue(a) - getServerValue(b));
+                    return res;
+                }
+            },
+        });
+        assert.deepEqual(
+            Array.from(document.querySelectorAll(".o_field_cell[name=id]")).map(
+                (e) => e.textContent
+            ),
+            ["1", "2", "3"]
+        );
+
+        // drag and drop the third line in second position
+        await dragAndDrop("tbody tr:nth-child(3) .o_handle_cell", "tbody tr:nth-child(2)");
+        assert.deepEqual(
+            Array.from(document.querySelectorAll(".o_field_cell[name=id]")).map(
+                (e) => e.textContent
+            ),
+            ["1", "3", "2"]
+        );
+
+        await click(target.querySelector("button.reload"));
+        assert.deepEqual(
+            Array.from(document.querySelectorAll(".o_field_cell[name=id]")).map(
+                (e) => e.textContent
+            ),
+            ["1", "3", "2"]
+        );
+    });
+
     QUnit.test("editable list with handle widget", async function (assert) {
         assert.expect(12);
 
