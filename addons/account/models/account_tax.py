@@ -434,10 +434,19 @@ class AccountTax(models.Model):
         return ''.join(list_name)
 
     @api.model
-    def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        if operator in ("ilike", "like"):
-            name = AccountTax._parse_name_search(name)
-        return super()._name_search(name, domain, operator, limit, order)
+    def _search(self, domain, offset=0, limit=None, order=None):
+        """
+        Intercept the search on `name` to allow searching more freely on taxes
+        when using `like` or `ilike`.
+        """
+        def preprocess_name_search(leaf):
+            match leaf:
+                case ('name', 'ilike' | 'like' as operator, str() as value):
+                    return ('name', operator, AccountTax._parse_name_search(value))
+                case _:
+                    return leaf
+        domain = [preprocess_name_search(leaf) for leaf in domain]
+        return super()._search(domain, offset, limit, order)
 
     def _search_name(self, operator, value):
         if operator not in ("ilike", "like") or not isinstance(value, str):
