@@ -189,6 +189,8 @@ class ReturnPicking(models.TransientModel):
 
         proc_list = []
         for line in self.product_return_moves:
+            if not line.move_id:
+                continue
             proc_values = {
                 'group_id': self.picking_id.group_id,
                 'sale_line_id': line.move_id.sale_line_id.id,
