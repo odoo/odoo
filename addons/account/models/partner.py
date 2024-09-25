@@ -254,11 +254,17 @@ class AccountFiscalPosition(models.Model):
 
         # First search only matching VAT positions
         vat_required = bool(partner.vat)
-        fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, vat_required)
+        vat_not_matching_country_for_domestic_eu = (
+            intra_eu and vat_exclusion and delivery.country_id != company.country_id
+        )
+        fpos_country_id = company.country_id.id if vat_not_matching_country_for_domestic_eu else delivery.country_id.id
+        fpos_state_id = False if vat_not_matching_country_for_domestic_eu else delivery.state_id.id
+        fpos_zip = False if vat_not_matching_country_for_domestic_eu else delivery.zip
+        fp = self._get_fpos_by_region(fpos_country_id, fpos_state_id, fpos_zip, vat_required)
 
         # Then if VAT required found no match, try positions that do not require it
         if not fp and vat_required:
-            fp = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, False)
+            fp = self._get_fpos_by_region(fpos_country_id, fpos_state_id, fpos_zip, False)
 
         return fp or self.env['account.fiscal.position']
 
