@@ -80,12 +80,21 @@ def _mock_make_request(func, self, *args, **kwargs):
         'send_document': _mock_send_document,
     }[endpoint](self, args, kwargs)
 
+
 def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
     self.ensure_one()
     old_value = self.peppol_verification_state
-    self.peppol_verification_state = 'valid'
-    self.invoice_sending_method = 'peppol'
-    self._log_verification_state_update(self.env.company, old_value, 'valid')
+    endpoint, eas, edi_format = self.peppol_endpoint, self.peppol_eas, self.invoice_edi_format
+    if endpoint and eas and edi_format:
+        self.peppol_verification_state = 'valid'
+        self.invoice_sending_method = 'peppol'
+        self._log_verification_state_update(self.env.company, old_value, 'valid')
+
+
+def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
+    (endpoint, eas, format) = args
+    return 'valid' if endpoint and eas and format else False
+
 
 def _mock_user_creation(func, self, *args, **kwargs):
     func(self, *args, **kwargs)
@@ -124,6 +133,7 @@ def _mock_check_verification_code(func, self, *args, **kwargs):
         *_get_notification_message(self.account_peppol_proxy_state)
     )
 
+
 def _mock_deregister_participant(func, self, *args, **kwargs):
     # Set documents sent in demo to a state where they can be re-sent
     demo_moves = self.env['account.move'].search([
@@ -154,8 +164,10 @@ def _mock_deregister_participant(func, self, *args, **kwargs):
     if 'account_peppol_edi_mode' in self._fields:
         self.account_peppol_edi_mode = mode_constraint
 
+
 def _mock_update_user_data(func, self, *args, **kwargs):
     pass
+
 
 def _mock_migrate_participant(func, self, *args, **kwargs):
     self.account_peppol_migration_key = 'I9cz9yw*ruDM%4VSj94s'
@@ -168,6 +180,7 @@ def _mock_check_company_on_peppol(func, self, *args, **kwargs):
 _demo_behaviour = {
     '_make_request': _mock_make_request,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
+    '_get_peppol_verification_state': _mock_get_peppol_verification_state,
     'button_peppol_sender_registration': _mock_user_creation,
     'button_deregister_peppol_participant': _mock_deregister_participant,
     'button_migrate_peppol_registration': _mock_migrate_participant,

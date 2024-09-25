@@ -19,6 +19,7 @@
         'security/ir.model.access.csv',
         'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',
+        'views/account_portal_templates.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
         'wizard/peppol_registration_views.xml',
@@ -32,6 +33,9 @@
     'assets': {
         'web.assets_backend': [
             'account_peppol/static/src/components/**/*',
+        ],
+        'web.assets_frontend': [
+            'account_peppol/static/src/js/*',
         ],
     }
 }
