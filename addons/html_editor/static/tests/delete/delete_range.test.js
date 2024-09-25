@@ -250,6 +250,14 @@ describe("deleteRange method", () => {
             expect(getContent(el)).toBe(contentAfter);
         });
     });
+    describe("Fill shrunk blocks", () => {
+        test("should not fill a HR with BR", async () => {
+            const { editor, el } = await setupEditor("<hr><p>abc[</p><p>]def</p>");
+            deleteRange(editor);
+            const hr = el.firstElementChild;
+            expect(hr.childNodes.length).toBe(0);
+        });
+    });
 });
 
 describe("DELETE_SELECTION command", () => {
