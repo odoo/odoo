@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import html
 from base64 import b64encode
+
 from odoo.fields import Command
 from odoo.tests import tagged
-from odoo.tools import file_open
+from odoo.tools import file_open, mute_logger
+
 from .test_common import TestHttpBase
 
 CT_HTML = 'text/html; charset=utf-8'
@@ -16,7 +18,7 @@ CSRF_USER_HEADERS = {
 
 
 @tagged('-at_install', 'post_install')
-class TestHttpWebJson_18_0(TestHttpBase):
+class TestHttpWebJson_1(TestHttpBase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -27,7 +29,7 @@ class TestHttpWebJson_18_0(TestHttpBase):
             cls.gizeh_b64 = b64encode(cls.gizeh_data).decode()
 
     def url_open_json(self, url, *, expected_code=0):
-        url = f"/json/18.0{url}"
+        url = f"/json/1{url}"
         res = self.url_open(url, headers=CSRF_USER_HEADERS)
         if expected_code is None:
             pass
@@ -180,3 +182,20 @@ class TestHttpWebJson_18_0(TestHttpBase):
             'length': len(stargates),
             'records': stargates[1:2]
         })
+
+    def test_webjson_readonly(self):
+        self.authenticate('demo', 'demo')
+        # test that we can write
+        self.env.ref('test_http.earth').copy()
+        # create the action that executes the same write
+        self.env['ir.actions.server'].create({
+            'name': 'test write',
+            'model_id': self.env['ir.model']._get('test_http.stargate').id,
+            'path': 'test_webjson_readonly',
+            'state': 'code',
+            'code': "action = {}\nmodel.env.ref('test_http.earth').copy()",
+        })
+        # test that is does NOT work
+        with mute_logger("odoo.http", "odoo.sql_db"):
+            res = self.url_open_json('/test_webjson_readonly', expected_code=403)
+            self.assertIn("Read-only action allowed", res.text)
