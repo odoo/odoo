@@ -21,16 +21,28 @@ _logger = logging.getLogger(__name__)
 class WebJsonController(http.Controller):
 
     # for /json, the route should work in a browser, therefore type=http
-    @http.route('/json/<path:subpath>', auth='bearer', type='http', readonly=True)
+    @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
     def web_json(self, subpath, **kwargs):
         return request.redirect(
-            f'/json/18.0/{subpath}?{urlencode(kwargs)}',
+            f'/json/1/{subpath}?{urlencode(kwargs)}',
             HTTPStatus.TEMPORARY_REDIRECT
         )
 
-    @http.route('/json/18.0/<path:subpath>', auth='bearer', type='http', readonly=True)
-    def web_json_18_0(self, subpath, view_type=None, limit=0, offset=0):
-        if not request.env.user.has_group('base.group_allow_export'):
+    @http.route('/json/1/<path:subpath>', auth='bearer', type='http', readonly=True)
+    def web_json_1(self, subpath, view_type=None, limit=0, offset=0):
+        """Simple JSON representation of the views.
+
+        Behaviour:
+        - we have a `record_id` (form view) and we `web_read` the spec
+        - otherwise `web_search_read`
+
+        :param subpath: Path to the (window) action to execute
+        :param view_type: View type from which we generate the parameters
+        :param offset: Offset for search
+        :param limit: Limit for search
+        """
+        env = request.env
+        if not env.user.has_group('base.group_allow_export'):
             raise AccessError(_("You need export permissions to use the /json route"))
 
         try:
@@ -38,27 +50,34 @@ class WebJsonController(http.Controller):
             offset = int(offset)
         except ValueError as exc:
             raise BadRequest(exc.args[0])
-        context = dict(request.env.context)
+        context = dict(env.context)
 
         def get_action_triples_():
             try:
-                yield from get_action_triples(request.env, subpath, start_pos=1)
+                yield from get_action_triples(env, subpath, start_pos=1)
             except ValueError as exc:
                 raise BadRequest(exc.args[0])
 
-        # Hack for OXP. We are not sure yet if we wanna run all server
-        # actions, but we are sure we want to run those ones. TODO: find
-        # a better way to do it.
-        allowed_server_action_paths = {'crm'}
-
         for active_id, action, record_id in get_action_triples_():
-            if action.sudo().path in allowed_server_action_paths:
+            action_sudo = action.sudo()
+            if action_sudo.usage == 'ir_actions_server' and action_sudo.path:
                 try:
-                    action = request.env['ir.actions.act_window'].new(
-                        action.sudo(False).run())
+                    with action.pool.cursor(readonly=True) as ro_cr:
+                        if not ro_cr.readonly:
+                            ro_cr.connection.set_session(readonly=True)
+                        assert ro_cr.readonly
+                        action_data = action.with_env(action.env(cr=ro_cr)).run()
                 except psycopg2.errors.ReadOnlySqlTransaction as e:
                     # never retry on RO connection, just leave
-                    raise AccessError() from e
+                    raise AccessError(env._("Read-only action allowed")) from e
+                except ValueError as e:
+                    # safe_eval wraps the error into a ValueError (as str)
+                    if "ReadOnlySqlTransaction" in e.args[0]:
+                        raise AccessError(env._("Read-only action allowed")) from e
+                    raise
+                # transform data into a new record
+                action = env[action_data['type']]
+                action = action.new(action_data, origin=action.browse(action_data.pop('id')))
             if action._name != 'ir.actions.act_window':
                 e = f"{action._name} are not supported server-side"
                 raise BadRequest(e)
@@ -74,7 +93,7 @@ class WebJsonController(http.Controller):
             else:
                 view_type = action.view_mode.split(',')[0]
 
-        model = request.env[action.res_model].with_context(context)
+        model = env[action.res_model].with_context(context)
         view = model.get_view(view_type=view_type)
         spec = model._get_fields_spec(view)
 
