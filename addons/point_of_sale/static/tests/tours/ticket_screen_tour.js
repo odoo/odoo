@@ -239,3 +239,36 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
             Order.hasLine("Sugar", "-0.02", "-0.06"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("LotTour", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLotNumber("1"),
+            ProductScreen.selectedOrderlineHas("Product A", "1.00"),
+            inLeftSide(
+                [
+                    ProductScreen.clickLotIcon(),
+                    ProductScreen.enterLotNumber("2"),
+                    Order.hasLine({
+                        productName: "Product A",
+                        quantity: 1.0,
+                    }),
+                    ProductScreen.clickLotIcon(),
+                    ProductScreen.enterLastLotNumber("1"),
+                    Order.hasLine({
+                        productName: "Product A",
+                        quantity: 2.0,
+                    }),
+                ].flat()
+            ),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.enterLastLotNumber("3"),
+            ProductScreen.selectedOrderlineHas("Product A", "3.00"),
+            inLeftSide({
+                trigger: ".info-list:contains('SN 3')",
+            }),
+        ].flat(),
+});
