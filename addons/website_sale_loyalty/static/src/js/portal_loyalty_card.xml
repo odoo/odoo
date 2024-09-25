@@ -16,7 +16,7 @@
                     <span class="text-primary" t-out="reward.points"/>
                 </div>
             </div>
-            <div class="d-flex justify-content-center">
+            <div t-if="props.rewards.length > 0" class="d-flex justify-content-center">
                 <a
                     t-if="props.program.program_type == 'loyalty'"
                     type="button"
