@@ -14,6 +14,7 @@ import {
     isEventTarget,
     isNode,
     isNodeFocusable,
+    isNodeVisible,
     parseDimensions,
     parsePosition,
     queryAll,
@@ -39,6 +40,15 @@ import { animationFrame } from "./time";
  * @typedef {import("./dom").Dimensions} Dimensions
  *
  * @typedef {{}} EventOptions generic event options
+ *
+ * @typedef {{
+ *  clientX: number;
+ *  clientY: number;
+ *  pageX: number;
+ *  pageY: number;
+ *  screenX: number;
+ *  screenY: number;
+ * }} EventPosition
  *
  * @typedef {keyof HTMLElementEventMap | keyof WindowEventMap} EventType
  *
@@ -168,6 +178,19 @@ const dispatchRelatedEvents = async (events, eventType, eventInit) => {
 };
 
 /**
+ * All touch events target the same element (the initial "touchstart" target).
+ *
+ * @param {EventType} eventType
+ * @param {TouchEventInit} eventInit
+ */
+const dispatchTouchEvent = async (eventType, eventInit) => {
+    if (!hasTouch() || !runTime.pointerDownTarget) {
+        return;
+    }
+    return dispatch(runTime.pointerDownTarget, eventType, eventInit);
+};
+
+/**
  * @template T
  * @param {MaybeIterable<T>} value
  * @returns {T[]}
@@ -193,17 +216,20 @@ const getDefaultRunTimeValue = () => ({
     lastDragOverCancelled: false,
 
     // Pointer
-    currentClickCount: 0,
-    currentKey: null,
+    clickCount: 0,
+    key: null,
     pointerDownTarget: null,
     pointerDownTimeout: 0,
     pointerTarget: null,
+    /** @type {EventPosition | {}} */
     position: {},
     previousPointerDownTarget: null,
     previousPointerTarget: null,
+    /** @type {EventPosition | {}} */
+    touchStartPosition: {},
 
     // File
-    currentFileInput: null,
+    fileInput: null,
 });
 
 const getDefaultSpecialKeysValue = () => ({
@@ -468,12 +494,12 @@ const hasTouch = () =>
     globalThis.ontouchstart !== undefined || globalThis.matchMedia("(pointer:coarse)").matches;
 
 /**
- * @param {EventTarget} target
+ * @param {EventTarget | EventPosition} target
  * @param {PointerOptions} [options]
  */
 const isDifferentPosition = (target, options) => {
     const previous = runTime.position;
-    const next = getPosition(target, options);
+    const next = isNode(target) ? getPosition(target, options) : target;
     for (const key in next) {
         if (previous[key] !== next[key]) {
             return true;
@@ -511,9 +537,9 @@ const parseKeyStrokes = (keyStrokes, options) =>
  */
 const registerFileInput = ({ target }) => {
     if (getTag(target) === "input" && target.type === "file") {
-        runTime.currentFileInput = target;
+        runTime.fileInput = target;
     } else {
-        runTime.currentFileInput = null;
+        runTime.fileInput = null;
     }
 };
 
@@ -696,8 +722,9 @@ const setupEvents = (type) => {
 };
 
 /**
- * @param {number} x
- * @param {number} y
+ * @param {number} clientX
+ * @param {number} clientY
+ * @param {Partial<EventPosition>} [position]
  */
 const toEventPosition = (clientX, clientY, position) => {
     clientX ||= 0;
@@ -776,11 +803,8 @@ const triggerFocus = async (target) => {
     if (previous === target) {
         return;
     }
-    /** @type {Promise<any> | null} */
-    let eventPromise = null;
     if (previous !== target.ownerDocument.body) {
-        if ($hasFocus()) {
-            eventPromise = catchNextEvent(previous, "blur");
+        if ($hasFocus() && isNodeVisible(previous)) {
             catchNextEvent(previous, "focusout");
         }
         // If document is focused, this will trigger a trusted "blur" event
@@ -791,18 +815,12 @@ const triggerFocus = async (target) => {
             await dispatch(previous, "blur", eventInit);
             await dispatch(previous, "focusout", eventInit);
         }
-
-        if (eventPromise) {
-            await eventPromise;
-            eventPromise = null;
-        }
     }
     if (isNodeFocusable(target)) {
         const previousSelection = getStringSelection(target);
 
         // If document is focused, this will trigger a trusted "focus" event
-        if ($hasFocus()) {
-            eventPromise = catchNextEvent(target, "focus");
+        if ($hasFocus() && isNodeVisible(target)) {
             catchNextEvent(target, "focusin");
         }
         target.focus();
@@ -815,11 +833,6 @@ const triggerFocus = async (target) => {
 
         if (previousSelection && previousSelection === getStringSelection(target)) {
             target.selectionStart = target.selectionEnd = target.value.length;
-        }
-
-        if (eventPromise) {
-            await eventPromise;
-            eventPromise = null;
         }
     }
 };
@@ -901,7 +914,7 @@ const _fill = async (target, value, options) => {
 
     if (options?.instantly) {
         // Simulates filling the clipboard with the value (can be from external source)
-        globalThis.navigator.clipboard.writeText(value);
+        globalThis.navigator.clipboard.writeText(value).catch();
         await _press(target, { ctrlKey: true, key: "v" });
     } else {
         if (options?.composition) {
@@ -933,7 +946,7 @@ const _hover = async (target, options) => {
 
     await setPointerTarget(target, options);
 
-    const { previousPointerTarget: previous, pointerTarget: current, pointerDownTarget } = runTime;
+    const { previousPointerTarget: previous, pointerTarget: current } = runTime;
     if (isDifferentTarget && previous && (!current || !previous.contains(current))) {
         // Leaves previous target
         const leaveEventInit = {
@@ -949,9 +962,10 @@ const _hover = async (target, options) => {
             // Regular case: pointer events are triggered
             await dispatchEventSequence(
                 previous,
-                ["pointermove", hasTouch() ? pointerDownTarget && "touchmove" : "mousemove"],
+                ["pointermove", !hasTouch() && "mousemove"],
                 leaveEventInit
             );
+            await dispatchTouchEvent("touchmove", leaveEventInit);
             await dispatchEventSequence(
                 previous,
                 ["pointerout", !hasTouch() && "mouseout"],
@@ -998,9 +1012,10 @@ const _hover = async (target, options) => {
             }
             await dispatchEventSequence(
                 target,
-                ["pointermove", hasTouch() ? pointerDownTarget && "touchmove" : "mousemove"],
+                ["pointermove", !hasTouch() && "mousemove"],
                 enterEventInit
             );
+            await dispatchTouchEvent("touchmove", enterEventInit);
         }
     }
 };
@@ -1023,10 +1038,8 @@ const _keyDown = async (target, eventInit) => {
     registerSpecialKey(eventInit, true);
 
     const repeat =
-        typeof eventInit.repeat === "boolean"
-            ? eventInit.repeat
-            : runTime.currentKey === eventInit.key;
-    runTime.currentKey = eventInit.key;
+        typeof eventInit.repeat === "boolean" ? eventInit.repeat : runTime.key === eventInit.key;
+    runTime.key = eventInit.key;
     const keyDownEvent = await dispatch(target, "keydown", { ...eventInit, repeat });
 
     if (isPrevented(keyDownEvent)) {
@@ -1168,7 +1181,7 @@ const _keyDown = async (target, eventInit) => {
             if (ctrlKey) {
                 // Get selection from window
                 const text = globalThis.getSelection().toString();
-                globalThis.navigator.clipboard.writeText(text);
+                globalThis.navigator.clipboard.writeText(text).catch();
 
                 await dispatch(target, "copy", {
                     clipboardData: eventInit.dataTransfer || new DataTransfer(),
@@ -1225,8 +1238,10 @@ const _keyDown = async (target, eventInit) => {
          */
         case "v": {
             if (ctrlKey && isEditable(target)) {
-                // Set target value (synchonously)
-                nextValue = await globalThis.navigator.clipboard.readText();
+                // Set target value (if possible)
+                try {
+                    nextValue = await globalThis.navigator.clipboard.readText();
+                } catch (err) {}
                 inputType = "insertFromPaste";
 
                 await dispatch(target, "paste", {
@@ -1244,7 +1259,7 @@ const _keyDown = async (target, eventInit) => {
             if (ctrlKey && isEditable(target)) {
                 // Get selection from window
                 const text = globalThis.getSelection().toString();
-                globalThis.navigator.clipboard.writeText(text);
+                globalThis.navigator.clipboard.writeText(text).catch();
 
                 nextValue = deleteSelection(target);
                 inputType = "deleteByCut";
@@ -1279,7 +1294,7 @@ const _keyDown = async (target, eventInit) => {
 const _keyUp = async (target, eventInit) => {
     await dispatch(target, "keyup", eventInit);
 
-    runTime.currentKey = null;
+    runTime.key = null;
     registerSpecialKey(eventInit, false);
 
     if (eventInit.key === " " && getTag(target) === "input" && target.type === "checkbox") {
@@ -1306,14 +1321,18 @@ const _pointerDown = async (target, options) => {
     };
 
     if (pointerDownTarget !== runTime.previousPointerDownTarget) {
-        runTime.currentClickCount = 0;
+        runTime.clickCount = 0;
     }
 
     const prevented = await dispatchEventSequence(
         pointerDownTarget,
-        ["pointerdown", hasTouch() ? "touchstart" : !pointerDownTarget.disabled && "mousedown"],
+        ["pointerdown", !hasTouch() && !pointerDownTarget.disabled && "mousedown"],
         eventInit
     );
+
+    runTime.touchStartPosition = { ...runTime.position };
+    await dispatchTouchEvent("touchstart", eventInit);
+
     if (prevented) {
         return;
     }
@@ -1343,7 +1362,7 @@ const _pointerUp = async (target, options) => {
     const eventInit = {
         ...runTime.position,
         button: options?.button || 0,
-        detail: runTime.currentClickCount,
+        detail: runTime.clickCount,
     };
 
     if (runTime.isDragging) {
@@ -1364,11 +1383,22 @@ const _pointerUp = async (target, options) => {
 
     await dispatchEventSequence(
         target,
-        ["pointerup", hasTouch() ? pointerDownTarget && "touchend" : !target.disabled && "mouseup"],
+        ["pointerup", !hasTouch() && !target.disabled && "mouseup"],
         eventInit
     );
 
-    const clickEventInit = { ...eventInit, detail: runTime.currentClickCount + 1 };
+    await dispatchTouchEvent("touchend", eventInit);
+
+    const touchStartPosition = runTime.touchStartPosition;
+    runTime.touchStartPosition = {};
+
+    if (hasTouch() && isDifferentPosition(touchStartPosition)) {
+        // No further event is trigger: there was a swiping motion since the "touchstart"
+        // event.
+        return;
+    }
+
+    const clickEventInit = { ...eventInit, detail: runTime.clickCount + 1 };
     let actualTarget;
     if (hasTouch()) {
         actualTarget = pointerDownTarget === target && target;
@@ -1377,8 +1407,8 @@ const _pointerUp = async (target, options) => {
     }
     if (actualTarget) {
         await triggerClick(actualTarget, clickEventInit);
-        runTime.currentClickCount++;
-        if (!hasTouch() && runTime.currentClickCount % 2 === 0) {
+        runTime.clickCount++;
+        if (!hasTouch() && runTime.clickCount % 2 === 0) {
             await dispatch(actualTarget, "dblclick", clickEventInit);
         }
     }
@@ -1390,7 +1420,7 @@ const _pointerUp = async (target, options) => {
     runTime.pointerDownTimeout = globalThis.setTimeout(() => {
         // Use `globalThis.setTimeout` to potentially make use of the mock timeouts
         // since the events run in the same temporal context as the tests
-        runTime.currentClickCount = 0;
+        runTime.clickCount = 0;
         runTime.pointerDownTimeout = 0;
     }, DOUBLE_CLICK_DELAY);
 };
@@ -1597,9 +1627,7 @@ const mapCancelableTouchEvent = (eventInit) => {
         view: getWindow(),
         ...mapBubblingCancelableEvent(eventInit),
         changedTouches: eventInit.changedTouches || touches,
-        // "touch" events all trigger on the same target as "touchstart"
-        // (i.e. `pointerDownTarget`)
-        target: runTime.pointerDownTarget || eventInit.target,
+        target: eventInit.target,
         targetTouches: eventInit.targetTouches || touches,
         touches: eventInit.touches || (eventInit.type === "touchend" ? [] : touches),
     };
@@ -1810,7 +1838,7 @@ export async function dispatch(target, type, eventInit) {
     const params = processParams({ ...eventInit, target, type });
     const event = new Constructor(type, params);
 
-    await Promise.resolve(params.target.dispatchEvent(event));
+    await Promise.resolve(target.dispatchEvent(event));
 
     getCurrentEvents().push(event);
 
@@ -1839,7 +1867,7 @@ export async function dispatch(target, type, eventInit) {
  * @example
  *  drag(".card:first").moveTo(".card:last").drop(); // Same as above
  * @example
- *  const { cancel, moveTo } = drag(".card:first"); // Starts the drag sequence
+ *  const { cancel, moveTo } = await drag(".card:first"); // Starts the drag sequence
  *  moveTo(".card:eq(3)"); // Moves the dragged card to the 4th card
  *  cancel(); // Cancels the drag sequence
  */
@@ -2328,7 +2356,7 @@ export async function select(value, options) {
  * @returns {Promise<Event[]>}
  */
 export async function setInputFiles(files, options) {
-    if (!runTime.currentFileInput) {
+    if (!runTime.fileInput) {
         throw new HootDomError(
             `cannot call \`setInputFiles()\`: no file input has been interacted with`
         );
@@ -2336,9 +2364,9 @@ export async function setInputFiles(files, options) {
 
     const finalizeEvents = setupEvents("setInputFiles");
 
-    await _fill(runTime.currentFileInput, files);
+    await _fill(runTime.fileInput, files);
 
-    runTime.currentFileInput = null;
+    runTime.fileInput = null;
 
     return finalizeEvents(options);
 }
