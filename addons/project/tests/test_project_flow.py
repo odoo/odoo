@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from .test_project_base import TestProjectCommon
 from odoo import Command
 from odoo.tools import mute_logger
@@ -123,6 +125,13 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         self.assertEqual(task.name, 'Super Frog', 'project_task: name should be the email subject')
         self.assertEqual(task.project_id, self.project_goats, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, 1, "project_task: should have a stage with sequence=1")
+        self.assertEqual(
+            task.description,
+            Markup(
+                '<pre>Hello,\n\nThis email should create a new entry in your module. Please check that it\neffectively works.\n\nThanks,\n<span data-o-mail-quote="1">\n--\nRaoul Boitempoils\nIntegrator at Agrolait</span></pre>\n'
+            ),
+            'The task description should be the email content.',
+        )
 
     def test_subtask_process(self):
         """
