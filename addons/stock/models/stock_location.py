@@ -401,7 +401,7 @@ class Location(models.Model):
 
     def should_bypass_reservation(self):
         self.ensure_one()
-        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
+        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
 
     def _check_access_putaway(self):
         return self
