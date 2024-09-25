@@ -28,7 +28,7 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
         self.env.user.company_id, self.env.user.company_ids = self.sub_child_company, self.sub_child_company
 
         another_eu_country_code = (self.env.ref('base.europe').country_ids - self.sub_child_company.country_id)[0].code
-        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
+        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%"{another_eu_country_code}"%')], limit=1)
         self.assertTrue(tax_oss)
         self.assertEqual(tax_oss.company_id, self.root_company)
 
@@ -39,7 +39,7 @@ class TestOSSBelgium(AccountTestInvoicingCommon):
         """
         # get an eu country which isn't the current one:
         another_eu_country_code = (self.env.ref('base.europe').country_ids - self.company_data['company'].country_id)[0].code
-        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
+        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%"{another_eu_country_code}"%')], limit=1)
 
         for doc_type, report_expression_xml_id in (
                 ("invoice", "l10n_be.tax_report_line_47_tag"),
@@ -73,7 +73,7 @@ class TestOSSSpain(AccountTestInvoicingCommon):
         """
         # get an eu country which isn't the current one:
         another_eu_country_code = (self.env.ref('base.europe').country_ids - self.company_data['company'].country_id)[0].code
-        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
+        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%"{another_eu_country_code}"%')], limit=1)
 
         for doc_type, tag_xml_id in (
                 ("invoice", "l10n_es.mod_303_casilla_124_balance"),
@@ -101,7 +101,7 @@ class TestOSSUSA(AccountTestInvoicingCommon):
     def test_no_oss_tax(self):
         # get an eu country which isn't the current one:
         another_eu_country_code = (self.env.ref('base.europe').country_ids - self.company_data['company'].country_id)[0].code
-        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
+        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%"{another_eu_country_code}"%')], limit=1)
 
         self.assertFalse(len(tax_oss), "OSS tax shouldn't be instanced on a US company")
 

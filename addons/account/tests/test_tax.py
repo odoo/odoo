@@ -60,17 +60,17 @@ class TestTax(TestTaxCommon):
         )
         list_ten_fixed_tax |= ten_fixed_tax_tix
 
-        self.assertListEqual(
-            [x[0] for x in self.env["account.tax"].name_search("tix")],
-            list_ten_fixed_tax.ids,
+        self.assertEqual(
+            self.env["account.tax"].search([("name", "ilike", "tix")]),
+            list_ten_fixed_tax,
         )
-        self.assertListEqual(
-            [x[0] for x in self.env["account.tax"].name_search("\"tix\"")],
-            ten_fixed_tax_tix.ids,
+        self.assertEqual(
+            self.env["account.tax"].search([("name", "ilike", "\"tix\"")]),
+            ten_fixed_tax_tix,
         )
-        self.assertListEqual(
-            [x[0] for x in self.env["account.tax"].name_search("Ten \"tix\"")],
-            ten_fixed_tax_tix.ids,
+        self.assertEqual(
+            self.env["account.tax"].search([("name", "ilike", "Ten \"tix\"")]),
+            ten_fixed_tax_tix,
         )
 
     def test_repartition_line_in(self):
