@@ -494,7 +494,7 @@ class TestMultiCompany(TransactionCase):
         move_line_1.quantity = 0.1
         move_from_supplier.picked = True
         move_from_supplier._action_done()
-        lot_1 = move_line_1.lot_id
+        lot = move_line_1.lot_id
 
         move_to_transit = self.env['stock.move'].create({
             'company_id': self.company_a.id,
@@ -520,29 +520,21 @@ class TestMultiCompany(TransactionCase):
         self.assertTrue(move_push, 'No move created from push rules')
         self.assertEqual(move_push.state, "assigned")
         self.assertTrue(move_push.move_line_ids, "No move line created for the move")
-        self.assertFalse(move_push in move_to_transit.move_dest_ids,
-                         "Chained move created in transit location")
-        self.assertNotEqual(move_push.move_line_ids.lot_id, move_line_2.lot_id,
-                            "Reserved from transit location")
+        self.assertTrue(move_push in move_to_transit.move_dest_ids,
+                         "Moves are not chained")
+        self.assertEqual(move_push.move_line_ids.lot_id, move_line_2.lot_id,
+                            "Should be reserved from transit location")
         picking_receipt = move_push.picking_id
-        with self.assertRaises(UserError):
-            picking_receipt.button_validate()
-
         move_line_3 = move_push.move_line_ids[0]
-        move_line_3.lot_name = 'lot 2'
-        move_line_3.quantity = 0.1
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
-        lot_2 = move_line_3.lot_id
-        self.assertEqual(lot_1.name, 'lot 1')
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_1), 0.1)
-        self.assertEqual(lot_2.name, 'lot 2')
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot_2), 0.1)
+        self.assertEqual(move_line_3.lot_id, lot)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, self.stock_location_b, lot), 0.1)
 
     def test_intercom_lot_pull(self):
         """Use warehouse of company a to resupply warehouse of company b. Check
-        pull rule works correctly in two companies and moves are unchained from
-        inter-company transit location."""
+        pull rule works correctly in two companies and moves are chained all the way through."""
         customer_location = self.env.ref('stock.stock_location_customers')
         supplier_location = self.env.ref('stock.stock_location_suppliers')
         intercom_location = self.env.ref('stock.stock_location_inter_company')
@@ -574,11 +566,11 @@ class TestMultiCompany(TransactionCase):
         })
         move_sup_to_whb._action_confirm()
         move_line_1 = move_sup_to_whb.move_line_ids[0]
-        move_line_1.lot_name = 'lot b'
+        move_line_1.lot_name = 'lot a'
         move_line_1.quantity = 1.0
         move_sup_to_whb.picked = True
         move_sup_to_whb._action_done()
-        lot_b = move_line_1.lot_id
+        lot_a = move_line_1.lot_id
 
         picking_out = self.env['stock.picking'].create({
             'company_id': self.company_a.id,
@@ -610,27 +602,25 @@ class TestMultiCompany(TransactionCase):
         self.assertTrue(move_transit_to_wha, "No move created by pull rule")
         self.assertTrue(move_wha_to_cus in move_transit_to_wha.move_dest_ids,
                         "Moves are not chained")
-        self.assertFalse(move_transit_to_wha in move_whb_to_transit.move_dest_ids,
-                         "Chained move created in transit location")
+        self.assertTrue(move_transit_to_wha in move_whb_to_transit.move_dest_ids,
+                         "Moves are not chained")
         self.assertEqual(move_wha_to_cus.state, "waiting")
         self.assertEqual(move_transit_to_wha.state, "waiting")
         self.assertEqual(move_whb_to_transit.state, "assigned")
 
         (move_wha_to_cus + move_whb_to_transit + move_transit_to_wha).picking_id.action_assign()
         self.assertEqual(move_wha_to_cus.state, "waiting")
-        self.assertEqual(move_transit_to_wha.state, "assigned")
+        self.assertEqual(move_transit_to_wha.state, "waiting")
         self.assertEqual(move_whb_to_transit.state, "assigned")
         move_whb_to_transit.picking_id.button_validate()
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, intercom_location, lot_b), 1.0)
-        with self.assertRaises(UserError):
-            move_transit_to_wha.picking_id.button_validate()
+        intercom_quant = self.env['stock.quant'].search([('lot_id', '=', lot_a.id), ('product_id', '=', product_lot.id), ('location_id', '=', intercom_location.id)])
+        self.assertRecordValues(intercom_quant, [{'quantity': 1, 'reserved_quantity': 1}])
 
         move_line_2 = move_transit_to_wha.move_line_ids[0]
-        move_line_2.lot_name = 'lot a'
+        self.assertEqual(move_line_2.lot_id, lot_a)
         move_line_2.quantity = 1.0
         move_transit_to_wha.picked = True
         move_transit_to_wha._action_done()
-        lot_a = move_line_2.lot_id
 
         move_wha_to_cus._action_assign()
         self.assertEqual(move_wha_to_cus.state, "assigned")
@@ -638,7 +628,6 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product_lot, customer_location, lot_a), 1.0)
 
         self.assertEqual(lot_a.name, 'lot a')
-        self.assertEqual(lot_b.name, 'lot b')
 
     def test_route_rules_company_consistency(self):
         route = self.env['stock.route'].create({
