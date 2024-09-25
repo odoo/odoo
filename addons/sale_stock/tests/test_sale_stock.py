@@ -1248,6 +1248,8 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         self.assertTrue(return_picking)
         self.assertEqual(len(return_picking.move_ids), 2)
+        new_product_moves = self.env['stock.move'].search([('product_id', '=', new_product.id)])
+        self.assertEqual(len(new_product_moves), 1, 'The new product should not create extra procurement')
         sol = self.env['sale.order.line'].search([('product_id', '=', new_product.id)])
         self.assertFalse(sol)
         return_picking.button_validate()
