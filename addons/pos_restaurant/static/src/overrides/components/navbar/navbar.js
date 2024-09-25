@@ -59,7 +59,7 @@ patch(Navbar.prototype, {
                 ZERO,
                 { ...BACKSPACE, class: "o_colorlist_item_color_transparent_1" },
             ]),
-            confirmButtonLabel: _t("Jump to table"),
+            confirmButtonLabel: _t("Jump"),
             getPayload: async (table_number) => {
                 const find_table = (t) => t.table_number === parseInt(table_number);
                 const table =
