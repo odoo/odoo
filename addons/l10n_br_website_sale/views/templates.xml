@@ -38,14 +38,17 @@
             <attribute name="class" separator=" " add="o_standard_address"/>
         </input>
         <input id="o_city" position="after">
-            <select t-if="res_company.account_fiscal_country_id.code == 'BR'" id="o_city_id" name="city_id" class="form-select o_extended_address">
-                <option value="">City...</option>
-                <t t-foreach="cities_sudo" t-as="c">
-                    <option t-att-value="c.id" t-att-selected="c.id == city_sudo.id" t-att-code="c.id" t-att-state-id="c.state_id.id" t-att-zip-ranges="c.l10n_br_zip_ranges">
-                        <t t-esc="c.name" />
-                    </option>
-                </t>
-            </select>
+            <div t-if="res_company.account_fiscal_country_id.code == 'BR'" class="o_select_city">
+                <!-- will be replaced with SelectMenuWrapper -->
+                <select id="o_city_id" name="city_id" class="form-select">
+                    <option value="">City...</option>
+                    <t t-foreach="cities_sudo" t-as="c">
+                        <option t-att-value="c.id" t-att-selected="c.id == city_sudo.id" t-att-code="c.id" t-att-state-id="c.state_id.id" t-att-zip-ranges="c.l10n_br_zip_ranges">
+                            <t t-esc="c.name" />
+                        </option>
+                    </t>
+                </select>
+            </div>
         </input>
         <!-- put base_address_extended fields separately to be more user-friendly -->
         <div id="div_street" position="attributes">
