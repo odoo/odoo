@@ -377,10 +377,12 @@ export class DomPlugin extends Plugin {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestPosition(...lastPosition);
         }
-        this.shared.setSelection(
-            { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
-            { normalize: false }
-        );
+        if (lastPosition[0] !== null) {
+            this.shared.setSelection(
+                { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
+                { normalize: false }
+            );
+        }
         return firstInsertedNodes.concat(insertedNodes).concat(lastInsertedNodes);
     }
 
@@ -388,7 +390,7 @@ export class DomPlugin extends Plugin {
         if (node === this.editable) {
             return true;
         }
-        return node.hasAttribute("contenteditable");
+        return node && node.hasAttribute("contenteditable");
     }
 
     copyAttributes(source, target) {
