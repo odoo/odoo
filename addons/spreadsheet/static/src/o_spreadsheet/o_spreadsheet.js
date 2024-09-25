@@ -30641,7 +30641,7 @@ function getCopyMenuItem(figureId, env) {
             env.model.dispatch("COPY");
             await env.clipboard.write(env.model.getters.getClipboardContent());
         },
-        icon: "o-spreadsheet-Icon.COPY",
+        icon: "o-spreadsheet-Icon.CLIPBOARD",
     };
 }
 function getCutMenuItem(figureId, env) {
@@ -32926,7 +32926,7 @@ const copy = {
         env.model.dispatch("COPY");
         await env.clipboard.write(env.model.getters.getClipboardContent());
     },
-    icon: "o-spreadsheet-Icon.COPY",
+    icon: "o-spreadsheet-Icon.CLIPBOARD",
 };
 const cut = {
     name: _t("Cut"),
