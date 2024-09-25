@@ -3,7 +3,7 @@
     <t t-name="stock.MovesListRenderer.RecordRow" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
         <xpath expr="//tr/t[1]" position="inside">
             <t t-if="column.type === 'opendetailsop'">
-                <td class="o_data_cell cursor-pointer o_list_button">
+                <td class="o_data_cell cursor-pointer o_list_button" style="width: 30px" t-att-class="{'w-0 p-0': record.data.show_details_visible}">
                     <t t-if="record.resModel === 'stock.move' &amp;&amp; record.data?.show_details_visible">
                         <button name="Open Move" class="btn btn-link fa fa-list" t-on-click="() => props.openRecord(record)"/>
                     </t>
