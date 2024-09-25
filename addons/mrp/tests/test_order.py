@@ -3433,7 +3433,7 @@ class TestMrpOrder(TestMrpCommon):
         mo_backorder.button_plan()
 
         self.assertEqual(mo_backorder.workorder_ids[0].state, 'cancel')
-        self.assertEqual(mo_backorder.workorder_ids[1].state, 'waiting')
+        self.assertEqual(mo_backorder.workorder_ids[1].state, 'ready')
         self.assertEqual(mo_backorder.workorder_ids[2].state, 'pending')
         self.assertFalse(mo_backorder.workorder_ids[0].date_start)
         self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))
