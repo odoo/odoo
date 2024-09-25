@@ -130,8 +130,7 @@ export class MediaPlugin extends Plugin {
         }
     }
 
-    onSaveMediaDialog(element, { node, restoreSelection }) {
-        restoreSelection();
+    onSaveMediaDialog(element, { node }) {
         if (!element) {
             // @todo @phoenix to remove
             throw new Error("Element is required: onSaveMediaDialog");
@@ -155,34 +154,32 @@ export class MediaPlugin extends Plugin {
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(element);
         this.shared.setSelection({ anchorNode, anchorOffset });
-
         this.dispatch("ADD_STEP");
     }
 
     openMediaDialog(params = {}) {
-        const selection = this.shared.getEditableSelection();
-        const restoreSelection = () => {
-            this.shared.setSelection(selection);
-        };
         const { resModel, resId, field, type } = this.recordInfo;
-        this.services.dialog.add(MediaDialog, {
-            resModel,
-            resId,
-            useMediaLibrary: !!(
-                field &&
-                ((resModel === "ir.ui.view" && field === "arch") || type === "html")
-            ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
-            media: params.node,
-            save: (element) => {
-                this.onSaveMediaDialog(element, { node: params.node, restoreSelection });
+        this.services.dialog.add(
+            MediaDialog,
+            {
+                resModel,
+                resId,
+                useMediaLibrary: !!(
+                    field &&
+                    ((resModel === "ir.ui.view" && field === "arch") || type === "html")
+                ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
+                media: params.node,
+                save: (element) => {
+                    this.onSaveMediaDialog(element, { node: params.node });
+                },
+                onAttachmentChange: this.config.onAttachmentChange || (() => {}),
+                noVideos: !!this.config.disableVideo,
+                noImages: !!this.config.disableImage,
+                ...this.config.mediaModalParams,
+                ...params,
             },
-            close: restoreSelection,
-            onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-            noVideos: !!this.config.disableVideo,
-            noImages: !!this.config.disableImage,
-            ...this.config.mediaModalParams,
-            ...params,
-        });
+            { onClose: () => this.shared.focusEditable() }
+        );
     }
 
     async savePendingImages() {

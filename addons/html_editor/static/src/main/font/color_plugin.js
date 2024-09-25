@@ -41,6 +41,7 @@ export class ColorPlugin extends Plugin {
                     type: "foreground",
                     getUsedCustomColors: () => p.getUsedCustomColors("color"),
                     getSelectedColors: () => p.selectedColors,
+                    focusEditable: () => p.shared.focusEditable(),
                 },
             },
             {
@@ -53,6 +54,7 @@ export class ColorPlugin extends Plugin {
                     type: "background",
                     getUsedCustomColors: () => p.getUsedCustomColors("background"),
                     getSelectedColors: () => p.selectedColors,
+                    focusEditable: () => p.shared.focusEditable(),
                 },
             },
         ],

@@ -130,6 +130,7 @@ describe("collapsed selection", () => {
             contentBefore: "<p>content</p>",
             stepFunction: async (editor) => {
                 editor.shared.setCursorEnd(editor.editable, false);
+                editor.shared.focusEditable();
                 editor.shared.domInsert(parseHTML(editor.document, "<p>def</p>"));
                 editor.dispatch("ADD_STEP");
             },
@@ -142,6 +143,7 @@ describe("collapsed selection", () => {
             contentBefore: "<p>content</p>",
             stepFunction: async (editor) => {
                 editor.shared.setCursorEnd(editor.editable, false);
+                editor.shared.focusEditable();
                 await tick();
                 editor.shared.domInsert(parseHTML(editor.document, "<div>abc</div><p>def</p>"));
                 editor.dispatch("ADD_STEP");

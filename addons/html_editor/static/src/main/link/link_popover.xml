@@ -1,7 +1,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="html_editor.linkPopover">
-        <div class="o-we-linkpopover d-flex bg-white overflow-auto shadow">
+        <div class="o-we-linkpopover d-flex bg-white overflow-auto shadow" t-on-keydown="onKeydown">
             <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper"  data-prevent-closing-overlay="true">
                 <div t-if="state.isImage" class="col p-2" style="max-width: 250px;">
                     <div class="input-group mb-1">

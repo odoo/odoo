@@ -55,8 +55,8 @@ export class DynamicPlaceholderPopover extends Component {
         this.state.defaultValue = value;
     }
     validate() {
-        this.props.close();
         this.props.validate(this.state.path, this.state.defaultValue);
+        this.props.close();
     }
 
     onBack() {

@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, useState, onMounted, useExternalListener, useRef } from "@odoo/owl";
+import { Component, useState, onMounted, useRef } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
@@ -75,7 +75,6 @@ export class LinkPopover extends Component {
                 this.loadAsyncLinkPreview();
             }
         });
-        useExternalListener(document, "mousedown", this.onClickAway, { capture: true });
     }
     initButtonStyle(className) {
         const styleArray = [
@@ -114,21 +113,21 @@ export class LinkPopover extends Component {
     onClickRemove() {
         this.props.onRemove();
     }
-    onClickAway(ev) {
-        if (
-            this.editingWrapper?.el &&
-            !this.editingWrapper?.el.contains(ev.target) &&
-            !this.props.linkEl.contains(ev.target)
-        ) {
-            this.props.onClose();
-        }
-    }
+
     onKeydownEnter(ev) {
         if (ev.key === "Enter") {
             ev.preventDefault();
             this.onClickApply();
         }
     }
+
+    onKeydown(ev) {
+        if (ev.key === "Escape") {
+            ev.preventDefault();
+            this.props.onClose();
+        }
+    }
+
     onClickReplaceTitle() {
         this.state.label = this.state.urlTitle;
         this.onClickApply();

@@ -28,10 +28,6 @@ export class Powerbox extends Component {
         useExternalListener(this.props.document, "mousemove", () => {
             this.mouseSelectionActive = true;
         });
-
-        useExternalListener(this.props.document, "mousedown", (ev) => {
-            this.props.close();
-        });
     }
 
     get commands() {

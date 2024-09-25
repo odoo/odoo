@@ -34,19 +34,21 @@ export class TableUIPlugin extends Plugin {
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.picker = this.shared.createOverlay(TablePicker, {
-            onPositioned: (picker, position) => {
-                const popperRect = picker.getBoundingClientRect();
-                const { left } = position;
-                if (this.config.direction === "rtl") {
-                    // position from the right instead of the left as it is needed
-                    // to ensure the expand animation is properly done
-                    if (left < 0) {
-                        picker.style.right = `${-popperRect.width - left}px`;
-                    } else {
-                        picker.style.right = `${window.innerWidth - left - popperRect.width}px`;
+            positionOptions: {
+                onPositioned: (picker, position) => {
+                    const popperRect = picker.getBoundingClientRect();
+                    const { left } = position;
+                    if (this.config.direction === "rtl") {
+                        // position from the right instead of the left as it is needed
+                        // to ensure the expand animation is properly done
+                        if (left < 0) {
+                            picker.style.right = `${-popperRect.width - left}px`;
+                        } else {
+                            picker.style.right = `${window.innerWidth - left - popperRect.width}px`;
+                        }
+                        picker.style.removeProperty("left");
                     }
-                    picker.style.removeProperty("left");
-                }
+                },
             },
         });
 
@@ -54,18 +56,22 @@ export class TableUIPlugin extends Plugin {
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.colMenu = this.shared.createOverlay(TableMenu, {
-            position: "top-fit",
-            onPositioned: (el, solution) => {
-                // Only accept top position as solution.
-                if (solution.direction !== "top") {
-                    el.style.display = "none"; // avoid glitch
-                    this.colMenu.close();
-                }
+            positionOptions: {
+                position: "top-fit",
+                onPositioned: (el, solution) => {
+                    // Only accept top position as solution.
+                    if (solution.direction !== "top") {
+                        el.style.display = "none"; // avoid glitch
+                        this.colMenu.close();
+                    }
+                },
             },
         });
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.rowMenu = this.shared.createOverlay(TableMenu, {
-            position: "left-fit",
+            positionOptions: {
+                position: "left-fit",
+            },
         });
         this.addDomListener(this.document, "pointermove", this.onMouseMove);
         const closeMenus = () => {
@@ -75,7 +81,6 @@ export class TableUIPlugin extends Plugin {
                 this.rowMenu.close();
             }
         };
-        this.addDomListener(this.document, "click", closeMenus);
         this.addDomListener(this.document, "scroll", closeMenus, true);
     }
 
