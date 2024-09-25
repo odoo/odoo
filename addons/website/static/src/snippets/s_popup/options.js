@@ -75,6 +75,7 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     onTargetShow: async function () {
+        //Todo: visp ask this to MSH as this model get appended in document body.
         const modal = Modal.getOrCreateInstance(this.$bsTarget[0]);
         modal.show();
         $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
@@ -94,7 +95,7 @@ options.registry.SnippetPopup = options.Class.extend({
             });
             // The following line is in charge of hiding .s_popup at the same
             // time the modal is closed when the page is saved in edit mode.
-            this.$target[0].closest('.s_popup').classList.add('d-none');
+            this.$target[0].closest('.s_popup')?.classList.add('d-none');
             const modal = Modal.getOrCreateInstance(this.$bsTarget[0]);
             modal.hide();
         });
