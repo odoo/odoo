@@ -52,17 +52,17 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" context="{'project_id': project_id}"/>
                     <field t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']" widget="remaining_days"/>
                     <field t-if="record.displayed_image_id.value" groups="base.group_user" name="displayed_image_id" widget="attachment_image"/>
-                    <div class="d-flex mt-2" t-if="!selection_mode">
+                    <footer t-if="!selection_mode">
                         <field name="priority" class="me-2" widget="priority"/>
-                        <div class="d-flex ms-auto">
-                            <span t-if="record.portal_user_names.raw_value.length > 0" class="pe-2" t-att-title="record.portal_user_names.raw_value">
+                        <div class="d-flex ms-auto text-truncate">
+                            <span t-if="record.portal_user_names.raw_value.length > 0" class="pe-2 text-truncate" t-att-title="record.portal_user_names.raw_value">
                                 <t t-set="user_count" t-value="record.portal_user_names.raw_value.split(',').length"/>
                                 <t t-if="user_count > 1"><t t-out="user_count"/> assignees</t>
                                 <field t-else="" name="portal_user_names"/>
                             </span>
                             <field name="state" widget="project_task_state_selection" options="{'is_toggle_mode': false}"/>
                         </div>
-                    </div>
+                    </footer>
                 </t>
                 </templates>
             </kanban>

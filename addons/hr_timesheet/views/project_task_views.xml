@@ -162,12 +162,12 @@
                 </templates>
                 <xpath expr="//footer/div" position="inside">
                    <t name="allocated_hours" t-if="record.allocated_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
-                        <t t-set="badge" t-value=""/>
+                        <t t-set="badge" t-value="'border border-success'"/>
                         <t t-set="badge" t-value="'border border-warning'" t-if="record.progress.raw_value &gt;= 0.8 and record.progress.raw_value &lt;= 1"/>
                         <t t-set="badge" t-value="'border border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                         <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                         <t t-set="title" t-value="'Time Remaining'" t-else=""/>
-                        <div t-attf-class="oe_kanban_align badge {{ badge }} me-0" t-att-title="title">
+                        <div t-attf-class="bg-transparent badge {{ badge }} me-0" t-att-title="title">
                             <field name="remaining_hours" widget="timesheet_uom" />
                         </div>
                    </t>
