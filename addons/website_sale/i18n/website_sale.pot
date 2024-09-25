@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
-"PO-Revision-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 08:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,6 +28,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
+msgid "#{record.name.value}"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "%s review"
 msgstr ""
@@ -38,14 +43,8 @@ msgid "%s reviews"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Delivery"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "&amp;nbsp;(<i>Your delivery address will be requested later)</i>"
 msgstr ""
 
 #. module: website_sale
@@ -96,6 +95,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories_list
+#: model_terms:ir.ui.view,arch_db:website_sale.products_categories_list_collapsible
 msgid "<b>Categories</b>"
 msgstr ""
 
@@ -182,10 +182,10 @@ msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.row_addresses
+#: model_terms:ir.ui.view,arch_db:website_sale.address_row
 msgid ""
-"<i class=\"fa fa-plus me-md-2\"/><span class=\"d-none d-md-inline\">Add "
-"address</span>"
+"<i class=\"fa fa-plus me-md-2\"/>\n"
+"                    <span class=\"d-none d-md-inline\">Add address</span>"
 msgstr ""
 
 #. module: website_sale
@@ -210,6 +210,32 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid ""
+"<i class=\"oi oi-chevron-left d-lg-none me-1\" role=\"presentation\"/>All "
+"Products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "<i class=\"oi oi-chevron-left me-1\" role=\"presentation\"/>All Products"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
+msgid ""
+"<i class=\"oi oi-chevron-left oe_unmovable border bg-white text-900\" "
+"role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
+msgid ""
+"<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
+"role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -249,7 +275,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
-"                        <i class=\"oi oi-close\"/>"
+"                            <i class=\"oi oi-close\" role=\"presentation\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -267,6 +293,38 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid ""
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
+"                                                <span class=\"oe_currency_value\">1,500.00</span>\n"
+"                                            </span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid ""
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
+"                                                <span class=\"oe_currency_value\">140.00</span>\n"
+"                                            </span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid ""
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
+"                                                <span class=\"oe_currency_value\">33.00</span>\n"
+"                                            </span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid ""
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" data-oe-expression=\"data['price']\">\n"
+"                                                <span class=\"oe_currency_value\">750.00</span>\n"
+"                                            </span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "<span class=\"mx-2 o_wsale_ppr_by\">by</span>"
 msgstr ""
@@ -277,20 +335,6 @@ msgid ""
 "<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
 "                    Select to compute delivery rate\n"
 "                </span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
-msgid ""
-"<span class=\"oi oi-chevron-left fa-2x oe_unmovable\" role=\"img\" aria-"
-"label=\"Previous\" title=\"Previous\"/>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
-msgid ""
-"<span class=\"oi oi-chevron-right fa-2x oe_unmovable\" role=\"img\" aria-"
-"label=\"Next\" title=\"Next\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -325,6 +369,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"visually-hidden\">filters active</span>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -443,15 +492,18 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid ""
+"A detailed,formatted description to promote your product on"
+"                                      this page. Use '/' to discover more "
+"features."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
 msgid ""
 "A product can be either a physical product or a service that you sell to "
 "your customers."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
-msgid "A short description that will also appear on documents."
 msgstr ""
 
 #. module: website_sale
@@ -539,6 +591,12 @@ msgid "Add"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Add Media"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 msgid "Add To Cart"
@@ -548,12 +606,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
 #: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
 msgid "Add To Cart Action"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-msgid "Add a Media"
 msgstr ""
 
 #. module: website_sale
@@ -621,7 +673,6 @@ msgid "All"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories_list
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "All Products"
@@ -638,8 +689,16 @@ msgid "All users"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "All websites"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Allow customers to pay in person at your stores"
+msgid ""
+"Allow customers to pick up their online purchases at your store and pay in "
+"person"
 msgstr ""
 
 #. module: website_sale
@@ -720,6 +779,11 @@ msgid "Attributes"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_multimedia_augmented_reality
+msgid "Augmented Reality Tools"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically send abandoned checkout emails"
 msgstr ""
@@ -780,6 +844,11 @@ msgid "Base Units"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_cabinets_bathroom
+msgid "Bathroom Cabinets"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
 msgstr ""
@@ -787,6 +856,11 @@ msgstr ""
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures_beds
+msgid "Beds"
 msgstr ""
 
 #. module: website_sale
@@ -800,15 +874,24 @@ msgid "Big"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Big Icons Subtitles"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+#: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
 msgid "Billing address"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
+msgid "Billing:"
 msgstr ""
 
 #. module: website_sale
@@ -883,6 +966,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_add_to_cart/options.js:0
 msgid "Buy now"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "Cabinet with Doors"
 msgstr ""
 
 #. module: website_sale
@@ -969,8 +1057,18 @@ msgid "Category Description"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_footer
+msgid "Category Footer"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
 msgid "Category:"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_lamps_ceiling
+msgid "Ceiling Lamps"
 msgstr ""
 
 #. module: website_sale
@@ -982,6 +1080,11 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_chairs
 msgid "Chairs"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_lamps_chandelier
+msgid "Chandeliers"
 msgstr ""
 
 #. module: website_sale
@@ -1046,7 +1149,13 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "Clear Filters"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
+msgid "Click & Collect"
 msgstr ""
 
 #. module: website_sale
@@ -1091,6 +1200,16 @@ msgid "Collapse Category Recursive"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_boxes_collapsible
+msgid "Collapsible Boxes"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Collapsible sidebar"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Color"
 msgstr ""
@@ -1098,6 +1217,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Columns"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_product_combos
+msgid "Combo Choices"
 msgstr ""
 
 #. module: website_sale
@@ -1177,6 +1301,11 @@ msgid "Compute shipping costs on orders"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "Conference Chair"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
@@ -1229,6 +1358,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 msgid "Continue Shopping"
 msgstr ""
@@ -1280,6 +1410,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
 msgid "Created by"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
+#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_little_icons
+msgid ""
+"Created in 2021, the company is young and dynamic. Discover the composition "
+"of the team and their skills."
 msgstr ""
 
 #. module: website_sale
@@ -1358,6 +1496,11 @@ msgid "Customers"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "Customizable Desk"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Customize Abandoned Email Template"
 msgstr ""
@@ -1391,6 +1534,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default (1/1)"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Default (1x1)"
 msgstr ""
 
 #. module: website_sale
@@ -1432,15 +1580,16 @@ msgid "Delete Ribbon"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Deliver to the same address"
+#. odoo-python
+#: code:addons/website_sale/models/website.py:0
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Delivery"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Delivery"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
+msgid "Delivery &amp;"
 msgstr ""
 
 #. module: website_sale
@@ -1450,13 +1599,19 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Delivery Methods"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+#: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_row
 msgid "Delivery address"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
+msgid "Delivery and Installation"
 msgstr ""
 
 #. module: website_sale
@@ -1475,6 +1630,11 @@ msgid "Description displayed on the eCommerce and on online quotations."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
+msgid "Description displayed on the eCommerce categories page."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
 msgstr ""
@@ -1483,6 +1643,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_services_design_and_planning
+msgid "Design and Planning"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_lamps_desk
+msgid "Desk Lamps"
 msgstr ""
 
 #. module: website_sale
@@ -1521,6 +1691,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
+#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_little_icons
+msgid "Discover our team"
 msgstr ""
 
 #. module: website_sale
@@ -1595,13 +1771,16 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "Drag building blocks here to customize the header for \""
+msgid ""
+"Drag building blocks here to customize the footer for\n"
+"                                    \""
 msgstr ""
 
 #. module: website_sale
-#. odoo-javascript
-#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
-msgid "Drag this website block and drop it in your page."
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid ""
+"Drag building blocks here to customize the header for\n"
+"                                    \""
 msgstr ""
 
 #. module: website_sale
@@ -1662,6 +1841,16 @@ msgid "Ecommerce Access"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Ecommerce Description"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Ecommerce Shop"
+msgstr ""
+
+#. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
 msgid "Ecommerce: Cart Recovery"
 msgstr ""
@@ -1684,7 +1873,13 @@ msgid "Edit this address"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_multimedia_education
+msgid "Education Tools"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
 msgid "Email"
 msgstr ""
 
@@ -1753,6 +1948,11 @@ msgid "Extra info"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
+msgid "Facebook"
+msgstr ""
+
+#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Featured"
@@ -1784,6 +1984,11 @@ msgid "Field Name"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_drawers_file
+msgid "File Drawers"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Fill"
 msgstr ""
@@ -1799,6 +2004,11 @@ msgid "Fiscal Position"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks_foldable
+msgid "Foldable Desks"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_follower_ids
 msgid "Followers"
 msgstr ""
@@ -1806,6 +2016,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_bins_storage
+msgid "Food Storage Bins"
 msgstr ""
 
 #. module: website_sale
@@ -1830,9 +2045,24 @@ msgid "Furnitures"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks_gaming
+msgid "Gaming Desks"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Gap"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks_glass
+msgid "Glass Desks"
 msgstr ""
 
 #. module: website_sale
@@ -1848,6 +2078,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Grid"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__shop_gap
+msgid "Grid-gap on the shop"
 msgstr ""
 
 #. module: website_sale
@@ -1979,6 +2214,11 @@ msgid "Image 512"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Image Menu"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
 msgstr ""
@@ -1995,7 +2235,17 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Images Ratio"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Images Size"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Images Subtitles"
 msgstr ""
 
 #. module: website_sale
@@ -2083,6 +2333,16 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_cabinets_kitchen
+msgid "Kitchen Cabinets"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_drawers_kitchen
+msgid "Kitchen Drawer Units"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
 msgid "Kpi Website Sale Total Value"
 msgstr ""
@@ -2149,6 +2409,11 @@ msgid "Last Year"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_bins_laundry
+msgid "Laundry Bins"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Layout"
 msgstr ""
@@ -2161,7 +2426,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Let the customer enter a shipping address"
+msgid "Let the customer enter a delivery address"
 msgstr ""
 
 #. module: website_sale
@@ -2201,14 +2466,34 @@ msgid "Line Subtotals Tax Display"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
+msgid "LinkedIn"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "List"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Little Icons"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
 msgid "Logged in users"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Logos"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_boxes_luxury
+msgid "Luxury Boxes"
 msgstr ""
 
 #. module: website_sale
@@ -2247,8 +2532,18 @@ msgid "Mandatory (no guest checkout)"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_cabinets_medicine
+msgid "Medicine Cabinets"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
 msgid "Medium"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_menu_image_menu
+msgid "Mega menu default image"
 msgstr ""
 
 #. module: website_sale
@@ -2272,6 +2567,12 @@ msgid "Mondial Relay Connector"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "More Information"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
 msgid "Move to first"
 msgstr ""
@@ -2289,6 +2590,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
 msgid "Move to previous"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Multi Menus"
 msgstr ""
 
 #. module: website_sale
@@ -2350,7 +2656,19 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "Next"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
 msgid "Next (Right-Arrow)"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_drawers_nightstand
+msgid "Nightstand Drawers"
 msgstr ""
 
 #. module: website_sale
@@ -2467,8 +2785,13 @@ msgid "Number of products in the grid on the shop"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_picking
-msgid "On Site Payments & Picking"
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Odoo Menu"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks_office
+msgid "Office Desks"
 msgstr ""
 
 #. module: website_sale
@@ -2660,6 +2983,11 @@ msgid "Pills"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
+msgid "Pinterest"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
 msgstr ""
@@ -2688,6 +3016,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
 msgid "Prevent Sale of Zero Priced Product"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "Previous"
 msgstr ""
 
 #. module: website_sale
@@ -2754,6 +3089,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 msgid "Proceed to Checkout"
 msgstr ""
@@ -3128,6 +3464,11 @@ msgid "Recently Viewed Products"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures_recliners
+msgid "Recliners"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
 msgstr ""
@@ -3141,6 +3482,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Reinforced for heavy loads"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_services_relocation_and_moving
+msgid "Relocation and Moving"
 msgstr ""
 
 #. module: website_sale
@@ -3168,8 +3514,18 @@ msgid "Remove one"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
+msgid "Repair and Maintenance"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Replace"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Reset Categories"
 msgstr ""
 
 #. module: website_sale
@@ -3211,6 +3567,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__right
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Right"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_boxes_rustic
+msgid "Rustic Boxes"
 msgstr ""
 
 #. module: website_sale
@@ -3276,6 +3637,11 @@ msgid "Salesperson"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.billing_address_row
+msgid "Same as delivery address"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_add_to_cart
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_borderless_1
@@ -3335,11 +3701,6 @@ msgid "Selectable"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
-msgid "Send a Cart Recovery Email"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
 msgstr ""
@@ -3373,18 +3734,14 @@ msgid "Sequence"
 msgstr ""
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.services
+#: model:product.public.category,name:website_sale.public_category_services
 msgid "Services"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Share"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Shipping"
 msgstr ""
 
 #. module: website_sale
@@ -3399,7 +3756,6 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_delivery_carrier
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shipping Methods"
 msgstr ""
 
@@ -3415,7 +3771,6 @@ msgstr ""
 
 #. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
-#: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Shop"
 msgstr ""
 
@@ -3534,6 +3889,11 @@ msgid "Small"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures_sofas
+msgid "Sofas"
+msgstr ""
+
+#. module: website_sale
 #: model:product.ribbon,name:website_sale.sold_out_ribbon
 msgid "Sold out"
 msgstr ""
@@ -3563,6 +3923,21 @@ msgid "Specify unit"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_menus_logos
+msgid "Spring collection has arrived!"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_boxes_stackable
+msgid "Stackable Boxes"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks_standing
+msgid "Standing Desks"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province"
 msgstr ""
@@ -3575,6 +3950,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__stay
 msgid "Stay on Product Page"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_cabinets_storage
+msgid "Storage Cabinets"
 msgstr ""
 
 #. module: website_sale
@@ -3743,6 +4123,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_images_subtitles
+#: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_little_icons
+msgid "The team"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
 msgstr ""
@@ -3769,6 +4155,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
+msgid "This content will be shared across all product pages."
 msgstr ""
 
 #. module: website_sale
@@ -3818,6 +4209,11 @@ msgid "This promo code is not available."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "Three-Seat Sofa"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Thumbnails"
 msgstr ""
@@ -3857,6 +4253,16 @@ msgid "Total number of views on products"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_lamps_touch
+msgid "Touch Lamps"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_bins_toy
+msgid "Toy Bins"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_snippet_filter__product_cross_selling
 msgid ""
 "True only for product filters that require a product_id because they relate "
@@ -3889,6 +4295,11 @@ msgid "USPS Shipping Methods"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_drawers_underbed
+msgid "Under-bed Drawers"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_website_base_unit
 msgid "Unit of Measure for price per unit on eCommerce products."
 msgstr ""
@@ -3906,6 +4317,7 @@ msgid "Unpaid Orders"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Unpublished"
 msgstr ""
@@ -3977,6 +4389,16 @@ msgid "Viewer"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_boxes_vintage
+msgid "Vintage Boxes"
+msgstr ""
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_multimedia_virtual_design
+msgid "Virtual Design Tools"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__visibility
 msgid "Visibility"
 msgstr ""
@@ -4019,6 +4441,11 @@ msgid "Visitor Product Views History"
 msgstr ""
 
 #. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures_wardrobes
+msgid "Wardrobes"
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
@@ -4034,6 +4461,11 @@ msgid "Warranty"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+msgid "Warranty (2 year)"
+msgstr ""
+
+#. module: website_sale
 #: model:product.template,description_sale:website_sale.product_product_1_product_template
 msgid ""
 "Warranty, issued to the purchaser of an article by its manufacturer, "
@@ -4045,7 +4477,6 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_website
 #: model:ir.model.fields,field_description:website_sale.field_account_bank_statement_line__website_id
 #: model:ir.model.fields,field_description:website_sale.field_account_move__website_id
-#: model:ir.model.fields,field_description:website_sale.field_account_payment__website_id
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_id
@@ -4057,6 +4488,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__website_id
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Website"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
+msgid "Website Category"
 msgstr ""
 
 #. module: website_sale
@@ -4141,7 +4577,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_account_bank_statement_line__website_id
 #: model:ir.model.fields,help:website_sale.field_account_move__website_id
-#: model:ir.model.fields,help:website_sale.field_account_payment__website_id
 msgid "Website through which this invoice was created for eCommerce orders."
 msgstr ""
 
@@ -4161,6 +4596,11 @@ msgid "What should be done on \"Add to Cart\"?"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_share_buttons
+msgid "WhatsApp"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_tag__visible_on_ecommerce
 msgid "Whether the tag is displayed on the eCommerce."
 msgstr ""
@@ -4169,6 +4609,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 msgid "Whiteboard"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Wide (16/9)"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Wider (21/9)"
 msgstr ""
 
 #. module: website_sale
@@ -4191,8 +4641,9 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
-"You are editing your <b>billing and delivery</b> addresses at the same time!<br/>\n"
-"                                            If you want to modify your delivery address, create a"
+"You are editing your <b>delivery and billing</b> addresses\n"
+"                                        at the same time!<br/>\n"
+"                                        If you want to modify your billing address, create a"
 msgstr ""
 
 #. module: website_sale
@@ -4244,11 +4695,8 @@ msgid "Your Name"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid ""
-"Your account is not allowed to pay in company %s. Please log out and create "
-"a new account for this website, or contact the website administrator."
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Your address"
 msgstr ""
 
 #. module: website_sale
@@ -4315,6 +4763,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action
 #: model:ir.ui.menu,name:website_sale.menu_catalog_categories
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "eCommerce Categories"
 msgstr ""
 
@@ -4325,8 +4774,12 @@ msgid "eCommerce Description"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
+msgid "eCommerce Filter"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 msgid "eCommerce Filter Visibility"
 msgstr ""
 
@@ -4338,11 +4791,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
 msgid "eCommerce Sales"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-msgid "eCommerce Shop"
 msgstr ""
 
 #. module: website_sale
