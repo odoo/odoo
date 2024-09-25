@@ -122,12 +122,12 @@ class OAuthController(http.Controller):
     @http.route('/auth_oauth/signin', type='http', auth='none')
     @fragment_to_query_string
     def signin(self, **kw):
-        state = json.loads(kw['state'])
+        state = json.loads(kw.get('state', '{}'))
 
         # make sure request.session.db and state['d'] are the same,
         # update the session and retry the request otherwise
-        dbname = state['d']
-        if not http.db_filter([dbname]):
+        dbname = state.get('d')
+        if not dbname or not http.db_filter([dbname]):
             return BadRequest()
         ensure_db(db=dbname)
 
