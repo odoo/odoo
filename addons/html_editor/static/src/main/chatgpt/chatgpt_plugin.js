@@ -61,8 +61,6 @@ export class ChatGPTPlugin extends Plugin {
 
     openDialog(params = {}) {
         const selection = this.shared.getEditableSelection();
-        const cursors = this.shared.preserveSelection();
-        const onClose = cursors.restore;
         const dialogParams = {
             insert: (content) => {
                 const insertedNodes = this.shared.domInsert(content);
@@ -105,6 +103,7 @@ export class ChatGPTPlugin extends Plugin {
             },
             ...params,
         };
+        const onClose = () => this.shared.focusEditable();
         // collapse to end
         const sanitize = this.shared.sanitize;
         if (selection.isCollapsed) {
@@ -114,10 +113,7 @@ export class ChatGPTPlugin extends Plugin {
                 { onClose }
             );
         } else {
-            const range = new Range();
-            range.setStart(selection.startContainer, selection.startOffset);
-            range.setEnd(selection.endContainer, selection.endOffset);
-            const originalText = range.toString() || "";
+            const originalText = selection.textContent() || "";
             this.services.dialog.add(
                 params.language ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
                 { ...dialogParams, originalText, sanitize },
@@ -125,10 +121,17 @@ export class ChatGPTPlugin extends Plugin {
             );
         }
         if (this.services.ui.isSmall) {
-            // If the dialog is opened on a small screen, remove all selection
-            // because the selection can be seen through the dialog on some devices.
             // TODO: Find a better way and avoid modifying range
-            this.document.getSelection()?.removeAllRanges();
+            // HACK: In the case of opening through dropdown:
+            // - when dropdown open, it keep the element focused before the open
+            // - when opening the dialog through the dropdown, the dropdown closes
+            // - upon close, the generic code of the dropdown sets focus on the kept element (in our case, the editable)
+            // - we need to remove the range after the generic code of the dropdown is triggered so we hack it by removing the range in the next tick
+            Promise.resolve().then(() => {
+                // If the dialog is opened on a small screen, remove all selection
+                // because the selection can be seen through the dialog on some devices.
+                this.document.getSelection()?.removeAllRanges();
+            });
         }
     }
 }

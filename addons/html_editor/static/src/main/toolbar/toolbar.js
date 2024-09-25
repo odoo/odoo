@@ -9,6 +9,7 @@ export class Toolbar extends Component {
             shape: {
                 dispatch: Function,
                 getSelection: Function,
+                focusEditable: Function,
                 buttonGroups: {
                     type: Array,
                     element: {
@@ -83,6 +84,11 @@ export class Toolbar extends Component {
             }
         }
         return this.props.toolbar.buttonGroups.filter((group) => group.namespace === undefined);
+    }
+
+    onButtonClick(button) {
+        button.action(this.props.toolbar.dispatch);
+        this.props.toolbar.focusEditable();
     }
 }
 

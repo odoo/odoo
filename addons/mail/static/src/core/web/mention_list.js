@@ -4,7 +4,6 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSequential } from "@mail/utils/common/hooks";
-import { markEventHandled } from "@web/core/utils/misc";
 
 export class MentionList extends Component {
     static template = "mail.MentionList";
@@ -14,6 +13,10 @@ export class MentionList extends Component {
         close: { type: Function, optional: true },
         type: { type: String },
     };
+    static defaultProps = {
+        close: () => {},
+    };
+
     setup() {
         super.setup();
         this.state = useState({
@@ -73,7 +76,10 @@ export class MentionList extends Component {
             anchorRef: this.ref.el,
             position: "bottom-fit",
             isLoading: !!this.state.searchTerm && this.state.isFetching,
-            onSelect: this.props.onSelect,
+            onSelect: (...args) => {
+                this.props.onSelect(...args);
+                this.props.close();
+            },
             options: [],
         };
         switch (this.props.type) {
@@ -99,6 +105,11 @@ export class MentionList extends Component {
     }
 
     onKeydown(ev) {
-        markEventHandled(ev, "MentionList.onKeydown");
+        switch (ev.key) {
+            case "Escape": {
+                this.props.close();
+                break;
+            }
+        }
     }
 }

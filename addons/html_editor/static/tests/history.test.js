@@ -277,7 +277,7 @@ describe("prevent mutationFilteredClasses to be set from history", () => {
 
     test("should prevent mutationFilteredClasses to be added when adding 2 classes", async () => {
         await testEditor({
-            contentBefore: `<p>a</p>`,
+            contentBefore: `<p>a[]</p>`,
             stepFunction: async (editor) => {
                 const p = editor.editable.querySelector("p");
                 p.className = "x y";
@@ -285,7 +285,7 @@ describe("prevent mutationFilteredClasses to be set from history", () => {
                 undo(editor);
                 redo(editor);
             },
-            contentAfter: `[]<p class="y">a</p>`,
+            contentAfter: `<p class="y">a[]</p>`,
             config: { Plugins: Plugins },
         });
     });

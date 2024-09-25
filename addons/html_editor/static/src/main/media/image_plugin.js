@@ -181,6 +181,7 @@ export class ImagePlugin extends Plugin {
             if (e.target.tagName === "IMG") {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
                 this.shared.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+                this.shared.focusEditable();
             }
         });
         this.fileViewer = createFileViewer();
