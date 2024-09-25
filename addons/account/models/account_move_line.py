@@ -824,10 +824,10 @@ class AccountMoveLine(models.Model):
             line.price_subtotal = base_line['tax_details']['total_excluded_currency']
             line.price_total = base_line['tax_details']['total_included_currency']
 
-    @api.depends('product_id', 'product_uom_id')
+    @api.depends('product_id', 'product_uom_id', 'quantity')
     def _compute_price_unit(self):
         for line in self:
-            if not line.product_id or line.display_type in ('line_section', 'line_note') or line.is_imported:
+            if not line.product_id or line.display_type in ('line_section', 'line_note') or line.is_imported or self._context.get('prevent_price_compute'):
                 continue
             if line.move_id.is_sale_document(include_receipts=True):
                 document_type = 'sale'
@@ -835,6 +835,14 @@ class AccountMoveLine(models.Model):
                 document_type = 'purchase'
             else:
                 document_type = 'other'
+
+            seller_offer = document_type == 'purchase' and line.product_id._select_seller(
+                partner_id=line.partner_id,
+                quantity=line.quantity,
+                date=line.move_id.invoice_date or None,
+                uom_id=line.product_uom_id,
+            )
+
             line.price_unit = line.product_id._get_tax_included_unit_price(
                 line.move_id.company_id,
                 line.move_id.currency_id,
@@ -842,6 +850,7 @@ class AccountMoveLine(models.Model):
                 document_type,
                 fiscal_position=line.move_id.fiscal_position_id,
                 product_uom=line.product_uom_id,
+                product_price_unit=seller_offer.price if seller_offer else None,
             )
 
     @api.depends('product_id', 'product_uom_id')

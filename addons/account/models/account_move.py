@@ -5015,7 +5015,7 @@ class AccountMove(models.Model):
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))
 
-        for move in self:
+        for move in self.with_context(prevent_price_compute=True):
             in_out, old_move_type = move.move_type.split('_')
             new_move_type = f"{in_out}_{'invoice' if old_move_type == 'refund' else 'refund'}"
             move.name = False
