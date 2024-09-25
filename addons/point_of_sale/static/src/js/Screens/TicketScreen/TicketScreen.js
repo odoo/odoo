@@ -214,8 +214,13 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
 
             const invoicedOrderIds = new Set(
                 allToRefundDetails
-                    .filter(detail => this._state.syncedOrders.cache[detail.orderline.orderBackendId].state === "invoiced")
-                    .map(detail => detail.orderline.orderBackendId)
+                    .filter(
+                        (detail) =>
+                            this._state.syncedOrders.cache[detail.orderline.orderBackendId] &&
+                            this._state.syncedOrders.cache[detail.orderline.orderBackendId].state ===
+                            "invoiced"
+                    )
+                    .map((detail) => detail.orderline.orderBackendId)
             );
 
             if (invoicedOrderIds.size > 1) {
