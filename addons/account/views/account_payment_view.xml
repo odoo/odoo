@@ -19,7 +19,7 @@
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
-                    <field name="payment_method_line_id"/>
+                    <field name="payment_method_line_id" context="{'hide_payment_journal_id': 1}"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="amount_signed" string="Amount in Currency" optional="hide" groups="!base.group_multi_currency"/>
                     <field name="amount_signed" string="Amount in Currency" optional="show" groups="base.group_multi_currency"/>
@@ -276,7 +276,9 @@
                                 <field name="journal_id"
                                        domain="[('id', 'in', available_journal_ids)]"
                                        readonly="state != 'draft'"/>
-                                <field name="payment_method_line_id" options="{'no_create': True, 'no_open': True}"
+                                <field name="payment_method_line_id"
+                                       context="{'hide_payment_journal_id': 1}"
+                                       options="{'no_create': True, 'no_open': True}"
                                        required="1"
                                        readonly="state != 'draft'"/>
 
