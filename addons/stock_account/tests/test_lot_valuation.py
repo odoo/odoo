@@ -511,3 +511,20 @@ class TestLotValuation(TestStockValuationCommon):
         self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot1, self.lot2])
         self.assertEqual(self.lot1.standard_price, 5)
         self.assertEqual(self.lot3.standard_price, 7)
+
+    def test_return_lot_valuated(self):
+        self.product1.standard_price = 9
+        move = self._make_out_move(self.product1, 3, create_picking=True, lot_ids=[self.lot1, self.lot2, self.lot3])
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=move.picking_id.id, active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 2
+        stock_return_picking_action = stock_return_picking.action_create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        self.assertEqual(len(return_pick.move_ids.move_line_ids), 2)
+        return_pick.move_ids.picked = True
+        return_pick._action_done()
+        self.assertRecordValues(return_pick.move_ids.stock_valuation_layer_ids, [
+            {'value': 9, 'lot_id': self.lot1.id, 'quantity': 1},
+            {'value': 9, 'lot_id': self.lot2.id, 'quantity': 1},
+        ])
