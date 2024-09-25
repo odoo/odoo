@@ -58,6 +58,7 @@
                         <group name="group1">
                             <field name="journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
                             <field name="payment_method_line_id"
+                                   context="{'hide_payment_journal_id': 1}"
                                    required="1"  options="{'no_create': True, 'no_open': True}"/>
                             <field name="partner_bank_id"
                                    invisible="not show_partner_bank_account or not can_edit_wizard or (can_group_payments and not group_payment)"

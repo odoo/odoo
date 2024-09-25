@@ -127,8 +127,11 @@ class AccountPaymentMethodLine(models.Model):
     available_payment_method_ids = fields.Many2many(related='journal_id.available_payment_method_ids')
 
     @api.depends('journal_id')
+    @api.depends_context('hide_payment_journal_id')
     def _compute_display_name(self):
         for method in self:
+            if self.env.context.get('hide_payment_journal_id'):
+                return super()._compute_display_name()
             method.display_name = f"{method.name} ({method.journal_id.name})"
 
     @api.depends('payment_method_id.name')
