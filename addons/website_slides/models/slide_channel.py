@@ -736,12 +736,11 @@ class Channel(models.Model):
     def copy_data(self, default=None):
         default = dict(default or {})
         vals_list = super().copy_data(default=default)
-        if 'name' not in default:
-            for channel, vals in zip(self, vals_list):
+        for channel, vals in zip(self, vals_list):
+            if 'name' not in default:
                 vals['name'] = f"{channel.name} ({_('copy')})"
-
-        if 'enroll' not in default and self.visibility == "members":
-            vals['enroll'] = 'invite'
+            if 'enroll' not in default and channel.visibility == "members":
+                vals['enroll'] = 'invite'
         return vals_list
 
     def write(self, vals):
