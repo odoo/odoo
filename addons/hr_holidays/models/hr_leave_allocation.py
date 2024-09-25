@@ -6,7 +6,6 @@ from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.float_utils import float_round
@@ -659,6 +658,7 @@ class HolidaysAllocation(models.Model):
             if not allocation.lastcall:
                 if not current_level:
                     allocation.lastcall = today
+                    allocation.actual_lastcall = allocation.lastcall
                     continue
                 allocation.lastcall = max(
                     current_level._get_previous_date(today),
