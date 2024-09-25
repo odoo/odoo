@@ -144,30 +144,31 @@ export class BarcodeVideoScanner extends Component {
      */
     async detectCode() {
         let barcodeDetected = false;
+        let codes = [];
         try {
-            const codes = await this.detector.detect(this.videoPreviewRef.el);
-            for (const code of codes) {
-                if (
-                    !this.isZXingBarcodeDetector() &&
-                    this.overlayInfo.x !== undefined &&
-                    this.overlayInfo.y !== undefined
-                ) {
-                    const { x, y, width, height } = this.adaptValuesWithRatio(code.boundingBox);
-                    if (
-                        x < this.overlayInfo.x ||
-                        x + width > this.overlayInfo.x + this.overlayInfo.width ||
-                        y < this.overlayInfo.y ||
-                        y + height > this.overlayInfo.y + this.overlayInfo.height
-                    ) {
-                        continue;
-                    }
-                }
-                barcodeDetected = true;
-                this.barcodeDetected(code.rawValue);
-                break;
-            }
+            codes = await this.detector.detect(this.videoPreviewRef.el);
         } catch (err) {
             this.props.onError(err);
+        }
+        for (const code of codes) {
+            if (
+                !this.isZXingBarcodeDetector() &&
+                this.overlayInfo.x !== undefined &&
+                this.overlayInfo.y !== undefined
+            ) {
+                const { x, y, width, height } = this.adaptValuesWithRatio(code.boundingBox);
+                if (
+                    x < this.overlayInfo.x ||
+                    x + width > this.overlayInfo.x + this.overlayInfo.width ||
+                    y < this.overlayInfo.y ||
+                    y + height > this.overlayInfo.y + this.overlayInfo.height
+                ) {
+                    continue;
+                }
+            }
+            barcodeDetected = true;
+            this.barcodeDetected(code.rawValue);
+            break;
         }
         if (this.stream && (!barcodeDetected || !this.props.delayBetweenScan)) {
             this.detectorTimeout = setTimeout(this.detectCode.bind(this), 100);
