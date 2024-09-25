@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { pyToJsLocale } from "@web/core/l10n/utils";
+import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
@@ -154,7 +154,7 @@ class Keyword extends Component {
 
         onMounted(async () => {
             const suggestions = await rpc('/website/seo_suggest', {
-                lang: this.props.language,
+                lang: jsToPyLocale(this.props.language),
                 keywords: this.props.keyword,
             });
             const regex = new RegExp(WORD_SEPARATORS_REGEX + this.props.keyword + WORD_SEPARATORS_REGEX, 'gi');
