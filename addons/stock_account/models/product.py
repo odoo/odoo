@@ -101,6 +101,11 @@ will update the cost of every lot/serial number in stock."),
     # -------------------------------------------------------------------------
     # Misc.
     # -------------------------------------------------------------------------
+    def _replenish_stock_quantities(self, product_id, location_id, quantity, package_id=False, owner_id=False):
+        # Disable lot valuation for the product, as it is no longer being tracked and will not cause errors during quant creation
+        product_id.product_tmpl_id.lot_valuated = False
+        super()._replenish_stock_quantities(product_id, location_id, quantity, package_id, owner_id)
+
     def _get_product_accounts(self):
         """ Add the stock accounts related to product to the result of super()
         @return: dictionary which contains information regarding stock accounts and super (income+expense accounts)
