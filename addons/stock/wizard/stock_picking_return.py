@@ -192,7 +192,7 @@ class ReturnPicking(models.TransientModel):
             proc_values = {
                 'group_id': self.picking_id.group_id,
                 'sale_line_id': line.move_id.sale_line_id.id,
-                'date_planned': line.move_id.date,
+                'date_planned': line.move_id.date or fields.Datetime.now(),
                 'warehouse_id': self.picking_id.picking_type_id.warehouse_id,
                 'partner_id': self.picking_id.partner_id.id,
                 'location_final_id': line.move_id.location_final_id or self.picking_id.location_dest_id,

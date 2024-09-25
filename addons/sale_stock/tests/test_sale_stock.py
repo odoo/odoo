@@ -1223,6 +1223,40 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_picking.move_ids.write({'quantity': 2, 'picked': True})
         return_picking.button_validate()
 
+    def test_return_for_exchange_negativ(self):
+        """test product added into the return wizard are excluded in case of return for exchange"""
+        sale_order = self._get_new_sale_order()
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids.write({'quantity': 10, 'picked': True})
+        picking.button_validate()
+
+        new_product = self.env['product.product'].create({
+            'name': 'new_product',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=picking.id, active_model='stock.picking'))
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = new_product
+            line.quantity = 2
+        return_wizard = return_picking_form.save()
+        return_wizard.product_return_moves[0].quantity = 2
+
+        res = return_wizard.action_create_exchanges()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        self.assertTrue(return_picking)
+        self.assertEqual(len(return_picking.move_ids), 2)
+        sol = self.env['sale.order.line'].search([('product_id', '=', new_product.id)])
+        self.assertFalse(sol)
+        return_picking.button_validate()
+        sol = self.env['sale.order.line'].search([('product_id', '=', new_product.id)])
+        self.assertTrue(sol)
+        self.assertEqual(sol.product_uom_qty, 0)
+        self.assertEqual(sol.qty_delivered, -2)
+        self.assertEqual(sol.order_id, sale_order)
+
     def test_return_with_mto_and_multisteps(self):
         """
         Suppose a product P and a 3-steps delivery.
