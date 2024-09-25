@@ -659,7 +659,8 @@ class AccountMove(models.Model):
                 move.invoice_user_id = move.invoice_user_id or self.env.user
             else:
                 move.invoice_user_id = False
-
+    
+    @api.depends('send_and_print_values')
     def _compute_is_being_sent(self):
         for move in self:
             move.is_being_sent = bool(move.send_and_print_values)
