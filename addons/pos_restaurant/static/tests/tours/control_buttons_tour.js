@@ -26,11 +26,17 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             FloorScreen.clickTable("4"),
             Chrome.activeTableOrOrderIs("4"),
             ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
+            // Extra line is added to test merging table.
+            // Merging this order to another should also include this extra line.
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.selectedOrderlineHas("Coca-Cola", "1"),
+
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("2"),
             Chrome.activeTableOrOrderIs("2"),
             Order.hasLine({ productName: "Water", quantity: "5" }),
             Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
+            Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
 
             // Test SplitBillButton
             ProductScreen.clickControlButton("Split"),
