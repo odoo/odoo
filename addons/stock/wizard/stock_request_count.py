@@ -12,7 +12,7 @@ class StockRequestCount(models.TransientModel):
         'Inventory Date', required=True,
         help="Choose a date to get the inventory at that date",
         default=fields.Datetime.now)
-    user_id = fields.Many2one('res.users', string="User")
+    user_id = fields.Many2one('res.users', string="User", domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)])
     quant_ids = fields.Many2many('stock.quant')
     set_count = fields.Selection([('empty', 'Leave Empty'), ('set', 'Set Current Value')], default='empty', string='Count')
 
