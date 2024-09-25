@@ -205,10 +205,11 @@ export class KanbanRecord extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
 
-        const { Compiler, templates } = this.props;
+        const { archInfo, Compiler, templates } = this.props;
         const ViewCompiler = Compiler || this.constructor.Compiler;
+        const isLegacy = archInfo.isLegacyArch;
 
-        this.templates = useViewCompiler(ViewCompiler, templates);
+        this.templates = useViewCompiler(ViewCompiler, templates, { isLegacy });
 
         this.menuTemplateName = this.props.archInfo.isLegacyArch
             ? this.constructor.LEGACY_KANBAN_MENU_ATTRIBUTE

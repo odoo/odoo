@@ -128,22 +128,25 @@ export class KanbanCompiler extends ViewCompiler {
             }
         }
 
-        const { bold, display } = extractAttributes(el, ["bold", "display"]);
-        const classNames = [];
-        if (display === "right") {
-            classNames.push("float-end");
-        } else if (display === "full") {
-            classNames.push("o_text_block");
+        if (params.isLegacy) {
+            const { bold, display } = extractAttributes(el, ["bold", "display"]);
+            const classNames = [];
+            if (display === "right") {
+                classNames.push("float-end");
+            } else if (display === "full") {
+                classNames.push("o_text_block");
+            }
+            if (bold) {
+                classNames.push("o_text_bold");
+            }
+            if (classNames.length > 0) {
+                const clsFormatted = isSpan
+                    ? classNames.join(" ")
+                    : toStringExpression(classNames.join(" "));
+                compiled.setAttribute("class", clsFormatted);
+            }
         }
-        if (bold) {
-            classNames.push("o_text_bold");
-        }
-        if (classNames.length > 0) {
-            const clsFormatted = isSpan
-                ? classNames.join(" ")
-                : toStringExpression(classNames.join(" "));
-            compiled.setAttribute("class", clsFormatted);
-        }
+
         const attrs = {};
         for (const attr of el.attributes) {
             attrs[attr.name] = attr.value;

@@ -442,24 +442,6 @@ test.tags("desktop")("Hide tooltip when user click inside a kanban headers item"
     expect(".o-tooltip").toHaveCount(0);
 });
 
-test("display full is supported on fields", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-        <kanban class="o_kanban_test">
-            <templates>
-                <t t-name="card">
-                    <field name="foo" display="full"/>
-                </t>
-            </templates>
-        </kanban>`,
-    });
-
-    expect(".o_kanban_record span.o_text_block").toHaveCount(4);
-    expect(queryFirst("span.o_text_block").textContent).toBe("yop");
-});
-
 test.tags("desktop")("basic grouped rendering", async () => {
     expect.assertions(16);
 
