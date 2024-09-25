@@ -582,26 +582,40 @@ class HolidaysAllocation(models.Model):
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
         allocations._process_accrual_plans()
 
-    def _get_future_leaves_on(self, accrual_date):
+    def _get_allocation_data_on(self, accrual_date):
         # As computing future accrual allocation days automatically updates the allocation,
         # We need to create a temporary copy of that allocation to return the difference in number of days
         # to see how much more days will be allocated from now until that date.
         self.ensure_one()
-        if not accrual_date or accrual_date <= date.today():
-            return 0
+
+        res = {'future_leaves': 0,
+               'carried_over_days_expiration_date': False,
+               'expiring_carryover_days': 0}
+
+        if not accrual_date or accrual_date < date.today():
+            return res
 
         if not (self.accrual_plan_id
                 and self.state == 'validate'
                 and self.allocation_type == 'accrual'
-                and (not self.date_to or self.date_to > accrual_date)
-                and (not self.nextcall or self.nextcall <= accrual_date)):
-            return 0
+                and (not self.date_to or self.date_to > accrual_date)):
+            return res
+
+        if accrual_date == date.today() or (self.nextcall and self.nextcall > accrual_date):
+            res.update({
+                'carried_over_days_expiration_date': self.carried_over_days_expiration_date,
+                'expiring_carryover_days': self.expiring_carryover_days
+            })
+            return res
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
         fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
         if self.type_request_unit in ['hour']:
-            return float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
-        res = round((fake_allocation.number_of_days - self.number_of_days), 2)
+            res['future_leaves'] = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
+        else:
+            res['future_leaves'] = round((fake_allocation.number_of_days - self.number_of_days), 2)
+        res['carried_over_days_expiration_date'] = fake_allocation.carried_over_days_expiration_date
+        res['expiring_carryover_days'] = fake_allocation.expiring_carryover_days
         self._invalidate_cache()
         return res
 
