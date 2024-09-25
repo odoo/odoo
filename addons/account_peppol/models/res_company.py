@@ -19,7 +19,7 @@ def _cc_checker(country_code, code_type):
 
 
 def _re_sanitizer(expression):
-    return lambda endpoint: (res.group(0) if (res := re.search(expression, endpoint)) else endpoint)
+    return lambda endpoint: (res := re.search(expression, endpoint)) and res.group(0) or endpoint
 
 
 PEPPOL_ENDPOINT_RULES = {
