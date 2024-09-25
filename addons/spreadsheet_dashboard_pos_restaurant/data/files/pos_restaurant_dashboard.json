@@ -1612,7 +1612,7 @@
           "id": "price_total:sum",
           "fieldName": "price_total",
           "aggregator": "sum",
-          "format": "[$$]#,##0.00"
+          "format": ""
         },
         {
           "id": "order_id:count_distinct",
@@ -1623,7 +1623,7 @@
           "id": "price_subtotal_excl:sum",
           "fieldName": "price_subtotal_excl",
           "aggregator": "sum",
-          "format": "[$$]#,##0.00"
+          "format": ""
         },
         {
           "id": "total_discount:sum",
@@ -1639,7 +1639,7 @@
             "sheetId": "5d9c050d-2ba4-49ea-992f-142a93cad05a",
             "formula": "=IFERROR('price_subtotal_excl:sum'/'order_id:count_distinct',)"
           },
-          "format": "[$$]#,##0.00"
+          "format": ""
         },
         {
           "id": "Discount / Order:sum",
@@ -1660,7 +1660,8 @@
           "computedBy": {
             "sheetId": "5d9c050d-2ba4-49ea-992f-142a93cad05a",
             "formula": "=IFERROR('price_total:sum'/'order_id:count_distinct',)"
-          }
+          },
+          "format": ""
         }
       ],
       "model": "report.pos.order",
@@ -1734,7 +1735,7 @@
             "sheetId": "2f23e6dd-5f3f-4ec7-9d7b-dc1b17c82f10",
             "formula": "=IFERROR('Untaxed Total:sum'/'customer_count:sum',)"
           },
-          "format": "[$$]#,##0.00"
+          "format": ""
         },
         {
           "id": "Total revenue per sitting:sum",
@@ -1745,7 +1746,7 @@
             "sheetId": "5d9c050d-2ba4-49ea-992f-142a93cad05a",
             "formula": "=IFERROR('amount_total:sum'/'customer_count:sum',)"
           },
-          "format": "[$$]#,##0.00"
+          "format": ""
         }
       ],
       "model": "pos.order",
@@ -1799,13 +1800,13 @@
           "id": "price_total:sum",
           "fieldName": "price_total",
           "aggregator": "sum",
-          "format": "[$$]#,##0.00"
+          "format": ""
         },
         {
           "id": "margin:sum",
           "fieldName": "margin",
           "aggregator": "sum",
-          "format": "[$$]#,##0.00"
+          "format": ""
         }
       ],
       "model": "report.pos.order",
@@ -1865,14 +1866,14 @@
           "id": "amount_total:sum",
           "fieldName": "amount_total",
           "aggregator": "sum",
-          "format": "[$$]#,##0.00"
+          "format": ""
         },
         { "id": "__count", "fieldName": "__count" },
         {
           "id": "tip_amount:sum",
           "fieldName": "tip_amount",
           "aggregator": "sum",
-          "format": "[$$]#,##0.00"
+          "format": ""
         }
       ],
       "model": "pos.order",
@@ -1925,7 +1926,7 @@
           "id": "price_total:sum",
           "fieldName": "price_total",
           "aggregator": "sum",
-          "format": "[$$]#,##0.00"
+          "format": ""
         }
       ],
       "model": "report.pos.order",
@@ -1973,7 +1974,8 @@
         {
           "id": "price_total:sum",
           "fieldName": "price_total",
-          "aggregator": "sum"
+          "aggregator": "sum",
+          "format": ""
         }
       ],
       "model": "report.pos.order",
