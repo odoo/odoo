@@ -1518,7 +1518,6 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const previousType = previousInputEl.type;
         [...this.$target[0].childNodes].forEach(node => node.remove());
         [...fieldEl.childNodes].forEach(node => this.$target[0].appendChild(node));
-        [...fieldEl.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
         [...fieldEl.attributes].forEach(el => this.$target[0].setAttribute(el.nodeName, el.nodeValue));
         if (hasConditionalVisibility) {
             this.$target[0].classList.add('s_website_form_field_hidden_if', 'd-none');
