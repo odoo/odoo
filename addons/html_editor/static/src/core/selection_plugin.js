@@ -119,6 +119,7 @@ export class SelectionPlugin extends Plugin {
         "getTraversedBlocks",
         "modifySelection",
         "rectifySelection",
+        "focusEditable",
         // "collapseIfZWS",
     ];
     static resources = () => ({
@@ -126,7 +127,6 @@ export class SelectionPlugin extends Plugin {
     });
 
     setup() {
-        this.canApplySelectionToDocument = true;
         this.resetSelection();
         this.addDomListener(this.document, "selectionchange", this.updateActiveSelection);
         this.addDomListener(this.editable, "mousedown", (ev) => {
@@ -432,8 +432,9 @@ export class SelectionPlugin extends Plugin {
         [anchorNode, anchorOffset] = normalizeFakeBR(anchorNode, anchorOffset);
         [focusNode, focusOffset] = normalizeFakeBR(focusNode, focusOffset);
         const selection = this.document.getSelection();
+        const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         if (selection) {
-            if (this.canApplySelectionToDocument) {
+            if (documentSelectionIsInEditable) {
                 if (
                     selection.anchorNode !== anchorNode ||
                     selection.focusNode !== focusNode ||
@@ -499,7 +500,6 @@ export class SelectionPlugin extends Plugin {
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
         const focus = { node: selection.focusNode, offset: selection.focusOffset };
 
-        this.canApplySelectionToDocument = selectionData.documentSelectionIsInEditable;
         return {
             restore: () => {
                 this.setSelection(
@@ -511,7 +511,6 @@ export class SelectionPlugin extends Plugin {
                     },
                     { normalize: false }
                 );
-                this.canApplySelectionToDocument = true;
             },
             update(callback) {
                 callback(anchor);
@@ -859,5 +858,17 @@ export class SelectionPlugin extends Plugin {
             this.editable.contains(anchorNode) &&
             (focusNode === anchorNode || this.editable.contains(focusNode))
         );
+    }
+
+    focusEditable() {
+        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
+        if (documentSelectionIsInEditable) {
+            return;
+        }
+        const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
+        const selection = this.document.getSelection();
+        if (selection) {
+            selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+        }
     }
 }

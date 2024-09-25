@@ -37,6 +37,7 @@ export class ColorSelector extends Component {
         type: String, // either foreground or background
         getUsedCustomColors: Function,
         getSelectedColors: Function,
+        focusEditable: Function,
         ...toolbarButtonProps,
     };
 
@@ -73,6 +74,7 @@ export class ColorSelector extends Component {
     applyColor(color) {
         this.currentCustomColor.color = color;
         this.props.dispatch("APPLY_COLOR", { color: color || "", mode: this.mode });
+        this.props.focusEditable();
     }
 
     onColorApply(ev) {

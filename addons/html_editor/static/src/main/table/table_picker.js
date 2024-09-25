@@ -16,10 +16,6 @@ export class TablePicker extends Component {
             cols: 3,
             rows: 3,
         });
-        const editable = this.props.editable;
-        useExternalListener(editable.ownerDocument, "mousedown", (ev) => {
-            this.props.overlay.close();
-        });
         useExternalListener(this.props.editable, "keydown", (ev) => {
             const key = ev.key;
             const isRTL = this.props.direction === "rtl";

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, press, waitFor } from "@odoo/hoot-dom";
+import { click, getActiveElement, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
@@ -86,4 +86,22 @@ test("Can insert an image, and selection should be collapsed after it", async ()
     await animationFrame();
     expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
     expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe("<p>a<img>[]bc</p>");
+});
+
+test("press escape to close media dialog", async () => {
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
+        return [];
+    });
+    const env = await makeMockEnv();
+    const { editor, el } = await setupEditor("<p>a[]bc</p>", { env });
+    insertText(editor, "/image");
+    await waitFor(".o-we-powerbox");
+    press("Enter");
+    await animationFrame();
+    expect(getActiveElement()).toBe(queryOne(".modal .o_select_media_dialog .o_we_search"));
+
+    press("escape");
+    await animationFrame();
+    expect(".modal .o_select_media_dialog").toHaveCount(0);
+    expect(getContent(el)).toBe("<p>a[]bc</p>");
 });

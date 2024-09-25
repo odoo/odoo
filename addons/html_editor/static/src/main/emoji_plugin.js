@@ -1,18 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import { Component, xml } from "@odoo/owl";
 import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
-
-class EditorEmojiPicker extends Component {
-    static template = xml`<div class="popover" t-on-mousedown.stop="() => {}">
-            <EmojiPicker t-props="props"/>
-        </div>`;
-    static components = { EmojiPicker };
-    static props = {
-        close: Function,
-        onSelect: Function,
-    };
-}
 
 export class EmojiPlugin extends Plugin {
     static name = "emoji";
@@ -34,11 +22,9 @@ export class EmojiPlugin extends Plugin {
     });
 
     setup() {
-        this.overlay = this.shared.createOverlay(EditorEmojiPicker, {
+        this.overlay = this.shared.createOverlay(EmojiPicker, {
             hasAutofocus: true,
-        });
-        this.addDomListener(this.document, "mousedown", () => {
-            this.overlay.close();
+            className: "popover",
         });
     }
 
@@ -53,14 +39,15 @@ export class EmojiPlugin extends Plugin {
             props: {
                 close: () => {
                     this.overlay.close();
+                    this.shared.focusEditable();
                 },
                 onSelect: (str) => {
-                    if (!onSelect) {
-                        this.shared.domInsert(str);
-                        this.dispatch("ADD_STEP");
+                    if (onSelect) {
+                        onSelect(str);
                         return;
                     }
-                    onSelect(str);
+                    this.shared.domInsert(str);
+                    this.dispatch("ADD_STEP");
                 },
             },
             target,

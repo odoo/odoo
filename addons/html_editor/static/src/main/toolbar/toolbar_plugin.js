@@ -47,7 +47,12 @@ export class ToolbarPlugin extends Plugin {
         if (this.isMobileToolbar) {
             this.overlay = new MobileToolbarOverlay(this.editable);
         } else {
-            this.overlay = this.shared.createOverlay(Toolbar, { position: "top-start" });
+            this.overlay = this.shared.createOverlay(Toolbar, {
+                positionOptions: {
+                    position: "top-start",
+                },
+                closeOnPointerdown: false,
+            });
         }
         this.state = reactive({
             buttonsActiveState: this.buttonGroups.flatMap((g) =>
@@ -151,6 +156,7 @@ export class ToolbarPlugin extends Plugin {
             buttonGroups: this.buttonGroups,
             getSelection: () => this.shared.getEditableSelection(),
             state: this.state,
+            focusEditable: () => this.shared.focusEditable(),
         };
     }
 
