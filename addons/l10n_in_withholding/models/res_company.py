@@ -8,7 +8,6 @@ class ResCompany(models.Model):
         comodel_name='account.account',
         string="TDS Account",
         check_company=True,
-        domain="[('type', '=', 'general')]"
     )
     l10n_in_withholding_journal_id = fields.Many2one(
         comodel_name='account.journal',
