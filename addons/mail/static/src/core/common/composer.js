@@ -212,7 +212,13 @@ export class Composer extends Component {
         }
         if (this.thread) {
             if (this.thread.channel_type === "channel") {
-                return _t("Message #%(thread name)s…", { "thread name": this.thread.displayName });
+                const threadName = this.thread.displayName;
+                if (this.thread.parent_channel_id) {
+                    return _t(`Message "%(subChannelName)s"`, {
+                        subChannelName: threadName,
+                    });
+                }
+                return _t("Message #%(threadName)s…", { threadName });
             }
             return _t("Message %(thread name)s…", { "thread name": this.thread.displayName });
         }
