@@ -196,7 +196,7 @@ beforeEach(() => {
     });
 });
 
-test("display full is supported on fields", async () => {
+test.debug("display full is supported on fields", async () => {
     await mountView({
         type: "kanban",
         resModel: "partner",
