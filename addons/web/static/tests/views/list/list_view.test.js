@@ -8637,6 +8637,124 @@ test(`result of consecutive resequences is correctly sorted`, async () => {
     });
 });
 
+test("resequence with NULL values", async () => {
+    mockService("action", {
+        doActionButton(params) {
+            params.onClose();
+        },
+    });
+    // we want the data to be minimal to have a minimal test
+    class MyFoo extends models.Model {
+        int_field = fields.Integer();
+
+        _records = [
+            { id: 1, int_field: 1 },
+            { id: 2 },
+            { id: 3, int_field: 3 },
+            { id: 4, int_field: 2 },
+        ];
+    }
+    defineModels([MyFoo]);
+
+    const serverValues = {
+        1: 1,
+        2: false,
+        3: 3,
+        4: 2,
+    };
+
+    onRpc("web_search_read", function ({ parent }) {
+        const res = parent();
+        const getServerValue = (record) =>
+            serverValues[record.id] === false ? Number.MAX_SAFE_INTEGER : serverValues[record.id];
+
+        // when sorted, NULL values are last
+        res.records.sort((a, b) => getServerValue(a) - getServerValue(b));
+        return res;
+    });
+
+    onRpc("/web/dataset/resequence", async (request) => {
+        const { params } = await request.json();
+        for (let i = 0; i < params.ids.length; i++) {
+            serverValues[params.ids[i]] = i;
+        }
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "my.foo",
+        arch: `<tree default_order="int_field">
+                <field name="int_field" widget="handle"/>
+                <field name="id"/>
+                <button name="reload" class="reload" string="Confirm" type="object"/>
+            </tree>`,
+    });
+
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "4", "3", "2"]);
+
+    await contains("tbody tr:nth-child(4) .o_handle_cell").dragAndDrop("tbody tr:nth-child(3)");
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "4", "2", "3"]);
+
+    await contains("button.reload").click();
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "4", "2", "3"]);
+});
+
+test("resequence with only NULL values", async () => {
+    mockService("action", {
+        doActionButton(params) {
+            params.onClose();
+        },
+    });
+    // we want the data to be minimal to have a minimal test
+    class MyFoo extends models.Model {
+        int_field = fields.Integer();
+
+        _records = [{ id: 1 }, { id: 2 }, { id: 3 }];
+    }
+    defineModels([MyFoo]);
+
+    const serverValues = {
+        1: false,
+        2: false,
+        3: false,
+    };
+
+    onRpc("web_search_read", function ({ parent }) {
+        const res = parent();
+        const getServerValue = (record) =>
+            serverValues[record.id] === false ? Number.MAX_SAFE_INTEGER : serverValues[record.id];
+
+        // when sorted, NULL values are last
+        res.records.sort((a, b) => getServerValue(a) - getServerValue(b));
+        return res;
+    });
+
+    onRpc("/web/dataset/resequence", async (request) => {
+        const { params } = await request.json();
+        for (let i = 0; i < params.ids.length; i++) {
+            serverValues[params.ids[i]] = i;
+        }
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "my.foo",
+        arch: `<tree default_order="int_field">
+                <field name="int_field" widget="handle"/>
+                <field name="id"/>
+                <button name="reload" class="reload" string="Confirm" type="object"/>
+            </tree>`,
+    });
+
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "2", "3"]);
+
+    await contains("tbody tr:nth-child(3) .o_handle_cell").dragAndDrop("tbody tr:nth-child(2)");
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "3", "2"]);
+
+    await contains("button.reload").click();
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["1", "3", "2"]);
+});
+
 test(`editable list with handle widget`, async () => {
     // resequence makes sense on a sequence field, not on arbitrary fields
     Foo._records[0].int_field = 0;
