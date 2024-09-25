@@ -22,7 +22,6 @@ import {
     setDimensions,
     toSelector,
 } from "./dom";
-import { animationFrame } from "./time";
 
 /**
  * @typedef {Target | Promise<Target>} AsyncTarget
@@ -30,14 +29,16 @@ import { animationFrame } from "./time";
  * @typedef {"auto" | "blur" | "enter" | "tab" | false} ConfirmAction
  *
  * @typedef {{
- *  cancel: (options?: EventOptions) => Promise<Event[]>;
- *  drop: (to?: AsyncTarget, options?: PointerOptions) => Promise<Event[]>;
+ *  cancel: (options?: EventOptions) => Promise<EventList>;
+ *  drop: (to?: AsyncTarget, options?: PointerOptions) => Promise<EventList>;
  *  moveTo: (to?: AsyncTarget, options?: PointerOptions) => Promise<DragHelpers>;
  * }} DragHelpers
  *
  * @typedef {import("./dom").Position} Position
  *
  * @typedef {import("./dom").Dimensions} Dimensions
+ *
+ * @typedef {((ev: Event) => boolean) | EventType} EventListPredicate
  *
  * @typedef {{}} EventOptions generic event options
  *
@@ -146,21 +147,31 @@ const deleteSelection = (target) => {
 };
 
 /**
+ *
  * @param {EventTarget} target
- * @param {EventType[]} eventSequence
- * @param {EventInit} eventInit
+ * @param {EventType} eventType
+ * @param {PointerEventInit} eventInit
+ * @param {{
+ *  mouse?: [EventType, MouseEventInit];
+ *  touch?: [EventType, TouchEventInit];
+ * }} additionalEvents
  */
-const dispatchEventSequence = async (target, eventSequence, eventInit) => {
-    for (const eventType of eventSequence) {
-        if (!eventType) {
-            continue;
+const dispatchPointerEvent = async (target, eventType, eventInit, { mouse, touch }) => {
+    const pointerEvent = await dispatch(target, eventType, eventInit);
+    let prevented = isPrevented(pointerEvent);
+    if (hasTouch()) {
+        if (touch && runTime.pointerDownTarget) {
+            const [touchEventType, touchEventInit] = touch;
+            await dispatch(runTime.pointerDownTarget, touchEventType, touchEventInit || eventInit);
         }
-        const event = await dispatch(target, eventType, eventInit);
-        if (isPrevented(event)) {
-            return true;
+    } else {
+        if (mouse && !prevented) {
+            const [mouseEventType, mouseEventInit] = mouse;
+            const mouseEvent = await dispatch(target, mouseEventType, mouseEventInit || eventInit);
+            prevented = isPrevented(mouseEvent);
         }
     }
-    return false;
+    return prevented;
 };
 
 /**
@@ -666,7 +677,7 @@ const setupEvents = (type) => {
     currentEventTypes.push(type);
 
     return async () => {
-        const events = getCurrentEvents();
+        const events = new EventList(getCurrentEvents());
         const currentType = currentEventTypes.pop();
         delete currentEvents[currentType];
         if (!allowLogs) {
@@ -717,6 +728,7 @@ const setupEvents = (type) => {
             $groupEnd();
         }
         $groupEnd();
+
         return events;
     };
 };
@@ -960,17 +972,13 @@ const _hover = async (target, options) => {
             await dispatch(previous, "dragleave", leaveEventInit);
         } else {
             // Regular case: pointer events are triggered
-            await dispatchEventSequence(
-                previous,
-                ["pointermove", !hasTouch() && "mousemove"],
-                leaveEventInit
-            );
-            await dispatchTouchEvent("touchmove", leaveEventInit);
-            await dispatchEventSequence(
-                previous,
-                ["pointerout", !hasTouch() && "mouseout"],
-                leaveEventInit
-            );
+            await dispatchPointerEvent(previous, "pointermove", leaveEventInit, {
+                mouse: ["mousemove"],
+                touch: ["touchmove"],
+            });
+            await dispatchPointerEvent(previous, "pointerout", leaveEventInit, {
+                mouse: ["mouseout"],
+            });
             const leaveEvents = await Promise.all(
                 getDifferentParents(current, previous).map((element) =>
                     dispatch(element, "pointerleave", leaveEventInit)
@@ -996,11 +1004,9 @@ const _hover = async (target, options) => {
         } else {
             // Regular case: pointer events are triggered
             if (isDifferentTarget) {
-                await dispatchEventSequence(
-                    target,
-                    ["pointerover", !hasTouch() && "mouseover"],
-                    enterEventInit
-                );
+                await dispatchPointerEvent(target, "pointerover", enterEventInit, {
+                    mouse: ["mouseover"],
+                });
                 const enterEvents = await Promise.all(
                     getDifferentParents(previous, current).map((element) =>
                         dispatch(element, "pointerenter", enterEventInit)
@@ -1010,12 +1016,10 @@ const _hover = async (target, options) => {
                     await dispatchRelatedEvents(enterEvents, "mouseenter", enterEventInit);
                 }
             }
-            await dispatchEventSequence(
-                target,
-                ["pointermove", !hasTouch() && "mousemove"],
-                enterEventInit
-            );
-            await dispatchTouchEvent("touchmove", enterEventInit);
+            await dispatchPointerEvent(target, "pointermove", enterEventInit, {
+                mouse: ["mousemove"],
+                touch: ["touchmove"],
+            });
         }
     }
 };
@@ -1280,10 +1284,14 @@ const _keyDown = async (target, eventInit) => {
         if (!isNil(nextSelectionEnd)) {
             target.selectionEnd = nextSelectionEnd;
         }
-        await dispatchEventSequence(target, ["beforeinput", "input"], {
+        const inputEventInit = {
             data: inputData,
             inputType,
-        });
+        };
+        const beforeInputEvent = await dispatch(target, "beforeinput", inputEventInit);
+        if (!isPrevented(beforeInputEvent)) {
+            await dispatch(target, "input", inputEventInit);
+        }
     }
 };
 
@@ -1324,14 +1332,14 @@ const _pointerDown = async (target, options) => {
         runTime.clickCount = 0;
     }
 
-    const prevented = await dispatchEventSequence(
-        pointerDownTarget,
-        ["pointerdown", !hasTouch() && !pointerDownTarget.disabled && "mousedown"],
-        eventInit
-    );
-
     runTime.touchStartPosition = { ...runTime.position };
-    await dispatchTouchEvent("touchstart", eventInit);
+    const prevented = await dispatchPointerEvent(pointerDownTarget, "pointerdown", eventInit, {
+        mouse: !pointerDownTarget.disabled && [
+            "mousedown",
+            { ...eventInit, detail: runTime.clickCount + 1 },
+        ],
+        touch: ["touchstart"],
+    });
 
     if (prevented) {
         return;
@@ -1362,7 +1370,6 @@ const _pointerUp = async (target, options) => {
     const eventInit = {
         ...runTime.position,
         button: options?.button || 0,
-        detail: runTime.clickCount,
     };
 
     if (runTime.isDragging) {
@@ -1381,13 +1388,14 @@ const _pointerUp = async (target, options) => {
         return;
     }
 
-    await dispatchEventSequence(
-        target,
-        ["pointerup", !hasTouch() && !target.disabled && "mouseup"],
-        eventInit
-    );
-
-    await dispatchTouchEvent("touchend", eventInit);
+    const mouseEventInit = {
+        ...eventInit,
+        detail: runTime.clickCount + 1,
+    };
+    await dispatchPointerEvent(target, "pointerup", eventInit, {
+        mouse: !target.disabled && ["mouseup", mouseEventInit],
+        touch: ["touchend"],
+    });
 
     const touchStartPosition = runTime.touchStartPosition;
     runTime.touchStartPosition = {};
@@ -1398,7 +1406,6 @@ const _pointerUp = async (target, options) => {
         return;
     }
 
-    const clickEventInit = { ...eventInit, detail: runTime.clickCount + 1 };
     let actualTarget;
     if (hasTouch()) {
         actualTarget = pointerDownTarget === target && target;
@@ -1406,10 +1413,10 @@ const _pointerUp = async (target, options) => {
         actualTarget = getFirstCommonParent(target, pointerDownTarget);
     }
     if (actualTarget) {
-        await triggerClick(actualTarget, clickEventInit);
+        await triggerClick(actualTarget, mouseEventInit);
         runTime.clickCount++;
         if (!hasTouch() && runTime.clickCount % 2 === 0) {
-            await dispatch(actualTarget, "dblclick", clickEventInit);
+            await dispatch(actualTarget, "dblclick", mouseEventInit);
         }
     }
 
@@ -1685,7 +1692,7 @@ const mapKeyboardEvent = (eventInit) => ({
  * @see {@link click}
  * @param {AsyncTarget} target
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  check("input[type=checkbox]"); // Checks the first <input> checkbox element
  */
@@ -1722,7 +1729,7 @@ export async function check(target, options) {
  * - (optional) triggering a "change" event by pressing "Enter".
  *
  * @param {FillOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  clear(); // Clears the value of the current active element
  */
@@ -1763,7 +1770,7 @@ export async function clear(options) {
  *
  * @param {AsyncTarget} target
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  click("button"); // Clicks on the first <button> element
  */
@@ -1783,7 +1790,7 @@ export async function click(target, options) {
  * @see {@link click}
  * @param {AsyncTarget} target
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  dblclick("button"); // Double-clicks on the first <button> element
  */
@@ -1965,7 +1972,7 @@ export async function drag(target, options) {
  * @see {@link fill}
  * @param {InputValue} value
  * @param {FillOptions} options
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  fill("foo"); // Types "foo" in the active element
  *  edit("Hello World"); // Replaces "foo" by "Hello World"
@@ -2009,7 +2016,7 @@ export function enableEventLogs(toggle) {
  *
  * @param {InputValue} value
  * @param {FillOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  fill("Hello World"); // Types "Hello World" in the active element
  * @example
@@ -2044,7 +2051,7 @@ export async function fill(value, options) {
  *
  * @param {AsyncTarget} target
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  hover("button"); // Hovers the first <button> element
  */
@@ -2075,7 +2082,7 @@ export async function hover(target, options) {
  *
  * @param {KeyStrokes} keyStrokes
  * @param {KeyboardOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  keyDown(" "); // Space key
  */
@@ -2097,7 +2104,7 @@ export async function keyDown(keyStrokes, options) {
  *
  * @param {KeyStrokes} keyStrokes
  * @param {KeyboardOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  keyUp("Enter");
  */
@@ -2124,7 +2131,7 @@ export async function keyUp(keyStrokes, options) {
  *  - [desktop] `mouseleave`
  *
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  leave("button"); // Moves out of <button>
  */
@@ -2178,7 +2185,7 @@ export function on(target, type, listener, options) {
  *
  * @param {AsyncTarget} target
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  pointerDown("button"); // Focuses to the first <button> element
  */
@@ -2202,7 +2209,7 @@ export async function pointerDown(target, options) {
  *
  * @param {AsyncTarget} target
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  pointerUp("body"); // Triggers a pointer up on the <body> element
  */
@@ -2225,7 +2232,7 @@ export async function pointerUp(target, options) {
  *
  * @param {KeyStrokes} keyStrokes
  * @param {KeyboardOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  pointerDown("button[type=submit]"); // Moves focus to <button>
  *  keyDown("Enter"); // Submits the form
@@ -2260,7 +2267,7 @@ export async function press(keyStrokes, options) {
  *
  * @param {Dimensions} dimensions
  * @param {EventOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  resize("body", { width: 1000, height: 500 }); // Resizes <body> to 1000x500
  */
@@ -2285,7 +2292,7 @@ export async function resize(dimensions, options) {
  * @param {AsyncTarget} target
  * @param {Position} position
  * @param {EventOptions & QueryOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  scroll("body", { y: 0 }); // Scrolls to the top of <body>
  */
@@ -2302,7 +2309,6 @@ export async function scroll(target, position, options) {
         scrollOptions.top = y;
     }
     const element = queryFirst(await target, { ...options, scrollable: true });
-    /** @type {Event[]} */
     if (!hasTouch()) {
         await dispatch(element, "wheel");
     }
@@ -2322,7 +2328,7 @@ export async function scroll(target, position, options) {
  *
  * @param {string | number | (string | number)[]} value
  * @param {SelectOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  click("select[name=country]"); // Focuses <select> element
  *  select("belgium"); // Selects the <option value="belgium"> element
@@ -2353,7 +2359,7 @@ export async function select(value, options) {
  *
  * @param {MaybeIterable<File>} files
  * @param {EventOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  */
 export async function setInputFiles(files, options) {
     if (!runTime.fileInput) {
@@ -2383,7 +2389,7 @@ export async function setInputFiles(files, options) {
  * @param {AsyncTarget} target
  * @param {number} value
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  */
 export async function setInputRange(target, value, options) {
     const finalizeEvents = setupEvents("setInputRange");
@@ -2425,7 +2431,7 @@ export function setupEventActions(fixture) {
  * @see {@link click}
  * @param {AsyncTarget} target
  * @param {PointerOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  * @example
  *  uncheck("input[type=checkbox]"); // Unchecks the first <input> checkbox element
  */
@@ -2457,7 +2463,7 @@ export async function uncheck(target, options) {
  * Triggers a "beforeunload" event the current window.
  *
  * @param {EventOptions} [options]
- * @returns {Promise<Event[]>}
+ * @returns {Promise<EventList>}
  */
 export async function unload(options) {
     const finalizeEvents = setupEvents("unload");
@@ -2465,4 +2471,29 @@ export async function unload(options) {
     await dispatch(getWindow(), "beforeunload");
 
     return finalizeEvents(options);
+}
+
+/** @extends {Array<Event>} */
+export class EventList extends Array {
+    constructor(...args) {
+        super(...args.flat());
+    }
+
+    /**
+     * @param {EventListPredicate} predicate
+     */
+    get(predicate) {
+        return this.getAll(predicate)[0] || null;
+    }
+
+    /**
+     * @param {EventListPredicate} predicate
+     */
+    getAll(predicate) {
+        if (typeof predicate !== "function") {
+            const type = predicate;
+            predicate = (ev) => ev.type === type;
+        }
+        return this.filter(predicate);
+    }
 }

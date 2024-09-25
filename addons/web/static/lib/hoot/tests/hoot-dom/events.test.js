@@ -26,6 +26,7 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
+import { EventList } from "@web/../lib/hoot-dom/helpers/events";
 import { parseUrl, waitForIframes } from "../local_helpers";
 
 /**
@@ -149,7 +150,7 @@ describe(parseUrl(import.meta.url), () => {
         monitorEvents("button");
 
         const events = await click("button");
-        const clickEvent = events.find((ev) => ev.type === "click");
+        const clickEvent = events.get("click");
 
         expect(clickEvent.pointerId).toBeGreaterThan(0);
         expect(clickEvent.pointerType).toBe("mouse");
@@ -209,27 +210,51 @@ describe(parseUrl(import.meta.url), () => {
     test("triple click", async () => {
         await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
 
-        const allEvents = [
+        const allEvents = new EventList(
             // trigger 3 clicks
             await click("button"),
             await click("button"),
-            await click("button"),
-        ].flat();
+            await click("button")
+        );
 
-        const clickEvents = allEvents.filter((ev) => ev.type === "click");
+        const clickEvents = allEvents.getAll("click");
+        const mouseDownEvents = allEvents.getAll("mousedown");
+        const mouseUpEvents = allEvents.getAll("mouseup");
+        const pointerDownEvents = allEvents.getAll("pointerdown");
+        const pointerUpEvents = allEvents.getAll("pointerup");
+
+        expect(pointerDownEvents).toHaveLength(3);
+        expect(pointerDownEvents[0].detail).toBe(0);
+        expect(pointerDownEvents[1].detail).toBe(0);
+        expect(pointerDownEvents[2].detail).toBe(0);
+
+        expect(mouseDownEvents).toHaveLength(3);
+        expect(mouseDownEvents[0].detail).toBe(1);
+        expect(mouseDownEvents[1].detail).toBe(2);
+        expect(mouseDownEvents[2].detail).toBe(3);
+
+        expect(pointerUpEvents).toHaveLength(3);
+        expect(pointerUpEvents[0].detail).toBe(0);
+        expect(pointerUpEvents[1].detail).toBe(0);
+        expect(pointerUpEvents[2].detail).toBe(0);
+
+        expect(mouseUpEvents).toHaveLength(3);
+        expect(mouseUpEvents[0].detail).toBe(1);
+        expect(mouseUpEvents[1].detail).toBe(2);
+        expect(mouseUpEvents[2].detail).toBe(3);
 
         expect(clickEvents).toHaveLength(3);
-        expect(allEvents.filter((ev) => ev.type === "dblclick")).toHaveLength(1);
         expect(clickEvents[0].detail).toBe(1);
         expect(clickEvents[1].detail).toBe(2);
         expect(clickEvents[2].detail).toBe(3);
 
+        expect(allEvents.getAll("dblclick")).toHaveLength(1);
+
         await advanceTime(1_000);
 
         const events = await click("button");
-        const clickEvent = events.find((ev) => ev.type === "click");
 
-        expect(clickEvent.detail).toBe(1);
+        expect(events.get("click").detail).toBe(1);
     });
 
     test("click on disabled element", async () => {
@@ -730,7 +755,7 @@ describe(parseUrl(import.meta.url), () => {
 
         const firstItem = queryOne("#first-item");
         const events = await (await drag("#first-item")).drop("#third-item");
-        const touchEvents = events.filter((e) => e.type.startsWith("touch"));
+        const touchEvents = events.getAll((ev) => ev.type.startsWith("touch"));
 
         expect(touchEvents.map((e) => e.target)).toEqual(
             [
@@ -1088,7 +1113,6 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("multiple keyDown should be flagged as repeated", async () => {
-        const getKeyDownEvent = () => events.find((ev) => ev.type === "keydown");
         let events;
 
         await mountOnFixture(/* xml */ `<input type="text" />`);
@@ -1098,28 +1122,28 @@ describe(parseUrl(import.meta.url), () => {
         monitorEvents("input");
 
         events = await keyDown("Enter");
-        expect(getKeyDownEvent().repeat).toBe(false);
+        expect(events.get("keydown").repeat).toBe(false);
 
         events = await keyDown("Enter");
-        expect(getKeyDownEvent().repeat).toBe(true);
+        expect(events.get("keydown").repeat).toBe(true);
 
         events = await keyDown("Enter");
-        expect(getKeyDownEvent().repeat).toBe(true);
+        expect(events.get("keydown").repeat).toBe(true);
 
         events = await keyDown("Escape");
-        expect(getKeyDownEvent().repeat).toBe(false);
+        expect(events.get("keydown").repeat).toBe(false);
 
         events = await keyDown("Enter");
-        expect(getKeyDownEvent().repeat).toBe(false);
+        expect(events.get("keydown").repeat).toBe(false);
 
         events = await keyUp("Enter");
-        expect(getKeyDownEvent()).toBe(undefined);
+        expect(events.get("keydown")).toBe(null);
 
         events = await keyDown("Enter");
-        expect(getKeyDownEvent().repeat).toBe(false);
+        expect(events.get("keydown").repeat).toBe(false);
 
         events = await keyDown("Enter");
-        expect(getKeyDownEvent().repeat).toBe(true);
+        expect(events.get("keydown").repeat).toBe(true);
 
         expect.verifySteps([
             "input.keydown",
