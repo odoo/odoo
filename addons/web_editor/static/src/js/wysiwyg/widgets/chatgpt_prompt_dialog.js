@@ -49,7 +49,9 @@ export class ChatGPTPromptDialog extends ChatGPTDialog {
     onTextareaKeydown(ev) {
         if (ev.key === 'Enter' && !ev.shiftKey) {
             ev.stopImmediatePropagation();
-            this.submitPrompt(ev);
+            if (this.state.prompt.trim().length) {
+                this.submitPrompt(ev);
+            }
         }
     }
     submitPrompt(ev) {
