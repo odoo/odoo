@@ -2247,7 +2247,7 @@
             <h4 class="text-uppercase small fs-6 fw-bold mt-3">Billing address</h4>
             <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
             <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
-                <label>
+                <label id="use_delivery_as_billing_label">
                     <input
                         type="checkbox"
                         id="use_delivery_as_billing"
@@ -2308,9 +2308,12 @@
     <!-- Card view of addresses. Called in `website_sale.checkout`. -->
     <template id="address_kanban" name="Kanban address">
         <t t-set="address_type" t-value="is_invoice and 'billing' or 'delivery'"/>
-        <div t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or is_invoice and 'js_change_billing' or 'js_change_delivery'}"
-             t-att-data-address-type="address_type"
-             t-att-data-partner-id="contact.id">
+        <div
+            name="address_card"
+            t-attf-class="card position-relative h-100 #{selected and 'bg-primary border border-primary' or 'js_change_address'}"
+            t-att-data-address-type="address_type"
+            t-att-data-partner-id="contact.id"
+        >
             <div class="card-body d-flex flex-column align-items-start">
                 <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 <t t-if="contact._can_be_edited_by_current_customer(website_sale_order, address_type)">

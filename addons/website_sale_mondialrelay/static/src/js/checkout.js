@@ -23,26 +23,85 @@ WebsiteSaleCheckout.include({
         "click #btn_confirm_relay": "_onClickBtnConfirmRelay",
     }, WebsiteSaleCheckout.prototype.events),
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    /**
+     * Do not allow use same as delivery if delivery method mondialrelay or mondialrelay address is
+     * selected.
+     *
+     * @override of `website_sale`
+     */
+    async start() {
+        await this._super(...arguments);
+        this.$('#use_delivery_as_billing_label')?.tooltip();
+        this._adaptUseDeliveryAsBillingToggle();
+    },
 
     /**
-     * Loads Mondial Relay the first time, else show it.
+     * Loads Mondial Relay modal when method is selected and disable `use_delivery_as_billing` if
+     * not available.
      *
      * @override
      */
-    _updateAmountBadge(radio, result) {
-        this._super(...arguments);
-        if (result.mondial_relay) {
+    async _selectDeliveryMethod(ev) {
+        const checkedRadio = ev.currentTarget;
+        await this._super(...arguments);
+        if (checkedRadio.dataset.isMondialrelay) {
+            if (this.use_delivery_as_billing_toggle.checked) {
+                // Uncheck use same as delivery and show the billing address row.
+                this.use_delivery_as_billing_toggle.dispatchEvent(new MouseEvent('click'));
+            }
+            // Fetch delivery method data.
+            const result = await this._setDeliveryMethod(checkedRadio.dataset.dmId);
+            // Show mondialrelay modal.
             if (!$('#modal_mondialrelay').length) {
                 this._loadMondialRelayModal(result);
             } else {
-                this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass('disabled', !result.mondial_relay.current);
+                this.$modal_mondialrelay.find('#btn_confirm_relay').toggleClass(
+                    'disabled', !result.mondial_relay.current
+                );
                 this.$modal_mondialrelay.modal('show');
             }
         }
+        this._adaptUseDeliveryAsBillingToggle();
     },
+
+    /**
+     * If mondialrelay address is chosen uncheck `use billing as delivery` and show billing address
+     * row. Mondialrelay addresses are not allowed to be selected as billing.
+     *
+     * @override of `website_sale`
+     */
+    async _changeAddress(ev) {
+        const newAddress = ev.currentTarget;
+        if (newAddress.dataset.isMondialrelay && this.use_delivery_as_billing_toggle.checked) {
+            // Uncheck use same as delivery and show the billing address row.
+            this.use_delivery_as_billing_toggle.dispatchEvent(new MouseEvent('click'));
+        }
+        await this._super(...arguments);
+        this._adaptUseDeliveryAsBillingToggle();
+    },
+
+    /**
+     * Disable use same as delivery when delivery method mondialrelay or mondialrelay address is
+     * selected, otherwise enable it.
+     *
+     * @private
+     * @return {void}
+     */
+    _adaptUseDeliveryAsBillingToggle() {
+        if (this.use_delivery_as_billing_toggle) {
+            const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+            const selectedDeliveryAddress = this._getSelectedAddress('delivery');
+            const requireSeparateBillingAddress = (
+                checkedRadio?.dataset.isMondialrelay
+                || selectedDeliveryAddress?.dataset.isMondialrelay
+            );
+            this.use_delivery_as_billing_toggle.disabled = requireSeparateBillingAddress;
+            this.$('#use_delivery_as_billing_label').tooltip(
+                requireSeparateBillingAddress ? 'enable' : 'disable'
+            );
+        }
+    },
+
     /**
      * This method render the modal, and inject it in dom with the Modial Relay Widgets script.
      * Once script loaded, it initialize the widget pre-configured with the information of result
@@ -96,11 +155,6 @@ WebsiteSaleCheckout.include({
 
     },
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-
     /**
      * Update the shipping address on the order and refresh the UI.
      *
@@ -113,9 +167,8 @@ WebsiteSaleCheckout.include({
         }
         rpc('/website_sale_mondialrelay/update_shipping', {
             ...this.lastRelaySelected,
-        }).then((o) => {
-            $('#address_on_payment').html(o.address);
-            this.$modal_mondialrelay.modal('hide');
+        }).then(() => {
+            location.reload(); // Update the addresses.
         });
     },
 });

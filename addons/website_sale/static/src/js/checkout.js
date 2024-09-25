@@ -22,6 +22,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     async start() {
         this.mainButton = document.querySelector('a[name="website_sale_main_button"]');
         this.use_delivery_as_billing_toggle = document.querySelector('#use_delivery_as_billing');
+        this.billingContainer = this.el.querySelector('#billing_container');
         await this._prepareDeliveryMethods();
     },
 
@@ -36,7 +37,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      */
     async _changeAddress(ev) {
         const newAddress = ev.currentTarget;
-        if (newAddress.dataset.isSelected) { // If the card is already selected.
+        if (newAddress.classList.contains('bg-primary')) { // If the card is already selected.
             return;
         }
         const addressType = newAddress.dataset.addressType;
@@ -87,14 +88,13 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         }
 
         // Toggle the billing address row.
-        const billingContainer = this.el.querySelector('#billing_container');
         if (useDeliveryAsBilling) {
-            billingContainer.classList.add('d-none');  // Hide the billing address row.
+            this.billingContainer.classList.add('d-none');  // Hide the billing address row.
             const selectedDeliveryAddress = this._getSelectedAddress('delivery');
             await this._selectMatchingBillingAddress(selectedDeliveryAddress.dataset.partnerId);
         } else {
             this._disableMainButton();
-            billingContainer.classList.remove('d-none');  // Show the billing address row.
+            this.billingContainer.classList.remove('d-none');  // Show the billing address row.
         }
 
         this._enableMainButton();  // Try to enable the main button.
