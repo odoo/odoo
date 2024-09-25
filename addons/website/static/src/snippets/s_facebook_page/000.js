@@ -39,9 +39,11 @@ const FacebookPageWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin
     destroy: function () {
         this._super.apply(this, arguments);
         if (this.iframeEl) {
+            this._deactivateEditorObserver();
             this.iframeEl.remove();
+            this._activateEditorObserver();
+            this.resizeObserver.disconnect();
         }
-        this.resizeObserver.disconnect();
     },
 
     //--------------------------------------------------------------------------
@@ -55,7 +57,7 @@ const FacebookPageWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin
      * @param {Object} params
     */
     _renderIframe(params) {
-        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+        this._deactivateEditorObserver();
 
         params.width = clamp(Math.floor(this.$el.width()), 180, 500);
         if (this.previousWidth !== params.width) {
@@ -65,20 +67,28 @@ const FacebookPageWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin
             this.iframeEl = Object.assign(document.createElement("iframe"), {
                 width: params.width,
                 height: params.height,
-                css: {
-                    border: "none",
-                    overflow: "hidden",
-                },
-                scrolling: "no",
-                frameborder: "0",
-                allowTransparency: "true",
-                "aria-label": _t("Facebook"),
             });
+            this.iframeEl.setAttribute("style", "border: none; overflow: hidden;");
+            this.iframeEl.setAttribute("aria-label", _t("Facebook"));
             this.el.replaceChildren(this.iframeEl);
             this._manageIframeSrc(this.el, src);
         }
 
+        this._activateEditorObserver();
+    },
+
+    /**
+     * Activates the editor observer if it exists.
+     */
+    _activateEditorObserver() {
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+    },
+
+    /**
+     * Deactivates the editor observer if it exists.
+     */
+    _deactivateEditorObserver() {
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
     },
 });
 
