@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:11+0000\n"
-"PO-Revision-Date: 2024-07-15 18:11+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 08:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,11 +38,6 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0009
 msgid "0009 - SIRET-CODE"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0037
-msgid "0037 - LY-tunnus"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -187,11 +182,6 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0211
 msgid "0211 - PARTITA IVA"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0215
-msgid "0215 - Net service ID"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -427,13 +417,6 @@ msgid "9959 - Employer Identification Number (EIN, USA)"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\"/>"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "A payment of %s was detected."
@@ -466,22 +449,21 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_id
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_payment__ubl_cii_xml_id
 msgid "Attachment"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_bis3
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
 msgid "BIS Billing 3.0"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_a_nz
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
 msgid "BIS Billing 3.0 A-NZ"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_sg
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_sg
 msgid "BIS Billing 3.0 SG"
 msgstr ""
 
@@ -492,24 +474,14 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Check Invoice(s)"
 msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Check Partner(s)"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
-msgid "Checkbox Ubl Cii Label"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_xml
-msgid "Checkbox Ubl Cii Xml"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -527,19 +499,9 @@ msgid ""
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model,name:account_edi_ubl_cii.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid "Conditional cash/payment discount"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model,name:account_edi_ubl_cii.model_res_config_settings
-msgid "Config Settings"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -588,12 +550,6 @@ msgid "E-FFF (BE)"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_search
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.res_partner_view_tree
-msgid "EDI Format"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "EN 16931"
 msgstr ""
@@ -617,18 +573,8 @@ msgid "Each invoice line should have at least one tax."
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
-msgid "Electronic Invoicing"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__enable_ubl_cii_xml
-msgid "Enable Ubl Cii Xml"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr ""
 
@@ -639,7 +585,7 @@ msgid "Export outside the EU"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__facturx
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
 msgid "Factur-X (CII)"
 msgstr ""
 
@@ -663,20 +609,9 @@ msgid "For intracommunity supply, the delivery address should be included."
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__ubl_cii_format
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__ubl_cii_format
-msgid "Format"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Format used to import the invoice: %s"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__invoice_is_ubl_cii
-msgid "Generate Peppol format by default"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -691,12 +626,18 @@ msgid "Invoice generated by Odoo"
 msgstr ""
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__is_ubl_format
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__is_ubl_format
+msgid "Is Ubl Format"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move
 msgid "Journal Entry"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__nlcius
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__nlcius
 msgid "NLCIUS"
 msgstr ""
 
@@ -725,13 +666,8 @@ msgid "Peppol e-address (EAS)"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_config_settings__invoice_is_ubl_cii
-msgid "Peppol format"
-msgstr ""
-
-#. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid ""
 "Please add a Recipient bank in the 'Other Info' tab to generate a complete "
 "file."
@@ -739,7 +675,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid ""
 "Please fill in Peppol EAS and Peppol Endpoint in your company form to "
 "generate a complete file."
@@ -838,7 +774,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid ""
 "These partners are missing Peppol EAS or Peppol Endpoint field. Please check"
 " those in their Accounting tab. Otherwise, the generated files will be "
@@ -863,7 +799,6 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_file
-#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_payment__ubl_cii_xml_file
 msgid "UBL/CII File"
 msgstr ""
 
@@ -877,19 +812,19 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Company"
 msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Invoice(s)"
 msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Partner(s)"
 msgstr ""
 
@@ -902,7 +837,13 @@ msgid ""
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__xrechnung
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "XML UBL"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
 msgid "XRechnung CIUS"
 msgstr ""
 
@@ -913,6 +854,12 @@ msgid ""
 "You should include at least one tax per invoice line. [BR-CO-04]-Each "
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
 " code (BT-151)."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__invoice_edi_format
+msgid "eInvoice format"
 msgstr ""
 
 #. module: account_edi_ubl_cii
