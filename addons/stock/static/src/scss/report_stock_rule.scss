@@ -1,4 +1,12 @@
-.o_report_stock_rule{
+.o_report_stock_rule {
+    .table > :not(:first-child) {
+        border-top: $border-width * 2 solid currentColor;
+    }
+
+    .table {
+        --table-border-color: #{$o-gray-300};
+    }
+
     .o_report_stock_rule_rule {
         display: flex;
         flex-flow: row nowrap;
