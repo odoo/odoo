@@ -338,6 +338,10 @@ export class SelfOrder extends Reactive {
         ); // Stripe, Adyen, Online
         const order = await this.sendDraftOrderToServer();
 
+        if (!order) {
+            return;
+        }
+
         // Stand number page will recall this function after the stand number is set
         if (
             service === "table" &&
