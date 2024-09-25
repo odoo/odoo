@@ -28,6 +28,10 @@ patch(PosOrder.prototype, {
             ...super.export_for_printing(...arguments),
             set_tip_after_payment: this.config.set_tip_after_payment,
             isRestaurant: this.config.module_pos_restaurant,
+            headerData: {
+                ...headerData,
+                trackingNumber: this.config.module_pos_restaurant ? this.tracking_number : null,
+            },
         };
     },
     setBooked(booked) {

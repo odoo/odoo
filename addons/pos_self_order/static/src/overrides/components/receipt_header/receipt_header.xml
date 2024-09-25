@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
-        <xpath expr="//h1[hasclass('tracking-number')]" position="after">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="before">
             <div t-if="props.data.pickingService" class="picking-service text-center pb-2">
                 <span t-if="props.data.pickingService == 'table'" >Service at Table</span>
                 <span t-else="">Pickup At Counter</span>

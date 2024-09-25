@@ -124,10 +124,7 @@ export class PosOrder extends Base {
             // FIXME: isn't there a better way to handle this date?
             shippingDate:
                 this.shipping_date && formatDate(DateTime.fromJSDate(new Date(this.shipping_date))),
-            headerData: {
-                ...headerData,
-                trackingNumber: this.tracking_number,
-            },
+            headerData: headerData,
             screenName: "ReceiptScreen",
         };
     }
