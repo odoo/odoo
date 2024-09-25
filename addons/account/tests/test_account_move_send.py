@@ -635,17 +635,18 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
         invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
 
-        self.partner_a.email = self.partner_b.email = None
+        self.partner_a.email = None
+        self.assertTrue(bool(self.partner_b.email))
         wizard = self.create_send_and_print(invoice1 + invoice2)
         self.assertTrue('account_missing_email' in wizard.alerts)
         self.assertEqual(wizard.alerts['account_missing_email']['level'], 'warning')
         wizard.action_send_and_print()
         self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
-        # email is not sent but invoices are still generated in multi, without raising any errors
+        # invoices are generated, but only partner_b got an email, without raising any errors
         self.assertTrue(invoice1.invoice_pdf_report_id)
         self.assertFalse(self._get_mail_message(invoice1))
         self.assertTrue(invoice2.invoice_pdf_report_id)
-        self.assertFalse(self._get_mail_message(invoice2))
+        self.assertTrue(self._get_mail_message(invoice2))
 
     def test_invoice_mail_attachments_widget(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
@@ -840,17 +841,17 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice, mail_template_id=None, mail_subject=custom_subject)
 
         wizard.action_send_and_print(allow_fallback_pdf=True)
-        message = self.env['mail.message'].search([('model', '=', invoice._name), ('res_id', '=', invoice.id)], limit=1)
+        message = self._get_mail_message(invoice)
         self.assertRecordValues(message, [{'subject': custom_subject}])
 
     def test_with_empty_mail_template_multi(self):
         """ Test shouldn't be able to send email without mail template in multi mode. """
-        self.partner_a.email = "turlututu@tsointsoin"
         invoice_1 = self.init_invoice("out_invoice", amounts=[1000], partner=self.partner_a, post=True)
         invoice_2 = self.init_invoice("out_invoice", amounts=[1000], partner=self.partner_a, post=True)
-
-        self.partner_a.invoice_sending_method = 'email'
-        self.partner_a.email = "turlututu@tsointsoin"
+        self.assertRecordValues(self.partner_a, [{
+            'email': 'turlututu@tsointsoin',
+            'invoice_sending_method': 'email',
+        }])
         wizard = self.create_send_and_print(invoice_1 + invoice_2)
 
         wizard.action_send_and_print()

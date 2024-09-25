@@ -94,7 +94,7 @@ class AccountMoveSend(models.AbstractModel):
         alerts = {}
         if partners_without_mail := moves.filtered(lambda m: 'email' in moves_data[m]['sending_methods'] and not m.partner_id.email).partner_id:
             alerts['account_missing_email'] = {
-                'level': 'danger' if len(partners_without_mail) == 1 else 'warning',
+                'level': 'danger' if len(moves) == 1 else 'warning',
                 'message': _("Partner(s) should have an email address."),
                 'action_text': _("View Partner(s)"),
                 'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)")),
