@@ -78,6 +78,20 @@ test("composer text input placeholder should contain channel name when thread do
     await contains("textarea.o-mail-Composer-input[placeholder='Message #General…']");
 });
 
+test("composer input placeholder in channel thread", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const subchannelID = pyEnv["discuss.channel"].create({
+        name: "ThreadFromGeneral",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(subchannelID);
+    await contains(`.o-mail-Composer-input[placeholder='Message "ThreadFromGeneral"']`);
+});
+
 test("add an emoji", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
