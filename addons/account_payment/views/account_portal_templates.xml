@@ -173,6 +173,9 @@
                                     </button>
                                 </div>
                                 <div class="tab-content" id="o_payment_tabcontent">
+                                    <div t-if="payment_state == 'in_payment'" class="alert alert-danger mt-2">
+                                        A payment has already been made on this invoice, please make sure to not pay twice.
+                                    </div>
                                     <div
                                         class="tab-pane my-3 show active"
                                         id="o_payment_installments"
@@ -231,6 +234,9 @@
                                 <div t-if="show_epd" class="alert alert-success">
                                     Early Payment Discount of <span t-out="epd_discount_amount_currency" t-options="{'widget': 'monetary', 'display_currency': currency}"/> has been applied.
                                 </div>
+                                <div t-if="payment_state == 'in_payment'" class="alert alert-danger">
+                                    A payment has already been made on this invoice, please make sure to not pay twice.
+                                </div>
                                 <div class="text-bg-light row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
                                     <t t-call="payment.summary_item">
                                         <t t-set="name" t-value="'amount_full'"/>
@@ -279,8 +285,11 @@
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
         <xpath expr="//t[@t-call='portal.portal_record_sidebar']//h2[1]" position="after">
             <t t-set="pending_txs" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized') and tx.provider_code not in ('none', 'custom'))"/>
-            <div t-if="invoice.payment_state in ('paid', 'in_payment')" class="rounded text-bg-success fw-normal badge">
+            <div t-if="invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-success fw-normal badge">
                 <i class="fa fa-fw fa-check-circle"/> Paid
+            </div>
+            <div t-if="invoice.payment_state == 'in_payment' and not invoice.currency_id.is_zero(invoice.amount_residual)" class="rounded text-bg-info fw-normal badge">
+                <i class="fa fa-fw fa-check-circle"/> Processing Payment
             </div>
             <div t-elif="pending_txs" class="rounded text-bg-info fw-normal badge">
                 <i class="fa fa-fw fa-check-circle"/> Pending

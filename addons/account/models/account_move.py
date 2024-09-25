@@ -1088,7 +1088,7 @@ class AccountMove(models.Model):
             move.amount_residual_signed = total_residual
             move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
 
-    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'matched_payment_ids')
+    @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'matched_payment_ids.state')
     def _compute_payment_state(self):
         stored_ids = tuple(self.ids)
         if stored_ids:
@@ -1178,6 +1178,8 @@ class AccountMove(models.Model):
                         new_pmt_state = invoice._get_invoice_in_payment_state()
                     elif reconciliation_vals:
                         new_pmt_state = 'partial'
+                    elif invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'paid'):
+                        new_pmt_state = invoice._get_invoice_in_payment_state()
             invoice.payment_state = new_pmt_state
 
     @api.depends('payment_state', 'state')
@@ -5163,13 +5165,6 @@ class AccountMove(models.Model):
 
     def _get_invoice_next_payment_values(self, custom_amount=None):
         self.ensure_one()
-        if self.currency_id.is_zero(self.amount_residual):
-            payment_state = 'fully_paid'
-        elif self.currency_id.is_zero(self.amount_total - self.amount_residual):
-            payment_state = 'not_paid'
-        else:
-            payment_state = 'partially_paid'
-
         term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
         installments = term_lines._get_installments_data()
         not_reconciled_installments = [x for x in installments if not x['reconciled']]
@@ -5237,7 +5232,7 @@ class AccountMove(models.Model):
                 next_due_date = installments[0]['date_maturity']
 
         return {
-            'payment_state': payment_state,
+            'payment_state': self.payment_state,
             'installment_state': installment_state,
             'next_amount_to_pay': next_amount_to_pay,
             'next_payment_reference': next_payment_reference,
