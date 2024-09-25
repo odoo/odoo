@@ -309,6 +309,11 @@ const isQueryableNode = (node) => QUERYABLE_NODE_TYPES.includes(node.nodeType);
 const isRootElement = (el) => el && R_ROOT_ELEMENT.test(el.nodeName || "");
 
 /**
+ * @param {Element} el
+ */
+const isShadowRoot = (el) => el.nodeType === Node.DOCUMENT_FRAGMENT_NODE && Boolean(el.host);
+
+/**
  * @template T
  * @param {T} object
  * @returns {T extends Window ? true : false}
@@ -1109,7 +1114,7 @@ export function isNodeCssVisible(node) {
         return false;
     }
     const parent = element.parentNode;
-    return !parent || isNodeCssVisible(parent.host || parent);
+    return !parent || isNodeCssVisible(isShadowRoot(parent) ? parent.host : parent);
 }
 
 /**
