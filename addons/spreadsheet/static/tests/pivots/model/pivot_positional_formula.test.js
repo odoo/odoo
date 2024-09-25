@@ -123,7 +123,7 @@ test("sort first pivot column (ascending)", async () => {
                 model: "partner",
                 sortedColumn: {
                     groupId: [[], [1]],
-                    measure: "probability:avg",
+                    measure: "probability",
                     order: "asc",
                 },
             },

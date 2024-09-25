@@ -98,16 +98,17 @@ export class OdooPivotModel extends PivotModel {
 
     /**
      * Get the value of the given domain for the given measure
-     * @param {string} measure
+     * @param {PivotMeasure} measure
      * @param {PivotDomain} domain
      */
     getPivotCellValue(measure, domain) {
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
         const group = JSON.stringify([rows, cols]);
         const values = this.data.measurements[group];
+        const measurementId = this._computeMeasurementId(measure);
 
-        if (values && (values[0][measure] || values[0][measure] === 0)) {
-            return values[0][measure];
+        if (values && (values[0][measurementId] || values[0][measurementId] === 0)) {
+            return values[0][measurementId];
         }
         return "";
     }
@@ -531,6 +532,7 @@ export class OdooPivotModel extends PivotModel {
         return this.getDefinition()
             .measures.filter((measure) => !measure.computedBy)
             .map((measure) => {
+                const measurementId = `${measure.fieldName}_${measure.aggregator}_id`;
                 if (measure.type === "many2one" && !measure.aggregator) {
                     return `${measure.fieldName}:count_distinct`;
                 }
@@ -539,7 +541,7 @@ export class OdooPivotModel extends PivotModel {
                     return "__count";
                 }
                 return measure.aggregator
-                    ? `${measure.fieldName}:${measure.aggregator}`
+                    ? `${measurementId}:${measure.aggregator}(${measure.fieldName})`
                     : measure.fieldName;
             });
     }
@@ -558,5 +560,61 @@ export class OdooPivotModel extends PivotModel {
             .join(",");
         params.kwargs.orderby = order;
         return super._getSubGroups(groupBys, params);
+    }
+
+    /**
+     * This method is used to compute the identifier of a measurement in the
+     * data of the web model. It's needed since we support to define an
+     * aggregator for a field.
+     */
+    _computeMeasurementId(measure) {
+        if (measure.fieldName === "__count") {
+            return "__count";
+        }
+        if (measure.aggregator) {
+            return `${measure.fieldName}_${measure.aggregator}_id`;
+        }
+        return measure.fieldName;
+    }
+
+    /**
+     * Override to support multiple aggregators for a same field
+     *
+     * @override
+     */
+    _getMeasurements(group) {
+        return this.getDefinition()
+            .measures.filter((measure) => !measure.computedBy)
+            .reduce((measurements, measure) => {
+                const measurementId = this._computeMeasurementId(measure);
+                var measurement = group[measurementId];
+                if (measurement instanceof Array) {
+                    // case field is many2one and used as measure and groupBy simultaneously
+                    measurement = 1;
+                }
+                if (measure.type === "boolean" && measurement instanceof Boolean) {
+                    measurement = measurement ? 1 : 0;
+                }
+                measurements[measurementId] = measurement;
+                return measurements;
+            }, {});
+    }
+
+    /**
+     * Override to support multiple aggregators for a same field
+     *
+     * @override
+     */
+    _getCellValue(groupId, measureName, originIndexes, config) {
+        const measure = this.getDefinition().measures.find((m) => m.fieldName === measureName);
+        const measurementId = this._computeMeasurementId(measure);
+        var key = JSON.stringify(groupId);
+        if (!config.data.measurements[key]) {
+            return;
+        }
+        var values = originIndexes.map((originIndex) => {
+            return config.data.measurements[key][originIndex][measurementId];
+        });
+        return values[0];
     }
 }

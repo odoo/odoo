@@ -817,7 +817,7 @@ test("Adding a measure should trigger a reload", async () => {
     });
     setCellContent(model, "A1", '=PIVOT.VALUE(1, "probability:sum")');
     await animationFrame();
-    expect.verifySteps([["probability:sum"], "read_group"]);
+    expect.verifySteps([["probability_sum_id:sum(probability)"], "read_group"]);
     updatePivot(model, 1, {
         measures: [
             { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
@@ -825,7 +825,10 @@ test("Adding a measure should trigger a reload", async () => {
         ],
     });
     await animationFrame();
-    expect.verifySteps([["probability:sum", "probability:avg"], "read_group"]);
+    expect.verifySteps([
+        ["probability_sum_id:sum(probability)", "probability_avg_id:avg(probability)"],
+        "read_group",
+    ]);
     updatePivot(model, 1, {
         measures: [
             { id: "probability:sum", fieldName: "probability", aggregator: "sum" },
@@ -834,7 +837,10 @@ test("Adding a measure should trigger a reload", async () => {
         ],
     });
     await animationFrame();
-    expect.verifySteps([["probability:sum", "probability:avg", "__count"], "read_group"]);
+    expect.verifySteps([
+        ["probability_sum_id:sum(probability)", "probability_avg_id:avg(probability)", "__count"],
+        "read_group",
+    ]);
 });
 
 test("Updating dimensions with undefined values does not trigger a new rpc", async () => {
@@ -1338,7 +1344,7 @@ test("can add a calculated measure", async function () {
         mockRPC: async function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "read_group") {
                 expect.step("read_group");
-                expect(kwargs.fields).toEqual(["probability:avg"]);
+                expect(kwargs.fields).toEqual(["probability_avg_id:avg(probability)"]);
             }
         },
     });
@@ -1452,7 +1458,7 @@ test("can import a pivot with a calculated field", async function () {
         mockRPC: function (route, { model, method, kwargs }) {
             if (model === "partner" && method === "read_group") {
                 expect.step("read_group");
-                expect(kwargs.fields).toEqual(["probability:avg"]);
+                expect(kwargs.fields).toEqual(["probability_avg_id:avg(probability)"]);
             }
         },
     });
@@ -1549,7 +1555,7 @@ test("Data are fetched with the correct aggregator", async () => {
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "read_group") {
-                expect(args.kwargs.fields).toEqual(["probability:avg"]);
+                expect(args.kwargs.fields).toEqual(["probability_avg_id:avg(probability)"]);
                 expect.step("read_group");
             }
         },
@@ -1569,7 +1575,7 @@ test("changing measure aggregates", async () => {
             }
         },
     });
-    expect.verifySteps(["probability:avg"]);
+    expect.verifySteps(["probability_avg_id:avg(probability)"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1578,7 +1584,7 @@ test("changing measure aggregates", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["probability:sum"]);
+    expect.verifySteps(["probability_sum_id:sum(probability)"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1587,7 +1593,7 @@ test("changing measure aggregates", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["foo:sum"]);
+    expect.verifySteps(["foo_sum_id:sum(foo)"]);
 });
 
 test("many2one measures are aggregated with count_distinct by default", async () => {
@@ -1602,7 +1608,7 @@ test("many2one measures are aggregated with count_distinct by default", async ()
             }
         },
     });
-    expect.verifySteps(["probability:avg"]);
+    expect.verifySteps(["probability_avg_id:avg(probability)"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
