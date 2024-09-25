@@ -3612,6 +3612,24 @@ describe("onDrop", () => {
             `<p>ab<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]c</p>`
         );
     });
+    test("should not cause a traceback when add br from htmlTransferItem, which is possible when dragging table cells", async () => {
+        const { el } = await setupEditor("<p>[]<br></p>");
+        const pElement = el.firstChild;
+        const textNode = pElement.firstChild;
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: textNode, offset: 0 }),
+        });
+
+        const dropData = new DataTransfer();
+        dropData.setData("text/html", '<br class="Apple-interchange-newline">');
+        dispatch(pElement, "drop", { dataTransfer: dropData });
+        await tick();
+
+        expect(getContent(el)).toBe(
+            `<p><br></p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        );
+    });
 });
 
 function dataURItoBlob(dataURI) {
