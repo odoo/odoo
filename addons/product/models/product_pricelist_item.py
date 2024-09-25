@@ -357,8 +357,7 @@ class PricelistItem(models.Model):
     @api.onchange('price_markup')
     def _onchange_price_markup(self):
         for item in self:
-            if item.price_markup:
-                item.price_discount = -item.price_markup
+            item.price_discount = -item.price_markup
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
