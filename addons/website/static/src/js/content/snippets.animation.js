@@ -826,6 +826,9 @@ registry.mediaVideo = publicWidget.Widget.extend(
 registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.o_background_video',
     disabledInEditableMode: false,
+    assetLibs: [
+        'website.assets_website_xml',
+    ],
 
     /**
      * @override

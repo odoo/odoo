@@ -212,10 +212,13 @@
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
             'website/static/src/xml/website.xml',
-            'website/static/src/xml/website.background.video.xml',
-            'website/static/src/xml/website.cookies_warning.xml',
             'website/static/src/js/text_processing.js',
             'website/static/src/snippets/observing_cookie_mixin.js',
+        ],
+        'website.assets_website_xml': [
+            'website/static/src/xml/website.background.video.xml',
+            'website/static/src/xml/website.cookies_warning.xml',
+            '''TODO check website.xml for widget'''
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/js/content/inject_dom.js',
