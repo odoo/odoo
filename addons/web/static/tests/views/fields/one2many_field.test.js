@@ -269,6 +269,71 @@ test("New record with a o2m also with 2 new records, ordered, and resequenced", 
     expect.verifySteps(["onchange partner"]);
 });
 
+test.tags("desktop")("resequence with NULL value", async () => {
+    mockService("action", {
+        doActionButton(params) {
+            params.onClose();
+        },
+    });
+    Partner._records.push(
+        { id: 10, int_field: 1 },
+        { id: 11, int_field: 2 },
+        { id: 12, int_field: 3 },
+        { id: 13 }
+    );
+    Partner._records[0].p = [10, 11, 12, 13];
+
+    const serverValues = {
+        10: 1,
+        11: 2,
+        12: 3,
+        13: false,
+    };
+
+    onRpc("web_read", function ({ parent }) {
+        const res = parent();
+        const getServerValue = (record) =>
+            serverValues[record.id] === false ? Number.MAX_SAFE_INTEGER : serverValues[record.id];
+
+        // when sorted, NULL values are last
+        res[0].p.sort((a, b) => getServerValue(a) - getServerValue(b));
+        return res;
+    });
+
+    onRpc("web_save", ({ args }) => {
+        args[1].p.forEach(([cmd, id, values]) => {
+            serverValues[id] = values.int_field;
+        });
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <sheet><div name="button_box">
+                    <button name="reload" class="reload" type="object" string="Confirm"/>
+                </div></sheet>
+                <field name="foo"/>
+                <field name="p">
+                    <list editable="bottom" default_order="int_field">
+                        <field name="int_field" widget="handle"/>
+                        <field name="id"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["10", "11", "12", "13"]);
+
+    await contains("tbody tr:nth-child(4) .o_handle_cell").dragAndDrop("tbody tr:nth-child(3)");
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["10", "11", "13", "12"]);
+
+    await contains("button.reload").click();
+    expect(queryAllTexts(".o_field_cell[name=id]")).toEqual(["10", "11", "13", "12"]);
+});
+
 test.tags("desktop")("one2many in a list x2many editable use the right context", async () => {
     onRpc("name_create", (args) => {
         expect.step(`name_create ${args.kwargs.context.my_context}`);
