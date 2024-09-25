@@ -230,7 +230,7 @@ const FieldEditor = FormEditor.extend({
             labelPosition: this._getLabelPosition(),
             labelWidth: this.$target[0].querySelector('.s_website_form_label').style.width,
             multiPosition: multipleInput && multipleInput.dataset.display || 'horizontal',
-            col: [...this.$target[0].classList].filter(el => el.match(/^col-/g)).join(' '),
+            col: [...this.$target[0].classList].filter(el => el.match(/^(col|offset)-/g)).join(' '),
             requiredMark: requiredMark,
             optionalMark: optionalMark,
             mark: mark && mark.textContent,
