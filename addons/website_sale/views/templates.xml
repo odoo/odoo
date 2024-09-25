@@ -1324,7 +1324,7 @@
                                     </t>
                                 </a>
                             </t>
-                            <div t-field="product.description_ecommerce" class="oe_structure"
+                            <div t-field="product.description_ecommerce"
                                 placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."/>
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
