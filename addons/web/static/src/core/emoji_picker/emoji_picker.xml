@@ -82,7 +82,7 @@
 </t>
 
 <t t-name="web.EmojiPicker.searchInput">
-    <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for an emoji" t-model="localState.searchTerm" t-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0"/>
+    <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for an emoji" t-model="localState.searchTerm" t-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0" t-att-tabindex="isMobileOS ? -1 : 0"/>
 </t>
 
 </templates>

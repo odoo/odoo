@@ -19,6 +19,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /**
  *
@@ -166,6 +167,7 @@ export class EmojiPicker extends Component {
     setup() {
         this.gridRef = useRef("emoji-grid");
         this.ui = useState(useService("ui"));
+        this.isMobileOS = isMobileOS();
         this.state = useState({
             activeEmojiIndex: 0,
             categoryId: null,
