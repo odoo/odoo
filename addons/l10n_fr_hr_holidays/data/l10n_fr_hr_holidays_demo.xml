@@ -65,7 +65,7 @@
         <field name="date_to" eval="time.strftime('%Y-12-31')"/>
         <field name="employee_id" ref="l10n_fr_part_time_employee"/>
     </record>
-    <function model="hr.leave.allocation" name="action_validate">
+    <function model="hr.leave.allocation" name="action_approve">
         <value eval="[ref('l10n_fr_hr_holidays_allocation')]"/>
     </function>
 

@@ -201,7 +201,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
             'date_from': datetime.strptime('2023-01-01', '%Y-%m-%d').date(),
             'date_to': datetime.strptime('2023-12-31', '%Y-%m-%d').date(),
         })
-        allocation.action_validate()
+        allocation.action_approve()
         leave_during_full_time, leave_during_partial_time = self.env['hr.leave'].create([
             {
                 'employee_id': employee.id,

@@ -109,7 +109,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }
-            ]).action_validate()
+            ]).action_approve()
 
             def _check_holidays_status(holiday_status, employee, ml, lt, rl, vrl):
                 result = holiday_status.get_allocation_data(employee)[employee][0][1]
@@ -152,7 +152,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             self.env.flush_all()
 
             # HrManager validates the second step
-            aloc1_user_group.with_user(self.user_hrmanager_id).action_validate()
+            aloc1_user_group.with_user(self.user_hrmanager_id).action_approve()
             # Checks Employee has effectively some days left
             hol_status_2_employee_group = self.holidays_status_limited.with_user(self.user_employee_id)
             _check_holidays_status(hol_status_2_employee_group, self.employee_emp, 2.0, 0.0, 2.0, 2.0)
@@ -251,7 +251,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'state': 'confirm',
             'date_from': time.strftime('%Y-%m-01'),
             'date_to': time.strftime('%Y-12-31'),
-        }).action_validate()
+        }).action_approve()
 
         leave_vals = {
             'name': 'Sick Time Off',

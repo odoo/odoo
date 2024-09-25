@@ -188,7 +188,7 @@
             <field name="state" position="before">
                 <button string="Approve" name="action_approve"
                     invisible="not can_approve or state != 'confirm' or not active_employee" type="object" class="oe_highlight"/>
-                <button string="Validate" name="action_validate"
+                <button string="Validate" name="action_approve"
                     invisible="state != 'validate1' or not active_employee" type="object" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     invisible="not can_approve or state not in ('confirm', 'validate1','validate') or not active_employee"/>
@@ -290,7 +290,7 @@
                     icon="fa-thumbs-up"
                     invisible="state != 'confirm'"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
-                <button string="Validate" name="action_validate" type="object"
+                <button string="Validate" name="action_approve" type="object"
                     icon="fa-check"
                     invisible="state != 'validate1'"
                     groups="hr_holidays.group_hr_holidays_responsible"/>
@@ -316,7 +316,7 @@
             <xpath expr="//field[@name='department_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_validate']" position="attributes">
+            <xpath expr="//button[@name='action_approve']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_refuse']" position="attributes">
@@ -398,7 +398,7 @@
                                 <span t-attf-class="badge rounded-pill {{ classname }}"><field name="state"/></span>
                             </div>
                             <div t-if="record.can_approve.raw_value and record.state.raw_value === 'confirm'">
-                                <button name="action_validate" type="object" class="btn btn-link btn-sm ps-0">
+                                <button name="action_approve" type="object" class="btn btn-link btn-sm ps-0">
                                     <i class="fa fa-check"/> Validate
                                 </button>
                                 <button name="action_refuse" type="object" class="btn btn-link btn-sm ps-0">
@@ -502,7 +502,7 @@
         <field name="state">code</field>
         <field name="code">
             if records:
-                records.action_validate()
+                records.action_approve()
         </field>
     </record>
 </odoo>

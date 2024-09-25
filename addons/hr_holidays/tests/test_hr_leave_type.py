@@ -62,7 +62,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             'employee_id': employee.id,
             'date_from': '2024-08-19',
             'date_to': '2024-08-20',
-        }).action_validate()
+        }).action_approve()
 
         leave_types = self.env['hr.leave.type'].with_context(
             default_date_from='2024-08-20 21:00:00',

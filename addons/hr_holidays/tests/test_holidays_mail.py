@@ -39,7 +39,7 @@ class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
                     'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }
-            ]).action_validate()
+            ]).action_approve()
 
             leave_vals = {
                 'name': 'Sick Time Off',
