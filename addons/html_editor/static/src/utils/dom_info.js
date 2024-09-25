@@ -225,7 +225,7 @@ export function isVisibleTextNode(testedNode) {
  * @param {Node} node
  * @returns {boolean}
  */
-const selfClosingElementTags = ["BR", "IMG", "INPUT", "T"];
+const selfClosingElementTags = ["BR", "IMG", "INPUT", "T", "HR"];
 export function isSelfClosingElement(node) {
     return node && selfClosingElementTags.includes(node.nodeName);
 }
@@ -525,7 +525,7 @@ export function isEmptyBlock(blockEl) {
  * @returns {boolean}
  */
 export function isShrunkBlock(blockEl) {
-    return isEmptyBlock(blockEl) && !blockEl.querySelector("br") && blockEl.nodeName !== "IMG";
+    return isEmptyBlock(blockEl) && !blockEl.querySelector("br") && !isSelfClosingElement(blockEl);
 }
 
 export function isEditorTab(node) {
