@@ -249,4 +249,39 @@
             </div>
         </t>
     </template>
+
+    <template id="portal_my_details_fields" inherit_id="portal.portal_my_details_fields">
+        <xpath expr="//select[@name='country_id']/.." position="after">
+            <div class="col-12 d-none d-xl-block">
+                <small class="form-text text-muted">
+                    You can choose how you want us to send your invoices, and with which electronic format.
+                </small>
+            </div>
+            <div class="row m-0 p-0" t-if="len(invoice_sending_methods) > 1">
+                <div class="col-xl-6">
+                    <label class="col-form-label" for="invoice_sending_method">Receive invoices</label>
+                    <select name="invoice_sending_method" class="form-select">
+                        <t t-foreach="invoice_sending_methods" t-as="method">
+                            <option t-att-value="method" t-att-selected="(invoice_sending_method or partner.invoice_sending_method) == method">
+                                <t t-esc="method_value"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+            <div class="row m-0 mb-3 p-0">
+                <div class="col-xl-6">
+                    <label class="col-form-label" for="invoice_edi_format">Electronic format</label>
+                    <select name="invoice_edi_format" class="form-select">
+                        <option value=""/>
+                        <t t-foreach="invoice_edi_formats" t-as="format">
+                            <option t-att-value="format" t-att-selected="(invoice_edi_format or partner.invoice_edi_format) == format">
+                                <t t-esc="format_value"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </xpath>
+    </template>
 </odoo>
