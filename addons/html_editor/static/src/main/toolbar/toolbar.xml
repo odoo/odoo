@@ -21,7 +21,7 @@
                                 }"
                                 t-att-title="button.title"
                                 t-att-name="button.id"
-                                t-on-click="() => button.action(this.props.toolbar.dispatch)"
+                                t-on-click="() => this.onButtonClick(button)"
                             >
                                 <span t-if="button.icon" class="fa fa-fw" t-att-class="button.icon"/>
                                 <span t-if="button.text" t-esc="button.text"/>

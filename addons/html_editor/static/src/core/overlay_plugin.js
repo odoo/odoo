@@ -41,8 +41,8 @@ export class OverlayPlugin extends Plugin {
         }
     }
 
-    createOverlay(Component, config = {}) {
-        const overlay = new Overlay(this, Component, () => this.container, config);
+    createOverlay(Component, props = {}, options) {
+        const overlay = new Overlay(this, Component, () => this.container, props, options);
         this.overlays.push(overlay);
         return overlay;
     }
@@ -60,10 +60,11 @@ export class OverlayPlugin extends Plugin {
 }
 
 export class Overlay {
-    constructor(plugin, C, getContainer, config) {
+    constructor(plugin, C, getContainer, props, options) {
         this.plugin = plugin;
         this.C = C;
-        this.config = config;
+        this.editorOverlayProps = props;
+        this.options = options;
         this.isOpen = false;
         this._remove = null;
         this.component = null;
@@ -92,7 +93,7 @@ export class Overlay {
             this._remove = this.plugin.services.overlay.add(
                 EditorOverlay,
                 markRaw({
-                    config: this.config,
+                    ...this.editorOverlayProps,
                     Component: this.C,
                     editable: this.plugin.editable,
                     props,
@@ -100,13 +101,14 @@ export class Overlay {
                     initialSelection,
                     bus: this.bus,
                     getContainer: this.getContainer,
+                    close: this.close.bind(this),
                     history: {
                         enableObserver: this.plugin.shared.enableObserver,
                         disableObserver: this.plugin.shared.disableObserver,
                     },
                 }),
                 {
-                    sequence: this.config.sequence || 50,
+                    ...this.options,
                 }
             );
         }
@@ -117,7 +119,6 @@ export class Overlay {
         if (this._remove) {
             this._remove();
         }
-        this.config.onClose?.();
     }
 
     updatePosition() {

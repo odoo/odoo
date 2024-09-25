@@ -1,19 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
-import { Component, xml } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { DynamicPlaceholderPopover } from "@web/views/fields/dynamic_placeholder_popover";
-
-class EditorDynamicPlaceholder extends Component {
-    static template = xml`<div class="popover" t-on-pointerdown.stop="() => {}">
-            <DynamicPlaceholderPopover t-props="props"/>
-        </div>`;
-    static components = { DynamicPlaceholderPopover };
-    static props = {
-        close: Function,
-        validate: Function,
-        resModel: String,
-    };
-}
 
 export class DynamicPlaceholderPlugin extends Plugin {
     static name = "dynamic_placeholder";
@@ -36,14 +23,9 @@ export class DynamicPlaceholderPlugin extends Plugin {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.overlay = this.shared.createOverlay(EditorDynamicPlaceholder, {
+        this.overlay = this.shared.createOverlay(DynamicPlaceholderPopover, {
             hasAutofocus: true,
-        });
-
-        this.addDomListener(this.document, "pointerdown", (e) => {
-            if (this.overlay.isOpen) {
-                this.overlay.close();
-            }
+            className: "popover",
         });
     }
 
@@ -73,7 +55,6 @@ export class DynamicPlaceholderPlugin extends Plugin {
                 { type: "danger" }
             );
         }
-        this.preservedSelection = this.shared.preserveSelection();
         this.overlay.open({
             props: {
                 close: this.onClose.bind(this),
@@ -99,13 +80,11 @@ export class DynamicPlaceholderPlugin extends Plugin {
         }
 
         this.shared.domInsert(t);
-        this.editable.focus();
         this.dispatch("ADD_STEP");
     }
-    onClose() {
-        this.preservedSelection?.restore();
-        delete this.preservedSelection;
 
+    onClose() {
         this.overlay.close();
+        this.shared.focusEditable();
     }
 }

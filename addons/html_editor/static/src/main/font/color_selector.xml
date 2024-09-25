@@ -10,7 +10,7 @@
                 </t>
             </button>
             <t t-set-slot="content">
-                <div class="o_font_color_selector user-select-none" data-prevent-closing-overlay="true">
+                <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true">
                     <div class="mb-1 d-flex">
                         <button class="btn btn-sm btn-light ms-1"
                             t-att-class="{active: state.activeTab === 'solid'}"
