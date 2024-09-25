@@ -452,6 +452,14 @@ class Location(models.Model):
         self.ensure_one()
         return other_location.parent_path in self.parent_path
 
+    def _is_outgoing(self):
+        self.ensure_one()
+        if self.usage == 'customer':
+            return True
+        # Can also be True if location is inter-company transit
+        inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
+        return self._child_of(inter_comp_location)
+
     def _get_weight(self, excluded_sml_ids=False):
         """Returns a dictionary with the net and forecasted weight of the location.
         param excluded_sml_ids: set of stock.move.line ids to exclude from the computation
