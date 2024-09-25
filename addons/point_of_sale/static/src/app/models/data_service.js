@@ -559,13 +559,15 @@ export class PosData extends Reactive {
             .map(([idx, values]) => values)
             .flat();
 
+        // Delete all children records before main record
         this.indexedDB.delete(recordModel, [record.uuid]);
-        const result = record.delete();
         for (const item of recordsToDelete) {
             this.indexedDB.delete(item.model.modelName, [item.uuid]);
             item.delete();
         }
 
+        // Delete the main record
+        const result = record.delete();
         return result;
     }
 
