@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:11+0000\n"
-"PO-Revision-Date: 2024-07-15 18:11+0000\n"
+"POT-Creation-Date: 2024-09-25 08:40+0000\n"
+"PO-Revision-Date: 2024-09-25 08:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -159,7 +159,7 @@ msgstr ""
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
-msgid "The FNC1 Separator Alternative is not a valid Regex: "
+msgid "The FNC1 Separator Alternative is not a valid Regex: %(error)s"
 msgstr ""
 
 #. module: barcodes_gs1_nomenclature
@@ -175,16 +175,16 @@ msgstr ""
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
-msgid "The rule pattern \"%s\" is not a valid Regex: "
+msgid ""
+"The rule pattern \"%s\" is not valid, it needs two groups:\n"
+"\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
+"\t- A second one to catch the value."
 msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
-msgid ""
-"The rule pattern \"%s\" is not valid, it needs two groups:\n"
-"\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
-"\t- A second one to catch the value."
+msgid "The rule pattern '%(rule)s' is not a valid Regex: %(error)s"
 msgstr ""
 
 #. module: barcodes_gs1_nomenclature

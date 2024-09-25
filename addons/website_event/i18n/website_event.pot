@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:10+0000\n"
-"PO-Revision-Date: 2024-07-15 18:10+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 08:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,11 +26,6 @@ msgid "'. Showing results for '"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "(Ref:"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "(only"
 msgstr ""
@@ -38,12 +33,6 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid ", at"
-msgstr ""
-
-#. module: website_event
-#. odoo-javascript
-#: code:addons/website_event/static/src/js/tours/event_tour.js:0
-msgid "<b>Drag and Drop</b> this snippet below the event title."
 msgstr ""
 
 #. module: website_event
@@ -103,16 +92,6 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
 "title=\"Facebook\"/>"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to Google Calendar"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to iCal/Outlook"
 msgstr ""
 
 #. module: website_event
@@ -196,6 +175,11 @@ msgid "<small class=\"text-muted\">Add to calendar:</small>"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<small>Add this event to your calendar</small>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid ""
 "<span class=\"badge text-bg-secondary text-uppercase "
@@ -254,6 +238,42 @@ msgid "<strong> You ordered more tickets than available seats</strong>"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
+msgid ""
+"<time class=\"text-white\" datetime=\"2024-08-05 07:00:00\">\n"
+"                                <span>July 26, 2024</span>\n"
+"                                <span class=\"s_events_event_time\">\n"
+"                                    - <span>9:00 AM</span>\n"
+"                                    (Europe/Brussels)\n"
+"                                </span>\n"
+"                            </time>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
+msgid ""
+"<time class=\"text-white\" datetime=\"2024-08-10 08:00:00\">\n"
+"                                <span>October 24, 2024</span>\n"
+"                                <span class=\"s_events_event_time\">\n"
+"                                    - <span>1:15 AM</span>\n"
+"                                    (Europe/Brussels)\n"
+"                                </span>\n"
+"                            </time>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
+msgid ""
+"<time class=\"text-white\" datetime=\"2024-11-08 20:15:00\">\n"
+"                                <span>November 23, 2024</span>\n"
+"                                <span class=\"s_events_event_time\">\n"
+"                                    - <span>8:15 PM</span>\n"
+"                                    (Europe/Brussels)\n"
+"                                </span>\n"
+"                            </time>"
+msgstr ""
+
+#. module: website_event
 #: model:event.question.answer,name:website_event.event_0_question_2_answer_2
 msgid "A friend"
 msgstr ""
@@ -279,6 +299,11 @@ msgid "Add to Google"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Add to Google Agenda"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "Add to Outlook"
 msgstr ""
@@ -286,6 +311,16 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "Add to iCal"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Add to iCal/Outlook"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "All"
 msgstr ""
 
 #. module: website_event
@@ -508,11 +543,16 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Don't miss out!"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
 msgid "Download All Tickets"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+#: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
 msgstr ""
 
@@ -535,6 +575,11 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
 msgid "Event Date"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Event Details"
 msgstr ""
 
 #. module: website_event
@@ -647,6 +692,11 @@ msgid "Events Page"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
+msgid "Excellence in Achievement Awards"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Expired"
 msgstr ""
@@ -690,6 +740,12 @@ msgid "Get directions"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Google Agenda"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 msgid "Great Reno Ballon Race"
@@ -698,6 +754,11 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Grid"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
+msgid "Harmony Under the Stars"
 msgstr ""
 
 #. module: website_event
@@ -734,6 +795,11 @@ msgstr ""
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
 msgid "Info"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
+msgid "Innovations in Technology and Society"
 msgstr ""
 
 #. module: website_event
@@ -946,6 +1012,12 @@ msgid "Our website"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Outlook"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 msgid "Past Events"
@@ -988,11 +1060,6 @@ msgstr ""
 #: model:event.question.answer,name:website_event.event_5_question_0_answer_2
 #: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_2
 msgid "Radio Ad"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Ref:"
 msgstr ""
 
 #. module: website_event
@@ -1136,6 +1203,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_tree
 msgid "Show on Website"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_options_template
+msgid "Show time"
 msgstr ""
 
 #. module: website_event

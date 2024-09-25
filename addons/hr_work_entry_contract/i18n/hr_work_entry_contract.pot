@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~17.4\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-15 18:11+0000\n"
-"PO-Revision-Date: 2024-07-15 18:11+0000\n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 08:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -140,6 +140,11 @@ msgid "From"
 msgstr ""
 
 #. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_contract_view_form_inherit_work_entry
+msgid "Fully Flexible"
+msgstr ""
+
+#. module: hr_work_entry_contract
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
 msgid "Generate Missing Work Entries"
 msgstr ""
@@ -187,6 +192,14 @@ msgid ""
 " an employee_id, a date_from and a date_to. In addition to that, the time "
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/components/work_entry_source_field/work_entry_source_field.js:0
+msgid ""
+"Invalid option: For fully flexible calendars, the work entry source cannot "
+"be 'Working Hours'."
 msgstr ""
 
 #. module: hr_work_entry_contract
@@ -312,6 +325,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__work_entry_source
 msgid "Work Entry Source"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source_calendar_invalid
+msgid "Work Entry Source Calendar Invalid"
 msgstr ""
 
 #. module: hr_work_entry_contract
