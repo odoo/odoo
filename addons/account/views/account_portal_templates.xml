@@ -75,10 +75,15 @@
                         <td class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                         <td name="invoice_status">
                             <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
-                                <span t-if="invoice.payment_state in ('paid', 'in_payment')"
+                                <span t-if="invoice.currency_id.is_zero(invoice.amount_residual)"
                                       class="badge rounded-pill text-bg-success">
                                     <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"/>
                                     <span class="d-none d-md-inline"> Paid</span>
+                                </span>
+                                <span t-elif="invoice.payment_state == 'in_payment' and not invoice.currency_id.is_zero(invoice.amount_residual)"
+                                      class="badge rounded-pill text-bg-info">
+                                    <i class="fa fa-fw fa-check" aria-label="processing_payment" title="Processing Payment" role="img"/>
+                                    <span class="d-none d-md-inline"> Processing Payment</span>
                                 </span>
                                 <span t-elif="invoice.payment_state == 'reversed'"
                                       class="badge rounded-pill text-bg-success">
@@ -120,11 +125,11 @@
                         <h2 class="mb-0 text-break mx-auto">
                             <span t-field="invoice.amount_total"/>
                         </h2>
-                        <div class="my-1 w-100" t-if="payment_state in ('not_paid', 'partially_paid')">
-                            <div class="alert alert-success px-2 py-1 text-center mb-2" t-if="payment_state == 'partially_paid'">
+                        <div class="my-1 w-100" t-if="payment_state in ('not_paid', 'partial')">
+                            <div class="alert alert-success px-2 py-1 text-center mb-2" t-if="payment_state == 'partial'">
                                 Already Paid: <span t-out="amount_paid" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                             </div>
-                            <div t-if="payment_state == 'partially_paid'" class="alert alert-warning px-2 py-1 text-center mb-2">
+                            <div t-if="payment_state == 'partial'" class="alert alert-warning px-2 py-1 text-center mb-2">
                                 Left to Pay:
                                 <span t-out="amount_due" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                 <div t-if="installment_state and is_last_installment" class="w-100 mt-2">
@@ -136,7 +141,7 @@
                                 <t t-out="epd_discount_msg"/>
                             </div>
                         </div>
-                        <t t-if="installment_state in ('next', 'overdue') and not is_last_installment and amount_due != 0.0">
+                        <t t-if="installment_state in ('next', 'overdue') and not is_last_installment and amount_due != 0.0 and payment_state != 'in_payment'">
                             <h5 name="installment_title" class="w-100 text-center mb-0">
                                 <t t-if="installment_state == 'next'">Next Installment</t>
                                 <t t-elif="installment_state == 'overdue'">Overdue</t>
@@ -148,7 +153,7 @@
                                 t-options="{'widget': 'monetary', 'display_currency': currency}"
                             />
                         </t>
-                        <div class="small w-100 text-center" t-if="payment_state in ('not_paid', 'partially_paid') and not (is_last_installment and installment_state)">
+                        <div class="small w-100 text-center" t-if="payment_state in ('not_paid', 'partial') and not (is_last_installment and installment_state)">
                             <i class="fa fa-clock-o"/>
                             <span class="o_portal_sidebar_timeago ml4" t-att-datetime="next_due_date"/>
                         </div>
