@@ -69,3 +69,11 @@ export function fillTextArea(target, value) {
         run: `edit ${value}`,
     };
 }
+
+export function newFloatingOrder() {
+    return {
+        content: "click on the new floating order button",
+        trigger: ".pos-leftheader button i.fa-plus-circle",
+        run: "click",
+    };
+}

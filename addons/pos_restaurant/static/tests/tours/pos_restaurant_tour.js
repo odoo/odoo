@@ -101,8 +101,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             ProductScreen.totalAmountIs("4.40"),
@@ -153,8 +152,7 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             ProductScreen.totalAmountIs("4.40"),
 
             // Create another draft order and go back to floor
-            Chrome.clickMenuOption("Orders"),
-            TicketScreen.clickNewTicket(),
+            Chrome.newFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickDisplayedProduct("Minute Maid", true),
             Chrome.clickPlanButton(),

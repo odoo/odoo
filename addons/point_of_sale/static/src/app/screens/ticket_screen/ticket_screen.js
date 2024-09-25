@@ -115,10 +115,6 @@ export class TicketScreen extends Component {
             }
         }
     }
-    onCreateNewOrder() {
-        this.pos.add_new_order();
-        this.pos.showScreen("ProductScreen");
-    }
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {
             this.state.page += 1;
@@ -303,15 +299,6 @@ export class TicketScreen extends Component {
         if (this.state.selectedOrder) {
             return this.state.selectedOrderlineIds[this.state.selectedOrder.id];
         }
-    }
-    /**
-     * Override to conditionally show the new order button, or prevent order
-     * creation when leaving the screen.
-     *
-     * @returns {boolean}
-     */
-    get allowNewOrders() {
-        return true;
     }
     get isOrderSynced() {
         return (
