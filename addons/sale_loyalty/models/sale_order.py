@@ -605,7 +605,7 @@ class SaleOrder(models.Model):
                     'Discount: %(desc)s%(tax_str)s',
                     desc=reward.description,
                     tax_str=tax_desc,
-                ),
+                ) if mapped_taxes else reward.description,
                 'price_unit': -(price * discount_factor),
                 'points_cost': 0,
                 'tax_id': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes]
