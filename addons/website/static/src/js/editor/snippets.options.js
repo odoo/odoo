@@ -1412,6 +1412,17 @@ options.registry.ReplaceMedia.include({
     },
 });
 
+options.registry.ImageTools.include({
+    async _computeWidgetVisibility(widgetName, params) {
+        if (params.optionsPossibleValues.selectStyle
+                && params.cssProperty === 'width'
+                && this.$target[0].classList.contains('o_card_img')) {
+            return false;
+        }
+        return this._super(...arguments);
+    },
+});
+
 options.registry.BackgroundVideo = options.Class.extend({
 
     //--------------------------------------------------------------------------
@@ -2479,7 +2490,7 @@ options.registry.collapse = options.Class.extend({
 
         const accordionId = setUniqueId(accordionEl, "myCollapse");
         accordionContentEl.dataset.bsParent = "#" + accordionId;
-        
+
         const contentId = setUniqueId(accordionContentEl, "myCollapseTab");
         accordionBtnEl.dataset.bsTarget = "#" + contentId;
         accordionBtnEl.setAttribute("aria-controls", contentId);
