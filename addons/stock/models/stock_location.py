@@ -79,9 +79,10 @@ class Location(models.Model):
              "and a fallback is made on the parent locations if none is set here.\n\n"
              "FIFO: products/lots that were stocked first will be moved out first.\n"
              "LIFO: products/lots that were stocked last will be moved out first.\n"
-             "Closet location: products/lots closest to the target location will be moved out first.\n"
+             "Closest Location: products/lots closest to the target location will be moved out first.\n"
              "FEFO: products/lots with the closest removal date will be moved out first "
-             "(the availability of this method depends on the \"Expiration Dates\" setting).")
+             "(the availability of this method depends on the \"Expiration Dates\" setting).\n"
+             "Least Packages: products/lots that were stocked in package with least amount of qty will be moved out first")
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')

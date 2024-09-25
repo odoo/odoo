@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.view_location_form"/>
         <field name="arch" type="xml">
             <field name="scrap_location" position="after">
-                <field name="is_a_dock"/>
+                <field name="is_a_dock" invisible="usage not in ('view', 'internal')"/>
             </field>
         </field>
     </record>
