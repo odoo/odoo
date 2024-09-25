@@ -165,6 +165,7 @@ class PaymentTransaction(models.Model):
             'payment_transaction_id': self.id,
             'memo': reference,
             'write_off_line_vals': [],
+            'invoice_ids': self.invoice_ids,
             **extra_create_values,
         }
 
