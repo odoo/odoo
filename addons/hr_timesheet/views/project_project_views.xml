@@ -87,7 +87,7 @@
                     <t t-set="title" t-value="'Days Remaining'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Time Remaining'" t-else=""/>
                     <div t-if="record.allow_timesheets.raw_value and record.allocated_hours.raw_value &gt; 0"
-                        t-attf-class="me-1 ms-1 oe_kanban_align badge border {{ badgeColor }}" t-att-title="title" groups="hr_timesheet.group_hr_timesheet_user">
+                        t-attf-class="me-1 ms-1 bg-transparent badge border {{ badgeColor }}" t-att-title="title" groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="remaining_hours" widget="timesheet_uom" class="p-0"/>
                     </div>
                 </xpath>
