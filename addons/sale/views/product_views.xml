@@ -14,7 +14,11 @@
                 <field name="visible_expense_policy" invisible="1"/>
             </field>
             <field name="type" position="after">
-                <field name="invoice_policy" required="1" invisible="not sale_ok"/>
+                <field
+                    name="invoice_policy"
+                    required="1"
+                    invisible="not sale_ok or type == 'combo'"
+                />
             </field>
             <field name="service_tracking" position="attributes">
                 <attribute name="invisible" add="not sale_ok" separator="or"/>
