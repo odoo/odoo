@@ -563,7 +563,7 @@ class account_journal(models.Model):
 
             query, selects = journals._get_open_sale_purchase_query(journal_type)
             sql = SQL("""%s
-                    GROUP BY account_move_line.company_id, account_move_line.journal_id, account_move_line.currency_id, late, to_pay""",
+                    GROUP BY account_move.company_id, account_move.journal_id, account_move.currency_id, late, to_pay""",
                       query.select(*selects),
             )
             self.env.cr.execute(sql)
@@ -631,8 +631,8 @@ class account_journal(models.Model):
                 'number_waiting': number_waiting,
                 'number_late': number_late,
                 'sum_draft': currency.format(sum_draft),  # sign is already handled by the SQL query
-                'sum_waiting': currency.format(sum_waiting * (1 if journal.type == 'sale' else -1)),
-                'sum_late': currency.format(sum_late * (1 if journal.type == 'sale' else -1)),
+                'sum_waiting': currency.format(sum_waiting),
+                'sum_late': currency.format(sum_late),
                 'has_sequence_holes': journal.has_sequence_holes,
                 'title_has_sequence_holes': title_has_sequence_holes,
                 'has_unhashed_entries': journal.has_unhashed_entries,
@@ -713,23 +713,23 @@ class account_journal(models.Model):
 
     def _get_open_sale_purchase_query(self, journal_type):
         assert journal_type in ('sale', 'purchase')
-        query = self.env['account.move.line']._where_calc([
-            ('move_id', 'in', self.env['account.move']._where_calc([
-                *self.env['account.move.line']._check_company_domain(self.env.companies),
-                ('journal_id', 'in', self.ids),
-                ('payment_state', 'in', ('not_paid', 'partial')),
-                ('move_type', '=', 'out_invoice' if journal_type == 'sale' else 'in_invoice'),
-                ('state', '=', 'posted'),
+        query = self.env['account.move']._where_calc([
+            *self.env['account.move.line']._check_company_domain(self.env.companies),
+            ('journal_id', 'in', self.ids),
+            ('payment_state', 'in', ('not_paid', 'partial')),
+            ('move_type', '=', 'out_invoice' if journal_type == 'sale' else 'in_invoice'),
+            ('state', '=', 'posted'),
+            ('line_ids', 'in', self.env['account.move.line']._where_calc([
+                ('account_type', '=', 'asset_receivable' if journal_type == 'sale' else 'liability_payable'),
             ])),
-            ('account_type', '=', 'asset_receivable' if journal_type == 'sale' else 'liability_payable'),
         ])
         selects = [
-            SQL("account_move_line.journal_id"),
-            SQL("account_move_line.company_id"),
-            SQL("account_move_line.currency_id AS currency"),
-            SQL("account_move_line.date_maturity < %s AS late", fields.Date.context_today(self)),
-            SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
-            SQL("SUM(account_move_line.amount_residual_currency) AS amount_total"),
+            SQL("journal_id"),
+            SQL("company_id"),
+            SQL("currency_id"),
+            SQL("invoice_date_due < %s AS late", fields.Date.context_today(self)),
+            SQL("SUM(amount_residual) AS amount_total_company"),
+            SQL("SUM(amount_total) AS amount_total"),
             SQL("COUNT(*)"),
             SQL("TRUE AS to_pay")
         ]
