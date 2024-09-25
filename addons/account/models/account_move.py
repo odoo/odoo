@@ -3195,17 +3195,17 @@ class AccountMove(models.Model):
             else:
                 to_process = [file_data]
 
-            for import_content in to_process:
+            for content_to_import in to_process:
                 invoice = current_invoice or import_self.create({})
                 try:
                     if success := (
-                        decoder(invoice, import_content, new)
+                        decoder(invoice, content_to_import, new)
                         or attachment.mimetype in ALLOWED_MIMETYPES
                     ):
                         invoice._link_bill_origin_to_purchase_orders(timeout=4)
                         invoices |= invoice
                         current_invoice -= current_invoice
-                        passed_file_data_list.append(import_content)
+                        passed_file_data_list.append(content_to_import)
                 except RedirectWarning:
                     raise
                 except Exception:
