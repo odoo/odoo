@@ -8,6 +8,7 @@ import re
 
 from ast import literal_eval
 from collections import defaultdict
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _, Command
@@ -1226,6 +1227,8 @@ class MrpProduction(models.Model):
                 continue
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            if move.manual_consumption and (float_compare(move.forecast_availability, 0, precision_rounding=move.product_uom.rounding) < 0) or move.forecast_expected_date and move.forecast_expected_date >= datetime.today():
+                new_qty = min(new_qty, move.product_qty_available)
             move._set_quantity_done(new_qty)
             if not move.manual_consumption:
                 move.picked = True

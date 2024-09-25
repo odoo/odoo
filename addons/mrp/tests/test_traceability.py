@@ -188,6 +188,8 @@ class TestTraceability(TestMrpCommon):
         mo_form.bom_id = bom_1
         mo_form.product_qty = 2
         mo = mo_form.save()
+        self.env['stock.quant']._update_available_quantity(product_1, mo.warehouse_id.lot_stock_id, 2.0)
+        self.env['stock.quant']._update_available_quantity(product_2, mo.warehouse_id.lot_stock_id, 2.0)
         mo.action_confirm()
 
         mo_form = Form(mo)

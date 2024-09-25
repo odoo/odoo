@@ -1245,6 +1245,8 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': p2.id,
             'company_id': self.env.company.id,
         })
+        self.env['stock.quant']._update_available_quantity(p1, mo1.warehouse_id.lot_stock_id, 2.0)
+        self.env['stock.quant']._update_available_quantity(p2, mo1.warehouse_id.lot_stock_id, 2.0)
         mo_form = Form(mo1)
         mo_form.qty_producing = 1
         mo1 = mo_form.save()
@@ -1341,6 +1343,8 @@ class TestMrpOrder(TestMrpCommon):
             'product_id': p2.id,
             'company_id': self.env.company.id,
         })
+        self.env['stock.quant']._update_available_quantity(p1, mo1.warehouse_id.lot_stock_id, 2.0)
+        self.env['stock.quant']._update_available_quantity(p2, mo1.warehouse_id.lot_stock_id, 2.0)
         mo_form = Form(mo1)
         mo_form.qty_producing = 1
         mo1 = mo_form.save()

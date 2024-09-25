@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta
+from odoo import Command, fields
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.tests import tagged, Form, HttpCase
 
@@ -50,6 +52,10 @@ class TestTourManualConsumption(HttpCase):
         mo_form.product_qty = 10
         mo = mo_form.save()
         mo.action_confirm()
+        # put products in stock to be avaible for the mo
+        self.env['stock.quant']._update_available_quantity(product_nt, mo.warehouse_id.lot_stock_id, 10.0)
+        self.env['stock.quant']._update_available_quantity(product_sn, mo.warehouse_id.lot_stock_id, 10.0)
+        self.env['stock.quant']._update_available_quantity(product_lot, mo.warehouse_id.lot_stock_id, 10.0)
         mo.action_assign()
 
         # test no updating
@@ -318,3 +324,60 @@ class TestManualConsumption(TestMrpCommon):
         self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [True, False])
         self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 3.0)
         self.assertRecordValues(mo.move_raw_ids, [{'quantity': 3.0, 'picked': True}, {'quantity': 2.0, 'picked': True}])
+
+    def test_update_manual_consumption_02(self):
+        """
+        Check that the manually consumed storable components are not automatically
+        reserved if not yet available (to not break the availability forecast).
+        """
+        bom = self.bom_1
+        _, comp2 = bom.bom_line_ids.product_id
+        bom.bom_line_ids.product_id.type = 'consu'
+        bom.bom_line_ids.product_id.type = 'product'
+        bom.bom_line_ids.manual_consumption = True
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 4
+        mo = mo_form.save()
+        # The components should not be available in stock
+        # but comp2 should be avaialble in the future
+        tomorrow = fields.Datetime.now() + timedelta(days=1)
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': mo.warehouse_id.in_type_id.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': mo.warehouse_id.lot_stock_id.id,
+            'scheduled_date': tomorrow,
+            'move_ids': [Command.create({
+                'name': comp2.name,
+                'product_id': comp2.id,
+                'product_uom_qty': 4,
+                'product_uom': comp2.uom_id.id,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': mo.warehouse_id.lot_stock_id.id,
+            })]
+        })
+        receipt.action_confirm()
+        mo.action_confirm()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'forecast_availability': -2.0, 'forecast_expected_date': False, 'quantity': 0.0},
+            {'forecast_availability': 4.0, 'forecast_expected_date': tomorrow, 'quantity': 0.0},
+        ])
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 4.0
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'forecast_availability': -2.0, 'forecast_expected_date': False, 'quantity': 0.0},
+            {'forecast_availability': 4.0, 'forecast_expected_date': tomorrow, 'quantity': 0.0},
+        ])
+        receipt.move_ids.write({'quantity': 2.0, 'picked': True})
+        receipt.picking_type_id.create_backorder = 'always'
+        receipt.button_validate()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'forecast_availability': -2.0, 'forecast_expected_date': False, 'quantity': 0.0},
+            {'forecast_availability': 4.0, 'forecast_expected_date': tomorrow, 'quantity': 2.0},
+        ])
+        receipt.backorder_ids.move_ids.write({'quantity': 2.0, 'picked': True})
+        receipt.backorder_ids.button_validate()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'forecast_availability': -2.0, 'forecast_expected_date': False, 'quantity': 0.0},
+            {'forecast_availability': 4.0, 'forecast_expected_date': False, 'quantity': 4.0},
+        ])

@@ -478,7 +478,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             for location, mvs in moves_per_location.items():
                 forecast_info = mvs._get_forecast_availability_outgoing(warehouse, location)
                 for move in mvs:
-                    move.forecast_availability, move.forecast_expected_date = forecast_info[move]
+                    # since the forecast_info are not computed for New records we set it from the _origin
+                    move.forecast_availability, move.forecast_expected_date = forecast_info[move._origin]
 
     def _set_date_deadline(self, new_deadline):
         # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
