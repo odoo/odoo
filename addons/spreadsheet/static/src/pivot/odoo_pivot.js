@@ -351,7 +351,7 @@ export class OdooPivot {
             return { value: "" };
         }
         const measure = this.getMeasure(measureId);
-        const value = this.model.getPivotCellValue(measure.fieldName, domain);
+        const value = this.model.getPivotCellValue(measure, domain);
         let format;
         switch (measure.aggregator) {
             case "count":
