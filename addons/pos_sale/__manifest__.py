@@ -20,7 +20,6 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
         'views/point_of_sale_report.xml',
         'views/sale_order_views.xml',
         'views/pos_order_views.xml',
-        'views/product_views.xml',
         'views/sales_team_views.xml',
         'views/res_config_settings_views.xml',
         'views/stock_template.xml',
