@@ -123,7 +123,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_to': time.strftime('%Y-12-31'),
             })
 
-            allocation.action_validate()
+            allocation.action_approve()
 
             # Employee cannot take a leave longer than the allocation
             with self.assertRaises(ValidationError):
@@ -162,7 +162,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': time.strftime('%Y-1-1'),
                 'date_to': time.strftime('%Y-12-31'),
             })
-            allocation.action_validate()
+            allocation.action_approve()
 
             holiday_status = self.holidays_type_2.with_user(self.user_employee_id)
             self._check_holidays_status(holiday_status, self.employee_emp, 2.0, 0.0, 2.0, 2.0)
@@ -195,7 +195,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_to': fields.Datetime.from_string('2017-06-01 00:00:00'),
             'number_of_days': 10,
         })
-        allocation.action_validate()
+        allocation.action_approve()
 
         self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Valid time period',
@@ -490,7 +490,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': '2020-01-01',
             'date_to': '2020-12-31',
         })
-        allocation.action_validate()
+        allocation.action_approve()
 
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.user_employee_id).create({
@@ -519,7 +519,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': '2020-01-01',
             'date_to': '2020-12-31',
         })
-        allocation_one.action_validate()
+        allocation_one.action_approve()
         allocation_two = self.env['hr.leave.allocation'].create({
             'name': 'Expired Allocation',
             'employee_id': self.employee_emp_id,
@@ -529,7 +529,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': '2021-01-01',
             'date_to': '2021-12-31',
         })
-        allocation_two.action_validate()
+        allocation_two.action_approve()
         # Try creating a request that could be validated if allocation1 was still valid
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].with_user(self.user_employee_id).create({
@@ -631,10 +631,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
             allocation_vals.update({'number_of_days': 4})
             allocation_4days = Allocation.create(allocation_vals)
-            allocation_4days.action_validate()
+            allocation_4days.action_approve()
             allocation_vals.update({'number_of_days': 1})
             allocation_1day = Allocation.create(allocation_vals)
-            allocation_1day.action_validate()
+            allocation_1day.action_approve()
             allocations = (allocation_4days + allocation_1day)
 
             leave_vals.update({
@@ -803,7 +803,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': '2020-01-01',
                 'date_to': '2020-12-31',
             })
-            allocation.action_validate()
+            allocation.action_approve()
             self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Holiday Request',
                 'employee_id': self.employee_emp_id,
@@ -828,7 +828,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': '2021-06-01',
                 'date_to': '2021-12-31',
             })
-            allocation_2021.action_validate()
+            allocation_2021.action_approve()
 
             allocation_2022 = self.env['hr.leave.allocation'].create({
                 'name': 'Annual Time Off 2022',
@@ -839,7 +839,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': '2022-01-01',
                 'date_to': '2022-12-31',
             })
-            allocation_2022.action_validate()
+            allocation_2022.action_approve()
 
             # Leave taken in 2021
             leave_2021 = self.env['hr.leave'].with_user(self.user_employee_id).create({
@@ -961,7 +961,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             },
         ])
 
-        allocations.action_validate()
+        allocations.action_approve()
 
         trigger_error_leave = {
             'name': 'Holiday Request',
@@ -1132,7 +1132,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': '2024-01-01',
             'date_to': '2024-12-31',
         })
-        allocation.action_validate()
+        allocation.action_approve()
         self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Holiday Request',
             'employee_id': employee.id,
@@ -1174,7 +1174,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'holiday_status_id': self.holidays_type_2.id,
             'allocation_type': 'regular'
         })
-        allocation.action_validate()
+        allocation.action_approve()
 
         self.assertEqual(allocation.state, 'validate')
 
