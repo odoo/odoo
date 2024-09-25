@@ -66,9 +66,10 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'partner_id': cls.env.company.partner_id.id,
         })
 
-    def create_move(self, partner):
+    def create_move(self, partner, company=None):
         return self.env['account.move'].create({
             'move_type': 'out_invoice',
+            'company_id': (company or self.env.company).id,
             'partner_id': partner.id,
             'date': '2023-01-01',
             'ref': 'Test reference',
@@ -85,7 +86,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         })
 
     @classmethod
-    def _get_mock_data(cls, error=False):
+    def _get_mock_data(cls, error=False, nr_invoices=1):
         proxy_documents = {
             FAKE_UUID[0]: {
                 'accounting_supplier_party': False,
@@ -109,7 +110,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
 
         responses = {
             '/api/peppol/1/send_document': {'result': {
-                'messages': [{'message_uuid': FAKE_UUID[0]}]}},
+                'messages': [{'message_uuid': FAKE_UUID[0]}] * nr_invoices}},
             '/api/peppol/1/ack': {'result': {}},
             '/api/peppol/1/get_all_documents': {'result': {
                 'messages': [
@@ -158,12 +159,14 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0198:dk16356706</id:ParticipantIdentifier></smp:ServiceGroup>'
             return response
 
-        proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'))
         url = r.path_url
         body = json.loads(r.body)
         if url == '/api/peppol/1/send_document':
             if not body['params']['documents']:
                 raise UserError('No documents were provided')
+            proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'), nr_invoices=len(body['params']['documents']))
+        else:
+            proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'))
 
         if url == '/api/peppol/1/get_document':
             uuid = body['params']['message_uuids'][0]
@@ -346,3 +349,46 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0477472701',
             }])
+
+    def test_peppol_send_multi_async(self):
+        company_2 = self.setup_other_company()['company']
+        company_2.write({
+            'country_id': self.env.ref('base.be').id,
+        })
+
+        new_partner = self.env['res.partner'].create({
+            'name': 'Deanna Troi',
+            'city': 'Namur',
+            'country_id': self.env.ref('base.be').id,
+            'peppol_endpoint': '0477472701',
+            'invoice_edi_format': 'ubl_bis3',
+        })
+        new_partner.with_company(company_2).invoice_edi_format = False
+        # partner is valid for company 1
+        self.assertRecordValues(new_partner, [{
+            'peppol_verification_state': 'valid',
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+            'invoice_edi_format': 'ubl_bis3',
+            'invoice_sending_method': 'peppol',
+        }])
+        # but not valid for company 2
+        self.assertRecordValues(new_partner.with_company(company_2), [{
+            'peppol_verification_state': False,
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+            'invoice_edi_format': False,
+            'invoice_sending_method': 'peppol',
+        }])
+        move_1 = self.create_move(new_partner)
+        move_2 = self.create_move(new_partner)
+        move_3 = self.create_move(new_partner, company_2)
+        (move_1 + move_2 + move_3).action_post()
+
+        wizard = self.create_send_and_print(move_1 + move_2 + move_3)
+        wizard.action_send_and_print()
+        self.assertEqual((move_1 + move_2 + move_3).mapped('is_being_sent'), [True, True, True])
+        # the cron is ran asynchronously and should be agnostic from the current self.env.company
+        self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
+        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
+        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'to_send'])

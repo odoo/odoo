@@ -15,8 +15,9 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
         if peppol_moves := moves.filtered(lambda m: 'peppol' in moves_data[m]['sending_methods']):
-            invalid_partners = peppol_moves.partner_id.commercial_partner_id.filtered(
-                lambda partner: partner.peppol_verification_state != 'valid')
+            invalid_partners = peppol_moves.filtered(
+                lambda move: move.partner_id.commercial_partner_id.with_company(move.company_id).peppol_verification_state != 'valid'
+            ).partner_id.commercial_partner_id
             ubl_warning_already_displayed = 'account_edi_ubl_cii_configure_partner' in alerts
             if invalid_partners and not ubl_warning_already_displayed:
                 alerts['account_peppol_warning_partner'] = {
@@ -60,7 +61,7 @@ class AccountMoveSend(models.AbstractModel):
         if method == 'peppol':
             return all([
                 self._is_applicable_to_company(method, move.company_id),
-                move.partner_id.commercial_partner_id.is_peppol_edi_format,
+                move.partner_id.commercial_partner_id.with_company(move.company_id).is_peppol_edi_format,
                 move.company_id.account_peppol_proxy_state != 'rejected',
                 move._need_ubl_cii_xml(move.partner_id.commercial_partner_id.with_company(move.company_id).invoice_edi_format)
                 or move.ubl_cii_xml_id and move.peppol_move_state not in ('processing', 'done'),
@@ -99,7 +100,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoice.peppol_move_state = 'skipped'
                     continue
 
-                partner = invoice.partner_id.commercial_partner_id
+                partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
                 if not partner.peppol_eas or not partner.peppol_endpoint:
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
