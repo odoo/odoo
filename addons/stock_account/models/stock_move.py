@@ -57,10 +57,10 @@ class StockMove(models.Model):
             if self.product_id.lot_valuated:
                 layers_by_lot = layers.grouped('lot_id')
                 prices = {}
-                for lot, stock_layers in layers_by_lot:
+                for lot, stock_layers in layers_by_lot.items():
                     qty = sum(stock_layers.mapped("quantity"))
                     val = sum(stock_layers.mapped("value"))
-                    prices[lot] = val / qty if not float_is_zero(qty, precision_rounding=lot.uom_id.rounding) else 0
+                    prices[lot] = val / qty if not float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) else 0
             else:
                 quantity = sum(layers.mapped("quantity"))
                 prices = {self.env['stock.lot']: sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0}
