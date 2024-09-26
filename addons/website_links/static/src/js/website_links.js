@@ -200,7 +200,10 @@ var RecentLinks = publicWidget.Widget.extend({
         var nbLinks = this.getChildren().length;
         var recentLinkBox = new RecentLinkBox(this, link);
         recentLinkBox.prependTo(this.$el);
-        Tooltip.getOrCreateInstance(document.querySelector(".link-tooltip"));
+        const linkTooltipEl = document.querySelector(".link-tooltip");
+        if (linkTooltipEl) {
+            Tooltip.getOrCreateInstance(linkTooltipEl);
+        }
 
         if (nbLinks === 0) {
             this._updateNotification();
