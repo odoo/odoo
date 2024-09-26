@@ -83,7 +83,7 @@ class Repair(models.Model):
         copy=False, readonly=True, tracking=True, check_company=True)
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
-        domain="[('type', '=', 'consu'), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
+        domain="[('type', '=', 'consu'), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
         check_company=True)
     product_qty = fields.Float(
         'Product Quantity', compute='_compute_product_qty', readonly=False, store=True,
@@ -106,7 +106,7 @@ class Repair(models.Model):
         'stock.picking.type', 'Operation Type', copy=True, readonly=False,
         compute='_compute_picking_type_id', store=True,
         default=_default_picking_type_id,
-        domain="[('code', '=', 'repair_operation'), ('company_id', '=', company_id)]",
+        domain="[('code', '=', 'repair_operation')]",
         required=True, precompute=True, check_company=True, index=True)
     procurement_group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',

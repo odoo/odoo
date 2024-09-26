@@ -72,7 +72,7 @@ class MrpWorkcenter(models.Model):
         'mrp_workcenter_alternative_rel',
         'workcenter_id',
         'alternative_workcenter_id',
-        domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        domain="[('id', '!=', id)]",
         string="Alternative Workcenters", check_company=True,
         help="Alternative workcenters that can be substituted to this one in order to dispatch production"
     )
@@ -574,7 +574,6 @@ class MrpWorkcenterProductivity(models.Model):
 class MrpWorkCenterCapacity(models.Model):
     _name = 'mrp.workcenter.capacity'
     _description = 'Work Center Capacity'
-    _check_company_auto = True
 
     def _default_time_start(self):
         workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')

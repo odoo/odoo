@@ -43,17 +43,17 @@ class Warehouse(models.Model):
     partner_id = fields.Many2one('res.partner', 'Address', default=lambda self: self.env.company.partner_id, check_company=True)
     view_location_id = fields.Many2one(
         'stock.location', 'View Location',
-        domain="[('usage', '=', 'view'), ('company_id', '=', company_id)]",
+        domain="[('usage', '=', 'view')]",
         required=True, check_company=True)
     lot_stock_id = fields.Many2one(
         'stock.location', 'Location Stock',
-        domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]",
+        domain="[('usage', '=', 'internal')]",
         required=True, check_company=True)
     code = fields.Char('Short Name', required=True, size=5, help="Short name used to identify your warehouse")
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_warehouse', 'warehouse_id', 'route_id',
         'Routes',
-        domain="[('warehouse_selectable', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('warehouse_selectable', '=', True)]",
         help='Defaults routes through the warehouse', check_company=True, copy=False)
     reception_steps = fields.Selection([
         ('one_step', 'Receive and Store (1 step)'),

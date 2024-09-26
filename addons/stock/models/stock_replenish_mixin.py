@@ -11,6 +11,7 @@ class ProductReplenishMixin(models.AbstractModel):
         'stock.route', string="Preferred Route",
         help="Apply specific route for the replenishment instead of product's default routes.",
         check_company=True)
+    company_id = fields.Many2one('res.company', string="Company")
     allowed_route_ids = fields.Many2many('stock.route', compute='_compute_allowed_route_ids')
 
     # INHERITS in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management'
