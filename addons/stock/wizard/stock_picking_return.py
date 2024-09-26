@@ -162,7 +162,8 @@ class ReturnPicking(models.TransientModel):
         )
         returned_lines = False
         for return_line in self.product_return_moves:
-            returned_lines = return_line._process_line(new_picking)
+            if return_line._process_line(new_picking):
+                returned_lines = True
         if not returned_lines:
             raise UserError(_("Please specify at least one non-zero quantity."))
 
