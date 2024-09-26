@@ -176,6 +176,8 @@ class EventMailScheduler(models.Model):
             self._refresh_mail_count_done()
             if auto_commit:
                 self.env.cr.commit()
+                # invalidate cache, no need to keep previous content in memory
+                self.env.invalidate_all()
 
     def _execute_event_based_for_registrations(self, registrations):
         """ Method doing notification and recipients specific implementation
@@ -262,6 +264,8 @@ class EventMailScheduler(models.Model):
             self._refresh_mail_count_done()
             if auto_commit:
                 self.env.cr.commit()
+                # invalidate cache, no need to keep previous content in memory
+                self.env.invalidate_all()
 
     def _create_missing_mail_registrations(self, registrations):
         new = self.env["event.mail.registration"]
