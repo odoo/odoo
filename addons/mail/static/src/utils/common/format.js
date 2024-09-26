@@ -1,7 +1,7 @@
+import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
 import { escape, unaccent } from "@web/core/utils/strings";
-import { url } from "@web/core/utils/urls";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
@@ -195,9 +195,8 @@ function generateMentionsLinks(body, { partners = [], threads = [], specialMenti
             `<a href="#" class="o-discuss-mention">@${escape(special)}</a>`
         );
     }
-    const baseHREF = url("/odoo");
     for (const mention of mentions) {
-        const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
+        const href = `href='${stateToUrl({ model: mention.model, resId: mention.id })}'`;
         const attClass = `class='${mention.class}'`;
         const dataOeId = `data-oe-id='${mention.id}'`;
         const dataOeModel = `data-oe-model='${mention.model}'`;
