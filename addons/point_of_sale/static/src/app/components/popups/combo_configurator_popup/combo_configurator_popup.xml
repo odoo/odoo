@@ -6,7 +6,7 @@
                 <t t-if="shouldShowCombo(combo)">
                     <h3 class="me-auto mb-3" t-esc="combo.name"/>
                     <div class="product-list d-grid gap-1">
-                        <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" class="m-2">
+                        <div t-foreach="combo.combo_item_ids" t-as="combo_item" t-key="combo_item.id" class="m-2" t-if="combo_item.product_id">
                             <t t-set="product" t-value="combo_item.product_id"/>
                             <input type="radio"
                                 t-attf-name="combo-{{combo.id}}"
@@ -34,7 +34,7 @@
                         Add to order
                     </button>
                     <div class="ms-auto">
-                        <t t-if="!areAllCombosSelected">
+                        <t t-if="!areAllCombosSelected()">
                             Complete the selection to proceed
                         </t>
                     </div>
