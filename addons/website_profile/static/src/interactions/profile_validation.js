@@ -7,7 +7,9 @@ import { rpc } from "@web/core/network/rpc";
 export class ProfileValidation extends Interaction {
     static selector = ".o_wprofile_email_validation_container";
     dynamicContent = {
-        ".send_validation_email": { "t-on-click.prevent.withTarget": this.onSendMailClick },
+        ".send_validation_email": {
+            "t-on-click.prevent.withTarget": this.locked(this.onSendMailClick, true),
+        },
         ".validated_email_close": { "t-on-click": () => rpc("/profile/validate_email/close") },
     };
 
@@ -21,6 +23,7 @@ export class ProfileValidation extends Interaction {
         }));
         if (data) {
             redirect(currentTargetEl.dataset["redirect_url"]);
+            return new Promise(() => {});
         }
     }
 }
