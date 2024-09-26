@@ -17,7 +17,7 @@ export class ImagePlugin extends Plugin {
     static name = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
     resources = {
-        handle_paste_url: this.handlePasteUrl.bind(this),
+        paste_url_overrides: this.handlePasteUrl.bind(this),
         onSelectionChange: this.onSelectionChange.bind(this),
         toolbarNamespace: [
             {

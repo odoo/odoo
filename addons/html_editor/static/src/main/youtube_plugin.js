@@ -11,7 +11,7 @@ export class YoutubePlugin extends Plugin {
     static dependencies = ["history", "powerbox", "link", "dom"];
     static shared = [];
     resources = {
-        handle_paste_url: this.handlePasteUrl.bind(this),
+        paste_url_overrides: this.handlePasteUrl.bind(this),
     };
     /**
      * @param {string} text

@@ -139,10 +139,8 @@ export class ColorPlugin extends Plugin {
      * @param {string} mode 'color' or 'backgroundColor'
      */
     applyColor(color, mode) {
-        for (const cb of this.getResource("colorApply") || []) {
-            if (cb(color, mode)) {
-                return;
-            }
+        if (this.delegateTo("color_apply_overrides", color, mode)) {
+            return;
         }
         let selection = this.shared.getEditableSelection();
         let selectionNodes;

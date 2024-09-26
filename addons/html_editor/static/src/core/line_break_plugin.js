@@ -47,10 +47,8 @@ export class LineBreakPlugin extends Plugin {
             targetNode = targetNode.parentElement;
         }
 
-        for (const callback of this.getResource("handle_insert_line_break_element")) {
-            if (callback({ targetNode, targetOffset })) {
-                return;
-            }
+        if (this.delegateTo("insert_line_break_element_overrides", { targetNode, targetOffset })) {
+            return;
         }
 
         this.insertLineBreakElement({ targetNode, targetOffset });
