@@ -9,14 +9,6 @@ import {
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 
-// Ensure all links are opened in a new tab.
-function retargetLinks(container) {
-    for (const link of container.querySelectorAll("a")) {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noreferrer");
-    }
-}
-
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
     static props = {
@@ -54,7 +46,7 @@ export class HtmlViewer extends Component {
         } else {
             this.readonlyElementRef = useRef("readonlyContent");
             useEffect(() => {
-                retargetLinks(this.readonlyElementRef.el);
+                this.retargetLinks(this.readonlyElementRef.el);
             });
         }
 
@@ -79,13 +71,27 @@ export class HtmlViewer extends Component {
         return value;
     }
 
+    /**
+     * Ensure all links are opened in a new tab.
+     */
+    retargetLinks(container) {
+        for (const link of container.querySelectorAll("a")) {
+            this.retargetLink(link);
+        }
+    }
+
+    retargetLink(link) {
+        link.setAttribute("target", "_blank");
+        link.setAttribute("rel", "noreferrer");
+    }
+
     updateIframeContent(content) {
         const contentWindow = this.iframeRef.el.contentWindow;
         const iframeTarget = this.props.hasFullHtml
             ? contentWindow.document.documentElement
             : contentWindow.document.querySelector("#iframe_target");
         iframeTarget.innerHTML = content;
-        retargetLinks(iframeTarget);
+        this.retargetLinks(iframeTarget);
     }
 
     onLoadIframe(value) {
