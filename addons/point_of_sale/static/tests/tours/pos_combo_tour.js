@@ -21,9 +21,17 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             // Check Product Configurator is open
             Dialog.is("Attribute selection"),
             Dialog.discard(),
+            {
+                content: "Check that Combo Product 10 (White) archived variant is disabled",
+                trigger: `.ptav-not-available article.product .product-content .product-name:contains("Combo Product 10 (White)")`,
+            },
+            combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 5"),
             combo.select("Combo Product 7"),
             combo.isSelected("Combo Product 7"),
+            // Check archived variant Selection
+            combo.select("Combo Product 10 (White)"),
+            combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 8"),
             combo.isSelected("Combo Product 8"),
             combo.isNotSelected("Combo Product 7"),
