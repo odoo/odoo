@@ -176,6 +176,30 @@ def setup_product_combo_items(self):
         'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
     })
 
+    color_attribute = self.env['product.attribute'].create({
+        'name': 'Color always',
+        'sequence': 4,
+        'create_variant': 'always',
+        'value_ids': [(0, 0, {
+            'name': 'White',
+            'sequence': 1,
+        }), (0, 0, {
+            'name': 'Red',
+            'sequence': 2,
+        })],
+    })
+
+    product_10_template = self.env['product.template'].create({
+        'name': 'Combo Product 10',
+        'list_price': 200,
+        'taxes_id': False,
+        'available_in_pos': True,
+        'attribute_line_ids': [(0, 0, {
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })],
+    })
+
     self.chairs_combo = self.env["product.combo"].create(
         {
             "name": "Chairs Combo",
@@ -196,9 +220,20 @@ def setup_product_combo_items(self):
                     "product_id": combo_product_9.id,
                     "extra_price": 0,
                 }),
+                Command.create({
+                    "product_id": product_10_template.product_variant_ids[0].id,
+                    "extra_price": 0,
+                }),
+                Command.create({
+                    "product_id": product_10_template.product_variant_ids[1].id,
+                    "extra_price": 0,
+                }),
             ],
         }
     )
+
+    # Archive one variant
+    product_10_template.product_variant_ids[0].write({'active': False})
 
     # Create Office Combo
     self.office_combo = self.env["product.product"].create(
