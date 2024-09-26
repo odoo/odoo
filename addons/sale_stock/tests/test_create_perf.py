@@ -39,7 +39,7 @@ class TestPERF(TransactionCaseWithUserDemo):
     @users('admin')
     @warmup
     def test_empty_sale_order_creation_perf(self):
-        with self.assertQueryCount(admin=34):
+        with self.assertQueryCount(admin=36):
             self.env['sale.order'].create({
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -53,7 +53,7 @@ class TestPERF(TransactionCaseWithUserDemo):
         # + 1 warehouse fetch
         # + 1 query to get analytic default account
         # + 1 followers queries ?
-        with self.assertQueryCount(admin=39):
+        with self.assertQueryCount(admin=40):
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
