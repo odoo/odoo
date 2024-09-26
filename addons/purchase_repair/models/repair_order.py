@@ -10,11 +10,11 @@ class RepairOrder(models.Model):
     @api.depends('move_ids.move_orig_ids.purchase_line_id.order_id')
     def _compute_purchase_count(self):
         for repair in self:
-            repair.purchase_count = len(repair.move_ids.move_orig_ids.purchase_line_id.order_id)
+            repair.purchase_count = len(repair.move_ids.created_purchase_line_ids.order_id)
 
     def action_view_purchase_orders(self):
         self.ensure_one()
-        purchase_ids = self.move_ids.move_orig_ids.purchase_line_id.order_id
+        purchase_ids = self.move_ids.created_purchase_line_ids.order_id
         action = {
             'type': 'ir.actions.act_window',
             'res_model': 'purchase.order',
