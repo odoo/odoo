@@ -32,7 +32,7 @@
                     </t>
                     <t t-set-slot="icon">
                         <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" member="thread.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
-                        <CountryFlag t-if="thread.anonymous_country" country="thread.anonymous_country" class="'o-mail-NotificationItem-country position-absolute border'"/>
+                        <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border'"/>
                     </t>
                     <t t-if="message" t-set-slot="body-icon">
                         <t t-call="mail.message_preview_prefix">
