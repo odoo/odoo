@@ -196,6 +196,9 @@ export class ProductProduct extends Base {
     }
 
     _isArchivedCombination(attributeValueIds) {
+        if (!this._archived_combinations) {
+            return false;
+        }
         for (const archivedCombination of this._archived_combinations) {
             const ptavCommon = archivedCombination.filter((ptav) =>
                 attributeValueIds.includes(ptav)
