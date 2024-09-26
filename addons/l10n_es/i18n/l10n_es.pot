@@ -16,6 +16,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_es
+#: model_terms:ir.ui.view,arch_db:l10n_es.res_config_settings_view_form
+msgid "Above this limit the simplified invoice won't be made"
+msgstr ""
+
+#. module: l10n_es
 #: model:ir.model,name:l10n_es.model_account_chart_template
 msgid "Account Chart Template"
 msgstr ""
@@ -112,6 +117,11 @@ msgid "Common"
 msgstr ""
 
 #. module: l10n_es
+#: model:ir.model,name:l10n_es.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_title_61
 #: model:account.report.line,name:l10n_es.mod_390_title_67
 #: model:account.report.line,name:l10n_es.mod_390_title_73
@@ -131,6 +141,11 @@ msgid "Complete (2008)"
 msgstr ""
 
 #. module: l10n_es
+#: model:ir.model,name:l10n_es.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_title_13
 msgid ""
 "Considerations for the assignment of image rights: income payments on "
@@ -138,16 +153,19 @@ msgid ""
 msgstr ""
 
 #. module: l10n_es
+#: model:ir.model,name:l10n_es.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_es
 #. odoo-python
 #: code:addons/l10n_es/models/template_es_coop_full.py:0
-#, python-format
 msgid "Cooperatives - Complete (2008)"
 msgstr ""
 
 #. module: l10n_es
 #. odoo-python
 #: code:addons/l10n_es/models/template_es_coop_pymes.py:0
-#, python-format
 msgid "Cooperatives - SMEs (2008)"
 msgstr ""
 
@@ -388,7 +406,6 @@ msgstr ""
 #. module: l10n_es
 #: model:ir.model.fields,field_description:l10n_es.field_account_bank_statement_line__l10n_es_is_simplified
 #: model:ir.model.fields,field_description:l10n_es.field_account_move__l10n_es_is_simplified
-#: model:ir.model.fields,field_description:l10n_es.field_account_payment__l10n_es_is_simplified
 msgid "Is Simplified"
 msgstr ""
 
@@ -511,6 +528,13 @@ msgid "Otros"
 msgstr ""
 
 #. module: l10n_es
+#: model:ir.model.fields,help:l10n_es.field_res_company__l10n_es_simplified_invoice_limit
+#: model:ir.model.fields,help:l10n_es.field_res_config_settings__l10n_es_simplified_invoice_limit
+msgid ""
+"Over this amount is not legally possible to create a simplified invoice"
+msgstr ""
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_title_10
 msgid ""
 "Patrimonial gains derived from the forest exploitation of the neighbors in "
@@ -563,6 +587,11 @@ msgstr ""
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_title_44
 msgid "Rectificación de deducciones por operaciones intragrupo"
+msgstr ""
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_303_title_20
+msgid "Rectification"
 msgstr ""
 
 #. module: l10n_es
@@ -624,6 +653,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_es/models/template_es_pymes.py:0
 msgid "SMEs (2008)"
+msgstr ""
+
+#. module: l10n_es
+#: model_terms:ir.ui.view,arch_db:l10n_es.res_config_settings_view_form
+msgid "Simplified Invoice Limit"
+msgstr ""
+
+#. module: l10n_es
+#: model:ir.model.fields,field_description:l10n_es.field_res_company__l10n_es_simplified_invoice_limit
+#: model:ir.model.fields,field_description:l10n_es.field_res_config_settings__l10n_es_simplified_invoice_limit
+msgid "Simplified Invoice limit amount"
+msgstr ""
+
+#. module: l10n_es
+#: model_terms:ir.ui.view,arch_db:l10n_es.res_config_settings_view_form
+msgid "Spain Localization"
 msgstr ""
 
 #. module: l10n_es
@@ -964,6 +1009,14 @@ msgid "[107] Entregas de bienes de inversión"
 msgstr ""
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_303_casilla_108
+msgid ""
+"[108] Exclusively for certain cases of corrective self-assessment due to a "
+"discrepancy in administrative criteria that should not be included in other "
+"boxes. Other adjustments"
+msgstr ""
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_casilla_108
 msgid "[108] Total volumen de operaciones (Art. 121 Ley IVA)"
 msgstr ""
@@ -1013,6 +1066,11 @@ msgstr ""
 msgid ""
 "[111] Operaciones sujetas y no exentas que originan el derecho a la "
 "devolución mensual"
+msgstr ""
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_303_casilla_111
+msgid "[111] Rectification - Amount"
 msgstr ""
 
 #. module: l10n_es
@@ -1302,6 +1360,11 @@ msgid "[164] Bienes corrientes y servicios: base imponible"
 msgstr ""
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_303_casilla_165
+msgid "[165] Base taxable 2%"
+msgstr ""
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_casilla_165
 msgid "[165] Bienes corrientes y servicios: cuota deducible"
 msgstr ""
@@ -1317,8 +1380,18 @@ msgid "[167] Bienes de inversión: cuota deducible"
 msgstr ""
 
 #. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_303_casilla_167
+msgid "[167] Contributions 2%"
+msgstr ""
+
+#. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_390_casilla_168
 msgid "[168] Base imponible"
+msgstr ""
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_303_casilla_168
+msgid "[168] Base taxable 0.26%"
 msgstr ""
 
 #. module: l10n_es
@@ -1328,12 +1401,17 @@ msgstr ""
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_303_casilla_16
-msgid "[16] Base taxable 0%, 0.5%, 0.62%"
+msgid "[16] Base taxable 1%"
 msgstr ""
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_111_casilla_16
 msgid "[16] Nº of recipients"
+msgstr ""
+
+#. module: l10n_es
+#: model:account.report.line,name:l10n_es.mod_303_casilla_170
+msgid "[170] Contribution 0.26%"
 msgstr ""
 
 #. module: l10n_es
@@ -1448,7 +1526,7 @@ msgstr ""
 
 #. module: l10n_es
 #: model:account.report.line,name:l10n_es.mod_303_casilla_18
-msgid "[18] Contribution 0%, 0.5%, 0.62%"
+msgid "[18] Contribution 1%"
 msgstr ""
 
 #. module: l10n_es
