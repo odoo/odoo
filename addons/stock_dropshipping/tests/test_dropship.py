@@ -239,3 +239,61 @@ class TestDropship(common.TransactionCase):
         picking_dropship.move_ids.picked = True
         picking_dropship.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 3.0)
+
+    def test_correct_vendor_dropship(self):
+        self.supplier_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
+        # dropship route to be added in test
+        self.dropship_product = self.env['product.product'].create({
+            'name': "Pen drive",
+            'type': "product",
+            'categ_id': self.env.ref('product.product_category_1').id,
+            'lst_price': 100.0,
+            'standard_price': 0.0,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'uom_po_id': self.env.ref('uom.product_uom_unit').id,
+            'seller_ids': [
+                (0, 0, {
+                    'delay': 10,
+                    'partner_id': self.supplier.id,
+                    'min_qty': 2.0,
+                    'price': 4
+                }),
+                (0, 0, {
+                    'delay': 5,
+                    'partner_id': self.supplier_2.id,
+                    'min_qty': 1.0,
+                    'price': 10
+                })
+            ],
+        })
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.customer
+        with mute_logger('odoo.tests.common.onchange'):
+            with so_form.order_line.new() as line:
+                line.product_id = self.dropship_product
+                line.product_uom_qty = 1
+                line.route_id = self.dropshipping_route
+        sale_order_drp_shpng = so_form.save()
+        sale_order_drp_shpng.action_confirm()
+
+        purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier_2.id)])
+        self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
+        self.assertTrue((purchase.date_planned - purchase.date_order).days == 5, "The second supplier has a delay of 5 days")
+        self.assertTrue(purchase.amount_untaxed == 10, "the suppliers sells the item for 10$")
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.customer
+        with mute_logger('odoo.tests.common.onchange'):
+            with so_form.order_line.new() as line:
+                line.product_id = self.dropship_product
+                line.product_uom_qty = 2
+                line.route_id = self.dropshipping_route
+        sale_order_drp_shpng = so_form.save()
+        sale_order_drp_shpng.action_confirm()
+
+        purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier.id)])
+        self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
+        self.assertTrue((purchase.date_planned - purchase.date_order).days == 10, "The first supplier has a delay of 10 days")
+        self.assertTrue(purchase.amount_untaxed == 8, "The price should be 4 * 2")
