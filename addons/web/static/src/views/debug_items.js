@@ -8,10 +8,8 @@ import { useService } from "@web/core/utils/hooks";
 import { formatMany2one } from "@web/views/fields/formatters";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart, useState, xml } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "../core/l10n/dates";
-import { redirect } from "@web/core/utils/urls";
-import { browser } from "@web/core/browser/browser";
 
 const debugRegistry = registry.category("debug");
 
@@ -176,24 +174,46 @@ debugRegistry.category("form").add("viewMetadata", viewMetadata);
 // View Raw Record Data
 // -----------------------------------------------------------------------------
 
-export function viewRawRecord({ component }) {
+class RawRecordDialog extends Component {
+    static template = xml`
+        <Dialog title="props.title">
+            <pre t-esc="content"/>
+        </Dialog>
+    `;
+    static components = { Dialog };
+    static props = {
+        record: { type: Object },
+        title: { type: String },
+        close: { type: Function },
+    };
+    get content() {
+        const record = this.props.record;
+        return JSON.stringify(record, Object.keys(record).sort(), 2);
+    }
+}
+
+export function viewRawRecord({ component, env }) {
+    const { resId, resModel } = component.model.config;
+    if (!resId) {
+        return null;
+    }
     const description = _t("Data");
     return {
         type: "item",
         description,
         callback: async () => {
-            const url = new URL(browser.location);
-            url.pathname = url.pathname.replace(/^\/odoo/, "json");
-            redirect(url);
+            const records = await component.model.orm.read(resModel, [resId]);
+            env.services.dialog.add(RawRecordDialog, {
+                title: _t("Data: %(model)s(%(id)s)", { model: resModel, id: resId }),
+                record: records[0],
+            });
         },
         sequence: 120,
-        get section() {
-            return component.env.config.viewType === "form" ? "record" : "records";
-        },
+        section: "record",
     };
 }
 
-debugRegistry.category("view").add("viewRawRecord", viewRawRecord);
+debugRegistry.category("form").add("viewRawRecord", viewRawRecord);
 
 // -----------------------------------------------------------------------------
 // Set Defaults

@@ -513,7 +513,10 @@ describe.tags("desktop")("DebugMenu", () => {
         });
         await contains(".o_debug_manager button").click();
         await contains(".dropdown-menu .dropdown-item:contains(/^Data/)").click();
-        expect(browser.location.pathname).toBe("/json/m-custom/1");
+        expect(".modal").toHaveCount(1);
+        expect(".modal-body pre").toHaveText(
+            '{\n "create_date": "2019-03-11 09:30:00",\n "display_name": "custom1",\n "id": 1,\n "name": "custom1",\n "write_date": "2019-03-11 09:30:00"\n}'
+        );
     });
 
     test("view metadata: basic rendering", async () => {
