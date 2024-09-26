@@ -516,3 +516,37 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
 
         picking2 = purchase_order2.picking_ids[0]
         self.assertEqual(picking2.state, 'done')
+
+    @freeze_time('2000-05-05')
+    def test_currency_exchange_journal_items(self):
+        """ Prices modified by discounts and currency exchanges should still yield accurate price
+        units when calculated by valuation mechanisms.
+        """
+        self.env.company.currency_id = self.env.ref('base.IQD').id
+        self.test_product_order.standard_price = 500
+        self.stock_account_product_categ.property_cost_method = 'average'
+        self.env['res.currency.rate'].create({
+            'name': '2000-05-05',
+            'company_rate': .00756,
+            'currency_id': self.env.ref('base.USD').id,
+            'company_id': self.env.company.id,
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.env.ref('base.USD').id,
+            'order_line': [(0, 0, {
+                'product_id': self.test_product_order.id,
+                'product_uom_qty': 13,
+                'discount': 1,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.picking_ids.move_ids.quantity = 13
+        purchase_order.picking_ids.button_validate()
+        pre_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
+        purchase_order.action_create_invoice()
+        purchase_order.invoice_ids.invoice_date = '2000-05-05'
+        purchase_order.invoice_ids.action_post()
+        post_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
+        self.assertEqual(post_bill_remaining_value, pre_bill_remaining_value)
