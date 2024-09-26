@@ -3,14 +3,36 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-function runUnitTestsItem() {
-    const href = "/web/tests?debug=assets";
+function runHootItem() {
+    const href = "/web/tests/next?debug=assets";
     return {
         type: "item",
-        description: _t("Run Unit Tests"),
+        description: _t("Run unit tests"),
         href,
         callback: () => browser.open(href),
         sequence: 10,
+    };
+}
+
+function runJSTestsItem() {
+    const href = "/web/tests?debug=assets";
+    return {
+        type: "item",
+        description: _t("Run QUnit tests (legacy)"),
+        href,
+        callback: () => browser.open(href),
+        sequence: 20,
+    };
+}
+
+function runJSTestsMobileItem() {
+    const href = "/web/tests/mobile?debug=assets";
+    return {
+        type: "item",
+        description: _t("Run QUnit mobile tests (legacy)"),
+        href,
+        callback: () => browser.open(href),
+        sequence: 30,
     };
 }
 
@@ -62,6 +84,8 @@ function globalSeparator() {
 registry
     .category("debug")
     .category("default")
-    .add("runUnitTestsItem", runUnitTestsItem)
+    .add("runHootItem", runHootItem)
+    .add("runJSTestsItem", runJSTestsItem)
+    .add("runJSTestsMobileItem", runJSTestsMobileItem)
     .add("globalSeparator", globalSeparator)
     .add("openViewItem", openViewItem);
