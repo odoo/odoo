@@ -427,7 +427,7 @@ def model(method: T) -> T:
 
     """
     if method.__name__ == 'create':
-        return model_create_single(method)
+        return model_create_multi(method)
     method._api = 'model'
     return method
 
@@ -443,34 +443,6 @@ def readonly(method: T) -> T:
     """
     method._readonly = True
     return method
-
-_create_logger = logging.getLogger(__name__ + '.create')
-
-
-@decorator
-def _model_create_single(create: CreateLegacyCallee[S], self: S, arg: ValuesType | list[ValuesType]) -> CreateCaller[S]:
-    # 'create' expects a dict and returns a record
-    if isinstance(arg, Mapping):
-        return create(self, typing.cast(ValuesType, arg))
-    if len(arg) > 1:
-        _create_logger.debug("%s.create() called with %d dicts", self, len(arg))
-    return self.browse().concat(*(create(self, vals) for vals in arg))
-
-
-def model_create_single(method: CreateLegacyCallee[S]) -> CreateCaller[S]:
-    """ Decorate a method that takes a dictionary and creates a single record.
-        The method may be called with either a single dict or a list of dicts::
-
-            record = model.create(vals)
-            records = model.create([vals, ...])
-    """
-    warnings.warn(
-        f"The model {method.__module__} is not overriding the create method in batch",
-        DeprecationWarning
-    )
-    wrapper = typing.cast('CreateCaller[S]', _model_create_single(method))  # pylint: disable=no-value-for-parameter
-    wrapper._api = 'model_create'
-    return wrapper
 
 
 @decorator
