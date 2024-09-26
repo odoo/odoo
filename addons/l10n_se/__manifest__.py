@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "Sweden - Accounting",
-    "version": "1.0",
+    "version": "1.1",
     "author": "XCLUDE, Odoo SA",
     "category": "Accounting/Localizations/Account Charts",
     'description': """
