@@ -287,7 +287,10 @@ class Task(models.Model):
     repeat_until = fields.Date(string="End Date", compute='_compute_repeat', compute_sudo=True, readonly=False)
 
     # Quick creation shortcuts
-    display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name',
+    display_name = fields.Char(
+        compute='_compute_display_name',
+        inverse='_inverse_display_name',
+        search='_search_display_name',
         help="""Use these keywords in the title to set new tasks:\n
             #tags Set tags on the task
             @user Assign the task to a user
