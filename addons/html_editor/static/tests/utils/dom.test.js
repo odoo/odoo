@@ -188,6 +188,7 @@ describe("wrapInlinesInBlocks", () => {
         );
         const div = el.querySelector("div");
         editor.shared.setSelection({ anchorNode: div, anchorOffset: 0 });
+        editor.shared.focusEditable();
         editor.shared.domInsert(
             parseHTML(
                 editor.document,
@@ -216,6 +217,7 @@ describe("wrapInlinesInBlocks", () => {
         );
         const div = el.querySelector("div");
         editor.shared.setSelection({ anchorNode: div, anchorOffset: 0 });
+        editor.shared.focusEditable();
         editor.shared.domInsert(
             parseHTML(
                 editor.document,

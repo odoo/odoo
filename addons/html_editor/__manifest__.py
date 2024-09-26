@@ -22,7 +22,6 @@ This addon provides an extensible, maintainable editor.
         'web.assets_backend': [
             'html_editor/static/src/**/*',
             ('include', 'html_editor.assets_media_dialog'),
-            'html_editor/static/lib/DOMpurify.js',
         ],
         'html_editor.assets_media_dialog': [
             # Bundle to use the media dialog in the backend and the frontend

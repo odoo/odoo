@@ -1,6 +1,7 @@
 import {
     getDeepestPosition,
     isEmptyBlock,
+    isShrunkBlock,
     isVisible,
     isVisibleTextNode,
     nextLeaf,
@@ -414,6 +415,14 @@ describe("isEmptyBlock", () => {
     test("should identify a tag with text as non-empty", () => {
         const [a] = insertTestHtml('<a href="#">Link text</a>');
         const result = isEmptyBlock(a);
+        expect(result).toBe(false);
+    });
+});
+
+describe("isShrunkBlock", () => {
+    test("should not consider a HR as a shrunk block", () => {
+        const [hr] = insertTestHtml("<hr>");
+        const result = isShrunkBlock(hr);
         expect(result).toBe(false);
     });
 });

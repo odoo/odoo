@@ -185,9 +185,7 @@ export class LinkPlugin extends Plugin {
         };
     };
     setup() {
-        this.overlay = this.shared.createOverlay(LinkPopover, {
-            sequence: 40,
-        });
+        this.overlay = this.shared.createOverlay(LinkPopover, {}, { sequence: 40 });
         this.addDomListener(this.editable, "click", (ev) => {
             if (ev.target.tagName === "A" && ev.target.isContentEditable) {
                 ev.preventDefault();
@@ -200,6 +198,7 @@ export class LinkPlugin extends Plugin {
             "Create link",
             () => {
                 this.toggleLinkTools();
+                this.shared.focusEditable();
             },
             {
                 hotkey: "control+k",
@@ -359,6 +358,7 @@ export class LinkPlugin extends Plugin {
                     onApply: (url, _) => {
                         this.linkElement.href = url;
                         this.shared.setCursorEnd(this.linkElement);
+                        this.shared.focusEditable();
                         this.removeCurrentLinkIfEmtpy();
                         this.dispatch("ADD_STEP");
                     },
@@ -413,6 +413,7 @@ export class LinkPlugin extends Plugin {
                     } else {
                         this.linkElement.removeAttribute("class");
                     }
+                    this.shared.focusEditable();
                     this.removeCurrentLinkIfEmtpy();
                     this.dispatch("ADD_STEP");
                 },
