@@ -14,7 +14,10 @@
         color: var(--website-loader-color);
         background-color: $gray-100;
         width: 100%;
-        max-width: 30rem;
+
+        @include media-breakpoint-up(lg) {
+            max-width: 30rem;
+        }
     }
     .o_website_loader_tip {
         color: var(--website-loader-color);
@@ -205,21 +208,17 @@
         }
 
         .o_website_loader_filmstrip_inner {
-            width: 237.5%;
+            width: 200%;
             animation: filmstripScroll 30s linear infinite;
             animation-play-state: inherit;
         }
         img {
-            width: percentage(1/8);
             height: auto;
             padding: 4px;
             border-radius: .6rem;
             object-fit: cover;
-
-            &.double {
-                width: percentage(1/4);
-            }
         }
+
         &.o_website_loader_filmstrip_middle {
             flex-grow: 1;
             z-index: 1;
@@ -228,9 +227,6 @@
                 animation-name: filmstripScroll;
                 animation-duration: 20s;
                 animation-direction: reverse;
-            }
-            img {
-                width: 25%;
             }
         }
 

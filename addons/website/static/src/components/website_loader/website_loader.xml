@@ -34,7 +34,7 @@
                 <span class="o_website_loader_done">Generating inspiring text.</span>
             </div>
             <div t-if="state.showWaitingMessages" class="o_website_loader_tip d-flex gap-2 h3-fs">
-                <div><i class="fa fa-circle-o-notch fa-spin fa-fw"/></div> <t t-out="currentWaitingMessage.description"/>
+                <div><i class="fa fa-circle-o-notch fa-spin fa-fw"/></div><div><t t-out="currentWaitingMessage.description"/></div>
             </div>
 
             <p class="o_website_loader_tip mt-auto mb-3">
@@ -66,29 +66,29 @@
             </div>
             <div id="o_website_loader_step_images" class="flex-column h-100">
                 <div class="o_website_loader_filmstrip d-flex w-100 overflow-hidden">
-                    <div class="o_website_loader_filmstrip_inner d-flex">
+                    <div class="o_website_loader_filmstrip_inner d-flex flex-shrink-0 flex-grow-0">
                         <img src="/website/static/src/img/website_loader/1.jpg" alt="Image 1"/>
-                        <img class="double" src="/website/static/src/img/website_loader/2.jpg" alt="Image 2"/>
+                        <img src="/website/static/src/img/website_loader/2.jpg" alt="Image 2"/>
                         <img src="/website/static/src/img/website_loader/3.jpg" alt="Image 3"/>
-                        <img class="double" src="/website/static/src/img/website_loader/4.jpg" alt="Image 4"/>
+                        <img src="/website/static/src/img/website_loader/8.jpg" alt="Image 8"/>
                         <img src="/website/static/src/img/website_loader/5.jpg" alt="Image 5"/>
                         <img src="/website/static/src/img/website_loader/6.jpg" alt="Image 6"/>
-                        <img class="double" src="/website/static/src/img/website_loader/7.jpg" alt="Image 7"/>
-                        <img src="/website/static/src/img/website_loader/8.jpg" alt="Image 8"/>
+                        <img src="/website/static/src/img/website_loader/7.jpg" alt="Image 7"/>
+                        <img src="/website/static/src/img/website_loader/4.jpg" alt="Image 4"/>
 
                         <!-- Duplicate images for seamless looping -->
                         <img src="/website/static/src/img/website_loader/1.jpg" alt="Image 1"/>
-                        <img class="double" src="/website/static/src/img/website_loader/2.jpg" alt="Image 2"/>
+                        <img src="/website/static/src/img/website_loader/2.jpg" alt="Image 2"/>
                         <img src="/website/static/src/img/website_loader/3.jpg" alt="Image 3"/>
-                        <img class="double" src="/website/static/src/img/website_loader/4.jpg" alt="Image 4"/>
+                        <img src="/website/static/src/img/website_loader/8.jpg" alt="Image 8"/>
                         <img src="/website/static/src/img/website_loader/5.jpg" alt="Image 5"/>
                         <img src="/website/static/src/img/website_loader/6.jpg" alt="Image 6"/>
-                        <img class="double" src="/website/static/src/img/website_loader/7.jpg" alt="Image 7"/>
-                        <img src="/website/static/src/img/website_loader/8.jpg" alt="Image 8"/>
+                        <img src="/website/static/src/img/website_loader/7.jpg" alt="Image 7"/>
+                        <img src="/website/static/src/img/website_loader/4.jpg" alt="Image 4"/>
                     </div>
                 </div>
                 <div class="o_website_loader_filmstrip o_website_loader_filmstrip_middle d-flex w-100 overflow-hidden">
-                    <div class="o_website_loader_filmstrip_inner d-flex">
+                    <div class="o_website_loader_filmstrip_inner d-flex flex-shrink-0 flex-grow-0">
                         <img src="/web/image/website.s_three_columns_default_image_1" alt=""/>
                         <img src="/web/image/website.s_showcase_default_image" alt=" "/>
                         <img src="/web/image/website.s_image_title_default_image" alt=""/>
@@ -102,9 +102,9 @@
                     </div>
                 </div>
                 <div class="o_website_loader_filmstrip d-flex w-100 overflow-hidden mt-auto">
-                    <div class="o_website_loader_filmstrip_inner d-flex">
+                    <div class="o_website_loader_filmstrip_inner d-flex flex-shrink-0 flex-grow-0">
                         <img src="/website/static/src/img/website_loader/8.jpg" alt="Image 8"/>
-                        <img class="double" src="/website/static/src/img/website_loader/7.jpg" alt="Image 7"/>
+                        <img src="/website/static/src/img/website_loader/7.jpg" alt="Image 7"/>
                         <img src="/website/static/src/img/website_loader/6.jpg" alt="Image 6"/>
                         <img src="/website/static/src/img/website_loader/5.jpg" alt="Image 5"/>
                         <img src="/website/static/src/img/website_loader/4.jpg" alt="Image 4"/>
@@ -114,7 +114,7 @@
 
                         <!-- Duplicate images for seamless looping -->
                         <img src="/website/static/src/img/website_loader/8.jpg" alt="Image 8"/>
-                        <img class="double" src="/website/static/src/img/website_loader/7.jpg" alt="Image 7"/>
+                        <img src="/website/static/src/img/website_loader/7.jpg" alt="Image 7"/>
                         <img src="/website/static/src/img/website_loader/6.jpg" alt="Image 6"/>
                         <img src="/website/static/src/img/website_loader/5.jpg" alt="Image 5"/>
                         <img src="/website/static/src/img/website_loader/4.jpg" alt="Image 4"/>
