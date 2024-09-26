@@ -179,6 +179,7 @@ test("restore a selection when you are not in the editable shouldn't move the fo
                 {
                     category: "widget",
                     name: "Test",
+                    description: "Test",
                     action() {
                         p.showOverlay();
                     },
