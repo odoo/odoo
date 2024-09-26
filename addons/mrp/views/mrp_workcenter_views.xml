@@ -209,7 +209,7 @@
                                         <button t-if="record.workorder_count.raw_value &gt; 0" class="btn btn-primary" name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1, 'desktop_list_view': 1, 'search_default_workcenter_id': id}">
                                             <span>WORK ORDERS</span>
                                         </button>
-                                        <button t-if="record.workorder_count.raw_value &lt;= 0" class="btn btn-warning" name="%(act_product_mrp_production_workcenter)d" type="action">
+                                        <button t-if="record.workorder_count.raw_value &lt;= 0" class="btn btn-warning" name="action_work_order_alternatives" type="object">
                                             <span>PLAN ORDERS</span>
                                         </button>
                                     </div>
