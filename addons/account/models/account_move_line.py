@@ -1704,6 +1704,15 @@ class AccountMoveLine(models.Model):
                         "with the payment terms"
                     ))
 
+    @api.ondelete(at_uninstall=False)  # Hashed entres are legally required to not be deleted.
+    def _except_hashed_entry_lines(self):
+        """ Lines belonginig to a hashed (locked) entry should not be allowed to be deleted in order to protect the
+        hash chain.
+        """
+        for line in self:
+            if line.move_id.inalterable_hash:
+                raise UserError(_('You cannot delete journal items belonging to a locked journal entry.'))
+
     def unlink(self):
         if not self:
             return True
