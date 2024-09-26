@@ -9,7 +9,7 @@ export class LinkPastePlugin extends Plugin {
     static dependencies = ["link", "clipboard", "selection", "dom"];
     resources = {
         before_paste: this.removeFullySelectedLink.bind(this),
-        handle_paste_text: this.handlePasteText.bind(this),
+        paste_text_overrides: this.handlePasteText.bind(this),
     };
 
     /**
@@ -49,10 +49,7 @@ export class LinkPastePlugin extends Plugin {
             this.handlePasteTextUrlInsideLink(text, url);
             return;
         }
-        const isHandled = this.getResource("handle_paste_url").some((handler) =>
-            handler(text, url)
-        );
-        if (isHandled) {
+        if (this.delegateTo("paste_url_overrides", text, url)) {
             return;
         }
         this.shared.insertLink(url, text);

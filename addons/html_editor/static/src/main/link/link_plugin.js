@@ -178,8 +178,8 @@ export class LinkPlugin extends Plugin {
             },
         ],
         onSelectionChange: this.handleSelectionChange.bind(this),
-        split_element_block: this.handleSplitBlock.bind(this),
-        handle_insert_line_break_element: this.handleInsertLineBreak.bind(this),
+        split_element_block_overrides: this.handleSplitBlock.bind(this),
+        insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         powerButtons: ["link"],
     };
     setup() {

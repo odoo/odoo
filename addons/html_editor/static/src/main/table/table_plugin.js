@@ -37,14 +37,14 @@ export class TablePlugin extends Plugin {
     static name = "table";
     static dependencies = ["dom", "history", "selection", "delete", "split", "color"];
     resources = {
-        handle_tab: withSequence(20, this.handleTab.bind(this)),
-        handle_shift_tab: withSequence(20, this.handleShiftTab.bind(this)),
-        handle_delete_range: this.handleDeleteRange.bind(this),
+        tab_overrides: withSequence(20, this.handleTab.bind(this)),
+        shift_tab_overrides: withSequence(20, this.handleShiftTab.bind(this)),
+        delete_range_overrides: this.handleDeleteRange.bind(this),
         isUnremovable: isUnremovableTableComponent,
         isUnsplittable: (element) =>
             element.tagName === "TABLE" || tableInnerComponents.has(element.tagName),
         onSelectionChange: this.updateSelectionTable.bind(this),
-        colorApply: this.applyTableColor.bind(this),
+        color_apply_overrides: this.applyTableColor.bind(this),
         modifyTraversedNodes: this.adjustTraversedNodes.bind(this),
         considerNodeFullySelected: (node) => !!closestElement(node, ".o_selected_td"),
     };

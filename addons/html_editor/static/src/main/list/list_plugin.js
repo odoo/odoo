@@ -35,11 +35,11 @@ export class ListPlugin extends Plugin {
     static name = "list";
     static dependencies = ["tabulation", "split", "selection", "delete", "dom"];
     resources = {
-        handle_delete_backward: this.handleDeleteBackward.bind(this),
-        handle_delete_range: this.handleDeleteRange.bind(this),
-        handle_tab: this.handleTab.bind(this),
-        handle_shift_tab: this.handleShiftTab.bind(this),
-        split_element_block: this.handleSplitBlock.bind(this),
+        delete_backward_overrides: this.handleDeleteBackward.bind(this),
+        delete_range_overrides: this.handleDeleteRange.bind(this),
+        tab_overrides: this.handleTab.bind(this),
+        shift_tab_overrides: this.handleShiftTab.bind(this),
+        split_element_block_overrides: this.handleSplitBlock.bind(this),
         toolbarCategory: withSequence(30, {
             id: "list",
         }),
