@@ -162,7 +162,7 @@
                 <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px" t-att-class="{ 'ms-3': !store.discuss.isSidebarCompact }">
                     <img class="w-100 h-100 rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
                     <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
-                    <CountryFlag t-if="thread.anonymous_country" country="thread.anonymous_country" class="'position-absolute o-mail-DiscussSidebarChannel-country border'"/>
+                    <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'position-absolute o-mail-DiscussSidebarChannel-country border'"/>
                 </div>
                 <span t-if="!store.discuss.isSidebarCompact" class="mx-2 text-truncate" t-att-class="thread.selfMember?.message_unread_counter > 0 and !thread.isMuted ? 'o-item-unread fw-bolder' : 'text-muted'">
                     <t t-esc="thread.displayName"/>
