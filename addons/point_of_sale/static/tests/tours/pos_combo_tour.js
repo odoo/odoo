@@ -26,10 +26,17 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
                 content: "check that amount is properly displayed when it is not 0",
                 trigger: `article.product .product-content .product-name:contains("Combo Product 3") ~.price-tag:contains("2.60")`,
             },
+            {
+                content: "Check that Combo Product 10 (White) archived variant is disabled",
+                trigger: `.ptav-not-available article.product .product-content .product-name:contains("Combo Product 10 (White)")`,
+            },
             combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 5"),
             combo.select("Combo Product 7"),
             combo.isSelected("Combo Product 7"),
+            // Check archived variant Selection
+            combo.select("Combo Product 10 (White)"),
+            combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 8"),
             combo.isSelected("Combo Product 8"),
             combo.isNotSelected("Combo Product 7"),
