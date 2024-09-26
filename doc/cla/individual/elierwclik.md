@@ -1,4 +1,4 @@
-Canada, 2024-09-26
+Canada, 2024-09-25
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
