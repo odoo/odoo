@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, describe } from "@odoo/hoot";
 import { click, getActiveElement, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
@@ -104,4 +104,20 @@ test("press escape to close media dialog", async () => {
     await animationFrame();
     expect(".modal .o_select_media_dialog").toHaveCount(0);
     expect(getContent(el)).toBe("<p>a[]bc</p>");
+});
+
+describe("Powerbox search keywords", () => {
+    test("Image and Icon are keywords for the Media command", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        insertText(editor, "/");
+        for (const word of ["image", "icon"]) {
+            insertText(editor, word);
+            await animationFrame();
+            expect(".active .o-we-command-name").toHaveText("Media");
+            // delete the keyword to try the next one
+            for (let i = 0; i < word.length; i++) {
+                press("backspace");
+            }
+        }
+    });
 });
