@@ -406,18 +406,17 @@
                     <filter name="my_purchases" string="My Purchases" domain="[('user_id', '=', uid)]"/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
-                    <filter name="draft" string="RFQs" domain="[('state', 'in', ('draft', 'sent', 'to approve'))]"/>
-                    <separator/>
-                    <filter name="approved" string="Purchase Orders" domain="[('state', '=', 'purchase')]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]" invisible="1"/>
                     <separator/>
-                    <filter name="order_date" string="Order Date" date="date_order"/>
                     <filter name="draft_rfqs" string="New" domain="[('state', '=', 'draft')]"/>
                     <filter name="waiting_rfqs" string="Sent" domain="[('state', '=', 'sent')]"/>
+                    <filter name="approved" string="Purchase Orders" domain="[('state', '=', 'purchase')]"/>
+                    <separator/>
                     <filter name="late" string="Late" domain="[('state', 'in', ['draft', 'sent', 'to approve']),('date_order', '&lt;', datetime.datetime.now())]"/>
                     <filter name="not_acknowledged" string="Not Acknowledged" domain="[('state', '=', 'purchase'), ('acknowledged', '=', False)]"/>
                     <filter name="late_receipt" string="Late Receipts" domain="[('is_late', '=', True)]"/>
                     <separator/>
+                    <filter name="order_date" string="Order Date" date="date_order"/>
                     <filter invisible="1" string="My Activities" name="filter_activities_my"
                         domain="[('activity_user_id', '=', uid)]"/>
                     <separator invisible="1"/>
