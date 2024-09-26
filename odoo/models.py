@@ -275,11 +275,6 @@ class MetaModel(api.Meta):
                     field.__set_name__(self, name)
 
             add('id', fields.Id(automatic=True))
-            add_default('display_name', fields.Char(
-                string='Display Name', automatic=True,
-                compute='_compute_display_name',
-                search='_search_display_name',
-            ))
 
             if attrs.get('_log_access', self._auto):
                 add_default('create_uid', fields.Many2one(
@@ -7264,6 +7259,12 @@ class Model(AbstractModel):
     _register = False           # not visible in ORM registry, meant to be python-inherited only
     _abstract = False           # not abstract
     _transient = False          # not transient
+
+    display_name = fields.Char(
+        string='Display Name', automatic=True,
+        compute='_compute_display_name',
+        search='_search_display_name',
+    )
 
 
 class TransientModel(Model):
