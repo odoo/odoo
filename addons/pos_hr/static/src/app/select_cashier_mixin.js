@@ -117,7 +117,7 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
                 return;
             }
         } else if (pinMatchEmployees.length === 1) {
-            employee = pinMatchEmployees[0].item;
+            employee = pinMatchEmployees[0];
         }
 
         if (!pin && employee && employee._pin) {
