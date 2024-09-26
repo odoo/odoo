@@ -36,7 +36,7 @@
                 <field name="livechat_operator_id"/>
                 <field name="session_count"/>
             </field>
-            <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="before">
+            <xpath expr="//div[@name='w_visitor_kanban_actions']" position="before">
                 <div t-if="record.session_count.raw_value">Chats<field name="session_count" class="float-end fw-bold"/></div>
                 <div t-if="record.livechat_operator_id.raw_value">
                     Speaking With
@@ -64,7 +64,7 @@
                 </div>
                 <div t-else="" class="col-lg d-none d-lg-block"/>
             </xpath>
-            <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
+            <xpath expr="//div[@name='w_visitor_kanban_actions']" position="inside">
                 <button name="action_send_chat_request" type="object"
                         class="btn btn-secondary"
                         invisible="livechat_operator_id or not is_connected">
