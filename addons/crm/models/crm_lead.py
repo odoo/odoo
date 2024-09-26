@@ -406,16 +406,15 @@ class Lead(models.Model):
     @api.depends('partner_id')
     def _compute_lang_id(self):
         """ compute the lang based on partner when partner_id has changed """
-        wo_lang = self.filtered(lambda lead: not lead.lang_id and lead.partner_id)
-        if not wo_lang:
-            return
-        # prepare cache
-        lang_codes = [code for code in wo_lang.mapped('partner_id.lang') if code]
-        lang_id_by_code = dict(
-            (code, self.env['res.lang']._lang_get_id(code))
-            for code in lang_codes
-        )
-        for lead in wo_lang:
+        lang_codes = [code for code in self.mapped('partner_id.lang') if code]
+        if lang_codes:
+            lang_id_by_code = {
+                code: self.env['res.lang']._lang_get_id(code)
+                for code in lang_codes
+            }
+        else:
+            lang_id_by_code = {}
+        for lead in self.filtered('partner_id'):
             lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
 
     @api.depends('partner_id')
