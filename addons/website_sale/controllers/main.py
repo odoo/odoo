@@ -142,6 +142,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return expression.AND(domains)
 
     def sitemap_shop(env, rule, qs):
+<<<<<<< 18.0
+||||||| 2ba922640d8d19fd04810da66ae5e8b256436552
+        website = env['website'].get_current_website()
+        # Make sure urls are not listed in sitemap when restriction is active
+        if website and website.ecommerce_access == 'logged_in':
+            return
+
+=======
+        website = env['website'].get_current_website()
+        if website and website.ecommerce_access == 'logged_in' and not qs:
+            # Make sure urls are not listed in sitemap when restriction is active
+            # and no autocomplete query string is provided
+            return
+
+>>>>>>> 414fc4eba751bf0d66b9b48f6265e2093cdc4272
         if not qs or qs.lower() in '/shop':
             yield {'loc': '/shop'}
 
@@ -149,7 +164,42 @@ class WebsiteSale(payment_portal.PaymentPortal):
         dom = sitemap_qs2dom(qs, '/shop/category', Category._rec_name)
         dom += env['website'].get_current_website().website_domain()
         for cat in Category.search(dom):
+<<<<<<< 18.0
             loc = '/shop/category/%s' % env['ir.http']._slug(cat)
+||||||| 2ba922640d8d19fd04810da66ae5e8b256436552
+            loc = '/shop/category/%s' % slug(cat)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
+    def sitemap_products(env, rule, qs):
+        website = env['website'].get_current_website()
+        # Make sure urls are not listed in sitemap when restriction is active
+        if website and website.ecommerce_access == 'logged_in':
+            return
+
+        ProductTemplate = env['product.template']
+        dom = sitemap_qs2dom(qs, '/shop', ProductTemplate._rec_name)
+        dom += website.sale_product_domain()
+        for product in ProductTemplate.search(dom):
+            loc = '/shop/%s' % slug(product)
+=======
+            loc = '/shop/category/%s' % slug(cat)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
+    def sitemap_products(env, rule, qs):
+        website = env['website'].get_current_website()
+        if website and website.ecommerce_access == 'logged_in' and not qs:
+            # Make sure urls are not listed in sitemap when restriction is active
+            # and no autocomplete query string is provided
+            return
+
+        ProductTemplate = env['product.template']
+        dom = sitemap_qs2dom(qs, '/shop', ProductTemplate._rec_name)
+        dom += website.sale_product_domain()
+        for product in ProductTemplate.search(dom):
+            loc = '/shop/%s' % slug(product)
+>>>>>>> 414fc4eba751bf0d66b9b48f6265e2093cdc4272
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
