@@ -41,6 +41,7 @@ class kioskAttendanceApp extends Component{
             displayDemoMessage: browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false",
         });
         this.lockScanner = false;
+        this.pwaService = useService("pwa");
         if (this.props.kioskMode === 'settings' || this.props.fromTrialMode){
             this.manualKioskMode = false;
             useBus(this.barcode.bus, "barcode_scanned", (ev) => this.onBarcodeScanned(ev.detail.barcode));

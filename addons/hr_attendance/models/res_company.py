@@ -96,3 +96,10 @@ class ResCompany(models.Model):
                 company.hr_presence_control_attendance = True
             if not at_install and company.hr_presence_control_attendance:
                 company.hr_presence_control_login = True
+
+    def _action_open_kiosk_mode(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': f'/hr_attendance/kiosk_mode_menu/{self.env.company.id}',
+        }

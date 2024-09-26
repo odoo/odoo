@@ -22,6 +22,7 @@ export class EventScanView extends Component {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.pwaService = useService("pwa");
 
         const { default_event_id, active_model, active_id } = this.props.action.context;
         this.eventId = default_event_id || (active_model === "event.event" && active_id);

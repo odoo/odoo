@@ -9,6 +9,7 @@ export class KioskBarcodeScanner extends BarcodeScanner {
         barcodeSource: String,
         token: String,
     };
+    static template = "hr_attendance.BarcodeScanner";
     setup() {
         super.setup();
         this.scanBarcode = () => scanBarcode(this.env, this.facingMode, this.props.token);
@@ -19,6 +20,13 @@ export class KioskBarcodeScanner extends BarcodeScanner {
             return "user";
         }
         return super.facingMode;
+    }
+
+    get installURL() {
+        const url = `hr_attendance/${this.props.token}`
+        return `/scoped_app?app_id=hr_attendance&path=${encodeURIComponent(
+            url.replace(document.location.origin + "/", "")
+        )}`;
     }
 }
 
