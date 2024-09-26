@@ -139,7 +139,7 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
 
             // Test Cancel Order from Actions
             ProductScreen.clickReview(),
-            ProductScreen.clickControlButton("Cancel Order"),
+            ProductScreen.clickControlButton("Delete Order"),
             Dialog.confirm(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.orderIsEmpty(),
