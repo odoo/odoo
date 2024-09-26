@@ -3,7 +3,7 @@
 
 from datetime import datetime, date
 
-from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+from odoo.addons.hr_work_entry_holidays_contract.tests.common import TestWorkEntryHolidaysBase
 
 
 class TestPayslipHolidaysComputation(TestWorkEntryHolidaysBase):

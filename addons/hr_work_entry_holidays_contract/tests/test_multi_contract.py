@@ -3,7 +3,7 @@
 
 from datetime import datetime
 from odoo.tests import tagged
-from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+from odoo.addons.hr_work_entry_holidays_contract.tests.common import TestWorkEntryHolidaysBase
 
 
 @tagged('work_entry_multi_contract')
