@@ -87,21 +87,21 @@ export class LinkPopoverWidget {
             tooltips.push(Tooltip.getOrCreateInstance(el));
         }
         let popoverShown = true;
-        this.$target.popover({
+        const newPopover = new Popover(this.target, {
             html: true,
-            content: this.$el,
-            placement: 'bottom',
+            content: this.el,
+            placement: "bottom",
             // We need the popover to:
             // 1. Open when the link is clicked or double clicked
             // 2. Remain open when the link is clicked again (which `trigger: 'click'` is not doing)
             // 3. Remain open when the popover content is clicked..
             // 4. ..except if it the click was on a button of the popover content
             // 5. Close when the user click somewhere on the page (not being the link or the popover content)
-            trigger: 'manual',
-            boundary: 'viewport',
+            trigger: "manual",
+            boundary: "viewport",
             container: this.container,
-        })
-        .on('show.bs.popover.link_popover', () => {
+        });
+        this.$target .on('show.bs.popover.link_popover', () => {
             this._loadAsyncLinkPreview();
             popoverShown = true;
         })
@@ -117,12 +117,12 @@ export class LinkPopoverWidget {
             const popover = Popover.getInstance(this.target);
             popover.tip.classList.add('o_edit_menu_popover');
         })
-        .popover('show');
+        newPopover.show();
 
-        this.popover = Popover.getInstance(this.target);
+        this.popover = newPopover;
         this.$target.on('mousedown.link_popover', (e) => {
             if (!popoverShown) {
-                this.$target.popover('show');
+                this.popover.show();
             }
         });
         this.$target.on('href_changed.link_popover', (e) => {
