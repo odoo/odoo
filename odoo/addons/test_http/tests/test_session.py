@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+import glob
 import json
 import os
 from tempfile import TemporaryDirectory
@@ -11,12 +12,12 @@ import pytz
 from freezegun import freeze_time
 
 import odoo
-from odoo.http import SESSION_LIFETIME
+from odoo.http import root, SESSION_DELETION_TIMER, SESSION_LIFETIME, SESSION_ROTATION_INTERVAL, STORED_SESSION_BYTES, _session_identifier_re
 from odoo.tests import get_db_name, tagged
 from odoo.tools import config, mute_logger, reset_cached_properties
 
 from .test_common import TestHttpBase
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.base.tests.common import HttpCase, HttpCaseWithUserDemo
 
 GEOIP_ODOO_FARM_2 = {
     'city': 'Ramillies',
@@ -404,3 +405,41 @@ class TestSessionStore(HttpCaseWithUserDemo):
             self.env['ir.http']._gc_sessions()
             session_from_store = odoo.http.root.session_store.get(session)
             self.assertNotEqual(session, session_from_store.sid, "the old session as been removed")
+
+
+# HttpCase because session rotation needs to be tested on the file store instead of memory store
+class TestSessionRotation(HttpCase):
+    def test_session_rotation(self):
+        def get_amount_sessions(session):
+            identifier = session[:STORED_SESSION_BYTES]
+            self.assertTrue(_session_identifier_re.match(identifier))
+            normalized_path = os.path.normpath(os.path.join(root.session_store.path, identifier[:2], identifier + '*'))
+            self.assertTrue(normalized_path.startswith(root.session_store.path))
+            return len(glob.glob(normalized_path))
+        self.authenticate('admin', 'admin')
+        self.url_open('/odoo')
+        session_one = self.opener.cookies['session_id']
+        # Session shouldn't rotate if not expired
+        self.url_open('/odoo')
+        self.assertEqual(self.opener.cookies['session_id'], session_one)
+        self.assertEqual(get_amount_sessions(session_one), 1)
+        # Expire the first session
+        session_one_obj = root.session_store.get(session_one)
+        session_one_obj['create_time'] -= SESSION_ROTATION_INTERVAL
+        root.session_store.save(session_one_obj)
+        self.url_open('/odoo')
+        session_two = self.opener.cookies['session_id']
+        self.assertNotEqual(session_one, session_two)
+        self.assertEqual(get_amount_sessions(session_two), 2)
+        # Trigger cleanup
+        session_two_obj = root.session_store.get(session_two)
+        session_two_obj['create_time'] -= SESSION_DELETION_TIMER
+        root.session_store.save(session_two_obj)
+        self.url_open('/odoo')
+        session_three = self.opener.cookies['session_id']
+        self.assertEqual(session_three, session_two)
+        self.assertEqual(get_amount_sessions(session_three), 1)
+        # Cleaning the test up
+        self.logout()
+        root.session_store.delete_from_identifiers([session_three[:STORED_SESSION_BYTES]])
+        self.assertEqual(get_amount_sessions(session_three), 0)

@@ -256,7 +256,7 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertEqual(new_session.uid, None)
 
         # follow redirection
-        self.opener.cookies['session_id'] = new_session.sid
+        self.opener.cookies.set("session_id", new_session.sid, domain=HOST)
         res = self.multidb_url_open('/test_http/ensure_db')
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
