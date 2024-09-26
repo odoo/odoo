@@ -4,7 +4,7 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import { unwrapContents } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
-import { delegate } from "@html_editor/utils/resource";
+import { delegate, trigger } from "@html_editor/utils/resource";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -221,7 +221,7 @@ export class ClipboardPlugin extends Plugin {
 
         this.dispatch("HISTORY_STAGE_SELECTION");
 
-        this.getResource("before_paste").forEach((handler) => handler(selection));
+        trigger(this.getResource("before_paste"), selection);
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.shared.getEditableSelection();
 

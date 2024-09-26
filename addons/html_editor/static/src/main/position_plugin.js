@@ -2,6 +2,7 @@ import { ancestors } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { couldBeScrollableX, couldBeScrollableY } from "@web/core/utils/scrolling";
+import { trigger } from "@html_editor/utils/resource";
 
 /**
  * This plugins provides a way to create a "local" overlays so that their
@@ -47,6 +48,6 @@ export class PositionPlugin extends Plugin {
         super.destroy();
     }
     layoutGeometryChange() {
-        this.getResource("layoutGeometryChange").forEach((cb) => cb());
+        trigger(this.getResource("layoutGeometryChange"));
     }
 }

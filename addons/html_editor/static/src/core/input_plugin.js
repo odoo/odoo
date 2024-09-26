@@ -1,3 +1,4 @@
+import { trigger } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 
 export class InputPlugin extends Plugin {
@@ -9,15 +10,11 @@ export class InputPlugin extends Plugin {
 
     onBeforeInput(ev) {
         this.dispatch("HISTORY_STAGE_SELECTION");
-        for (const handler of this.getResource("onBeforeInput")) {
-            handler(ev);
-        }
+        trigger(this.getResource("onBeforeInput"), ev);
     }
 
     onInput(ev) {
         this.dispatch("ADD_STEP");
-        for (const handler of this.getResource("onInput")) {
-            handler(ev);
-        }
+        trigger(this.getResource("onInput"), ev);
     }
 }
