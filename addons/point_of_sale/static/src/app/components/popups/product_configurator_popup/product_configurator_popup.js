@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, onRendered, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, useRef, useState, useSubEnv } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useRefListener, useService } from "@web/core/utils/hooks";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
@@ -17,9 +17,6 @@ export class BaseProductAttribute extends Component {
 
         onMounted(() => {
             this.env.attribute_components.push(this);
-        });
-
-        onRendered(() => {
             this.env.computeProductProduct();
         });
     }

@@ -155,6 +155,10 @@ class ProductTemplate(models.Model):
             if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
                 product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
 
+            product['_archived_combinations'] = []
+            for product_product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', '=', product['id']), ('active', '=', False)]):
+                product['_archived_combinations'].append(product_product.product_template_attribute_value_ids.ids)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):
         product_ctx = dict(self.env.context or {}, active_test=False)
