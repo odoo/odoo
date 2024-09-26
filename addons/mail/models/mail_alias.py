@@ -32,6 +32,7 @@ class Alias(models.Model):
     _name = 'mail.alias'
     _description = "Email Aliases"
     _rec_name = 'alias_name'
+    _rec_names_search = ['alias_name', 'alias_domain']
     _order = 'alias_model_id, alias_name'
 
     # email definition
@@ -39,7 +40,7 @@ class Alias(models.Model):
         'Alias Name', copy=False,
         help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
     alias_full_name = fields.Char('Alias Email', compute='_compute_alias_full_name', store=True, index='btree_not_null')
-    display_name = fields.Char(string='Display Name', compute='_compute_display_name')
+    display_name = fields.Char(string='Display Name', compute='_compute_display_name', search='_search_display_name')
     alias_domain_id = fields.Many2one(
         'mail.alias.domain', string='Alias Domain', ondelete='restrict',
         default=lambda self: self.env.company.alias_domain_id)
