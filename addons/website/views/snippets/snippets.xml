@@ -302,7 +302,7 @@
                 </t>
 
                 <!-- Contact & Forms group -->
-                <t t-snippet="website.s_website_form" string="Form" t-forbid-sanitize="form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" group="contact_and_forms"/>
+                <t t-snippet="website.s_title_form" string="Title - Form" t-forbid-sanitize="form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" group="contact_and_forms"/>
                 <t t-snippet="website.s_opening_hours" string="Opening Hours" group="contact_and_forms"/>
                 <t t-snippet="website.s_contact_info" string="Contact Info" group="contact_and_forms"/>
 
@@ -384,6 +384,14 @@
                 <t t-snippet="website.s_blockquote" string="Blockquote" t-thumbnail="/website/static/src/img/snippets_thumbs/s_blockquote.svg">
                     <keywords>cite</keywords>
                 </t>
+                <!--
+                Note: this inner snippet is still allowed to be dropped as a
+                main snippet. Indeed, this handles the fact that the snippet
+                was previously a main one and can still be in old databases, but
+                also in some apps templates. It was just chosen to not suggest
+                it in the snippets modal anymore, and just *used* as an inner
+                snippet by other snippets in there.
+                -->
                 <t t-snippet="website.s_website_form" string="Form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
                 <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
                     <keywords>celebration, launch</keywords>
