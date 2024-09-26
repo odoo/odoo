@@ -1986,6 +1986,7 @@
                                      t-out="line._get_displayed_unit_price() * line.product_uom_qty"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </t>
+                            <t t-set="product_price" t-value="line._get_cart_display_price()"/>
                             <t t-call="website_sale.cart_product_price"/>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
                                    class="cart_product_base_unit_price d-block text-muted"
@@ -2034,17 +2035,6 @@
     </template>
 
     <template id="cart_product_price">
-        <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
-        <t
-            t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-            t-set="product_price"
-            t-value="line._get_combo_price_subtotal() if is_combo else line.price_subtotal"
-        />
-        <t
-            t-else=""
-            t-set="product_price"
-            t-value="line._get_combo_price_total() if is_combo else line.price_total"
-        />
         <span
             t-out="product_price"
             style="white-space: nowrap;"
@@ -2782,7 +2772,12 @@
                                                         </t>
                                                         <td t-attf-class="#{o_cart_sum_padding_top} td-price pe-0 text-end"
                                                             name="website_sale_cart_summary_line_price">
-                                                            <t t-call="website_sale.cart_product_price"/>
+                                                            <t t-call="website_sale.cart_product_price">
+                                                                <t
+                                                                    t-set="product_price"
+                                                                    t-value="line._get_cart_display_price()"
+                                                                />
+                                                            </t>
                                                         </td>
                                                     </tr>
                                                 </tbody>
