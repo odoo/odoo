@@ -22,17 +22,19 @@ const ForumShare = publicWidget.Widget.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
         var $question = this.$('article.question');
-        if (!this.targetType) {
-            this._super.apply(this, arguments);
-        } else {
-            const el = renderToElement('website.social_modal', {
+        if (this.targetType) {
+            const modalEl = renderToElement("website.social_modal", {
                 target_type: this.targetType,
                 state: $question.data('state'),
             });
-            $('body').append(el);
+            // Remove modal from DOM once it's closed.
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                modalEl.remove();
+            });
+            this.el.appendChild(modalEl);
             this.trigger_up('widgets_start_request', {
                 editableMode: false,
-                $target: $(el.querySelector(".s_share")),
+                $target: $(modalEl.querySelector(".s_share")),
             });
             $('#oe_social_share_modal').modal('show');
         }
@@ -50,7 +52,11 @@ publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
         // Retrieve stored social data
         if (sessionStorage.getItem('social_share')) {
             var socialData = JSON.parse(sessionStorage.getItem('social_share'));
-            (new ForumShare(this, false, socialData.targetType)).attachTo($(document.body));
+            // Dummy div to attach the ForumShare publicwidget
+            const divEl = document.createElement("div");
+            divEl.classList.add("social-modal");
+            document.body.appendChild(divEl);
+            (new ForumShare(this, false, socialData.targetType)).attachTo(divEl);
             sessionStorage.removeItem('social_share');
         }
 
