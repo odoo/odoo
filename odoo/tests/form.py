@@ -564,7 +564,17 @@ class Form:
                 record = record.with_context(**context)
 
         values = self._get_onchange_values()
+        self._env.flush_all()
         result = record.onchange(values, field_names, self._view['fields_spec'])
+
+        # Check the readonlyness of onchange
+        # TODO: Not correct, need to check the mro
+        if hasattr(record.onchange, '_readonly') and record.onchange._readonly:
+            # Force the recompute of store fields to see if it creates dirty value in the cache
+            self._env._recompute_all()
+            if field_to_write := list(self._env.cache.get_dirty_fields()):
+                _logger.error('%s.onchange() is not readonly, fields to write: %r', record.browse(), field_to_write)
+
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 
