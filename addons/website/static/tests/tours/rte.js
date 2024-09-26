@@ -13,6 +13,7 @@ registerWebsitePreviewTour('rte_translator', {
     test: true,
     url: '/',
     edition: true,
+    checkDelay: 150,
     wait_for: whenReady(),
 }, () => [
 ...goToTheme(),
@@ -71,15 +72,15 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "insert file name",
-    trigger: '.modal .modal-dialog .modal-body input[type="text"]',
-    run: "edit rte_translator.xml",
+    trigger: ".modal:not(.o_inactive_modal):contains(new page) .modal-body input[type=text]",
+    run: "edit rte_translator.xml && press Tab",
 },
 {
-    trigger: 'input[type="text"]:value(rte_translator.xml)',
+    trigger: '.modal:not(.o_inactive_modal):contains(new page) .modal-body input[type="text"]:value(rte_translator.xml)',
 },
 {
     content: "create file",
-    trigger: ".modal button.btn-primary:contains(create)",
+    trigger: ".modal:not(.o_inactive_modal):contains(new page) button.btn-primary:contains(create)",
     run: "click",
 }, {
     content: "click on the 'page manager' button",

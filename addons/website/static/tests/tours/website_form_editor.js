@@ -145,6 +145,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     url: '/',
     edition: true,
     test: true,
+    checkDelay: 100,
 }, () => [
     // Drop a form builder snippet and configure it
     {
@@ -301,7 +302,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     {
         content: "Change added Option label",
         trigger: 'we-list table input:eq(3)',
-        run: "edit Wiko Stairway",
+        run: "edit Wiko Stairway && press Tab",
     }, {
         content: "Check the resulting field",
         trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
