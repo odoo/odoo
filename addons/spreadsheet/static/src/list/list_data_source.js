@@ -208,7 +208,7 @@ export class ListDataSource extends OdooViewsDataSource {
                 return value ? value[1] : "";
             }
             case "boolean":
-                return record[fieldName] ? "TRUE" : "FALSE";
+                return record[fieldName] ? true : false;
             case "date":
                 return record[fieldName]
                     ? toNumber(this._formatDate(record[fieldName]), DEFAULT_LOCALE)

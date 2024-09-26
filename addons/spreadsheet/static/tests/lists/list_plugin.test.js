@@ -72,8 +72,8 @@ test("Return display_name of many2one field", async () => {
 
 test("Boolean fields are correctly formatted", async () => {
     const { model } = await createSpreadsheetWithList({ columns: ["bar"] });
-    expect(getCellValue(model, "A2")).toBe("TRUE");
-    expect(getCellValue(model, "A5")).toBe("FALSE");
+    expect(getCellValue(model, "A2")).toBe(true);
+    expect(getCellValue(model, "A5")).toBe(false);
 });
 
 test("properties field displays property display names", async () => {
@@ -99,7 +99,7 @@ test("Can display a field which is not in the columns", async function () {
     expect(getCellValue(model, "A1")).toBe("Loading...");
     await waitForDataLoaded(model); // Await for batching collection of missing fields
     await animationFrame();
-    expect(getCellValue(model, "A1")).toBe("TRUE");
+    expect(getCellValue(model, "A1")).toBe(true);
 });
 
 test("Can remove a list with undo after editing a cell", async function () {
@@ -480,7 +480,7 @@ test("can edit list domain", async () => {
     const { model } = await createSpreadsheetWithList();
     const [listId] = model.getters.getListIds();
     expect(model.getters.getListDefinition(listId).domain).toEqual([]);
-    expect(getCellValue(model, "B2")).toBe("TRUE");
+    expect(getCellValue(model, "B2")).toBe(true);
     model.dispatch("UPDATE_ODOO_LIST_DOMAIN", {
         listId,
         domain: [["foo", "in", [55]]],
@@ -492,7 +492,7 @@ test("can edit list domain", async () => {
     await waitForDataLoaded(model);
     expect(model.getters.getListDefinition(listId).domain).toEqual([]);
     await waitForDataLoaded(model);
-    expect(getCellValue(model, "B2")).toBe("TRUE");
+    expect(getCellValue(model, "B2")).toBe(true);
     model.dispatch("REQUEST_REDO");
     expect(model.getters.getListDefinition(listId).domain).toEqual([["foo", "in", [55]]]);
     await waitForDataLoaded(model);
@@ -506,18 +506,18 @@ test("can edit list sorting", async () => {
     // prettier-ignore
     const initialGrid = [
         ["Foo", "Bar",   "Date", "Probability", "Money!"],
-        [12,    "TRUE",  42474,  10,                74.4],
-        [1,     "TRUE",  42669,  11,                74.8],
-        [17,    "TRUE",  42719,  95,                   4],
-        [2,     "FALSE", 42715,  15,                1000],
+        [12,     true,   42474,  10,                74.4],
+        [1,      true,   42669,  11,                74.8],
+        [17,     true,   42719,  95,                   4],
+        [2,      false,  42715,  15,                1000],
     ]
     // prettier-ignore
     const orderedGrid = [
         ["Foo", "Bar",   "Date", "Probability", "Money!"],
-        [17,    "TRUE",  42719,   95,                  4],
-        [12,    "TRUE",  42474,   10,               74.4],
-        [1,     "TRUE",  42669,   11,               74.8],
-        [2,     "FALSE", 42715,   15,               1000],
+        [17,     true,   42719,   95,                  4],
+        [12,     true,   42474,   10,               74.4],
+        [1,      true,   42669,   11,               74.8],
+        [2,      false,  42715,   15,               1000],
     ]
     const [listId] = model.getters.getListIds();
     expect(model.getters.getListDefinition(listId).orderBy).toEqual([]);
