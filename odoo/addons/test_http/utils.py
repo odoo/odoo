@@ -74,8 +74,17 @@ class MemorySessionStore(SessionStore):
     def get_missing_session_identifiers(self, identifiers):
         return set(identifiers).difference(self.store)
 
-    def rotate(self, session, env):
-        FilesystemSessionStore.rotate(self, session, env)
+    def delete_old_sessions(self, session):
+        return FilesystemSessionStore.delete_old_sessions(self, session)
+
+    def rotate(self, session, env, soft=None):
+        FilesystemSessionStore.rotate(self, session, env, soft)
+
+    def generate_key(self, salt=None):
+        return FilesystemSessionStore.generate_key(self, salt)
+
+    def is_valid_key(self, key):
+        return FilesystemSessionStore.is_valid_key(self, key)
 
     def vacuum(self):
         return

@@ -2297,7 +2297,7 @@ class HttpCase(TransactionCase):
         # An alternative would be to set the cookie to None (unsetting it
         # completely) or clear-ing session.cookies.
         self.opener = Opener(self)
-        self.opener.cookies['session_id'] = session.sid
+        self.opener.cookies.set("session_id", session.sid, domain=HOST)
         if browser:
             self._logger.info('Setting session cookie in browser')
             browser.set_cookie('session_id', session.sid, '/', HOST)

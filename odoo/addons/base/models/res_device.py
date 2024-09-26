@@ -5,7 +5,7 @@ from datetime import datetime
 import logging
 
 from odoo import api, fields, models, tools
-from odoo.http import GeoIP, request, root
+from odoo.http import GeoIP, request, root, STORED_SESSION_BYTES
 from odoo.tools import SQL, OrderedSet, unique
 from odoo.tools.translate import _
 from .res_users import check_identity
@@ -64,7 +64,7 @@ class ResDeviceLog(models.Model):
 
     def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
         if field_name == 'is_current' and request:
-            return SQL("session_identifier = %s DESC", request.session.sid[:42])
+            return SQL("session_identifier = %s DESC", request.session.sid[:STORED_SESSION_BYTES])
         return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
     def _is_mobile(self, platform):
@@ -87,7 +87,7 @@ class ResDeviceLog(models.Model):
 
         geoip = GeoIP(trace['ip_address'])
         user_id = request.session.uid
-        session_identifier = request.session.sid[:42]
+        session_identifier = request.session.sid[:STORED_SESSION_BYTES]
 
         if self.env.cr.readonly:
             self.env.cr.rollback()
