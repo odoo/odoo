@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { DashboardLoader, Status } from "./dashboard_loader";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
@@ -13,9 +12,12 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 import { useSpreadsheetPrint } from "@spreadsheet/hooks";
+import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+
+export const dashboardActionRegistry = new Registry();
 
 export class SpreadsheetDashboardAction extends Component {
     static template = "spreadsheet_dashboard.DashboardAction";
@@ -34,7 +36,6 @@ export class SpreadsheetDashboardAction extends Component {
         this.controlPanelDisplay = {};
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.isDashboardAdmin = false;
         // Use the non-protected orm service (`this.env.services.orm` instead of `useService("orm")`)
         // because spreadsheets models are preserved across multiple components when navigating
         // with the breadcrumb
@@ -51,11 +52,6 @@ export class SpreadsheetDashboardAction extends Component {
             const activeDashboardId = this.getInitialActiveDashboard();
             if (activeDashboardId) {
                 this.openDashboard(activeDashboardId);
-            }
-            if (this.env.debug) {
-                this.isDashboardAdmin = await user.hasGroup(
-                    "spreadsheet_dashboard.group_dashboard_manager"
-                );
             }
         });
         useEffect(
@@ -87,6 +83,10 @@ export class SpreadsheetDashboardAction extends Component {
         useSpreadsheetPrint(() => this.state.activeDashboard?.model);
         /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */
         this.state = useState({ activeDashboard: undefined, sidebarExpanded: true });
+    }
+
+    get dashboardButton() {
+        return dashboardActionRegistry.getAll()[0];
     }
 
     /**
