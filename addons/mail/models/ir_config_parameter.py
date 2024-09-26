@@ -29,7 +29,12 @@ class IrConfigParameter(models.Model):
     #   - MailComposer._action_send_mail_mass_mail(): mails generation based on records
     #   - MailThread._notify_thread_by_email(): mails generation for notification emails
     #   - MailTemplate.send_mail_batch(): mails generation done directly from templates
-    #   to split mail generation in batches. 50 by default;
+    #   to split mail generation in batches;
+    #   - EventMail._execute_attendee_based() and EventMail._execute_event_based():
+    #    mails (+ sms, whatsapp) generation for each attendee of en event;
+    #    50 by default;
+    # * 'mail.render.cron.limit': used in cron involving rendering of content
+    #   and/or templates, like event mail scheduler cron. Defaults to 1000;
 
     # Mail Gateway
     #   * 'mail.gateway.loop.minutes' and 'mail.gateway.loop.threshold': block

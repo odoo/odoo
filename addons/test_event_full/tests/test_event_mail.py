@@ -122,7 +122,8 @@ class TestEventMailSchedule(TestEventMailCommon):
     def test_schedule_event_scalability(self):
         """ Test scalability / iterative work on event-based schedulers """
         test_event = self.env['event.event'].browse(self.test_event.ids)
-        self._create_registrations(test_event, 30)
+        registrations = self._create_registrations(test_event, 30)
+        registrations = registrations.sorted("id")
 
         # check event-based schedulers
         after_mail = test_event.event_mail_ids.filtered(lambda s: s.interval_type == "after_event" and s.notification_type == "mail")
@@ -142,20 +143,51 @@ class TestEventMailSchedule(TestEventMailCommon):
         self.assertEqual(before_sms.mail_count_done, 0)
         self.assertFalse(before_sms.mail_done)
 
+        # setup batch and cron limit sizes to check iterative behavior
+        batch_size, cron_limit = 5, 20
+        self.env["ir.config_parameter"].sudo().set_param("mail.batch_size", batch_size)
+        self.env["ir.config_parameter"].sudo().set_param("mail.render.cron.limit", cron_limit)
+
         # launch before event schedulers -> all communications are sent
         current_now = self.event_date_begin - timedelta(days=1)
-        with self.mock_datetime_and_now(current_now), \
+        EventMail = type(self.env['event.mail'])
+        exec_origin = EventMail._execute_event_based_for_registrations
+        with patch.object(
+                EventMail, '_execute_event_based_for_registrations', autospec=True, wraps=EventMail, side_effect=exec_origin,
+             ) as mock_exec, \
+             self.mock_datetime_and_now(current_now), \
              self.mockSMSGateway(), \
              self.mock_mail_gateway(), \
              self.capture_triggers('event.event_mail_scheduler') as capture:
             self.event_cron_id.method_direct_trigger()
 
+        self.assertFalse(after_mail.last_registration_id)
         self.assertEqual(after_mail.mail_count_done, 0)
         self.assertFalse(after_mail.mail_done)
+        self.assertFalse(after_sms.last_registration_id)
         self.assertEqual(after_sms.mail_count_done, 0)
         self.assertFalse(after_sms.mail_done)
+        # iterative work on registrations: only 20 (cron limit) are taken into account
+        self.assertEqual(before_mail.last_registration_id, registrations[19])
+        self.assertEqual(before_mail.mail_count_done, 20)
+        self.assertFalse(before_mail.mail_done)
+        self.assertEqual(before_sms.last_registration_id, registrations[19])
+        self.assertEqual(before_sms.mail_count_done, 20)
+        self.assertFalse(before_sms.mail_done)
+        self.assertEqual(mock_exec.call_count, 8, "Batch of 5 to make 20 registrations: 4 calls / scheduler")
+        # cron should have been triggered for the remaining registrations
+        self.assertSchedulerCronTriggers(capture, [current_now] * 2)
+
+        # relaunch to close scheduler
+        with self.mock_datetime_and_now(current_now), \
+             self.mockSMSGateway(), \
+             self.mock_mail_gateway(), \
+             self.capture_triggers('event.event_mail_scheduler') as capture:
+            self.event_cron_id.method_direct_trigger()
+        self.assertEqual(before_mail.last_registration_id, registrations[-1])
         self.assertEqual(before_mail.mail_count_done, 30)
         self.assertTrue(before_mail.mail_done)
+        self.assertEqual(before_sms.last_registration_id, registrations[-1])
         self.assertEqual(before_sms.mail_count_done, 30)
         self.assertTrue(before_sms.mail_done)
         self.assertFalse(capture.records)
@@ -168,14 +200,29 @@ class TestEventMailSchedule(TestEventMailCommon):
              self.capture_triggers('event.event_mail_scheduler') as capture:
             self.event_cron_id.method_direct_trigger()
 
+        # iterative work on registrations: only 20 (cron limit) are taken into account
+        self.assertEqual(after_mail.last_registration_id, registrations[19])
+        self.assertEqual(after_mail.mail_count_done, 20)
+        self.assertFalse(after_mail.mail_done)
+        self.assertEqual(after_sms.last_registration_id, registrations[19])
+        self.assertEqual(after_sms.mail_count_done, 20)
+        self.assertFalse(after_sms.mail_done)
+        self.assertEqual(mock_exec.call_count, 8, "Batch of 5 to make 20 registrations: 4 calls / scheduler")
+        # cron should have been triggered for the remaining registrations
+        self.assertSchedulerCronTriggers(capture, [current_now] * 2)
+
+        # relaunch to close scheduler
+        with self.mock_datetime_and_now(current_now), \
+             self.mockSMSGateway(), \
+             self.mock_mail_gateway(), \
+             self.capture_triggers('event.event_mail_scheduler') as capture:
+            self.event_cron_id.method_direct_trigger()
+        self.assertEqual(after_mail.last_registration_id, registrations[-1])
         self.assertEqual(after_mail.mail_count_done, 30)
         self.assertTrue(after_mail.mail_done)
+        self.assertEqual(after_sms.last_registration_id, registrations[-1])
         self.assertEqual(after_sms.mail_count_done, 30)
         self.assertTrue(after_sms.mail_done)
-        self.assertEqual(before_mail.mail_count_done, 30)
-        self.assertTrue(before_mail.mail_done)
-        self.assertEqual(before_sms.mail_count_done, 30)
-        self.assertTrue(before_sms.mail_done)
         self.assertFalse(capture.records)
 
     @users('user_eventmanager')
