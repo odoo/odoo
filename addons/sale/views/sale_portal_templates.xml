@@ -642,14 +642,7 @@
             <section t-if="not is_html_empty(sale_order.note)" id="terms" class="mt-4">
                 <h4 class="">Terms &amp; Conditions</h4>
                 <hr class="mt-0 mb-1"/>
-                <t t-if="sale_order.terms_type == 'html'">
-                    <!-- Note is plain text. This ensures a clickable link  -->
-                    <t t-set="tc_url" t-value="'%s/terms' % (sale_order.get_base_url())"/>
-                    <em>Terms &amp; Conditions: <a href="/terms"><t t-out="tc_url"/></a></em>
-                </t>
-                <t t-else="">
-                    <em t-field="sale_order.note"/>
-                </t>
+                <em t-field="sale_order.note"/>
             </section>
 
             <section t-if="sale_order.payment_term_id" class="mt-4">
