@@ -1895,16 +1895,6 @@ class BaseModel(metaclass=MetaModel):
 
         return defaults
 
-    @classmethod
-    def clear_caches(cls):
-        """ Clear the caches
-
-        This clears the caches associated to methods decorated with
-        ``tools.ormcache``.
-        """
-        warnings.warn("Deprecated model.clear_cache(), use registry.clear_cache() instead", DeprecationWarning)
-        cls.pool.clear_all_caches()
-
     @api.model
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
         """ Get fields aggregations specified by ``aggregates`` grouped by the given ``groupby``
@@ -4427,52 +4417,6 @@ class BaseModel(metaclass=MetaModel):
 
         return None
 
-    @api.model
-    def check_access_rights(self, operation, raise_exception=True):
-        """ Verify that the given operation is allowed for the current user accord to ir.model.access.
-
-        :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
-        :param bool raise_exception: whether an exception should be raise if operation is forbidden
-        :return: whether the operation is allowed
-        :rtype: bool
-        :raise AccessError: if the operation is forbidden and raise_exception is True
-        """
-        warnings.warn(
-            "check_access_rights() is deprecated since 18.0; use check_access() instead.",
-            DeprecationWarning, 1,
-        )
-        if raise_exception:
-            return self.browse().check_access(operation)
-        return self.browse().has_access(operation)
-
-    def check_access_rule(self, operation):
-        """ Verify that the given operation is allowed for the current user according to ir.rules.
-
-        :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
-        :return: None if the operation is allowed
-        :raise UserError: if current ``ir.rules`` do not permit this operation.
-        """
-        warnings.warn(
-            "check_access_rule() is deprecated since 18.0; use check_access() instead.",
-            DeprecationWarning, 1,
-        )
-        self.check_access(operation)
-
-    def _filter_access_rules(self, operation):
-        """ Return the subset of ``self`` for which ``operation`` is allowed. """
-        warnings.warn(
-            "_filter_access_rules() is deprecated since 18.0; use _filtered_access() instead.",
-            DeprecationWarning, 1,
-        )
-        return self._filtered_access(operation)
-
-    def _filter_access_rules_python(self, operation):
-        warnings.warn(
-            "_filter_access_rules_python() is deprecated since 18.0; use _filtered_access() instead.",
-            DeprecationWarning, 1,
-        )
-        return self._filtered_access(operation)
-
     def unlink(self):
         """ unlink()
 
@@ -5637,99 +5581,6 @@ class BaseModel(metaclass=MetaModel):
         return SQL("%s %s %s", sql_field, direction, nulls)
 
     @api.model
-    def _flush_search(self, domain, fields=None, order=None, seen=None):
-        """ Flush all the fields appearing in `domain`, `fields` and `order`.
-
-        Note that ``order=None`` actually means no order, so if you expect some
-        fallback order, you have to provide it yourself.
-        """
-        warnings.warn("Since 18.0, _flush_search are deprecated")
-        if seen is None:
-            seen = set()
-        elif self._name in seen:
-            return
-        seen.add(self._name)
-
-        to_flush = defaultdict(OrderedSet)             # {model_name: field_names}
-        if fields:
-            to_flush[self._name].update(fields)
-
-        def collect_from_domain(model, domain):
-            for arg in domain:
-                if isinstance(arg, str):
-                    continue
-                if not isinstance(arg[0], str):
-                    continue
-                comodel = collect_from_path(model, arg[0])
-                if arg[1] in ('child_of', 'parent_of') and comodel._parent_store:
-                    # hierarchy operators need the parent field
-                    collect_from_path(comodel, comodel._parent_name)
-                if arg[1] in ('any', 'not any'):
-                    collect_from_domain(comodel, arg[2])
-
-        def collect_from_path(model, path):
-            # path is a dot-separated sequence of field names
-            for fname in path.split('.'):
-                field = model._fields.get(fname)
-                if not field:
-                    break
-                to_flush[model._name].add(fname)
-                if field.type == 'one2many' and field.inverse_name:
-                    to_flush[field.comodel_name].add(field.inverse_name)
-                    field_domain = field.get_domain_list(model)
-                    if field_domain:
-                        collect_from_domain(self.env[field.comodel_name], field_domain)
-                # DLE P111: `test_message_process_email_partner_find`
-                # Search on res.users with email_normalized in domain
-                # must trigger the recompute and flush of res.partner.email_normalized
-                if field.related:
-                    # DLE P129: `test_transit_multi_companies`
-                    # `self.env['stock.picking'].search([('product_id', '=', product.id)])`
-                    # Should flush `stock.move.picking_ids` as `product_id` on `stock.picking` is defined as:
-                    # `product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id', readonly=False)`
-                    collect_from_path(model, field.related)
-                if field.relational:
-                    model = self.env[field.comodel_name]
-            # return the model found by traversing all fields (used in collect_from_domain)
-            return model
-
-        # flush the order fields
-        if order:
-            for order_part in order.split(','):
-                order_field = order_part.split()[0]
-                field = self._fields.get(order_field)
-                if field is not None:
-                    to_flush[self._name].add(order_field)
-                    if field.relational:
-                        comodel = self.env[field.comodel_name]
-                        comodel._flush_search([], order=comodel._order, seen=seen)
-
-        if self._active_name and self.env.context.get('active_test', True):
-            to_flush[self._name].add(self._active_name)
-
-        collect_from_domain(self, domain)
-
-        # Check access of fields with groups
-        for model_name, field_names in to_flush.items():
-            self.env[model_name].check_field_access_rights('read', field_names)
-
-        # also take into account the fields in the record rules
-        if ir_rule_domain := self.env['ir.rule']._compute_domain(self._name, 'read'):
-            collect_from_domain(self, ir_rule_domain)
-
-        # flush model dependencies (recursively)
-        if self._depends:
-            models = [self]
-            while models:
-                model = models.pop()
-                for model_name, field_names in model._depends.items():
-                    to_flush[model_name].update(field_names)
-                    models.append(self.env[model_name])
-
-        for model_name, field_names in to_flush.items():
-            self.env[model_name].flush_model(field_names)
-
-    @api.model
     def _search(self, domain, offset=0, limit=None, order=None) -> Query:
         """
         Private implementation of search() method.
@@ -5993,14 +5844,6 @@ class BaseModel(metaclass=MetaModel):
             col2=SQL.identifier(column2),
         ))
         return bool(cr.fetchone())
-
-    def _check_recursion(self, parent=None):
-        warnings.warn("Since 18.0, one must use not _has_cycle() instead", DeprecationWarning, 2)
-        return not self._has_cycle(parent)
-
-    def _check_m2m_recursion(self, field_name):
-        warnings.warn("Since 18.0, one must use not _has_cycle() instead", DeprecationWarning, 2)
-        return not self._has_cycle(field_name)
 
     def _get_external_ids(self):
         """Retrieve the External ID(s) of any database record.
