@@ -81,7 +81,7 @@ export class ColumnPlugin extends Plugin {
         hints: [
             {
                 selector: `.odoo-editor-editable .o_text_columns div[class^='col-'],
-                            .odoo-editor-editable .o_text_columns p:first-child`,
+                            .odoo-editor-editable .o_text_columns div[class^='col-']>p:first-child`,
                 text: _t("Empty column"),
             },
         ],
