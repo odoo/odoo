@@ -30,6 +30,8 @@ def _auto_install_l10n(env):
             module_list.append('base_vat')
         if country_code == 'uk':
             module_list.append('account_bacs')
+        if country_code == 'MC':
+            module_list.append('l10n_fr')
 
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
         if module_ids:
