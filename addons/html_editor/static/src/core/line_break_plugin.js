@@ -2,6 +2,8 @@ import { Plugin } from "../plugin";
 import { CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
+import { isBlock } from "../utils/blocks";
+import { closestElement } from "../utils/dom_traversal";
 
 export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "split"];
@@ -64,6 +66,10 @@ export class LineBreakPlugin extends Plugin {
         const brEls = [brEl];
         if (targetOffset >= targetNode.childNodes.length) {
             targetNode.appendChild(brEl);
+            if (!isBlock(closestElement(targetNode))) {
+                targetNode.appendChild(this.document.createTextNode("\u200B"));
+                targetNode.setAttribute("data-oe-inline-line-break", "");
+            }
         } else {
             targetNode.insertBefore(brEl, targetNode.childNodes[targetOffset]);
         }
