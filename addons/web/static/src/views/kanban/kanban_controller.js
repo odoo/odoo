@@ -228,6 +228,9 @@ export class KanbanController extends Component {
                 await firstGroup.toggle();
             }
             this.quickCreateState.groupId = firstGroup.id;
+            if (!this.model.root.records.length) {
+                this.render(true);
+            }
         } else if (onCreate && onCreate !== "quick_create") {
             const options = {
                 additionalContext: root.context,
