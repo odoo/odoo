@@ -1,3 +1,4 @@
+import { delegate } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { childNodes, descendants, getCommonAncestor } from "../utils/dom_traversal";
 
@@ -651,13 +652,12 @@ export class HistoryPlugin extends Plugin {
      * @param { number } index
      */
     isReversibleStep(index) {
-        for (const cb of this.getResource("is_reversible_step")) {
-            const result = cb(index);
-            if (typeof result !== "undefined") {
-                return result;
-            }
+        const cbs = this.getResource("is_reversible_step");
+        if (cbs.length) {
+            return cbs.every((cb) => cb(index));
+        } else {
+            return Boolean(this.steps[index]);
         }
-        return Boolean(this.steps[index]);
     }
     /**
      * Get the step index in the history to redo.
@@ -1000,12 +1000,10 @@ export class HistoryPlugin extends Plugin {
      * @param { string } attributeValue
      */
     setAttribute(node, attributeName, attributeValue) {
-        for (const cb of this.getResource("set_attribute")) {
-            const result = cb(node, attributeName, attributeValue);
-            if (result) {
-                return;
-            }
+        if (delegate(this.getResource("set_attribute"), node, attributeName, attributeValue)) {
+            return;
         }
+
         // if attributeValue is falsy but not null, we still need to apply it
         if (attributeValue !== null) {
             node.setAttribute(attributeName, attributeValue);

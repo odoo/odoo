@@ -4,6 +4,7 @@ import { isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { descendants, getAdjacentPreviousSiblings } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
+import { delegate } from "@html_editor/utils/resource";
 
 const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
 const GRID_COLUMN_WIDTH = 40; //@todo Configurable?
@@ -59,10 +60,8 @@ export class TabulationPlugin extends Plugin {
     }
 
     handleTab() {
-        for (const callback of this.getResource("handle_tab")) {
-            if (callback()) {
-                return;
-            }
+        if (delegate(this.getResource("handle_tab"))) {
+            return;
         }
 
         const selection = this.shared.getEditableSelection();
@@ -76,10 +75,8 @@ export class TabulationPlugin extends Plugin {
     }
 
     handleShiftTab() {
-        for (const callback of this.getResource("handle_shift_tab")) {
-            if (callback()) {
-                return;
-            }
+        if (delegate(this.getResource("handle_shift_tab"))) {
+            return;
         }
         const traversedBlocks = this.shared.getTraversedBlocks();
         this.outdentBlocks(traversedBlocks);
