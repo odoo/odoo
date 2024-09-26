@@ -66,7 +66,7 @@ class AccountAnalyticDistributionModel(models.Model):
         for model in applicable_models:
             # ignore model if it contains an account having a root plan that was already applied
             if not applied_plans & model.distribution_analytic_account_ids.root_plan_id:
-                res |= model.analytic_distribution
+                res |= model.analytic_distribution or {}
                 applied_plans += model.distribution_analytic_account_ids.root_plan_id
         return res
 
