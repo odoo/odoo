@@ -796,6 +796,38 @@ class TestPickShip(TestStockCommon):
         picking_client.do_unreserve()
         self.assertEqual(picking_client.state, 'waiting')
 
+    def test_return_only_one_product(self):
+        """ test returning only one product in a picking"""
+        picking_client = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'state': 'draft',
+            'move_ids': [Command.create({
+                'name': p.name,
+                'product_id': p.id,
+                'product_uom_qty': 10,
+                'product_uom': p.uom_id.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+                'state': 'waiting',
+                'procure_method': 'make_to_order',
+            }) for p in (self.productA, self.productB, self.productC)]
+        })
+        picking_client.move_ids.quantity = 10
+        picking_client.move_ids.picked = True
+        picking_client.button_validate()
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking_client.ids, active_id=picking_client.ids[0],
+            active_model='stock.picking'))
+        return1 = stock_return_picking_form.save()
+        return1.product_return_moves.filtered(lambda l: l.product_id.id == self.productB.id).quantity = 5.0
+        return_pick = return1.action_create_returns()
+        return_pick = self.env['stock.picking'].browse(return_pick['res_id'])
+        self.assertEqual(len(return_pick.move_ids), 1)
+        self.assertEqual(return_pick.move_ids.product_id, self.productB)
+        self.assertEqual(return_pick.move_ids.product_uom_qty, 5)
+
     def test_return_location(self):
         """ In a pick ship scenario, send two items to the customer, then return one in the ship
         location and one in a return location that is located in another warehouse.
