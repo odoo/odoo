@@ -146,8 +146,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def sitemap_shop(env, rule, qs):
         website = env['website'].get_current_website()
-        # Make sure urls are not listed in sitemap when restriction is active
-        if website and website.ecommerce_access == 'logged_in':
+        if website and website.ecommerce_access == 'logged_in' and not qs:
+            # Make sure urls are not listed in sitemap when restriction is active
+            # and no autocomplete query string is provided
             return
 
         if not qs or qs.lower() in '/shop':
@@ -163,8 +164,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def sitemap_products(env, rule, qs):
         website = env['website'].get_current_website()
-        # Make sure urls are not listed in sitemap when restriction is active
-        if website and website.ecommerce_access == 'logged_in':
+        if website and website.ecommerce_access == 'logged_in' and not qs:
+            # Make sure urls are not listed in sitemap when restriction is active
+            # and no autocomplete query string is provided
             return
 
         ProductTemplate = env['product.template']
