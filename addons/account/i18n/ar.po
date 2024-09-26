@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-14 16:15+0000\n"
+"POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -6910,6 +6910,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"معادلة في line_code.expression_label. يتيح لك ذلك إعداد الهدف من الترحيل "
+"لهذا التعبير (في تعبير بعنوان _carryover_*)، إذا كان مختلفاً عن البند "
+"الرئيسي. "
 
 #. module: account
 msgid ""
@@ -9697,7 +9700,7 @@ msgstr "القيمة السالبة لحقل المبلغ إذا كان payment_
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "Nested group of taxes are not allowed."
-msgstr ""
+msgstr "لا يُسمح بالمجموعة المضمنة من الضرائب. "
 
 #. module: account
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_net
@@ -15161,6 +15164,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr "دفتر اليومية هذا مرتبط بطريقة دفع. لا يمكنك أرشفته "
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -15721,6 +15732,13 @@ msgstr "سعر الوحدة:"
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
 msgstr "وحدة القياس"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/template_generic_coa.py:0
+#, python-format
+msgid "United States of America (Generic)"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16355,6 +16373,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"عندما تستهدف تعبيراً للترحيل، يجب أن يبدأ عنوان ذلك التعبير بـ "
+"_applied_carryover_ "
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -17143,6 +17163,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"لا يمكنك استخدام الحقل carryover_target في تعبير لا يبدأ عنوانه بـ "
+"_carryover_ "
 
 #. module: account
 #. odoo-python

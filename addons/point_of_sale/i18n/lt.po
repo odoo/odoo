@@ -8,7 +8,6 @@
 # Anatolij, 2023
 # Rolandas <info@paninfo.lt>, 2023
 # Eimantas <eimantas@focusate.eu>, 2023
-# Gailius Kazlauskas <gailius@vialaurea.lt>, 2023
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2023
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2023
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2023
@@ -30,6 +29,7 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2024
 # Jonas Zinkevicius <jozi@odoo.com>, 2024
 # Arunas V. <arunas@devoro.com>, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Arunas V. <arunas@devoro.com>, 2024\n"
+"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.lt>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4106,7 +4106,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Pranešimų, kuriems reikia imtis veiksmų, skaičius"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_has_error_counter
@@ -8251,6 +8251,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You cannot use the same journal on multiples cash payment methods."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You do not have permission to open a POS session. Please try opening a "
+"session with a different user"
 msgstr ""
 
 #. module: point_of_sale

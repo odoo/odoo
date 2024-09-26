@@ -468,7 +468,8 @@ registry.slider = publicWidget.Widget.extend({
 
         // Only for carousels having the `Carousel` and `CarouselItem` options
         // (i.e. matching the `section > .carousel` selector).
-        if (this.editableMode && this.el.matches("section > .carousel")) {
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
             this.controlEls = this.el.querySelectorAll(".carousel-control-prev, .carousel-control-next");
             const indicatorEls = this.el.querySelectorAll(".carousel-indicators > li");
             // Deactivate the carousel controls to handle the slides manually in
@@ -504,7 +505,8 @@ registry.slider = publicWidget.Widget.extend({
         $(window).off('.slider');
         this.$el.off('.slider'); // TODO remove in master
 
-        if (this.editableMode && this.el.matches("section > .carousel")) {
+        if (this.editableMode && this.el.matches("section > .carousel")
+                && !this.options.wysiwyg.options.enableTranslation) {
             // Restore the carousel controls.
             const indicatorEls = this.el.querySelectorAll(".carousel-indicators > li");
             this.options.wysiwyg.odooEditor.observerUnactive("restore_controls");
@@ -1986,6 +1988,13 @@ registry.TextHighlight = publicWidget.Widget.extend({
         // to block the callback on this first notification for observed items.
         this.observerLock = new Map();
         this.resizeObserver = new window.ResizeObserver(entries => {
+            // Some options, like the popup, trigger a resize after a delay
+            // before the page is saved. This causes the highlights to be added
+            // back to the DOM after the "TextHighlight" widget has been
+            // destroyed. This is why the following line is needed.
+            if (this.isDestroyed()) {
+                return;
+            }
             window.requestAnimationFrame(() => {
                 const textHighlightEls = new Set();
                 entries.forEach(entry => {
@@ -2062,6 +2071,9 @@ registry.TextHighlight = publicWidget.Widget.extend({
         // we use a lock map (`observerLocked`) to block the callback on this
         // first notification for observed items.
         this.resizeObserver = new window.ResizeObserver(entries => {
+            if (this.isDestroyed()) {
+                return;
+            }
             window.requestAnimationFrame(() => {
                 const topTextEls = new Set();
                 entries.forEach(entry => {

@@ -12,6 +12,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Flavia0320, 2024
 # Corina Calin, 2024
+# Lyall Kindmurr, 2024
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Corina Calin, 2024\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -391,7 +392,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__create_date
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__currency_id
@@ -699,12 +700,17 @@ msgstr "Marja"
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
+msgid "Other costs"
+msgstr ""
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
-#, python-format
-msgid "Materials"
-msgstr "Materiale"
+msgid "Other revenues"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method

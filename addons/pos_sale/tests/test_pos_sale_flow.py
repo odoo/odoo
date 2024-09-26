@@ -657,6 +657,12 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentLinesPerTax', login="accountman")
 
+        # We check the content of the invoice to make sure Product A/B/C only appears only once
+        invoice_pdf_content = str(self.env['pos.order'].search([]).account_move.get_invoice_pdf_report_attachment()[0])
+        self.assertEqual(invoice_pdf_content.count('Product A'), 1)
+        self.assertEqual(invoice_pdf_content.count('Product B'), 1)
+        self.assertEqual(invoice_pdf_content.count('Product C'), 1)
+
     def test_settle_draft_order_service_product(self):
         """
         Checks that, when settling a draft order (quotation), the quantity set on the corresponding
@@ -689,3 +695,27 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleDraftOrder', login="accountman")
+
+    def test_ship_later_no_default(self):
+        """ Verify that when settling an order the ship later is not activated by default"""
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 10.0,
+            'taxes_id': False,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'name': product.name,
+                'product_uom_qty': 4,
+                'price_unit': product.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.write({'ship_later': True})
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosShipLaterNoDefault', login="accountman")

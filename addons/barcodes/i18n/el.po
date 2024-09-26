@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * barcodes
-#
+# 	* barcodes
+# 
 # Translators:
-# Martin Trigaux, 2018
-# Kostas Goutoudis <goutoudis@gmail.com>, 2018
-# Stefanos Nikou <stefanos.nikou@gmail.com>, 2018
-# Giota Dandidou <giotadandidou@gmail.com>, 2018
-# George Tarasidis <george_tarasidis@yahoo.com>, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2024
+# George Tarasidis <george_tarasidis@yahoo.com>, 2024
+# Giota Dandidou <giotadandidou@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
-"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
-"Language: el\n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Stefanos Nikou <stefanos.nikou@gmail.com>, 2024\n"
+"Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: barcodes
@@ -44,8 +45,12 @@ msgstr ""
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
-msgid "A barcode nomenclature defines how the point of sale identify and interprets barcodes"
-msgstr "Μια ονοματολογία barcode καθορίζει το πώς το σημείο πώλησης εντοπίζει και ερμηνεύει barcodes"
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr ""
+"Μια ονοματολογία barcode καθορίζει το πώς το σημείο πώλησης εντοπίζει και "
+"ερμηνεύει barcodes"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -83,7 +88,7 @@ msgstr "Οποιοδήποτε"
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 #, python-format
 msgid "Barcode"
-msgstr ""
+msgstr "Barcode"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -254,6 +259,13 @@ msgid "The barcode matching pattern"
 msgstr "Το μοτίβο αντιστοίχισης barcode"
 
 #. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
 msgstr "Η λίστα των κανόνων barcode"
@@ -267,26 +279,33 @@ msgstr "Το αντιστοίχισμένο μοτίβο θα έχει ψευδ�
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
 msgstr ""
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: braces can only contain N's followed by D's."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
 msgstr ""
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
-msgid "This rule will apply only if the barcode is encoded with the specified encoding"
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
 msgstr ""
 
 #. module: barcodes
@@ -296,7 +315,10 @@ msgstr "Τύπος"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
-msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
 msgstr ""
 
 #. module: barcodes
@@ -328,8 +350,11 @@ msgstr ""
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid "Used to order rules such that rules with a smaller sequence match first"
-msgstr "Χρησιμοποιείται για να ταξινομεί κανόνες με μια μικρότερη ακολουθία αντιστοίχισης"
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+"Χρησιμοποιείται για να ταξινομεί κανόνες με μια μικρότερη ακολουθία "
+"αντιστοίχισης"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

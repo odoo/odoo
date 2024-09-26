@@ -396,7 +396,10 @@ class AccountChartTemplate(models.AbstractModel):
                     and isinstance(values[fname], (list, tuple))
                 ]
                 if x2manyfields:
-                    rec = self.ref(xmlid, raise_if_not_found=False)
+                    if isinstance(xmlid, int):
+                        rec = self.env[model_name].browse(xmlid).exists()
+                    else:
+                        rec = self.ref(xmlid, raise_if_not_found=False)
                     if rec:
                         for fname in x2manyfields:
                             for i, (line, (command, _id, vals)) in enumerate(zip(rec[fname], values[fname])):
@@ -431,6 +434,9 @@ class AccountChartTemplate(models.AbstractModel):
                 vals['currency_id'] = fiscal_country.currency_id.id
         if not company.country_id:
             vals['country_id'] = fiscal_country.id
+
+        # Ensure that we write on 'anglo_saxon_accounting' when changing to a CoA that relies on the default of `False`.
+        vals.setdefault('anglo_saxon_accounting', False)
 
         # This write method is important because it's overridden and has additional triggers
         # e.g it activates the currency

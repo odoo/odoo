@@ -9,6 +9,7 @@
 # Jakub Smolka, 2023
 # Katerina Horylova, 2024
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
+# Tereza Mokrá, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jiří Podhorecký <jirka.p@volny.cz>, 2024\n"
+"Last-Translator: Tereza Mokrá, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,6 +81,9 @@ msgid ""
 "deregister from that service, or request a migration key before trying "
 "again. "
 msgstr ""
+"Účastník s těmito údaji již byl v síti zaregistrován. Pokud jste se již "
+"dříve zaregistrovali v jiné službě Peppol, zrušte prosím registraci v této "
+"službě nebo si před dalším pokusem vyžádejte migrační klíč. "
 
 #. module: account_peppol
 #. odoo-python
@@ -194,7 +198,7 @@ msgstr "Nelze zrušit záznam, který již byl poslán skrze PEPPOL"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
 msgid "Cannot receive this format"
-msgstr ""
+msgstr "Tento formát nelze přijmout"
 
 #. module: account_peppol
 #. odoo-python
@@ -260,7 +264,7 @@ msgstr "Detaily kontaktu byly aktualizovány."
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Contact email and mobile number are required."
-msgstr ""
+msgstr " Vyžaduje se kontaktní e-mail a mobilní číslo."
 
 #. module: account_peppol
 #. odoo-python
@@ -570,7 +574,7 @@ msgstr ""
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Please enter a mobile number to verify your application."
-msgstr ""
+msgstr "Zadejte prosím číslo mobilního telefonu pro ověření vaší žádosti."
 
 #. module: account_peppol
 #. odoo-python
@@ -824,6 +828,8 @@ msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
 msgstr ""
+"Chcete-li generovat kompletní elektronické faktury, nastavte pro tohoto "
+"partnera také zemi."
 
 #. module: account_peppol
 #. odoo-python
@@ -943,7 +949,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
 msgid "You will receive a verification code to this mobile number"
-msgstr ""
+msgstr "Na toto mobilní číslo obdržíte ověřovací kód."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form

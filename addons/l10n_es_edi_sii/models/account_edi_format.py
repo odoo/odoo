@@ -210,6 +210,11 @@ class AccountEdiFormat(models.Model):
             tax_details_info['NoSujeta']['ImportePorArticulos7_14_Otros'] = round(sign * base_amount_not_subject, 2)
         if not invoice.company_id.currency_id.is_zero(base_amount_not_subject_loc) and invoice.is_sale_document():
             tax_details_info['NoSujeta']['ImporteTAIReglasLocalizacion'] = round(sign * base_amount_not_subject_loc, 2)
+        if not tax_details_info and invoice.is_sale_document():
+            if any(t['l10n_es_type'] == 'no_sujeto' for t in tax_details['tax_details'].values()):
+                tax_details_info['NoSujeta']['ImportePorArticulos7_14_Otros'] = 0
+            if any(t['l10n_es_type'] == 'no_sujeto_loc' for t in tax_details['tax_details'].values()):
+                tax_details_info['NoSujeta']['ImporteTAIReglasLocalizacion'] = 0
 
         return {
             'tax_details_info': tax_details_info,
@@ -556,8 +561,11 @@ class AccountEdiFormat(models.Model):
                         if partner_info.get('NIF') and partner_info['NIF'] == respl_partner_info.NIF:
                             inv = candidate
                             break
-                        if partner_info.get('IDOtro') and all(getattr(respl_partner_info.IDOtro, k) == v
-                                                              for k, v in partner_info['IDOtro'].items()):
+                        if (
+                            partner_info.get('IDOtro')
+                            and respl_partner_info['IDOtro']
+                            and all(respl_partner_info['IDOtro'][k] == v for k, v in partner_info['IDOtro'].items())
+                        ):
                             inv = candidate
                             break
 

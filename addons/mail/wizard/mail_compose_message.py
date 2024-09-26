@@ -667,8 +667,7 @@ class MailComposer(models.TransientModel):
         for wizard in self:
             if wizard.res_domain:
                 search_domain = wizard._evaluate_res_domain()
-                search_user = wizard.res_domain_user_id or self.env.user
-                res_ids = self.env[wizard.model].with_user(search_user).search(search_domain).ids
+                res_ids = self.env[wizard.model].search(search_domain).ids
             else:
                 res_ids = wizard._evaluate_res_ids()
             # in comment mode: raise here as anyway message_post will raise.
@@ -735,18 +734,24 @@ class MailComposer(models.TransientModel):
             if records:
                 records._message_mail_after_hook(iter_mails_sudo)
 
-            if not self.force_send:
-                continue
-            # as 'send' does not filter out scheduled mails (only 'process_email_queue'
-            # does) we need to do it manually
-            iter_mails_sudo_tosend = iter_mails_sudo.filtered(
-                lambda mail: (
-                    not mail.scheduled_date or
-                    mail.scheduled_date <= datetime.datetime.utcnow()
+            if self.force_send:
+                # as 'send' does not filter out scheduled mails (only 'process_email_queue'
+                # does) we need to do it manually
+                iter_mails_sudo_tosend = iter_mails_sudo.filtered(
+                    lambda mail: (
+                        not mail.scheduled_date or
+                        mail.scheduled_date <= datetime.datetime.utcnow()
+                    )
                 )
-            )
-            if iter_mails_sudo_tosend:
-                iter_mails_sudo_tosend.send(auto_commit=auto_commit)
+                if iter_mails_sudo_tosend:
+                    iter_mails_sudo_tosend.send(auto_commit=auto_commit)
+                    continue
+            # sending emails will commit and invalidate cache; in case we do not force
+            # send better void the cache and commit what is already generated to avoid
+            # running several times on same records in case of issue
+            if auto_commit is True:
+                self._cr.commit()
+            self.env.invalidate_all()
 
         return mails_sudo
 
@@ -1254,7 +1259,7 @@ class MailComposer(models.TransientModel):
         template_values = self.template_id._generate_template(
             res_ids,
             template_fields,
-            find_or_create_partners=True
+            find_or_create_partners=find_or_create_partners,
         )
 
         exclusion_list = ('email_cc', 'email_to') if find_or_create_partners else ()

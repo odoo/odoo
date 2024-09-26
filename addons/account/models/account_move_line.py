@@ -804,7 +804,10 @@ class AccountMoveLine(models.Model):
                 tax = record.tax_repartition_line_id.tax_id or record.tax_ids[:1]
                 is_refund = record.is_refund
                 tax_type = tax.type_tax_use
-                record.tax_tag_invert = (tax_type == 'purchase' and is_refund) or (tax_type == 'sale' and not is_refund)
+                if record.display_type == 'epd':  # In case of early payment, tax_tag_invert is independent of the balance of the line
+                    record.tax_tag_invert = tax_type == 'purchase'
+                else:
+                    record.tax_tag_invert = (tax_type == 'purchase' and is_refund) or (tax_type == 'sale' and not is_refund)
             else:
                 # For invoices with taxes
                 record.tax_tag_invert = origin_move_id.is_inbound()
@@ -1401,7 +1404,7 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     def check_field_access_rights(self, operation, field_names):
         result = super().check_field_access_rights(operation, field_names)
-        if not fields:
+        if not field_names:
             weirdos = ['term_key', 'tax_key', 'compute_all_tax', 'epd_key', 'epd_needed', 'discount_allocation_key', 'discount_allocation_needed']
             result = [fname for fname in result if fname not in weirdos]
         return result

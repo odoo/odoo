@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import models, _
 from odoo.addons.account.models.chart_template import template
 
 
@@ -17,7 +17,7 @@ class AccountChartTemplate(models.AbstractModel):
         :rtype: dict
         """
         return {
-            'name': "Generic Chart Template",
+            'name': _("United States of America (Generic)"),
             'country': None,
             'property_account_receivable_id': 'receivable',
             'property_account_payable_id': 'payable',

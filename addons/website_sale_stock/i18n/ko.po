@@ -5,7 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Sarah Park, 2023
-# Daye Jeong, 2023
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -274,8 +274,16 @@ msgstr "장바구니에 이미 %s 단위가 있습니다."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr " %(desired_qty)s의 %(product_name)s을 요청했으나 %(new_qty)s만 사용할 수 있습니다."
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr "요청하신 품목 수량은 %(desired_qty)s이나 현재 가능한 수량은 %(new_qty)s 입니다."

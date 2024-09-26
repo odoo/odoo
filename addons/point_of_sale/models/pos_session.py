@@ -1289,6 +1289,7 @@ class PosSession(models.Model):
             'tax_base_amount': abs(base_amount_converted),
             'tax_repartition_line_id': repartition_line_id,
             'tax_tag_ids': [(6, 0, tag_ids)],
+            'display_type': 'tax',
         }
         return self._debit_amounts(partial_args, amount, amount_converted)
 
@@ -1953,7 +1954,10 @@ class PosSession(models.Model):
         }
 
     def _get_pos_ui_res_users(self, params):
-        user = self.env['res.users'].search_read(**params['search_params'])[0]
+        user = self.env['res.users'].search_read(**params['search_params'], limit=1)
+        if not user:
+            raise UserError(_("You do not have permission to open a POS session. Please try opening a session with a different user"))
+        user = user[0]
         user['role'] = 'manager' if any(id == self.config_id.group_pos_manager_id.id for id in user['groups_id']) else 'cashier'
         del user['groups_id']
         return user

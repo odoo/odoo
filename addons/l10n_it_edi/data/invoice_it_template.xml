@@ -26,14 +26,14 @@
                         <Tipo t-out="'SC'"/>
                         <Importo t-out="format_numbers(abs(line_dict['discount_amount']))"/>
                     </ScontoMaggiorazione>
-                    <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price'], currency)"/>
+                    <PrezzoTotale t-out="format_monetary(line_dict['subtotal_price_eur'], currency)"/>
                     <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-out="format_numbers(vat_tax.amount)"/>
                     <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-out="'0.00'"/>
                     <Natura t-if="vat_tax.l10n_it_exempt_reason" t-out="vat_tax.l10n_it_exempt_reason"/>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato t-translation="off">DIVISA</TipoDato>
                         <RiferimentoTesto t-out="format_alphanumeric(record.currency_id.name)"/>
-                        <RiferimentoNumero t-out="'%.06f' % line.price_subtotal"/>
+                        <RiferimentoNumero t-out="'%.06f' % line_dict['subtotal_price']"/>
                     </AltriDatiGestionali>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato t-translation="off">CAMBIO</TipoDato>

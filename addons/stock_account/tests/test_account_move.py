@@ -47,6 +47,8 @@ class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
             }
         )
 
+        cls.branch_a = cls.setup_company_data("Branch A", parent_id=cls.env.company.id)
+
 
 @tagged("post_install", "-at_install")
 class TestAccountMove(TestAccountMoveStockCommon):
@@ -298,3 +300,38 @@ class TestAccountMove(TestAccountMoveStockCommon):
             [stock_valuation_line, output_line],
             [expected_valuation_line, expected_output_line]
         )
+
+    def test_stock_account_move_automated_not_standard_with_branch_company(self):
+        """
+        Test that the validation of a stock picking does not fail `_check_company`
+        at the creation of the account move with sub company
+        """
+        branch_a = self.branch_a['company']
+        self.env.user.company_id = branch_a
+
+        self.auto_categ.write({'property_cost_method': 'average', 'property_valuation': 'real_time'})
+        product = self.product_A
+        product.write({'categ_id': self.auto_categ.id, 'standard_price': 300, 'company_id': branch_a.id})
+
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+
+        in_picking = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': stock_location.warehouse_id.in_type_id.id,
+        })
+
+        sm = self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'location_id': in_picking.location_id.id,
+            'location_dest_id': in_picking.location_dest_id.id,
+            'picking_id': in_picking.id,
+        })
+        in_picking.button_validate()
+        self.assertEqual(sm.state, 'done')
+        self.assertEqual(sm.account_move_ids.company_id, self.env.company)

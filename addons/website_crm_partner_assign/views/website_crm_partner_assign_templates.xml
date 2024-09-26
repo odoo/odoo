@@ -246,7 +246,7 @@
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="card mt-3 border-0">
             <div class="row">
                 <div class="col-md-2">
-                    <span t-field="reference.avatar_128" class="d-flex justify-content-center h-100" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded"}'/>
+                    <span t-field="reference.avatar_128" class="d-flex justify-content-center" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded mw-100"}'/>
                 </div>
                 <div class="card-body col-md-10">
                     <span t-field="reference.self"/>

@@ -97,8 +97,15 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         });
 
         // This allows conditional styling for the filmstrip
-        if (isBrowserFirefox() || hasTouch()) {
-            this.el.querySelector('.o_wsale_filmstip_container')?.classList.add('o_wsale_filmstip_fancy_disabled');
+        const filmstripContainer = this.el.querySelector('.o_wsale_filmstip_container');
+        const filmstripContainerWidth = filmstripContainer
+            ? filmstripContainer.getBoundingClientRect().width : 0;
+        const filmstripWrapper = this.el.querySelector('.o_wsale_filmstip_wrapper');
+        const filmstripWrapperWidth = filmstripWrapper
+            ? filmstripWrapper.getBoundingClientRect().width : 0;
+        const isFilmstripScrollable = filmstripWrapperWidth < filmstripContainerWidth
+        if (isBrowserFirefox() || hasTouch() || isFilmstripScrollable) {
+            filmstripContainer?.classList.add('o_wsale_filmstip_fancy_disabled');
         }
 
         this.getRedirectOption();

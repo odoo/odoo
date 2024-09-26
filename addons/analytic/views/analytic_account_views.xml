@@ -60,8 +60,8 @@
                     <field name="plan_id"/>
                     <field name="active" column_invisible="True"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="debit" sum="Debit" invisible="1"/>
-                    <field name="credit" sum="Credit" invisible="1"/>
+                    <field name="debit" sum="Debit" column_invisible="True"/>
+                    <field name="credit" sum="Credit" column_invisible="True"/>
                     <field name="balance" sum="Balance"/>
                 </tree>
             </field>

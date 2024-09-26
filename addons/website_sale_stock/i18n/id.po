@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Abe Manyo, 2023
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -279,8 +279,18 @@ msgstr "Anda sudah memiliki %s produk di keranjang Anda."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"Anda meminta %(desired_qty)s %(product_name)s tapi hanya %(new_qty)s yang "
+"tersedia"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""

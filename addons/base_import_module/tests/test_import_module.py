@@ -160,9 +160,8 @@ class TestImportModule(odoo.tests.TransactionCase):
         ]
         with self.assertLogs('odoo.addons.base_import_module.models.ir_module') as log_catcher:
             self.import_zipfile(files)
-            self.assertEqual(len(log_catcher.output), 2)
-            self.assertIn('module foo: skip unsupported file res.partner.xls', log_catcher.output[0])
-            self.assertIn("Successfully imported module 'foo'", log_catcher.output[1])
+            self.assertIn("INFO:odoo.addons.base_import_module.models.ir_module:module foo: skip unsupported file res.partner.xls", log_catcher.output)
+            self.assertIn("INFO:odoo.addons.base_import_module.models.ir_module:Successfully imported module 'foo'", log_catcher.output)
             self.assertFalse(self.env.ref('foo.foo', raise_if_not_found=False))
 
     def test_import_zip_extract_only_useful(self):

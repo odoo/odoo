@@ -8,7 +8,6 @@
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Martin Trigaux, 2024
-# Fenyedi Levente, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Larisa_nexterp, 2024
 # Maria Muntean, 2024
@@ -34,7 +33,7 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot display the payment form"
-msgstr ""
+msgstr "Nu se poate afișa formularul de plată"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
@@ -80,7 +79,7 @@ msgstr "Generează webhook-ul tău"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
-msgstr "Obține cheile tale Secretă și Publică"
+msgstr "Obține cheia ta Secretă și Publică"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
@@ -97,7 +96,7 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Date de plată invalide"
 
 #. module: payment_stripe
 #. odoo-python
@@ -111,7 +110,7 @@ msgstr "Nu s-a găsit nicio tranzacție care să se potrivească cu referința %
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Other Payment Providers"
-msgstr ""
+msgstr "Alți furnizori de plată"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_provider
@@ -145,7 +144,7 @@ msgstr "Procesarea plății a eșuat"
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Please use live credentials to enable Apple Pay."
-msgstr ""
+msgstr "Pentru a permite Apple Pay, vă rugăm să folosiți credențiale live."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -176,7 +175,7 @@ msgstr "Date primite fără referință de comerciant"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
 msgid "Secret Key"
-msgstr "Cheia Secret"
+msgstr "Cheie Secret"
 
 #. module: payment_stripe
 #: model:ir.model.fields.selection,name:payment_stripe.selection__payment_provider__code__stripe
@@ -197,33 +196,33 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
 msgid "Stripe Mandate"
-msgstr ""
+msgstr "Stripe Mandate"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr "Stripe Payment Method ID"
+msgstr "ID metodă de plată Stripe"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
-msgstr "Eroare Stripe Proxy: %(error)s"
+msgstr "Eroare proxy Stripe: %(error)s"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr "Stripe Proxy: A apărut o eroare în timpul comunicării cu proxy-ul."
+msgstr "Proxy Stripe : Eroare în timpul comunicării cu proxy-ul."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr "Stripe Proxy: Nu s-a putut stabili conexiunea."
+msgstr "Proxy Stripe: Nu s-a putut stabili conexiunea."
 
 #. module: payment_stripe
 #. odoo-python
@@ -234,17 +233,14 @@ msgid ""
 "The communication with the API failed.\n"
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
-msgstr ""
-"Comunicarea cu API-ul a eșuat.\n"
-"Stripe ne-a dat următoarele informații despre problema apărută:\n"
-"'%s'"
+msgstr "Comunicarea cu API-ul a eșuat. Răspuns Stripe: '%s'"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Clientul a ieșit de pe pagina de plată."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -259,6 +255,9 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
+"Returul nu a fost procesat. Vă rugăm să accesați pagina principală Stripe "
+"pentru a afla mai multe informații, și corectați orice neconcordanță "
+"contabilă."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
@@ -277,7 +276,7 @@ msgstr "Tranzacția nu este legată de un token."
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr "Nu se poate converti token-ul de plată la noua API."
+msgstr "Nu se poate converti token-ul de plată la noul API."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
@@ -308,6 +307,8 @@ msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe"
 " is completed."
 msgstr ""
+"Nu se poate seta starea providerului drept valabil până nu terminați setup-"
+"ul Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -317,6 +318,8 @@ msgid ""
 "You cannot set the provider to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
+"Nu puteți seta providerul în modul test cât timp este conectat cu contul "
+"dumneavoastra Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -337,4 +340,4 @@ msgstr "Comandă dvs."
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your web domain was successfully verified."
-msgstr ""
+msgstr "Domeniul dumneavoastrâ web a fost verificat cu succes."

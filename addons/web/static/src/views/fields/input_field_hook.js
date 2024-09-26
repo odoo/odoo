@@ -46,6 +46,9 @@ export function useInputField(params) {
      */
     function onInput(ev) {
         isDirty = ev.target.value !== lastSetValue;
+        if (params.preventLineBreaks && ev.inputType === "insertFromPaste") {
+            ev.target.value = ev.target.value.replace(/[\r\n]+/g, " ");
+        }
         component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
         if (!component.props.record.isValid) {
             component.props.record.resetFieldValidity(component.props.name);

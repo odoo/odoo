@@ -8,9 +8,10 @@
                 <header>
                     <button name="generate_ewaybill" string="Generate e-Waybill" class="oe_highlight" type="object" invisible="state != 'pending'" data-hotkey="g"/>
                     <button name="cancel_ewaybill" string="Cancel e-Waybill" type="object" invisible="state != 'generated'" data-hotkey="c"/>
-                    <button name="reset_to_pending" string="Reset to Pending" type="object" invisible="state != 'cancel'" data-hotkey="r" confirm="Are you sure you want to re-send the e-Waybill?"/>
+                    <button name="reset_to_pending" string="Reset to Pending" type="object" invisible="not state in ['cancel', 'challan']" data-hotkey="r"/>
+                    <button name="action_set_to_challan" string="Use as Challan" type="object" invisible="state != 'pending'" data-hotkey="d"/>
                     <button name="action_export_json" string="Download JSON" class="oe_highlight" type="object" invisible="not error_message" groups="base.group_no_one"/>
-                    <field name="state" widget="statusbar" statusbar_visible="pending,generated"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,generated" invisible="state == 'challan'"/>
                 </header>
                 <field name="blocking_level" invisible="1"/>
                 <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" invisible="not error_message or blocking_level == 'error'">

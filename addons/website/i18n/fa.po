@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2023
-# M.Hossein S.Farvashani <Farvashani@gmail.com>, 2023
 # Maziar Niaki <maziarmn@gmail.com>, 2023
 # fardin mardani <fmardani0@gmail.com>, 2023
 # Ali Reza Feizi Derakhshi, 2023
@@ -99,7 +98,7 @@ msgstr "\"آدرس اینترنتی به\" را نمی‌توان بر روی ی
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
 msgstr ""
 "\"آدرس اینترنتی به\" نمی‌تواند شامل پارامتر 1 %s باشد که در \"آدرس اینترنتی "
-"از\" استفاده نشده باشد. "
+"از\" استفاده نشده است. "
 
 #. module: website
 #. odoo-python
@@ -420,13 +419,15 @@ msgstr "25%"
 msgid ""
 "250 Executive Park Blvd, Suite 3400 <br/> San Francisco CA 94134 <br/>United"
 " States"
-msgstr ""
+msgstr "سانفرانسیسکو کالیفرنیا <br/> ایالات متحده آمریکا <br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
 msgid ""
 "250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States"
 msgstr ""
+"سانفرانسیسکو کالیفرنیا94134 1 ایالات متحده آمریکا 2 250 Executive Park Blvd,"
+" Suite 3400"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown
@@ -649,6 +650,8 @@ msgid ""
 "<b>My Company</b><br/>250 Executive Park Blvd, Suite 3400 <br/> San "
 "Francisco CA 94134 <br/>United States"
 msgstr ""
+"<b>شرکت من</b><br/>نمونه آدرس خیابان 250 شماره 3400 <br/>شهرستان 94134 "
+"<br/>کشور"
 
 #. module: website
 #. odoo-javascript
@@ -727,6 +730,8 @@ msgid ""
 "<i class=\"fa fa-1x fa-fw fa-map-marker me-2\"/>250 Executive Park Blvd, "
 "Suite 3400 • San Francisco CA 94134 • United States"
 msgstr ""
+"<i class=\"fa fa-1x fa-fw fa-map-marker me-2\"/>نمونه نشانی بلوار 250 شماره "
+"3400 شهر 94134"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -775,7 +780,9 @@ msgstr "<i class=\"fa fa-fw fa-thumbs-up\"/> انگشت شست / تایید"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "<i class=\"fa fa-fw o_button_icon fa-circle text-danger\" title=\"Offline\"/>"
-msgstr "<i class=\"fa fa-fw o_button_icon fa-circle text-danger\" title=\"Offline\"/>"
+msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-circle text-danger\" "
+"title=\"Offline\"/> "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -784,12 +791,12 @@ msgid ""
 "title=\"Connected\"/>"
 msgstr ""
 "<i class=\"fa fa-fw o_button_icon fa-circle text-success\" "
-"title=\"Connected\"/>"
+"title=\"Connected\"/> "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr "<i class=\"fa fa-globe me-1\" title=\"وب‌سایت\"/>"
+msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -1036,22 +1043,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(rounded-0)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(rounded-0)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(rounded-1)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(rounded-1)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(rounded-2)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(rounded-2)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(rounded-3)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(rounded-3)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -1061,12 +1068,12 @@ msgstr "<small class=\"text-muted\"> (سایه) </small>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(shadow-lg)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(shadow-lg)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "<small class=\"text-muted\">(shadow-sm)</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">(shadow-sm)</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -1525,6 +1532,11 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
+"یک کد server action می‌تواند با استفاده از یک کنترلگر اختصاص داده شده از "
+"وبسایت اجرا شود. نشانی آن <base>/website/action/ <website_path> است. این "
+"فیلد را بر روی True تنظیم کنید تا به کاربران امکان اجرای این اقدام را بدهد. "
+"اگر آن را بر روی False تنظیم کنید در این صورت اقدام از طریق وبسایت انجام "
+"نخواهد شد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -1760,13 +1772,13 @@ msgstr "اِلمان‌ها را بیافزایید"
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Add Files"
-msgstr "پوشه‌ها را بیافزایید"
+msgstr "پرونده‌ها را اضافه کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Add Item"
-msgstr "مورد را اضافه کنید "
+msgstr "آیتم را اضافه کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -1964,7 +1976,7 @@ msgstr "پیشرفته"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Advertising &amp; Marketing<br/>(optional)"
-msgstr ""
+msgstr "تبلیغات &amp ؛ بازاریابی <br/> (اختیاری)"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__after
@@ -2016,7 +2028,7 @@ msgstr "تراز"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_media_list
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Aline Turner, CTO"
-msgstr "مدیر ارشد فناوری، آلینه ترنر"
+msgstr "مدیر ارشد فناوری، الین ترنر"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_0_s_three_columns
@@ -2028,6 +2040,9 @@ msgid ""
 "do. She mentors 100+ in-house developers and looks after the community of "
 "thousands of developers."
 msgstr ""
+"الین مدیر ارشد فناوری اودوو یکی از افراد نمادین است که می‌تواند ادعا کند "
+"عاشق کاری است که انجام می‌دهد. او بیش از 100+ توسعه‌دهنده داخلی را راهنمایی "
+"می‌کند و بر اجتماع هزاران توسعه دهنده نظارت می‌کند."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__
@@ -2039,7 +2054,7 @@ msgstr "همه"
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 #, python-format
 msgid "All SCSS Files"
-msgstr "تمام پوشه‌های SCSS"
+msgstr "تمام پرونده‌های SCSS"
 
 #. module: website
 #: model:ir.model,name:website.model_website_route
@@ -2227,14 +2242,14 @@ msgstr "کوکی‌های تحلیلی و اطلاعات حریم خصوصی"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Analytics<br/>(optional)"
-msgstr ""
+msgstr "آنالیتیکس <br/> (اختیاری)"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Anchor copied to clipboard<br>Link: %s"
-msgstr ""
+msgstr "انکر بر روی صفحه کلید ذخیره شده است <br> لینک 1 %s"
 
 #. module: website
 #. odoo-javascript
@@ -2329,7 +2344,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_controller_page__arch_fs
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
-msgstr "نام پوشه آرچ"
+msgstr "نام پرونده آرچ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__arch_fs
@@ -2353,7 +2368,7 @@ msgstr "آیا مطمئن هستید که می‌خواهید این صفحه ر
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "Are you sure you want to delete those pages?"
-msgstr "آیا مطمئن هستید که می‌خواهید این صفحات را پاک کنید؟"
+msgstr "آیا مطمئن هستید که می‌خواهید آن صفحات را پاک کنید؟"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -2382,7 +2397,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__copy_ids
 msgid "Assets using a copy of me"
-msgstr ""
+msgstr "دارایی‌ها با استفاده از کپی من"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -2405,8 +2420,8 @@ msgid ""
 "Authenticate users, protect user data and allow the website to deliver the services users expects,\n"
 "                                                such as maintaining the content of their cart, or allowing file uploads."
 msgstr ""
-"احراز هویت کاربران، محافظت از داده‌های کاربران، و اجازه به تارنما برای ارائه خدمات مورد انتظار کاربران، \n"
-"مانند حفظ محتوای سبد خریدشان، یا اجازه آپلود فایل."
+"کاربران را احزار هویت کنید، از داده‌های کاربران محافظت کنید و به تارنما اجازه بدهید تا  خدماتی را که کاربران انتظار دارند برایشان ارائه کند،\n"
+"مانند حفظ محتوای سبد خریدشان، یا اجازه بارگذاری‌ فایل‌."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_search
@@ -2453,12 +2468,12 @@ msgstr "در دسترس بر روی وبسایت"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
-msgstr ""
+msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "BTS Base Colors"
-msgstr ""
+msgstr "رنگ‌هایی بر پایه BTS"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -2508,7 +2523,7 @@ msgstr "نشان"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Bags"
-msgstr ""
+msgstr "کیف‌ها"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -2562,7 +2577,7 @@ msgstr "فروش ابتدایی و بازاریابی برای حداکثر 2 ن
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
 msgid "Beautiful snippets"
-msgstr ""
+msgstr "اسنیپت‌های زیبا"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -2638,7 +2653,7 @@ msgstr "مسدود کردن"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Blockquote"
-msgstr ""
+msgstr "Blockquote"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -2725,7 +2740,7 @@ msgstr "شعاع متوسط حاشیه "
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Border radius none"
-msgstr ""
+msgstr "شعاع مرزی "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -2849,13 +2864,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
 #: model:ir.model.fields,field_description:website.field_website__cdn_url
 msgid "CDN Base URL"
-msgstr "آدرس اینترنتی مبتنی بر CDN"
+msgstr "آدرس اینترنتی مبتنی بر CDN/شبکه توزیع محتوا"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_filters
 #: model:ir.model.fields,field_description:website.field_website__cdn_filters
 msgid "CDN Filters"
-msgstr "فیلترهای CDN شبکه توزیع محتوا"
+msgstr "فیلترهای CDN/شبکه توزیع محتوا"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -2865,7 +2880,7 @@ msgstr "فراخوان"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Call to Action"
-msgstr "فراخوان یا اقدام به عمل "
+msgstr "فراخوان/اقدام به عمل "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -2917,7 +2932,7 @@ msgid ""
 "Cannot apply this option on current text selection. Try clearing the format "
 "and try again."
 msgstr ""
-"این گزینه را نمی‌توان برای متن انتخاب شده فعلی، اعمال کرد. سعی کنید فرمت را "
+"این گزینه را نمی‌توان برای متن انتخاب شده فعلی به کار برد. سعی کنید فرمت را "
 "پاک کرده و دوباره امتحان کنید."
 
 #. module: website
@@ -3073,7 +3088,7 @@ msgstr "برای افزایش میزان تعامل، با مخاطبان خود
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 msgid "Check out now and get $20 off your first order."
-msgstr "هم اکنون بررسی کنید و برای اولین سفارشتان 20... تخفیف بگیرید."
+msgstr "هم اکنون بررسی کنید و برای اولین سفارش تان 20... تخفیف بگیرید."
 
 #. module: website
 #. odoo-javascript
@@ -3318,6 +3333,10 @@ msgid ""
 "resize and duplicate the blocks to create your own layout. Add images or "
 "icons to customize the blocks."
 msgstr ""
+"رنگ کردن بلوک‌ها یک روش ساده و موثر برای <b>ارائه و چشمگیر کردن محتوای شما "
+"است. </b> برای پس زمینه یک رنگ یا تصویر انتخاب کنید. حتی می‌توانید اندازه "
+"بلوک‌هارا تغییر دهید یا آنها را تکثیر کنید یا قالب خودتانرا بسازید. برای "
+"شخصی‌سازی بلوک‌ها، عکس یا آیکون اضافه کنید."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
@@ -3380,7 +3399,7 @@ msgstr "مقایسه‌ها"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Complete CRM for any size team"
-msgstr "برای هراندازه تیمی CRM را تکمیل کنید"
+msgstr "ماژول CRM را برای یک گروه در هر اندازه‌ای تکمیل کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -3507,6 +3526,8 @@ msgid ""
 "Contact us about anything related to our company or services.<br/>\n"
 "                                    We'll do our best to get back to you as soon as possible."
 msgstr ""
+"برای در میان گذاشتن هر موضوعی مرتبط با شرکت ما، با ما تماس بگیرید.<br/>\n"
+"ما تمام تلاش خود را می‌کنیم تا در اولین فرصت ممکن پاسخگوی شما باشیم. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -3540,7 +3561,7 @@ msgstr "دربر داشتن/ پوشش دادن"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Contains"
-msgstr "محتوی"
+msgstr "دربر داشتن/ پوشش دادن"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_robots__content
@@ -3597,13 +3618,13 @@ msgstr "صفحه ناظر"
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
 msgid "Cookie Policy"
-msgstr ""
+msgstr "سیاست‌های استفاده از کوکی‌ها"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_cookies_bar
 #: model:ir.model.fields,field_description:website.field_website__cookies_bar
 msgid "Cookies Bar"
-msgstr ""
+msgstr "پنجره اطلاع‌رسانی کوکی‌ها"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -3618,30 +3639,39 @@ msgid ""
 "                            We also use cookies to help us compile aggregate data about site traffic and site interaction so that we can offer\n"
 "                            better site experiences and tools in the future."
 msgstr ""
+"کوکی‌ها بخش‌های کوچکی از متن هستند که هنگام دسترسی شما به خدمات ما توسط سرورهای ما به رایانه یا دستگاه شما ارسال می‌شوند.\n"
+"کوکی‌های در مرورگر شما ذخیره شده و بعدا به سرورهای ما ارسال می‌شوند بنابراین ما می‌توانیم متحوای متنی ارائه دهیم.\n"
+"تجربه استفاده از وب بدون وجود کوکی‌ها، خیلی خسته‌کننده خواهد شد.\n"
+"ما از کوکی‌ها استفاده می‌کنیم تا از فعالیت‌های شما در تارنما/وبسایت خود پشتیبانی کنیم. برای مثال جلسه کاربری شما (تا دیگر نیازی به ورود دوباره نداشته باشید) یا سبد خرید شما.\n"
+"<br/>\n"
+"کوکی‌ها همچنین کمک می‌کنند تا درکی از ترجیحات شما بر اساس فعالیت‌های قبلی یا فعلی در تارنما/وبسایتمان (صفحاتی که بازدید کرده‌اید)، \n"
+"زبان و کشور شما داشته باشیم که این امر به ما مکان می‌دهد تا برایتان خدمات ارتقا یافته ارائ دهیم.\n"
+"همچنین ما از کوکی‌ها برای کمک به جمع‌آوری داده‌های کلی درباره ترافیک تارنما/وبسایت و تعاملات کاربران استفاده می‌کنیم تا بتوانیم در آینده، \n"
+"تجربه‌ها و ابزارهای بهتری در تارنما/وبسایت ارائه دهیم."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Copyright"
-msgstr ""
+msgstr "کپی‌رایت/ حق تکثیر"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Countdown"
-msgstr ""
+msgstr "شمارش معکوس"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.js:0
 #, python-format
 msgid "Countdown ends in"
-msgstr ""
+msgstr "شمارش معکوس ختم می‌شود به "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/options.xml:0
 #, python-format
 msgid "Countdown is over - Firework"
-msgstr ""
+msgstr "شمارش معکوس تمام شد - firework"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__country_id
@@ -3669,12 +3699,12 @@ msgstr "دوره"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Cover"
-msgstr ""
+msgstr "پوشش"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Cover Photo"
-msgstr ""
+msgstr "عکس روی جلد"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_cover_properties_mixin__cover_properties
@@ -3684,12 +3714,12 @@ msgstr "خصوصیات رویه"
 #. module: website
 #: model:ir.model,name:website.model_website_cover_properties_mixin
 msgid "Cover Properties Website Mixin"
-msgstr ""
+msgstr "ترکیب ویژگی‌های پوشش تارنما/وبسایت"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_cover
 msgid "Crafting Your Digital Success Story"
-msgstr ""
+msgstr "ساخت داستان تجربه موفق دیجیتال شما"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -3726,14 +3756,14 @@ msgstr "ایجاد یک پروژه گوگل و دریافت یک کلید"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Create a link to target this section"
-msgstr ""
+msgstr "برای هدفگذاری این بخش یک لینک ایجاد کنید "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Create new"
-msgstr ""
+msgstr "ایجاد جدید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -3741,6 +3771,8 @@ msgid ""
 "Create your page from scratch by dragging and dropping pre-made,\n"
 "                            fully customizable building blocks."
 msgstr ""
+"با کشیدن و رها کردن بلوک‌های از پیش ساخته شده و کاملا قابل تغییر، \n"
+"صفحه خود را از صفر بسازید."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__create_uid
@@ -3769,6 +3801,8 @@ msgid ""
 "Created in 2021, the company is young and dynamic. Discover the composition "
 "of the team and their skills."
 msgstr ""
+"این شرکت جوان و پویا در سال 2021 ایجاد شده است. ترکیب تیم و مهارت‌های آنان "
+"را کشف کنید. "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__create_date
@@ -3791,12 +3825,12 @@ msgstr "ایجادشده در"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_color_blocks_2
 msgid "Crystal Clear Sound"
-msgstr ""
+msgstr "صدای کاملا واضح"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps_options
 msgid "Curved arrow"
-msgstr ""
+msgstr "پیکان منحنی"
 
 #. module: website
 #. odoo-javascript
@@ -3810,34 +3844,34 @@ msgstr "سفارشی"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__custom_code_head
 msgid "Custom <head> code"
-msgstr ""
+msgstr "کد <head> را سفارشی کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
 msgid "Custom Code"
-msgstr ""
+msgstr "کد سفارشی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Custom Key"
-msgstr ""
+msgstr "کلید سفارشی"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Custom Url"
-msgstr ""
+msgstr "آدرس اینترنتی سفارشی"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__custom_code_footer
 msgid "Custom end of <body> code"
-msgstr ""
+msgstr "پایان کد سفارشی <body>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Custom field"
-msgstr ""
+msgstr "فیلد سفارشی"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
@@ -3855,12 +3889,12 @@ msgstr "مشتریان"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Customization tool"
-msgstr ""
+msgstr "ابزار سفارشی‌سازی"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__customize_show
 msgid "Customize Show"
-msgstr ""
+msgstr "سفارشی‌سازی نمایش "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -3877,17 +3911,17 @@ msgstr ""
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #, python-format
 msgid "DRAG BUILDING BLOCKS HERE"
-msgstr ""
+msgstr "بلوک‌های ساخت صفحات را اینجا بکشید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 msgid "Danger"
-msgstr ""
+msgstr "خطر"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_line_widgets
 msgid "Dashed"
-msgstr ""
+msgstr "خط چین"
 
 #. module: website
 #. odoo-javascript
@@ -3903,28 +3937,28 @@ msgstr "داده"
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Data Border"
-msgstr ""
+msgstr "مرز داده‌ها"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Data Color"
-msgstr ""
+msgstr "رنگ داده‌ها"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Dataset Border"
-msgstr ""
+msgstr "مرز مجموعه داده"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Dataset Color"
-msgstr ""
+msgstr "رنگ مجموعه داده"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -3970,7 +4004,7 @@ msgstr "حق دسترسی های پیش فرض"
 #: code:addons/website/static/src/snippets/s_searchbar/options.js:0
 #, python-format
 msgid "Default Input Style"
-msgstr ""
+msgstr "سبک ورودی پیش‌فرض"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__default_lang_id
@@ -3980,7 +4014,7 @@ msgstr "زبان پیشفرض"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__default_layout
 msgid "Default Layout"
-msgstr ""
+msgstr "چیدمان پیش‌فرض"
 
 #. module: website
 #: model:website.menu,name:website.main_menu
@@ -3990,7 +4024,7 @@ msgstr "منوی اصلی پیشفرض"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Default Reversed"
-msgstr ""
+msgstr "پیش‌فرض معکوس"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_default_image
@@ -4007,7 +4041,7 @@ msgstr "مقدار پیش‌فرض"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Default checkbox"
-msgstr ""
+msgstr "چک‌باکس پیش‌فرض"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
@@ -4022,17 +4056,17 @@ msgstr "کد زبان پیشفرض"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_controller_page_listing_layout
 msgid "Default layout"
-msgstr ""
+msgstr "طرحبندی پیش‌فرض"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Default radio"
-msgstr ""
+msgstr "رادیوی پیش‌فرض"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Default switch checkbox input"
-msgstr ""
+msgstr "ورودی پیش‌فرض جعبه‌چک‌مارک سوئیچ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -4066,6 +4100,8 @@ msgid ""
 "Delete the above image or replace it with a picture that illustrates your "
 "message. Click on the picture to change its <em>rounded corner</em> style."
 msgstr ""
+"تصویر بالا را پاک کرده یا آن را با یک عکسی که پیام شما را به تصویر می‌کشد، "
+"جایگزین کنید. روی عکس کلیک کنید تا ظاهر<em>گوشه گرد</em> آن را تغییر دهید. "
 
 #. module: website
 #. odoo-javascript
@@ -4082,11 +4118,14 @@ msgid ""
 "Deleting a font requires a reload of the page. This will save all your "
 "changes and reload the page, are you sure you want to proceed?"
 msgstr ""
+"برای پاک کردن یک فونت باید صفحه را دوباره بارگذاری کنید. تمام تغییرات اعمال "
+"شده شما ابتدا ذخیره شده و سپس صفحه مجددا بارگذاری می‌شود، آیا از ادامه مطئمن"
+" هستید؟"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid "Deliveries"
-msgstr ""
+msgstr "تحویل‌ها "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -4107,7 +4146,7 @@ msgstr "وابستگی‌ها"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Describe your field here."
-msgstr ""
+msgstr "اینجا فیلد خود را توصیف کنید. "
 
 #. module: website
 #. odoo-javascript
@@ -4124,7 +4163,7 @@ msgstr "توصیف"
 #. module: website
 #: model:website.configurator.feature,description:website.feature_page_our_services
 msgid "Description of your services offer"
-msgstr ""
+msgstr "شرح ارائه خدمات شما "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_options
@@ -4134,7 +4173,7 @@ msgstr "توضیحات"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Descriptive"
-msgstr ""
+msgstr "توصیفی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -4144,34 +4183,34 @@ msgstr "طراحی"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Design features"
-msgstr ""
+msgstr "ویژگی‌های طراحی "
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_page_pricing
 msgid "Designed to drive conversion"
-msgstr ""
+msgstr "طراحی شده برای ایجاد تبدیل"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_cover
 msgid "Designed to provide an immersive audio experience on the go."
-msgstr ""
+msgstr "طراحی شده برای ارائه یک تجربه صوتی همه جانبه در حال حرکت."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
 msgid "Desktop"
-msgstr ""
+msgstr "میزکار"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Desktop computers"
-msgstr ""
+msgstr "رایانه‌های رومیزی/ کامپیوتر دسکتاپ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Detail"
-msgstr ""
+msgstr "جزء"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -4183,12 +4222,12 @@ msgstr "جزییات"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Detect"
-msgstr ""
+msgstr "تشخیص دادن/ردیابی کردن"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_image_text_2nd
 msgid "Digital Consulting Expertise"
-msgstr ""
+msgstr "تخصص مشاوره دیجیتال"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -4199,12 +4238,12 @@ msgstr "جهت"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__directive
 msgid "Directive"
-msgstr ""
+msgstr "راهنمای انجام کار"
 
 #. module: website
 #: model:ir.actions.server,name:website.website_disable_unused_snippets_assets_ir_actions_server
 msgid "Disable unused snippets assets"
-msgstr ""
+msgstr "دارایی‌های اسنیپت‌های استفاده نشده را غیرفعال کنید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -4215,12 +4254,12 @@ msgstr "غیر فعال شده"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Disappearing"
-msgstr ""
+msgstr "در حال ناپدید شدن "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Disappears"
-msgstr ""
+msgstr "ناپدید می‌شود "
 
 #. module: website
 #. odoo-javascript
@@ -4234,12 +4273,12 @@ msgstr "رها کردن"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_banner
 msgid "Discover Our Univers"
-msgstr ""
+msgstr "جهان ما را کشف کنید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 msgid "Discover all the features"
-msgstr ""
+msgstr "تمام ویژگی‌ها را کشف کنید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
@@ -4249,7 +4288,7 @@ msgstr "اطلاعات بیشتر"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Discover more <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-msgstr ""
+msgstr "بیشتر بیاموزید <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_image_text
@@ -4257,33 +4296,35 @@ msgid ""
 "Discover our comprehensive marketing service designed to amplify your "
 "brand's reach and impact."
 msgstr ""
+"درباره خدمات جامع بازاریابی ما بیشتر بدانید، خدماتی که برای تقویت دامنه و "
+"تاثیر برند شما طراحی شدند. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
 msgid "Discover our culture and our values"
-msgstr ""
+msgstr "درباره فرهنگ و ارزش‌های ما بیشتر بدانید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Discover our legal notice"
-msgstr ""
+msgstr "درباره اطلاعیه حقوقی ما بیشتر بدانید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Discover our realisations"
-msgstr ""
+msgstr "درباره تجزیه و تحلیل ما بیشتر بدانید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
 msgid "Discover our team"
-msgstr ""
+msgstr "تیم ما را بشناسید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Discrete"
-msgstr ""
+msgstr "منفصل"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -4293,7 +4334,7 @@ msgstr "گروه بحث"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Disk"
-msgstr ""
+msgstr "صفحه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -4308,37 +4349,37 @@ msgstr "نمایش"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 1"
-msgstr ""
+msgstr "نمایش1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 2"
-msgstr ""
+msgstr "نمایش2"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 3"
-msgstr ""
+msgstr "نمایش3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 4"
-msgstr ""
+msgstr "نمایش4"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 5"
-msgstr ""
+msgstr "نمایش5"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 6"
-msgstr ""
+msgstr "نمایش6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "Display Inline"
-msgstr ""
+msgstr "نمایش درصف"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__display_name
@@ -4363,13 +4404,13 @@ msgstr "نام نمایش داده شده"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display a customizable cookies bar on your website"
-msgstr ""
+msgstr "یک نوار کوکی‌های قابل تنظیم در تارنما/وبسایت خود نمایش دهید"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_cookies_bar
 #: model:ir.model.fields,help:website.field_website__cookies_bar
 msgid "Display a customizable cookies bar on your website."
-msgstr ""
+msgstr "یک نوار کوکی‌های قابل تنظیم در تارنما/وبسایت خود نمایش دهید. "
 
 #. module: website
 #. odoo-python
@@ -4412,6 +4453,8 @@ msgid ""
 "Do not copy/paste code you do not understand, this could put your data at "
 "risk."
 msgstr ""
+"اگر متوجه یک کد نمی‌شوید، آن را رونویسی و جایگذاری نکنید، این کار می‌تواند "
+"داده‌های شما را به خطر بیاندازد."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -4419,6 +4462,8 @@ msgid ""
 "Do you need specific information? Our specialists will help you with "
 "pleasure."
 msgstr ""
+"آیا به اطلاعات خاصی نیاز دارید؟ کارشناسان ما با کمال میل به شما کمک خواهند "
+"کرد."
 
 #. module: website
 #. odoo-javascript
@@ -4435,7 +4480,7 @@ msgstr "مستندات"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Doesn't contain"
-msgstr ""
+msgstr "شامل نمی‌شود"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4452,6 +4497,7 @@ msgstr "دامنه"
 #: model:ir.model.fields,help:website.field_website_controller_page__record_domain
 msgid "Domain to restrict records that can be viewed publicly"
 msgstr ""
+"دامینی برای محدود کردن رکوردهایی که می‌توانند به صورت عمومی مشاهده شوند"
 
 #. module: website
 #. odoo-javascript
@@ -4472,7 +4518,7 @@ msgstr "دیگر نشان نده"
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
 msgid "Don't worry, you can switch later."
-msgstr ""
+msgstr "نگران نباشید، بعدا می‌توانید تغییراتی اعمال کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -4482,7 +4528,7 @@ msgstr "کمک مالی"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Donation Button"
-msgstr "دکمه کمک مالی"
+msgstr "دکمه اهدای کمک مالی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -4503,11 +4549,13 @@ msgstr "دوبل"
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Double click an icon to replace it with one of your choice."
 msgstr ""
+"برای جایگذاری یک آیکون با یکی از گزینه‌های خود، بر روی آن آیکون دوبار کلیک "
+"کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Doughnut"
-msgstr ""
+msgstr "دونات"
 
 #. module: website
 #. odoo-javascript
@@ -4515,14 +4563,14 @@ msgstr ""
 #, python-format
 msgid ""
 "Drag the <b>%s</b> building block and drop it at the bottom of the page."
-msgstr ""
+msgstr "بلوک سازه <b>%s</b>را کشیده و آن را در پایین صفحه رها کنید."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
 msgid "Drag to the right to get a submenu"
-msgstr ""
+msgstr "برای دسترسی به زیرمنو، آن را به سمت راست بکشید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -4558,17 +4606,17 @@ msgstr "تکثیر کردن"
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "Duplicate Page"
-msgstr ""
+msgstr "صفحه را تکثیر کن"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Duplicate blocks <br/>to add more steps."
-msgstr ""
+msgstr "بلوک‌ها را تکثیر کنید <br/> تا گام‌های بیشتری اضافه کنید."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Duplicate blocks and columns to add more features."
-msgstr ""
+msgstr "بلوک‌ها و ستون‌ها را تکثیر کنید تا ویژگی‌های بیشتری اضافه کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4594,13 +4642,13 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_res_config_settings__website_homepage_url
 #: model:ir.model.fields,help:website.field_website__homepage_url
 msgid "E.g. /contactus or /shop"
-msgstr ""
+msgstr "برای مثال / تماس باما یا / فروشگاه"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_domain
 #: model:ir.model.fields,help:website.field_website__domain
 msgid "E.g. https://www.mydomain.com"
-msgstr ""
+msgstr "برای مثال: https://www.mydomain.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -4608,13 +4656,15 @@ msgid ""
 "Easily design your own Odoo templates thanks to clean HTML\n"
 "                            structure and bootstrap CSS."
 msgstr ""
+"به لطف ساختار HTML منظم و CSS بوت‌استرپ، به راحتی  قالب‌های اودوو خودتان را \n"
+"طراحی کنید."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_dashboard/website_dashboard.xml:0
 #, python-format
 msgid "Easily track your visitor with Plausible"
-msgstr ""
+msgstr "به راحتی بازدیدکنندگان خود را به کمک plausible ردیابی کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_cover
@@ -4651,14 +4701,14 @@ msgstr "ویرایش %s"
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 #, python-format
 msgid "Edit HTML anyway"
-msgstr ""
+msgstr "به هر حال HTML را ویرایش کنید"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
 #, python-format
 msgid "Edit Head and Body Code"
-msgstr ""
+msgstr "کد بخش‌های Head & Body را ویرایش کنید"
 
 #. module: website
 #. odoo-javascript
@@ -4680,7 +4730,7 @@ msgstr "ویرایش آیتم منو"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Edit Message"
-msgstr ""
+msgstr "ویرایش پیغام"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -4693,7 +4743,7 @@ msgstr "ویرایش استایل ها"
 #: model_terms:ir.ui.view,arch_db:website.s_embed_code_options
 #, python-format
 msgid "Edit embedded code"
-msgstr ""
+msgstr "ویرایش کدهای جایگذاری شده"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.publish_management
@@ -4703,17 +4753,17 @@ msgstr "ویرایش در بک اند"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Edit robots.txt"
-msgstr ""
+msgstr "ویرایش robots.txt "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
 msgid "Edit this content"
-msgstr ""
+msgstr "این محتوا را ویرایش کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "Edit video"
-msgstr ""
+msgstr "ویدیو را ویرایش کنید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
@@ -4740,22 +4790,22 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Electronics"
-msgstr ""
+msgstr "الکترونیک"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Elements"
-msgstr ""
+msgstr "عناصر"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_call_to_action
 msgid "Elevate Your Audio Journey Today"
-msgstr ""
+msgstr "تجربه صوتی خود را همین امروز ارتقا بدهید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_1_s_banner
 msgid "Elevate Your Brand With Us"
-msgstr ""
+msgstr "برند خود را با ما ارتقا بدهید"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__email
@@ -4769,7 +4819,7 @@ msgstr "پست الکترونیک"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Email & Marketing"
-msgstr ""
+msgstr "ایمیل و بازاریابی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4793,6 +4843,9 @@ msgid ""
 "beginnings. What started as a simple idea in a garage has evolved into an "
 "innovative force in the industry."
 msgstr ""
+"سفری در زمان را آغاز کنید در حالی که داستان آغاز فروتنانه مان را به اشتراک "
+"می‌گذاریم. چیزی که به عنوان یک ایده ساده در یک گاراژ شروع شد، به یک نیروی "
+"نوآورانه در این صنعت تبدیل شده است. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -4803,54 +4856,54 @@ msgstr "تعبیه کد"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
 msgid ""
 "Empowering your business through strategic digital insights and expertise."
-msgstr ""
+msgstr "کسب و کار خود را با بینش و تخصص دیجیتال، قدرتمند کنید. "
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 #, python-format
 msgid "Empty field name in %r"
-msgstr ""
+msgstr "نام فیلد خالی در %r"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Enable billing on your Google Project"
-msgstr ""
+msgstr "صورتحساب را در پروژه گوگل خود فعال کنید"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr ""
+msgstr "ویژگی ساخت فرم را برای این مدل فعال کنید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Enable the right google map APIs in your google account"
-msgstr ""
+msgstr "APIهای صحیح گوگل مپ را در حساب گوگل خود فعال کنید"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "Enabling your %s."
-msgstr ""
+msgstr "فعال کردن %s"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "Engage with your community and build relationships."
-msgstr ""
+msgstr "در تعامل با اجتماع خود باشید و روابطی بسازید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Enter an API Key"
-msgstr ""
+msgstr "یک کلید API وارد کنید"
 
 #. module: website
 #. odoo-javascript
@@ -4859,11 +4912,13 @@ msgstr ""
 msgid ""
 "Enter code that will be added before the </body> of every page of your site."
 msgstr ""
+"کدی را وارد کنید که بتوان آن را قبل از </body> در هر صفحه از سایتتان اضافه "
+"کرد."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Enter code that will be added into every page of your site"
-msgstr ""
+msgstr "کدی را وارد کنید که به هر صفحه از سایت شما اضافه خواهد شد"
 
 #. module: website
 #. odoo-javascript
@@ -4871,7 +4926,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Enter code that will be added into the <head> of every page of your site."
-msgstr ""
+msgstr "کدی را وارد کنید که به <head> هر صفحه از سایت شما اضافه خواهد شد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -4881,7 +4936,7 @@ msgstr "ایمیل وارد کن"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Equal Widths"
-msgstr ""
+msgstr "دامنه‌های برابر "
 
 #. module: website
 #. odoo-javascript
@@ -4907,7 +4962,7 @@ msgstr "رویداد"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Event heading"
-msgstr ""
+msgstr "عنوان رویداد"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_event
@@ -4922,12 +4977,12 @@ msgstr "رویدادها"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_s_carousel
 msgid "Every Friday From 6PM to 7PM !"
-msgstr ""
+msgstr "هر جمعه از 6 تا 7 عصر"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Every Time"
-msgstr ""
+msgstr "هر دفعه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -4944,7 +4999,7 @@ msgstr "نمونه‌ها"
 #: code:addons/website/static/src/components/resource_editor/utils.js:0
 #, python-format
 msgid "Expected "
-msgstr ""
+msgstr "مورد  انتظار"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_cover
@@ -4982,7 +5037,7 @@ msgstr "کارشناس"
 #. module: website
 #: model:website.configurator.feature,description:website.feature_page_privacy_policy
 msgid "Explain how you protect privacy"
-msgstr ""
+msgstr "توضیح دهید که چگونه از حریم خصوصی محافظت می‌کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert
@@ -4994,7 +5049,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Explore"
-msgstr ""
+msgstr "اکتشاف"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_text_block_2nd
@@ -5021,22 +5076,22 @@ msgstr "آیدی خارجی"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Extra Large"
-msgstr ""
+msgstr "بسیار بزرگ "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
 msgid "Extra items button"
-msgstr ""
+msgstr "دکمه آیتم‌های اضافی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Extra link"
-msgstr ""
+msgstr "لینک اضافی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Extra page"
-msgstr ""
+msgstr "صفحه بیشتر "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5046,12 +5101,12 @@ msgstr "خیلی بزرگ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Extra-Small"
-msgstr ""
+msgstr "خیلی کوچک"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "F.A.Q."
-msgstr ""
+msgstr "سوالات متداول"
 
 #. module: website
 #. odoo-javascript
@@ -5078,19 +5133,19 @@ msgstr "حساب فیسبوک"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fade"
-msgstr ""
+msgstr "محو"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Fade Out"
-msgstr ""
+msgstr "محو تدریجی"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Failed to install \"%s\""
-msgstr ""
+msgstr "\"%s\" نصب نشد"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -5139,22 +5194,22 @@ msgstr "ویژگی ها"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Features Grid"
-msgstr ""
+msgstr "شبکه ویژگی‌ها"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "Fetched elements"
-msgstr ""
+msgstr "عناصر دریافت شده"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__field_names
 msgid "Field Names"
-msgstr ""
+msgstr "اسامی فیلد"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr ""
+msgstr "فیلد برای داده‌های فرم سفارشی"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_model_fields
@@ -5192,7 +5247,7 @@ msgstr "تکمیل کردن"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Fill and justify"
-msgstr ""
+msgstr "پر کردن و تراز کردن"
 
 #. module: website
 #. odoo-javascript
@@ -5212,7 +5267,7 @@ msgstr "شدت فیلتر"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Find a store near you"
-msgstr ""
+msgstr "یک فروشگاه در نزدیکی خود پیدا کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
@@ -5245,7 +5300,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_visitor__create_date
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "First Connection"
-msgstr ""
+msgstr "اولین اتصال"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -5260,12 +5315,12 @@ msgstr "منوی اول"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "First Time Only"
-msgstr ""
+msgstr "تنها دفعه اول"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 msgid "First feature"
-msgstr ""
+msgstr "اولین ویژگی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -6583,7 +6638,7 @@ msgstr "حساب اینستاگرام"
 #: model_terms:ir.ui.view,arch_db:website.s_instagram_page_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Instagram Page"
-msgstr ""
+msgstr "صفحه اینستاگرام"
 
 #. module: website
 #. odoo-javascript
@@ -6600,7 +6655,7 @@ msgstr "نصب زبان"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Install languages"
-msgstr ""
+msgstr "نصب زبان‌های متعدد"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -6610,7 +6665,7 @@ msgstr "نصب برنامه‌ها"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Localizations / Account Charts"
-msgstr ""
+msgstr "بومی‌سازی‌های نصب شده / نمودارهای حساب"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
@@ -6629,54 +6684,54 @@ msgstr "در حال نصب \"%s\""
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "Installing your %s."
-msgstr ""
+msgstr "1%s خود را نصب کنید."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 #, python-format
 msgid "Installing your features"
-msgstr ""
+msgstr "ویژگی‌هایتان را اضافه کنید "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "Integrating your %s."
-msgstr ""
+msgstr "%s خود را ادغام کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "Intensity"
-msgstr ""
+msgstr "فشردگی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Interaction History<br/>(optional)"
-msgstr ""
+msgstr "تاریخچه تعامل <br/> (اختیاری)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
 msgid "Intuitive Touch Controls"
-msgstr ""
+msgstr "کنترل‌های لمسی بصری"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Intuitive system"
-msgstr ""
+msgstr "سیستم شهودی"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Invalid API Key. The following error was returned by Google:"
-msgstr ""
+msgstr "کلید API نامعتبر است. گوگل خطای زیر را عودت داده است:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Iris Joe, CFO"
-msgstr "اصغر قلی زاده، CFO"
+msgstr "آیریس جو، CFO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -6689,17 +6744,17 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 msgid "Is In Main Menu"
-msgstr ""
+msgstr "در منوی اصلی قرار دارد"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__is_in_menu
 msgid "Is In Menu"
-msgstr ""
+msgstr "در منو است"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__website_indexed
 msgid "Is Indexed"
-msgstr ""
+msgstr "در پایگاه داده موتورهای جستجوگر ثبت شده است "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_module_module__is_installed_on_current_website
@@ -6732,77 +6787,77 @@ msgstr "قابل دید است"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is after"
-msgstr ""
+msgstr "بعد از ... است"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is after or equal to"
-msgstr ""
+msgstr "بعد یا برابر است با "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is before"
-msgstr ""
+msgstr "قبل از ... است"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is before or equal to"
-msgstr ""
+msgstr "قبل یا برابر است با "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is between (included)"
-msgstr ""
+msgstr "بین ... است (گنجانده شده)"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__is_connected
 msgid "Is connected?"
-msgstr ""
+msgstr "آیا متصل شده است؟"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is equal to"
-msgstr ""
+msgstr "برابر است با "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is greater than"
-msgstr ""
+msgstr "بیشتر از ... است "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is greater than or equal to"
-msgstr ""
+msgstr "بیشتر یا برابر است با "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is less than"
-msgstr ""
+msgstr "کمتر از ... است"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is less than or equal to"
-msgstr ""
+msgstr "کمتر یا برابر است با "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is not between (excluded)"
-msgstr ""
+msgstr "بین ... نیست (حذف شده)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is not equal to"
-msgstr ""
+msgstr "برابر نیست با"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is not set"
-msgstr ""
+msgstr "تنظیم نشده است"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Is set"
-msgstr ""
+msgstr "تنظیم شده است"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6812,13 +6867,17 @@ msgid ""
 "            we recommend you to try to use the new color system, which is\n"
 "            still customizable."
 msgstr ""
+"به نظر می‌رسد تارنما/وبسایت شما از سیستم رنگ قدیمی اودوو 13.0 در برخی جاها استفاده می‌کند\n"
+"از کارکرد آن مطمئن هستیم اما \n"
+"به شما پیشنهاد می‌کنیم از سیستم رنگ جدید که\n"
+"همچنان تنظیم شدنی است، استفاده کنید."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "It looks like your file is being called by"
-msgstr ""
+msgstr "به نظر می‌رسد پرونده شما توسط ... فراخوانی شده است "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_2nd
@@ -6826,11 +6885,14 @@ msgid ""
 "It's time to elevate your fitness journey with coaching that's as unique as "
 "you are. Choose your path, embrace the guidance, and transform your life."
 msgstr ""
+"زمان آن رسیده که تجربه تناسب اندام خود را با مربیگری که مانند خودتان منحصر "
+"به فرد است، بهبود ببخشید. مسیر خود را انتخاب کنید، راهنمایی‌ها را با آغوش "
+"باز بپذیرید، و زندگی خود را متحول کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Item"
-msgstr ""
+msgstr "آیتم/مورد"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -6847,12 +6909,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Jacket"
-msgstr ""
+msgstr "کاپشن/کت"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Jeans"
-msgstr ""
+msgstr "شلوار جین"
 
 #. module: website
 #. odoo-javascript
@@ -6873,6 +6935,8 @@ msgid ""
 "Join us for a remarkable dining experience that blends exquisite flavors "
 "with a warm ambiance."
 msgstr ""
+"برای تجربه استثنائی صرف غذا همراه با طعم‌های بی‌نظیر در محیط صمیمی، به ما "
+"بپیوندید. "
 
 #. module: website
 #. odoo-javascript
@@ -6880,7 +6944,7 @@ msgstr ""
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Keep empty to use default value"
-msgstr ""
+msgstr "اینجا را خالی بگذارید تا از مقدار پیش‌فرض استفاده کنید. "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__key
@@ -6897,7 +6961,7 @@ msgstr "کلید"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Keyboards"
-msgstr ""
+msgstr "صفحه کلید"
 
 #. module: website
 #. odoo-javascript
@@ -6923,17 +6987,17 @@ msgstr "بر چسب"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_label
 msgid "Label for form action"
-msgstr ""
+msgstr "برچسب عملکرد فرم"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Labels Width"
-msgstr ""
+msgstr "دامنه برچسب‌ها"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
 msgid "Landing Pages"
-msgstr ""
+msgstr "لندینگ پیج"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__lang_id
@@ -6945,12 +7009,12 @@ msgstr "زبان"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Language Selector"
-msgstr ""
+msgstr "انتخاب کننده زبان"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__lang_id
 msgid "Language from the website when visitor has been created"
-msgstr ""
+msgstr "زبان تارنما/وبسایت زمانی که بازدیدکننده‌ای ایجاد شده است "
 
 #. module: website
 #: model:ir.model,name:website.model_res_lang
@@ -6970,7 +7034,7 @@ msgstr "زبانهای موجود در وبسایت شما"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Laptops"
-msgstr ""
+msgstr "لپ‌تاپ‌ها"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -7001,7 +7065,7 @@ msgstr "آخرین اتصال"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
 msgid "Last Feature"
-msgstr ""
+msgstr "آخرین ویژگی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
@@ -7067,7 +7131,7 @@ msgstr "آخرین کنش"
 #: code:addons/website/controllers/main.py:0
 #, python-format
 msgid "Last modified pages"
-msgstr ""
+msgstr "آخرین صفحات تصحیح شده"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__last_connection_datetime
@@ -7078,7 +7142,7 @@ msgstr "تاریخ بازدید آخرین صفحه"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
 msgid "Latests news and case studies"
-msgstr ""
+msgstr "آخرین اخبار و مطالعات موردی "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -7091,17 +7155,17 @@ msgstr "طرح بندی"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background"
-msgstr ""
+msgstr "پس زمینه چیدمان"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background Color"
-msgstr ""
+msgstr "رنگ پس‌زمینه چیدمان"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Lead text"
-msgstr ""
+msgstr "متن مقدمه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -7130,22 +7194,23 @@ msgstr "منوی چپ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Legal"
-msgstr ""
+msgstr "قانونی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Legal Notice"
-msgstr ""
+msgstr "اطلاعیه حقوقی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Legend"
-msgstr ""
+msgstr "اسطوره"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Let your customers follow <br/>and understand your process."
 msgstr ""
+"به مشتریان خود اجازه دهید <br/> را دنبال کرده و فرآیند شما را درک کنند. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7193,12 +7258,12 @@ msgstr "کتابخانه"
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
 #, python-format
 msgid "Light"
-msgstr ""
+msgstr "روشن"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Light &amp; Dark"
-msgstr ""
+msgstr "روشن &amp؛ تیره"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__limit
@@ -7219,7 +7284,7 @@ msgstr "سطر"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
 msgid "Line Color"
-msgstr ""
+msgstr "رنگ خط /قلم"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8279,7 +8344,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Nothing"
-msgstr ""
+msgstr "هیچ چیز"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -9416,7 +9481,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
@@ -10305,7 +10370,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_controller_page__customize_show
 #: model:ir.model.fields,field_description:website.field_website_page__customize_show
 msgid "Show As Optional Inherit"
-msgstr ""
+msgstr "نمایش به‌عنوان ارث‌بری اختیاری"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10794,17 +10859,17 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Stretch to Equal Height"
-msgstr ""
+msgstr " تا ارتفاع برابر بکشید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 msgid "Striped"
-msgstr ""
+msgstr "راه‌راه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Stroke Width"
-msgstr ""
+msgstr "عرض خط"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10823,12 +10888,12 @@ msgstr "استایل"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sub Menus"
-msgstr ""
+msgstr "زیرمنوها"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Subheading"
-msgstr ""
+msgstr "زیرعنوان"
 
 #. module: website
 #. odoo-javascript
@@ -10846,7 +10911,7 @@ msgstr "ارسال"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Submit sitemap to Google"
-msgstr ""
+msgstr "سایت مپ را در گوگل ثبت کنید"
 
 #. module: website
 #. odoo-javascript
@@ -10861,7 +10926,7 @@ msgstr "موفقیت"
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_success_stories
 msgid "Success Stories"
-msgstr ""
+msgstr "داستان‌های موفق"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -10871,31 +10936,31 @@ msgstr "پیشنهادات"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Surrounded"
-msgstr ""
+msgstr "محصور شده"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
+msgstr "فعالیت مشکوکی توسط گوگل reCaptcha شناسایی شد."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Switch Theme"
-msgstr ""
+msgstr "تغییر تم"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "System Fonts"
-msgstr ""
+msgstr "فونت‌های سیستم"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "T-shirts"
-msgstr ""
+msgstr "تیشرت‌ها"
 
 #. module: website
 #. odoo-javascript
@@ -10907,7 +10972,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Table of Content"
-msgstr ""
+msgstr "فهرست مطالب"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -10920,12 +10985,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tabs"
-msgstr ""
+msgstr "زبانه/تب"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Tabs color"
-msgstr ""
+msgstr "رنگ تب‌ها"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10951,17 +11016,17 @@ msgstr "نام فنی:"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Telephone"
-msgstr ""
+msgstr "تلفن"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Televisions"
-msgstr ""
+msgstr "تلویزیون‌ها "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "Tell what's the value for the <br/>customer for this feature."
-msgstr ""
+msgstr "ارزش این ویژگی را برای مشتری <br/> را بیان کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -10975,17 +11040,17 @@ msgstr "پوسته"
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 #, python-format
 msgid "Template ID: %s"
-msgstr ""
+msgstr "شناسه قالب: %s"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
-msgstr ""
+msgstr "پشتیبان گیری از قالب "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 msgid "Terms of Services"
-msgstr ""
+msgstr "شرایط خدمات"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -11000,7 +11065,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid "Test your robots.txt with Google Search Console"
-msgstr ""
+msgstr "robots.txt خود را با گوگل سرچ کنسول امتحان کنید"
 
 #. module: website
 #. odoo-javascript
@@ -11016,23 +11081,23 @@ msgstr "متن"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text - Image"
-msgstr ""
+msgstr "متن - تصویر"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Text Alignment"
-msgstr ""
+msgstr "ترازبندی متن "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Text Color"
-msgstr ""
+msgstr "رنگ متن "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text Cover"
-msgstr ""
+msgstr "متن پوششی "
 
 #. module: website
 #. odoo-javascript
@@ -11041,22 +11106,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Text Highlight"
-msgstr ""
+msgstr "برجسته کردن متن"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
 msgid "Text Image Text"
-msgstr ""
+msgstr "متن تصویر متن"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Text Inline"
-msgstr ""
+msgstr "متن درون‌خطی "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Text Position"
-msgstr ""
+msgstr "وضعیت متن "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -11080,14 +11145,14 @@ msgstr "سپاسگزاریم!"
 #: code:addons/website/static/src/snippets/s_instagram_page/options.js:0
 #, python-format
 msgid "The Instagram page name is not valid"
-msgstr ""
+msgstr "نام صفحه اینستاگرام معتبر نیست"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "The chosen name already exists"
-msgstr ""
+msgstr "نام انتخاب شده از قبل وجود دارد "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
@@ -11096,6 +11161,8 @@ msgid ""
 "battery life that lasts up to 17h, you can enjoy your favorite tunes without"
 " interruption."
 msgstr ""
+"کِیس شارژ جمع‌وجور امکان شارژ راحت حین حرکت را فراهم می‌کند و با عمر باتری "
+"تا 17 ساعت، می‌توانید بدون وقفه از موسیقی مورد علاقه‌تان لذت ببرید."
 
 #. module: website
 #. odoo-python
@@ -11105,11 +11172,13 @@ msgid ""
 "The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
 "Change that website's company first."
 msgstr ""
+"شرکت %(نام شرکت)r را نمی‌توان بایگانی کرد زیرا یک وبسایت به آن پیونده شده است %(نام وبسایت)r. \n"
+"اول شرکت وبسایت را تغییر دهید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
-msgstr ""
+msgstr "شرکتی که این تارنما/وبسایت به آن متعلق است"
 
 #. module: website
 #. odoo-javascript
@@ -11119,6 +11188,8 @@ msgid ""
 "The description will be generated by search engines based on page content "
 "unless you specify one."
 msgstr ""
+"موتورهای جستجو براساس محتوای صفحه  توضیحات را به طور خودکار تولید می‌کنند "
+"مگر اینکه شما توضیح مشخصی را وارد کنید. "
 
 #. module: website
 #. odoo-javascript
@@ -11128,6 +11199,8 @@ msgid ""
 "The description will be generated by social media based on page content "
 "unless you specify one."
 msgstr ""
+"شبکه‌های اجتماعی بر اساس محتوای صفحه توضیحات را به طور خودکار تولید می‌کنند،"
+" مگر اینکه خودتان توضیح مشخصی را وارد کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
@@ -11136,27 +11209,30 @@ msgid ""
 "pocket-friendly size ensures you can carry your audio experience wherever "
 "you roam."
 msgstr ""
+"هندزفری‌ها با سبک زندگی شما سازگار می‌شوند، اندازه‌ی جیبی کِیس شارژ به شما "
+"این امکان را می‌دهد تا تجربه‌ی صوتی را در هر مکانی که می‌روید با خود حمل "
+"کنید."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "The field '%s' is mandatory for the action '%s'."
-msgstr ""
+msgstr "فیلد '%s' برای اقدام '%s' ضروری است."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
-msgstr ""
+msgstr "فرم با موفقیت ارسال شده است."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "The form's specified model does not exist"
-msgstr ""
+msgstr "مدل مشخص شده برای فرم وجود ندارد"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_url
@@ -11180,26 +11256,26 @@ msgstr "آدرس وب کامل برای دسترسی به سرور از طریق
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "The homepage URL should be relative and start with '/'."
-msgstr ""
+msgstr "نشانی اینترنتی URL صفحه اصلی باید مرتبط باشد و با '/' شروع شود. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "The installation of an App is already in progress."
-msgstr ""
+msgstr "نصب اپلیکیشن آغاز شده است. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "The language of the keyword and related keywords."
-msgstr ""
+msgstr "زبان کلمه کلیدی و کلمات کلیدی مرتبط. "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__limit
 msgid "The limit is the maximum number of records retrieved"
-msgstr ""
+msgstr "محدودیت، حداکثر تعداد سوابقی است که بازیابی می‌شوند."
 
 #. module: website
 #. odoo-python
@@ -11211,39 +11287,43 @@ msgstr "محدوده باید بین 1 تا 16 باشد"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "The maximum number of files that can be uploaded."
-msgstr ""
+msgstr "بیشترین تعداد پرونده‌هایی که می‌توان بارگذاری کرد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "The maximum size (in MB) an uploaded file can have."
 msgstr ""
+"حداکثر اندازه‌ای که یک پرونده بارگذاری شده (به مگابایت) می‌تواند داشته باشد."
+" "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "The message will be visible once the countdown ends"
-msgstr ""
+msgstr "زمانی که شمارش معکوس پایان می‌یابد، پیام قابل مشاهده خواهد شد. "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__page_name
 msgid ""
 "The name is used to generate the URL and is shown in the browser title bar"
 msgstr ""
+"این نام برای ایجاد URL کاربرد دارد و در نوار عنوان مرورگر نمایش داده می‌شود."
+" "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__name_slugified
 msgid "The name of the page usable in a URL"
-msgstr ""
+msgstr "نام صفحه‌ای که در یک URL قابل استفاده است"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
-msgstr ""
+msgstr "قالب‌های انتخاب شده به تنظیمات کارخانه بازخواهند گشت. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_little_icons
 msgid "The team"
-msgstr ""
+msgstr "تیم"
 
 #. module: website
 #. odoo-javascript
@@ -11251,6 +11331,8 @@ msgstr ""
 #, python-format
 msgid "The title will take a default value unless you specify one."
 msgstr ""
+"این عنوان یک مقدار پیش‌فرض خواهد داشت مگر اینکه شما یک مقدار مشخص را وارد "
+"کنید. "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__page_type
@@ -11258,17 +11340,23 @@ msgid ""
 "The type of the page. If set, it indicates whether the page displays a list "
 "of records or a single record"
 msgstr ""
+"نوع صفحه. اگر تنظیم شده باشد، نشان می‌دهد که آیا صفحه فهرستی از رکوردها را "
+"نمایش می‌دهد یا تنها یک رکورد را نمایش می‌دهد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "The website will not work properly if you reject or discard those cookies."
 msgstr ""
+"اگر شما از آن کوکی‌ها صرف نظر کرده و یا آنها را رد کنید، تارنما/وبسایت به "
+"درستی کار نخواهد کرد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "The website will still work if you reject or discard those cookies."
 msgstr ""
+"اگر شما از آن کوکی‌ها صرف نظر کرده و یا آنها را رد کنید، تارنما/وبسایت "
+"همچنان کار خواهد کرد. "
 
 #. module: website
 #. odoo-javascript
@@ -11283,7 +11371,7 @@ msgstr "تم"
 #. module: website
 #: model:ir.model,name:website.model_theme_ir_asset
 msgid "Theme Asset"
-msgstr ""
+msgstr "منابع موضوعی"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_ir_attachment
@@ -11293,7 +11381,7 @@ msgstr "پیوست‌های تم"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Theme Colors"
-msgstr ""
+msgstr "رنگ‌های تم"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
@@ -11319,7 +11407,7 @@ msgstr "ابزارهای تم"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 msgid "There are currently no pages for this website."
-msgstr ""
+msgstr "در حال حاضر هیچ صفحه‌ای برای این تارنما/وبسایت وجود ندارد. "
 
 #. module: website
 #. odoo-python
@@ -11327,13 +11415,14 @@ msgstr ""
 #, python-format
 msgid "There are no contact and/or no email linked to this visitor."
 msgstr ""
+"هیچ اطلاعات تماس و یا ایمیلی به این بازدیدکننده پیونده داده نشده است. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "There is no field available for this option."
-msgstr ""
+msgstr "هیچ فیلدی برای این گزینه در دسترس نیست. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -11344,27 +11433,32 @@ msgid ""
 " and conditions of your use of this website and any of its products or "
 "services (collectively, \"Website\" or \"Services\")."
 msgstr ""
+"شرایط و مقررات خدمات‌رسانی (\"شرایط\"، \"توافقنامه\") یک توافق قانونی بین "
+"وبسایت (\"اپراتور وبسایت\"، \"با ما\"، \"ما\" یا \"برای ما\") و شما "
+"(\"کاربر\"، \"شما\" یا \"برای شما\") است. این توافقنامه شرایط و ضوابط عمومی "
+"را که مربوط به استفاده شما از این وبسایت و هر یک از محصولات یا خدمات آن "
+"می‌شود (به طور کلی \"وبسایت\" یا \"خدمات\")، تعیین می‌کند."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_images_subtitles
 msgid "They trust us since years"
-msgstr ""
+msgstr "آنها از سالها پیش به ما اعتماد دارند. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Thick"
-msgstr ""
+msgstr "ضخیم"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Thickness"
-msgstr ""
+msgstr "ضخامت"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Thin"
-msgstr ""
+msgstr "باریک"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -11381,7 +11475,7 @@ msgstr "منوی سوم"
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
-msgstr ""
+msgstr "این URL در ”%(field)s“ متعلق به ”%(model)s“ موجود است. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
@@ -11390,12 +11484,17 @@ msgid ""
 "nutrition guidance, and expert coaching. Elevate your fitness level and "
 "achieve feats you never thought possible."
 msgstr ""
+"این برنامه مربیگری تمرینات تخصصی متمرکز بر قدرت بدنی، راهنمایی تغذیه، و "
+"مربیگری تخصصی را ارائه می‌دهد. سطح تناسب اندام خود را بالا ببرید و به "
+"دستاوردهایی برسید که هرگز فکرش را هم نمی‌کردید."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
 #: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
 msgstr ""
+"در این فیلد تصویری قرار دارد که برای نمایش فاوآیکون در تارنما/وبسایت استفاده"
+" شده است. "
 
 #. module: website
 #. odoo-javascript
@@ -11405,6 +11504,8 @@ msgid ""
 "This field is mandatory for this action. You cannot remove it. Try hiding it"
 " with the 'Visibility' option instead and add it a default value."
 msgstr ""
+"این فیلد برای این اقدام ضروری است. شما نمی‌توانید آن را حذف کنید. سعی کنید "
+"آن را با گزینه \"قابل رویت\" مخفی کرده و یک مثدار پیش‌فرض به آن اضافه کنید. "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__arch_base
@@ -11451,6 +11552,8 @@ msgid ""
 "This font already exists, you can only add it as a local font to replace the"
 " server version."
 msgstr ""
+"این فونت پیش از این وجود داشته، شما فقط می‌توانید این فونت را به عنوان یک "
+"فونت بومی افزوده تا جایگزین نسخه سرور شود. "
 
 #. module: website
 #. odoo-javascript
@@ -11459,11 +11562,12 @@ msgstr ""
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
 msgstr ""
+"سرورهای گوگل این فونت را میزبانی کرده و به بازدیدکنندگان شما ارائه می‌کنند."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "This is a \""
-msgstr ""
+msgstr "این یک \" است "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -11473,6 +11577,10 @@ msgid ""
 "aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus."
 " Phasellus laoreet lorem vel dolor tempus vehicula."
 msgstr ""
+"این یک پاراگراف است. به زبان لاتین: Ambitioni dedisse scripsisse "
+"iudicaretur. Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. "
+"Unam incolunt Belgae, aliam Aquitani, tertiam. Integer legentibus erat a "
+"ante historiarum dapibus. Phasellus laoreet lorem vel dolor tempus vehicula."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -11480,6 +11588,8 @@ msgid ""
 "This is a simple hero unit, a simple jumbotron-style component for calling "
 "extra attention to featured content or information."
 msgstr ""
+"این یک واحد برجسته ساده است، یک جزء از سبک جامبرتون ساده برای اینکه به "
+"اطلاعات یا محتوای ویژه توجه بیشتری را معطوف کند. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -11487,36 +11597,38 @@ msgid ""
 "This is a wider card with supporting text below as a natural lead-in to "
 "additional content. This content is a little bit longer."
 msgstr ""
+"این کارت عریض‌تر است و یک متن پشتیبان در زیر آن قرار دارد که طبیعتا مقدمه‌ای"
+" برای محتوای بیشتر است. این محتوا کمی طولانی‌تر است."
 
 #. module: website
 #: model:ir.ui.view,website_meta_description:website.contactus
 msgid "This is the contact us page of the website"
-msgstr ""
+msgstr "این صفحه \"تماس با ما\" تارنما/وبسایت است. "
 
 #. module: website
 #: model:ir.ui.view,website_meta_description:website.homepage
 msgid "This is the homepage of the website"
-msgstr ""
+msgstr "این صفحه اصلی تارنما/وبسایت است. "
 
 #. module: website
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
 msgid "This message has been posted on your website!"
-msgstr ""
+msgstr "این پیغام روی تارنما/وبسایت شما ارسال شده است. "
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
+msgstr "از این اپراتور پشتیبانی نمی‌شود"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_current_page
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "This page"
-msgstr ""
+msgstr "این صفحه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -11524,13 +11636,15 @@ msgid ""
 "This page does not exist, but you can create it as you are editor of this "
 "site."
 msgstr ""
+"این صفحه وجود ندارد اما از آنجایی که شما ویرایشگر این وبسایت هستید، "
+"می‌توانید این صفحه را ایجاد کنید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "This translation is not editable."
-msgstr ""
+msgstr "نمی‌توانید این ترجمه را ویرایش کنید. "
 
 #. module: website
 #. odoo-javascript
@@ -11540,20 +11654,23 @@ msgid ""
 "This value will be escaped to be compliant with all major browsers and used "
 "in url. Keep it empty to use the default name of the record."
 msgstr ""
+"این مقدار برای سازگاری با تمام مرورگرهای اصلی از حالت نمایش خارج خواهد شد و "
+"در URL استفاده می‌شود. آن مقدار را برای استفاده از نام پیش‌فرض رکورد، خالی "
+"بگذارید."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "This view arch has been modified"
-msgstr ""
+msgstr "این نمای آرچ تصحیح شده است. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.xml:0
 #, python-format
 msgid "This website does not have a domain configured."
-msgstr ""
+msgstr "این تارنما/وبسایت دامنه تنظیم شده ندارد. "
 
 #. module: website
 #. odoo-javascript
@@ -11563,6 +11680,8 @@ msgid ""
 "This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
 "To remove this message please set a domain in your website settings"
 msgstr ""
+"این تارنما/وبسایت دامنه‌ تنظیم شده ندارد. برای جلوگیری از بروز عملکرد غیرمنتظره حین ویرایش تارنما/وبسایت، توصیه می‌کنیم سایر تب‌های مرورگر را ببندید (یا رفرش کنید).\n"
+"برای لغو این پیام لطفا یک دامنه در بخش تنظیمات تارنما/وبسایت خود تعیین کنید."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11576,30 +11695,30 @@ msgstr "تصاویر نمایه"
 #: model_terms:ir.ui.view,arch_db:website.s_social_media
 #, python-format
 msgid "TikTok"
-msgstr ""
+msgstr "تیک‌تاک"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_tiktok
 msgid "TikTok Account"
-msgstr ""
+msgstr "حساب کاربری تیک‌تاک"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__time_since_last_action
 msgid "Time since last page view. E.g.: 2 minutes ago"
-msgstr ""
+msgstr "مدت زمان از آخرین بازدید صفحه. برای مثال:2 دقیقه قبل"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 #, python-format
 msgid "Time's up! You can now visit"
-msgstr ""
+msgstr "زمان به سر آمد! اکنون می‌توانید بازدید کنید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Timeline"
-msgstr ""
+msgstr "جدول زمانی"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__timezone
@@ -11611,31 +11730,33 @@ msgstr "منطقه‌ زمانی"
 #: model:digest.tip,name:website.digest_tip_website_4
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_4
 msgid "Tip: Add shapes to energize your Website"
-msgstr ""
+msgstr "نکته: برای انرژی بخشیدن به وبسایت خود، شکل‌هایی اضافه کنید"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_0
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_0
 msgid "Tip: Engage with visitors to convert them into leads"
 msgstr ""
+"نکته: با بازدیدکنندگان تعامل برقرار کنید تا آنها را به سرنخ تبدیل کنید "
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_2
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_2
 msgid "Tip: Search Engine Optimization (SEO)"
-msgstr ""
+msgstr "نکته: بهینه‌سازی موتور جستجوگر (سئو)"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_3
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_3
 msgid "Tip: Use illustrations to spice up your website"
 msgstr ""
+"نکته: از نمونه‌های تصویری استفاده کنید تا رونق وبسایت خود را افزایش دهید"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_1
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_1
 msgid "Tip: Use royalty-free photos"
-msgstr ""
+msgstr "نکته: از عکس‌های  royalty-free استفاده کنید"
 
 #. module: website
 #. odoo-javascript
@@ -11651,7 +11772,7 @@ msgstr "عنوان"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Title Position"
-msgstr ""
+msgstr "وضعیت عنوان"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -11660,11 +11781,14 @@ msgid ""
 "right icon of each block. Then, duplicate one of the columns to create a new"
 " one as a copy."
 msgstr ""
+"برای افزودن چهارمین ستون، با استفاده از آیکون سمت راست هر بوک، سایز این سه "
+"ستون را کاهش دهید. سپس، یکی از ستون‌ها را تکثیر کنید تا یک ستون جدید ایجاد "
+"شود. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "To be successful your content needs to be useful to your readers."
-msgstr ""
+msgstr "محتوای شما باید برای خوانندگانتان کاربردی باشد تا شما موفق شوید. "
 
 #. module: website
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_2
@@ -11674,6 +11798,11 @@ msgid ""
 "will recommend you the best keywords to target. Then adapt your title and "
 "description accordingly to boost your traffic."
 msgstr ""
+"برای جذب بازدیدکنندگان بیشتر، باید از آن دسته از کلمات کلیدی استفاده کنید که"
+" بیشتر در گوگل جستجو می‌شوند. با ابزار سئو موجود در اودوو، به محض تعریف چند "
+"کلمه کلیدی، اودوو به شما بهترین کلمات کلیدی را برای هدفگذاری پیشنهاد می‌کند."
+" سپس شما عنوان و توضیحات را بر همان اساس انتخاب کنید تا ترافیک وبسایت خود را"
+" بالا ببرید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11689,13 +11818,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Toggle"
-msgstr ""
+msgstr "toggle"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.template_header_mobile
 msgid "Toggle navigation"
-msgstr ""
+msgstr "toggle navigation"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_0_s_three_columns
@@ -11708,7 +11837,7 @@ msgstr "تونی فرد، CEO"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Tooltip"
-msgstr ""
+msgstr "Tooltip"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -11729,49 +11858,49 @@ msgstr "بالا"
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "Top Menu for Website %s"
-msgstr ""
+msgstr "منو بالای تارنما 1 %s"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "Top to Bottom"
-msgstr ""
+msgstr "بالا به پایین"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Tops"
-msgstr ""
+msgstr "محبوب‌ترین‌ها"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__page_count
 msgid "Total number of tracked page visited"
-msgstr ""
+msgstr "تعداد کل صفحات ردیابی‌شده بازدیدشده "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visitor_page_count
 msgid "Total number of visits on tracked pages"
-msgstr ""
+msgstr "تعداد کل بازدیدها از صفحات ردیابی شده"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__track
 #: model:ir.model.fields,field_description:website.field_website_controller_page__track
 #: model:ir.model.fields,field_description:website.field_website_page__track
 msgid "Track"
-msgstr ""
+msgstr "ردیابی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Track visits using Google Analytics"
-msgstr ""
+msgstr "بازدیدها را با استفاده از گوگل آنالیتیکس ردیابی کنید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Tracked"
-msgstr ""
+msgstr "ردیابی شده"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_image
 msgid "Transform Your Brand"
-msgstr ""
+msgstr "نام تجاری خود را متحول کنید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11790,28 +11919,28 @@ msgstr "ترجمه"
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "Translate Attribute"
-msgstr ""
+msgstr "ویژگی را ترجمه کنید"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "Translate Selection Option"
-msgstr ""
+msgstr "گزینه انتخابی را ترجمه کنید "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "Translate header in the text. Menu is generated automatically."
-msgstr ""
+msgstr "عنوان را در متن ترجمه کنید. منو به صورت خودکار ایجاد می‌شود. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.xml:0
 #, python-format
 msgid "Translated content"
-msgstr ""
+msgstr "محتوای ترجمه شده "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11821,17 +11950,17 @@ msgstr "راه اندازی"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__configurator_done
 msgid "True if configurator has been completed or ignored"
-msgstr ""
+msgstr "اگر پیکربندی کامل شده یا نادیده گرفته شده باشد، درست است"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Tuna and Salmon Burger"
-msgstr ""
+msgstr "برگر ماهی تُن و ماهی سالمون "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Turn every feature into a benefit for your reader."
-msgstr ""
+msgstr "هر ویژگی را به یک مزیت برای خواننده خود تبدیل کنید. "
 
 #. module: website
 #. odoo-javascript
@@ -11876,7 +12005,7 @@ msgstr "نوع"
 #: code:addons/website/static/src/xml/web_editor.xml:0
 #, python-format
 msgid "Type '"
-msgstr ""
+msgstr "تایپ کردن "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -11884,13 +12013,15 @@ msgid ""
 "Type '<i class=\"confirm_word\">yes</i>' in the box below if you want to "
 "confirm."
 msgstr ""
+"اگر می‌خواهید تایید کنید، در کادر زیر کلمه <i class=\"confirm_word\">بله</i>"
+" را تایپ کنید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #, python-format
 msgid "Type in text here..."
-msgstr ""
+msgstr "متن را اینجا تایپ کنید ..."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_rewrite__redirect_type
@@ -11903,6 +12034,11 @@ msgid ""
 "        308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)\n"
 "    "
 msgstr ""
+"نوع تغییر مسیر/بازنویسی:\n"
+"301 به صورت دائمی انتقال داده شده است: URL جدید در حافظه پنهان مرورگر نگه داشته خواهد شد.\n"
+"302 به صورت موقت انتقال داده شده است: URL جدید در حافظه پنهان مرورگر نگه داشته نخواهد شد و دفعه بعد درباره URL جدید سوال خواهد شد.\n"
+"404 یافت نشد: اگر قصد حذف یک صفحه/کنترلگر خاص را دارید (مثلا تجارت الکترونیک نصب شده است اما شما نمی‌خواهید در یک وبسایت خاص فروشگاه داشته باشید)\n"
+"308 تغییر مسیر/بازنویسی: اگر قصد تغییرنام یک کنترلگر را با یک URL جدید را دارید. (به عنوان مثال: /shop -> /garden - هر دو URL قابل دسترسی خواهند بود اما /shop به طور خودکار به /garden تغییر مسیر می‌دهد) "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name_slugified
@@ -11916,18 +12052,20 @@ msgstr "URL"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_from
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "URL from"
-msgstr ""
+msgstr "URL از"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
 #: model:ir.model.fields,help:website.field_website__cdn_filters
 msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
+"آدرس اینترنتی که با آن فیلترها هماهنگ باشد با استفاده از URL بر پایه CDN "
+"شبکه تولید محتوا بازنویسی خواهد شد. "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
-msgstr ""
+msgstr "URL به"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11937,19 +12075,19 @@ msgstr "کمپین UTM"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "UTM Medium"
-msgstr ""
+msgstr "رسانه UTM"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "UTM Source"
-msgstr ""
+msgstr "منبع UTM"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Unalterable unique identifier"
-msgstr ""
+msgstr "شناسه منحصر به فرد غیرقابل تغییر "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11962,18 +12100,20 @@ msgid ""
 "Understand how visitors engage with our website, via Google Analytics.\n"
 "                                                Learn more about"
 msgstr ""
+"از طریق گوگل آنالیتیکس، می‌دانیم که بازدیدکنندگان چگونه با وبسایت ما تعامل دارند. \n"
+"در اینباره بیشتر بدانید."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/utils.js:0
 #, python-format
 msgid "Unexpected "
-msgstr ""
+msgstr "غیرمنتظره"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited CRM power and support"
-msgstr ""
+msgstr "قدرت و پشتیبانی بدون محدودیت CRM"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -12001,7 +12141,7 @@ msgstr "منتشر نشده"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Unregistered"
-msgstr ""
+msgstr "ثبت نشده "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
@@ -12013,14 +12153,14 @@ msgstr "بروزرسانی تم"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Upload"
-msgstr "آپلود"
+msgstr "آپلود/بارگذاری"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Uploaded file is too large."
-msgstr ""
+msgstr "فایل بارگذاری شده بسیار بزرگ است. "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__url
@@ -12044,12 +12184,12 @@ msgstr "نشانی اینترنتی تصویر پرچم ثابت"
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 #, python-format
 msgid "Url or Email"
-msgstr ""
+msgstr "نشانی اینترنتی یا ایمیل"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Urls & Pages"
-msgstr ""
+msgstr "آدرس‌های اینترنتی و صفحات "
 
 #. module: website
 #. odoo-javascript
@@ -12057,27 +12197,33 @@ msgstr ""
 #, python-format
 msgid "Use Google Map on your website (Contact Us page, snippets, etc)."
 msgstr ""
+"از گوگل مپ بر روی وبسایت خود استفاده کنید (صفحه تماس با ما، اسنیپت‌ها، و "
+"غیره)"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__use_main_menu_as_parent
 msgid "Use Main Menu As Parent"
-msgstr ""
+msgstr "از منوی اصلی به عنوان والد استفاده کنید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid ""
 "Use Plausible.io, Simple and privacy-friendly Google Analytics alternative"
 msgstr ""
+"از Plausible.io استفاده کنید که جایگزین ساده گوگل انالیتیکس و سازگار با حریم"
+" خصوصی است. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use a CDN to optimize the availability of your website's content"
 msgstr ""
+"از یک CDN شبکه تحویل محتوا برای بهینه‌سازی قابلیت دسترسی محتوای وبسایت خود "
+"استفاده کنید. "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_default_share_image
 msgid "Use a image by default for sharing"
-msgstr ""
+msgstr "به صورت پیش‌فرض از یک تصویر برای اشتراک‌گذاری استفاده کنید"
 
 #. module: website
 #. odoo-javascript
@@ -12085,6 +12231,8 @@ msgstr ""
 #, python-format
 msgid "Use an array to list the images to use in the radio selection."
 msgstr ""
+"از  یک آرایه برای فهرست‌بندی تصاویر استفاده کنید تا از آن تصاویر در گزینه "
+"رادیو استفاده کنید."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -12094,7 +12242,7 @@ msgstr "استفاده به عنوان صفحه اصلی"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Use of Cookies"
-msgstr ""
+msgstr "استفاده از کوکی‌ها"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -12102,6 +12250,8 @@ msgid ""
 "Use this component for creating a list of featured elements to which you "
 "want to bring attention."
 msgstr ""
+"از این مؤلفه برای ایجاد فهرستی از عناصر شاخص استفاده کنید، عناصری که "
+"می‌خواهید توجه را به آنها جلب کنید."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -12110,6 +12260,9 @@ msgid ""
 "or right-aligned image alongside textual content. Duplicate the element to "
 "create a list that fits your needs."
 msgstr ""
+"از این اسنیپت برای ساخت انواع متنوعی از ترکیبات استفاده کنید که یک تصویر "
+"تراز چپ یا تراز راست در کنار محتوای متنی شما بسازد. این مورد را تکثیر کنید "
+"تا فهرستی متناسب با نیازهایتان ایجاد کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -12117,18 +12270,20 @@ msgid ""
 "Use this snippet to presents your content in a slideshow-like format. Don't "
 "write about products or services here, write about solutions."
 msgstr ""
+"از این اسنیپت استفاده کنید تا محتوایتان را در قالبی مانند نمایش اسلاید ارائه"
+" دهید. درباره محصولات و خدمات اینجا ننویسید، درباره راه حل اینجا بنویسید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
 #, python-format
 msgid "Use this template"
-msgstr ""
+msgstr "از این قالب استفاده کن "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
 msgid "Use this theme"
-msgstr "این تم استفاده کن"
+msgstr "از این تم استفاده کن"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
@@ -12136,46 +12291,48 @@ msgid ""
 "Use this timeline as a part of your resume, to show your visitors what "
 "you've done in the past."
 msgstr ""
+"این جدول زمانی را در بخشی از رزومه‌تان استفاده کنید تا به بازدیدکنندگان خود "
+"آنچه را در گذشته انجام داده‌اید، نشان دهید. "
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_key
 msgid "Used in FormBuilder Registry"
-msgstr ""
+msgstr "در رجیستری فرم‌ساز کاربرد دارد"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page content"
-msgstr ""
+msgstr "در محتوای صفحه به کار رفته است"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page description"
-msgstr ""
+msgstr "در توصیف صفحه به کار رفته است"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page first level heading"
-msgstr ""
+msgstr "در عنوان رده اول صفحه به کار رفته است"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page second level heading"
-msgstr ""
+msgstr "در عنوان رده دوم صفحه به کار رفته است"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Used in page title"
-msgstr ""
+msgstr "در عنوان صفحه به کار رفته است"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -12183,6 +12340,8 @@ msgid ""
 "Used to collect information about your interactions with the website, the pages you've seen,\n"
 "                                                and any specific marketing campaign that brought you to the website."
 msgstr ""
+"برای جمع‌آوری اطلاعات تعاملات شما با وبسایت، صفحاتی که دیده‌اید، \n"
+"و هر نوع کمپین بازاریابی خاصی که شما را به وبسایت آورده، استفاده می‌شد."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -12190,16 +12349,18 @@ msgid ""
 "Used to make advertising more engaging to users and more valuable to publishers and advertisers,\n"
 "                                                such as providing more relevant ads when you visit other websites that display ads or to improve reporting on ad campaign performance."
 msgstr ""
+"برای جذاب‌تر کردن تبلیغات برای کاربران و ارزشمندتر کردن تبلیغات برای ناشران و تبلیغ‌کنندگان استفاده می‌شد،\n"
+"مانند ارائه تبلیغات مرتبط‌ترهنگام بازدید دیگر وبسایت‌هایی که تبلیغات را نمایش می‌دهند و یا برای بهبود گزارش‌دهی از عملکرد کمپین تبلیغاتی. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Useful Links"
-msgstr ""
+msgstr "لینک‌های مفید"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
 msgid "Useful options"
-msgstr ""
+msgstr "گزینه‌های کاربردی"
 
 #. module: website
 #: model:ir.model,name:website.model_res_users
@@ -12214,7 +12375,7 @@ msgstr "کاربران"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Utilities &amp; Typography"
-msgstr ""
+msgstr "Utilities &amp; طراحی حروف"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -12224,12 +12385,12 @@ msgstr "مقدار"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
 msgid "Vegetable Salad, Beef Burger and Mango Ice Cream"
-msgstr ""
+msgstr "سالاد سبزیجات، برگر گوشت گاو و بستنی انبه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Vert. Alignment"
-msgstr ""
+msgstr "تراز. عمودی"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -12389,7 +12550,7 @@ msgstr "صفحات بازدید شده"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_track_ids
 msgid "Visited Pages History"
-msgstr ""
+msgstr "تاریخچه صفحات وب بازدیدشده"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visitor_id
@@ -12401,22 +12562,22 @@ msgstr "بازدید کننده"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_graph
 msgid "Visitor Page Views"
-msgstr ""
+msgstr "بازدید صفحات وب بازدیدکننده"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_tree
 msgid "Visitor Page Views History"
-msgstr ""
+msgstr "تاریخچه بازدید از صفحات وب بازدیدکننده"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_track_view_graph
 msgid "Visitor Views"
-msgstr ""
+msgstr "بازدیدهای بازدیدکننده"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_track_view_tree
 msgid "Visitor Views History"
-msgstr ""
+msgstr "تاریخچه بازدید بازدیدکنندگان "
 
 #. module: website
 #: model:ir.actions.act_window,name:website.website_visitors_action
@@ -12438,6 +12599,8 @@ msgstr "بازدیدها"
 msgid ""
 "Wait for visitors to come to your website to see the pages they viewed."
 msgstr ""
+"منتظر بازدیدکنندگانی از وبسایتتان باشید تا صفحاتی را که بازدید کرده‌اند، "
+"ببینید. "
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
@@ -12445,6 +12608,8 @@ msgid ""
 "Wait for visitors to come to your website to see their history and engage "
 "with them."
 msgstr ""
+"منتظر بازدیدکنندگانی از وبسایتتان باشید که تاریخچه‌شان را ببینید و با آنها "
+"تعامل کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -12460,12 +12625,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_4_s_cover
 msgid "We Are Coming Soon"
-msgstr ""
+msgstr "به زودی می‌آییم"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_5_s_banner
 msgid "We Are Down for Maintenance"
-msgstr ""
+msgstr "تعمیرات را انجام دادیم"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -12473,6 +12638,8 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.\n"
 "                            <br/><br/>Our products are designed for small to medium size companies willing to optimize their performance."
 msgstr ""
+"ما تیمی از افراد پرشور هستیم که هدفمان بهبود زندگی افراد از طریق ارائه محصولات تحول‌آفرین است. ما محصولاتی عالی برای مشکلات کسب و کار شما می‌سازیم. \n"
+"<br/><br/> محصولات ما برای شرکت‌هایی با اندازه کوچک تا متوسط طراحی شدند که فصد دارند عملکرد خود را بهینه کنند. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
@@ -12482,6 +12649,10 @@ msgid ""
 "problems. Our products are designed for small to medium size companies "
 "willing to optimize their performance."
 msgstr ""
+"ما تیمی از افراد پرشور هستیم که هدفمان بهبود زندگی افراد از طریق ارائه خدمات"
+" تحول‌آفرین است. ما محصولاتی عالی می‌سازیم که مشکلات کسب و کار شما را حل "
+"کند. محصولات ما برای شرکت‌هایی با اندازه کوچک تا متوسط طراحی شدند که به "
+"دنبال بهینه‌سازی عملکرد خود هستند. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
@@ -12489,16 +12660,18 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's "
 "life.<br/>Our services are designed for small to medium size companies."
 msgstr ""
+"ما تیمی از افراد پرشور هستیم که هدفمان بهبود زندگی همه افراد است. <br/> "
+"خدمات ما برای کسب و کارهایی با اندازه کوچک تا متوسط طراحی شده است. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
 msgid "We are almost done!"
-msgstr ""
+msgstr "کار ما تقریبا به پایان رسیده است!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references
 msgid "We are in good company."
-msgstr ""
+msgstr "ما در شرایط مشابهی هستیم. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_image
@@ -12507,13 +12680,16 @@ msgid ""
 "understanding your fitness aspirations, your current lifestyle, and any "
 "challenges you face."
 msgstr ""
+"ما بر این باوریم که مسیر سیدن به تناسب اندام برای هر شخص منحصر به فرد است. "
+"رویکرد ما با درک صحیح از اهداف تناسب اندام شما، سبک زندگی کنونی شما، و تمام "
+"چالش‌های روبروی شما آغاز می‌شود.  "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
 #, python-format
 msgid "We couldn't find the Facebook page"
-msgstr ""
+msgstr "قادر به یافتن صفحه فیسبوک نبودیم. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -12521,6 +12697,8 @@ msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
 "standard for compliance."
 msgstr ""
+"ما در حال حاضر هشدار \"عدم ردیابی\" را پشتیبانی نمی‌کنیم چراکه هیچ استاندارد"
+" صنفی برای دستورالعمل نظارت وجود ندارد. "
 
 #. module: website
 #. odoo-javascript
@@ -12535,6 +12713,8 @@ msgid ""
 "We may not be able to provide the best service to you if you reject those "
 "cookies, but the website will work."
 msgstr ""
+"اگر شما استفاده از این کوکی‌ها را رد کنید، ممکن است نتوانیم بهترین خدمات را "
+"به شما ارائه دهیم اما وبسایت همچنان کار خواهد کرد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
@@ -12542,11 +12722,13 @@ msgid ""
 "We monitor your progress meticulously, adjusting your plan as needed to "
 "ensure continuous improvement and results."
 msgstr ""
+"ما پیشرفت شما را به دقت زیر نظر داریم و برنامه شما را بر اساس نیاز تنظیم "
+"می‌کنیم تا بهبود و نتایج مستمر را تضمین کنیم."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid "We offer tailor-made products according to your needs and your budget."
-msgstr ""
+msgstr "ما بر اساس نیازها و بودجه شما، محصولات مناسبتان را ارائه می‌کنیم. "
 
 #. module: website
 #. odoo-javascript
@@ -12556,6 +12738,9 @@ msgid ""
 "We use cookies to provide improved experience on this website. You can learn"
 " more about our cookies and how we use them in our"
 msgstr ""
+"ما از کوکی‌ها برای بهبود تجربه کاربری در این وبسایت استفاده می‌کنیم. شما "
+"می‌توانید با مراجعه به ... ما درباره کوکی‌ها و شیوه استفاده ما از آنها، "
+"بیشتر بدانید.  "
 
 #. module: website
 #. odoo-javascript
@@ -12564,6 +12749,8 @@ msgstr ""
 msgid ""
 "We use cookies to provide you a better user experience on this website."
 msgstr ""
+"برای فراهم کردن تجربه کاربری بهتر در این وبسایت، از کوکی‌ها استفاده می‌کنیم."
+" "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -12575,7 +12762,7 @@ msgstr "به زودی با شما تماس خواهیم گرفت."
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "We'll set you up and running in"
-msgstr ""
+msgstr "ما نرم افزار شما را راه اندازی و تنظیم کرده و آن را اجرا خواهیم کرد "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_text_image
@@ -12583,11 +12770,13 @@ msgid ""
 "We're driven by the aspiration to redefine industry standards, to exceed the"
 " expectations of our clients, and to foster a culture of continuous growth."
 msgstr ""
+"ما با تکیه بر آرمان‌هایی برای بازتعریف استانداردهای صنعت پیش می‌رویم تا پا "
+"را فراتر از انتظارات مشتریانمان گذاشته , فرهنگ رشد مستمر را ترویج کنیم. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 msgid "Web Visitors"
-msgstr "بازدید کنندگان وب"
+msgstr "بازدیدکنندگان وب"
 
 #. module: website
 #. odoo-javascript
@@ -12633,22 +12822,22 @@ msgstr "تارنما"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_company_id
 msgid "Website Company"
-msgstr ""
+msgstr "شرکت وبسایت"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__website_config_preselection
 msgid "Website Config Preselection"
-msgstr ""
+msgstr "پیش‌انتخاب پیکربندی وبسایت "
 
 #. module: website
 #: model:ir.actions.client,name:website.website_configurator
 msgid "Website Configurator"
-msgstr ""
+msgstr "پیکربندی وبسایت"
 
 #. module: website
 #: model:ir.model,name:website.model_website_configurator_feature
 msgid "Website Configurator Feature"
-msgstr ""
+msgstr "ویژگی پیکربندی وبسایت "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_domain
@@ -12659,7 +12848,7 @@ msgstr "دامنه وبسایت"
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_domain_unique
 msgid "Website Domain should be unique."
-msgstr ""
+msgstr "نام دامنه وبسایت باید منحصر به فرد باشد. "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
@@ -12669,7 +12858,7 @@ msgstr "فاوآیکون وبسایت"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_key
 msgid "Website Form Key"
-msgstr ""
+msgstr "کلید فرم وبسایت "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.ir_model_view
@@ -12679,7 +12868,7 @@ msgstr "فرم‌های وبسایت"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Info"
-msgstr ""
+msgstr "اطلاعات وبسایت"
 
 #. module: website
 #. odoo-javascript
@@ -12704,12 +12893,12 @@ msgstr "تنظیمات منوهای وبسایت"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_controller_pages_form_view
 msgid "Website Model Page Settings"
-msgstr ""
+msgstr "تنظیمات صفحات نمونه وبسایت"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_controller_pages_list
 msgid "Website Model Pages"
-msgstr ""
+msgstr "صفحات نمونه وبسایت"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
@@ -12745,7 +12934,7 @@ msgstr "مسیر وبسایت"
 #. module: website
 #: model:ir.actions.client,name:website.website_preview
 msgid "Website Preview"
-msgstr ""
+msgstr "پیش نمایش تارنما/وبسایت"
 
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
@@ -12755,12 +12944,12 @@ msgstr "میکسین منتشر شده وبسایت"
 #. module: website
 #: model:ir.model,name:website.model_website_searchable_mixin
 msgid "Website Searchable Mixin"
-msgstr ""
+msgstr "میکسین Mixin قابل جستجوی وبسایت"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
 msgid "Website Settings"
-msgstr "تنظیمات وبسایت"
+msgstr "تنظیمات تارنما/وبسایت"
 
 #. module: website
 #: model:ir.model,name:website.model_website_snippet_filter
@@ -12770,12 +12959,12 @@ msgstr "فیلتر قطعه وب سایت"
 #. module: website
 #: model:ir.model,name:website.model_theme_website_menu
 msgid "Website Theme Menu"
-msgstr "منوی تم وبسایت"
+msgstr "منوی تم تارنما/وبسایت"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_website_page
 msgid "Website Theme Page"
-msgstr "صفحه تم وبسایت"
+msgstr "صفحه تم تارنما/وبسایت"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__website_url
@@ -12798,19 +12987,19 @@ msgstr "Url وبسایت"
 #: model:ir.model,name:website.model_website_visitor
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Website Visitor"
-msgstr "بازدید کننده وبسایت"
+msgstr "بازدید کننده تارنما/وبسایت"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "Website Visitor #%s"
-msgstr "بازدید کننده وبسایت #%s"
+msgstr "بازدید کننده تارنما/وبسایت #%s"
 
 #. module: website
 #: model:ir.actions.server,name:website.website_visitor_cron_ir_actions_server
 msgid "Website Visitor : clean inactive visitors"
-msgstr ""
+msgstr "بازدیدکننده تارنما/وبسایت: بازدیدکنندگان غیرفعال"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -12826,7 +13015,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_tree
 msgid "Website menu"
-msgstr "منوی وبسایت"
+msgstr "منوی تارنما/وبسایت"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_description
@@ -12850,7 +13039,7 @@ msgstr "کلیدواژه‌های متا وبسایت"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_title
 msgid "Website meta title"
-msgstr "عنوان متا وبسایت"
+msgstr "عنوان متای تارنما/وبسایت"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_og_img
@@ -12878,12 +13067,12 @@ msgstr "بازنویس های وبسایت"
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_analytics
 msgid "Website: Analytics"
-msgstr ""
+msgstr "تارنما/وبسایت: آنالیتیکس"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
 msgid "Website: Dashboard"
-msgstr "وبسایت: داشبورد"
+msgstr "تارنما/وبسایت: داشبورد"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_list
@@ -12891,17 +13080,17 @@ msgstr "وبسایت: داشبورد"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_numbers
 #: model_terms:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
-msgstr "وبسایتها"
+msgstr "تارنماها/وبسایتها"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_language_install__website_ids
 msgid "Websites to translate"
-msgstr "وبسایت برای ترجمه"
+msgstr "تارنما/وبسایت برای ترجمه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Weight Loss Transformation"
-msgstr ""
+msgstr "تحول کاهش وزن"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_2nd
@@ -12911,6 +13100,9 @@ msgid ""
 "support, we're committed to helping you achieve lasting results that align "
 "with your aspirations."
 msgstr ""
+"به مجموعه خدمات جامع مربیگری تناسب اندام اختصاصی ما خوش آمدید، ما با ارائه "
+"تمرینات ورزشی شخصی، برنامه‌های تغذیه سفارشی، و پشتیبانی بی‌دریغ، متعهد کمک "
+"به شما هستیم تا به نتایج پایداری دست یابید که با آرمان‌های شما همسو هستند. "
 
 #. module: website
 #. odoo-javascript
@@ -12922,17 +13114,17 @@ msgstr "خوشآمدگویی به"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Wellness Coaching"
-msgstr ""
+msgstr "مربیگری تربیت بدنی و سلامت "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_text_block_h2
 msgid "What Makes Me Proud"
-msgstr ""
+msgstr "آنچه که باعث افتخار من است "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "What you see is what you get"
-msgstr ""
+msgstr "آنچه می‌بینید، چیزی است که به دست می‌آورید "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_share
@@ -12948,17 +13140,17 @@ msgstr "عرض"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 msgid "Win $20"
-msgstr ""
+msgstr "20$ برنده شو"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
 msgid "Wireless Freedom"
-msgstr ""
+msgstr "آزادی از سیم و کابل"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__password
 msgid "With Password"
-msgstr ""
+msgstr "با گذرواژه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
@@ -12967,11 +13159,14 @@ msgid ""
 " support, you'll shed unwanted pounds while building healthy habits that "
 "last."
 msgstr ""
+"با برنامه‌های تناسب اندام مختص یک شخص، با راهنمایی‌های تغذیه‌ای متناسب با "
+"فرد، و با پشتیبانی مداوم، اضافه وزن‌ ناخواسته را کم کرده و همزمان عادات "
+"غذایی سالمی را بسازید که ماندگار هستند."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Women"
-msgstr "زن"
+msgstr "زنان"
 
 #. module: website
 #. odoo-javascript
@@ -12981,6 +13176,8 @@ msgid ""
 "Would you like to save before being redirected? Unsaved changes will be "
 "discarded."
 msgstr ""
+"آیا مایل هستید پیش از تغییر مسیر، ذخیره کنید؟ تغییرات ذخیره نشده، کنار "
+"گذاشته خواهند شد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote
@@ -12989,13 +13186,13 @@ msgid ""
 "Write a quote here from one of your customers. Quotes are a great way to "
 "build confidence in your products or services."
 msgstr ""
-"یک نقل قول توسط یکی از مشتریان خود را در اینجا بنویسید. نقل قول ها روشی عالی"
-" برای ایجاد اعتماد برای محصولات یا خدمات شما است."
+"یک نقل قول از طرف یکی از مشتریان خود را در اینجا بنویسید. نوشتن نقل قول‌ها "
+"روشی عالی برای ایجاد اعتماد برای محصولات یا خدمات شما است."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Write one or two paragraphs describing your product or services."
-msgstr ""
+msgstr "برای توصیف محصول یا خدمات خود، یک یا دو پاراگراف بنویسید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
@@ -13004,6 +13201,8 @@ msgid ""
 "Write one or two paragraphs describing your product or services. To be "
 "successful your content needs to be useful to your readers."
 msgstr ""
+"با یک یا دو پاراگراف محصول یا خدمات خود را توصیف کنید. برای موفقیت، محتوای "
+"شما باید برای خوانندگانتان مفید باشد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_cover
@@ -13011,6 +13210,8 @@ msgid ""
 "Write one or two paragraphs describing your product, services or a specific "
 "feature. To be successful your content needs to be useful to your readers."
 msgstr ""
+"با یک یا دو پاراگراف محصول، خدمات و یا ویژگی خاص خود را توصیف کنید. برای "
+"موفقیت، محتوای شما باید برای خوانندگان شما مفید باشد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
@@ -13051,6 +13252,9 @@ msgid ""
 "%s ). This is necessary to edit or view your website from the Website app. "
 "You might need to log back in."
 msgstr ""
+"شما در آستانه هدایت به دامنه پیکربندی شده برای تارنمای خود هستید ( 1 %s). "
+"ضروری  است تا تارنمای خود را از اپلیکیشن وبسایت مشاهده یا ویرایش کنید. ممکن "
+"است لازم باشد دوباره وارد سامانه شوید."
 
 #. module: website
 #. odoo-javascript
@@ -13065,16 +13269,18 @@ msgid ""
 "You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies.\n"
 "                            Each browser is a little different, so look at your browser's Help menu to learn the correct way to modify your cookies."
 msgstr ""
+"می‌توانید انتخاب کنید تا رایانه‌تان هر بار که یک کوکی ارسال می‌شود به شما هشدار دهد، یا می‌توانید انتخاب کنید که همه کوکی‌ها خاموش شوند.\n"
+"هر مرورگر اندکی متفاوت است، بنابراین به منوی راهنمای مرورگر خود نگاه کنید تا به روش صحیح تنظیم کوکی‌ها پی ببرید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "You can edit colors and backgrounds to highlight features."
-msgstr ""
+msgstr "شما امکان ویرایش رنگ‌ها و پس‌زمینه برای چشمگیر کردن را دارید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "You can edit, duplicate..."
-msgstr ""
+msgstr "شما می‌توانید ویرایش و تکثیر کنید ..."
 
 #. module: website
 #. odoo-python
@@ -13090,20 +13296,22 @@ msgstr "شما نمی توانید دو کاربر با نام ورود یکسا
 #, python-format
 msgid "You can only use template prefixed by dynamic_filter_template_ "
 msgstr ""
+"شما تنها می‌توانید از قالبی با پیشوند dynamic_filter_template_  استفاده "
+"کنید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't duplicate the submit button of the form."
-msgstr ""
+msgstr "شما نمی‌توانید دکمه ارسال/اظهار فرم را تکثیر کنید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't remove the submit button of the form"
-msgstr ""
+msgstr "نمی‌توانید دکمه ارسال/اظهار فرم را حذف کنید"
 
 #. module: website
 #. odoo-python
@@ -13112,6 +13320,8 @@ msgstr ""
 msgid ""
 "You cannot delete default website %s. Try to change its settings instead"
 msgstr ""
+"نمی‌توانید 1 %s پیش‌فرض تارنما را پاک کنید. به جای آن سعی کنید تنظیماتش را "
+"تغییر بدهید. "
 
 #. module: website
 #. odoo-python
@@ -13121,20 +13331,22 @@ msgid ""
 "You cannot delete this website menu as this serves as the default parent "
 "menu for new websites (e.g., /shop, /event, ...)."
 msgstr ""
+"نمی‌توانید منوی این تارنما را پاک کنید زیرا این منوی پیش‌فرض والد برای "
+"تارنماهای جدید است (برای مثال.، /فروشگاه، /رویداد، ...). "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You cannot duplicate this field."
-msgstr ""
+msgstr "امکان تکثیر این فیلد را ندارید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
 #, python-format
 msgid "You didn't provide a valid Facebook link"
-msgstr ""
+msgstr "لینک معتبر از یک صفحه فیسبوک ارائه ندادید."
 
 #. module: website
 #. odoo-python
@@ -13148,7 +13360,7 @@ msgstr "شما حق منتشر کردن/منتشر نکردن را ندارید"
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "You don't have permissions to edit this record."
-msgstr ""
+msgstr "شما اجازه ویرایش این یادداشت را ندارید. "
 
 #. module: website
 #. odoo-javascript
@@ -13165,6 +13377,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "You may opt-out of a third-party's use of cookies by visiting the"
 msgstr ""
+"ممکن است با بازدید از ... ، از استفاده اشخاص ثالث از کوکی‌ها انصراف دهید."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
@@ -13180,14 +13393,14 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_searchbar
 msgid "You will get results from blog posts, products, etc"
-msgstr ""
+msgstr "شما نتایجی را از مطالب بلاگ، از محصلات و غیره، به دست خواهید آورد. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "You'll be able to create your pages later on."
-msgstr ""
+msgstr "شما می‌توانید صفحات خود را بعدا ایجاد کنید. "
 
 #. module: website
 #. odoo-javascript
@@ -13203,7 +13416,7 @@ msgstr "یوتیوب"
 #: code:addons/website/static/src/js/send_mail_form.js:0
 #, python-format
 msgid "Your Company"
-msgstr ""
+msgstr "سازمان شما"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
@@ -13211,6 +13424,8 @@ msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
 "because you did not provided both a filter and a template to use.<br/>"
 msgstr ""
+"ِDynamic Snippet شما اینجا به نمایش گذاشته خواهد شد... این پیام به این دلیل "
+"نمایان شد که شما هم یک فیلتر و هم یک قالب را آماده نکردید. <br/>"
 
 #. module: website
 #. odoo-javascript
@@ -13227,25 +13442,26 @@ msgid ""
 "Your Embed Code snippet doesn't have anything to display. Click on Edit to "
 "modify it."
 msgstr ""
+"قطعه کد نهادینه‌شده شما چیزی برای نمایش ندارد. برای تصحیح آن کلیک کنید. "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 #, python-format
 msgid "Your Name"
-msgstr "نام"
+msgstr "نام شما"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 #, python-format
 msgid "Your Question"
-msgstr ""
+msgstr "سوال شما"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_title
 msgid "Your Site Title"
-msgstr ""
+msgstr "عنوان وبسایت شما"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
@@ -13253,6 +13469,8 @@ msgid ""
 "Your brand is your story. We help you tell it through cohesive visual "
 "identity and messaging that resonates with your audience."
 msgstr ""
+"برند شما داستان شماست. ما به شما کمک می‌کنیم تا از طریق هویت بصری منسجم و "
+"پیام‌هایی که با مخاطبانتان همخوانی دارد، این داستان را تعریف کنید. "
 
 #. module: website
 #. odoo-javascript
@@ -13260,6 +13478,7 @@ msgstr ""
 #, python-format
 msgid "Your changes might be lost during future Odoo upgrade."
 msgstr ""
+"در به روزرسانی‌های آتی اودوو، امکان از دست رفتن تغییرات شما وجود دارد. "
 
 #. module: website
 #. odoo-javascript
@@ -13281,12 +13500,16 @@ msgid ""
 "Your experience may be degraded if you discard those cookies, but the "
 "website will still work."
 msgstr ""
+"اگر کوکی‌ها را حذف کنید، ممکن است تجربه کاربری شما تنزل پیدا کند اما تارنما "
+"همچنان کار خواهد کرد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_instagram_page_options
 msgid ""
 "Your instagram page must be public to be integrated into an Odoo website."
 msgstr ""
+"صفحه اینستاگرام شما باید عمومی باشد تا بتوان آن را در یک تارنمای اودوو ادغام"
+" کرد. "
 
 #. module: website
 #. odoo-javascript
@@ -13294,6 +13517,7 @@ msgstr ""
 #, python-format
 msgid "Your modifications were saved to apply this option."
 msgstr ""
+"اصلاحاتی که انجام داده‌اید برای اعمال کردن بر روی این گزینه ذخیره شد. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
@@ -13333,6 +13557,8 @@ msgid ""
 "__gads (Google)<br/>\n"
 "                                            __gac (Google)"
 msgstr ""
+"<br/>__gads (Google)\n"
+" __gac (Google)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -13342,6 +13568,10 @@ msgid ""
 "                                            _gid (Google)<br/>\n"
 "                                            _gac_* (Google)"
 msgstr ""
+"<br/>_ga (Google)\n"
+"<br/> _gat (Google)\n"
+"<br/>_gid (Google)\n"
+" _gac_* (Google)"
 
 #. module: website
 #. odoo-javascript
@@ -13369,7 +13599,7 @@ msgstr "یک تصویر جدید"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "a pre-made Palette"
-msgstr "یک پلت از پیش ساخته شده "
+msgstr "یک پالت از پیش ساخته شده "
 
 #. module: website
 #. odoo-javascript
@@ -13390,7 +13620,7 @@ msgstr "یک تارنمای رویداد "
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 #, python-format
 msgid "an online store"
-msgstr "در فروشگاه آنلاین"
+msgstr "یک فروشگاه آنلاین"
 
 #. module: website
 #. odoo-javascript
@@ -13404,7 +13634,7 @@ msgstr "و"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "and copy paste the address of the font page here."
-msgstr "نشانی صفحه اول را در اینجا کپی پیست کنید. "
+msgstr "نشانی اینترنتی صفحه فونت را رونویسی کرده و در اینجا جایگذاری کنید. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -13416,33 +13646,33 @@ msgstr "بزرگ"
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "blog"
-msgstr ""
+msgstr "بلاگ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "breadcrumb"
-msgstr "خرده نان"
+msgstr "بردکرامب"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "btn-outline-primary"
-msgstr ""
+msgstr "btn-outline-primary"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "btn-outline-secondary"
-msgstr ""
+msgstr "btn-outline-secondary"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "btn-primary"
-msgstr ""
+msgstr "btn-primary"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "btn-secondary"
-msgstr ""
+msgstr "btn-secondary"
 
 #. module: website
 #. odoo-javascript
@@ -13474,7 +13704,7 @@ msgstr "نقل قول کردن"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "columns, description"
-msgstr "ستون‌ها، توصیفات"
+msgstr "ستون‌ها، توصیف"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -13508,18 +13738,18 @@ msgstr "برند را توسعه بدهید "
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 #, python-format
 msgid "e-learning platform"
-msgstr ""
+msgstr "پلتفرم آموزش الکترونیک "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "e.g. /my-awesome-page"
-msgstr ""
+msgstr "برای مثال:  /my-awesome-page"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
 msgid "e.g. De Brouckere, Brussels, Belgium"
-msgstr ""
+msgstr "برای مثال: De Brouckere, Brussels, Belgium"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -13529,12 +13759,12 @@ msgstr "برای مثال: صفحه اصلی "
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
 msgid "eCommerce"
-msgstr "تجارت الکترونیکی"
+msgstr "تجارت الکترونیک"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
-msgstr "آموزش الکترونیکی"
+msgstr "آموزش الکترونیک"
 
 #. module: website
 #. odoo-python
@@ -13636,7 +13866,7 @@ msgstr "قهرمان، جامبرتون/ جعبه ویژه"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "https://fonts.google.com/specimen/Roboto"
-msgstr ""
+msgstr "https://fonts.google.com/specimen/Roboto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -13656,6 +13886,10 @@ msgid ""
 "                                            utm_source (Odoo)<br/>\n"
 "                                            utm_medium (Odoo)"
 msgstr ""
+"<br/>im_livechat_previous_operator_pid (Odoo)\n"
+"<br/> utm_campaign (Odoo)\n"
+"<br/> utm_source (Odoo)\n"
+" utm_medium (Odoo)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -13717,7 +13951,7 @@ msgstr "قالب‌بندی آجری، مشبّک"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
-msgstr "منو، قیمتگذاری"
+msgstr "منو، قیمت‌گذاری"
 
 #. module: website
 #. odoo-javascript
@@ -13729,7 +13963,7 @@ msgstr "بدون مقدار"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "o-color-"
-msgstr ""
+msgstr "o-color-"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_instagram_page_options
@@ -13760,7 +13994,7 @@ msgstr "فروشگاه آنلاین"
 #: code:addons/website/static/src/systray_items/edit_website.js:0
 #, python-format
 msgid "or edit master"
-msgstr ""
+msgstr "ویرایش استادانه"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -13785,14 +14019,14 @@ msgstr "تلفن"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "placeholder"
-msgstr "مکان‌نما"
+msgstr "جایگاه متن "
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 #, python-format
 msgid "pointer to build the perfect page in 7 steps."
-msgstr "اشاره‌گر برای ساخت یک صفحه کامل تنها در 7 گام."
+msgstr "اشاره‌گر ماوس برای ساخت یک صفحه کامل تنها در 7 گام."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

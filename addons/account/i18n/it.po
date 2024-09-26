@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-14 16:15+0000\n"
+"POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -7047,6 +7047,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"La formula nel modulo  line_code.expression_label. Questo permette di "
+"configurare l'etichetta del riporto per quest'espressione (su un'espressione"
+" etichettata come _carryover_*), in caso differisca dalla riga principale."
 
 #. module: account
 msgid ""
@@ -15473,6 +15476,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Questo registro è associato a un metodo di pagamento. Non è possibile "
+"archiviarlo"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -16040,6 +16053,13 @@ msgstr "Prezzo unitario:"
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
 msgstr "Unità di misura"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/template_generic_coa.py:0
+#, python-format
+msgid "United States of America (Generic)"
+msgstr "Stati Uniti d'America (Generico)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16685,6 +16705,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"Quando si indica un'espressione per il riporto, l'etichetta dell'espressione"
+" deve iniziare con _applied_carryover_"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -17538,6 +17560,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"Non è possibile utilizzare il campo carryover_target in un'espressione che "
+"non ha l'etichetta che inizia con _carryover_"
 
 #. module: account
 #. odoo-python
