@@ -490,6 +490,15 @@ export class PosStore extends Reactive {
     }
 
     async afterProcessServerData() {
+        // Adding the not synced paid orders to the pending orders
+        const paidUnsyncedOrderIds = this.models["pos.order"]
+            .filter((order) => order.isUnsyncedPaid)
+            .map((order) => order.id);
+
+        if (paidUnsyncedOrderIds.length > 0) {
+            this.addPendingOrder(paidUnsyncedOrderIds);
+        }
+
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
 
         if (!this.config.module_pos_restaurant) {
