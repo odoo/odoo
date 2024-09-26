@@ -457,7 +457,7 @@ class SaleOrder(models.Model):
     def _compute_amounts(self):
         """Compute the total amounts of the SO."""
         for order in self:
-            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order_lines = order._get_amounts_order_lines()
 
             if order.company_id.tax_calculation_rounding_method == 'round_globally':
                 tax_results = self.env['account.tax']._compute_taxes([
@@ -883,6 +883,9 @@ class SaleOrder(models.Model):
             return self.env.ref('sale.email_template_edi_sale', raise_if_not_found=False)
         else:
             return self._get_confirmation_template()
+
+    def _get_amounts_order_lines(self):
+        return self.order_line.filtered(lambda x: not x.display_type)
 
     def _get_confirmation_template(self):
         """ Get the mail template sent on SO confirmation (or for confirmed SO's).
