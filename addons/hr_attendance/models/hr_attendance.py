@@ -118,6 +118,7 @@ class HrAttendance(models.Model):
                                   as date)) = date_trunc('day', ot.date)
                    AND att.employee_id = ot.employee_id
                    AND att.employee_id IN %s
+                   AND ot.adjustment IS false
               ORDER BY att.check_in DESC
             ''', (tuple(self.employee_id.ids),))
             a = self.env.cr.dictfetchall()
