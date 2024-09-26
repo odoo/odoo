@@ -88,6 +88,9 @@ export class PosOrder extends Base {
         return this.state !== "draft";
     }
 
+    get isUnsyncedPaid() {
+        return this.finalized && typeof this.id === "string";
+    }
     getEmailItems() {
         return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
     }
