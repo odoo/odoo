@@ -14,12 +14,13 @@ import {
     getAdjacents,
     selectElements,
 } from "@html_editor/utils/dom_traversal";
-import { childNodeIndex } from "@html_editor/utils/position";
+import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { getListMode, switchListMode } from "@html_editor/utils/list";
+import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 
 function isListActive(listMode) {
     return (selection) => {
@@ -30,7 +31,7 @@ function isListActive(listMode) {
 
 export class ListPlugin extends Plugin {
     static name = "list";
-    static dependencies = ["tabulation", "split", "selection", "delete", "dom"];
+    static dependencies = ["tabulation", "split", "selection", "delete", "dom", "color"];
     /** @type { (p: ListPlugin) => Record<string, any> } */
     static resources = (p) => ({
         handle_delete_backward: { callback: p.handleDeleteBackward.bind(p), sequence: 10 },
@@ -38,6 +39,8 @@ export class ListPlugin extends Plugin {
         handle_tab: { callback: p.handleTab.bind(p), sequence: 10 },
         handle_shift_tab: { callback: p.handleShiftTab.bind(p), sequence: 10 },
         split_element_block: { callback: p.handleSplitBlock.bind(p) },
+        colorApply: p.applyListColor.bind(p),
+        formatSelection: p.applyListFormat.bind(p),
         toolbarCategory: {
             id: "list",
             sequence: 30,
@@ -270,6 +273,7 @@ export class ListPlugin extends Plugin {
                 this.mergeSimilarLists,
                 this.normalizeLI,
                 this.normalizeNestedList,
+                this.normalizeListStyle,
             ]) {
                 fn.call(this, element);
             }
@@ -418,6 +422,33 @@ export class ListPlugin extends Plugin {
         }
     }
 
+    normalizeListStyle(element) {
+        element = closestElement(element, "ul, ol");
+        if (
+            ![...descendants(element)].filter((n) => n.nodeName !== "LI").every((n) => !isBlock(n))
+        ) {
+            const doesHasClass = [...FONT_SIZE_CLASSES].find((ele) =>
+                element.classList.contains(ele)
+            );
+            const doesHasSize = element.style.fontSize;
+            const cursors = this.shared.preserveSelection();
+            this.shared.setSelection({
+                anchorNode: element,
+                anchorOffset: 0,
+                focusNode: element,
+                focusOffset: nodeSize(element),
+            });
+            if (doesHasClass) {
+                removeClass(element, ...FONT_SIZE_CLASSES);
+                this.dispatch("FORMAT_FONT_SIZE_CLASSNAME", { className: doesHasClass });
+            } else if (doesHasSize) {
+                this.dispatch("FORMAT_FONT_SIZE", { size: doesHasSize });
+            }
+            cursors.restore();
+            element.style.listStylePosition = "";
+        }
+    }
+
     // --------------------------------------------------------------------------
     // Indentation
     // --------------------------------------------------------------------------
@@ -532,6 +563,9 @@ export class ListPlugin extends Plugin {
         const dir = ul.getAttribute("dir");
         let p;
         let toMove = li.lastChild;
+        const listColor = li.style.color;
+        const ulFontSizeClass = FONT_SIZE_CLASSES.find((n) => ul.classList.contains(n));
+        const ulFontSize = ul.style.fontSize;
         while (toMove) {
             if (isBlock(toMove)) {
                 if (p && isVisible(p)) {
@@ -555,12 +589,26 @@ export class ListPlugin extends Plugin {
         if (p && isVisible(p)) {
             cursors.update(callbacksForCursorUpdate.after(ul, p));
             ul.after(p);
+            this.shared.setSelection({
+                anchorNode: p.firstChild,
+                anchorOffset: 0,
+                focusNode: p.lastChild,
+                focusOffset: nodeSize(p.lastChild),
+            });
         }
         cursors.update(callbacksForCursorUpdate.remove(li));
         li.remove();
         if (!ul.firstElementChild) {
             cursors.update(callbacksForCursorUpdate.remove(ul));
             ul.remove();
+        }
+        if (listColor) {
+            this.dispatch("APPLY_COLOR", { color: listColor, mode: "color" });
+        }
+        if (ulFontSize) {
+            this.dispatch("FORMAT_FONT_SIZE", { size: ulFontSize });
+        } else if (ulFontSizeClass) {
+            this.dispatch("FORMAT_FONT_SIZE_CLASSNAME", { className: ulFontSizeClass });
         }
         cursors.restore();
     }
@@ -742,5 +790,60 @@ export class ListPlugin extends Plugin {
             pointerOffsetY >= checkboxPosition.top &&
             pointerOffsetY <= checkboxPosition.bottom
         );
+    }
+
+    applyListColor(color, mode) {
+        const selectedNodes = new Set(
+            this.shared
+                .getSelectedNodes()
+                .map((n) => closestElement(n, "li"))
+                .filter(Boolean)
+        );
+        if (!selectedNodes.size || mode !== "color") {
+            return;
+        }
+        for (const list of selectedNodes) {
+            if (this.shared.isNodeContentsFullySelected(list)) {
+                [...descendants(list)].map((n) => {
+                    if (n.nodeType === Node.ELEMENT_NODE && n.style.color) {
+                        n.style.color = "";
+                    }
+                });
+                this.shared.colorElement(list, color, mode);
+            }
+        }
+    }
+
+    applyListFormat(formatName, { formatProps } = {}) {
+        const selectedNodes = new Set(
+            this.shared
+                .getSelectedNodes()
+                .map((n) => closestElement(n, "ul, ol"))
+                .filter(Boolean)
+        );
+        if (!selectedNodes.size) {
+            return;
+        }
+        for (const list of selectedNodes) {
+            if (
+                ![...descendants(list)].filter((n) => n.nodeName !== "LI").every((n) => !isBlock(n))
+            ) {
+                continue;
+            }
+            if (this.shared.isNodeContentsFullySelected(list)) {
+                [list, ...descendants(list)].map((n) => {
+                    if (n.nodeType === Node.ELEMENT_NODE) {
+                        removeClass(n, ...FONT_SIZE_CLASSES);
+                    }
+                });
+                if (formatName === "setFontSizeClassName") {
+                    list.classList.add(formatProps.className);
+                } else if (formatName === "fontSize") {
+                    list.style["font-size"] = formatProps.size;
+                }
+                list.style.listStylePosition = "inside";
+                this.dispatch("ADD_STEP");
+            }
+        }
     }
 }
