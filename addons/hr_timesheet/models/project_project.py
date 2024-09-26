@@ -169,7 +169,7 @@ class Project(models.Model):
             project_wo_account = self.filtered(lambda project: not project.account_id)
             if project_wo_account:
                 project_wo_account._create_analytic_account()
-        return super(Project, self).write(values)
+        return super().write(values)
 
     @api.depends('is_internal_project', 'company_id')
     @api.depends_context('allowed_company_ids')
@@ -223,7 +223,7 @@ class Project(models.Model):
     # ----------------------------
 
     def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
+        buttons = super()._get_stat_buttons()
         if not self.allow_timesheets or not self.env.user.has_group("hr_timesheet.group_hr_timesheet_user"):
             return buttons
 

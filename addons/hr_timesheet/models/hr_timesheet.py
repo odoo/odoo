@@ -34,7 +34,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def default_get(self, field_list):
-        result = super(AccountAnalyticLine, self).default_get(field_list)
+        result = super().default_get(field_list)
         if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id']), ('company_id', '=', result.get('company_id', self.env.company.id))], limit=1).id
         if not self._context.get('default_project_id') and self._context.get('is_timesheet'):
@@ -272,7 +272,7 @@ class AccountAnalyticLine(models.Model):
                 raise ValidationError(error_msg)
 
         # 5/ Finally, create the timesheets
-        lines = super(AccountAnalyticLine, self).create(vals_list)
+        lines = super().create(vals_list)
         lines._check_can_create()
         for line, values in zip(lines, vals_list):
             if line.project_id:  # applied only for timesheet
@@ -298,7 +298,7 @@ class AccountAnalyticLine(models.Model):
             values['name'] = '/'
         if 'company_id' in values and not values.get('company_id'):
             del values['company_id']
-        result = super(AccountAnalyticLine, self).write(values)
+        result = super().write(values)
         # applied only for timesheet
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
         return result

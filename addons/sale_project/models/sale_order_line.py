@@ -393,7 +393,7 @@ class SaleOrderLine(models.Model):
             this method allows to retrieve the analytic account which is linked to project or task directly linked
             to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
         """
-        values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
+        values = super()._prepare_invoice_line(**optional_values)
         if not values.get('analytic_distribution'):
             if self.task_id.project_id.account_id:
                 values['analytic_distribution'] = {self.task_id.project_id.account_id.id: 100}

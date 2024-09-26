@@ -11,7 +11,7 @@ class Http(models.AbstractModel):
         """ The widget 'timesheet_uom' needs to know which UoM conversion factor and which javascript
             widget to apply, depending on the current company.
         """
-        result = super(Http, self).session_info()
+        result = super().session_info()
         if self.env.user._is_internal():
             company_ids = self.env.user.company_ids
 
