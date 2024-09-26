@@ -37,6 +37,23 @@ describe("2 columns", () => {
         });
     });
 
+    test("should display the normal hint when cursor is in an empty cell of an empty table in one of the columns", async () => {
+        await testEditor({
+            /* eslint-disable */
+            contentBefore:
+                columnsContainer(
+                    column(6, `<table><tbody><tr><td><p>[]<br></p></td><td><p><br></p></td></tr></tbody></table>`) +
+                    column(6, "<p><br></p>")
+                ),
+            contentAfterEdit:
+                columnsContainer(
+                    column(6, `<table><tbody><tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table>`) +
+                    column(6, `<p><br></p>`)
+                ),
+            /* eslint-enable */
+        });
+    });
+
     test("should do nothing", async () => {
         await testEditor({
             contentBefore: columnsContainer(
