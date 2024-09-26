@@ -240,12 +240,15 @@ class CrmLead(models.Model):
                     })
             lead.write(lead_values)
 
-    def update_contact_details_from_portal(self, values):
+    def _check_update_from_portal(self, values):
         self.check_access_rights('write')
         fields = ['partner_name', 'phone', 'mobile', 'email_from', 'street', 'street2',
             'city', 'zip', 'state_id', 'country_id']
         if any([key not in fields for key in values]):
             raise UserError(_("Not allowed to update the following field(s) : %s.") % ", ".join([key for key in values if not key in fields]))
+
+    def update_contact_details_from_portal(self, values):
+        self._check_update_from_portal(values)
         return self.sudo().write(values)
 
     @api.model
@@ -306,3 +309,8 @@ class CrmLead(models.Model):
                     'url': '/my/opportunity/%s' % record.id,
                 }
         return super(CrmLead, self).get_access_action(access_uid)
+
+    def write(self, vals):
+        if self.user_has_groups('base.group_portal'):
+            self._check_update_from_portal(vals)
+        return super().write(vals)
