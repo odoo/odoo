@@ -34,3 +34,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'chart75010500',
             },
         }
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if company.country_id.code == 'PL':
+            pl_bank_and_cash_tags = self.env["account.account.tag"].search([("country_id.code", "=", "PL"), ("name", "in", ["bs_assets_b_3_1_c_1", "small_bs_assets_b_3_a_1", "micro_bs_assets_b_1"])])
+            pl_bank_and_cash_accounts = self.env["account.account"].search([
+                '&', '|', '|',
+                ("code", "=like", f"{company.bank_account_code_prefix}%"),
+                ("code", "=like", f"{company.cash_account_code_prefix}%"),
+                ("code", "=like", f"{company.transfer_account_code_prefix}%"),
+                ("company_id", "=", company.id),
+            ])
+            pl_bank_and_cash_accounts.tag_ids = pl_bank_and_cash_tags
