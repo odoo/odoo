@@ -287,41 +287,9 @@ def file_open_temporary_directory(env: Environment):
             env.transaction._Transaction__file_open_tmp_paths = ()
 
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # iterables
-#----------------------------------------------------------
-def flatten(list):
-    """Flatten a list of elements into a unique list
-    Author: Christophe Simonis (christophe@tinyerp.com)
-
-    Examples::
-    >>> flatten(['a'])
-    ['a']
-    >>> flatten('b')
-    ['b']
-    >>> flatten( [] )
-    []
-    >>> flatten( [[], [[]]] )
-    []
-    >>> flatten( [[['a','b'], 'c'], 'd', ['e', [], 'f']] )
-    ['a', 'b', 'c', 'd', 'e', 'f']
-    >>> t = (1,2,(3,), [4, 5, [6, [7], (8, 9), ([10, 11, (12, 13)]), [14, [], (15,)], []]])
-    >>> flatten(t)
-    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    """
-    warnings.warn(
-        "deprecated since 18.0",
-        category=DeprecationWarning,
-        stacklevel=2,
-    )
-    r = []
-    for e in list:
-        if isinstance(e, (bytes, str)) or not isinstance(e, collections.abc.Iterable):
-            r.append(e)
-        else:
-            r.extend(flatten(e))
-    return r
-
+# ----------------------------------------------------------
 
 def reverse_enumerate(lst: Sequence[T]) -> Iterator[tuple[int, T]]:
     """Like enumerate but in the other direction
@@ -1322,7 +1290,6 @@ def formatLang(
     value: float | typing.Literal[''],
     digits: int = 2,
     grouping: bool = True,
-    monetary: bool | Sentinel = SENTINEL,
     dp: str | None = None,
     currency_obj=None,
     rounding_method: typing.Literal['HALF-UP', 'HALF-DOWN', 'HALF-EVEN', "UP", "DOWN"] = 'HALF-EVEN',
@@ -1335,8 +1302,6 @@ def formatLang(
     :param float value: The value to be formatted.
     :param int digits: The number of decimals digits.
     :param bool grouping: Usage of language grouping or not.
-    :param bool monetary: Usage of thousands separator or not.
-        .. deprecated:: 13.0
     :param str dp: Name of the decimals precision to be used. This will override ``digits``
                    and ``currency_obj`` precision.
     :param Object currency_obj: Currency to be used. This will override ``digits`` precision.
@@ -1357,8 +1322,6 @@ def formatLang(
     :returns: The value formatted.
     :rtype: str
     """
-    if monetary is not SENTINEL:
-        warnings.warn("monetary argument deprecated since 13.0", DeprecationWarning, 2)
     # We don't want to return 0
     if value == '':
         return ''
