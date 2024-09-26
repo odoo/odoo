@@ -9,6 +9,7 @@ export class KioskBarcodeScanner extends BarcodeScanner {
         barcodeSource: String,
         token: String,
     };
+    static template = "hr_attendance.BarcodeScanner";
     setup() {
         super.setup();
         this.scanBarcode = () => scanBarcode(this.env, this.facingMode, this.props.token);
