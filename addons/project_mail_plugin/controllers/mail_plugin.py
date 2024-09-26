@@ -23,7 +23,7 @@ class MailPluginController(mail_plugin.MailPluginController):
         create tasks, the section won't be visible on the addin side (like if the project
         module was not installed on the database).
         """
-        contact_values = super(MailPluginController, self)._get_contact_data(partner)
+        contact_values = super()._get_contact_data(partner)
 
         if not request.env['project.task'].has_access('create'):
             return contact_values
@@ -49,13 +49,13 @@ class MailPluginController(mail_plugin.MailPluginController):
         return contact_values
 
     def _mail_content_logging_models_whitelist(self):
-        models_whitelist = super(MailPluginController, self)._mail_content_logging_models_whitelist()
+        models_whitelist = super()._mail_content_logging_models_whitelist()
         if not request.env['project.task'].has_access('create'):
             return models_whitelist
         return models_whitelist + ['project.task']
 
     def _translation_modules_whitelist(self):
-        modules_whitelist = super(MailPluginController, self)._translation_modules_whitelist()
+        modules_whitelist = super()._translation_modules_whitelist()
         if not request.env['project.task'].has_access('create'):
             return modules_whitelist
         return modules_whitelist + ['project_mail_plugin']

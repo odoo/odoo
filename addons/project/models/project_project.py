@@ -220,12 +220,12 @@ class Project(models.Model):
             project.is_milestone_deadline_exceeded = milestone.is_deadline_exceeded
 
     def _compute_access_url(self):
-        super(Project, self)._compute_access_url()
+        super()._compute_access_url()
         for project in self:
             project.access_url = f'/my/projects/{project.id}'
 
     def _compute_access_warning(self):
-        super(Project, self)._compute_access_warning()
+        super()._compute_access_warning()
         for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
             project.access_warning = _(
                 "This project is currently restricted to \"Invited internal users\". The project's visibility will be changed to \"invited portal users and all internal users (public)\" in order to make it accessible to the recipients.")
@@ -535,7 +535,7 @@ class Project(models.Model):
             elif (date_end_update and no_current_date_begin and not date_start_update):
                 del vals['date']
 
-        res = super(Project, self).write(vals) if vals else True
+        res = super().write(vals) if vals else True
 
         if 'allow_task_dependencies' in vals and not vals.get('allow_task_dependencies'):
             self.env['project.task'].search([('project_id', 'in', self.ids), ('state', '=', '04_waiting_normal')]).write({'state': '01_in_progress'})
@@ -562,7 +562,7 @@ class Project(models.Model):
             if project.account_id and not project.account_id.line_ids:
                 analytic_accounts_to_delete |= project.account_id
         self.with_context(active_test=False).tasks.unlink()
-        result = super(Project, self).unlink()
+        result = super().unlink()
         analytic_accounts_to_delete.unlink()
         return result
 
@@ -582,7 +582,7 @@ class Project(models.Model):
         User update notification preference of project its propagated to all the tasks that the user is
         currently following.
         """
-        res = super(Project, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+        res = super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         if subtype_ids:
             project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids)
             task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids
@@ -600,7 +600,7 @@ class Project(models.Model):
             self.env['project.collaborator'].search([('partner_id', 'in', partner_ids), ('project_id', 'in', self.ids)]).unlink()
 
     def _alias_get_creation_values(self):
-        values = super(Project, self)._alias_get_creation_values()
+        values = super()._alias_get_creation_values()
         values['alias_model_id'] = self.env['ir.model']._get('project.task').id
         if self.id:
             values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
