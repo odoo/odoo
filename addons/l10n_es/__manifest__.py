@@ -2,7 +2,7 @@
 {
     'name': 'Spain - Accounting (PGCE 2008)',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/spain.html',
-    'version': '5.2',
+    'version': '5.3',
     'icon': '/account/static/description/l10n.png',
     'countries': ['es'],
     'author': 'Spanish Localization Team',
@@ -18,7 +18,7 @@ Spanish charts of accounts (PGCE 2008).
     * Defines templates for sale and purchase VAT
     * Defines tax templates
     * Defines fiscal positions for spanish fiscal legislation
-    * Defines tax reports mod 111, 115 and 303
+    * Defines tax reports mod 111, 115, 130 and 303
 """,
     'depends': [
         'account',
@@ -35,6 +35,7 @@ Spanish charts of accounts (PGCE 2008).
         'views/res_config_settings_views.xml',
         'data/mod111.xml',
         'data/mod115.xml',
+        'data/mod130.xml',
         'data/mod303.xml',
         'data/mod390/mod390_section1.xml',
         'data/mod390/mod390_section2.xml',
