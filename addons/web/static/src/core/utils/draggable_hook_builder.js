@@ -662,8 +662,13 @@ export function makeDraggableHook(hookParams) {
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=1352061
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=339293
                 safePrevent(ev);
-                if (document.activeElement && !document.activeElement.contains(ev.target)) {
-                    document.activeElement.blur();
+                const eventDocument = ev.target.ownerDocument || ("activeElement" in ev.target && ev.target);
+                if (
+                    eventDocument &&
+                    eventDocument.activeElement &&
+                    !eventDocument.activeElement.contains(ev.target)
+                ) {
+                    eventDocument.activeElement.blur();
                 }
 
                 const { currentTarget, pointerId, target } = ev;
