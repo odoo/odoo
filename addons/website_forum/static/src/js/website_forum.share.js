@@ -52,11 +52,15 @@ var ForumShare = publicWidget.registry.socialShare.extend({
         } else if (this.targetType === 'social-alert') {
             $question.before(qweb.render('website.social_alert', {medias: this.socialList}));
         } else {
-            $('body').append(qweb.render('website.social_modal', {
+            this.el.insertAdjacentHTML('beforeend', qweb.render('website.social_modal', {
                 medias: this.socialList,
                 target_type: this.targetType,
                 state: $question.data('state'),
             }));
+            const modalEl = this.el.querySelector('#oe_social_share_modal');
+            modalEl.addEventListener('hidden.bs.modal', () => {
+                modalEl.remove();
+            });
             $('#oe_social_share_modal').modal('show');
         }
     },
@@ -83,7 +87,11 @@ publicWidget.registry.websiteForumShare = publicWidget.Widget.extend({
         // Retrieve stored social data
         if (sessionStorage.getItem('social_share')) {
             var socialData = JSON.parse(sessionStorage.getItem('social_share'));
-            (new ForumShare(this, false, socialData.targetType)).attachTo($(document.body));
+            // Dummy div to attach the ForumShare publicwidget
+            const divEl = document.createElement("div");
+            divEl.classList.add("social-modal");
+            document.body.appendChild(divEl);
+            (new ForumShare(this, false, socialData.targetType)).attachTo(divEl);
             sessionStorage.removeItem('social_share');
         }
         // Display an alert if post has no reply and is older than 10 days
