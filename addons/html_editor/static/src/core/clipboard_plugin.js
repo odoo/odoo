@@ -293,7 +293,7 @@ export class ClipboardPlugin extends Plugin {
      */
     handlePasteText(selection, clipboardData) {
         const text = clipboardData.getData("text/plain");
-        if (this.getResource("handle_paste_text").some((handler) => handler(selection, text))) {
+        if (this.delegateTo("paste_text_overrides", selection, text)) {
             return;
         } else {
             this.pasteText(selection, text);
