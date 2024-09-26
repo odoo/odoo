@@ -198,6 +198,30 @@ def setup_pos_combo_items(self):
         'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
     })
 
+    color_attribute = self.env['product.attribute'].create({
+        'name': 'Color always',
+        'sequence': 4,
+        'create_variant': 'always',
+        'value_ids': [(0, 0, {
+            'name': 'White',
+            'sequence': 1,
+        }), (0, 0, {
+            'name': 'Red',
+            'sequence': 2,
+        })],
+    })
+
+    product_10_template = self.env['product.template'].create({
+        'name': 'Combo Product 10',
+        'list_price': 200,
+        'taxes_id': False,
+        'available_in_pos': True,
+        'attribute_line_ids': [(0, 0, {
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })],
+    })
+
     product_6_combo_line = self.env["pos.combo.line"].create(
         {
             "product_id": combo_product_6.id,
@@ -225,6 +249,20 @@ def setup_pos_combo_items(self):
             "combo_price": 5,
         }
     )
+    product_10_combo_line_1 = self.env["pos.combo.line"].create(
+        {
+            "product_id": product_10_template.product_variant_ids[0].id,
+            "combo_price": 2,
+        }
+    )
+    product_10_combo_line_2 = self.env["pos.combo.line"].create(
+        {
+            "product_id": product_10_template.product_variant_ids[1].id,
+            "combo_price": 2,
+        }
+    )
+    # Archive one variant
+    product_10_template.product_variant_ids[0].write({'active': False})
 
     self.chairs_combo = self.env["pos.combo"].create(
         {
@@ -238,6 +276,8 @@ def setup_pos_combo_items(self):
                         product_7_combo_line.id,
                         product_8_combo_line.id,
                         product_9_combo_line.id,
+                        product_10_combo_line_1.id,
+                        product_10_combo_line_2.id,
                     ],
                 )
             ],

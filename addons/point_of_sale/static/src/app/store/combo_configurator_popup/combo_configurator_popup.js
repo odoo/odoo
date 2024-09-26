@@ -90,6 +90,44 @@ export class ComboConfiguratorPopup extends Component {
         }
     }
 
+    getSelectedComboItems() {
+        const comboItems = this.props.product.combo_ids.flatMap(
+            (comboLine) => comboLine.combo_line_ids
+        );
+
+        return Object.values(this.state.combo)
+            .filter((x) => x) // we only keep the non-zero values
+            .map((x) => {
+                const combo_item_id = comboItems.find((comboItem) => comboItem.id == x);
+                return {
+                    combo_item_id: combo_item_id,
+                    configuration: this.state.configuration[combo_item_id.id],
+                };
+            });
+    }
+
+    isArchived(comboItem) {
+        const product = comboItem.product_id;
+        const archivedCombinations = product._archived_combinations;
+        if (!archivedCombinations) {
+            return false;
+        }
+
+        const productCombination = product.product_template_variant_value_ids.map(
+            (ptav) => ptav.id
+        );
+        return archivedCombinations.some(
+            (archivedCombination) =>
+                JSON.stringify(archivedCombination) === JSON.stringify(productCombination)
+        );
+    }
+
+    isArchivedProductSelected() {
+        return this.getSelectedComboItems().some((comboItem) =>
+            this.isArchived(comboItem.combo_item_id)
+        );
+    }
+
     confirm() {
         this.props.getPayload(this.getSelectedComboLines());
         this.props.close();
