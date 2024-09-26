@@ -99,13 +99,13 @@ export class FontPlugin extends Plugin {
     static name = "font";
     static dependencies = ["split", "selection"];
     resources = {
-        split_element_block: [
+        split_element_block_overrides: [
             this.handleSplitBlockPRE.bind(this),
             this.handleSplitBlockHeading.bind(this),
         ],
         onInput: this.onInput.bind(this),
-        handle_delete_backward: withSequence(20, this.handleDeleteBackward.bind(this)),
-        handle_delete_backward_word: this.handleDeleteBackward.bind(this),
+        delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
+        delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
         toolbarCategory: [
             withSequence(10, {
                 id: "font",
