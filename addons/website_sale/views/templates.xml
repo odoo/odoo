@@ -1870,7 +1870,7 @@
          description_sale. Called in `website_sale.cart_lines`. -->
     <template id="cart_line_description_following_lines" name="Shopping Cart Line Description Following Lines">
         <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
-        <div t-if="description_lines" t-attf-class="text-muted {{div_class}} small">
+        <div t-if="description_lines" t-attf-class="text-muted small">
             <t t-foreach="description_lines" t-as="name_line">
                 <span t-if="name_line" class="d-block" t-out="name_line"/>
             </t>
@@ -1908,9 +1908,7 @@
                         <t t-call="website_sale.cart_line_product_link">
                             <h6 t-field="line.name_short" class="d-inline align-top h6 fw-bold"/>
                         </t>
-                        <t t-call="website_sale.cart_line_description_following_lines">
-                            <t t-set="div_class" t-valuef="d-none d-md-block"/>
-                        </t>
+                        <t t-call="website_sale.cart_line_description_following_lines"/>
                         <div name="o_wsale_cart_line_button_container">
                             <a href='#'
                                class="js_delete_product d-none d-md-inline-block small"
