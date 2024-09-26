@@ -74,6 +74,22 @@ function assertPageCanonicalUrlIs(url) {
         },
     ];
 }
+function assertIsInMenu(url) {
+    return [
+        {
+            content: "Verify is in menu",
+            trigger: `:visible :iframe #top_menu a[href="${url}"]`,
+        },
+    ];
+}
+function assertIsNotInMenu(url) {
+    return [
+        {
+            content: "Verify is not in menu",
+            trigger: `:visible :iframe #top_menu:not(:has(a[href="${url}"]))`,
+        },
+    ];
+}
 
 function checkIsTemplate(isTemplate, pageTitle = undefined) {
     return [
@@ -107,6 +123,23 @@ function checkIsTemplate(isTemplate, pageTitle = undefined) {
     ];
 }
 
+const testEditMenuDialog = [
+    {
+        content: "Open Edit Menu dialog",
+        trigger: '.o_field_widget[name="is_in_menu"] + .btn-link',
+        run: "click",
+    },
+    {
+        content: "Check that menu editor was opened",
+        trigger: ".oe_menu_editor",
+    },
+    {
+        content: "Close Edit Menu dialog",
+        trigger: ".modal:has(.oe_menu_editor) .btn-close",
+        run: "click",
+    },
+];
+
 function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
     if (!modifiedUrl) {
         modifiedUrl = url;
@@ -114,20 +147,6 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
 
     const steps = {
         setup: [
-            {
-                content: "Open Edit Menu dialog",
-                trigger: '.o_field_widget[name="is_in_menu"] + .btn-link',
-                run: "click",
-            },
-            {
-                content: "Check that menu editor was opened",
-                trigger: ".oe_menu_editor",
-            },
-            {
-                content: "Close Edit Menu dialog",
-                trigger: ".modal:has(.oe_menu_editor) .btn-close",
-                run: "click",
-            },
             {
                 content: "Add to menu",
                 trigger: "#is_in_menu_0",
@@ -140,10 +159,7 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
             },
         ],
         check: [
-            {
-                content: "Verify is in menu",
-                trigger: `:visible :iframe #top_menu a[href="${modifiedUrl}"]`,
-            },
+            ...assertIsInMenu(modifiedUrl),
             stepUtils.goToUrl(getClientActionUrl("/")),
             ...assertPageCanonicalUrlIs(modifiedUrl),
             stepUtils.goToUrl(getClientActionUrl(modifiedUrl)),
@@ -161,10 +177,7 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
             },
         ],
         checkTorndown: [
-            {
-                content: "Verify is not in menu",
-                trigger: `:visible :iframe #top_menu:not(:has(a[href="${url}"]))`,
-            },
+            ...assertIsNotInMenu(url),
             stepUtils.goToUrl(getClientActionUrl("/")),
             ...assertPageCanonicalUrlIs("/"),
             stepUtils.goToUrl(getClientActionUrl(url)),
@@ -174,6 +187,7 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
             return [
                 ...openPagePropertiesDialog,
                 ...this.setup,
+                ...testEditMenuDialog,
                 clickOnSaveButtonStep,
                 ...this.check,
                 ...openPagePropertiesDialog,
@@ -208,8 +222,8 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
     return steps;
 }
 
-function testWebsitePageProperties() {
-    const steps = testCommonProperties("/new-page", true, "/cool-page");
+function testWebsitePageProperties(url, title) {
+    const steps = testCommonProperties(url, true, "/cool-page");
     steps.setup.unshift(
         {
             content: "Change page title",
@@ -265,7 +279,7 @@ function testWebsitePageProperties() {
             trigger: ":visible :iframe head title:text(/Cool Page/)",
         },
         ...assertPageCanonicalUrlIs("/cool-page"),
-        stepUtils.goToUrl(getClientActionUrl("/new-page")),
+        stepUtils.goToUrl(getClientActionUrl(url)),
         assertPathName("/cool-page", "body"),
         {
             content: "Verify no index",
@@ -277,7 +291,7 @@ function testWebsitePageProperties() {
         {
             content: "Reset page title",
             trigger: "#name_0",
-            run: `edit New Page`,
+            run: `edit ${title}`,
         },
         {
             content: `Change url back to /new-page`,
@@ -317,11 +331,11 @@ function testWebsitePageProperties() {
     steps.checkTorndown.push(
         {
             content: "Verify page title",
-            trigger: ":visible :iframe head title:text(/New Page/)",
+            trigger: `:visible :iframe head title:text(/${title}/)`,
         },
-        ...assertPageCanonicalUrlIs("/new-page"),
-        stepUtils.goToUrl(getClientActionUrl("/new-page")),
-        assertPathName("/new-page", "body"),
+        ...assertPageCanonicalUrlIs(url),
+        stepUtils.goToUrl(getClientActionUrl(url)),
+        assertPathName(url, "body"),
         {
             content: "Verify is indexed",
             trigger: ':visible :iframe head:not(:has(meta[name="robots"][content="noindex"]))',
@@ -329,6 +343,55 @@ function testWebsitePageProperties() {
         ...checkIsTemplate(false),
     );
     return steps;
+}
+
+function testClonePage(url, title) {
+    const newPageUrl = `${url}-2`; // Automatically set from title
+    return [
+        ...assertIsInMenu(url),
+        ...assertIsNotInMenu(newPageUrl),
+        ...openPagePropertiesDialog,
+        {
+            content: "Click on Clone Page button",
+            trigger: ".modal .o_form_buttons_edit .btn:has(.fa-clone)",
+            run: "click",
+        },
+        {
+            content: `Name page "${title} 2"`,
+            trigger: 'label:text(/Page Name/) + * input[type="text"]',
+            run: `edit ${title} 2`,
+        },
+        {
+            content: "Click on dialog's Ok button",
+            trigger: ".modal-footer .btn:text(/Ok/)",
+            run: "click",
+        },
+        ...assertPageCanonicalUrlIs(newPageUrl),
+        ...assertIsInMenu(newPageUrl),
+    ];
+}
+
+function testDeletePageDeletesWebsiteMenu(url) {
+    return [
+        ...assertIsInMenu(url),
+        ...openPagePropertiesDialog,
+        {
+            content: "Click on Delete Page button",
+            trigger: ".modal .o_form_buttons_edit .btn:has(.fa-trash)",
+            run: "click",
+        },
+        {
+            content: "Check confirmation checkbox",
+            trigger: '.modal-body .o-checkbox:has(.text-warning) input[type="checkbox"]',
+            run: "check",
+        },
+        {
+            content: "Click dialog's Ok button",
+            trigger: ".modal-footer .btn:text(/Ok/)",
+            run: "click",
+        },
+        ...assertIsNotInMenu(url),
+    ];
 }
 
 registerWebsitePreviewTour(
@@ -349,6 +412,8 @@ registerWebsitePreviewTour(
     () => [...testCommonProperties("/test_website/model_item/1", true).finalize()],
 );
 
+const TEST_PAGE_TITLE = "New Page";
+const TEST_PAGE_URL = "/new-page"; // Automatically set from title
 registerWebsitePreviewTour(
     "website_page_properties_website_page",
     {
@@ -365,7 +430,7 @@ registerWebsitePreviewTour(
         {
             content: "Name page",
             trigger: ".modal-body input",
-            run: "edit New Page",
+            run: `edit ${TEST_PAGE_TITLE}`,
         },
         {
             content: "Don't add to menu",
@@ -383,6 +448,24 @@ registerWebsitePreviewTour(
         },
         ...clickOnSave(),
         stepUtils.waitIframeIsReady(),
-        ...testWebsitePageProperties().finalize(),
+        ...testWebsitePageProperties(TEST_PAGE_URL, TEST_PAGE_TITLE).finalize(),
+
+        // Add page to menu for testClonePage and
+        // testDeletePageDeletesWebsiteMenu
+        ...assertIsNotInMenu(TEST_PAGE_URL),
+        ...openPagePropertiesDialog,
+        {
+            content: "Add to menu",
+            trigger: "#is_in_menu_0",
+            run: "check",
+        },
+        clickOnSaveButtonStep,
+        ...assertIsInMenu(TEST_PAGE_URL),
+        stepUtils.waitIframeIsReady(),
+
+        ...testClonePage(TEST_PAGE_URL, TEST_PAGE_TITLE),
+        stepUtils.goToUrl(getClientActionUrl(TEST_PAGE_URL)),
+        stepUtils.waitIframeIsReady(),
+        ...testDeletePageDeletesWebsiteMenu(TEST_PAGE_URL),
     ],
 );

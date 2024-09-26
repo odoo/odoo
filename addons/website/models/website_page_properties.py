@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.tools.translate import _
 
 
 class PagePropertiesBase(models.TransientModel):
@@ -115,6 +117,12 @@ class PagePropertiesBase(models.TransientModel):
         elif 'is_published' in target._fields:
             target.is_published = self.is_published
 
+    @api.constrains('url')
+    def _check_url(self):
+        for record in self.filtered('url'):
+            if not record.url.startswith('/'):
+                raise ValidationError(_("The URL should be relative and start with '/'."))
+
     def _get_ir_ui_view_unpublish_group(self):
         return self.env.ref('base.group_user')
 
@@ -183,7 +191,7 @@ class PageProperties(models.TransientModel):
         if 'url' in vals:
             for record in self:
                 old_url = record.old_url
-                new_url = record.url
+                new_url = vals.get('url') or record.url
                 if old_url != new_url:
                     if vals.get('redirect_old_url'):
                         website_id = vals.get('website_id') or record.website_id.id or False
