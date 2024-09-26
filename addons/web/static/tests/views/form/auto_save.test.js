@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { unload } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockSendBeacon, tick } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockSendBeacon } from "@odoo/hoot-mock";
 import {
     contains,
     defineActions,
@@ -8,6 +8,7 @@ import {
     fieldInput,
     fields,
     getService,
+    hideTab,
     makeServerError,
     models,
     mountView,
@@ -17,18 +18,6 @@ import {
 } from "../../web_test_helpers";
 
 import { WebClient } from "@web/webclient/webclient";
-
-const hideTab = async () => {
-    const prop = Object.getOwnPropertyDescriptor(Document.prototype, "visibilityState");
-    Object.defineProperty(document, "visibilityState", {
-        value: "hidden",
-        configurable: true,
-        writable: true,
-    });
-    document.dispatchEvent(new Event("visibilitychange"));
-    await tick();
-    Object.defineProperty(document, "visibilityState", prop);
-};
 
 onRpc("has_group", () => true);
 
@@ -891,4 +880,151 @@ test("doesn't autosave when in dialog (beacon)", async () => {
     unload();
     await animationFrame();
     expect.verifySteps([]);
+});
+
+test.tags("desktop")(
+    `doesn't autosave when a many2one search more is open (visibility change)`,
+    async () => {
+        Partner._fields.product_id = fields.Many2one({ relation: "product" });
+
+        class Product extends models.Model {
+            name = fields.Char();
+            _records = [
+                { id: 37, name: "xphone" },
+                { id: 41, name: "xpad" },
+            ];
+        }
+
+        Product._views = {
+            form: `
+                <form>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            `,
+            list: `
+                <tree>
+                    <field name="name"/>
+                </tree>
+            `,
+            search: `<search/>`,
+        };
+
+        defineModels([Product]);
+
+        onRpc("web_save", () => {
+            expect.step("should not call web_save");
+        });
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" domain="[]" context="{'lang': 'en_US'}" widget="many2one"/>
+                    </sheet>
+                </form>
+            `,
+            resId: 1,
+        });
+        await contains(`.o_field_many2one_selection .o-autocomplete--input`).click();
+        await contains(`.o_m2o_dropdown_option_search_more`).click();
+        expect(`.modal`).toHaveCount(1);
+        await contains(`.o_create_button`).click();
+        expect(`.modal`).toHaveCount(2);
+        await hideTab();
+        expect.verifySteps([]);
+    }
+);
+
+test(`doesn't autosave when a x2many is in openned (visibility change)`, async () => {
+    Partner._fields.child_ids = fields.One2many({ string: "one2many field", relation: "partner" });
+    Partner._records[0].child_ids = [1, 2];
+    onRpc("web_save", () => {
+        expect.step("web_save");
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="expertise"/>
+                <field name="child_ids">
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <field name="name"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                    <form>
+                        <field name="name"/>
+                    </form>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    await fieldInput("expertise").edit("HR");
+    expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(1);
+
+    await contains(`.o-kanban-button-new`).click();
+    expect(`.modal`).toHaveCount(1);
+    await fieldInput("name").edit("Test McTest");
+
+    await hideTab();
+    await animationFrame();
+    expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(1);
+    expect.verifySteps([]); // should not call web_save
+    await contains(`.o_form_button_save`).click();
+    expect.verifySteps(["web_save"]);
+});
+
+test(`doesn't autosave when a x2many is in openned (visibility change) 2`, async () => {
+    Partner._fields.child_ids = fields.One2many({ string: "one2many field", relation: "partner" });
+    Partner._records[0].child_ids = [1, 2];
+    onRpc("web_save", () => {
+        expect.step("web_save");
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="expertise"/>
+                <field name="child_ids">
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <field name="name"/>
+                            </t>
+                        </templates>
+                    </kanban>
+                    <form>
+                        <field name="name"/>
+                    </form>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    await fieldInput("expertise").edit("HR");
+    expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(1);
+
+    await contains(`.o-kanban-button-new`).click();
+    expect(`.modal`).toHaveCount(1);
+    await fieldInput("name").edit("Test McTest");
+
+    await hideTab();
+    await animationFrame();
+    expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(1);
+    expect.verifySteps([]); // should not call web_save
+    await contains(`.o_dialog .o_form_button_cancel`).click();
+    expect.verifySteps([]); // should not call web_save
+
+    await hideTab();
+    await animationFrame();
+    expect(`.o_form_status_indicator_buttons:not(.invisible)`).toHaveCount(0);
+    expect.verifySteps(["web_save"]);
 });

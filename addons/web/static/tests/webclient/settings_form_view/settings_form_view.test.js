@@ -1,6 +1,6 @@
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { click, edit, queryAllProperties, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineActions,
@@ -8,6 +8,7 @@ import {
     editSearch,
     fields,
     getService,
+    hideTab,
     makeServerError,
     mockService,
     models,
@@ -664,13 +665,7 @@ test("settings views ask for confirmation when leaving if dirty", async () => {
 });
 
 test("Auto save: don't save on closing tab/browser", async () => {
-    expect.assertions(3);
-
-    onRpc("create", (route, { args, model }) => {
-        if (model === "res.config.settings") {
-            expect.notOk(args, "settings should not be saved");
-        }
-    });
+    mockSendBeacon(() => expect.step("sendBeacon"));
     await mountView({
         type: "form",
         resModel: "res.config.settings",
@@ -697,6 +692,38 @@ test("Auto save: don't save on closing tab/browser", async () => {
 
     window.dispatchEvent(new Event("beforeunload"));
     await animationFrame();
+    expect.verifySteps([]);
+});
+
+test("Auto save: don't save on visibility change", async () => {
+    onRpc("web_save", () => expect.step("should not call web_save"));
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="Base Setting" name="base-setting">
+                    <setting>
+                        <field name="bar"/>Make Changes
+                    </setting>
+                </app>
+            </form>
+        `,
+    });
+
+    expect(".o_field_boolean input:checked").toHaveCount(0, {
+        message: "checkbox should not be checked",
+    });
+    expect(".o_dirty_warning").toHaveCount(0, { message: "warning message should not be shown" });
+    click(".o_field_boolean input[id=bar_0]");
+    await animationFrame();
+    expect(".o_field_boolean input:checked").toHaveCount(1, {
+        message: "checkbox should be checked",
+    });
+
+    await hideTab();
+    await animationFrame();
+    expect.verifySteps([]);
 });
 
 test("correctly copy attributes to compiled labels", async () => {
