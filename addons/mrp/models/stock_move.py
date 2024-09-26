@@ -727,7 +727,7 @@ class StockMove(models.Model):
 
     @api.model
     def _determine_is_manual_consumption(self, bom_line):
-        return bom_line and bom_line.manual_consumption
+        return bom_line and (bom_line.manual_consumption or bom_line.operation_id)
 
     def _get_relevant_state_among_moves(self):
         res = super()._get_relevant_state_among_moves()
