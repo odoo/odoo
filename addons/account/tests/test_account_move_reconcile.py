@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0326
 from contextlib import contextmanager
+from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
@@ -5187,3 +5188,72 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             },
         ]
         self.assertRecordValues(caba_move.line_ids.sorted('id').sorted('sequence'), expected_caba_move_line_values)
+
+    def test_partial_payments_auto_validation(self):
+        with patch.object(self.env.registry['account.move'], '_get_invoice_in_payment_state', return_value='in_payment'):
+            def create_move_payment(move, payment_amount, with_outstanding_account=False):
+                payment = self.env['account.payment.register'].with_context(
+                    active_model='account.move',
+                    active_ids=move.ids
+                ).create({
+                    'amount': payment_amount,
+                    'payment_method_line_id': self.company_data['default_journal_bank'].inbound_payment_method_line_ids.filtered_domain([
+                        ('payment_account_id', '!=' if with_outstanding_account else "=", False),
+                    ])[0].id,
+                })._create_payments()
+                self.assertEqual(payment.state, 'in_process')
+                return payment
+
+            def reconcile_move(move, transaction_amount, balance=None, date='2023-09-30', currency=None, lines_filter=None):
+                lines_filter = lines_filter or (lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable'))
+                move_line = move.line_ids.filtered(lines_filter)[0]
+                rec_account = move_line.account_id
+                rec_line = self.create_line_for_reconciliation(-(balance or transaction_amount), -transaction_amount, currency or move.currency_id, date, account_1=rec_account)
+                amls = rec_line + move_line
+                amls.reconcile()
+
+            vendor_bill = self.init_invoice(move_type='in_invoice', amounts=[1000], post=True)
+            payment = create_move_payment(vendor_bill, 10)
+            reconcile_move(vendor_bill, -12)
+            self.assertEqual(payment.state, 'in_process')
+            reconcile_move(vendor_bill, -10)
+            self.assertEqual(payment.state, 'paid')
+
+            customer_invoice = self.init_invoice(move_type='out_invoice', amounts=[400], post=True)
+            payment1 = create_move_payment(customer_invoice, 200)
+            payment2 = create_move_payment(customer_invoice, 50)
+            payment3 = create_move_payment(customer_invoice, 10)
+            reconcile_move(customer_invoice, 50)
+            self.assertEqual(payment1.state, 'in_process')
+            self.assertEqual(payment2.state, 'paid')
+            self.assertEqual(payment3.state, 'in_process')
+
+            foreign_currency = self.other_currency_2
+            customer_invoice_foreign = self.init_invoice(move_type='out_invoice', amounts=[200], post=True, currency=foreign_currency)
+            payment1 = create_move_payment(customer_invoice_foreign, 30)
+            payment2 = create_move_payment(customer_invoice_foreign, 60)
+            payment3 = create_move_payment(customer_invoice_foreign, 15)
+            reconcile_move(customer_invoice_foreign, 30, 15)
+            self.assertEqual(payment1.state, 'paid')
+            self.assertEqual(payment2.state, 'in_process')
+            self.assertEqual(payment3.state, 'in_process')
+
+            foreign_currency2 = self.other_currency
+            customer_invoice_different_currencies = self.init_invoice(move_type='out_invoice', amounts=[100], post=True)
+            payment1 = create_move_payment(customer_invoice_different_currencies, 5)
+            payment2 = create_move_payment(customer_invoice_different_currencies, 10)
+            payment3 = create_move_payment(customer_invoice_different_currencies, 20)
+            reconcile_move(customer_invoice_different_currencies, 10, currency=foreign_currency2)
+            self.assertEqual(payment1.state, 'paid')
+            self.assertEqual(payment2.state, 'in_process')
+            self.assertEqual(payment3.state, 'in_process')
+
+            customer_invoice_outstanding = self.init_invoice(move_type='out_invoice', amounts=[300], post=True)
+            payment1 = create_move_payment(customer_invoice_outstanding, 12, True)
+            payment2 = create_move_payment(customer_invoice_outstanding, 12)
+            reconcile_move(customer_invoice_outstanding, 12)
+            reconcile_move(customer_invoice_outstanding, 12)
+            self.assertEqual(payment1.state, 'in_process')
+            self.assertEqual(payment2.state, 'paid')
+            reconcile_move(payment1.move_id, 12, lines_filter=lambda l: l.account_id.account_type not in ('asset_receivable', 'liability_payable'))
+            self.assertEqual(payment1.state, 'paid')
