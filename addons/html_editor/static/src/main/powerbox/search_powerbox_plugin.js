@@ -83,9 +83,12 @@ export class SearchPowerboxPlugin extends Plugin {
      * @param {string} searchTerm
      */
     filterCommands(searchTerm) {
-        return fuzzyLookup(searchTerm.toLowerCase(), this.enabledCommands, (cmd) =>
-            (cmd.name + cmd.description + cmd.categoryName).toLowerCase()
-        );
+        return fuzzyLookup(searchTerm, this.enabledCommands, (cmd) => [
+            cmd.name,
+            cmd.categoryName,
+            cmd.description,
+            ...(cmd.searchKeywords || []),
+        ]);
     }
     /**
      * @param {EditorSelection} selection
