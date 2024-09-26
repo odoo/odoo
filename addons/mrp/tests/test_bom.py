@@ -2459,6 +2459,39 @@ class TestBoM(TestMrpCommon):
             mo_form.bom_id = bom_2
         self.assertEqual(set(mo.workorder_ids.mapped('name')), {'op3', 'op4', 'new op'})
 
+    def test_manual_consumption_bom_line(self):
+        """
+        1. Create a BOM with two lines
+        2. Attach an operation to the first BOM line
+        3. Create an MO
+        4. Check that the move with BOM line attached will be treated as a manual consumption move despite the BOM line being automatic consumption
+        """
+        common_vals = {'is_storable': True}
+        finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
+        component_1 = self.env['product.product'].create(dict(common_vals, name="Monster"))
+        component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2]],
+            'operation_ids': [
+                Command.create({'name': 'OP1', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 10, 'sequence': 1}),
+                Command.create({'name': 'OP2', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 2}),
+            ],
+        })
+        bom.bom_line_ids[0].operation_id = bom.operation_ids[0].id
+        # Creates a MO and confirms it.
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_1 = mo_form.save()
+        mo_1.action_confirm()
+
+        move_with_bom_line_op = mo_1.all_move_raw_ids[0]
+        move_without_bom_line_op = mo_1.all_move_raw_ids[1]
+
+        self.assertTrue(move_with_bom_line_op._is_manual_consumption())
+        self.assertFalse(move_without_bom_line_op._is_manual_consumption())
+
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
