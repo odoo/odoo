@@ -147,9 +147,9 @@
                             <div t-if="record.page_count.raw_value">Last Page<field name="last_visited_page_id" class="float-end fw-bold"/></div>
                             <div>Visits<field name="visit_count" class="float-end fw-bold"/></div>
                             <div t-if="record.page_count.raw_value" id="o_page_count">Visited Pages<span class="float-end fw-bold"><field name="page_count"/></span></div>
-                            <div class="w_visitor_kanban_actions">
+                            <div name="w_visitor_kanban_actions" class="d-flex gap-1">
                                 <button name="action_send_mail" type="object"
-                                        class="btn btn-secondary me-1" invisible="not email">
+                                        class="btn btn-secondary" invisible="not email">
                                         Email
                                 </button>
                             </div>

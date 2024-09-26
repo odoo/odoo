@@ -20,7 +20,7 @@
             <field name="country_id" position="after">
                 <field name="mobile" widget="phone"/>
             </field>
-            <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
+            <xpath expr="//div[@name='w_visitor_kanban_actions']" position="inside">
                 <button name="action_send_sms" type="object" class="btn btn-secondary"
                         invisible="not mobile">SMS
                 </button>
