@@ -196,7 +196,7 @@ overridden by modules), because:
     </xpath>
     <xpath expr="//h2" position="replace" mode="inner">Our Services</xpath>
     <xpath expr="//h2" position="after">
-        <t t-snippet-call="website.s_searchbar_input"/>
+        <t t-snippet-call="website.s_searchbar_input" string="Search Input"/>
     </xpath>
 </template>
 
@@ -455,8 +455,8 @@ overridden by modules), because:
         <p class="lead">Experienced fullstack developer.</p>
     </xpath>
     <xpath expr="//p" position="after">
-        <t t-snippet-call="website.s_social_media"/>
-        <t t-snippet-call="website.s_hr"/>
+        <t t-snippet-call="website.s_social_media" string="Social"/>
+        <t t-snippet-call="website.s_hr" string="Separator"/>
     </xpath>
 </template>
 
@@ -573,13 +573,13 @@ overridden by modules), because:
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level o_cc o_cc1" separator=" "/>
     </xpath>
-</template> 
+</template>
 
 <template id="new_page_template_basic_s_quotes_carousel" inherit_id="website.new_page_template_s_quotes_carousel" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" remove="o_colored_level o_cc o_cc1" separator=" "/>
     </xpath>
-</template> 
+</template>
 
 <!-- s_references -->
 
