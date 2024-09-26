@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
+from odoo.tools.float_utils import float_compare
 
 from datetime import date
 
@@ -135,8 +136,24 @@ class AccountPartialReconcile(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         partials = super().create(vals_list)
+        self._pay_matched_payment(partials)
         self._update_matching_number(partials.debit_move_id + partials.credit_move_id)
         return partials
+
+    @api.model
+    def _pay_matched_payment(self, partials):
+        for partial in partials:
+            matched_payments = (partial.credit_move_id | partial.debit_move_id).move_id.matched_payment_ids
+            amount = 0
+            for matched_payment in matched_payments:
+                if matched_payment.payment_type == 'inbound':
+                    amount = partial.debit_amount_currency
+                else:
+                    amount = partial.credit_amount_currency
+                decimal_places = matched_payment.currency_id.decimal_places
+                if not float_compare(matched_payment.amount_signed, amount, precision_digits=decimal_places) and matched_payment.state != 'paid':
+                    matched_payment.state = 'paid'
+                    break
 
     @api.model
     def _update_matching_number(self, amls):
