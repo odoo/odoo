@@ -703,3 +703,8 @@ class AccountMove(models.Model):
         code_and_name = re.match(r"(\[(?P<default_code>.*?)\]\s)?(?P<name>.*)", item_description).groupdict()
         product = self.env['product.product']._retrieve_product(**code_and_name)
         return product
+
+    def _generate_pdf_and_send_invoice(self, template, force_synchronous=True, allow_fallback_pdf=True, bypass_download=False, **kwargs):
+        if self.company_id.country_code == "ES" and not self.company_id.l10n_es_edi_facturae_certificate_id:
+            kwargs['l10n_es_edi_facturae_checkbox_xml'] = False
+        return super()._generate_pdf_and_send_invoice(template, force_synchronous, allow_fallback_pdf, bypass_download, **kwargs)
