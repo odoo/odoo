@@ -480,10 +480,6 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         if 'depends_context' in attrs:
             attrs['_depends_context'] = tuple(attrs.pop('depends_context'))
 
-        if 'group_operator' in attrs:
-            warnings.warn("Since Odoo 18, 'group_operator' is deprecated, use 'aggregator' instead", DeprecationWarning, 2)
-            attrs['aggregator'] = attrs.pop('group_operator')
-
         return attrs
 
     def _setup_attrs(self, model_class, name):
