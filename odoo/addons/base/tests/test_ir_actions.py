@@ -294,11 +294,12 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertEqual(self.test_partner.country_id.name, 'TestUpdatedCountry', 'ir_actions_server: country name should have been updated through relation')
 
         # update a readonly field
-        self.action.write({
-            'state': 'object_write',
-            'update_path': 'country_id.image_url',
-            'value': "/base/static/img/country_flags/be.png",
-        })
+        with mute_logger('odoo.models'):
+            self.action.write({
+                'state': 'object_write',
+                'update_path': 'country_id.image_url',
+                'value': "/base/static/img/country_flags/be.png",
+            })
         self.assertEqual(self.test_partner.country_id.image_url, "/base/static/img/country_flags/ty.png", 'ir_actions_server: country flag has this value before the update')
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')

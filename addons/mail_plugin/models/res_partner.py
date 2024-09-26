@@ -65,4 +65,6 @@ class ResPartner(models.Model):
                         'iap_search_domain': vals.get('iap_search_domain'),
                     } for partner in missing_partners
                 ])
+            vals.pop('iap_enrich_info', None)
+            vals.pop('iap_search_domain', None)
         return res
