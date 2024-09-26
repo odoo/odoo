@@ -734,10 +734,10 @@ test("A new MediaDialog after switching record in a Form view should have the co
     expect(".odoo-editor-editable p:contains(second)").toHaveCount(1);
 
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "/Image");
+    await insertText(htmlEditor, "/Media");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(1);
-    expect(".active .o-we-command-name").toHaveText("Image");
+    expect(".active .o-we-command-name").toHaveText("Media");
 
     await press("Enter");
     await animationFrame();
@@ -916,7 +916,7 @@ test("html field with a placeholder", async () => {
     );
 });
 
-test("'Video' command is available by default", async () => {
+test("'Video Link' command is available", async () => {
     await mountView({
         type: "form",
         resId: 1,
@@ -929,52 +929,60 @@ test("'Video' command is available by default", async () => {
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video", "Video Link"]);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
 });
 
-test("'Video' command is not available when 'disableVideo' = true", async () => {
+test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     await mountView({
         type: "form",
         resId: 1,
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html" options="{'disableVideo': True}"/>
-            </form>`,
-    });
-    setSelectionInHtmlField();
-    await insertText(htmlEditor, "/video");
-    await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
-});
-
-test("'Video' command is not available by default when sanitize_tags = true", async () => {
-    class SanitizePartner extends models.Model {
-        _name = "sanitize.partner";
-
-        txt = fields.Html({ sanitize_tags: true });
-        _records = [{ id: 1, txt: "<p>first sanitize tags</p>" }];
-    }
-
-    defineModels([SanitizePartner]);
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "sanitize.partner",
-        arch: `
-            <form>
                 <field name="txt" widget="html"/>
             </form>`,
     });
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "/video");
+    await insertText(htmlEditor, "/media");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
+
+    await press("Enter");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
+    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
+        "Images",
+        "Documents",
+        "Icons",
+        "Videos",
+    ]);
 });
 
-test("'Video' command is not available by default when sanitize = true", async () => {
+test("MediaDialog does not contain 'Videos' tab in html field when 'disableVideo' = true", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+            <field name="txt" widget="html" options="{'disableVideo': True}"/>
+            </form>`,
+    });
+
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/media");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
+
+    await press("Enter");
+    await animationFrame();
+    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
+        "Images",
+        "Documents",
+        "Icons",
+    ]);
+});
+
+test("MediaDialog does not contain 'Videos' tab when sanitize = true", async () => {
     class SanitizePartner extends models.Model {
         _name = "sanitize.partner";
 
@@ -993,13 +1001,20 @@ test("'Video' command is not available by default when sanitize = true", async (
             </form>`,
     });
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "/video");
+    await insertText(htmlEditor, "/media");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
+
+    await press("Enter");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
+    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
+        "Images",
+        "Documents",
+        "Icons",
+    ]);
 });
 
-test("'Video' command is available when sanitize_tags = true and 'disableVideo' = false", async () => {
+test("MediaDialog contains 'Videos' tab when sanitize_tags = true and 'disableVideo' = false", async () => {
     class SanitizePartner extends models.Model {
         _name = "sanitize.partner";
 
@@ -1018,26 +1033,9 @@ test("'Video' command is available when sanitize_tags = true and 'disableVideo' 
             </form>`,
     });
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "/video");
-    await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video", "Video Link"]);
-});
-
-test("MediaDialog contains 'Videos' tab by default in html field", async () => {
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "partner",
-        arch: `
-            <form>
-                <field name="txt" widget="html"/>
-            </form>`,
-    });
-    setSelectionInHtmlField();
-    await insertText(htmlEditor, "/image");
+    await insertText(htmlEditor, "/media");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Image"]);
+    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
 
     await press("Enter");
     await animationFrame();
@@ -1049,32 +1047,7 @@ test("MediaDialog contains 'Videos' tab by default in html field", async () => {
     ]);
 });
 
-test("MediaDialog don't contains 'Videos' tab in html field when 'disableVideo' = true", async () => {
-    await mountView({
-        type: "form",
-        resId: 1,
-        resModel: "partner",
-        arch: `
-            <form>
-            <field name="txt" widget="html" options="{'disableVideo': True}"/>
-            </form>`,
-    });
-
-    setSelectionInHtmlField();
-    await insertText(htmlEditor, "/image");
-    await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Image"]);
-
-    await press("Enter");
-    await animationFrame();
-    expect(queryAllTexts(".o_select_media_dialog .nav-tabs .nav-item")).toEqual([
-        "Images",
-        "Documents",
-        "Icons",
-    ]);
-});
-
-test("'Image' command is available by default", async () => {
+test("'Media' command is available by default", async () => {
     await mountView({
         type: "form",
         resId: 1,
@@ -1085,12 +1058,12 @@ test("'Image' command is available by default", async () => {
             </form>`,
     });
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "/image");
+    await insertText(htmlEditor, "/media");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Image"]);
+    expect(queryAllTexts(".o-we-command-name")[0]).toEqual("Media");
 });
 
-test("'Image' command is not available when 'disableImage' = true", async () => {
+test("'Media' command is not available when 'disableImage' = true", async () => {
     await mountView({
         type: "form",
         resId: 1,
@@ -1101,10 +1074,9 @@ test("'Image' command is not available when 'disableImage' = true", async () => 
             </form>`,
     });
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "/image");
+    await insertText(htmlEditor, "/media");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
-    expect(queryAllTexts(".o-we-command-name")).toEqual([]);
+    expect(queryAllTexts(".o-we-command-name")).not.toInclude("Media");
 });
 
 test("codeview is not available by default", async () => {

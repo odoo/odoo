@@ -15,26 +15,6 @@ import { withSequence } from "@html_editor/utils/resource";
 const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 
 /**
- * @param {MediaPlugin} plugin
- */
-const getPowerboxItems = (plugin) => {
-    const powerboxItems = [];
-    if (!plugin.config.disableImage) {
-        powerboxItems.push({
-            categoryId: "media",
-            commandId: "insertImage",
-        });
-    }
-    if (!plugin.config.disableVideo) {
-        powerboxItems.push({
-            categoryId: "media",
-            commandId: "insertVideo",
-        });
-    }
-    return powerboxItems;
-};
-
-/**
  * @typedef { Object } MediaShared
  * @property { MediaPlugin['savePendingImages'] } savePendingImages
  */
@@ -51,25 +31,12 @@ export class MediaPlugin extends Plugin {
                 run: this.replaceImage.bind(this),
             },
             {
-                id: "insertImage",
-                title: _t("Image"),
-                description: _t("Insert an image"),
+                id: "insertMedia",
+                title: _t("Media"),
+                description: _t("Insert image or icon"),
+                keywords: [_t("Image"), _t("Icon")],
                 icon: "fa-file-image-o",
                 run: this.openMediaDialog.bind(this),
-            },
-            {
-                id: "insertVideo",
-                title: _t("Video"),
-                description: _t("Insert a video"),
-                icon: "fa-file-video-o",
-                run: () => {
-                    this.openMediaDialog({
-                        noVideos: false,
-                        noImages: true,
-                        noIcons: true,
-                        noDocuments: true,
-                    });
-                },
             },
         ],
         toolbar_groups: withSequence(29, {
@@ -85,8 +52,12 @@ export class MediaPlugin extends Plugin {
             },
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
-        powerbox_items: getPowerboxItems(this),
-        power_buttons: { commandId: "insertImage" },
+        powerbox_items: [
+            ...(this.config.disableImage
+                ? []
+                : [{ categoryId: "media", commandId: "insertMedia" }]),
+        ],
+        power_buttons: { commandId: "insertMedia" },
 
         /** Handlers */
         clean_handlers: this.clean.bind(this),
