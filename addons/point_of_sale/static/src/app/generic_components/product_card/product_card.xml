@@ -8,7 +8,7 @@
             t-on-click="props.onClick"
             t-att-data-product-id="props.productId"
             t-attf-aria-labelledby="article_product_{{props.productId}}">
-            <div t-if="props.productInfo" class="product-information-tag" t-on-click.stop="props.onProductInfoClick" t-att-class="{'red-tag' : !props.showWarning}">
+            <div t-if="props.productInfo" class="product-information-tag" t-on-click.stop="props.onProductInfoClick" t-att-class="{'red-tag' : props.showWarning}">
                 <i class="product-information-tag-logo fa fa-info" role="img" aria-label="Product Information" title="Product Information" />
             </div>
             <div t-if="props.imageUrl" class="product-img">
