@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { trigger } from "@html_editor/utils/resource";
 
 // 60 seconds
 export const HISTORY_SNAPSHOT_INTERVAL = 1000 * 60;
@@ -160,7 +161,7 @@ export class CollaborationPlugin extends Plugin {
             this.shared.rectifySelection(selectionData.editableSelection);
         }
 
-        this.getResource("onExternalHistorySteps").forEach((cb) => cb());
+        trigger(this.getResource("onExternalHistorySteps"));
 
         // todo: ensure that if the selection was not in the editable before the
         // reset, it remains where it was after applying the snapshot.

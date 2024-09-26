@@ -18,6 +18,7 @@ import {
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
+import { trigger } from "@html_editor/utils/resource";
 
 /**
  * @typedef { Object } EditorSelection
@@ -191,9 +192,7 @@ export class SelectionPlugin extends Plugin {
                 return;
             }
         }
-        for (const handler of this.getResource("onSelectionChange")) {
-            handler(selectionData);
-        }
+        trigger(this.getResource("onSelectionChange"), selectionData);
     }
 
     /**

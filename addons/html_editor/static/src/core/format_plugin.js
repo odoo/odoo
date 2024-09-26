@@ -16,7 +16,7 @@ import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../u
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { withSequence } from "@html_editor/utils/resource";
+import { trigger, withSequence } from "@html_editor/utils/resource";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -153,9 +153,7 @@ export class FormatPlugin extends Plugin {
             }
             this._formatSelection(format, { applyStyle: false });
         }
-        for (const callback of this.getResource("removeFormat")) {
-            callback();
-        }
+        trigger(this.getResource("removeFormat"));
         this.dispatch("ADD_STEP");
     }
 

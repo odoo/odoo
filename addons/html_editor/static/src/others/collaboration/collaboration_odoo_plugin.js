@@ -4,6 +4,7 @@ import { user } from "@web/core/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { PeerToPeer, RequestError } from "./PeerToPeer";
+import { trigger } from "@html_editor/utils/resource";
 
 /**
  * @typedef {Object} CollaborationSelection
@@ -269,9 +270,7 @@ export class CollaborationOdooPlugin extends Plugin {
                 },
             },
             onNotification: async (notification) => {
-                for (const cb of this.getResource("handleCollaborationNotification")) {
-                    cb(notification);
-                }
+                trigger(this.getResource("handleCollaborationNotification"), notification);
                 let { fromPeerId, notificationName, notificationPayload } = notification;
                 switch (notificationName) {
                     case "ptp_remove":
@@ -361,7 +360,7 @@ export class CollaborationOdooPlugin extends Plugin {
      * @param {CollaborationSelection} selection
      */
     onExternalMultiselectionUpdate(selection) {
-        this.getResource("collaborativeSelectionUpdate").forEach((cb) => cb(selection));
+        trigger(this.getResource("collaborativeSelectionUpdate"), selection);
     }
 
     async requestPeer(peerId, requestName, requestPayload, params) {

@@ -1,4 +1,4 @@
-import { delegate } from "@html_editor/utils/resource";
+import { delegate, trigger } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { childNodes, descendants, getCommonAncestor } from "../utils/dom_traversal";
 
@@ -182,7 +182,7 @@ export class HistoryPlugin extends Plugin {
         }
         this.steps = steps;
         // todo: to test
-        this.getResource("historyResetFromSteps").forEach((cb) => cb());
+        trigger(this.getResource("historyResetFromSteps"));
 
         this.enableObserver();
         this.dispatch("HISTORY_RESET_FROM_STEPS");
