@@ -60,7 +60,18 @@ export function useSetupAction(params = {}) {
         __getOrderBy__,
     } = component.env;
 
-    const { beforeUnload, beforeLeave, getGlobalState, getLocalState, rootRef } = params;
+    const {
+        beforeVisibilityChange,
+        beforeUnload,
+        beforeLeave,
+        getGlobalState,
+        getLocalState,
+        rootRef,
+    } = params;
+
+    if (beforeVisibilityChange) {
+        useExternalListener(document, "visibilitychange", beforeVisibilityChange);
+    }
 
     if (beforeUnload) {
         useExternalListener(window, "beforeunload", beforeUnload);
