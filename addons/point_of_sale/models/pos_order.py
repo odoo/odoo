@@ -1041,14 +1041,14 @@ class PosOrder(models.Model):
         order_ids = []
         session_ids = set({order.get('session_id') for order in orders})
         for order in orders:
+            existing_order = self.env["pos.order"].search(
+                [('id', '=', order.get('id', False)), ('state', '=', 'draft')]) if isinstance(order.get('id'), int) else False
             if len(self._get_refunded_orders(order)) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
 
-            existing_order = self.env['pos.order'].search([('uuid', '=', order.get('uuid'))])
-            if existing_order and existing_order.state == 'draft':
-                order_ids.append(self._process_order(order, existing_order))
-            elif not existing_order:
-                order_ids.append(self._process_order(order, False))
+            if not existing_order:
+                existing_order = self.env['pos.order'].search([('uuid', '=', order.get('uuid'))])
+            order_ids.append(self._process_order(order, existing_order or False))
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
