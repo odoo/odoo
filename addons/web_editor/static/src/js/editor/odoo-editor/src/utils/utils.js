@@ -1232,6 +1232,12 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
         let currentNode = selectedTextNode;
         let parentNode = selectedTextNode.parentElement;
 
+        let closestFontNode = parentNode.closest("font");
+        if (closestFontNode?.classList.contains('text-gradient') 
+            && ((formatName == "underline") || (formatName == "strikeThrough"))) {
+            return;
+        }
+
         // Remove the format on all inline ancestors until a block or an element
         // with a class (in case the formating comes from the class).
         while (

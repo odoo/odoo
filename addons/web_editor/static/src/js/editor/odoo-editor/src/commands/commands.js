@@ -105,6 +105,12 @@ function colorElement(element, color, mode) {
             element.style['background'] = '';
             element.style['background-image'] = color;
             element.classList.add('text-gradient');
+            element.querySelectorAll('u, s').forEach(lineDecorationTag => {
+                while (lineDecorationTag.firstChild) {
+                    lineDecorationTag.parentNode.insertBefore(lineDecorationTag.firstChild, lineDecorationTag);
+                }
+                lineDecorationTag.remove();
+              });
         } else {
             element.style['background-image'] = color;
         }
