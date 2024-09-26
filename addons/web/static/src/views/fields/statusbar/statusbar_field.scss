@@ -28,7 +28,7 @@
             &:not(.o_first),
             &:not(.o_last) {
                 &:before, &:after {
-                    @include o-position-absolute(-$border-width, -$o-statusbar-arrow-width);
+                    @include o-position-absolute(-$border-width, -$o-statusbar-arrow-width, -$border-width);
                     display: block;
 
                     border-top: floor($o-statusbar-height/2) solid transparent;
