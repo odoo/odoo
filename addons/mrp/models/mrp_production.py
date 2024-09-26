@@ -826,6 +826,8 @@ class MrpProduction(models.Model):
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
+        if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
+            return
         self._set_qty_producing(False)
 
     @api.onchange('lot_producing_id')
