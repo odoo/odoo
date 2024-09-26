@@ -9349,6 +9349,8 @@ registry.VersionControl = SnippetOptionWidget.extend({
                 newBlockEl = snippet.baseBody.cloneNode(true);
             },
         });
+        // Removing the eventual dialog previews.
+        newBlockEl.querySelectorAll(".s_dialog_preview").forEach(previewEl => previewEl.remove());
         // Replacing the block.
         this.options.wysiwyg.odooEditor.historyPauseSteps();
         this.$target[0].classList.add("d-none"); // Hiding the block to replace it smoothly.

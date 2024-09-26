@@ -928,6 +928,7 @@ export class PosStore extends Reactive {
      * @returns {name: string, id: int, role: string}
      */
     get_cashier() {
+        this.user.role = this.user._raw.role;
         return this.user;
     }
     get_cashier_user_id() {
@@ -1379,12 +1380,13 @@ export class PosStore extends Reactive {
             this.ticket_screen_mobile_pane === "left" ? "right" : "left";
     }
     async logEmployeeMessage(action, message) {
-        await this.data.call("pos.session", "log_partner_message", [
-            this.session.id,
-            this.user.partner_id.id,
-            action,
-            message,
-        ]);
+        await this.data.call(
+            "pos.session",
+            "log_partner_message",
+            [this.session.id, this.user.partner_id.id, action, message],
+            {},
+            true
+        );
     }
     showScreen(name, props) {
         this.previousScreen = this.mainScreen.component?.name;

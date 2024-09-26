@@ -146,3 +146,107 @@ test.tags("desktop")("Expand columns in the correct direction in 'rtl'", async (
     expect(tablePickerOverlay).toHaveStyle({ right });
     expect(".o-we-cell.active").toHaveCount(6);
 });
+
+test.tags("desktop")("add table inside empty list", async () => {
+    const { el, editor } = await setupEditor("<ul><li>[]<br></li></ul>");
+
+    // open powerbox
+    insertText(editor, "/");
+    await waitFor(".o-we-powerbox");
+    expect(".o-we-tablepicker").toHaveCount(0);
+
+    // filter to get table command in first position
+    insertText(editor, "table");
+    await animationFrame();
+
+    // press enter to open tablepicker
+    press("Enter");
+    await waitFor(".o-we-tablepicker");
+    expect(".o-we-powerbox").toHaveCount(0);
+
+    // press enter to validate current dimension (3x3)
+    press("Enter");
+    await animationFrame();
+    expect(".o-we-powerbox").toHaveCount(0);
+    expect(".o-we-tablepicker").toHaveCount(0);
+    expectContentToBe(
+        el,
+        `<ul>
+            <li>
+                <br>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+            </li>
+        </ul>`
+    );
+});
+
+test.tags("desktop")("add table inside non-empty list", async () => {
+    const { el, editor } = await setupEditor("<ul><li>abc[]</li></ul>");
+
+    // open powerbox
+    insertText(editor, "/");
+    await waitFor(".o-we-powerbox");
+    expect(".o-we-tablepicker").toHaveCount(0);
+
+    // filter to get table command in first position
+    insertText(editor, "table");
+    await animationFrame();
+
+    // press enter to open tablepicker
+    press("Enter");
+    await waitFor(".o-we-tablepicker");
+    expect(".o-we-powerbox").toHaveCount(0);
+
+    // press enter to validate current dimension (3x3)
+    press("Enter");
+    await animationFrame();
+    expect(".o-we-powerbox").toHaveCount(0);
+    expect(".o-we-tablepicker").toHaveCount(0);
+    expectContentToBe(
+        el,
+        `<ul>
+            <li>
+                abc
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+            </li>
+        </ul>`
+    );
+});

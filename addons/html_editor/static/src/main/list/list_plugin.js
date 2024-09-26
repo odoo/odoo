@@ -7,12 +7,14 @@ import {
     isProtected,
     isProtecting,
     isVisible,
+    paragraphRelatedElements,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     descendants,
     getAdjacents,
     selectElements,
+    ancestors,
 } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
@@ -104,13 +106,7 @@ export class ListPlugin extends Plugin {
                 },
             },
         ],
-        emptyBlockHints: [
-            { selector: "UL LI", hint: _t("List") },
-            { selector: "OL LI", hint: _t("List") },
-            // @todo @phoenix: hint for checklists was supposed to be "To-do",
-            // but never worked because of the ::before pseudo-element is used
-            // to display the checkbox.
-        ],
+        hints: [{ selector: "LI", text: _t("List") }],
         onInput: { handler: p.onInput.bind(p) },
     });
 
@@ -397,7 +393,11 @@ export class ListPlugin extends Plugin {
             return;
         }
 
-        if ([...element.children].some(isBlock)) {
+        if (
+            [...element.children].some(
+                (child) => isBlock(child) && !this.shared.isUnsplittable(child)
+            )
+        ) {
             const cursors = this.shared.preserveSelection();
             wrapInlinesInBlocks(element, cursors);
             cursors.restore();
@@ -602,6 +602,17 @@ export class ListPlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     handleTab() {
+        const selection = this.shared.getEditableSelection();
+        const closestLI = closestElement(selection.anchorNode, "LI");
+        if (closestLI) {
+            const block = closestBlock(selection.anchorNode);
+            const isLiContainsUnSpittable =
+                paragraphRelatedElements.includes(block.nodeName) &&
+                ancestors(block, closestLI).find((node) => this.shared.isUnsplittable(node));
+            if (isLiContainsUnSpittable) {
+                return;
+            }
+        }
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.indentListNodes(listItems);
@@ -613,6 +624,17 @@ export class ListPlugin extends Plugin {
     }
 
     handleShiftTab() {
+        const selection = this.shared.getEditableSelection();
+        const closestLI = closestElement(selection.anchorNode, "LI");
+        if (closestLI) {
+            const block = closestBlock(selection.anchorNode);
+            const isLiContainsUnSpittable =
+                paragraphRelatedElements.includes(block.nodeName) &&
+                ancestors(block, closestLI).find((node) => this.shared.isUnsplittable(node));
+            if (isLiContainsUnSpittable) {
+                return;
+            }
+        }
         const { listItems, navListItems, nonListItems } = this.separateListItems();
         if (listItems.length || navListItems.length) {
             this.outdentListNodes(listItems);
@@ -625,7 +647,12 @@ export class ListPlugin extends Plugin {
 
     handleSplitBlock(params) {
         const closestLI = closestElement(params.targetNode, "LI");
-        if (!closestLI) {
+        const isBlockUnsplittable =
+            closestLI &&
+            Array.from(closestLI.childNodes).some(
+                (node) => isBlock(node) && this.shared.isUnsplittable(node)
+            );
+        if (!closestLI || isBlockUnsplittable) {
             return;
         }
         if (!closestLI.textContent) {

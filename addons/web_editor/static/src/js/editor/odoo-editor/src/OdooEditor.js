@@ -238,7 +238,8 @@ export class OdooEditor extends EventTarget {
                 getPowerboxElement: () => {
                     const selection = document.getSelection();
                     if (selection.isCollapsed && selection.rangeCount) {
-                        return closestElement(selection.anchorNode, 'P, DIV');
+                        const elementSelectors = ['DIV', 'LI', ...paragraphRelatedElements];
+                        return closestElement(selection.anchorNode, elementSelectors.join(', '));
                     }
                 },
                 preHistoryUndo: () => {},
@@ -2673,7 +2674,7 @@ export class OdooEditor extends EventTarget {
                 this._selectTableCells(range);
                 appliedCustomSelection = true;
             }
-        } else if (!traversedNodes.every(node => node.parentElement && closestElement(node.parentElement, 'table'))) {
+        } else if (!traversedNodes.every(node => node.parentElement && closestElement(node.parentElement, 'table')) && !selection.isCollapsed) {
             // The selection goes through a table but also outside of it ->
             // select the whole table.
             this.observerUnactive('handleSelectionInTable');
@@ -4089,10 +4090,16 @@ export class OdooEditor extends EventTarget {
             // Tab
             const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
             const sel = this.document.getSelection();
-            const closestLi = closestElement(sel.anchorNode, 'li');
-            if (closestElement(sel.anchorNode, 'table') && !closestLi) {
+            const closestUnbreakable = closestElement(sel.anchorNode, isUnbreakable);
+            const closestTableOrLi = closestElement(sel.anchorNode, 'table, li');
+            const closestUnbreakableOrLi = closestElement(sel.anchorNode, ["li", closestUnbreakable.nodeName].join(","));
+            if (closestTableOrLi && closestTableOrLi.nodeName === 'TABLE') {
                 this._onTabulationInTable(ev);
-            } else if (!ev.shiftKey && sel.isCollapsed && !closestLi) {
+            } else if (
+                !ev.shiftKey &&
+                sel.isCollapsed &&
+                closestUnbreakableOrLi.nodeName !== 'LI'
+            ) {
                 // Indent text (collapsed selection).
                 this.execCommand('insert', parseHTML(this.document, tabHtml));
             } else {
@@ -4570,9 +4577,7 @@ export class OdooEditor extends EventTarget {
             H4: this.options._t('Heading 4'),
             H5: this.options._t('Heading 5'),
             H6: this.options._t('Heading 6'),
-            'UL LI': this.options._t('List'),
-            'OL LI': this.options._t('List'),
-            'CL LI': this.options._t('To-do'),
+            LI: this.options._t('List'),
         };
 
         for (const hint of this.editable.querySelectorAll('.oe-hint')) {
@@ -4598,19 +4603,13 @@ export class OdooEditor extends EventTarget {
             }
         }
 
-        if (this.options.showEmptyElementHint) {
-            for (const [selector, text] of Object.entries(selectors)) {
-                for (const el of this.editable.querySelectorAll(selector)) {
-                    if (!this.options.isHintBlacklisted(el)) {
-                        this._makeHint(el, text);
-                    }
-                }
-            }
-        }
-
         const block = this.options.getPowerboxElement();
-        if (block) {
-            this._makeHint(block, this.options._t('Type "/" for commands'), true);
+        if (block && !this.options.isHintBlacklisted(block)) {
+            if (block.nodeName in selectors && this.options.showEmptyElementHint) {
+                this._makeHint(block, selectors[block.nodeName], true);
+            } else if (block.nodeName === 'P' || block.nodeName === 'DIV') {
+                this._makeHint(block, this.options._t('Type "/" for commands'), true);
+            }
         }
 
         // placeholder hint

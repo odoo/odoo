@@ -36,6 +36,8 @@ Key Features:
 from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime
+
+from psycopg2.errors import InsufficientPrivilege
 from dateutil.relativedelta import relativedelta
 import logging
 
@@ -59,12 +61,26 @@ def get_field_variation_date(model: Model, field: Field, factor: int, series_ali
     setting duplicated records too far back in the past.
     """
     total_days = min((MAX_DATETIME - MIN_DATETIME).days, factor)
-    return SQL("""
-        %(field)s - (%(factor)s - %(series_alias)s) * floor(%(total_days)s/%(factor)s) * interval '1 days'
-    """, field=SQL.identifier(field.name),
-         factor=factor,
-         series_alias=SQL.identifier(series_alias),
-         total_days=total_days)
+    cast_type = SQL(field._column_type[1])
+
+    def redistribute(value):
+        return SQL(
+            "(%(value)s - (%(factor)s - %(series_alias)s) * floor(%(total_days)s/%(factor)s) * interval '1 days')::%(cast_type)s",
+            value=value,
+            factor=factor,
+            series_alias=SQL.identifier(series_alias),
+            total_days=total_days,
+            cast_type=cast_type,
+        )
+
+    if not field.company_dependent:
+        return redistribute(SQL.identifier(field.name))
+    # company_dependent -> jsonb
+    return SQL(
+        '(SELECT jsonb_object_agg(key, %(expr)s) FROM jsonb_each_text(%(field)s))',
+        expr=redistribute(SQL('value::%s', cast_type)),
+        field=SQL.identifier(field.name),
+    )
 
 
 def get_field_variation_char(field: Field, postfix: str | SQL | None = None) -> SQL:
@@ -78,16 +94,10 @@ def get_field_variation_char(field: Field, postfix: str | SQL | None = None) -> 
         postfix = SQL.identifier(postfix)
     # if the field is translatable, it's a JSONB column, we vary all values for each key
     if field.translate:
-        return SQL("""
-            CASE
-                WHEN %(field)s IS NOT NULL
-                THEN (
-                    SELECT jsonb_object_agg(key, value || %(postfix)s)
-                    FROM jsonb_each_text(%(field)s)
-                )
-                ELSE NULL
-            END
-        """, field=SQL.identifier(field.name), postfix=postfix)
+        return SQL("""(
+            SELECT jsonb_object_agg(key, value || %(postfix)s)
+            FROM jsonb_each_text(%(field)s)
+        )""", field=SQL.identifier(field.name), postfix=postfix)
     else:
         # no postfix for fields that are an '' (no point to)
         # or '/' (default/draft name for many model's records)
@@ -130,9 +140,14 @@ def ignore_fkey_constraints(model: Model):
     """
     Disable Fkey constraints checks by setting the session to replica.
     """
-    model.env.cr.execute('SET session_replication_role TO replica')
-    yield
-    model.env.cr.execute('RESET session_replication_role')
+    try:
+        model.env.cr.execute('SET session_replication_role TO replica')
+        yield
+        model.env.cr.execute('RESET session_replication_role')
+    except InsufficientPrivilege:
+        _logger.warning("Cannot ignore Fkey constraints during insertion due to insufficient privileges for current pg_role."
+                        "The bulk insertion will be vastly slower than anticipated.")
+        yield
 
 
 def field_needs_variation(model: Model, field: Field) -> bool:

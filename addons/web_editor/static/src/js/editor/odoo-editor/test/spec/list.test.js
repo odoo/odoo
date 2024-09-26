@@ -98,14 +98,14 @@ describe('List', () => {
                                 <table class="table table-bordered o_selected_table">
                                     <tbody>
                                         <tr>
-                                            <td class="o_selected_td">[<ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td">[<ul><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul></td>
                                         </tr>
                                         <tr>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul><li placeholder="List" class="oe-hint"><br></li></ul>]</td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul><li><br></li></ul>]</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -381,14 +381,14 @@ describe('List', () => {
                                 <table class="table table-bordered o_selected_table">
                                     <tbody>
                                         <tr>
-                                            <td class="o_selected_td">[<ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
+                                            <td class="o_selected_td">[<ol><li><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol></td>
                                         </tr>
                                         <tr>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol></td>
-                                            <td class="o_selected_td"><ol><li placeholder="List" class="oe-hint"><br></li></ol>]</td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol></td>
+                                            <td class="o_selected_td"><ol><li><br></li></ol>]</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -744,14 +744,14 @@ describe('List', () => {
                                 <table class="table table-bordered o_selected_table">
                                     <tbody>
                                         <tr>
-                                            <td class="o_selected_td">[<ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
+                                            <td class="o_selected_td">[<ul class="o_checklist"><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul></td>
                                         </tr>
                                         <tr>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul></td>
-                                            <td class="o_selected_td"><ul class="o_checklist"><li placeholder="List" class="oe-hint"><br></li></ul>]</td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td class="o_selected_td"><ul class="o_checklist"><li><br></li></ul>]</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -5933,7 +5933,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li>ab</li><li class="o_checked"><a href="#">[cd</a></li><li>ef]</li><li>gh</li></ul>',
                             stepFunction: deleteBackward,
                             contentAfterEdit:
-                                '<ul class="o_checklist"><li>ab</li><li placeholder="List" class="oe-hint">[]<br></li><li>gh</li></ul>',
+                                '<ul class="o_checklist"><li>ab</li><li placeholder="List" class="oe-hint oe-command-temporary-hint">[]<br></li><li>gh</li></ul>',
                             contentAfter:
                                 '<ul class="o_checklist"><li>ab</li><li>[]<br></li><li>gh</li></ul>',
                         });
@@ -6265,7 +6265,7 @@ describe('List', () => {
                         await testEditor(BasicEditor, {
                             contentBefore,
                             stepFunction: deleteBackward,
-                            contentAfterEdit: '<ul><li>ab</li><li placeholder="List" class="oe-hint">[]<br></li><li>ij</li></ul>',
+                            contentAfterEdit: '<ul><li>ab</li><li placeholder="List" class="oe-hint oe-command-temporary-hint">[]<br></li><li>ij</li></ul>',
                             contentAfter: '<ul><li>ab</li><li>[]<br></li><li>ij</li></ul>',
                         });
                     });
@@ -8931,6 +8931,138 @@ describe('List', () => {
                     stepFunction: switchDirection,
                     contentAfter: `<ul><li>a[]</li><li class="oe-nested"><ul class="o_checklist"><li>b</li><li class="oe-nested"><ol><li>g</li><li>e</li></ol></li><li>c</li></ul></li><li>d</li></ul>`,
                 });
+            });
+        });
+        describe('table as direct child of list', () => {
+            it('should create table inside an empty list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>[]<br></li></ul>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '/table');
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>
+                                <br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p>[]<br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </li>
+                        </ul>`
+                    ),
+                })
+            });
+            it('should create table inside a non-empty list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<ul><li>abc[]</li></ul>',
+                    stepFunction: async editor => {
+                        await insertText(editor, '/table');
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    },
+                    contentAfter: unformat(`
+                        <ul>
+                            <li>abc
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p>[]<br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                            </li>
+                        </ul>`
+                    ),
+                })
+            });
+            it('should add an empty list item after a list item', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                        <ul>
+                            <li><br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                []<br>
+                            </li>
+                        </ul>`
+                    ),
+                    stepFunction: insertParagraphBreak,
+                    contentAfter: unformat(`
+                        <ul>
+                            <li><br>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li>[]<br></li>
+                        </ul>`
+                    ),
+                })
             });
         });
     });

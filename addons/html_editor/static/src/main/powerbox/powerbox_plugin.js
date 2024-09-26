@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isEmpty } from "@html_editor/utils/dom_info";
+import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rotate } from "@web/core/utils/arrays";
@@ -32,7 +32,7 @@ function target(selectionData) {
     if (
         selectionData.documentSelectionIsInEditable &&
         (el.tagName === "DIV" || el.tagName === "P") &&
-        isEmpty(el)
+        isEmptyBlock(el)
     ) {
         return el;
     }
@@ -43,7 +43,7 @@ export class PowerboxPlugin extends Plugin {
     static dependencies = ["overlay", "selection", "history"];
     static shared = ["openPowerbox", "updatePowerbox", "closePowerbox"];
     static resources = () => ({
-        temp_hints: {
+        hints: {
             text: _t('Type "/" for commands'),
             target,
         },
