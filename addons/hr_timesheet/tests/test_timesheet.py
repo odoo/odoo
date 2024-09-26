@@ -98,7 +98,7 @@ class TestCommonTimesheet(TransactionCase):
 class TestTimesheet(TestCommonTimesheet):
 
     def setUp(self):
-        super(TestTimesheet, self).setUp()
+        super().setUp()
 
         # Crappy hack to disable the rule from timesheet grid, if it exists
         # The registry doesn't contain the field timesheet_manager_id.

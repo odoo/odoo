@@ -10,7 +10,7 @@ from odoo.tests import tagged
 class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
 
     def setUp(self):
-        super(TestSaleTimesheetMargin, self).setUp()
+        super().setUp()
         uom_day_id = self.ref('uom.product_uom_day')
         self.uom_day = self.env['uom.uom'].browse(uom_day_id)
         self.product_1 = self.env['product.product'].create({

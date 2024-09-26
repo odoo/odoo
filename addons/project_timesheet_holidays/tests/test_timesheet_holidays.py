@@ -40,7 +40,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
 class TestTimesheetHolidays(TestCommonTimesheet):
 
     def setUp(self):
-        super(TestTimesheetHolidays, self).setUp()
+        super().setUp()
 
         self.employee_working_calendar = self.empl_employee.resource_calendar_id
         # leave dates : from next monday to next wednesday (to avoid crashing tests on weekend, when

@@ -11,7 +11,7 @@ class ProjectUpdate(models.Model):
 
     @api.model
     def _get_template_values(self, project):
-        template_values = super(ProjectUpdate, self)._get_template_values(project)
+        template_values = super()._get_template_values(project)
         profitability_values = self._get_profitability_values(project)
         show_profitability = bool(profitability_values and profitability_values.get('account_id') and (profitability_values.get('costs') or profitability_values.get('revenues')))
         return {

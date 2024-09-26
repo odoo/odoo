@@ -21,7 +21,7 @@ class Employee(models.Model):
         return employees
 
     def write(self, vals):
-        result = super(Employee, self).write(vals)
+        result = super().write(vals)
         self_company = self.with_context(allowed_company_ids=self.company_id.ids)
         if 'active' in vals:
             if vals.get('active'):

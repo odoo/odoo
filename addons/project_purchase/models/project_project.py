@@ -73,7 +73,7 @@ class Project(models.Model):
     # ----------------------------
 
     def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
+        buttons = super()._get_stat_buttons()
         if self.env.user.has_group('purchase.group_purchase_user'):
             self_sudo = self.sudo()
             buttons.append({

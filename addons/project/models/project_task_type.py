@@ -75,7 +75,7 @@ class ProjectTaskType(models.Model):
     def write(self, vals):
         if 'active' in vals and not vals['active']:
             self.env['project.task'].search([('stage_id', 'in', self.ids)]).write({'active': False})
-        return super(ProjectTaskType, self).write(vals)
+        return super().write(vals)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

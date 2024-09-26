@@ -12,7 +12,7 @@ from odoo.tests import common
 class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
     def setUp(self):
-        super(TestTimesheetGlobalTimeOff, self).setUp()
+        super().setUp()
         # Creates 1 test company and a calendar for employees that
         # work part time. Then creates an employee per calendar (one
         # for the standard calendar and one for the one we created)

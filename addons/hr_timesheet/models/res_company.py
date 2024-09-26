@@ -46,7 +46,7 @@ class ResCompany(models.Model):
 
     @api.model_create_multi
     def create(self, values):
-        company = super(ResCompany, self).create(values)
+        company = super().create(values)
         # use sudo as the user could have the right to create a company
         # but not to create a project. On the other hand, when the company
         # is created, it is not in the allowed_company_ids on the env

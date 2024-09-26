@@ -235,7 +235,7 @@ class ResourceCalendarLeaves(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        results = super(ResourceCalendarLeaves, self).create(vals_list)
+        results = super().create(vals_list)
         results._generate_timesheeets()
         return results
 
@@ -248,6 +248,6 @@ class ResourceCalendarLeaves(models.Model):
             if timesheets:
                 timesheets.write({'global_leave_id': False})
                 timesheets.unlink()
-        result = super(ResourceCalendarLeaves, self).write(vals)
+        result = super().write(vals)
         global_time_off_updated and global_time_off_updated.sudo()._generate_timesheeets()
         return result

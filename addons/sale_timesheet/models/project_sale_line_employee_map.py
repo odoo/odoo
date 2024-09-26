@@ -132,7 +132,7 @@ class ProjectProductEmployeeMap(models.Model):
         return maps
 
     def write(self, values):
-        res = super(ProjectProductEmployeeMap, self).write(values)
+        res = super().write(values)
         self._update_project_timesheet()
         return res
 
