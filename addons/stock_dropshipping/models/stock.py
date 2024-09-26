@@ -15,6 +15,12 @@ class StockRule(models.Model):
         """
         return procurement.values.get('sale_line_id'), super(StockRule, self)._get_procurements_to_merge_groupby(procurement)
 
+    def _get_partner_id(self, values, rule):
+        route = self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False)
+        if route and rule.route_id == route:
+            return False
+        return super()._get_partner_id(values, rule)
+
 
 class ProcurementGroup(models.Model):
     _inherit = "procurement.group"
