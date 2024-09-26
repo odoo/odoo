@@ -6,7 +6,7 @@ import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFrom
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
     read_events: {
-        'click .send_validation_email': '_onSendValidationEmailClick',
+        'click .send_validation_email': 'async _onSendValidationEmailClick',
         'click .validated_email_close': '_onCloseValidatedEmailClick',
     },
 
@@ -25,11 +25,12 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
         var $element = $(ev.currentTarget);
-        this.rpc('/profile/send_validation_email', {
+        return this.rpc('/profile/send_validation_email', {
             'redirect_url': $element.data('redirect_url'),
         }).then(function (data) {
             if (data) {
                 window.location = $element.data('redirect_url');
+                return new Promise(() => {});
             }
         });
     },
