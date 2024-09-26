@@ -49,9 +49,12 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='approved']" position="after">
-                <filter string="Requisition" name="requisition" domain="[('requisition_id', '!=', False)]"  help="Purchase Orders with requisition"/>
-            </xpath>
+            <field name="product_id" position="after">
+                <field name="requisition_id"/>
+            </field>
+            <filter name="representative" position="after">
+                <filter string="Agreement" name="requisition" domain="[]" context="{'group_by': 'requisition_id'}"/>
+            </filter>
         </field>
     </record>
 
