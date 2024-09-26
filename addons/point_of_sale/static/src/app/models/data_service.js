@@ -390,7 +390,7 @@ export class PosData extends Reactive {
     }
 
     async missingRecursive(recordMap, idsMap = {}, acc = {}) {
-        const missingRecords = [];
+        const missingRecords = {};
 
         for (const [model, records] of Object.entries(recordMap)) {
             if (!acc[model]) {
@@ -423,13 +423,20 @@ export class PosData extends Reactive {
                 });
 
                 if (missing.length > 0) {
-                    missingRecords.push([rel.relation, Array.from(new Set(missing))]);
+                    if (!missingRecords[rel.relation]) {
+                        missingRecords[rel.relation] = new Set(missing);
+                    } else {
+                        missingRecords[rel.relation] = new Set([
+                            ...missingRecords[rel.relation],
+                            ...missing,
+                        ]);
+                    }
                 }
             }
         }
 
         const newRecordMap = {};
-        for (const [model, ids] of missingRecords) {
+        for (const [model, ids] of Object.entries(missingRecords)) {
             if (!idsMap[model]) {
                 idsMap[model] = new Set(ids);
             } else {
