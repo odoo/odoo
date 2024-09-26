@@ -21,7 +21,7 @@
                     <t t-else="">
                         <ThreadIcon className="'me-2 align-self-center'" size="'large'" thread="thread"/>
                     </t>
-                    <CountryFlag t-if="thread.anonymous_country" country="thread.anonymous_country" class="'o-mail-Discuss-headerCountry border'"/>
+                    <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-Discuss-headerCountry border'"/>
                     <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" member="thread.correspondent" />
                     <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                         <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">

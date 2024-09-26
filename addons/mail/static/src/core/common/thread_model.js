@@ -138,6 +138,19 @@ export class Thread extends Record {
             return this.computeCorrespondent();
         },
     });
+    correspondentCountry = Record.one("Country", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.correspondent?.persona?.country ?? this.anonymous_country;
+        },
+    });
+    get showCorrespondentCountry() {
+        return (
+            this.channel_type === "livechat" &&
+            this.operator?.eq(this.store.self) &&
+            Boolean(this.correspondentCountry)
+        );
+    }
     counter = 0;
     counter_bus_id = 0;
     /** @type {string} */
