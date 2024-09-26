@@ -29,7 +29,7 @@ class CalendarEvent(models.Model):
             raise UserError(_("There are no attendees on these events"))
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Send SMS Text Message"),
+            'name': _("Send SMS"),
             'res_model': 'sms.composer',
             'view_mode': 'form',
             'target': 'new',

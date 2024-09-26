@@ -10,7 +10,7 @@ export class SendSMSButton extends Component {
     static props = ["*"];
     setup() {
         this.action = useService("action");
-        this.title = _t("Send SMS Text Message");
+        this.title = _t("Send SMS");
     }
     get phoneHref() {
         return "sms:" + this.props.record.data[this.props.name].replace(/\s+/g, "");
