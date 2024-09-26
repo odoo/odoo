@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.2alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
-"PO-Revision-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-26 08:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,13 +26,19 @@ msgid "$5000"
 msgstr ""
 
 #. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid "%s - Labour"
+msgstr ""
+
+#. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "2023-08-15"
 msgstr ""
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
-msgid "<span class=\"o_stat_text\">Analytic Account</span>"
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_move_form_inherit_mrp_account
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
 msgstr ""
 
 #. module: mrp_account
@@ -76,33 +82,38 @@ msgid "<span>Unit of Measure</span>"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
+msgid "A single line cannot be both credit and debit."
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
+msgid "Account"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__account_move_line_id
+msgid "Account Move Line"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
+msgid "Account move line to be created when posting WIP account move"
+msgstr ""
+
+#. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "Acme Corp."
 msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_ids
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_account_ids
 msgid "Analytic Account"
 msgstr ""
 
 #. module: mrp_account
-#. odoo-python
-#: code:addons/mrp_account/models/mrp_production.py:0
-msgid "Analytic Accounts"
-msgstr ""
-
-#. module: mrp_account
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_distribution
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_distribution
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
-
-#. module: mrp_account
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_distribution_text
-msgid "Analytic Distribution Text"
 msgstr ""
 
 #. module: mrp_account
@@ -116,15 +127,8 @@ msgid "Analytic Plan's Applicabilities"
 msgstr ""
 
 #. module: mrp_account
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_precision
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__analytic_precision
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
-
-#. module: mrp_account
-#: model:ir.model,name:mrp_account.model_mrp_bom
-msgid "Bill of Material"
 msgstr ""
 
 #. module: mrp_account
@@ -173,8 +177,61 @@ msgid "Costs Hour Account"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_uid
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__create_date
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__credit
+msgid "Credit"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__date
+msgid "Date"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__debit
+msgid "Debit"
+msgstr ""
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Discard"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__business_domain
 msgid "Domain"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__expense_account_id
+msgid "Expense Account"
 msgstr ""
 
 #. module: mrp_account
@@ -183,8 +240,29 @@ msgid "Extra Unit Cost"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__id
+msgid "ID"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__journal_id
+msgid "Journal"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
 msgid "Journal Item"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__label
+msgid "Label"
 msgstr ""
 
 #. module: mrp_account
@@ -193,11 +271,30 @@ msgid "Laptop"
 msgstr ""
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_date
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
 msgstr ""
 
 #. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Manual Entry"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_production
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_applicability__business_domain__manufacturing_order
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
 msgid "Manufacturing Order"
@@ -212,12 +309,47 @@ msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
+#: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_count
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_count
 msgid "Manufacturing Orders Count"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Manufacturing WIP - %(orders_list)s"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
+msgid "Mo"
 msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_ids
 msgid "Mo Analytic Account Line"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid ""
+"Please make sure the total credit amount equals the total debit amount."
+msgstr ""
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Post Manufacturing WIP"
+msgstr ""
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Post WIP"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
+msgid "Post WIP Accounting Entry"
 msgstr ""
 
 #. module: mrp_account
@@ -246,13 +378,36 @@ msgid "Production Account"
 msgstr ""
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_mrp_production
-msgid "Production Order"
+#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
+msgid "REF123"
 msgstr ""
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "REF123"
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
+msgid "Reference"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
+msgid "Relevant WIP MOs"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
+msgid "Reversal Date"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Reversal date must be after the posting date."
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "Reversal of: %s"
 msgstr ""
 
 #. module: mrp_account
@@ -266,8 +421,19 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: mrp_account
-#: model:ir.model,name:mrp_account.model_stock_rule
-msgid "Stock Rule"
+#: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
+#: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
+msgid ""
+"The MOs that this WIP entry was based on. Expected to be set at time of WIP "
+"entry creation."
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
+msgid ""
+"The expense is accounted for when the manufacturing order is marked as done."
+" If not set, it is the expense account of the final product that will be "
+"used instead."
 msgstr ""
 
 #. module: mrp_account
@@ -278,13 +444,51 @@ msgid ""
 msgstr ""
 
 #. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Total Credit"
+msgstr ""
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
+msgid "Total Debit"
+msgstr ""
+
+#. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "Units"
 msgstr ""
 
 #. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "WIP - Component Value"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
+msgid "WIP - Overhead"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/account_move.py:0
+msgid "WIP MOs of %s"
+msgstr ""
+
+#. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "WIP Report for"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
+msgid "WIP accounting lines"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
+msgid "WIP accounting wizard"
 msgstr ""
 
 #. module: mrp_account
@@ -295,6 +499,11 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
 msgid "Wc Analytic Account Line"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
+msgid "Wizard to post Manufacturing WIP account move"
 msgstr ""
 
 #. module: mrp_account
@@ -326,6 +535,11 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
 msgid "Workcenter"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
+msgid "Workcenter Productivity Log"
 msgstr ""
 
 #. module: mrp_account

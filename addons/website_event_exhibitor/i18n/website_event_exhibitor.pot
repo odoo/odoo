@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-26 08:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,20 +37,8 @@ msgid ""
 msgstr ""
 
 #. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
-msgid ""
-"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
-"                    Write one."
-msgstr ""
-
-#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<small class=\"badge text-bg-danger\">Unpublished</small>"
-msgstr ""
-
-#. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
-msgid "<span class=\"btn border-0 py-1 px-2\">×</span>"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -128,6 +116,11 @@ msgid "All Countries"
 msgstr ""
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_exhibitor_main
+msgid "All Exhibitors"
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar_sponsorship
 msgid "All Levels"
 msgstr ""
@@ -163,6 +156,11 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "Available from"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_exhibitor_main
+msgid "Back to all Exhibitors"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -335,7 +333,6 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #. odoo-javascript
-#: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: model:ir.model,name:website_event_exhibitor.model_event_event
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__event_id
@@ -768,6 +765,7 @@ msgid "Phone"
 msgstr ""
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
 msgid "Published"
 msgstr ""
@@ -782,11 +780,6 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__rating_ids
 msgid "Ratings"
-msgstr ""
-
-#. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
-msgid "Register"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -828,6 +821,11 @@ msgstr ""
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Sales and Distribution"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar
+msgid "Search an exhibitor ..."
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -954,14 +952,6 @@ msgid "Talent Management"
 msgstr ""
 
 #. module: website_event_exhibitor
-#. odoo-python
-#: code:addons/website_event_exhibitor/controllers/website_event_main.py:0
-msgid ""
-"The event %s starts on %s (%s). \n"
-"Join us there to meet %s!"
-msgstr ""
-
-#. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_url
 msgid "The full URL to access the document through the website."
 msgstr ""
@@ -1072,7 +1062,6 @@ msgstr ""
 
 #. module: website_event_exhibitor
 #. odoo-javascript
-#: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 #: code:addons/website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog.xml:0
 msgid "is not available right now."
 msgstr ""
