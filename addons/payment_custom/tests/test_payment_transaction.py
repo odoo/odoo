@@ -63,3 +63,16 @@ class TestPaymentTransaction(PaymentCustomCommon):
 
         sale_order.reference = "test"
         self.assertEqual(tx._get_communication(), "test")
+
+    def test_wire_transfer_confirms_transaction(self):
+        tx = self._create_transaction(
+            flow='direct', reference="S00099", state='pending', currency_id=self.currency_usd.id,
+        )
+        tx.payment_method_id.code = 'wire_transfer'
+        absl = self.env['account.bank.statement.line'].create({
+            'payment_ref': tx.reference,
+            'partner_id': self.partner.id,
+            'amount': tx.amount,
+        })
+        absl._cron_confirm_wire_transfer_transactions()
+        self.assertEqual(tx.state, 'done')
