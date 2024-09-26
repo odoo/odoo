@@ -623,7 +623,7 @@ class RepairOrder(models.Model):
         repairs_to_confirm = self.filtered(lambda repair: repair.state == 'draft')
         repairs_to_confirm._check_company()
         repairs_to_confirm.move_ids._check_company()
-        repairs_to_confirm.move_ids._adjust_procure_method()
+        repairs_to_confirm.move_ids._adjust_procure_method(picking_type_code='repair_operation')
         repairs_to_confirm.move_ids._action_confirm()
         repairs_to_confirm.move_ids._trigger_scheduler()
         repairs_to_confirm.write({'state': 'confirmed'})
