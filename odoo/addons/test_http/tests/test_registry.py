@@ -80,7 +80,7 @@ class TestHttpRegistry(BaseCase):
         session.update(odoo.http.get_default_session(), db=db or get_db_name())
         session.context['lang'] = odoo.http.DEFAULT_LANG
         odoo.http.root.session_store.save(session)
-        self.opener.cookies['session_id'] = session.sid
+        self.opener.cookies.set("session_id", session.sid, domain=HOST)
         return session
 
     def url_open(self, path, *, allow_redirects=False):
