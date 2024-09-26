@@ -2,7 +2,7 @@
 
 import binascii
 
-from odoo import fields, http, _
+from odoo import _, fields, http, SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -144,8 +144,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 author = order_sudo.partner_id if request.env.user._is_public() else request.env.user.partner_id
                 msg = _('Quotation viewed by customer %s', author.name)
                 del context
-                order_sudo.message_post(
-                    author_id=author.id,
+                order_sudo.with_user(SUPERUSER_ID).message_post(
                     body=msg,
                     message_type="notification",
                     subtype_xmlid="sale.mt_order_viewed",
