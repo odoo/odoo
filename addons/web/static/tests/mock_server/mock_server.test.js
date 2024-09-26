@@ -1652,7 +1652,7 @@ test("access rights attributes are present on an editable many2one field", async
     const expectedForm = /* xml */ `
         <form>
             <field name="partner_id" can_create="true" can_write="true"/>
-        </form>
+        <field name="display_name" invisible="True" readonly="True"/></form>
     `;
 
     const { views } = await ormRequest({
@@ -1690,7 +1690,7 @@ test("access rights attributes are missing on an editable many2one field", async
     const expectedForm = /* xml */ `
         <form>
             <field name="partner_id" readonly="0"/>
-        </form>
+        <field name="display_name" invisible="True" readonly="True"/></form>
     `;
 
     const { views } = await ormRequest({

@@ -48,7 +48,7 @@ class ProductImage(models.Model):
     @api.depends('video_url')
     def _compute_embed_code(self):
         for image in self:
-            image.embed_code = get_video_embed_code(image.video_url) or False
+            image.embed_code = image.video_url and get_video_embed_code(image.video_url) or False
 
     #=== ONCHANGE METHODS ===#
 

@@ -2189,3 +2189,11 @@ class SharedComputeMethod(models.Model):
                 record.start = 0
             if not record.end:
                 record.end = 10
+
+
+class OnchangePartialView(models.Model):
+    _name = _description = 'test_new_api.onchange.partial'
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company', default=lambda r: r.env.company)
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')

@@ -64,7 +64,7 @@ class LoyaltyCard(models.Model):
 
     def _format_points(self, points):
         self.ensure_one()
-        if self.point_name == self.program_id.currency_id.symbol:
+        if self.program_id.currency_id and self.point_name == self.program_id.currency_id.symbol:
             return format_amount(self.env, points, self.program_id.currency_id)
         if points == int(points):
             return f"{int(points)} {self.point_name or ''}"

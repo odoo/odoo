@@ -803,6 +803,14 @@ const parseView = (model, params) => {
     const viewType = getTag(doc);
     const isEditable = editable && isViewEditable(doc, model._name);
 
+    if (viewType === 'form' && level === 0) {
+        let element = doc.ownerDocument.createElement('field');
+        element.setAttribute('name', 'display_name')
+        element.setAttribute('invisible', 'true')
+        element.setAttribute('readonly', 'true')
+        doc.appendChild(element)
+    }
+
     traverseElement(doc, (node) => {
         if (node.nodeType !== Node.ELEMENT_NODE) {
             return false;

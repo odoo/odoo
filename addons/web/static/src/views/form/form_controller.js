@@ -22,7 +22,7 @@ import { executeButtonCallback, useViewButtons } from "@web/views/view_button/vi
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Field } from "@web/views/fields/field";
 import { useModel } from "@web/model/model";
-import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
@@ -184,11 +184,6 @@ export class FormController extends Component {
                 this.archInfo,
                 this.props.fields
             );
-            if (this.display.controlPanel) {
-                addFieldDependencies(activeFields, fields, [
-                    { name: "display_name", type: "char", readonly: true },
-                ]);
-            }
             this.model.config.activeFields = activeFields;
             this.model.config.fields = fields;
         };
