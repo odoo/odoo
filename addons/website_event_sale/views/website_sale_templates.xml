@@ -21,11 +21,6 @@
 
     <!-- If the sale order line concerns an event, we want to show an additional line with the event name even on small screens -->
     <template id="cart_lines_inherit_website_event_sale" inherit_id="website_sale.cart_lines" name="Event Shopping Cart Lines">
-        <xpath expr="//t[@t-call='website_sale.cart_line_description_following_lines']/t[@t-set='div_class']" position="after">
-            <t t-if="line.event_id">
-                <t t-set="div_class" t-value="''"/>
-            </t>
-        </xpath>
         <xpath expr="//del" position="attributes">
             <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'd-none' or ''}"/>
         </xpath>
