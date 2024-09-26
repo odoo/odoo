@@ -216,7 +216,6 @@ class MetaKeywords extends Component {
 
         onWillStart(async () => {
             this.languages = await rpc('/website/get_languages');
-            this.languages = this.languages.map(([code, urlCode, name]) => [pyToJsLocale(code), urlCode, name]);
             this.state.language = this.getLanguage();
         });
     }
