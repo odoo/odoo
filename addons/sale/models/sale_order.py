@@ -1413,6 +1413,16 @@ class SaleOrder(models.Model):
         action['context'] = context
         return action
 
+    def action_view_payment_transaction(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('payment.action_payment_transaction')
+        if len(self.transaction_ids) == 1:
+            action['view_mode'] = 'form'
+            action['res_id'] = self.transaction_ids.id
+            action['views'] = []
+        else:
+            action['domain'] = [('id', 'in', self.transaction_ids.ids)]
+        return action
+
     def _get_invoice_grouping_keys(self):
         return ['company_id', 'partner_id', 'currency_id']
 

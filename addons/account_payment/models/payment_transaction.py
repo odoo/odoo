@@ -104,16 +104,22 @@ class PaymentTransaction(models.Model):
         cancelled transactions, we cancel the payment.
         """
         super()._post_process()
-        for tx in self.filtered(lambda t: t.state == 'done'):
-            # Validate invoices automatically once the transaction is confirmed.
-            self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+        transactions = self.filtered(lambda t: t.state == 'done')
+        # Validate invoices automatically once the transaction is confirmed.
+        transactions.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
 
+        for tx in transactions:
             # Create and post missing payments.
             # As there is nothing to reconcile for validation transactions, no payment is created
             # for them. This is also true for validations with or without a validity check (transfer
             # of a small amount with immediate refund) because validation amounts are not included
             # in payouts. As the reconciliation is done in the child transactions for partial voids
             # and captures, no payment is created for their source transactions either.
+            provider = tx.provider_id
+            default_payment_method = provider._get_provider_payment_method(provider._get_code())
+            if not default_payment_method:
+                continue
+
             if (
                 tx.operation != 'validation'
                 and not tx.payment_id
