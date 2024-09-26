@@ -68,6 +68,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'match_partner_ids': [(6, 0, (cls.partner_1 + cls.partner_2 + cls.partner_3).ids)],
             'company_id': cls.company.id,
             'line_ids': [(0, 0, {'account_id': cls.current_assets_account.id})],
+            'match_text_location_label': False,
         })
         cls.rule_2 = cls.env['account.reconcile.model'].create({
             'name': 'write-off model',
@@ -295,7 +296,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
     @freeze_time('2019-01-01')
     def test_zero_payment_tolerance(self):
-        rule = self._create_reconcile_model(line_ids=[{}])
+        rule = self._create_reconcile_model(match_text_location_label=False, line_ids=[{}])
 
         for inv_type, bsl_sign in (('out_invoice', 1), ('in_invoice', -1)):
 
@@ -325,6 +326,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     @freeze_time('2019-01-01')
     def test_zero_payment_tolerance_auto_reconcile(self):
         rule = self._create_reconcile_model(
+            match_text_location_label=False,
             auto_reconcile=True,
             line_ids=[{}],
         )
@@ -350,6 +352,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     @freeze_time('2019-01-01')
     def test_not_enough_payment_tolerance(self):
         rule = self._create_reconcile_model(
+            match_text_location_label=False,
             payment_tolerance_param=0.5,
             line_ids=[{}],
         )
@@ -378,6 +381,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     @freeze_time('2019-01-01')
     def test_enough_payment_tolerance(self):
         rule = self._create_reconcile_model(
+            match_text_location_label=False,
             payment_tolerance_param=2.0,
             line_ids=[{}],
         )
@@ -405,6 +409,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     @freeze_time('2019-01-01')
     def test_enough_payment_tolerance_auto_reconcile_not_full(self):
         rule = self._create_reconcile_model(
+            match_text_location_label=False,
             payment_tolerance_param=1.0,
             auto_reconcile=True,
             line_ids=[{'amount_type': 'percentage_st_line', 'amount_string': '200.0'}],
@@ -423,7 +428,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
     @freeze_time('2019-01-01')
     def test_allow_payment_tolerance_lower_amount(self):
-        rule = self._create_reconcile_model(line_ids=[{'amount_type': 'percentage_st_line'}])
+        rule = self._create_reconcile_model(match_text_location_label=False, line_ids=[{'amount_type': 'percentage_st_line'}])
 
         for inv_type, bsl_sign in (('out_invoice', 1), ('in_invoice', -1)):
 
@@ -439,6 +444,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     @freeze_time('2019-01-01')
     def test_enough_payment_tolerance_auto_reconcile(self):
         rule = self._create_reconcile_model(
+            match_text_location_label=False,
             payment_tolerance_param=1.0,
             auto_reconcile=True,
             line_ids=[{}],
@@ -463,6 +469,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     @freeze_time('2019-01-01')
     def test_percentage_st_line_auto_reconcile(self):
         rule = self._create_reconcile_model(
+            match_text_location_label=False,
             payment_tolerance_param=1.0,
             rule_type='writeoff_suggestion',
             auto_reconcile=True,
@@ -764,6 +771,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         st_line = self._create_st_line(partner_id=None, payment_ref=None)
 
         rule = self._create_reconcile_model(
+            match_text_location_label=False,
             partner_mapping_line_ids=[{
                 'partner_id': self.partner_1.id,
                 'payment_ref_regex': 'toto.*',
@@ -831,6 +839,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'match_same_currency': False,
             'company_id': self.company_data['company'].id,
             'past_months_limit': False,
+            'match_text_location_label': False,
         })
 
         statement_line = self.env['account.bank.statement.line'].create({
@@ -890,6 +899,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         journal_foreign_curr.currency_id = self.currency_data['currency']
 
         reco_model = self._create_reconcile_model(
+            match_text_location_label=False,
             auto_reconcile=True,
             rule_type='writeoff_suggestion',
             line_ids=[{
