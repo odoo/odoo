@@ -99,6 +99,9 @@ export class SettingsFormController extends formView.Controller {
     //This is needed to avoid the auto save when unload
     beforeUnload() {}
 
+    //This is needed to avoid the auto save when visibility change
+    beforeVisibilityChange() {}
+
     async save() {
         await this.env.onClickViewButton({
             clickParams: {

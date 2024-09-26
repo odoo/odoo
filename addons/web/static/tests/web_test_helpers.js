@@ -140,6 +140,7 @@ export {
     mountViewInDialog,
     parseViewProps,
     selectFieldDropdownItem,
+    hideTab,
 } from "./_framework/view_test_helpers";
 export { useTestClientAction } from "./_framework/webclient_test_helpers";
 

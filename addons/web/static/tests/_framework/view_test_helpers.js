@@ -1,6 +1,6 @@
 import { after, expect, getFixture } from "@odoo/hoot";
 import { click, formatXml, queryAll, queryAllTexts } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -282,4 +282,19 @@ export function parseViewProps(params) {
 export async function selectFieldDropdownItem(fieldName, itemContent, options) {
     await clickFieldDropdown(fieldName, options);
     await clickFieldDropdownItem(fieldName, itemContent);
+}
+
+/**
+ * Emulates the behaviour when we hide the tab in the browser.
+ */
+export async function hideTab() {
+    const prop = Object.getOwnPropertyDescriptor(Document.prototype, "visibilityState");
+    Object.defineProperty(document, "visibilityState", {
+        value: "hidden",
+        configurable: true,
+        writable: true,
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+    await tick();
+    Object.defineProperty(document, "visibilityState", prop);
 }

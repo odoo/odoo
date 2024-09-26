@@ -37,9 +37,10 @@ import {
     onError,
     onMounted,
     onRendered,
+    onWillUnmount,
     status,
+    useComponent,
     useEffect,
-    useExternalListener,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -110,6 +111,16 @@ export async function loadSubViews(fieldNodes, fields, context, resModel, viewSe
     }
 }
 
+export function useFormViewInDialog() {
+    const component = useComponent();
+    onMounted(() => {
+        component.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD");
+    });
+
+    onWillUnmount(() => {
+        component.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE");
+    });
+}
 // -----------------------------------------------------------------------------
 
 export class FormController extends Component {
@@ -167,6 +178,11 @@ export class FormController extends Component {
         if (this.env.inDialog) {
             this.display.controlPanel = false;
         }
+
+        this.formInDialog = 0;
+
+        useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:ADD", () => this.formInDialog++);
+        useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE", () => this.formInDialog--);
 
         const beforeFirstLoad = async () => {
             await loadSubViews(
@@ -255,6 +271,7 @@ export class FormController extends Component {
 
         useSetupView({
             rootRef: this.rootRef,
+            beforeVisibilityChange: () => this.beforeVisibilityChange(),
             beforeLeave: () => this.beforeLeave(),
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => {
@@ -305,12 +322,8 @@ export class FormController extends Component {
             );
         }
 
-        if (!this.env.inDialog) {
-            useExternalListener(document, "visibilitychange", () => {
-                if (document.visibilityState === "hidden") {
-                    this.model.root.save();
-                }
-            });
+        if (this.env.inDialog) {
+            useFormViewInDialog();
         }
     }
 
@@ -417,6 +430,12 @@ export class FormController extends Component {
                 });
             }
             throw e;
+        }
+    }
+
+    beforeVisibilityChange() {
+        if (document.visibilityState === "hidden" && this.formInDialog === 0) {
+            return this.model.root.save();
         }
     }
 
