@@ -1204,6 +1204,93 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     },
 });
 
+
+const SelectInputUserValueWidget = BaseSelectionUserValueWidget.extend({
+    tagName: 'we-select-input',
+    events: {
+        "click we-input": "_onInputClick",
+        "input we-input": "_onInputChange",
+        "blur we-input": "_onInputBlur",
+        "click we-button": "_onDropdownItemClick"
+    },
+
+    async start() {
+        await this._super(...arguments);
+
+        this.inputEl = document.createElement('we-input');
+        this._copyAttributesToInput(this.inputEl);
+        this.inputEl.classList.add('custom-input');
+        this.containerEl.appendChild(this.inputEl);
+
+        this.menuEl = document.createElement("we-selection-items");
+        this.menuEl.dataset.placeholderText = "None";
+        this.menuEl.style.cssText = `
+            position: absolute;
+            margin: 0px;
+            transform: translate(0px, -55px);
+            display: none;
+        `;
+
+        const items = ["1px", "5px", "20px", "50px"]; //TODO: get global roundness settings
+        items.forEach(item => {
+            const buttonEl = document.createElement("we-button");
+            buttonEl.classList.add("o_we_user_value_widget", "dropdown-item");
+            buttonEl.dataset.value = item;
+            buttonEl.innerHTML = `<div>${item}</div>`;
+            this.menuEl.appendChild(buttonEl);
+        });
+
+        this.containerEl.appendChild(this.menuEl);
+
+    },
+
+    //--------------------------------------------------------------------------
+    // Private Methods
+    //--------------------------------------------------------------------------
+
+    _copyAttributesToInput(inputEl) {
+        const attrsToCopy = ['data-apply-to', 'data-dependencies', 'data-css-property', 'data-unit', 'data-extra-class', 'data-variable'];
+
+        attrsToCopy.forEach(attr => {
+            if (this.el.hasAttribute(attr)) {
+                inputEl.setAttribute(attr, this.el.getAttribute(attr));
+            }
+        });
+    },
+
+    _toggleDropdown(visible) {
+        this.menuEl.style.display = visible ? 'block' : 'none';
+    },
+
+    //--------------------------------------------------------------------------
+    // Event Handlers
+    //--------------------------------------------------------------------------
+
+    _onInputClick() {
+        this._toggleDropdown(true);
+    },
+
+    _onInputChange(ev) {
+        this._value = this.inputEl.value;
+        this.trigger("change", this._value);
+    },
+
+    _onInputBlur(ev) {
+        setTimeout(() => this._toggleDropdown(false), 200);
+    },
+
+    _onDropdownItemClick(ev) {
+        const selectedItem = ev.currentTarget.dataset.value;
+        this.inputEl.value = parseInt(selectedItem.split("px")[0]);
+        this._value = parseInt(selectedItem.split("px")[0]);
+        this._toggleDropdown(false);
+        this.trigger("change", selectedItem);
+        this.trigger("change", this._value);
+    },
+});
+
+
+
 const ButtonGroupUserValueWidget = BaseSelectionUserValueWidget.extend({
     tagName: 'we-button-group',
 });
@@ -3318,6 +3405,7 @@ const userValueWidgetsRegistry = {
     'we-select-pager': SelectPagerUserValueWidget,
     'we-many2one': Many2oneUserValueWidget,
     'we-many2many': Many2manyUserValueWidget,
+    'we-select-input': SelectInputUserValueWidget,
 };
 
 /**
