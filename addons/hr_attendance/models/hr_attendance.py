@@ -452,6 +452,8 @@ class HrAttendance(models.Model):
                                 to_recompute)
         self.env.add_to_compute(self._fields['validated_overtime_hours'],
                                 to_recompute)
+        self.env.add_to_compute(self._fields['expected_hours'],
+                                to_recompute)
 
     @api.model_create_multi
     def create(self, vals_list):
