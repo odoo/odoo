@@ -173,13 +173,7 @@ class EventMailScheduler(models.Model):
             self._execute_event_based_for_registrations(registrations_chunk)
             self.last_registration_id = registrations_chunk[-1]
 
-            total_sent = self.env['event.registration'].search_count([
-                ('id', '<=', self.last_registration_id.id),
-                ('event_id', "=", self.event_id.id),
-                ('state', 'not in', ["draft", "cancel"]),
-            ])
-            self.mail_count_done = total_sent
-            self.mail_done = total_sent >= self.event_id.seats_taken
+            self._refresh_mail_count_done()
             if auto_commit:
                 self.env.cr.commit()
 
@@ -261,12 +255,11 @@ class EventMailScheduler(models.Model):
             # scheduled mails for draft / cancel should be removed as they won't be sent
             (chunk - valid_chunk).unlink()
 
+            # send communications, then update only when being in cron mode (aka no
+            # context registrations) to avoid concurrent updates on scheduler
             valid_chunk._execute_on_registrations()
-            total_sent = self.env['event.mail.registration'].search_count([
-                ('scheduler_id', '=', self.id),
-                ('mail_sent', '=', True),
-            ])
-            self.mail_count_done = total_sent
+            # if not context_registrations:
+            self._refresh_mail_count_done()
             if auto_commit:
                 self.env.cr.commit()
 
@@ -279,6 +272,26 @@ class EventMailScheduler(models.Model):
                     'scheduler_id': scheduler.id,
                 } for registration in registrations])
         return new
+
+    def _refresh_mail_count_done(self):
+        for scheduler in self:
+            if scheduler.interval_type == "after_sub":
+                total_sent = self.env["event.mail.registration"].search_count([
+                    ("scheduler_id", "=", self.id),
+                    ("mail_sent", "=", True),
+                ])
+                self.mail_count_done = total_sent
+            elif scheduler.last_registration_id:
+                total_sent = self.env["event.registration"].search_count([
+                    ("id", "<=", self.last_registration_id.id),
+                    ("event_id", "=", self.event_id.id),
+                    ("state", "not in", ["draft", "cancel"]),
+                ])
+                self.mail_count_done = total_sent
+                self.mail_done = total_sent >= self.event_id.seats_taken
+            else:
+                scheduler.mail_count_done = 0
+                scheduler.mail_done = False
 
     def _filter_template_ref(self):
         """ Check for valid template reference: existing, working template """
