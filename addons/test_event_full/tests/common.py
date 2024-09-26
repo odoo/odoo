@@ -4,9 +4,12 @@
 from datetime import datetime, timedelta, time
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.addons.event.tests.common import EventCase
 from odoo.addons.event_crm.tests.common import EventCrmCase
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
+from odoo.addons.sms.tests.common import SMSCase
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 
 
@@ -298,6 +301,98 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                     self.assertIn(answer.value_answer_id.name, lead.description)
                 else:
                     self.assertIn(answer.value_text_box, lead.description)  # better: check multi line
+
+
+class TestEventMailCommon(EventCase, SMSCase, MailCommon, CronMixinCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.event_cron_id = cls.env.ref('event.event_mail_scheduler')
+        # deactivate other schedulers to avoid messing with crons
+        cls.env['event.mail'].search([]).unlink()
+        # consider asynchronous sending as default sending
+        cls.env["ir.config_parameter"].set_param("event.event_mail_async", False)
+
+        cls.env.company.write({
+            'email': 'info@yourcompany.example.com',
+            'name': 'YourCompany',
+        })
+
+        # prepare SMS templates
+        cls.sms_template_sub = cls.env['sms.template'].create({
+            'name': 'Test SMS Subscription',
+            'model_id': cls.env.ref('event.model_event_registration').id,
+            'body': '{{ object.event_id.organizer_id.name }} registration confirmation.',
+            'lang': '{{ object.partner_id.lang }}'
+        })
+        cls.sms_template_rem = cls.env['sms.template'].create({
+            'name': 'Test SMS Reminder',
+            'model_id': cls.env.ref('event.model_event_registration').id,
+            'body': '{{ object.event_id.organizer_id.name }} reminder',
+            'lang': '{{ object.partner_id.lang }}'
+        })
+
+        # freeze some datetimes, and ensure more than 1D+1H before event starts
+        # to ease time-based scheduler check
+        # Since `now` is used to set the `create_date` of an event and create_date
+        # has often microseconds, we set it to ensure that the scheduler we still be
+        # launched if scheduled_date == create_date - microseconds
+        cls.reference_now = datetime(2021, 3, 20, 14, 30, 15, 123456)
+        cls.event_date_begin = datetime(2021, 3, 25, 8, 0, 0)
+        cls.event_date_end = datetime(2021, 3, 28, 18, 0, 0)
+
+        cls._setup_test_reports()
+        with cls.mock_datetime_and_now(cls, cls.reference_now):
+            cls.test_event = cls.env['event.event'].create({
+                'name': 'TestEventMail',
+                'user_id': cls.user_eventmanager.id,
+                'date_begin': cls.event_date_begin,
+                'date_end': cls.event_date_end,
+                'event_mail_ids': [
+                    (0, 0, {  # right at subscription: mail
+                        'interval_unit': 'now',
+                        'interval_type': 'after_sub',
+                        'notification_type': 'mail',
+                        'template_ref': f'mail.template,{cls.template_subscription.id}',
+                    }),
+                    (0, 0, {  # right at subscription: sms
+                        'interval_unit': 'now',
+                        'interval_type': 'after_sub',
+                        'notification_type': 'sms',
+                        'template_ref': f'sms.template,{cls.sms_template_sub.id}',
+                    }),
+                    (0, 0, {  # 3 days before event: mail
+                        'interval_nbr': 3,
+                        'interval_unit': 'days',
+                        'interval_type': 'before_event',
+                        'notification_type': 'mail',
+                        'template_ref': f'mail.template,{cls.template_reminder.id}',
+                    }),
+                    (0, 0, {  # 3 days before event: SMS
+                        'interval_nbr': 3,
+                        'interval_unit': 'days',
+                        'interval_type': 'before_event',
+                        'notification_type': 'sms',
+                        'template_ref': f'sms.template,{cls.sms_template_rem.id}',
+                    }),
+                    (0, 0, {  # 1h after event: mail
+                        'interval_nbr': 1,
+                        'interval_unit': 'hours',
+                        'interval_type': 'after_event',
+                        'notification_type': 'mail',
+                        'template_ref': f'mail.template,{cls.template_reminder.id}',
+                    }),
+                    (0, 0, {  # 1h after event: SMS
+                        'interval_nbr': 1,
+                        'interval_unit': 'hours',
+                        'interval_type': 'after_event',
+                        'notification_type': 'sms',
+                        'template_ref': f'sms.template,{cls.sms_template_rem.id}',
+                    }),
+                ],
+            })
 
 
 class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor):
