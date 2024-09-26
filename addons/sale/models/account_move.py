@@ -72,11 +72,21 @@ class AccountMove(models.Model):
         real_invoices = set(other_so_lines.invoice_lines.move_id)
         for dpl in downpayment_lines:
             try:
-                dpl.price_unit = sum(
-                    l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
-                    for l in dpl.invoice_lines
-                    if l.move_id.state == 'posted' and l.move_id not in real_invoices  # don't recompute with the final invoice
-                )
+                price_unit = 0.0
+                for aml in dpl.invoice_lines:
+                    if aml.move_id.state == 'posted' and aml.move_id not in real_invoices:  # don't recompute with the final invoice
+                        sign = 1 if aml.move_id.move_type == 'out_invoice' else -1
+                        if aml.currency_id == dpl.currency_id:
+                            amount = aml.price_unit
+                        else:
+                            amount = aml.currency_id._convert(
+                                aml.price_unit,
+                                dpl.currency_id,
+                                aml.company_id,
+                                aml.date or fields.Date.context_today(aml),
+                            )
+                        price_unit += sign * amount
+                dpl.price_unit = price_unit
                 dpl.tax_id = dpl.invoice_lines.tax_ids
             except UserError:
                 # a UserError here means the SO was locked, which prevents changing the taxes
