@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+import base64
+import textwrap
+import uuid
 
 from contextlib import contextmanager
 from unittest.mock import patch
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.test_mimetypes.tests.test_guess_mimetypes import contents
+from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
@@ -59,7 +64,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.attachment_number += 1
         return self.env['ir.attachment'].create({
             'name': f"attachment_{self.attachment_number}",
-            'raw': 'test',
+            'raw': contents('xlsx'),
             'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         })
 
@@ -67,24 +72,8 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.attachment_number += 1
         return self.env['ir.attachment'].create({
             'name': f"attachment_{self.attachment_number}",
-            'raw': 'test',
+            'raw': contents('docx'),
             'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        })
-
-    def _create_dummy_txt_attachment(self):
-        self.attachment_number += 1
-        return self.env['ir.attachment'].create({
-            'name': f"attachment_{self.attachment_number}",
-            'raw': 'test',
-            'mimetype': 'text/plain',
-        })
-
-    def _create_dummy_csv_attachment(self):
-        self.attachment_number += 1
-        return self.env['ir.attachment'].create({
-            'name': f"attachment_{self.attachment_number}",
-            'raw': 'test',
-            'mimetype': 'text/csv',
         })
 
     def _disable_ocr(self, company):
@@ -126,28 +115,88 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         with patch.object(type(self.env['ir.attachment']), '_decode_edi_pdf', decode_edi_pdf):
             yield xml_filename
 
-    def _assert_extend_with_attachments(self, input_values, expected_values=None, new=False, **context):
-        if not expected_values:
+    def _get_raw_mail_message_str(self, attachments, email_to, message_id=None):
+        """
+        :param attachments: Odoo recordset of ir.attachment.
+        :param email_to: string that will fill email_to field in the email, probably you'll want to use some journal alias here.
+        :param message_id: Optional. Custom message ID for the email. If not provided, a UUID will be generated.
+
+        Returns:
+            Formatted email string.
+        """
+        if not message_id:
+            message_id = str(uuid.uuid4())
+
+        attachment_parts = []
+        for attachment in attachments:
+            encoded_attachment = base64.b64encode(attachment['raw']).decode()
+            attachment_part = textwrap.dedent(f"""\
+                --000000000000a47519057e029630
+                Content-Type: {attachment['mimetype']}
+                Content-Transfer-Encoding: base64
+                Content-Disposition: attachment; filename="{attachment['name']}"
+
+                {encoded_attachment}
+            """)
+            attachment_parts.append(attachment_part)
+
+        email_raw = textwrap.dedent(f"""\
+            MIME-Version: 1.0
+            Date: Fri, 26 Nov 2021 16:27:45 +0100
+            Message-ID: {message_id}
+            Subject: Incoming bill
+            From: Someone <someone@some.company.com>
+            To: {email_to}
+            Content-Type: multipart/alternative; boundary="000000000000a47519057e029630"
+
+            --000000000000a47519057e029630
+            Content-Type: text/plain; charset="UTF-8"
+
+            Here is your requested document(s).
+        """)
+        email_raw += "\n".join(attachment_parts)
+        email_raw += "\n--000000000000a47519057e029630--"
+        return email_raw
+
+    def _assert_extend_with_attachments(self, input_values, expected_values=None, origin='chatter'):
+        # Patching to obtain moves created while processing the email message
+        created_moves = []
+        _create = self.env.registry['account.move'].create
+        def _save_create(self, vals_list):
+            records = _create(self, vals_list)
+            created_moves.extend(records.ids)
+            return records
+        self.patch(self.env.registry['account.move'], 'create', _save_create)
+
+        # Init the test
+        if expected_values is None:
             expected_values = input_values
         attachments = self.env['ir.attachment'].browse([x.id for x in input_values])
-        nb_moves_before = self.env['account.move'].search_count([('company_id', '=', self.env.company.id)])
-        results = self.env['account.move']\
-            .with_context(**context, default_move_type='out_invoice', default_journal_id=self.company_data['default_journal_sale'].id)\
-            ._extend_with_attachments(attachments, new=new)
-        invoice_number = 0
-        previous_invoice = None
-        current_values = {}
-        for attachment, invoice in results.items():
-            if previous_invoice != invoice:
-                invoice_number += 1
-                previous_invoice = invoice
+        attachments.write({'res_model': False, 'res_id': False})
 
-            current_values[attachment.name] = invoice_number
+        # Run the action
+        journal = self.company_data['default_journal_sale']
+        init_vals = {'move_type': 'out_invoice', 'journal_id': journal.id}
+        match origin:
+            case 'mail_alias':
+                email_raw = self._get_raw_mail_message_str(attachments=attachments, email_to=journal.alias_id.display_name)
+                self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
+            case 'journal':
+                journal.create_document_from_attachment(attachments.ids)
+            case 'chatter':
+                self.env['account.move'].create(init_vals).message_post(attachment_ids=attachments.ids)
+            case _:
+                raise ValueError(f"Unknown origin: {origin}")
 
+        # Assert
+        attachments = self.env['ir.attachment'].search([('res_model', '=', 'account.move'), ('res_id', 'in', created_moves)], order='id')
+        current_values = {
+            attachment.name: i
+            for i, grouped_attachments in enumerate(attachments.grouped('res_id').values(), start=1)
+            for attachment in grouped_attachments
+        }
         self.assertEqual(current_values, {k.name: v for k, v in expected_values.items()})
-
-        nb_moves_after = self.env['account.move'].search_count([('company_id', '=', self.env.company.id)])
-        self.assertEqual(nb_moves_before + invoice_number, nb_moves_after)
+        self.assertEqual(len(created_moves), len(set(expected_values.values())))
 
     def test_supplier_invoice_mailed_from_supplier(self):
         message_parsed = {
@@ -241,80 +290,72 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         xml1 = self._create_dummy_xml_attachment()
         xml2 = self._create_dummy_xml_attachment()
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 1}, new=False)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 1}, origin='chatter')
             self.assertEqual(decoded_files, {pdf1.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, origin='journal')
             self.assertEqual(decoded_files, {pdf1.name, pdf2.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, origin='mail_alias')
             self.assertEqual(decoded_files, {pdf1.name, pdf2.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 1, gif1: 1, gif2: 1}, new=False)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 1, gif1: 1, gif2: 1}, origin='chatter')
             self.assertEqual(decoded_files, {pdf1.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2, gif1: 3, gif2: 4}, new=True)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2, gif1: 3, gif2: 4}, origin='journal')
             self.assertEqual(decoded_files, {pdf1.name, pdf2.name, gif1.name, gif2.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2, gif1: 3, gif2: 4}, expected_values={pdf1: 1, pdf2: 2}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2, gif1: 3, gif2: 4}, expected_values={pdf1: 1, pdf2: 2}, origin='mail_alias')
             self.assertEqual(decoded_files, {pdf1.name, pdf2.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=False)
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, origin='chatter')
             self.assertEqual(decoded_files, {xml1.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=True)
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 2}, origin='journal')
+            self.assertEqual(decoded_files, {pdf1.name, xml1.name})
+        with self.with_success_decoder() as decoded_files:
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, origin='mail_alias')
             self.assertEqual(decoded_files, {xml1.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({xml1: 1, xml2: 1}, origin='chatter')
             self.assertEqual(decoded_files, {xml1.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({xml1: 1, xml2: 1}, new=False)
-            self.assertEqual(decoded_files, {xml1.name})
-        with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({xml1: 1, xml2: 2}, new=True)
+            self._assert_extend_with_attachments({xml1: 1, xml2: 2}, origin='journal')
             self.assertEqual(decoded_files, {xml1.name, xml2.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({xml1: 1, xml2: 2}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({xml1: 1, xml2: 2}, origin='mail_alias')
             self.assertEqual(decoded_files, {xml1.name, xml2.name})
         with self.with_success_decoder(omit={pdf1.name}) as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, origin='journal')
             self.assertEqual(decoded_files, {pdf2.name})
         with self.with_success_decoder(omit={pdf1.name}) as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, origin='mail_alias')
             self.assertEqual(decoded_files, {pdf2.name})
         with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1) as xml_filename:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 1}, new=False)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 1}, origin='chatter')
             self.assertEqual(decoded_files, {xml_filename})
         with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1) as xml_filename:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, origin='journal')
             self.assertEqual(decoded_files, {xml_filename, pdf2.name})
         with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1) as xml_filename:
-            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({pdf1: 1, pdf2: 2}, origin='mail_alias')
             self.assertEqual(decoded_files, {xml_filename, pdf2.name})
         with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1):
-            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=False)
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, origin='chatter')
             self.assertEqual(decoded_files, {xml1.name})
+        with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1) as xml_filename:
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 2}, origin='journal')
+            self.assertEqual(decoded_files, {xml_filename, xml1.name})
         with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1):
-            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=True)
-            self.assertEqual(decoded_files, {xml1.name})
-        with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1):
-            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, origin='mail_alias')
             self.assertEqual(decoded_files, {xml1.name})
 
     def test_extend_with_attachments_document_formats(self):
-        txt = self._create_dummy_txt_attachment()
-        csv = self._create_dummy_csv_attachment()
         xlsx = self._create_dummy_xlsx_attachment()
         docx = self._create_dummy_docx_attachment()
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({txt: 1}, new=True, from_alias=True)
-            self.assertEqual(decoded_files, {txt.name})
-        with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({csv: 1}, new=True, from_alias=True)
-            self.assertEqual(decoded_files, {csv.name})
-        with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({xlsx: 1}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({xlsx: 1}, origin='mail_alias')
             self.assertEqual(decoded_files, {xlsx.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({docx: 1}, new=True, from_alias=True)
+            self._assert_extend_with_attachments({docx: 1}, origin='mail_alias')
             self.assertEqual(decoded_files, {docx.name})
