@@ -490,10 +490,13 @@ export class TablePlugin extends Plugin {
     onMousedown(ev) {
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
+        this.deselectTable();
         if (this.isPointerInsideCell(ev)) {
             this.editable.addEventListener("mousemove", this.onMousemove);
+            const currentSelection = this.shared.getEditableSelection();
+            // disable dragging on table
+            this.shared.setCursorStart(currentSelection.anchorNode);
         }
-        this.deselectTable();
     }
 
     onMouseup(ev) {
