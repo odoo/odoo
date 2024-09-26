@@ -3,6 +3,7 @@ import { URL_REGEX, cleanZWChars } from "./utils";
 import { isImageUrl } from "@html_editor/utils/url";
 import { Plugin } from "@html_editor/plugin";
 import { leftPos } from "@html_editor/utils/position";
+import { delegate } from "@html_editor/utils/resource";
 
 export class LinkPastePlugin extends Plugin {
     static name = "link_paste";
@@ -49,10 +50,7 @@ export class LinkPastePlugin extends Plugin {
             this.handlePasteTextUrlInsideLink(text, url);
             return;
         }
-        const isHandled = this.getResource("handle_paste_url").some((handler) =>
-            handler(text, url)
-        );
-        if (isHandled) {
+        if (delegate(this.getResource("handle_paste_url", text, url))) {
             return;
         }
         this.shared.insertLink(url, text);

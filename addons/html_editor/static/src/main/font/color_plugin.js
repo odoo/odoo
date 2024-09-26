@@ -20,7 +20,7 @@ import { isCSSColor } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { withSequence } from "@html_editor/utils/resource";
+import { delegate, withSequence } from "@html_editor/utils/resource";
 
 export class ColorPlugin extends Plugin {
     static name = "color";
@@ -139,10 +139,8 @@ export class ColorPlugin extends Plugin {
      * @param {string} mode 'color' or 'backgroundColor'
      */
     applyColor(color, mode) {
-        for (const cb of this.getResource("colorApply") || []) {
-            if (cb(color, mode)) {
-                return;
-            }
+        if (delegate(this.getResource("colorApply", color, mode))) {
+            return;
         }
         let selection = this.shared.getEditableSelection();
         let selectionNodes;

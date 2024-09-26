@@ -1,3 +1,4 @@
+import { delegate } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
@@ -47,10 +48,13 @@ export class LineBreakPlugin extends Plugin {
             targetNode = targetNode.parentElement;
         }
 
-        for (const callback of this.getResource("handle_insert_line_break_element")) {
-            if (callback({ targetNode, targetOffset })) {
-                return;
-            }
+        if (
+            delegate(this.getResource("handle_insert_line_break_element"), {
+                targetNode,
+                targetOffset,
+            })
+        ) {
+            return;
         }
 
         this.insertLineBreakElement({ targetNode, targetOffset });

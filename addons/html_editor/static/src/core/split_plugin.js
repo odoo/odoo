@@ -1,3 +1,4 @@
+import { delegate } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty } from "../utils/dom";
@@ -82,10 +83,14 @@ export class SplitPlugin extends Plugin {
         }
         const blockToSplit = closestElement(targetNode, isBlock);
 
-        for (const callback of this.getResource("split_element_block")) {
-            if (callback({ targetNode, targetOffset, blockToSplit })) {
-                return [undefined, undefined];
-            }
+        if (
+            delegate(this.getResource("split_element_block"), {
+                targetNode,
+                targetOffset,
+                blockToSplit,
+            })
+        ) {
+            return [undefined, undefined];
         }
 
         return this.splitElementBlock({ targetNode, targetOffset, blockToSplit });

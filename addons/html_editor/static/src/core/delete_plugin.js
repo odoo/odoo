@@ -38,7 +38,7 @@ import {
     startPos,
 } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
-import { withSequence } from "@html_editor/utils/resource";
+import { delegate, withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef {Object} RangeLike
@@ -139,10 +139,8 @@ export class DeletePlugin extends Plugin {
             this.fullyIncludeLinks,
         ]);
 
-        for (const callback of this.getResource("handle_delete_range")) {
-            if (callback(range)) {
-                return;
-            }
+        if (delegate(this.getResource("handle_delete_range"), range)) {
+            return;
         }
 
         range = this.deleteRange(range);
@@ -188,11 +186,8 @@ export class DeletePlugin extends Plugin {
             word: "handle_delete_backward_word",
             line: "handle_delete_backward_line",
         };
-        const handlers = this.getResource(resourceIds[granularity]);
-        for (const handler of handlers) {
-            if (handler(range)) {
-                return;
-            }
+        if (delegate(this.getResource(resourceIds[granularity]), range)) {
+            return;
         }
 
         range = this.adjustRange(range, [
@@ -219,11 +214,8 @@ export class DeletePlugin extends Plugin {
             word: "handle_delete_forward_word",
             line: "handle_delete_forward_line",
         };
-        const handlers = this.getResource(resourceIds[granularity]);
-        for (const handler of handlers) {
-            if (handler(range)) {
-                return;
-            }
+        if (delegate(this.getResource(resourceIds[granularity]), range)) {
+            return;
         }
 
         range = this.adjustRange(range, [
