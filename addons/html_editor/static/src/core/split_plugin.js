@@ -81,14 +81,13 @@ export class SplitPlugin extends Plugin {
             targetNode = targetNode.parentElement;
         }
         const blockToSplit = closestElement(targetNode, isBlock);
+        const params = { targetNode, targetOffset, blockToSplit };
 
-        for (const callback of this.getResource("split_element_block")) {
-            if (callback({ targetNode, targetOffset, blockToSplit })) {
-                return [undefined, undefined];
-            }
+        if (this.delegateTo("split_element_block_overrides", params)) {
+            return [undefined, undefined];
         }
 
-        return this.splitElementBlock({ targetNode, targetOffset, blockToSplit });
+        return this.splitElementBlock(params);
     }
     /**
      * @param {Object} param0

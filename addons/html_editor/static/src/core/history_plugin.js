@@ -1000,12 +1000,10 @@ export class HistoryPlugin extends Plugin {
      * @param { string } attributeValue
      */
     setAttribute(node, attributeName, attributeValue) {
-        for (const cb of this.getResource("set_attribute")) {
-            const result = cb(node, attributeName, attributeValue);
-            if (result) {
-                return;
-            }
+        if (this.delegateTo("set_attribute_overrides", node, attributeName, attributeValue)) {
+            return;
         }
+
         // if attributeValue is falsy but not null, we still need to apply it
         if (attributeValue !== null) {
             node.setAttribute(attributeName, attributeValue);

@@ -26,9 +26,9 @@ export class TabulationPlugin extends Plugin {
     static dependencies = ["dom", "selection", "delete", "split"];
     static shared = ["indentBlocks", "outdentBlocks"];
     resources = {
-        handle_tab: [],
-        handle_shift_tab: [],
-        handle_delete_forward: this.handleDeleteForward.bind(this),
+        tab_overrides: [],
+        shift_tab_overrides: [],
+        delete_forward_overrides: this.handleDeleteForward.bind(this),
         shortcuts: [
             { hotkey: "tab", command: "TAB" },
             { hotkey: "shift+tab", command: "SHIFT_TAB" },
@@ -59,10 +59,8 @@ export class TabulationPlugin extends Plugin {
     }
 
     handleTab() {
-        for (const callback of this.getResource("handle_tab")) {
-            if (callback()) {
-                return;
-            }
+        if (this.delegateTo("tab_overrides")) {
+            return;
         }
 
         const selection = this.shared.getEditableSelection();
@@ -76,10 +74,8 @@ export class TabulationPlugin extends Plugin {
     }
 
     handleShiftTab() {
-        for (const callback of this.getResource("handle_shift_tab")) {
-            if (callback()) {
-                return;
-            }
+        if (this.delegateTo("shift_tab_overrides")) {
+            return;
         }
         const traversedBlocks = this.shared.getTraversedBlocks();
         this.outdentBlocks(traversedBlocks);

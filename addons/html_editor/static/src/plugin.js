@@ -132,9 +132,37 @@ export class Plugin {
 
     /**
      * @param {string} resourceId
+     * @returns {Array}
      */
     getResource(resourceId) {
         return this._resources[resourceId] || [];
+    }
+
+    /**
+     * Execute a series of functions until one of them returns a truthy value.
+     *
+     * This function is meant to enhance code readability by clearly expressing
+     * its intent.
+     *
+     * A command "delegates" its execution to one of the overriding functions,
+     * which return a truthy value to signal it has been handled.
+     *
+     * It is the the caller's responsability to stop the execution when this
+     * function returns true.
+     *
+     * Example:
+     * ```js
+     * if (this.delegateTo("my_command_overrides", arg1, arg2)) {
+     *   return;
+     * }
+     * ```
+     *
+     * @param {string} resourceId
+     * @param  {...any} args The arguments to pass to the overrides.
+     * @returns {boolean} Whether one of the overrides returned a truthy value.
+     */
+    delegateTo(resourceId, ...args) {
+        return this.getResource(resourceId).some((fn) => fn(...args));
     }
 
     destroy() {
