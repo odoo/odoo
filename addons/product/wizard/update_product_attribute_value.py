@@ -25,7 +25,7 @@ class UpdateProductAttributeValue(models.TransientModel):
         for wizard in self:
             if wizard.mode == 'add':
                 wizard.message = _(
-                    "You are about to add \"%(attribute_value)s\" to %(product_count)s products.",
+                    "You are about to add the value \"%(attribute_value)s\" to %(product_count)s products.",
                     attribute_value=wizard.attribute_value_id.name,
                     product_count=wizard.product_count,
                 )
