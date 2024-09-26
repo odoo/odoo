@@ -481,6 +481,7 @@ export class TablePlugin extends Plugin {
                         (td) => closestElement(td, "table") === table
                     )) {
                         td.classList.toggle("o_selected_td", true);
+                        this.isTableBeingSelected = true;
                     }
                 }
             }
@@ -493,12 +494,15 @@ export class TablePlugin extends Plugin {
         if (this.isPointerInsideCell(ev)) {
             this.editable.addEventListener("mousemove", this.onMousemove);
         }
-        this.deselectTable();
     }
 
     onMouseup(ev) {
         this._currentMouseState = ev.type;
         this.editable.removeEventListener("mousemove", this.onMousemove);
+        if (!this.isTableBeingSelected) {
+            this.deselectTable();
+        }
+        delete this.isTableBeingSelected;
     }
 
     /**
@@ -597,6 +601,7 @@ export class TablePlugin extends Plugin {
                 (_, index) => index >= minColIndex && index <= maxColIndex
             )) {
                 td.classList.toggle("o_selected_td", true);
+                this.isTableBeingSelected = true;
             }
         }
     }
