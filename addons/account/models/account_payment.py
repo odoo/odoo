@@ -406,7 +406,7 @@ class AccountPayment(models.Model):
             ):
                 payment.state = 'paid'
 
-    @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id')
+    @api.depends('move_id.line_ids.amount_residual', 'move_id.line_ids.amount_residual_currency', 'move_id.line_ids.account_id', 'state')
     def _compute_reconciliation_status(self):
         ''' Compute the field indicating if the payments are already reconciled with something.
         This field is used for display purpose (e.g. display the 'reconcile' button redirecting to the reconciliation
@@ -415,7 +415,10 @@ class AccountPayment(models.Model):
         for pay in self:
             liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
 
-            if not pay.currency_id or not pay.id or not pay.move_id:
+            if not pay.outstanding_account_id:
+                pay.is_reconciled = False
+                pay.is_matched = pay.state == 'paid'
+            elif not pay.currency_id or not pay.id or not pay.move_id:
                 pay.is_reconciled = False
                 pay.is_matched = False
             elif pay.currency_id.is_zero(pay.amount):
