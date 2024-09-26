@@ -4,6 +4,7 @@
 # Copyright (c) 2015 ACSONE SA/NV (<http://acsone.eu>)
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.exceptions import ValidationError
 
 
 class TestResPartnerBank(SavepointCaseWithUserDemo):
@@ -31,6 +32,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
 
         # sanitaze the acc_number
         sanitized_acc_number = 'BE001251882303'
+        self.assertEqual(partner_bank.sanitized_acc_number, sanitized_acc_number)
         vals = partner_bank_model.search(
             [('acc_number', '=', sanitized_acc_number)])
         self.assertEqual(1, len(vals))
@@ -49,3 +51,7 @@ class TestResPartnerBank(SavepointCaseWithUserDemo):
         vals = partner_bank_model.search(
             [('acc_number', '=', acc_number.lower())])
         self.assertEqual(1, len(vals))
+
+        # prevent diff between acc_number and sanitized_acc_number
+        with self.assertRaises(ValidationError):
+            partner_bank.write({'sanitized_acc_number': 'BE001251882303WRONG'})
