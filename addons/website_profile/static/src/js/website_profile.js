@@ -8,7 +8,7 @@ const rpc = require('web.rpc');
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
     read_events: {
-        'click .send_validation_email': '_onSendValidationEmailClick',
+        'click .send_validation_email': 'async _onSendValidationEmailClick',
         'click .validated_email_close': '_onCloseValidatedEmailClick',
     },
 
@@ -22,12 +22,13 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
         var $element = $(ev.currentTarget);
-        this._rpc({
+        return this._rpc({
             route: '/profile/send_validation_email',
             params: {'redirect_url': $element.data('redirect_url')},
         }).then(function (data) {
             if (data) {
                 window.location = $element.data('redirect_url');
+                return new Promise(() => {});
             }
         });
     },
