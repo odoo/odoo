@@ -193,7 +193,7 @@ class StockMoveLine(models.Model):
                         or (picking_type.batch_group_by_src_loc and line.location_id != wave.picking_ids.location_id) \
                         or (picking_type.batch_group_by_dest_loc and line.location_dest_id != wave.picking_ids.location_dest_id) \
                         or (picking_type.wave_group_by_product and line.product_id != wave.move_line_ids.product_id) \
-                        or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_categ_id) \
+                        or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_id.categ_id) \
                         or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id):
                             continue
 
@@ -349,7 +349,7 @@ class StockMoveLine(models.Model):
         if self.picking_type_id.wave_group_by_product:
             description_items.append(self.product_id.display_name)
         if self.picking_type_id.wave_group_by_category:
-            description_items.append(self.product_categ_id.display_name)
+            description_items.append(self.product_id.categ_id.complete_name)
         if self.picking_type_id.wave_group_by_location:
             description_items.append(nearest_parent_location.complete_name)
 
