@@ -4649,3 +4649,11 @@ class MailThread(models.AbstractModel):
         if thread.exists() and thread.sudo(False).has_access(mode):
             return thread
         return self.browse()
+
+    def _get_fetch_domain(self):
+        self.ensure_one()
+        return [
+            ("res_id", "=", self.id),
+            ("model", "=", self._name),
+            ("message_type", "!=", "user_notification"),
+        ]

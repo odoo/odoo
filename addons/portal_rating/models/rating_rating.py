@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, exceptions, _
+from odoo.addons.mail.tools.discuss import Store
 
 
 class Rating(models.Model):
@@ -54,3 +55,16 @@ class Rating(models.Model):
             if not values.get('publisher_id'):
                 values['publisher_id'] = self.env.user.partner_id.id
         return values
+
+    def _to_store(self, store: Store, /, *, fields=None):
+        super()._to_store(store, fields=fields)
+        for rating in self:
+            if rating.publisher_id and fields is None:
+                fields = ["id", "publisher_comment", "publisher_datetime"]
+                data = self._read_format(fields, load=False)[0]
+                data["publisher_id"] = Store.one(
+                    rating.publisher_id, fields=["name", "is_company", "user", "write_date"]
+                )
+                data["message_id"] = Store.one(rating.message_id, only_id=True)
+                store.add(rating, data)
+

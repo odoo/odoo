@@ -648,6 +648,7 @@ export class Thread extends Record {
                 after,
                 around,
                 before,
+                ...this.rpcParams,
             });
             this.store.insert(data, { html: true });
             this.isLoaded = true;
