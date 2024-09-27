@@ -28,12 +28,12 @@
         content: markup(_t("Start by creating your first <b>Mailing</b>.")),
         position: 'bottom',
     }, {
-        trigger: 'input[name="subject"]',
+        trigger: 'input#subject_0',
         content: markup(_t('Pick the <b>email subject</b>.')),
         position: 'bottom',
         run: 'text ' + DateTime.now().toFormat("LLLL") + " Newsletter",
     }, {
-        trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
+        trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input#contact_list_ids_0',
         run: 'click',
         auto: true,
     }, {
@@ -82,7 +82,7 @@
         content: _t("Ready for take-off!"),
         position: 'bottom',
     }, {
-        trigger: '.btn-primary:contains("Ok")',
+        trigger: '.btn-primary:contains("Send to all")',
         content: _t("Don't worry, the mailing contact we created is an internal user."),
         position: 'bottom',
         run: "click",
