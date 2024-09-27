@@ -24,7 +24,6 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { parseUTCString } from "@point_of_sale/utils";
 import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
 
-const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
 
 export class TicketScreen extends Component {
@@ -331,35 +330,28 @@ export class TicketScreen extends Component {
             orders = fuzzyLookup(this.state.search.searchTerm, orders, repr);
         }
 
-        if (this.state.filter === "SYNCED") {
-            return orders
-                .sort((a, b) => {
-                    const dateA = DateTime.fromFormat(a.date_order, "yyyy-MM-dd HH:mm:ss");
-                    const dateB = DateTime.fromFormat(b.date_order, "yyyy-MM-dd HH:mm:ss");
-
-                    if (b.date_order !== a.date_order) {
-                        return dateB - dateA;
-                    } else {
-                        return (
-                            parseInt(b.name.replace(/\D/g, "")) -
-                            parseInt(a.name.replace(/\D/g, ""))
-                        );
-                    }
-                })
-                .slice((this.state.page - 1) * NBR_BY_PAGE, this.state.page * NBR_BY_PAGE);
-        } else {
+        const sortOrders = (orders, ascending = false) => {
             return orders.sort((a, b) => {
-                const dateA = DateTime.fromFormat(b.date_order, "yyyy-MM-dd HH:mm:ss");
-                const dateB = DateTime.fromFormat(a.date_order, "yyyy-MM-dd HH:mm:ss");
+                const dateA = parseUTCString(a.date_order, "yyyy-MM-dd HH:mm:ss");
+                const dateB = parseUTCString(b.date_order, "yyyy-MM-dd HH:mm:ss");
 
-                if (b.date_order !== a.date_order) {
-                    return dateB - dateA;
+                if (a.date_order !== b.date_order) {
+                    return ascending ? dateA - dateB : dateB - dateA;
                 } else {
-                    return (
-                        parseInt(a.name.replace(/\D/g, "")) - parseInt(b.name.replace(/\D/g, ""))
-                    );
+                    const nameA = parseInt(a.name.replace(/\D/g, "")) || 0;
+                    const nameB = parseInt(b.name.replace(/\D/g, "")) || 0;
+                    return ascending ? nameA - nameB : nameB - nameA;
                 }
             });
+        };
+
+        if (this.state.filter === "SYNCED") {
+            return sortOrders(orders).slice(
+                (this.state.page - 1) * NBR_BY_PAGE,
+                this.state.page * NBR_BY_PAGE
+            );
+        } else {
+            return sortOrders(orders, true);
         }
     }
     getDate(order) {
@@ -703,11 +695,7 @@ export class TicketScreen extends Component {
             .filter((orderInfo) => {
                 const order = this.pos.models["pos.order"].get(orderInfo[0]);
 
-                if (
-                    order &&
-                    DateTime.fromFormat(orderInfo[1], "yyyy-MM-dd HH:mm:ss") >
-                        DateTime.fromFormat(order.date_order, "yyyy-MM-dd HH:mm:ss")
-                ) {
+                if (order && parseUTCString(orderInfo[1]) > parseUTCString(order.date_order)) {
                     return true;
                 }
 
