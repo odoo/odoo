@@ -8,6 +8,7 @@
                 t-att-class="{
                     'o_avatar opacity-trigger-hover' : tag.img,
                     'o_badge badge rounded-pill lh-1': !tag.img,
+                    'cursor-pointer': tag.canEdit,
                 }"
                 t-attf-class="{{ !tag.img ? 'o_tag_color_' + (tag.colorIndex ? tag.colorIndex : '0') : '' }}"
                 tabindex="-1"
