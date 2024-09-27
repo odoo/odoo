@@ -289,19 +289,19 @@
                 <kanban class="o_kanban_mobile" sample="1">
                     <templates>
                         <t t-name="card">
-                            <div class="d-flex flex-row">
+                            <div class="d-flex gap-1">
                                 <span t-att-title="record.employee_id.value">
                                     <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_image_64_cover me-2 float-start"/>
                                 </span>
-                                <div class="d-flex flex-column text-truncate lh-sm col-10">
+                                <div class="d-flex flex-column min-w-0 lh-sm">
                                     <span class="text-truncate" invisible="context.get('default_project_id')" t-att-title="record.project_id.value">
                                         <field name="project_id" class="p-0 fw-bold fs-5"/>
                                     </span>
-                                    <span class="text-truncate" t-att-title="record.task_id.value">
+                                    <span name="task_id_wrapper" class="text-truncate" t-att-title="record.task_id.value">
                                         <field name="task_id" invisible="context.get('default_project_id')"/>
                                         <field name="task_id" invisible="not context.get('default_project_id')" class="p-0 fw-bold fs-5"/>
                                     </span>
-                                    <span class="text-truncate">
+                                    <span>
                                         <i class="fa fa-calendar me-1" role="img" aria-label="Date" title="Date"></i>
                                         <field name="date"/><span invisible="context.get('is_my_timesheets')"> - <field name="employee_id"/></span>
                                     </span>
