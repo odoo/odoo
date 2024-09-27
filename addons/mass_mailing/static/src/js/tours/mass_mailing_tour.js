@@ -6,8 +6,6 @@
 
     import { markup } from "@odoo/owl";
 
-    const { DateTime } = luxon;
-
     registry.category("web_tour.tours").add('mass_mailing_tour', {
         url: '/odoo',
         steps: () => [stepUtils.showAppsMenuItem(), {
@@ -32,10 +30,10 @@
         tooltipPosition: 'bottom',
         run: "click",
     }, {
-        trigger: 'input[name="subject"]',
+        trigger: 'div[name="subject"]',
         content: markup(_t('Pick the <b>email subject</b>.')),
         tooltipPosition: 'bottom',
-        run: `edit ${DateTime.now().toFormat("LLLL")} Newsletter`,
+        run: 'click',
     }, {
         isActive: ["auto"],
         trigger: 'div[name="contact_list_ids"] > .o_input_dropdown > input[type="text"]',
@@ -58,7 +56,7 @@
         run: 'click',
     }, {
         isActive: ["enterprise"],
-        trigger: 'div[name="body_arch"] :iframe div.s_text_block',
+        trigger: 'div[name="body_arch"] :iframe div.theme_selection_done div.s_text_block',
         content: _t('Click on this paragraph to edit it.'),
         tooltipPosition: 'top',
         run: 'click',
@@ -89,7 +87,7 @@
         tooltipPosition: 'bottom',
         run: "click",
     }, {
-        trigger: '.btn-primary:contains("Ok")',
+        trigger: '.btn-primary:contains("Send to all")',
         content: _t("Don't worry, the mailing contact we created is an internal user."),
         tooltipPosition: 'bottom',
         run: "click",
