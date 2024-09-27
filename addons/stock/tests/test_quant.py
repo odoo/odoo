@@ -5,7 +5,7 @@ from contextlib import closing
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, TransactionCase
@@ -989,3 +989,30 @@ class StockQuant(TransactionCase):
         action = quant.action_view_stock_moves()
         history = self.env['stock.move.line'].search(action['domain'])
         self.assertTrue(history)
+
+    def test_diff_unset_after_create(self):
+        """
+        Test that validating moves does not set new quant's inventory_diff_quantity
+        """
+        warehouse = self.env.ref('stock.warehouse0')
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'name': 'Lovely move',
+                'product_id': self.product.id,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': self.stock_location.id,
+                'product_uom_qty': 5,
+                'product_uom': self.product.uom_id.id,
+            })],
+        })
+        picking.action_confirm()
+        picking.move_ids.quantity_done = 5.0
+        picking.button_validate()
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', self.product.id),
+            ('location_id', '=', self.stock_location.id),
+        ])
+        self.assertFalse(quant.inventory_diff_quantity, "diff quantity should be 0 or unset")
