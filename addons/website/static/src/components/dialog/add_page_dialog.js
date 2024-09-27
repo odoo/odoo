@@ -7,6 +7,7 @@ import { useAutofocus, useService } from '@web/core/utils/hooks';
 import { _t } from "@web/core/l10n/translation";
 import { WebsiteDialog } from '@website/components/dialog/dialog';
 import { Switch } from '@website/components/switch/switch';
+import { applyTextHighlight } from "@website/js/text_processing";
 import { useRef, useState, useSubEnv, Component, onWillStart, onMounted } from "@odoo/owl";
 import wUtils from '@website/js/utils';
 
@@ -242,6 +243,14 @@ export class AddPageTemplatePreview extends Component {
             if (this.props.isCustom) {
                 this.adaptCustomTemplate(wrapEl);
             }
+            // We need this to correctly compute the highlights size (the
+            // `ResizeObserver` that adapts the effects when a custom font
+            // is applied is not available), for now, we need a setTimeout.
+            setTimeout(() => {
+                for (const textEl of iframeEl.contentDocument?.querySelectorAll(".o_text_highlight") || []) {
+                    applyTextHighlight(textEl);
+                }
+            }, 200);
         });
     }
 
