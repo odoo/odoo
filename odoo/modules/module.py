@@ -15,12 +15,25 @@ import traceback
 import warnings
 from os.path import join as opj, normpath
 
-from packaging.requirements import InvalidRequirement, Requirement
-
 import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo.tools.misc import file_path
+
+try:
+    from packaging.requirements import InvalidRequirement, Requirement
+except ImportError:
+    class InvalidRequirement(Exception):
+        ...
+
+    class Requirement:
+        def __init__(self, pydep):
+            if not re.fullmatch(r'\w+', pydep):  # check that we have no versions or marker in pydep
+                msg = f"Package `packaging` is required to parse `{pydep}` external dependency and is not installed"
+                raise Exception(msg)
+            self.marker = None
+            self.specifier = None
+            self.name = pydep
 
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
@@ -466,9 +479,17 @@ def check_python_external_dependency(pydep):
             "Ignored external dependency %s because environment markers do not match",
             pydep
         )
+        return
     try:
         version = importlib.metadata.version(requirement.name)
     except importlib.metadata.PackageNotFoundError as e:
+        try:
+            # keep compatibility with module name but log a warning instead of info
+            importlib.import_module(pydep)
+            _logger.warning("python external dependency on '%s' does not appear o be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+            return
+        except ImportError:
+            pass
         msg = f"External dependency {pydep} not installed: {e}"
         raise Exception(msg) from e
     if requirement.specifier and not requirement.specifier.contains(version):
