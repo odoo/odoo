@@ -41,6 +41,7 @@ export class ChatGPTPlugin extends Plugin {
         powerboxItems: {
             name: _t("ChatGPT"),
             description: _t("Generate or transform content with AI."),
+            searchKeywords: [_t("AI")],
             category: "ai",
             fontawesome: "fa-magic",
             action(dispatch) {
