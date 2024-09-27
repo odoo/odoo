@@ -27,24 +27,19 @@ class EventMailScheduler(models.Model):
         sms_schedulers = self.filtered(lambda scheduler: scheduler.template_ref and scheduler.template_ref._name == 'sms.template')
         sms_schedulers.notification_type = 'sms'
 
-    def execute(self):
-        for scheduler in self:
-            now = fields.Datetime.now()
-            if scheduler.interval_type != 'after_sub' and scheduler.notification_type == 'sms':
-                # before or after event -> one shot email
-                if scheduler.mail_done:
-                    continue
-                # Do not send SMS if the communication was scheduled before the event but the event is over
-                if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.registration_ids.filtered(
-                        lambda registration: registration.state not in ('cancel', 'draft')
-                    )._message_sms_schedule_mass(
-                        template=scheduler.template_ref,
-                        mass_keep_log=True
-                    )
-                    scheduler.update({
-                        'mail_done': True,
-                        'mail_count_done': scheduler.event_id.seats_taken,
-                    })
+    def _execute_event_based_for_registrations(self, registrations):
+        if self.notification_type == "sms":
+            self._send_sms(registrations)
+        return super()._execute_event_based_for_registrations(registrations)
 
-        return super(EventMailScheduler, self).execute()
+    def _send_sms(self, registrations):
+        """ SMS action: send SMS to attendees """
+        registrations._message_sms_schedule_mass(
+            template=self.template_ref,
+            mass_keep_log=True
+        )
+
+    def _template_model_by_notification_type(self):
+        info = super()._template_model_by_notification_type()
+        info["sms"] = "sms.template"
+        return info
