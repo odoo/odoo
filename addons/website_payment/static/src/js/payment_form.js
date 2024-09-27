@@ -62,30 +62,29 @@ PaymentForm.include({
                 'email': _t('Email'),
                 'country_id': _t('Country'),
             };
+            this.el.querySelectorAll("div.invalid-feedback").forEach((el) => el.remove());
+            this.el.querySelectorAll(".is-invalid").forEach((el) => el.classList.remove("is-invalid"));
             for (const id in mandatoryFields) {
                 const fieldEl = this.el.querySelector(`input[name="${id}"],select[name="${id}"]`);
-                fieldEl.classList.remove('is-invalid');
-                Popover.getOrCreateInstance(fieldEl)?.dispose();
                 if (!fieldEl.value.trim()) {
-                    errorFields[id] = _t("Field '%s' is mandatory", mandatoryFields[id]);
+                    errorFields[id] = _t("Please enter %s", mandatoryFields[id]);
                 }
             }
             if (Object.keys(errorFields).length) {
+                const firstErrorFieldId = Object.keys(errorFields)[0];
                 for (const id in errorFields) {
                     const fieldEl = this.el.querySelector(
                         `input[name="${id}"],select[name="${id}"]`
                     );
                     fieldEl.classList.add('is-invalid');
-                    Popover.getOrCreateInstance(fieldEl, {
-                        content: errorFields[id],
-                        placement: 'top',
-                        trigger: 'hover',
-                    });
+                    const errorDivEl = document.createElement('div');
+                    errorDivEl.className = 'invalid-feedback';
+                    errorDivEl.textContent = errorFields[id];
+                    fieldEl.after(errorDivEl);
+                    if (id === firstErrorFieldId) {
+                        fieldEl.focus();
+                    }
                 }
-                this._displayErrorDialog(
-                    _t("Payment processing failed"),
-                    _t("Some information is missing to process your payment.")
-                );
                 this._enableButton();
                 return;
             }
