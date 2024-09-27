@@ -23,9 +23,9 @@ class Job(models.Model):
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
     description = fields.Html(string='Job Description', sanitize_attributes=False)
     requirements = fields.Text('Requirements')
-    department_id = fields.Many2one('hr.department', string='Department', check_company=True)
+    department_id = fields.Many2one('hr.department', string='Department', check_company=True, tracking=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    contract_type_id = fields.Many2one('hr.contract.type', string='Employment Type')
+    contract_type_id = fields.Many2one('hr.contract.type', string='Employment Type', tracking=True)
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),

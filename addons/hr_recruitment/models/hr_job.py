@@ -32,7 +32,7 @@ class Job(models.Model):
 
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
-        domain=lambda self: self._address_id_domain(),
+        domain=lambda self: self._address_id_domain(), tracking=True,
         help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Job Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
@@ -56,9 +56,9 @@ class Job(models.Model):
     color = fields.Integer("Color Index")
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
-    interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]", help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
+    interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
-    industry_id = fields.Many2one('res.partner.industry', 'Industry')
+    industry_id = fields.Many2one('res.partner.industry', 'Industry', tracking=True)
     date_from = fields.Date(help="Is set, update candidates availability once hired for that specific mission.")
     date_to = fields.Date()
 
