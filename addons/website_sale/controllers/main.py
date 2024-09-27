@@ -918,7 +918,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             line.unlink()
 
     def _get_cart_notification_information(self, order, line_ids):
-        """ Get the information about the sale order line to show in the notification.
+        """ Get the information about the sale order lines to show in the notification.
 
         :param recordset order: The sale order containing the lines.
         :param list(int) line_ids: The ids of the lines to display in the notification.
@@ -928,7 +928,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 'currency_id': int
                 'lines': [{
                     'id': int
-                    'linked_line_id': int
                     'image_url': int
                     'quantity': float
                     'name': str
@@ -947,16 +946,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'lines': [
                 { # For the cart_notification
                     'id': line.id,
-                    # Only set the linked line id for combo items, not for optional products.
-                    'linked_line_id': line.linked_line_id.id if line.combo_item_id else None,
                     'image_url': order.website_id.image_url(line.product_id, 'image_128'),
                     'quantity': line._get_displayed_quantity(),
                     'name': line.name_short,
                     'description': line._get_sale_order_line_multiline_description_variants(),
                     'line_price_total': line.price_total if show_tax else line.price_subtotal,
+                    **self._get_additional_notification_information(line),
                 } for line in lines
             ],
         }
+
+    def _get_additional_notification_information(self, line):
+        # Only set the linked line id for combo items, not for optional products.
+        if line.combo_item_id:
+            return {'linked_line_id': line.linked_line_id.id}
+        return {}
 
     # ------------------------------------------------------
     # Checkout
