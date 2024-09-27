@@ -321,7 +321,7 @@ export class SaleOrderManagementScreen extends Component {
                     title: _t("Down Payment"),
                     subtitle: sprintf(
                         popupSubtitle,
-                        this.env.utils.formatCurrency(sale_order.amount_total)
+                        this.env.utils.formatCurrency(sale_order.amount_unpaid)
                     ),
                     buttons: enhancedButtons(this.env),
                     formatDisplayedValue: (x) => `${popupInputSuffix} ${x}`,
