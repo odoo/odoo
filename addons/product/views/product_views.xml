@@ -125,12 +125,20 @@
                                     </div>
                                     <label
                                         for="standard_price"
-                                        invisible="(product_variant_count &gt; 1 and not is_product_variant) or type == 'combo'"
+                                        invisible="type == 'combo'
+                                                    or (not is_product_variant and (
+                                                        product_variant_count &gt; 1
+                                                        or (product_variant_count == 0 and is_dynamically_created)
+                                                    ))"
                                         id="standard_price_label"
                                     />
                                     <div
                                         name="standard_price_uom"
-                                        invisible="(product_variant_count &gt; 1 and not is_product_variant) or type == 'combo'"
+                                        invisible="type == 'combo'
+                                                    or (not is_product_variant and (
+                                                        product_variant_count &gt; 1
+                                                        or (product_variant_count == 0 and is_dynamically_created)
+                                                    ))"
                                     >
                                         <field
                                             name="standard_price"
