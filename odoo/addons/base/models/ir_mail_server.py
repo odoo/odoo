@@ -739,11 +739,13 @@ class IrMailServer(models.Model):
                     return mail_server
 
         # 1. Try to find a mail server for the right mail from
-        if mail_server := first_match(email_from_normalized, email_normalize):
-            return mail_server, email_from
+        # Skip if passed email_from is False (example Odoobot has no email address)
+        if email_from:
+            if mail_server := first_match(email_from_normalized, email_normalize):
+                return mail_server, email_from
 
-        if mail_server := first_match(email_from_domain, email_domain_normalize):
-            return mail_server, email_from
+            if mail_server := first_match(email_from_domain, email_domain_normalize):
+                return mail_server, email_from
 
         # 2. Try to find a mail server for <notifications@domain.com>
         if notifications_email:
