@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -1293,4 +1292,5 @@ class SaleOrderLine(models.Model):
         return self.move_ids
 
     def _sellable_lines_domain(self):
-        return [('is_downpayment', '=', False)]
+        discount_products = self.env.companies.sale_discount_product_id
+        return [('is_downpayment', '=', False), ('product_id', 'not in', discount_products.ids)]
