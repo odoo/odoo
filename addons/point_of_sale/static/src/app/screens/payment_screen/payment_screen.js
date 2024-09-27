@@ -51,7 +51,8 @@ export class PaymentScreen extends Component {
     }
 
     onMounted() {
-        if (this.payment_methods_from_config.length == 1) {
+        // add a payment line if there is only one payment method and no payment lines
+        if (this.payment_methods_from_config.length == 1 && this.paymentLines.length == 0) {
             this.addNewPaymentLine(this.payment_methods_from_config[0]);
         }
     }
