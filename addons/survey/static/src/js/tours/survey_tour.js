@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     content: _t("Let's have a look at your answers!"),
     position: 'bottom',
 }, {
-    trigger: '.alert-info a:contains("This is a Test Survey")',
+    trigger: '.survey_button_form_view_hook',
     content: _t("Now, use this shortcut to go back to the survey."),
     position: 'bottom',
 }, {
