@@ -86,7 +86,7 @@
                                                             }" t-ref="body">
                                                     <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
                                                     <t t-else="">
-                                                        <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
+                                                        <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
                                                         <t t-elif="state.showTranslation" t-out="message.translationValue"/>
                                                         <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
