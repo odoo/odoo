@@ -9,7 +9,7 @@
         >
             <t t-set="order" t-value="scope.item" />
             <button t-esc="order.getName()"
-                t-attf-class="{{pos.get_order()?.id === order.id ? 'btn-secondary active' : ''}}"
+                t-att-class="{ 'active': pos.get_order()?.id === order.id }"
                 class="btn btn-lg btn-secondary text-truncate mx-1"
                 style="min-width: 4rem;"
                 t-on-click="() => this.selectFloatingOrder(order)"
