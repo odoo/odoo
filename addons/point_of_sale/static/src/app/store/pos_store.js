@@ -1057,6 +1057,10 @@ export class PosStore extends Reactive {
                 // a higher id than the original one since it's the last one created.
                 const session = this.models["pos.session"].sort((a, b) => a.id - b.id)[0];
                 session.delete();
+                this.models["pos.order"]
+                    .getAll()
+                    .filter((order) => order.state === "draft")
+                    .forEach((order) => (order.session_id = this.session));
             }
 
             return newData["pos.order"];
