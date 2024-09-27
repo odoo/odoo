@@ -98,6 +98,10 @@ class ResConfigSettings(models.TransientModel):
         'Default Social Share Image',
         related='website_id.social_default_image',
         readonly=False)
+    google_maps_api_key = fields.Char(
+        'Google maps api key',
+        related='website_id.google_maps_api_key',
+        readonly=False)
 
     group_multi_website = fields.Boolean(
         "Multi-website",
