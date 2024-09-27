@@ -4,6 +4,7 @@
         <field name="name">Event: Track Confirmation</field>
         <field name="model_id" ref="website_event_track.model_event_track"/>
         <field name="subject">Confirmation of {{ object.name }}</field>
+        <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
         <field name="use_default_to" eval="True"/>
         <field name="description">Sent to speakers whose track proposal is accepted (set the template on the right stage)</field>
         <field name="body_html" type="html">

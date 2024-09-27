@@ -202,3 +202,9 @@ class EventCase(common.TransactionCase):
             "subject": "Reminder for {{ object.event_id.name }}: {{ object.event_date_range }}",
             "report_template_ids": [(4, cls.test_report_action.id)],
         })
+
+    def assertSchedulerCronTriggers(self, capture, call_at_list):
+        self.assertEqual(len(capture.records), len(call_at_list))
+        for record, call_at in zip(capture.records, call_at_list):
+            self.assertEqual(record.call_at, call_at.replace(microsecond=0))
+            self.assertEqual(record.cron_id, self.env.ref('event.event_mail_scheduler'))

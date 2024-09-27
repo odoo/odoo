@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import contextmanager
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import exceptions, tools
@@ -15,6 +16,23 @@ class MockSMS(common.TransactionCase):
     def tearDown(self):
         super(MockSMS, self).tearDown()
         self._clear_sms_sent()
+
+    # ------------------------------------------------------------
+    # UTILITY MOCKS
+    # ------------------------------------------------------------
+
+    @contextmanager
+    def mock_datetime_and_now(self, mock_dt):
+        """ Used when synchronization date (using env.cr.now()) is important
+        in addition to standard datetime mocks. Used mainly to detect sync
+        issues. """
+        with freeze_time(mock_dt), \
+             patch.object(self.env.cr, 'now', lambda: mock_dt):
+            yield
+
+    # ------------------------------------------------------------
+    # GATEWAY MOCK
+    # ------------------------------------------------------------
 
     @contextmanager
     def mockSMSGateway(self, sms_allow_unlink=False, sim_error=None, nbr_t_error=None, moderated=False, force_delivered=False):
