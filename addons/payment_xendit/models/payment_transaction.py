@@ -27,7 +27,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         res = super()._get_specific_rendering_values(processing_values)
-        if self.provider_code != 'xendit' or self.payment_method_code != 'card':
+        if self.provider_code != 'xendit' or self.payment_method_code == 'card':
             return res
 
         # Initiate the payment and retrieve the invoice data.
