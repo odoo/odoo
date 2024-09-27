@@ -3,6 +3,7 @@
 from odoo.service.common import exp_version
 from odoo import http, _
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import float_round, SQL
 from odoo.tools.image import image_data_uri
 
@@ -149,6 +150,7 @@ class HrAttendance(http.Controller):
     def employees_infos(self, token, limit, offset, domain):
         company = self._get_company(token)
         if company:
+            domain = expression.AND([domain, [('company_id', '=', company.id)]])
             employees = request.env['hr.employee'].sudo().search_fetch(domain, ['id', 'display_name', 'job_id'],
                 limit=limit, offset=offset, order="name, id")
             employees_data = [{
