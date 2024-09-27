@@ -3,6 +3,7 @@
 
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
+from odoo.exceptions import UserError
 from odoo.tests import tagged, users
 
 
@@ -106,10 +107,10 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
                 # complete national number
                 ('0475000000', test_phone_records[0]),
                 # various international numbers
-                # ('32475110606', test_phone_records[6]),  # currently not supported, returns nothing
-                ('0032475110606', test_phone_records[6]),
-                ('+32475110606', test_phone_records[6]),
-                ('+32 475 11 06 06', test_phone_records[6]),
+                ('32475110606', test_phone_records[6] + self.dupes),
+                ('0032475110606', test_phone_records[6] + self.dupes),
+                ('+32475110606', test_phone_records[6] + self.dupes),
+                ('+32 475 11 06 06', test_phone_records[6] + self.dupes),
             ]:
                 with self.subTest(source=source):
                     results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', source)])
@@ -140,3 +141,19 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
             with self.subTest(source=source, operator="not ilike"):
                 results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'not ilike', source)])
                 self.assertEqual(results, notilike_expected)
+
+    @users('employee')
+    def test_search_phone_mobile_search_in(self):
+        """ Test searching by phone/mobile with direct search using in, currently
+        not supported. """
+        _test_phone_records = self.test_phone_records.with_env(self.env)
+
+        for user_country in (self.env.ref("base.be"), self.env.ref("base.us")):
+            self.env.user.sudo().country_id = user_country.id
+            # test "in" search
+            for sources, expected in [
+                (['0475'], self.env['mail.test.sms.bl']),
+            ]:
+                with self.subTest(sources=sources):
+                    with self.assertRaises(UserError):
+                        _results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', 'in', sources)])

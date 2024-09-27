@@ -94,8 +94,23 @@ class PhoneMixin(models.AbstractModel):
         if self._phone_search_min_length and len(value) < self._phone_search_min_length:
             raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
 
-        sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
+        # try to format number, based on current user's country as a wild guess;
+        # if we can format it, we fallback on a direct search to speedup research
+        # otherwise we use regex-based search on phone fields, hoping to find
+        # something that matches
+        formatted = self.env.user._phone_format(number=value)
+        if formatted:
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                return expression.AND([
+                    [('phone_sanitized', '!=', formatted)],
+                    expression.AND([[(phone_field, '!=', formatted)] for phone_field in phone_fields])
+                ])
+            return expression.OR([
+                [('phone_sanitized', '=', formatted)],
+                expression.OR([[(phone_field, '=', formatted)] for phone_field in phone_fields])
+            ])
 
+        sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
         if value.startswith('+') or value.startswith('00'):
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 # searching on +32485112233 should also finds 0032485112233 (and vice versa)
