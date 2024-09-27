@@ -115,7 +115,13 @@
                             <field name="product_properties" widget="properties"/>
                         </main>
                         <aside>
-                            <field name="image_128" widget="image" alt="Product" options="{'img_class': 'w-100 object-fit-contain'}"/>
+                            <field
+                                name="image_128"
+                                widget="image"
+                                alt="Product"
+                                options="{'img_class': 'w-100 object-fit-contain'}"
+                                invisible="not image_128"
+                            />
                         </aside>
                     </t>
                 </templates>
