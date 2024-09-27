@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { Component, useState, onWillUnmount } from "@odoo/owl";
-import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 export class CardLayout extends Component {
@@ -20,9 +19,6 @@ export class CardLayout extends Component {
         this.timeInterval = setInterval(() => {
             Object.assign(this.state, this.getDateTime());
         }, 1000);
-        this.companyImageUrl = url("/web/binary/company_logo", {
-            company: this.props.companyId,
-        });
         onWillUnmount(() => {
             clearInterval(this.timeInterval);
         });
