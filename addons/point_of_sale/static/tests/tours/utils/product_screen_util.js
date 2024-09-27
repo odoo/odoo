@@ -177,7 +177,14 @@ export function clickControlButton(name) {
         },
     ];
 }
-
+export function clickCloseButton() {
+    return [
+        {
+            trigger: `.btn-close`,
+            run: "click",
+        },
+    ];
+}
 export function clickControlButtonMore() {
     return [
         {
