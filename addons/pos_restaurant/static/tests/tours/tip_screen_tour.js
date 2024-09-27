@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TicketScreen.nthRowContains("4", "Tipping"),
 
             // Tip 20% on order1
-            TicketScreen.selectOrder("-0001"),
+            TicketScreen.selectOrderByPrice("2.0"),
             TicketScreen.loadSelectedOrder(),
             TipScreen.isShown(),
             TipScreen.totalAmountIs("2.0"),
@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             Chrome.clickMenuOption("Orders"),
 
             // Tip 25% on order3
-            TicketScreen.selectOrder("-0003"),
+            TicketScreen.selectOrderByPrice("6.0"),
             TicketScreen.loadSelectedOrder(),
             TipScreen.isShown(),
             TipScreen.totalAmountIs("6.0"),
@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             Chrome.clickMenuOption("Orders"),
 
             // finalize order 4 then tip custom amount
-            TicketScreen.selectOrder("-0004"),
+            TicketScreen.selectOrderByPrice("8.0"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.totalAmountIs("8.0"),
@@ -115,7 +115,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
 
             // tip order2 during payment
             // tip screen should not show after validating payment screen
-            TicketScreen.selectOrder("-0002"),
+            TicketScreen.selectOrderByPrice("4.0"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.isShown(),
             ProductScreen.clickPayButton(),

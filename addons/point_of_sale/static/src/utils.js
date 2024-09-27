@@ -117,6 +117,10 @@ export function loadImage(url, options = {}) {
  * @param {HTMLElement} el
  */
 export function loadAllImages(el) {
+    if (!el) {
+        return Promise.resolve();
+    }
+
     const images = el.querySelectorAll("img");
     return Promise.all(Array.from(images).map((img) => loadImage(img.src)));
 }
