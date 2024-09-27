@@ -28,16 +28,17 @@ class ResourceCalendarLeaves(models.Model):
         remaining = leaves_by_resource_id.pop(False)
 
         for resource_id, leaves in leaves_by_resource_id.items():
-            contract = contracts.filtered_domain([('employee_id.resource_id', '=', resource_id)])
-            if not contract:
+            resource_contracts = contracts.filtered_domain([('employee_id.resource_id', '=', resource_id)])
+            if not resource_contracts:
                 remaining += leaves
                 continue
-            tz = timezone(contract.resource_calendar_id.tz or 'UTC')
-            start_dt = date2datetime(contract.date_start, tz)
-            end_dt = date2datetime(contract.date_end, tz) if contract.date_end else datetime.max
-            # only modify leaves that fall under the active contract
-            leaves.filtered(
-                lambda leave: start_dt <= leave.date_from < end_dt
-            ).calendar_id = contract.resource_calendar_id
+            for contract in resource_contracts:
+                tz = timezone(contract.resource_calendar_id.tz or 'UTC')
+                start_dt = date2datetime(contract.date_start, tz)
+                end_dt = date2datetime(contract.date_end, tz) if contract.date_end else datetime.max
+                # only modify leaves that fall under the active contracts
+                leaves.filtered(
+                    lambda leave: start_dt <= leave.date_from < end_dt
+                ).calendar_id = contract.resource_calendar_id
 
         super(ResourceCalendarLeaves, remaining)._compute_calendar_id()

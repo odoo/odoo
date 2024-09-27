@@ -114,7 +114,8 @@ class TestHrContracts(TestContractCommon):
         employee's leaves iff they're after the contract's start date.
         """
         contract1 = self.create_contract('close', 'done', date(2024, 1, 1), date(2024, 5, 31))
-        contract2 = self.create_contract('open', 'normal', date(2024, 6, 1))
+        contract2 = self.create_contract('open', 'normal', date(2024, 6, 1), date(2024, 7, 31))
+        contract3 = self.create_contract('draft', 'normal', date(2024, 8, 1), date(2024, 9, 30))
 
         calendar1 = contract1.resource_calendar_id
         calendar2 = self.env['resource.calendar'].create({'name': 'Test Schedule'})
@@ -133,8 +134,16 @@ class TestHrContracts(TestContractCommon):
             'date_from': datetime(2024, 7, 5, 8, 0),
             'date_to': datetime(2024, 7, 5, 17, 0),
         })
+        leave3 = self.env['resource.calendar.leaves'].create({
+            'name': 'Sick during next contract',
+            'resource_id': self.employee.resource_id.id,
+            'calendar_id': calendar1.id,
+            'date_from': datetime(2024, 9, 5, 8, 0),
+            'date_to': datetime(2024, 9, 5, 17, 0),
+        })
 
         contract2.resource_calendar_id = calendar2
+        contract3.resource_calendar_id = calendar2
 
         self.assertEqual(
             self.employee.resource_calendar_id,
@@ -150,6 +159,13 @@ class TestHrContracts(TestContractCommon):
             leave2.calendar_id,
             calendar2,
             "Leave under active contract should update",
+        )
+
+        contract3.state = 'open'
+        self.assertEqual(
+            leave3.calendar_id,
+            calendar2,
+            "Leave under new running contract should update"
         )
 
     def test_running_contract_updates_employee_job_info(self):
