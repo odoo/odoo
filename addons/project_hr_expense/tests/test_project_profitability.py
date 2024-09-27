@@ -39,10 +39,16 @@ class TestProjectHrExpenseProfitability(TestProjectProfitabilityCommon, TestProj
         # Create a new company with the foreign currency.
         foreign_company = self.company_data_2['company']
         foreign_company.currency_id = self.foreign_currency
+        foreign_bank_account = self.env['res.partner.bank'].create({
+            'acc_number': '123456789',
+            'partner_id': foreign_company.partner_id.id,
+            'acc_type': 'bank',
+        })
         foreign_employee = self.env['hr.employee'].create({
             'name': 'Foreign employee',
             'company_id': foreign_company.id,
             'work_email': 'email@email',
+            'bank_account_id': foreign_bank_account.id,
         })
 
         expense = self.env['hr.expense'].create({
