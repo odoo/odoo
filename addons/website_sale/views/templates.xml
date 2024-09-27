@@ -1447,8 +1447,9 @@
             class="o_accordion_not_initialized accordion accordion-flush my-4"
         >
             <div
+                t-if="is_view_active('website_sale.accordion_more_information')"
                 id="more_information_accordion_item"
-                t-attf-class="accordion-item {{not is_view_active('website_sale.accordion_more_information') and 'border-bottom-0'}}"
+                class="accordion-item"
             />
         </div>
     </template>
