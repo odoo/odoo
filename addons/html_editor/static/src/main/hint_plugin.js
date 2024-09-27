@@ -13,13 +13,11 @@ function isMutationRecordSavable(record) {
  * @param {HTMLElement} editable
  */
 function target(selectionData, editable) {
+    if (selectionData.documentSelectionIsInEditable || editable.childNodes.length !== 1) {
+        return;
+    }
     const el = editable.firstChild;
-    if (
-        !selectionData.documentSelectionIsInEditable &&
-        el &&
-        el.tagName === "P" &&
-        editable.textContent === ""
-    ) {
+    if (el.tagName === "P" && isEmptyBlock(el)) {
         return el;
     }
 }
