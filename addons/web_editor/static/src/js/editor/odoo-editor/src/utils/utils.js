@@ -80,7 +80,8 @@ export const FONT_SIZE_CLASSES = ["display-1-fs", "display-2-fs", "display-3-fs"
  */
 export const TEXT_STYLE_CLASSES = ["display-1", "display-2", "display-3", "display-4", "lead", "o_small", "small"];
 
-export const ZERO_WIDTH_CHARS = ['\u200b', '\ufeff'];
+const ZWNBSP_CHAR = '\ufeff';
+export const ZERO_WIDTH_CHARS = ['\u200b', ZWNBSP_CHAR];
 export const ZERO_WIDTH_CHARS_REGEX = new RegExp(`[${ZERO_WIDTH_CHARS.join('')}]`, 'g');
 
 //------------------------------------------------------------------------------
@@ -1644,7 +1645,7 @@ export function hasClass(node, props) {
  */
 export function isSelectionFormat(editable, format) {
     const selectedNodes = getTraversedNodes(editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE);
+        .filter((n) => n.nodeType === Node.TEXT_NODE && n.nodeValue.replaceAll(ZWNBSP_CHAR, '').length);
     const isFormatted = formatsSpecs[format].isFormatted;
     return selectedNodes.length && selectedNodes.every(n => isFormatted(n, editable));
 }
