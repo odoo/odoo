@@ -2663,10 +2663,11 @@ export class OdooEditor extends EventTarget {
         // Get the top table ancestors at range bounds.
         const startTable = ancestors(range.startContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
         const endTable = ancestors(range.endContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
-        if (startTd !== endTd && startTable === endTable) {
+        if ((startTd !== endTd || this.keepCellSelected) && startTable === endTable) {
             if (!isProtected(startTable)) {
                 // The selection goes through at least two different cells ->
-                // select cells.
+                // select cells. Select single cell if cell is selected through
+                // double click.
                 this._selectTableCells(range);
                 appliedCustomSelection = true;
             }
@@ -4796,6 +4797,17 @@ export class OdooEditor extends EventTarget {
             this._activateContenteditable();
         }
 
+        const selection = this.document.getSelection();
+        const td = closestElement(selection.anchorNode, 'td');
+        if (td &&
+            !isProtected(td) &&
+            ((isEmptyBlock(td) && ev.detail === 2) || ev.detail === 3)
+        ) {
+            this._selectTableCells(selection.getRangeAt(0));
+            this.keepCellSelected = true;
+            return;
+        }
+        delete this.keepCellSelected;
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
 
