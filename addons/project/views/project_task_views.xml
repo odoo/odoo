@@ -664,7 +664,6 @@
                     <field name="rating_active"/>
                     <field name="has_late_and_unreached_milestone" />
                     <field name="allow_milestones" />
-                    <field name="state" />
                     <field name="subtask_count"/>
                     <progressbar field="state" colors='{"1_done": "success-done", "1_canceled": "danger", "03_approved": "success", "02_changes_requested": "warning", "04_waiting_normal": "info", "01_in_progress": "200" }'/>
                     <templates>
@@ -681,8 +680,8 @@
                             <div class="text-muted">
                                 <field t-if="record.parent_id.raw_value" invisible="context.get('default_parent_id', False)" name="parent_id"/>
                                 <field invisible="context.get('default_project_id', False)" name="project_id" options="{'no_open': True}"/>
-                                <field t-if="record.partner_id.value" t-att-title="record.partner_id.value" name="partner_id" class="text-truncate d-block"/>
-                                <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''">
+                                <field t-if="record.partner_id.value" t-att-title="record.partner_id.value" name="partner_id" class="text-truncate"/>
+                                <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" class="d-block">
                                     <field name="milestone_id" options="{'no_open': True}" />
                                 </span>
                             </div>
