@@ -9,11 +9,13 @@ export class StockOrderpointSearchPanel extends SearchPanel {
 
     setup() {
         super.setup(...arguments);
-        this.globalVisibilityDays = useState({value: 0});
+        const storedVal = localStorage.getItem("stock.orderpoint_horizon")
+        this.globalVisibilityDays = useState({value: storedVal === null ? 0 : parseInt(storedVal)});
     }
 
     async applyGlobalVisibilityDays(ev) {
         this.globalVisibilityDays.value = Math.max(parseInt(ev.target.value), 0);
+        localStorage.setItem("stock.orderpoint_horizon", this.globalVisibilityDays.value.toString());
         await this.env.searchModel.applyGlobalVisibilityDays(this.globalVisibilityDays.value);
     }
 }
