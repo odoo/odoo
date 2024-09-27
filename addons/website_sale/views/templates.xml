@@ -2386,10 +2386,13 @@
                                     <t t-if="is_anonymous_cart">
                                         <div id="div_email_public" t-attf-class="col-lg-12">
                                             <label class="col-form-label" for="o_email">Email</label>
-                                            <div class="align-items-center float-end" style="margin-top: -11px">
+                                            <div
+                                                t-if="website.account_on_checkout != 'disabled'"
+                                                class="align-items-center float-end"
+                                                style="margin-top: -11px"
+                                            >
                                                 <span>Already have an account?</span>
                                                 <a
-                                                    t-if="account_on_checkout != 'disabled'"
                                                     role="button"
                                                     href='/web/login?redirect=/shop/checkout'
                                                     class="btn btn-primary"
