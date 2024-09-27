@@ -10,6 +10,7 @@ from . import message_reaction
 from . import thread
 from . import webclient
 from . import webmanifest
+from . import im_status
 
 # after mail specifically as discuss module depends on mail
 from . import discuss

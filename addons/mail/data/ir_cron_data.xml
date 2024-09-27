@@ -93,5 +93,14 @@
             <field name="code">model._cleanup_expired_mutes()</field>
             <field name="state">code</field>
         </record>
+
+        <record id="ir_cron_reset_custom_statuses" model="ir.cron">
+            <field name="name">Notification: reset custom statuses</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="code">model._reset_custom_status_cron()</field>
+            <field name="state">code</field>
+        </record>
     </data>
 </odoo>

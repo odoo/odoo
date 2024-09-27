@@ -440,11 +440,12 @@ class ChannelMember(models.Model):
             ('channel_id', '=', self.channel_id.id),
             ('rtc_inviting_session_id', '=', False),
             ('rtc_session_ids', '=', False),
+            ('partner_id.im_status', '!=', 'busy'),
         ]
         if member_ids:
             channel_member_domain = expression.AND([channel_member_domain, [('id', 'in', member_ids)]])
         members = self.env['discuss.channel.member'].search(channel_member_domain)
-        for member in members:
+        for member in members.filtered(lambda m: m.partner_id.im_status != "busy"):
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             member._bus_send_store(
                 self.channel_id, {"rtcInvitingSession": Store.one(member.rtc_inviting_session_id)}

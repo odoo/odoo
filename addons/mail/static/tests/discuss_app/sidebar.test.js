@@ -929,10 +929,10 @@ test("chat - states: open manually by clicking the title", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { count: 0, text: "Mitchell Admin" });
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
-    await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { text: "Mitchell Admin" });
 });
 
 test("chat - states: close should call update server data", async () => {
@@ -1012,14 +1012,14 @@ test("chat - states: close from the bus", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
-    await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { text: "Mitchell Admin" });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_chat_open: false,
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { count: 0, text: "Mitchell Admin" });
 });
 
 test("chat - states: open from the bus", async () => {
@@ -1046,14 +1046,14 @@ test("chat - states: open from the bus", async () => {
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { count: 0, text: "Mitchell Admin" });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "res.users.settings", {
         id: userSettingsId,
         is_discuss_sidebar_category_chat_open: true,
     });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
-    await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { text: "Mitchell Admin" });
 });
 
 test("chat - states: the active category item should be visible even if the category is closed", async () => {
@@ -1062,15 +1062,15 @@ test("chat - states: the active category item should be visible even if the cate
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
-    await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { text: "Mitchell Admin" });
     await click("button", { text: "Mitchell Admin" });
     await contains("button.o-active", { text: "Mitchell Admin" });
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { text: "Mitchell Admin" });
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
-    await contains(".o-mail-DiscussSidebar button", { count: 0, text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebar-item button", { count: 0, text: "Mitchell Admin" });
 });
 
 test("chat - avatar: should have correct avatar", async () => {

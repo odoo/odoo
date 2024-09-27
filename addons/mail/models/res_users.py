@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime
 
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.tools import email_normalize
@@ -13,6 +14,8 @@ class Users(models.Model):
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
+        - add forced IM status
+        - add custom status
     """
     _name = 'res.users'
     _inherit = ['res.users']
@@ -25,6 +28,14 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+
+    forced_im_status = fields.Selection([
+        ('away', 'Away'),
+        ('busy', 'Busy'),
+        ('offline', 'Offline')],
+        'Forced IM Status')
+    custom_status = fields.Char('Custom Status')
+    reset_custom_status_datetime = fields.Datetime('Reset Custom Status Datetime')
 
     _sql_constraints = [(
         "notification_type",
@@ -64,11 +75,11 @@ class Users(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['notification_type']
+        return super().SELF_READABLE_FIELDS + ['notification_type', 'forced_im_status', 'custom_status']
 
     @property
     def SELF_WRITEABLE_FIELDS(self):
-        return super().SELF_WRITEABLE_FIELDS + ['notification_type']
+        return super().SELF_WRITEABLE_FIELDS + ['notification_type', 'forced_im_status', 'custom_status']
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -254,6 +265,14 @@ class Users(models.Model):
                           user_name=current_user.name, user_id=current_user.id,
                           portal_user_name=user.name)
             )
+
+    @api.model
+    def _reset_custom_status_cron(self):
+        users = self.env['res.users'].search(
+            [('reset_custom_status_datetime', '<=', datetime.utcnow())]
+        )
+        users.custom_status = None
+        users.reset_custom_status_datetime = None
 
     # ------------------------------------------------------------
     # DISCUSS

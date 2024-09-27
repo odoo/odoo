@@ -96,6 +96,8 @@
                     <t t-set-slot="content">
                         <div class="overflow-hidden" t-ref="floating">
                             <span class="fw-bolder user-select-none" t-esc="thread.displayName"/>
+                            <t t-set="customStatus" t-value="thread.correspondent?.persona.custom_status" />
+                            <span t-if="customStatus" class="text-muted text-truncate" t-att-title="customStatus" t-esc="customStatus" />
                             <t t-call="mail.DiscussSidebarChannel.commands"/>
                         </div>
                     </t>
@@ -166,6 +168,8 @@
                 </div>
                 <span t-if="!store.discuss.isSidebarCompact" class="mx-2 text-truncate" t-att-class="thread.selfMember?.message_unread_counter > 0 and !thread.isMuted ? 'o-item-unread fw-bolder' : 'text-muted'">
                     <t t-esc="thread.displayName"/>
+                    <t t-set="customStatus" t-value="thread.correspondent?.persona.custom_status" />
+                    <span t-if="customStatus" class="ms-1 fw-normal text-muted w-100 text-truncate" t-att-title="customStatus" t-esc="customStatus" />
                 </span>
             </div>
             <t t-if="!store.discuss.isSidebarCompact">

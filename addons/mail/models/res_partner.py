@@ -26,6 +26,7 @@ class Partner(models.Model):
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
     starred_message_ids = fields.Many2many('mail.message', 'mail_message_res_partner_starred_rel')
+    custom_status = fields.Char(compute='_compute_custom_status')
 
     @api.depends('contact_address')
     def _compute_contact_address_inline(self):
@@ -40,6 +41,14 @@ class Partner(models.Model):
         odoobot = self.env['res.partner'].browse(odoobot_id)
         if odoobot in self:
             odoobot.im_status = 'bot'
+
+    def _compute_custom_status(self):
+        for partner in self:
+            main_user = next(
+                (u for u in partner.with_context(active_test=False).user_ids if not u.share),
+                self.env["res.users"]
+            )
+            partner.custom_status = main_user.custom_status
 
     # pseudo computes
 
@@ -214,7 +223,7 @@ class Partner(models.Model):
 
     def _to_store(self, store: Store, /, *, fields=None, main_user_by_partner=None):
         if fields is None:
-            fields = ["active", "email", "im_status", "is_company", "name", "user", "write_date"]
+            fields = ["active", "email", "im_status", "is_company", "name", "user", "write_date", "custom_status"]
         if not self.env.user._is_internal() and "email" in fields:
             fields.remove("email")
         for partner in self:

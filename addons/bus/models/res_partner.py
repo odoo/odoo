@@ -13,6 +13,9 @@ class ResPartner(models.Model):
         status_by_partner = {}
         for presence in self.env["bus.presence"].search([("user_id", "in", self.user_ids.ids)]):
             partner = presence.user_id.partner_id
+            if forced_im_status := presence.user_id.forced_im_status:
+                status_by_partner[partner] = forced_im_status
+                continue
             if (
                 status_by_partner.get(partner, "offline") == "offline"
                 or presence.status == "online"

@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { UserStatusPanel } from "@mail/core/public_web/user_status_panel";
 
 export const discussSidebarItemsRegistry = registry.category("mail.discuss_sidebar_items");
 
@@ -16,7 +17,7 @@ export const discussSidebarItemsRegistry = registry.category("mail.discuss_sideb
 export class DiscussSidebar extends Component {
     static template = "mail.DiscussSidebar";
     static props = {};
-    static components = { Dropdown };
+    static components = { Dropdown, UserStatusPanel };
 
     setup() {
         super.setup();

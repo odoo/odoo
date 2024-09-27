@@ -73,6 +73,7 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
     im_status = fields.Char(related="user_id.im_status")
+    custom_status = fields.Char(related="user_id.custom_status")
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 
     @api.model
