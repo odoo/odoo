@@ -17,14 +17,22 @@ tour.register('order_lunch_tour', {
     position: 'bottom',
 },
 {
+    content: 'insert text in the search bar',
+    trigger: '.o_searchview_input',
+    run: 'text pizza'
+},
+{
+    content: "Select the Transaction search option from the dropdown",
+    trigger: ".o_searchview_autocomplete li:contains(Vendor)",
+},
+{
     trigger: "div[role=article]",
     extra_trigger: '.o_search_panel_filter_value .form-check-input:checked',
     content: _t("Click on a product you want to order and is available."),
     position: 'bottom',
 },
 {
-    trigger: 'textarea[name="note"]',
-    extra_trigger: 'button[name="add_to_cart"]',
+    trigger: 'textarea[id="note"]',
     content: _t("Add additionnal information about your order."),
     position: 'bottom',
     run: 'text allergy to peanuts',
@@ -35,7 +43,7 @@ tour.register('order_lunch_tour', {
     position: 'bottom',
 },
 {
-    trigger: '.o_lunch_widget_order_button',
+    trigger: 'button:contains("Order Now")',
     content: _t("Validate your order"),
     position: 'left',
     run: 'click',
