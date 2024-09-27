@@ -262,11 +262,11 @@ class PosOrder(models.Model):
             line = line_values['record']
             invoice_lines_values = self._get_invoice_lines_values(line_values, line)
             invoice_lines.append((0, None, invoice_lines_values))
-            if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_subtotal_incl, line.product_id.lst_price * line.qty, precision_rounding=self.currency_id.rounding) < 0:
+            if line.order_id.pricelist_id.discount_policy == 'without_discount' and float_compare(line.price_unit, line.product_id.lst_price, precision_rounding=self.currency_id.rounding) < 0:
                 invoice_lines.append((0, None, {
                     'name': _('Price discount from %s -> %s',
-                              float_repr(line.product_id.lst_price * line.qty, self.currency_id.decimal_places),
-                              float_repr(line.price_subtotal_incl, self.currency_id.decimal_places)),
+                              float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
+                              float_repr(line.price_unit, self.currency_id.decimal_places)),
                     'display_type': 'line_note',
                 }))
             if line.customer_note:
