@@ -521,7 +521,11 @@ export function makeDraggableHook(hookParams) {
 
                 dom.addClass(document.body, "pe-none", "user-select-none");
                 if (params.iframeWindow) {
-                    dom.addClass(params.iframeWindow.body, "pe-none", "user-select-none");
+                    for (const iframe of document.getElementsByTagName("iframe")) {
+                        if (iframe.contentWindow === params.iframeWindow) {
+                            dom.addClass(iframe, "pe-none", "user-select-none");
+                        }
+                    }
                 }
                 // FIXME: adding pe-none and cursor on the same element makes
                 // no sense as pe-none prevents the cursor to be displayed.
@@ -773,6 +777,16 @@ export function makeDraggableHook(hookParams) {
              * @param {PointerEvent} ev
              */
             const updatePointerPosition = (ev) => {
+                if (ev.view === params.iframeWindow) {
+                    for (const iframe of document.getElementsByTagName("iframe")) {
+                        if (iframe.contentWindow === params.iframeWindow) {
+                            const boundingRect = iframe.getBoundingClientRect();
+                            ctx.pointer.x = ev.clientX + boundingRect.x;
+                            ctx.pointer.y = ev.clientY + boundingRect.y;
+                            return;
+                        }
+                    }
+                }
                 ctx.pointer.x = ev.clientX;
                 ctx.pointer.y = ev.clientY;
             };
