@@ -62,7 +62,7 @@ export class PaymentScreen extends Component {
             }
         }
 
-        if (this.payment_methods_from_config.length == 1) {
+        if (this.payment_methods_from_config.length == 1 && this.paymentLines.length == 0) {
             this.addNewPaymentLine(this.payment_methods_from_config[0]);
         }
     }
