@@ -197,6 +197,13 @@ def init_logger():
     # need to be adapted later but too muchwork for this pr.
     warnings.filterwarnings('ignore', r'^datetime.datetime.utcnow\(\) is deprecated and scheduled for removal in a future version.*', category=DeprecationWarning)
 
+    # pkg_ressouce is used in google-auth < 1.23.0 (removed in https://github.com/googleapis/google-auth-library-python/pull/596)
+    # unfortunately, in ubuntu jammy and noble, the google-auth version is 1.5.1
+    # starting from noble, the default pkg_ressource version emits a warning on import, triggered when importing
+    # google-auth
+    warnings.filterwarnings('ignore', r'pkg_resources is deprecated as an API.+', category=DeprecationWarning)
+    warnings.filterwarnings('ignore', r'Deprecated call to \`pkg_resources.declare_namespace.+', category=DeprecationWarning)
+
     from .tools.translate import resetlocale
     resetlocale()
 
