@@ -436,10 +436,10 @@
                         <t t-name="card">
                             <div class="o_project_kanban_main d-flex align-items-baseline gap-1 ms-1">
                                 <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
-                                <div class="mw-100 pb-4 me-5">
+                                <div class="min-w-0 pb-4 me-2">
                                     <span class="text-truncate d-block fs-4 fw-bold" t-att-title="record.display_name.value"><field name="display_name"/></span>
-                                    <span name="partner_name" class="text-truncate text-muted" t-if="record.partner_id.value">
-                                        <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><field name="partner_id"/>
+                                    <span name="partner_name" class="text-muted d-flex align-items-baseline" t-if="record.partner_id.value">
+                                        <span class="fa fa-user me-2" aria-label="Partner" title="Partner"></span><field class="text-truncate" name="partner_id"/>
                                     </span>
                                     <div t-if="record.date.raw_value or record.date_start.raw_value" class="text-muted">
                                         <span class="fa fa-clock-o me-2" title="Dates"></span><field name="date_start"/>
