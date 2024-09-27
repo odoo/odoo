@@ -40,7 +40,14 @@ patch(Navbar.prototype, {
     setFloatingOrder(floatingOrder) {
         this.pos.selectedTable = null;
         this.pos.set_order(floatingOrder);
-        this.pos.showScreen("ProductScreen");
+
+        const props = {};
+        const screenName = floatingOrder.get_screen_data().name;
+        if (screenName === "PaymentScreen") {
+            props.orderUuid = floatingOrder.uuid;
+        }
+
+        this.pos.showScreen(screenName || "ProductScreen", props);
     },
     async onClickTableTab() {
         await this.pos.syncAllOrders();
