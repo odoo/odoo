@@ -462,6 +462,13 @@ function _shouldEditableMediaBeEditable(mediaEl) {
     // first non editable ancestor is in fact in an editable parent.
     const parentEl = mediaEl.parentElement;
     const nonEditableAncestorRootEl = parentEl && parentEl.closest('[contenteditable="false"]');
+    if (
+        nonEditableAncestorRootEl
+        && nonEditableAncestorRootEl.id === "wrapwrap"
+        && nonEditableAncestorRootEl.closest("[data-edit_translations]")
+    ) {
+        return true;
+    }
     return nonEditableAncestorRootEl
         && nonEditableAncestorRootEl.parentElement
         && nonEditableAncestorRootEl.parentElement.isContentEditable;
@@ -498,9 +505,9 @@ function _forwardToThumbnail(imgEl) {
         const carouselItemEl = imgEl.closest(".carousel-item");
         if (carouselInnerEl && carouselItemEl) {
             const imageIndex = [...carouselInnerEl.children].indexOf(carouselItemEl);
-            const miniatureEl = carouselEl.querySelector(`.carousel-indicators [data-bs-slide-to="${imageIndex}"]`);
-            if (miniatureEl && miniatureEl.style.backgroundImage) {
-                miniatureEl.style.backgroundImage = `url(${imgEl.getAttribute("src")})`;
+            const miniatureEl = carouselEl.querySelector(`.carousel-indicators [data-bs-slide-to="${imageIndex}"] img`);
+            if (miniatureEl) {
+                miniatureEl.setAttribute("src", imgEl.getAttribute("src"));
             }
         }
     }

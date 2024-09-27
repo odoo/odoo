@@ -117,7 +117,7 @@ var SnippetEditor = publicWidget.Widget.extend({
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable && !this.$target.hasClass('oe_unmovable');
         this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]') && !isUnremovable(this.$target[0]);
-        this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
+        this.displayOverlayOptions = !this.options.enableTranslation && (this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable);
 
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
@@ -3369,8 +3369,9 @@ class SnippetsMenu extends Component {
             return snippetEditor.__isStarted;
         }
 
-        // In translate mode, only allow creating the editor if the target is a
-        // text option snippet.
+        // In translate mode, only allow creating the editor if the target is
+        // among some specific snippets (text option snippet, has a translatable
+        // attribute...).
         if (!forceCreate && this.options.enableTranslation && !this._allowInTranslationMode($snippet)) {
             return Promise.resolve(null);
         }
@@ -4096,7 +4097,9 @@ class SnippetsMenu extends Component {
      * @private
      */
     _allowInTranslationMode($snippet) {
-        return globalSelector.is($snippet, { onlyTextOptions: true });
+        return $snippet[0]?.matches(".o_translatable_attribute")
+            || $snippet[0]?.querySelector(".o_translatable_attribute")
+            || globalSelector.is($snippet, { onlyTextOptions: true });
     }
 
     //--------------------------------------------------------------------------

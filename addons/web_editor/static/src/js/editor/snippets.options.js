@@ -3917,7 +3917,11 @@ const SnippetOptionWidget = publicWidget.Widget.extend({
                 i++;
             }
             const proms = allSubWidgets.map(async widget => {
-                const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+                let show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+                if (show && this.options.enableTranslation) {
+                    show = this._computeWidgetTranslateVisibility
+                        .call(obj, widget.getName(), params);
+                }
                 if (!show) {
                     widget.toggleVisibility(false);
                     return;
@@ -4181,6 +4185,17 @@ const SnippetOptionWidget = publicWidget.Widget.extend({
      */
     _computeWidgetVisibility: async function (widgetName, params) {
         return true;
+    },
+    /**
+     * Returns true if the widget should be visible in translate mode.
+     *
+     * @private
+     * @param {string} widgetName
+     * @param {Object} params
+     * @returns {boolean}
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        return false;
     },
     /**
      * @private
@@ -4619,10 +4634,16 @@ registry.sizing = SnippetOptionWidget.extend({
         const self = this;
         const def = this._super.apply(this, arguments);
         let isMobile = weUtils.isMobileView(this.$target[0]);
-
+        this.canUseHandle = !this.options.enableTranslation;
         this.$handles = this.$overlay.find('.o_handle');
 
         let resizeValues = this._getSize();
+        if (!this.canUseHandle) {
+            for (const handleEl of this.$handles) {
+                handleEl.classList.add("readonly");
+            }
+            return def;
+        }
         this.$handles.on('mousedown', function (ev) {
             const mousedownTime = ev.timeStamp;
             ev.preventDefault();
@@ -4685,8 +4706,8 @@ registry.sizing = SnippetOptionWidget.extend({
             let resizeResolve;
             const prom = new Promise(resolve => resizeResolve = () => resolve());
             self.trigger_up("snippet_edition_request", { exec: () => {
-                self.trigger_up("disable_loading_effect");
-                return prom;
+                    self.trigger_up("disable_loading_effect");
+                    return prom;
             }});
 
             // If we are in grid mode, add a background grid and place it in
@@ -4831,9 +4852,9 @@ registry.sizing = SnippetOptionWidget.extend({
                     self.options.wysiwyg.odooEditor.historyStep();
 
                     self.trigger_up("snippet_edition_request", { exec: async () => {
-                        await new Promise(resolve => {
-                            self.trigger_up("snippet_option_update", { onSuccess: () => resolve() });
-                        });
+                            await new Promise(resolve => {
+                                self.trigger_up("snippet_option_update", { onSuccess: () => resolve() });
+                            });
                     }});
                 }, 0);
             };
@@ -4880,7 +4901,7 @@ registry.sizing = SnippetOptionWidget.extend({
         const isMobileView = weUtils.isMobileView(this.$target[0]);
         const isGridOn = this.$target[0].classList.contains("o_grid_item");
         const isGrid = !isMobileView && isGridOn;
-        if (this.$target[0].parentNode && this.$target[0].parentNode.classList.contains('row')) {
+        if (this.canUseHandle && this.$target[0].parentNode && this.$target[0].parentNode.classList.contains('row')) {
             // Hiding/showing the correct resize handles if we are in grid mode
             // or not.
             for (const handleEl of this.$handles) {
@@ -6474,13 +6495,18 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         await this._loadImageInfo();
         await this._rerenderXML();
         const img = this._getImg();
+        let resizeWidth = this.optimizedWidth;
+        if (this.options.enableTranslation && img.dataset.resizeWidth) {
+            // In translate mode, we keep width of the default lang img.
+            resizeWidth = img.dataset.resizeWidth;
+        }
         if (!['image/gif', 'image/svg+xml'].includes(img.dataset.mimetype)) {
             // Convert to recommended format and width.
             img.dataset.mimetype = 'image/webp';
-            img.dataset.resizeWidth = this.optimizedWidth;
+            img.dataset.resizeWidth = resizeWidth;
         } else if (img.dataset.shape && img.dataset.originalMimetype !== "image/gif") {
             img.dataset.originalMimetype = "image/webp";
-            img.dataset.resizeWidth = this.optimizedWidth;
+            img.dataset.resizeWidth = resizeWidth;
         }
         await this._applyOptions();
         await this.updateUI();
@@ -7426,6 +7452,21 @@ registry.ImageTools = ImageHandlerOption.extend({
         }
         if (widgetName === "toggle_stretch_opt") {
             return this._isCropRequired();
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetTranslateVisibility(widgetName, params) {
+        if (!this.$target[0].classList.contains("o_translatable_attribute")) {
+            return false;
+        }
+        switch (widgetName) {
+            case "image_alt_opt":
+                return !!this.$target[0].getAttribute("alt");
+            case "image_title_opt":
+                return !!this.$target[0].getAttribute("title");
         }
         return this._super(...arguments);
     },
