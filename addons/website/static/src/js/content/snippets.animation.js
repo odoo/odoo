@@ -718,7 +718,7 @@ const MobileYoutubeAutoplayMixin = {
         this.isYoutubeVideo = src.indexOf('youtube') >= 0;
         this.isMobileEnv = uiUtils.getSize() <= SIZES.LG && hasTouch();
 
-        if (this.isYoutubeVideo && this.isMobileEnv && !window.YT) {
+        if (this.isYoutubeVideo && this.isMobileEnv && !window.YT && !this.el.dataset.needCookiesApproval) {
             const oldOnYoutubeIframeAPIReady = window.onYouTubeIframeAPIReady;
             promise = new Promise(resolve => {
                 window.onYouTubeIframeAPIReady = () => {
@@ -740,7 +740,7 @@ const MobileYoutubeAutoplayMixin = {
     _triggerAutoplay: function (iframeEl) {
         // YouTube does not allow to auto-play video in mobile devices, so we
         // have to play the video manually.
-        if (this.isMobileEnv && this.isYoutubeVideo) {
+        if (this.isMobileEnv && this.isYoutubeVideo && !this.el.dataset.needCookiesApproval) {
             new window.YT.Player(iframeEl, {
                 events: {
                     onReady: ev => ev.target.playVideo(),
