@@ -819,7 +819,7 @@ class ProjectTask(models.Model):
         domain = expression.AND([
             self.env['sale.order.line']._sellable_lines_domain(),
             [
-                '|', ('order_partner_id.commercial_partner_id', 'parent_of', unquote('partner_id if partner_id else []')),
+                '|', ('order_partner_id.commercial_partner_id.id', 'parent_of', unquote('partner_id if partner_id else []')),
                     ('order_partner_id', '=?', unquote('partner_id')),
                 ('is_service', '=', True), ('is_expense', '=', False), ('state', '=', 'sale'),
             ],
