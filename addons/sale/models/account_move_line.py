@@ -15,6 +15,11 @@ class AccountMoveLine(models.Model):
         'invoice_line_id', 'order_line_id',
         string='Sales Order Lines', readonly=True, copy=False)
 
+    def _compute_price_unit(self):
+        # EXTEND account - prevent price computation when there are sale order lines linked, unless the product/uom differs
+        lines_to_be_computed = self.filtered(lambda l: not l.sale_line_ids or l.sale_line_ids.product_uom != l.product_uom_id or l.sale_line_ids.product_id != l.product_id)
+        super(AccountMoveLine, lines_to_be_computed)._compute_price_unit()
+
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'sale_line_ids' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)

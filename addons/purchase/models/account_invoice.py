@@ -517,6 +517,11 @@ class AccountMoveLine(models.Model):
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
 
+    def _compute_price_unit(self):
+        # EXTEND account - prevent price computation when there are purchase order lines linked, unless the product or uom differs
+        lines_to_be_computed = self.filtered(lambda l: not l.purchase_line_id or l.purchase_line_id.product_uom != l.product_uom_id or l.purchase_line_id.product_id != l.product_id)
+        super(AccountMoveLine, lines_to_be_computed)._compute_price_unit()
+
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'purchase_line_id' field as well.
         super(AccountMoveLine, self)._copy_data_extend_business_fields(values)

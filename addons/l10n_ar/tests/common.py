@@ -585,8 +585,8 @@ class TestAr(AccountTestInvoicingCommon):
                 for line in values['invoice_line_ids']:
                     with invoice_form.invoice_line_ids.new() as line_form:
                         line_form.product_id = line.get('product_id')
-                        line_form.price_unit = line.get('price_unit')
                         line_form.quantity = line.get('quantity')
+                        line_form.price_unit = line.get('price_unit')
                         if line.get('tax_ids'):
                             line_form.tax_ids = line.get('tax_ids')
                         line_form.name = 'xxxx'
