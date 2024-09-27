@@ -85,13 +85,15 @@ class AccountTax(models.Model):
             ('VATEX_FR-CNWVAT', 'VATEX-FR-CNWVAT - France domestic Credit Notes without VAT, due to supplier forfeit of VAT for discount'),
         ]
     )
+    ubl_cii_requires_exemption_reason = fields.Boolean(compute='_compute_ubl_cii_requires_exemption_reason')
 
-    def _requires_exemption_reason(self):
-        self.ensure_one()
-        return self.ubl_cii_tax_category_code in ['AE', 'E', 'G', 'O', 'K']
+    @api.depends('ubl_cii_tax_category_code')
+    def _compute_ubl_cii_requires_exemption_reason(self):
+        for tax in self:
+            tax.ubl_cii_requires_exemption_reason = tax.ubl_cii_tax_category_code in ['AE', 'E', 'G', 'O', 'K']
 
     @api.onchange("ubl_cii_tax_category_code")
     def _onchange_ubl_cii_tax_category_code(self):
         for tax in self:
-            if not tax._requires_exemption_reason():
+            if not tax.ubl_cii_requires_exemption_reason:
                 tax.ubl_cii_tax_exemption_reason_code = False
