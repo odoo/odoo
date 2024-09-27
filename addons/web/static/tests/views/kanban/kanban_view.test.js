@@ -8013,7 +8013,6 @@ test("kanban with color attribute", async () => {
         resModel: "category",
         arch: `
             <kanban highlight_color="color">
-                <field name="color"/>
                 <templates>
                     <t t-name="card">
                         <field name="name"/>
