@@ -110,3 +110,19 @@ class Complex(models.Model):
     d = fields.Date()
     dt = fields.Datetime()
     parent_id = fields.Many2one('import.complex')
+
+
+class PropertyDefinition(models.Model):
+    _name = _description = 'import.properties.definition'
+    _rec_name = 'id'
+
+    properties_definition = fields.PropertiesDefinition()
+    record_properties_ids = fields.One2many('import.properties', 'record_definition_id')
+    main_properties_record_id = fields.Many2one('import.properties', 'record_definition_id')
+
+
+class Property(models.Model):
+    _name = _description = 'import.properties'
+
+    properties = fields.Properties(definition='record_definition_id.properties_definition')
+    record_definition_id = fields.Many2one('import.properties.definition')

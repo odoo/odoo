@@ -76,6 +76,10 @@ class EventRegistration(models.Model):
     registration_answer_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Answers')
     registration_answer_choice_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Selection Answers',
         domain=[('question_type', '=', 'simple_choice')])
+    # scheduled mails
+    mail_registration_ids = fields.One2many(
+        'event.mail.registration', 'registration_id',
+        string="Scheduler Emails", readonly=True)
     # properties
     registration_properties = fields.Properties(
         'Properties', definition='event_id.registration_properties_definition', copy=True)
@@ -309,7 +313,6 @@ class EventRegistration(models.Model):
         if not onsubscribe_schedulers:
             return
 
-        onsubscribe_schedulers.update({'mail_done': False})
         # either trigger the cron, either run schedulers immediately (scaling choice)
         async_scheduler = self.env['ir.config_parameter'].sudo().get_param('event.event_mail_async')
         if async_scheduler:
@@ -318,9 +321,14 @@ class EventRegistration(models.Model):
             # we could simply call _create_missing_mail_registrations and let cron do their job
             # but it currently leads to several delays. We therefore call execute until
             # cron triggers are correctly used
-            onsubscribe_schedulers.with_context(
-                event_mail_registration_ids=open_registrations.ids
-            ).with_user(SUPERUSER_ID).execute()
+            for scheduler in onsubscribe_schedulers:
+                try:
+                    scheduler.with_context(
+                        event_mail_registration_ids=open_registrations.ids
+                    ).with_user(SUPERUSER_ID).execute()
+                except Exception as e:
+                    _logger.exception("Failed to run scheduler %s", scheduler.id)
+                    self.env["event.mail"]._warn_template_error(scheduler, e)
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY

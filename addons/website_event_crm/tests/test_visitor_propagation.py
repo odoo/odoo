@@ -39,6 +39,6 @@ class TestWebsiteEventCrmFlow(TestEventCrmCommon):
                 'email': 'test2@test.example.com',
             },
         ])
-        leads = test_lang_registration1.lead_ids | test_lang_registration2.lead_ids
+        leads = test_lang_registration1.sudo().lead_ids | test_lang_registration2.sudo().lead_ids
         self.assertEqual(leads.visitor_ids, test_lang_visitor)
         self.assertEqual(leads.lang_id, test_lang_visitor.lang_id)

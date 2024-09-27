@@ -57,10 +57,17 @@ class IrQWeb(models.AbstractModel):
                 sub_call = el.get('t-call')
                 if sub_call:
                     el.set('t-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
-                # If it already has a data-snippet it is a saved or an inherited snippet.
-                # Do not override it.
-                elif 'data-snippet' not in el.attrib:
-                    el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
+                else:
+                    # If it already has a data-snippet it is a saved or an
+                    # inherited snippet. Do not override it.
+                    if 'data-snippet' not in el.attrib:
+                        el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
+
+                    # If it already has a data-name it is a saved or an
+                    # inherited snippet. Do not override it.
+                    snippet_name = compile_context.get('snippet-name')
+                    if snippet_name and 'data-name' not in el.attrib:
+                        el.attrib['data-name'] = snippet_name
 
         return super()._compile_node(el, compile_context, indent)
 
@@ -101,8 +108,9 @@ class IrQWeb(models.AbstractModel):
 
     def _compile_directive_snippet_call(self, el, compile_context, indent):
         key = el.attrib.pop('t-snippet-call')
+        snippet_name = el.attrib.pop('string', None)
         el.set('t-call', key)
-        el.set('t-options', f"{{'snippet-key': {key!r}}}")
+        el.set('t-options', f"{{'snippet-key': {key!r}, 'snippet-name': {snippet_name!r}}}")
         return self._compile_node(el, compile_context, indent)
 
     def _compile_directive_install(self, el, compile_context, indent):

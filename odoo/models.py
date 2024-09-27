@@ -1076,6 +1076,50 @@ class BaseModel(metaclass=MetaModel):
         if not _is_toplevel_call:
             splittor = lambda rs: rs
 
+        # {properties_fname: {record: {property_name: (value, property_type)}}}
+        cache_properties = {}
+
+        def get_property(properties_fname, property_name, record):
+            # FIXME: Only efficient during the _is_toplevel_call == True
+            if properties_fname not in cache_properties:
+                properties_field = self._fields[properties_fname]
+                # each value is either None or a dict
+                result = []
+                for rec in self:
+                    raw_properties = rec[properties_fname]
+                    definition = properties_field._get_properties_definition(rec)
+                    if not raw_properties or not definition:
+                        result.append(definition or [])
+                    else:
+                        assert isinstance(raw_properties, dict), f"Wrong type {raw_properties!r}"
+                        result.append(properties_field._dict_to_list(raw_properties, definition))
+
+                # FIXME: Far from optimal, it will fetch display_name for no reason
+                res_ids_per_model = properties_field._get_res_ids_per_model(self, result)
+
+                cache_properties[properties_fname] = record_map = {}
+                for properties, rec in zip(result, self):
+                    properties_field._parse_json_types(properties, self.env, res_ids_per_model)
+                    record_map[rec] = prop_map = {}
+                    for prop in properties:
+                        value = prop.get('value')
+                        prop_type = prop.get('type')
+                        property_model = prop.get('comodel')
+
+                        if prop_type in ('many2one', 'many2many') and property_model:
+                            value = self.env[property_model].browse(value)
+                        elif prop_type == 'tags' and value:
+                            value = ",".join(
+                                next(iter(tag[1] for tag in prop['tags'] if tag[0] == v), '')
+                                for v in value
+                            )
+                        elif prop_type == 'selection':
+                            value = dict(prop['selection']).get(value, '')
+
+                        prop_map[prop['name']] = (value, prop_type)
+
+            return cache_properties[properties_fname][record].get(property_name, ('', 'char'))
+
         # memory stable but ends up prefetching 275 fields (???)
         for record in splittor(self):
             # main line of record, initially empty
@@ -1099,15 +1143,23 @@ class BaseModel(metaclass=MetaModel):
                 elif name == 'id':
                     current[i] = (record._name, record.id)
                 else:
-                    field = record._fields[name]
-                    value = record[name]
+                    prop_name = None
+                    if '.' in name:
+                        fname, prop_name = name.split('.')
+                        field = record._fields[fname]
+                        assert field.type == 'properties' and prop_name
+                        value, field_type = get_property(fname, prop_name, record)
+                    else:
+                        field = record._fields[name]
+                        field_type = field.type
+                        value = record[name]
 
                     # this part could be simpler, but it has to be done this way
                     # in order to reproduce the former behavior
                     if not isinstance(value, BaseModel):
                         current[i] = field.convert_to_export(value, record)
 
-                    elif import_compatible and field.type == 'reference':
+                    elif import_compatible and field_type == 'reference':
                         current[i] = f"{value._name},{value.id}"
 
                     else:
@@ -1119,7 +1171,7 @@ class BaseModel(metaclass=MetaModel):
 
                         # in import_compat mode, m2m should always be exported as
                         # a comma-separated list of xids or names in a single cell
-                        if import_compatible and field.type == 'many2many':
+                        if import_compatible and field_type == 'many2many':
                             index = None
                             # find out which subfield the user wants & its
                             # location as we might not get it as the first
@@ -1138,7 +1190,7 @@ class BaseModel(metaclass=MetaModel):
                                 xml_ids = [xid for _, xid in value.__ensure_xml_id()]
                                 current[index] = ','.join(xml_ids)
                             else:
-                                current[index] = field.convert_to_export(value, record)
+                                current[index] = ','.join(value.mapped('display_name')) if value else ''
                             continue
 
                         lines2 = value._export_rows(fields2, _is_toplevel_call=False)
@@ -1231,15 +1283,11 @@ class BaseModel(metaclass=MetaModel):
             if field_path[0] in (None, 'id', '.id'):
                 continue
             model_fields = self._fields
-            if isinstance(model_fields[field_path[0]], odoo.fields.Many2one):
-                # this only applies for toplevel m2o (?) fields
-                if field_path[0] in (self.env.context.get('name_create_enabled_fieds') or {}):
-                    creatable_models.add(model_fields[field_path[0]].comodel_name)
             for field_name in field_path:
                 if field_name in (None, 'id', '.id'):
                     break
 
-                if isinstance(model_fields[field_name], odoo.fields.One2many):
+                if isinstance(model_fields.get(field_name), odoo.fields.One2many):
                     comodel = model_fields[field_name].comodel_name
                     creatable_models.add(comodel)
                     model_fields = self.env[comodel]._fields
@@ -1362,14 +1410,7 @@ class BaseModel(metaclass=MetaModel):
             'nextrow': nextrow,
         }
 
-    def _add_fake_fields(self, fields):
-        from odoo.fields import Char, Integer
-        fields[None] = Char('rec_name')
-        fields['id'] = Char('External ID')
-        fields['.id'] = Integer('Database ID')
-        return fields
-
-    def _extract_records(self, fields_, data, log=lambda a: None, limit=float('inf')):
+    def _extract_records(self, field_paths, data, log=lambda a: None, limit=float('inf')):
         """ Generates record dicts from the data sequence.
 
         The result is a generator of dicts mapping field names to raw
@@ -1384,35 +1425,67 @@ class BaseModel(metaclass=MetaModel):
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
         """
-        fields = dict(self._fields)
-        # Fake fields to avoid special cases in extractor
-        fields = self._add_fake_fields(fields)
-        # m2o fields can't be on multiple lines so exclude them from the
-        # is_relational field rows filter, but special-case it later on to
-        # be handled with relational fields (as it can have subfields)
-        is_relational = lambda field: fields[field].relational
+        fields = self._fields
+
         get_o2m_values = itemgetter_tuple([
             index
-            for index, fnames in enumerate(fields_)
-            if fields[fnames[0]].type == 'one2many'
+            for index, fnames in enumerate(field_paths)
+            if fnames[0] in fields and fields[fnames[0]].type == 'one2many'
         ])
         get_nono2m_values = itemgetter_tuple([
             index
-            for index, fnames in enumerate(fields_)
-            if fields[fnames[0]].type != 'one2many'
+            for index, fnames in enumerate(field_paths)
+            if fnames[0] not in fields or fields[fnames[0]].type != 'one2many'
         ])
         # Checks if the provided row has any non-empty one2many fields
         def only_o2m_values(row):
             return any(get_o2m_values(row)) and not any(get_nono2m_values(row))
+
+        property_definitions = {}
+        property_columns = defaultdict(list)
+        for fname, *__ in field_paths:
+            if not fname:
+                continue
+            if '.' not in fname:
+                if fname not in fields:
+                    raise ValueError(f'Invalid field name {fname!r}')
+                continue
+
+            f_prop_name, property_name = fname.split('.')
+            if f_prop_name not in fields or fields[f_prop_name].type != 'properties':
+                # Can be .id
+                continue
+
+            definition = self.get_property_definition(fname)
+            if not definition:
+                # Can happen if someone remove the property, UserError ?
+                raise ValueError(f"Property {property_name!r} doesn't have any definition on {fname!r} field")
+
+            property_definitions[fname] = definition
+            property_columns[f_prop_name].append(fname)
+
+        # m2o fields can't be on multiple lines so don't take it in account
+        # for only_o2m_values rows filter, but special-case it later on to
+        # be handled with relational fields (as it can have subfields).
+        def is_relational(fname):
+            return (
+                fname in fields and
+                fields[fname].relational
+            ) or (
+                fname in property_definitions and
+                property_definitions[fname].get('type') in ('many2one', 'many2many')
+            )
 
         index = 0
         while index < len(data) and index < limit:
             row = data[index]
 
             # copy non-relational fields to record dict
-            record = {fnames[0]: value
-                      for fnames, value in zip(fields_, row)
-                      if not is_relational(fnames[0])}
+            record = {
+                fnames[0]: value
+                for fnames, value in zip(field_paths, row)
+                if not is_relational(fnames[0])
+            }
 
             # Get all following rows which have relational values attached to
             # the current record (no non-relational values)
@@ -1420,13 +1493,20 @@ class BaseModel(metaclass=MetaModel):
                 only_o2m_values, itertools.islice(data, index + 1, None))
             # stitch record row back on for relational fields
             record_span = list(itertools.chain([row], record_span))
-            for relfield in set(fnames[0] for fnames in fields_ if is_relational(fnames[0])):
-                comodel = self.env[fields[relfield].comodel_name]
+
+            for relfield, *__ in field_paths:
+                if not is_relational(relfield):
+                    continue
+
+                if relfield not in property_definitions:
+                    comodel = self.env[fields[relfield].comodel_name]
+                else:
+                    comodel = self.env[property_definitions[relfield]['comodel']]
 
                 # get only cells for this sub-field, should be strictly
                 # non-empty, field path [None] is for display_name field
                 indices, subfields = zip(*((index, fnames[1:] or [None])
-                                           for index, fnames in enumerate(fields_)
+                                           for index, fnames in enumerate(field_paths)
                                            if fnames[0] == relfield))
 
                 # return all rows which have at least one value for the
@@ -1436,6 +1516,13 @@ class BaseModel(metaclass=MetaModel):
                     subrecord
                     for subrecord, _subinfo in comodel._extract_records(subfields, relfield_data, log=log)
                 ]
+
+            for properties_fname, property_indexes_names in property_columns.items():
+                properties = []
+                for property_name in property_indexes_names:
+                    value = record.pop(property_name)
+                    properties.append(dict(**property_definitions[property_name], value=value))
+                record[properties_fname] = properties
 
             yield record, {'rows': {
                 'from': index,
@@ -5252,11 +5339,44 @@ class BaseModel(metaclass=MetaModel):
             self.env.cache.update(records, self._fields['parent_path'], updated.values())
             records.modified(['parent_path'])
 
-    def _load_records_write(self, values):
-        self.write(values)
+    def _clean_properties(self) -> None:
+        """ Remove all properties of ``self`` that are no longer in the related definition """
+        for fname, field in self._fields.items():
+            if field.type != 'properties':
+                continue
+            for record in self:
+                old_value = record[fname]
+                if not old_value:
+                    continue
 
-    def _load_records_create(self, values):
-        return self.create(values)
+                definitions = field._get_properties_definition(record)
+                all_names = {definition['name'] for definition in definitions}
+                new_values = {name: value for name, value in old_value.items() if name in all_names}
+                if len(new_values) != len(old_value):
+                    record[fname] = new_values
+
+    def _load_records_write(self, values):
+        self.ensure_one()
+        to_write = {}  # Deferred the write to avoid using the old definition if it changed
+        for fname in list(values):
+            if fname not in self or self._fields[fname].type != 'properties':
+                continue
+            field_converter = self._fields[fname].convert_to_cache
+            to_write[fname] = dict(self[fname], **field_converter(values.pop(fname), self))
+
+        self.write(values)
+        if to_write:
+            self.write(to_write)
+            # Because we don't know which properties was linked to which definition,
+            # we can know clean properties (note that it is not mandatory, we can wait
+            # that client change the record in a Form view)
+            self._clean_properties()
+
+    def _load_records_create(self, vals_list):
+        records = self.create(vals_list)
+        if any(field.type == 'properties' for field in self._fields.values()):
+            records._clean_properties()
+        return records
 
     def _load_records(self, data_list, update=False, ignore_duplicates=False):
         """ Create or update records of this model, and assign XMLIDs.

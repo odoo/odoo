@@ -294,7 +294,7 @@
                 <t t-snippet="website.s_product_catalog" string="Pricelist" group="text">
                     <keywords>menu, pricing</keywords>
                 </t>
-                <t t-snippet="website.s_pricelist_cafe" string="Pricelist cafe" group="text">
+                <t t-snippet="website.s_pricelist_cafe" string="Pricelist Cafe" group="text">
                     <keywords>menu, pricing, shop, table, cart, product, cost, charges, fees, tarifs, prices, expenses, columns</keywords>
                 </t>
                 <t t-snippet="website.s_pricelist_boxed" string="Pricelist Boxed" group="text">
@@ -302,7 +302,7 @@
                 </t>
 
                 <!-- Contact & Forms group -->
-                <t t-snippet="website.s_website_form" string="Form" t-forbid-sanitize="form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" group="contact_and_forms"/>
+                <t t-snippet="website.s_title_form" string="Title - Form" t-forbid-sanitize="form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" group="contact_and_forms"/>
                 <t t-snippet="website.s_opening_hours" string="Opening Hours" group="contact_and_forms"/>
                 <t t-snippet="website.s_contact_info" string="Contact Info" group="contact_and_forms"/>
 
@@ -384,6 +384,14 @@
                 <t t-snippet="website.s_blockquote" string="Blockquote" t-thumbnail="/website/static/src/img/snippets_thumbs/s_blockquote.svg">
                     <keywords>cite</keywords>
                 </t>
+                <!--
+                Note: this inner snippet is still allowed to be dropped as a
+                main snippet. Indeed, this handles the fact that the snippet
+                was previously a main one and can still be in old databases, but
+                also in some apps templates. It was just chosen to not suggest
+                it in the snippets modal anymore, and just *used* as an inner
+                snippet by other snippets in there.
+                -->
                 <t t-snippet="website.s_website_form" string="Form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
                 <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
                     <keywords>celebration, launch</keywords>
@@ -654,6 +662,23 @@
     </we-row>
 </template>
 
+<template id="vertical_alignment_option">
+    <we-button-group t-att-class="indent and 'o_we_sublevel_1'" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
+        <we-button title="Align Top"
+                    data-select-class="align-items-start"
+                    data-img="/website/static/src/img/snippets_options/align_top.svg"/>
+        <we-button title="Align Middle"
+                    data-select-class="align-items-center"
+                    data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
+        <we-button title="Align Bottom"
+                    data-select-class="align-items-end"
+                    data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
+        <we-button title="Stretch to Equal Height"
+                    data-select-class="align-items-stretch"
+                    data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
+    </we-button-group>
+</template>
+
 <template id="snippet_options" inherit_id="web_editor.snippet_options" primary="True">
     <!-- =================================================================== -->
     <!-- Modify generic snippet options                                      -->
@@ -834,7 +859,7 @@
 
     <!-- Grid only -->
     <div data-js="layout_column"
-        data-selector="section.s_masonry_block, section.s_image_frame, section.s_contact_info"
+        data-selector="section.s_masonry_block, section.s_quadrant, section.s_image_frame, section.s_card_offset, section.s_contact_info"
         data-target="> *:has(> .row)">
         <t t-call="website.grid_layout_options"/>
     </div>
@@ -859,21 +884,12 @@
     </div>
 
     <!--  Vertical Alignment -->
-    <div data-js="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image" data-target=".row">
-        <we-button-group class="o_we_sublevel_1" string="Vert. Alignment" title="Vertical Alignment" data-dependencies="normal_mode">
-            <we-button title="Align Top"
-                       data-select-class="align-items-start"
-                       data-img="/website/static/src/img/snippets_options/align_top.svg"/>
-            <we-button title="Align Middle"
-                       data-select-class="align-items-center"
-                       data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
-            <we-button title="Align Bottom"
-                       data-select-class="align-items-end"
-                       data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
-            <we-button title="Stretch to Equal Height"
-                       data-select-class="align-items-stretch"
-                       data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
-        </we-button-group>
+    <div data-js="vAlignment" id="row_valign_snippet_option"
+         data-selector=".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image"
+         data-target=".row">
+        <t t-call="website.vertical_alignment_option">
+            <t t-set="indent" t-value="True"/>
+        </t>
     </div>
 
     <!-- Move snippets around -->

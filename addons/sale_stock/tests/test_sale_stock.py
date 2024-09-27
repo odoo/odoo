@@ -12,6 +12,15 @@ from odoo import Command
 @tagged('post_install', '-at_install')
 class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.new_product = cls.env['product.product'].create({
+            'name': 'new_product',
+            'type': 'consu',
+            'is_storable': True,
+        })
+
     def _get_new_sale_order(self, amount=10.0, product=False):
         """ Creates and returns a sale order with one default order line.
 
@@ -1222,6 +1231,67 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.move_ids.write({'quantity': 2, 'picked': True})
         return_picking.button_validate()
+
+    def test_return_for_exchange_negativ(self):
+        """test product added into the return wizard are excluded in case of return for exchange"""
+        sale_order = self._get_new_sale_order()
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids.write({'quantity': 10, 'picked': True})
+        picking.button_validate()
+
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=picking.id, active_model='stock.picking'))
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = self.new_product
+            line.quantity = 2
+        return_wizard = return_picking_form.save()
+        return_wizard.product_return_moves[0].quantity = 2
+
+        res = return_wizard.action_create_exchanges()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        self.assertTrue(return_picking)
+        self.assertEqual(len(return_picking.move_ids), 2)
+        new_product_moves = self.env['stock.move'].search([('product_id', '=', self.new_product.id)])
+        self.assertEqual(len(new_product_moves), 1, 'The new product should not create extra procurement')
+        sol = self.env['sale.order.line'].search([('product_id', '=', self.new_product.id)])
+        self.assertFalse(sol)
+        return_picking.button_validate()
+        sol = self.env['sale.order.line'].search([('product_id', '=', self.new_product.id)])
+        self.assertTrue(sol)
+        self.assertEqual(sol.product_uom_qty, 0)
+        self.assertEqual(sol.qty_delivered, -2)
+        self.assertEqual(sol.order_id, sale_order)
+
+    def test_return_multisteps_receipt(self):
+        """test extra product returned are added to the sale order only once in 3 steps receipt"""
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'three_steps'
+        sale_order = self._get_new_sale_order()
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids.write({'quantity': 10, 'picked': True})
+        picking.button_validate()
+
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_id=picking.id, active_model='stock.picking'))
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = self.new_product
+            line.quantity = 2
+        return_wizard = return_picking_form.save()
+        res = return_wizard.action_create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        self.assertEqual(return_picking.location_id, picking.location_dest_id)
+        self.assertEqual(return_picking.location_dest_id, warehouse.in_type_id.default_location_dest_id)
+        return_picking.button_validate()
+        next_pick = return_picking.move_ids.move_dest_ids.picking_id
+        next_pick.button_validate()
+        next_pick = next_pick.move_ids.move_dest_ids.picking_id
+        next_pick.button_validate()
+        sol = self.env['sale.order.line'].search([('product_id', '=', self.new_product.id)])
+        self.assertEqual(len(sol), 1)
+        self.assertEqual(sol.qty_delivered, -2)
 
     def test_return_with_mto_and_multisteps(self):
         """

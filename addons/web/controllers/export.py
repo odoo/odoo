@@ -11,8 +11,6 @@ from collections import OrderedDict
 
 from werkzeug.exceptions import InternalServerError
 
-import odoo
-import odoo.modules.registry
 from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
@@ -107,7 +105,7 @@ class GroupsTreeNode:
         for field_name in self._export_field_names:
             if field_name == '.id':
                 field_name = 'id'
-            if '/' in field_name:
+            if '/' in field_name or field_name not in self._model:
                 # Currently no support of aggregated value for nested record fields
                 # e.g. line_ids/analytic_line_ids/amount
                 continue
@@ -304,20 +302,76 @@ class Export(http.Controller):
             {'tag': 'csv', 'label': 'CSV'},
         ]
 
-    def fields_get(self, model):
+    def _get_property_fields(self, fields, model, domain=()):
+        """ Return property fields existing for the `domain` """
+        property_fields = {}
         Model = request.env[model]
-        fields = Model.fields_get()
-        return fields
+        for fname, field in fields.items():
+            if field.get('type') != 'properties':
+                continue
+
+            definition_record = field['definition_record']
+            definition_record_field = field['definition_record_field']
+
+            target_model = Model.env[Model._fields[definition_record].comodel_name]
+            domain_definition = [(definition_record_field, '!=', False)]
+            # Depends of the records selected to avoid showing useless Properties
+            if domain:
+                self_subquery = Model.with_context(active_test=False)._search(domain)
+                domain_definition.append(('id', 'in', self_subquery.subselect(definition_record)))
+
+            definition_records = target_model.search_fetch(
+                domain_definition, [definition_record_field, 'display_name'],
+                order='id',  # Avoid complex order
+            )
+
+            for record in definition_records:
+                for definition in record[definition_record_field]:
+                    # definition = {
+                    #     'name': 'aa34746a6851ee4e',
+                    #     'string': 'Partner',
+                    #     'type': 'many2one',
+                    #     'comodel': 'test_new_api.partner',
+                    #     'default': [1337, 'Bob'],
+                    # }
+                    if (
+                        definition['type'] == 'separator' or
+                        (
+                            definition['type'] in ('many2one', 'many2many')
+                            and definition['comodel'] not in Model.env
+                        )
+                    ):
+                        continue
+                    id_field = f"{fname}.{definition['name']}"
+                    property_fields[id_field] = {
+                        'type': definition['type'],
+                        'string': Model.env._(
+                            "%(property_string)s (%(parent_name)s)",
+                            property_string=definition['string'], parent_name=record.display_name,
+                        ),
+                        'default_export_compatible': field['default_export_compatible'],
+                    }
+                    if definition['type'] in ('many2one', 'many2many'):
+                        property_fields[id_field]['relation'] = definition['comodel']
+
+        return property_fields
 
     @http.route('/web/export/get_fields', type='json', auth='user', readonly=True)
-    def get_fields(self, model, prefix='', parent_name='',
+    def get_fields(self, model, domain, prefix='', parent_name='',
                    import_compat=True, parent_field_type=None,
                    parent_field=None, exclude=None):
 
-        fields = self.fields_get(model)
+        Model = request.env[model]
+        fields = Model.fields_get(
+            attributes=[
+                'type', 'string', 'required', 'relation_field', 'default_export_compatible',
+                'relation', 'definition_record', 'definition_record_field',
+            ],
+        )
+
         if import_compat:
             if parent_field_type in ['many2one', 'many2many']:
-                rec_name = request.env[model]._rec_name_fallback()
+                rec_name = Model._rec_name_fallback()
                 fields = {'id': fields['id'], rec_name: fields[rec_name]}
         else:
             fields['.id'] = {**fields['id']}
@@ -328,42 +382,52 @@ class Export(http.Controller):
             parent_field['string'] = request.env._('External ID')
             fields['id'] = parent_field
 
-        fields_sequence = sorted(fields.items(),
-            key=lambda field: field[1]['string'].lower())
-
-        records = []
-        for field_name, field in fields_sequence:
-            if import_compat and not field_name == 'id':
+        exportable_fields = {}
+        for field_name, field in fields.items():
+            if import_compat and field_name != 'id':
                 if exclude and field_name in exclude:
-                    continue
-                if field.get('type') in ('properties', 'properties_definition'):
                     continue
                 if field.get('readonly'):
                     continue
             if not field.get('exportable', True):
                 continue
+            exportable_fields[field_name] = field
 
+        exportable_fields.update(self._get_property_fields(fields, model, domain=domain))
+
+        fields_sequence = sorted(exportable_fields.items(), key=lambda field: field[1]['string'].lower())
+
+        result = []
+        for field_name, field in fields_sequence:
             ident = prefix + ('/' if prefix else '') + field_name
             val = ident
             if field_name == 'name' and import_compat and parent_field_type in ['many2one', 'many2many']:
                 # Add name field when expand m2o and m2m fields in import-compatible mode
                 val = prefix
             name = parent_name + (parent_name and '/' or '') + field['string']
-            record = {'id': ident, 'string': name,
-                      'value': val, 'children': False,
-                      'field_type': field.get('type'),
-                      'required': field.get('required'),
-                      'relation_field': field.get('relation_field'),
-                      'default_export': import_compat and field.get('default_export_compatible')}
-            records.append(record)
-
+            field_dict = {
+                'id': ident,
+                'string': name,
+                'value': val,
+                'children': False,
+                'field_type': field.get('type'),
+                'required': field.get('required'),
+                'relation_field': field.get('relation_field'),
+                'default_export': import_compat and field.get('default_export_compatible')
+            }
             if len(ident.split('/')) < 3 and 'relation' in field:
-                ref = field.pop('relation')
-                record['value'] += '/id'
-                record['params'] = {'model': ref, 'prefix': ident, 'name': name, 'parent_field': field}
-                record['children'] = True
+                field_dict['value'] += '/id'
+                field_dict['params'] = {
+                    'model': field['relation'],
+                    'prefix': ident,
+                    'name': name,
+                    'parent_field': field,
+                }
+                field_dict['children'] = True
 
-        return records
+            result.append(field_dict)
+
+        return result
 
     @http.route('/web/export/namelist', type='json', auth='user', readonly=True)
     def namelist(self, model, export_id):
@@ -372,7 +436,13 @@ class Export(http.Controller):
 
     def fields_info(self, model, export_fields):
         field_info = []
-        fields = self.fields_get(model)
+        fields = request.env[model].fields_get(
+            attributes=[
+                'type', 'string', 'required', 'relation_field', 'default_export_compatible',
+                'relation', 'definition_record', 'definition_record_field',
+            ],
+        )
+        fields.update(self._get_property_fields(fields, model))
         if ".id" in export_fields:
             fields['.id'] = fields.get('id', {'string': 'ID'})
 
@@ -418,7 +488,7 @@ class Export(http.Controller):
             elif base in fields:
                 field_dict = fields[base]
                 field_info.append({
-                    'id': field_dict['name'],
+                    'id': base,
                     'string': field_dict['string'],
                     'field_type': field_dict['type'],
                 })

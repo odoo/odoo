@@ -162,7 +162,8 @@ class ReturnPicking(models.TransientModel):
         )
         returned_lines = False
         for return_line in self.product_return_moves:
-            returned_lines = return_line._process_line(new_picking)
+            if return_line._process_line(new_picking):
+                returned_lines = True
         if not returned_lines:
             raise UserError(_("Please specify at least one non-zero quantity."))
 
@@ -189,10 +190,12 @@ class ReturnPicking(models.TransientModel):
 
         proc_list = []
         for line in self.product_return_moves:
+            if not line.move_id:
+                continue
             proc_values = {
                 'group_id': self.picking_id.group_id,
                 'sale_line_id': line.move_id.sale_line_id.id,
-                'date_planned': line.move_id.date,
+                'date_planned': line.move_id.date or fields.Datetime.now(),
                 'warehouse_id': self.picking_id.picking_type_id.warehouse_id,
                 'partner_id': self.picking_id.partner_id.id,
                 'location_final_id': line.move_id.location_final_id or self.picking_id.location_dest_id,

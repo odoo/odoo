@@ -299,18 +299,56 @@ class Import(models.TransientModel):
             'required': False,
             'fields': [],
             'type': 'id',
+            'model_name': model,
         }]
         if not depth:
             return importable_fields
 
-        model_fields = Model.fields_get()
+        model_fields = Model.fields_get(attributes=[
+            'string', 'required', 'type', 'readonly', 'relation',
+            'definition_record', 'definition_record_field',
+        ])
         blacklist = models.MAGIC_COLUMNS
+
+        for name, field in dict(model_fields).items():
+            if field['type'] not in 'properties':
+                continue
+            definition_record = field['definition_record']
+            definition_record_field = field['definition_record_field']
+
+            target_model = Model.env[Model._fields[definition_record].comodel_name]
+            # Do not take into account the definition of archived parents,
+            # we do not import archived records most of the time.
+            definition_records = target_model.search_fetch(
+                [(definition_record_field, '!=', False)],
+                [definition_record_field, 'display_name'],
+                order='id',  # Avoid complex order
+            )
+
+            for record in definition_records:
+                for definition in record[definition_record_field]:
+                    definition_type = definition['type']
+                    if (
+                        definition_type == 'separator' or
+                        (
+                            definition_type in ('many2one', 'many2many')
+                            and definition['comodel'] not in Model.env
+                        )
+                    ):
+                        continue
+                    id_field = f"{name}.{definition['name']}"
+                    model_fields[id_field] = {
+                        'type': definition_type,
+                        'string': _(
+                            "%(property_string)s (%(parent_name)s)",
+                            property_string=definition['string'], parent_name=record.display_name,
+                        ),
+                    }
+                    if definition_type in ('many2one', 'many2many'):
+                        model_fields[id_field]['relation'] = definition['comodel']
+
         for name, field in model_fields.items():
             if name in blacklist:
-                continue
-            # an empty string means the field is deprecated, @deprecated must
-            # be absent or False to mean not-deprecated
-            if field.get('deprecated', False) is not False:
                 continue
             if field.get('readonly'):
                 continue
@@ -322,7 +360,7 @@ class Import(models.TransientModel):
                 'required': bool(field.get('required')),
                 'fields': [],
                 'type': field['type'],
-                'model_name': model
+                'model_name': model,
             }
 
             if field['type'] in ('many2many', 'many2one'):
@@ -339,7 +377,6 @@ class Import(models.TransientModel):
 
             importable_fields.append(field_value)
 
-        # TODO: cache on model?
         return importable_fields
 
     def _filter_fields_by_types(self, model_fields_tree, header_types):
@@ -662,7 +699,7 @@ class Import(models.TransientModel):
             return results
 
         # If not boolean, date/datetime, float or integer, only suggest text based fields.
-        return ['text', 'char', 'binary', 'selection', 'html']
+        return ['text', 'char', 'binary', 'selection', 'html', 'tags']
 
     def _try_match_date_time(self, preview_values, options):
         # Or a date/datetime if it matches the pattern
@@ -798,24 +835,17 @@ class Import(models.TransientModel):
             }
 
         if '/' not in header:
-            # Then, try exact match
-            if header:
-                field_rec = (
-                    self.env['ir.model.fields'].sudo().with_context(lang='en_US')
-                    .search([('field_description', '=', header)], limit=1)
-                    .with_env(self.env)
-                )
-                translated_header = (field_rec.sudo().field_description or header).lower()
-            else:
-                translated_header = ""
+            IrModelFieldsUs = self.with_context(lang='en_US').env['ir.model.fields']
             for field in fields_tree:
+                fname = field['name']
                 # exact match found based on the field technical name
-                if header.casefold() == field['name'].casefold():
+                if header.casefold() == fname.casefold():
                     break
-
-                field_string = field.get('string', '').casefold()
                 # match found using either user translation, either model defined field label
-                if translated_header == field_string or header.casefold() == field_string:
+                if header.casefold() == field['string'].casefold():
+                    break
+                field_strings_en = IrModelFieldsUs.get_field_string(field['model_name'])
+                if fname in field_strings_en and header.casefold() == field_strings_en[fname].casefold():
                     break
             else:
                 field = None
@@ -835,19 +865,24 @@ class Import(models.TransientModel):
             min_dist = 1
             min_dist_field = False
             for field in filtered_fields:
-                field_string = field.get('string', '').casefold()
-
+                fname = field['name']
                 # use string distance for fuzzy match only on most likely field types
-                name_field_dist = self._get_distance(header.casefold(), field['name'].casefold())
-                string_field_dist = self._get_distance(header.casefold(), field_string)
-                translated_string_field_dist = self._get_distance(translated_header.casefold(), field_string)
+                distances = [
+                    self._get_distance(header.casefold(), fname.casefold()),
+                    self._get_distance(header.casefold(), field['string'].casefold()),
+                ]
+
+                if field_string_en := IrModelFieldsUs.get_field_string(field['model_name']).get(fname):
+                    distances.append(
+                        self._get_distance(header.casefold(), field_string_en.casefold()),
+                    )
 
                 # Keep only the closest mapping suggestion. Note that in case of multiple mapping on the same field,
                 # a mapping suggestion could be canceled by another one that has a smaller distance on the same field.
                 # See 'deduplicate_mapping_suggestions' method for more info.
-                current_field_dist = min([name_field_dist, string_field_dist, translated_string_field_dist])
+                current_field_dist = min(distances)
                 if current_field_dist < min_dist:
-                    min_dist_field = field['name']
+                    min_dist_field = fname
                     min_dist = current_field_dist
 
             if min_dist < self.FUZZY_MATCH_DISTANCE:
@@ -1547,8 +1582,12 @@ class Import(models.TransientModel):
                 # get target_field type (on target model)
                 target_model = self.res_model
                 for field in split_fields:
-                    if field != target_field:  # if not on the last hierarchy level, retarget the model
+                    # if not on the last hierarchy level, retarget the model.
+                    # Also check if the field exists to silently ignore properties field and
+                    # since we don't have the definition here anyway.
+                    if field != target_field and field in self.env[target_model]:
                         target_model = self.env[target_model][field]._name
+
                 field = self.env[target_model]._fields.get(target_field)
                 field_type = field.type if field else ''
 
