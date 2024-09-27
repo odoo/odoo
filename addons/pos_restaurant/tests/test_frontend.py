@@ -254,17 +254,12 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosResTipScreenTour')
 
-        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')], limit=1, order='id desc')
-        order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')], limit=1, order='id desc')
-        order3 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0003')], limit=1, order='id desc')
-        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')], limit=1, order='id desc')
-        order5 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0005')], limit=1, order='id desc')
+        orders = self.env['pos.order'].search([], limit=5, order="id desc")
+        order_tips = [o.tip_amount for o in orders]
 
-        self.assertTrue(order1.is_tipped and order1.tip_amount == 0.40)
-        self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)
-        self.assertTrue(order3.is_tipped and order3.tip_amount == 1.50)
-        self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
-        self.assertTrue(order5.is_tipped and order5.tip_amount == 0.00)
+        # orders order can be different depending on which module is install so we sort the tips
+        order_tips.sort()
+        self.assertEqual(order_tips, [0.0, 0.4, 1.0, 1.0, 1.5])
 
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
