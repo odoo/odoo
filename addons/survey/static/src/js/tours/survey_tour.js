@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     position: 'bottom',
     run: "click",
 }, {
-    trigger: '.alert-info a:contains("This is a Test Survey")',
+    trigger: '.survey_button_form_view_hook',
     content: _t("Now, use this shortcut to go back to the survey."),
     position: 'bottom',
     run: "click",
