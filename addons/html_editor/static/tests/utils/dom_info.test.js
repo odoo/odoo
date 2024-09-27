@@ -417,6 +417,14 @@ describe("isEmptyBlock", () => {
         const result = isEmptyBlock(a);
         expect(result).toBe(false);
     });
+
+    test("should return false for a p containing media element", () => {
+        const [p] = insertTestHtml(
+            '<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>'
+        );
+        const result = isEmptyBlock(p);
+        expect(result).toBe(false);
+    });
 });
 
 describe("isShrunkBlock", () => {
