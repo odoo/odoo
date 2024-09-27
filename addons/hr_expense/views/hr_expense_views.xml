@@ -296,9 +296,9 @@
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="card">
-                            <div class="d-flex">
-                                <field class="fw-bold fs-5" name="name"/>
-                                <field class="fw-bold ms-auto" name="total_amount_currency" widget="monetary"/>
+                            <div class="d-flex align-items-baseline">
+                                <field class="fw-bold fs-5 me-2" name="name"/>
+                                <field class="fw-bold ms-auto flex-shrink-0" name="total_amount_currency" widget="monetary"/>
                             </div>
                             <div class="d-flex mt8 text-muted">
                                 <field name="employee_id" widget="many2one_avatar_user"

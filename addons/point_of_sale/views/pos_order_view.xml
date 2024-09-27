@@ -217,21 +217,21 @@
                 <field name="currency_id"/>
                 <templates>
                     <t t-name="card">
-                            <div class="d-flex mb-1">
-                                <span t-if="record.partner_id.value">
-                                    <field name="partner_id" class="fw-bolder"/>
-                                </span>
-                                <span t-else="">
-                                    <field name="name" class="fw-bolder"/>
-                                </span>
-                                <field name="amount_total" widget="monetary" class="fw-bolder ms-auto"/>
-                            </div>
-                            <field name="pos_reference" />
-                            <div class="d-flex">
-                                <field name="date_order" class="text-muted"/>
-                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
-                                'invoiced': 'success', 'cancel': 'danger'}}" class="ms-auto"/>
-                            </div>
+                        <div class="d-flex align-items-baseline mb-1">
+                            <span t-if="record.partner_id.value">
+                                <field name="partner_id" class="fw-bolder me-2"/>
+                            </span>
+                            <span t-else="">
+                                <field name="name" class="fw-bolder me-2"/>
+                            </span>
+                            <field name="amount_total" widget="monetary" class="fw-bolder ms-auto flex-shrink-0"/>
+                        </div>
+                        <field name="pos_reference" />
+                        <footer class="flex-wrap">
+                            <field name="date_order" class="text-muted text-nowrap"/>
+                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
+                            'invoiced': 'success', 'cancel': 'danger'}}" class="ms-auto text-truncate"/>
+                        </footer>
                     </t>
                 </templates>
             </kanban>

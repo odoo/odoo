@@ -75,15 +75,15 @@
                     colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="card">
-                        <div class="d-flex mb-2">
-                            <field name="partner_id" class="fw-bolder fs-5" />
-                            <field name="amount_total" widget="monetary" class="fw-bolder ms-auto"/>
+                        <div class="d-flex align-items-baseline mb-2">
+                            <field name="partner_id" class="fw-bolder fs-5 me-2"/>
+                            <field name="amount_total" widget="monetary" class="fw-bolder ms-auto flex-shrink-0"/>
                         </div>
-                        <footer>
-                            <div class="d-flex text-muted">
+                        <footer class="align-items-end">
+                            <div class="d-flex flex-wrap gap-1 text-muted text-nowrap">
                                 <field name="name"/>
-                                <field name="date_order" class="ms-1"/>
-                                <field name="activity_ids" widget="kanban_activity" class="ms-2"/>
+                                <field name="date_order"/>
+                                <field name="activity_ids" widget="kanban_activity"/>
                             </div>
                             <field name="state"
                                 widget="label_selection"
