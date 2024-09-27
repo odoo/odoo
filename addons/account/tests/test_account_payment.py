@@ -194,6 +194,46 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             expected_liquidity_line,
         ])
 
+        # ==== Check editing the account.payment ====
+        # `partner_type` on payment is always invisible. It's supposed to be set through a context `default_` key
+        # In this case the goal of the test is to take an existing customer payment and change it to a supplier payment,
+        # which is not supposed to be possible through the web interface.
+        # So, change the payment partner_type beforehand rather than in the form view.
+        payment.action_draft()
+        payment.partner_type = 'supplier'
+        pay_form = Form(payment)
+        pay_form.currency_id = self.other_currency
+        payment = pay_form.save()
+        self.assertRecordValues(payment, [{
+            **expected_payment_values,
+            'partner_type': 'supplier',
+            'destination_account_id': self.partner_a.property_account_payable_id.id,
+            'currency_id': self.other_currency.id,
+            'partner_id': self.partner_a.id,
+        }])
+        self.assertRecordValues(payment.move_id, [{
+            **expected_move_values,
+            'currency_id': self.other_currency.id,
+            'partner_id': self.partner_a.id,
+        }])
+        self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
+            {
+                **expected_counterpart_line,
+                'debit': 0.0,
+                'credit': 25.0,
+                'amount_currency': -50.0,
+                'currency_id': self.other_currency.id,
+                'account_id': self.partner_a.property_account_payable_id.id,
+            },
+            {
+                **expected_liquidity_line,
+                'debit': 25.0,
+                'credit': 0.0,
+                'amount_currency': 50.0,
+                'currency_id': self.other_currency.id,
+            },
+        ])
+
     def test_payment_journal_onchange(self):
         # Create a new payment form
         pay_form = Form(self.env['account.payment'].with_context(
