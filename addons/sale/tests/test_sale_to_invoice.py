@@ -1056,6 +1056,32 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(sol_prod_deliver.amount_to_invoice, 0.0)
         self.assertEqual(sol_prod_deliver.amount_invoiced, sol_prod_deliver.price_total / 2)
 
+    def test_amount_to_invoice_with_down_payment(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'order_line': [Command.create({
+                'product_id': self.company_data['product_order_no'].id,
+                'product_uom_qty': 1,
+                'tax_id': False,
+            })],
+        })
+
+        so.action_confirm()
+
+        self.assertEqual(so.amount_to_invoice, 280.0)
+
+        invoice_vals = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'percentage',
+            'amount': 50,
+            'sale_order_ids': [Command.set(so.ids)],
+        }).create_invoices()
+
+        invoice = self.env[invoice_vals['res_model']].browse(invoice_vals['res_id'])
+        invoice.action_post()
+
+        self.assertEqual(so.amount_to_invoice, 140.0)
+
     def test_invoice_line_name_has_product_name(self):
         """ Testing that when invoicing a sales order, the invoice line name ALWAYS contains the product name. """
         so = self.sale_order
