@@ -45,12 +45,12 @@ function toggleDropdown(toggles, show) {
                 () => resolve(),
                 { once: true }
             );
-
+            const dropdown = Dropdown.getOrCreateInstance(toggle);
             if (toShow) {
-                toggle.classList.add('show');
-                toggle.dispatchEvent(new Event('shown.bs.dropdown'));
+                dropdown.show();
+                toggle.dispatchEvent(new Event("shown.bs.dropdown"));
             } else {
-                toggle.classList.remove('show');
+                dropdown.hide();
                 toggle.dispatchEvent(new Event('hidden.bs.dropdown'));
             }
         });
@@ -239,7 +239,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                     });
 
                 // Then toggle the clicked one
-                toggleDropdown(clickedToggle)
+                toggleDropdown([clickedToggle])
                     .then(() => dispose(clickedToggle))
                     .then(() => {
                         if (!this.options.enableTranslation) {
