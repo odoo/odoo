@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, _
+
+from odoo import api, fields, models, _
 
 
 class ResPartner(models.Model):
@@ -9,6 +10,7 @@ class ResPartner(models.Model):
         'hr.employee', 'work_contact_id', string='Employees', groups="hr.group_hr_user",
         help="Related employees based on their private address")
     employees_count = fields.Integer(compute='_compute_employees_count', groups="hr.group_hr_user")
+    employee = fields.Boolean(help="Whether this contact is an Employee.", compute='_compute_employee', store=True, readonly=False)
 
     def _compute_employees_count(self):
         for partner in self:
@@ -50,6 +52,17 @@ class ResPartner(models.Model):
             'country': employee_id.private_country_id.code,
         }
         return [pstl_addr] + super()._get_all_addr()
+
+    @api.depends('employee_ids')
+    def _compute_employee(self):
+        employee_data = self.env['hr.employee'].read_group(
+            domain=[('work_contact_id', 'in', self.ids)],
+            fields=['work_contact_id'],
+            groupby=['work_contact_id']
+        )
+        employee_dict = {data['work_contact_id'][0]: data['work_contact_id_count'] for data in employee_data}
+        for partner in self:
+            partner.employee = bool(employee_dict.get(partner.id, 0))
 
 
 class ResPartnerBank(models.Model):
