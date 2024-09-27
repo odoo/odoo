@@ -28,6 +28,11 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             groups='base.group_user',
             company_ids=[Command.set(cls.env.companies.ids)],
         )
+        cls.employee_bank_account = cls.env['res.partner.bank'].create({
+            'acc_number': "0123456789",
+            'partner_id': cls.expense_user_employee.partner_id.id,
+            'acc_type': 'bank',
+        })
         cls.expense_user_manager = mail_new_test_user(
             cls.env,
             name='Expense manager',
@@ -42,6 +47,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'name': 'expense_employee',
             'user_id': cls.expense_user_employee.id,
             'work_contact_id': cls.expense_user_employee.partner_id.id,
+            'bank_account_id': cls.employee_bank_account.id,
         })
 
         # Allow the current accounting user to access the expenses.
