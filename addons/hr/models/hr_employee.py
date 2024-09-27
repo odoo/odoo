@@ -428,8 +428,9 @@ class HrEmployee(models.Model):
     @api.constrains('barcode')
     def _verify_barcode(self):
         for employee in self:
-            if employee.barcode and not employee.barcode.isdigit():
-                raise ValidationError(_("The Badge ID must be a sequence of digits."))
+            if employee.barcode:
+                if not (employee.barcode.isalnum() and len(employee.barcode) <= 18):
+                    raise ValidationError(_("The Badge ID must be alphanumeric and no longer than 18 characters."))
 
     @api.constrains('ssnid')
     def _check_ssnid(self):
