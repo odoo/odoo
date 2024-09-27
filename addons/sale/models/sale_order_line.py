@@ -1086,6 +1086,8 @@ class SaleOrderLine(models.Model):
                 unit_price_total = line.price_total / line.product_uom_qty
                 price_reduce = unit_price_total * (1 - (line.discount or 0.0) / 100.0)
                 line.amount_to_invoice = price_reduce * qty_to_invoice
+            elif line.is_downpayment and line.display_type != 'line_section':
+                line.amount_to_invoice = -line.amount_invoiced
             else:
                 line.amount_to_invoice = 0.0
 
