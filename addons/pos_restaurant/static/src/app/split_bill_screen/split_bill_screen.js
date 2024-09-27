@@ -99,7 +99,7 @@ export class SplitBillScreen extends Component {
             newOrder.updateLastOrderChange();
         }
 
-        originalOrder.customerCount -= 1;
+        originalOrder.customer_count -= 1;
         await this.postSplitOrder(originalOrder, newOrder);
         originalOrder.set_screen_data({ name: "ProductScreen" });
         this.pos.selectedOrderUuid = null;

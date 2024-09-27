@@ -260,6 +260,8 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
         self.assertTrue(order5.is_tipped and order5.tip_amount == 0.00)
 
+        self.assertEqual(order4.customer_count, 2)
+
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour2')
