@@ -304,3 +304,17 @@ test("press escape to close ChatGPT dialog", async () => {
     expect(promptDialogHeaderSelector).toHaveCount(0);
     expect(getContent(el)).toBe("<p>te[]st</p>");
 });
+
+test("AI is an alias to ChatGPT command in the Powerbox", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>");
+    insertText(editor, "/AI");
+    await animationFrame();
+    expect(".active .o-we-command-name").toHaveText("ChatGPT");
+
+    // Search is case-insensitive: "/ai" should also match.
+    press("backspace");
+    press("backspace");
+    insertText(editor, "ai");
+    await animationFrame();
+    expect(".active .o-we-command-name").toHaveText("ChatGPT");
+});
