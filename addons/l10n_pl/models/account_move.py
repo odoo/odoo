@@ -1,5 +1,4 @@
-from odoo import fields, models, _
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
 
 class AccountMove(models.Model):
@@ -17,11 +16,3 @@ class AccountMove(models.Model):
         string='B_MPV_Prowizja',
         help="Supply of agency and other services pertaining to the transfer of a single-purpose voucher",
     )
-
-    def action_post(self):
-        "Validation to avoid having credit notes with more than the invoice"
-        for record in self:
-            if record.company_id.account_fiscal_country_id.code == 'PL' and record.reversed_entry_id and\
-                record.reversed_entry_id.amount_total < record.amount_total and record.move_type != 'entry':
-                raise ValidationError(_("Credit notes can't have a total amount greater than the invoice's"))
-        return super().action_post()
