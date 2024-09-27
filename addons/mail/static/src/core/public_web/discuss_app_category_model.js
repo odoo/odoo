@@ -29,15 +29,15 @@ export class DiscussAppCategory extends Record {
     get isVisible() {
         return (
             !this.hideWhenEmpty ||
-            this.threads.some((thread) => thread.displayToSelf || thread.isLocallyPinned)
+            this.channel_ids.some((thread) => thread.displayToSelf || thread.isLocallyPinned)
         );
     }
 
     /** @type {string} */
     extraClass;
     /** @string */
-    icon;
-    /** @string */
+    icon = "fa fa-hashtag";
+    /** @type {number|string} */
     id;
     /** @type {string} */
     name;
@@ -66,7 +66,11 @@ export class DiscussAppCategory extends Record {
         },
     });
     /** @type {number} */
-    sequence;
+    sequence = 5;
+
+    get isRootCategory() {
+        return this.id !== "all" && !Number.isInteger(this.id);
+    }
 
     get open() {
         return this.saveStateToServer
@@ -103,11 +107,11 @@ export class DiscussAppCategory extends Record {
     addTitle;
     /** @type {string} */
     addHotkey;
-    threads = Record.many("Thread", {
+    channel_ids = Record.many("Thread", {
         sort(t1, t2) {
             return this.sortThreads(t1, t2);
         },
-        inverse: "discussAppCategory",
+        inverse: "channel_category_id",
     });
 }
 

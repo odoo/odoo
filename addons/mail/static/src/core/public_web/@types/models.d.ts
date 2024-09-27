@@ -13,7 +13,7 @@ declare module "models" {
     }
 
     export interface Thread {
-        discussAppCategory: DiscussAppCategory,
+        channel_category_id: DiscussAppCategory,
         setAsDiscussThread: (pushState: boolean) => void,
         unpin: () => Promise<void>,
     }

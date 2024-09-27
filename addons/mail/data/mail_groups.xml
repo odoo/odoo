@@ -3,11 +3,17 @@
 <data noupdate="1">
     <record model="ir.module.category" id="module_category_canned_response">
         <field name="name">Canned Responses</field>
+        <field name="parent_id" ref="base.module_category_productivity"/>
+    </record>
+    
+    <record id="group_mail_canned_response_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="module_category_canned_response"/>
     </record>
 
-    <record id="group_mail_canned_response_admin" model="res.groups">
-        <field name="name">Canned Response Administrator</field>
-        <field name="category_id" ref="module_category_canned_response"/>
+    <record id="group_mail_discuss_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_productivity_discuss"/>
     </record>
 
     <record id="group_mail_template_editor" model="res.groups">
@@ -16,7 +22,7 @@
     </record>
 
     <record id="base.group_system" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('mail.group_mail_template_editor')), (4, ref('mail.group_mail_canned_response_admin'))]"/>
+        <field name="implied_ids" eval="[(4, ref('mail.group_mail_template_editor')), (4, ref('mail.group_mail_canned_response_admin')), (4, ref('mail.group_mail_discuss_admin'))]"/>
     </record>
 
     <!-- By default, allow all users to edit mail templates -->

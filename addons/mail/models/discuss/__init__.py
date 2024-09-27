@@ -4,6 +4,7 @@
 from . import mail_message
 
 # discuss
+from . import discuss_channel_category
 from . import discuss_channel_member
 from . import discuss_channel_rtc_session
 from . import discuss_channel

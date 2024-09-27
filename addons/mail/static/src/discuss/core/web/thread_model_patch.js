@@ -12,7 +12,7 @@ patch(Thread.prototype, {
         if (!this.displayToSelf && !this.isLocallyPinned && this.eq(this.store.discuss.thread)) {
             if (this.store.discuss.isActive) {
                 const newThread =
-                    this.store.discuss.channels.threads.find(
+                    this.store.discuss.channels.channel_ids.find(
                         (thread) => thread.displayToSelf || thread.isLocallyPinned
                     ) || this.store.inbox;
                 newThread.setAsDiscussThread();

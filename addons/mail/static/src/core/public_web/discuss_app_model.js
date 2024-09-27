@@ -31,6 +31,11 @@ export class DiscussApp extends Record {
                 addTitle: _t("Start a conversation"),
                 addHotkey: "d",
             },
+            all: {
+                id: "all",
+                name: _t("All"),
+                sequence: 999,
+            },
         });
         return res;
     }
@@ -44,6 +49,15 @@ export class DiscussApp extends Record {
     }
 
     INSPECTOR_WIDTH = 300;
+    hasSubCategories = Record.attr(false, {
+        compute() {
+            return this.store.discuss.allCategories
+                .filter((c) => c.id !== "all" && !c.isRootCategory)
+                .map((c) => [...c.channel_ids])
+                .flat(1)
+                .some((t) => t.displayToSelf || t.isLocallyPinned);
+        },
+    });
     /** @type {'main'|'channel'|'chat'|'livechat'} */
     activeTab = "main";
     searchTerm = "";
@@ -76,6 +90,7 @@ export class DiscussApp extends Record {
     thread = Record.one("Thread");
     channels = Record.one("DiscussAppCategory");
     chats = Record.one("DiscussAppCategory");
+    all = Record.one("DiscussAppCategory");
     hasRestoredThread = false;
 }
 

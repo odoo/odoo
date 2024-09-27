@@ -38,6 +38,7 @@ export class DiscussChannel extends models.ServerModel {
         default: () => [Command.create({ partner_id: serverState.partnerId })],
     });
     channel_type = fields.Generic({ default: "channel" });
+    channel_category_id = fields.Many2one({ relation: "discuss.channel.category" });
     group_public_id = fields.Generic({
         default: () => serverState.groupId,
     });

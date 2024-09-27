@@ -375,7 +375,7 @@ class Cursor(BaseCursor):
             hook(self, query, params, start, delay)
 
         # advanced stats
-        if _logger.isEnabledFor(logging.DEBUG):
+        if _logger.isEnabledFor(logging.WARNING):
             query_type, table = categorize_query(self._obj.query.decode())
             log_target = None
             if query_type == 'into':

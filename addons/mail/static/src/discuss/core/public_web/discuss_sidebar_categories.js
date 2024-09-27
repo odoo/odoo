@@ -47,7 +47,7 @@ export class DiscussSidebarSubchannel extends Component {
 
 export class DiscussSidebarChannel extends Component {
     static template = "mail.DiscussSidebarChannel";
-    static props = ["thread"];
+    static props = ["thread", "category"];
     static components = { CountryFlag, DiscussSidebarSubchannel, Dropdown, ImStatus, ThreadIcon };
 
     setup() {
@@ -161,8 +161,12 @@ export class DiscussSidebarChannel extends Component {
 
 export class DiscussSidebarCategory extends Component {
     static template = "mail.DiscussSidebarCategory";
-    static props = ["category"];
-    static components = { Dropdown };
+    static props = ["category", "quickSearchVal"];
+    static components = {
+        Dropdown,
+        DiscussSidebarChannel,
+        DiscussSidebarCategory,
+    };
 
     setup() {
         super.setup();
@@ -177,6 +181,63 @@ export class DiscussSidebarCategory extends Component {
 
     onHover(hovering) {
         this.floating.isOpen = hovering;
+    }
+
+    get filteredThreads() {
+        const threads =
+            this.category.id === "all"
+                ? this.store.discuss.channels.channel_ids
+                : this.category.channel_ids;
+        return threads.filter((thread) => {
+            return (
+                (thread.displayToSelf || thread.isLocallyPinned) &&
+                (!this.props.quickSearchVal ||
+                    cleanTerm(thread.displayName).includes(cleanTerm(this.props.quickSearchVal)))
+            );
+        });
+    }
+
+    get channelsCategories() {
+        return this.store.discuss.allCategories.filter((c) => !c.isRootCategory);
+    }
+
+    // get displayThreadWhensClosed() {
+    //     return (
+    //         this.store.discuss.thread?.in(this.category.channel_ids) ||
+    //         (this.category.id === "channels" &&
+    //             this.store.discuss.thread?.in(
+    //                 this.channelsCategories.map((c) => [...c.channel_ids]).flat(1)
+    //             )) ||
+    //         (this.category.id === "all" &&
+    //             this.store.discuss.thread?.in(this.store.discuss.channels.channel_ids))
+    //     );
+    // }
+
+    get displaySubThreadWhenClosed() {
+        return (
+            this.store.discuss.thread?.parent_channel_id?.in(this.category.channel_ids) ||
+            (this.category.id === "channels" &&
+                this.store.discuss.thread?.parent_channel_id?.in(
+                    this.channelsCategories.map((c) => [...c.channel_ids]).flat(1)
+                )) ||
+            (this.category.id === "all" &&
+                this.store.discuss.thread?.parent_channel_id?.in(
+                    this.store.discuss.channels.channel_ids
+                ))
+        );
+    }
+
+    get threads() {
+        if (this.category.id === "channels") {
+            return [
+                ...this.category.channel_ids,
+                ...this.channelsCategories.map((c) => [...c.channel_ids]).flat(1),
+            ];
+        } else if (this.category.id === "all") {
+            return this.store.discuss.channels.channel_ids;
+        } else {
+            return this.category.channel_ids;
+        }
     }
 
     /** @returns {import("models").DiscussAppCategory} */
