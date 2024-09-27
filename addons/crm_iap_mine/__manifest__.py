@@ -26,7 +26,7 @@
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'crm_iap_mine/static/src/js/**/*',
+            'crm_iap_mine/static/tests/tours/**/*',
         ],
     },
     'license': 'LGPL-3',

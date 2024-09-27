@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import "@crm/js/tours/crm";
+import "@crm/tests/tours/crm";
 import { patch } from "@web/core/utils/patch";
 
 import { markup } from "@odoo/owl";
