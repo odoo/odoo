@@ -337,8 +337,16 @@ class MrpProduction(models.Model):
             if not production.picking_type_id.default_location_src_id or not production.picking_type_id.default_location_dest_id:
                 company_id = production.company_id.id if (production.company_id and production.company_id in self.env.companies) else self.env.company.id
                 fallback_loc = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1).lot_stock_id
+            previous_location_src = production.location_src_id.id
+            previous_location_dest = production.location_dest_id.id
             production.location_src_id = production.picking_type_id.default_location_src_id.id or fallback_loc.id
             production.location_dest_id = production.picking_type_id.default_location_dest_id.id or fallback_loc.id
+            production.move_raw_ids = [
+                Command.update(m.id, {'location_id': production.location_src_id.id if m.location_id.id == previous_location_src else m.location_id.id}) for m in production.move_raw_ids
+            ]
+            production.move_finished_ids = [
+                Command.update(m.id, {'location_dest_id': production.location_dest_id.id if m.location_dest_id.id == previous_location_dest else m.location_dest_id.id}) for m in production.move_finished_ids
+            ]
 
     @api.model
     def _search_components_availability_state(self, operator, value):
