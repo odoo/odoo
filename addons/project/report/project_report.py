@@ -48,7 +48,6 @@ class ReportProjectTaskUser(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
     task_id = fields.Many2one('project.task', string='Tasks', readonly=True)
-    active = fields.Boolean(readonly=True)
     tag_ids = fields.Many2many('project.tags', relation='project_tags_project_task_rel',
         column1='project_task_id', column2='project_tags_id',
         string='Tags', readonly=True)
@@ -68,7 +67,6 @@ class ReportProjectTaskUser(models.Model):
                 (select 1) AS nbr,
                 t.id as id,
                 t.id as task_id,
-                t.active,
                 t.create_date,
                 t.date_assign,
                 t.date_end,
@@ -99,7 +97,6 @@ class ReportProjectTaskUser(models.Model):
     def _group_by(self):
         return """
                 t.id,
-                t.active,
                 t.create_date,
                 t.date_assign,
                 t.date_end,
