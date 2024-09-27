@@ -224,7 +224,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if self._context.get('convert_fixed_taxes'):
             taxes = taxes.filtered(lambda t: t.amount_type != 'fixed')
         tax_category_vals_list = self._get_tax_category_list(line.move_id, taxes)
-        description = (line.product_id.display_name and line.product_id.display_name.replace('\n', ', ')) or (line.name and line.name.replace('\n', ', '))
+        description = line.name and line.name.replace('\n', ', ')
         return {
             'description': description,
             'name': product.name or description,
