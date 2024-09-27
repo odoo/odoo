@@ -61,6 +61,15 @@ class StockLot(models.Model):
             lot.avg_cost = avg_cost
             lot.total_value = avg_cost * quantity_sum
 
+    def create(self, vals_list):
+        lots = super().create(vals_list)
+        for product, lots_by_product in lots.grouped('product_id').items():
+            if product.lot_valuated:
+                lots_by_product.filtered(lambda lot: not lot.standard_price).with_context(disable_auto_svl=True).write({
+                    'standard_price': product.standard_price
+                })
+        return lots
+
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
             self._change_standard_price(vals['standard_price'])
