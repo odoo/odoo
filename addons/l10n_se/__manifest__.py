@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/saas-17.2/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['se'],
-    'version': '1.0',
+    'version': '1.1',
     'author': 'XCLUDE, Odoo S.A.',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
