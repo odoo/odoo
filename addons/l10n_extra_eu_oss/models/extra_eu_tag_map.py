@@ -12,4 +12,11 @@ The EXTRA_EU_TAG_MAP answers the question: "which tag should I apply on the OSS 
 """
 
 EXTRA_EU_TAG_MAP = {
+    # United Kingdom
+    'l10n_uk.l10n_uk': {
+        'invoice_base_tag': None,
+        'invoice_tax_tag': None,
+        'refund_base_tag': None,
+        'refund_tax_tag': None,
+    },
 }
