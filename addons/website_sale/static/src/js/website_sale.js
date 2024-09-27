@@ -718,6 +718,8 @@ publicWidget.registry.WebsiteSaleAccordionProduct = publicWidget.Widget.extend({
      */
     _updateAccordionActiveItem() {
         const firstAccordionItemEl = this.el.querySelector('.accordion-item');
+        if (!firstAccordionItemEl) return;
+
         const firstAccordionItemButtonEl = firstAccordionItemEl.querySelector('.accordion-button');
         firstAccordionItemButtonEl.classList.remove('collapsed');
         firstAccordionItemButtonEl.setAttribute('aria-expanded', 'true');
