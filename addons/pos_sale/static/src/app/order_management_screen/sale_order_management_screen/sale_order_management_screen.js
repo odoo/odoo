@@ -315,7 +315,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         title: popupTitle,
                         subtitle: sprintf(
                             popupSubtitle,
-                            this.env.utils.formatCurrency(sale_order.amount_total)
+                            this.env.utils.formatCurrency(sale_order.amount_unpaid)
                         ),
                         inputSuffix: popupInputSuffix,
                         startingValue: 0,
