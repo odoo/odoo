@@ -202,6 +202,8 @@ class TestIrMailServer(MailCommon):
                 '"Unknown" <unknown_email@test.mycompany.com>',
                 # fallback on notification email
                 '"Test" <test@unknown_domain.com>',
+                # fallback when email_from is False, should default to notification email
+                False,
                 # mail_server_user multiple from_filter check: can be used for a
                 # specific email and 2 domain names -> check other domains in filter
                 '"Example" <test@domain2.com>',
@@ -214,6 +216,7 @@ class TestIrMailServer(MailCommon):
                 (self.mail_server_domain, 'unknown_email@test.mycompany.com'),
                 (self.mail_server_domain, 'unknown_email@TEST.MYCOMPANY.COM'),
                 (self.mail_server_domain, '"Unknown" <unknown_email@test.mycompany.com>'),
+                (self.mail_server_notification, f'{self.default_from}@test.mycompany.com'),
                 (self.mail_server_notification, f'{self.default_from}@test.mycompany.com'),
                 # mail_server_user multiple from_filter check
                 (self.mail_server_user, '"Example" <test@domain2.com>'),
