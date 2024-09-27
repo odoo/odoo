@@ -1,0 +1,67 @@
+///
+/// Backend Custom Utility Classes
+/// ==============================================================================
+
+$utilities: map-merge(
+    $utilities,
+    (
+        // Fix border
+        "border": map-merge(
+            map-get($utilities, "border"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "border"), "values"),
+                    (null: $border-width solid $border-color),
+                ),
+            ),
+        ),
+        "border-top": map-merge(
+            map-get($utilities, "border-top"),
+                (
+                    values: map-merge(
+                        map-get(map-get($utilities, "border-top"), "values"),
+                        (null: $border-width solid $border-color),
+                    ),
+                ),
+        ),
+        "border-end": map-merge(
+            map-get($utilities, "border-end"),
+                (
+                    values: map-merge(
+                        map-get(map-get($utilities, "border-end"), "values"),
+                        (null: $border-width solid $border-color),
+                    ),
+                ),
+        ),
+        "border-bottom": map-merge(
+            map-get($utilities, "border-bottom"),
+                (
+                    values: map-merge(
+                        map-get(map-get($utilities, "border-bottom"), "values"),
+                        (null: $border-width solid $border-color),
+                    ),
+                ),
+        ),
+        "border-start": map-merge(
+            map-get($utilities, "border-start"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "border-start"), "values"),
+                    (null: $border-width solid $border-color),
+                ),
+            ),
+        ),
+        "border-color": map-merge(
+            map-get($utilities, "border-color"),
+            (
+                values: map-merge(
+                    $theme-colors,
+                    (
+                        "black": $black,
+                        "white": $white,
+                    )
+                ),
+            ),
+        ),
+    )
+);
