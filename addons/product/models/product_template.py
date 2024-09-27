@@ -165,6 +165,8 @@ class ProductTemplate(models.Model):
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
     has_configurable_attributes = fields.Boolean("Is a configurable product", compute='_compute_has_configurable_attributes', store=True)
 
+    is_dynamically_created = fields.Boolean("Is Dynamically Created", compute='_compute_is_dynamically_created')
+
     product_tooltip = fields.Char(compute='_compute_product_tooltip')
 
     is_favorite = fields.Boolean(string="Favorite")
@@ -229,6 +231,14 @@ class ProductTemplate(models.Model):
                     or ptal.value_ids.is_custom
                     for ptal in product.attribute_line_ids
                 )
+            )
+
+    @api.depends('attribute_line_ids.attribute_id')
+    def _compute_is_dynamically_created(self):
+        for template in self:
+            template.is_dynamically_created = any(
+                line.attribute_id.create_variant == 'dynamic'
+                for line in template.attribute_line_ids
             )
 
     @api.depends('product_variant_ids')
