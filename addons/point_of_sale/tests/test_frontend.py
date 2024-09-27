@@ -524,9 +524,15 @@ class TestUi(TestPointOfSaleHttpCommon):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
 
+<<<<<<< saas-17.2
         # Verify that the tip product is not taxable
         self.tip.write({
             'taxes_id': False
+||||||| e97593146c695c0e586b42b0c4c353917b40a064
+=======
+        self.tip.write({
+            'taxes_id': False,
+>>>>>>> 73f3225383978780f46db435cc7d8c9fc61a37cb
         })
         self.main_pos_config.write({
             'iface_tipproduct': True,
