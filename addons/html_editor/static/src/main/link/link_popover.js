@@ -15,6 +15,7 @@ export class LinkPopover extends Component {
         getInternalMetaData: Function,
         getExternalMetaData: Function,
         isImage: Boolean,
+        LinkPopoverState: Object,
     };
     colorsData = [
         { type: "", label: _t("Link"), btnPreview: "link" },
@@ -46,7 +47,7 @@ export class LinkPopover extends Component {
         this.http = useService("http");
 
         this.state = useState({
-            editing: this.props.linkEl.href ? false : true,
+            editing: this.props.LinkPopoverState.editing,
             url: this.props.linkEl.href || "",
             label: cleanZWChars(this.props.linkEl.textContent),
             previewIcon: false,

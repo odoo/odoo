@@ -235,6 +235,6 @@ test("should zwnbps-pad links with .btn class", async () => {
 test("should not add visual indication to a button", async () => {
     await testEditor({
         contentBefore: '<p><a class="btn">[]content</a></p>',
-        contentBeforeEdit: '<p>\ufeff<a class="btn">\ufeffcontent\ufeff</a>\ufeff</p>',
+        contentBeforeEdit: '<p>\ufeff<a class="btn">\ufeff[]content\ufeff</a>\ufeff</p>',
     });
 });

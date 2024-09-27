@@ -211,6 +211,8 @@ export class LinkPlugin extends Plugin {
 
         this.getExternalMetaData = memoize(fetchExternalMetaData);
         this.getInternalMetaData = memoize(fetchInternalMetaData);
+
+        this.LinkPopoverState = { editing: false };
     }
 
     destroy() {
@@ -333,6 +335,7 @@ export class LinkPlugin extends Plugin {
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
+            LinkPopoverState: this.LinkPopoverState,
         };
         if (!selectionData.documentSelectionIsInEditable) {
             // note that data-prevent-closing-overlay also used in color picker but link popover
@@ -360,6 +363,7 @@ export class LinkPlugin extends Plugin {
                         this.linkElement.href = url;
                         this.shared.setCursorEnd(this.linkElement);
                         this.removeCurrentLinkIfEmtpy();
+                        this.LinkPopoverState.editing = false;
                         this.dispatch("ADD_STEP");
                     },
                 };
@@ -414,6 +418,7 @@ export class LinkPlugin extends Plugin {
                         this.linkElement.removeAttribute("class");
                     }
                     this.removeCurrentLinkIfEmtpy();
+                    this.LinkPopoverState.editing = false;
                     this.dispatch("ADD_STEP");
                 },
             };
@@ -456,6 +461,7 @@ export class LinkPlugin extends Plugin {
             return linkElement;
         } else {
             // create a new link element
+            this.LinkPopoverState.editing = true;
             const selectedNodes = this.shared.getSelectedNodes();
             const imageNode = selectedNodes.find((node) => node.tagName === "IMG");
 
