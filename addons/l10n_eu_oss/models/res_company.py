@@ -26,7 +26,9 @@ class Company(models.Model):
         oss_tax_groups = self.env['ir.model.data'].search([
             ('module', '=', 'l10n_eu_oss'),
             ('model', '=', 'account.tax.group')])
-        for company in self.root_id:  # instantiate OSS taxes on the root company only
+        for company in self:
+            # instantiate OSS taxes on the first branch with a TAX ID, default on root company
+            company = company.parent_ids.filtered(lambda c: c.vat)[-1:] or self.root_id
             invoice_repartition_lines, refund_repartition_lines = company._get_repartition_lines_oss()
             taxes = self.env['account.tax'].search([
                 *self.env['account.tax']._check_company_domain(company),
