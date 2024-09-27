@@ -578,9 +578,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
-        last_order = self.env['pos.order'].search([])[-1]
-        self.assertEqual(last_order.lines[0].price_subtotal, 12.0)
-        self.assertEqual(last_order.lines[0].price_subtotal_incl, 12.0)
+        last_order = self.env['pos.order'].search([], limit=1, order="id desc")
+        self.assertEqual(last_order.lines[0].price_subtotal, 30.0)
+        self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
 
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show
