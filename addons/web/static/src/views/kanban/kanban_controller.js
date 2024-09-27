@@ -180,6 +180,11 @@ export class KanbanController extends Component {
         const { resModel, archInfo, limit, defaultGroupBy } = this.props;
         const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, this.props.fields);
 
+        const cardColorField = archInfo.cardColorField;
+        if (cardColorField) {
+            addFieldDependencies(activeFields, fields, [{ name: cardColorField, type: "integer" }]);
+        }
+
         // Remove fields aggregator unused to avoid asking them for no reason
         const aggregateFieldNames = this.progressBarAggregateFields.map((field) => field.name);
         for (const [key, value] of Object.entries(activeFields)) {
