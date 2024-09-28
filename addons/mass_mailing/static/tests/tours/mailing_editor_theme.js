@@ -148,6 +148,6 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             content: "Make sure the floating toolbar is visible",
             trigger: '#toolbar.oe-floating[style*="visible"]',
         },
-        ...stepUtils.discardForm(),
-    ]
+        //Nothing to discard => no waiting changes.
+    ],
 });

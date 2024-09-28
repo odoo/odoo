@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from '@web_tour/tour_service/tour_utils';
 
 registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_sml_synchronization', {
     test: true,
@@ -160,6 +159,14 @@ registry.category("web_tour.tours").add('test_manufacturing_and_byproduct_sm_to_
             trigger: ".modal .modal-footer .o_form_button_save",
             run: "click",
         },
-        ...stepUtils.saveForm(),
+        {
+            content: "wait the modal is closed",
+            trigger: "body:not(:has(.modal))",
+        },
+        {
+            isActive: ["auto"],
+            content: "wait for save completion",
+            trigger: ".o_form_readonly, .o_form_saved",
+        },
     ]
 });

@@ -301,13 +301,20 @@ export class TourHelpers {
      * @default this.anchor
      */
     _get_action_element(selector) {
+        //TODO: use the same behavior as findTrigger of TourStepAutomatic
+        let element;
         if (typeof selector === "string" && selector.length) {
             const nodes = hoot.queryAll(selector);
-            return nodes.find(hoot.isVisible) || nodes.at(0);
+            element = nodes.find(hoot.isVisible) || nodes.at(0);
         } else if (selector instanceof Node) {
-            return selector;
+            element = selector;
+        } else {
+            element = this.anchor;
         }
-        return this.anchor;
+        if (!element) {
+            throw new Error(`Element has not been found for selector ${selector}.`);
+        }
+        return element;
     }
 
     // Useful for wysiwyg editor.

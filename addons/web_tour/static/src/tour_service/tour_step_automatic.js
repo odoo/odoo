@@ -1,5 +1,4 @@
 import { browser } from "@web/core/browser/browser";
-import { _legacyIsVisible } from "@web/core/utils/ui";
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
@@ -175,15 +174,14 @@ export class TourStepAutomatic extends TourStep {
      * @returns {HTMLElement}
      */
     findTrigger() {
-        let nodes;
+        let triggerEl;
         try {
-            nodes = hoot.queryAll(this.trigger);
+            //We force visible true is pseudo-selector :visible is not present in trigger
+            const visible = !this.trigger.includes(":visible");
+            triggerEl = hoot.queryFirst(this.trigger, { visible });
         } catch (error) {
             this.throwError(`Trigger was not found : ${this.trigger} : ${error.message}`);
         }
-        const triggerEl = this.trigger.includes(":visible")
-            ? nodes.at(0)
-            : nodes.find(_legacyIsVisible);
         this.triggerFound = !!triggerEl;
         return triggerEl;
     }

@@ -288,8 +288,8 @@ registry.category("web_tour.tours").add("test_open_automation_from_grouped_kanba
     test: true,
     steps: () => [
         {
-            trigger: ".o_kanban_view .o_kanban_config button.dropdown-toggle",
-            run: "click",
+            trigger: ".o_kanban_header:contains(test tag)",
+            run: "hover && click .o_kanban_view .o_kanban_config button.dropdown-toggle",
         },
         {
             trigger: ".dropdown-menu .o_column_automations",
@@ -488,9 +488,6 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
         },
         {
             trigger: "body:not(:has(.modal-content))",
-        },
-        {
-            trigger: ".o_form_button_cancel",
         },
     ],
 });

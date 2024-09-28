@@ -67,8 +67,8 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "click on Use this template",
-    trigger: ".o_page_template button.btn-primary",
-    run: "click",
+    trigger: ".modal .o_page_template:first",
+    run: "hover && click .modal .o_page_template button.btn-primary",
 }, {
     content: "insert file name",
     trigger: '.modal .modal-dialog .modal-body input[type="text"]',
@@ -99,8 +99,8 @@ registerWebsitePreviewTour('rte_translator', {
     run: "click",
 }, {
     content: "click on Use this template",
-    trigger: ".o_page_template button.btn-primary",
-    run: "click",
+    trigger: ".modal .o_page_template:first",
+    run: "hover && click .modal .o_page_template button.btn-primary",
 }, {
     content: "insert page name",
     trigger: '.modal .modal-dialog .modal-body input[type="text"]',

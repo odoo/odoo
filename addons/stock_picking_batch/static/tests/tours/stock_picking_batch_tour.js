@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { stepUtils } from '@web_tour/tour_service/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
-registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_synchronization', {
+registry.category("web_tour.tours").add("test_stock_picking_batch_sm_to_sml_synchronization", {
     test: true,
     steps: () => [
         {
@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_sync
         },
         {
             trigger: ".o_list_number > div[name=quantity] input",
-            run: 'edit 7',
+            run: "edit 7",
         },
         {
             trigger: ".fa-list",
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_sync
         },
         {
             trigger: ".o_list_number[name=quantity] input",
-            run: 'edit 21',
+            run: "edit 21",
         },
         {
             trigger: ".fa-list",
@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_sync
         },
         {
             trigger: ".modal:not(.o_inactive_modal) .o_list_number[name=quantity] input",
-            run: 'edit 27',
+            run: "edit 27",
         },
         {
             content: "Click Save",
@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_sync
         },
         {
             trigger: ".o_field_widget[name=quantity] input",
-            run: 'edit 7',
+            run: "edit 7",
         },
         {
             trigger: ".fa-list",
@@ -97,10 +97,6 @@ registry.category("web_tour.tours").add('test_stock_picking_batch_sm_to_sml_sync
             trigger: ".modal:not(.o_inactive_modal) .o_form_button_save",
             run: "click",
         },
-        {
-            trigger: ".o_form_button_save",
-            run: "click",
-        },
         ...stepUtils.saveForm(),
-    ]
+    ],
 });
