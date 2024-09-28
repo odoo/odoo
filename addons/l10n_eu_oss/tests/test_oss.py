@@ -115,6 +115,39 @@ class TestOSSUSA(AccountTestInvoicingCommon):
 
         self.assertFalse(len(tax_oss), "OSS tax shouldn't be instanced on a US company")
 
+    def test_oss_tax_on_eu_branch(self):
+        self.root_company = self.company_data['company']
+        self.root_company.child_ids = [Command.create({'name': 'Branch A'})]
+        self.cr.precommit.run()  # load the CoA
+        self.child_company = self.root_company.child_ids
+        self.child_company.child_ids = [Command.create({'name': 'sub Branch B'})]
+        self.sub_child_company = self.root_company.child_ids.child_ids
+        self.cr.precommit.run()  # load the CoA
+        # simulate sub child selection in the switcher
+        self.env.user.company_id, self.env.user.company_ids = self.sub_child_company, self.sub_child_company
+
+        foreign_country = self.env.ref('base.be')
+        self.sub_child_company.country_id = foreign_country
+        self.sub_child_company.account_fiscal_country_id = self.sub_child_company.country_id
+        self.sub_child_company.vat = "BE0477472701"
+
+        self.foreign_vat_fpos = self.env["account.fiscal.position"].create({
+            "name": "sub branch BE foreign VAT",
+            "auto_apply": True,
+            "country_id": foreign_country.id,
+            "foreign_vat": "BE0477472701",
+            "company_id": self.sub_child_company.id,
+        })
+        self.foreign_vat_fpos.action_create_foreign_taxes()
+
+        self.sub_child_company._map_eu_taxes()
+
+        another_eu_country_code = (self.env.ref('base.europe').country_ids - self.sub_child_company.country_id)[0].code
+        tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
+
+        self.assertTrue(tax_oss)
+        self.assertEqual(tax_oss.company_id, self.sub_child_company)
+
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
 class TestOSSMap(AccountTestInvoicingCommon):
