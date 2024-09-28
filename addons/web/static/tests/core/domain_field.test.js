@@ -642,7 +642,7 @@ test("domain field: edit through selector (dynamic content)", async function () 
     // Open and close the datepicker
     await contains(".o_datetime_input").click();
     expect(".o_datetime_picker").toHaveCount(1);
-    scroll(getFixture(), { top: 10 });
+    await scroll(getFixture(), { top: 10 });
     expect(".o_datetime_picker").toHaveCount(1);
     expect(SELECTORS.debugArea).toHaveValue(rawDomain);
     expect.verifySteps([]);
@@ -827,7 +827,6 @@ test("debug input corrections don't need a focus out to be saved", async functio
     await contains(".o_form_button_save").click();
     expect(".o_field_domain").toHaveClass("o_field_invalid");
     await contains(SELECTORS.debugArea).edit("[('id', '=', 1)]", { confirm: false });
-    // await animationFrame();
     expect(".o_form_status_indicator span i.fa-warning").toHaveCount(0);
     expect(".o_form_button_save[disabled]").toHaveCount(0);
     expect(".o_form_button_save").toHaveCount(1);

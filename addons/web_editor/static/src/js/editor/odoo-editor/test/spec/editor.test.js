@@ -77,10 +77,10 @@ describe('Editor', () => {
             it('should not transform indentation', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: `
-    <p>ab</p>  
+    <p>ab</p>
     <p>c</p>`,
                     contentAfter: `
-    <p>ab</p>  
+    <p>ab</p>
     <p>c</p>`,
                 });
             });

@@ -2,8 +2,17 @@
 
 import { EventBus, whenReady } from "@odoo/owl";
 import { getCurrentDimensions, mockedMatchMedia } from "@web/../lib/hoot-dom/helpers/dom";
+import {
+    mockedCancelAnimationFrame,
+    mockedClearInterval,
+    mockedClearTimeout,
+    mockedRequestAnimationFrame,
+    mockedSetInterval,
+    mockedSetTimeout,
+} from "@web/../lib/hoot-dom/helpers/time";
 import { getRunner } from "../main_runner";
 import { MockConsole } from "./console";
+import { MockDate } from "./date";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBroadcastChannel,
@@ -21,15 +30,6 @@ import {
 import { MockNotification } from "./notification";
 import { MockStorage } from "./storage";
 import { MockBlob } from "./sync_values";
-import {
-    MockDate,
-    mockedCancelAnimationFrame,
-    mockedClearInterval,
-    mockedClearTimeout,
-    mockedRequestAnimationFrame,
-    mockedSetInterval,
-    mockedSetTimeout,
-} from "./time";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -41,8 +41,6 @@ const {
     HTMLBodyElement,
     HTMLHeadElement,
     HTMLHtmlElement,
-    innerHeight,
-    innerWidth,
     MessagePort,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
@@ -53,8 +51,6 @@ const {
         hasOwn: $hasOwn,
     },
     ontouchstart,
-    outerHeight,
-    outerWidth,
     Reflect: { ownKeys: $ownKeys },
     Set,
     SharedWorker,
@@ -184,14 +180,14 @@ const WINDOW_MOCK_DESCRIPTORS = {
     Date: { value: MockDate, writable: false },
     fetch: { value: mockedFetch, writable: false },
     history: { value: mockHistory },
-    innerHeight: { get: () => getCurrentDimensions().height || innerHeight },
-    innerWidth: { get: () => getCurrentDimensions().width || innerWidth },
+    innerHeight: { get: () => getCurrentDimensions().height },
+    innerWidth: { get: () => getCurrentDimensions().width },
     localStorage: { value: mockLocalStorage, writable: false },
     matchMedia: { value: mockedMatchMedia },
     navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
-    outerHeight: { get: () => getCurrentDimensions().height || outerHeight },
-    outerWidth: { get: () => getCurrentDimensions().width || outerWidth },
+    outerHeight: { get: () => getCurrentDimensions().height },
+    outerWidth: { get: () => getCurrentDimensions().width },
     Request: { value: MockRequest, writable: false },
     requestAnimationFrame: { value: mockedRequestAnimationFrame, writable: false },
     Response: { value: MockResponse, writable: false },

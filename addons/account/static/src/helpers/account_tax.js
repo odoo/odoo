@@ -99,7 +99,7 @@ export const accountTaxHelpers = {
         }
 
         function add_extra_base(other_tax, sign) {
-            const tax_amount = taxes_data[tax.id].tax_amount;
+            const tax_amount = taxes_data[tax.id].tax_amount_factorized;
             if (!("tax_amount" in taxes_data[other_tax.id])) {
                 taxes_data[other_tax.id].extra_base_for_tax += sign * tax_amount;
             }
@@ -171,7 +171,7 @@ export const accountTaxHelpers = {
         if (tax.amount_type === "percent") {
             const total_percentage =
                 batch.reduce(
-                    (sum, batch_tax) => sum + batch_tax.amount,
+                    (sum, batch_tax) => sum + batch_tax.total_tax_factor * batch_tax.amount,
                     0
                 ) / 100.0;
             const to_price_excluded_factor =
@@ -197,7 +197,7 @@ export const accountTaxHelpers = {
         if (tax.amount_type === "division") {
             const total_percentage =
                 batch.reduce(
-                    (sum, batch_tax) => sum + batch_tax.amount,
+                    (sum, batch_tax) => sum + batch_tax.total_tax_factor * batch_tax.amount,
                     0
                 ) / 100.0;
             const incl_base_multiplicator = total_percentage === 1.0 ? 1.0 : 1 - total_percentage;
@@ -206,7 +206,7 @@ export const accountTaxHelpers = {
         return null;
     },
 
-    evaluate_taxes_computation(
+    get_tax_details(
         taxes,
         price_unit,
         quantity,
@@ -219,15 +219,20 @@ export const accountTaxHelpers = {
             // the type of involved fields and we don't have access to this information js-side.
             product = null,
             special_mode = null,
+            round_price_include = true,
         } = {}
     ) {
         const self = this;
 
         function add_tax_amount_to_results(tax, tax_amount) {
-            taxes_data[tax.id].tax_amount = tax_amount;
-            if (rounding_method === "round_per_line") {
-                taxes_data[tax.id].tax_amount = roundPrecision(
-                    taxes_data[tax.id].tax_amount,
+            const tax_data = taxes_data[tax.id];
+            tax_data.tax_amount = tax_amount;
+            tax_data.tax_amount_factorized = tax_amount * tax.total_tax_factor;
+            const special_mode = evaluation_context.special_mode;
+            const round_price_include = evaluation_context.round_price_include;
+            if (rounding_method === "round_per_line" || (!special_mode && tax_data.price_include && round_price_include)) {
+                taxes_data[tax.id].tax_amount_factorized = roundPrecision(
+                    taxes_data[tax.id].tax_amount_factorized,
                     precision_rounding
                 );
             }
@@ -297,6 +302,7 @@ export const accountTaxHelpers = {
             quantity: quantity,
             raw_base: raw_base,
             special_mode: special_mode,
+            round_price_include: round_price_include,
         };
 
         // Define the order in which the taxes must be evaluated.
@@ -327,7 +333,7 @@ export const accountTaxHelpers = {
             }
 
             const total_tax_amount = taxes_data[tax.id].batch.reduce(
-                (sum, other_tax) => sum + taxes_data[other_tax.id].tax_amount,
+                (sum, other_tax) => sum + taxes_data[other_tax.id].tax_amount_factorized,
                 0
             );
             let base = raw_base + taxes_data[tax.id].extra_base_for_base;
@@ -348,7 +354,7 @@ export const accountTaxHelpers = {
         if (taxes_data_list.length > 0) {
             total_excluded = taxes_data_list[0].base;
             const tax_amount = taxes_data_list.reduce(
-                (sum, tax_data) => sum + tax_data.tax_amount,
+                (sum, tax_data) => sum + tax_data.tax_amount_factorized,
                 0
             );
             total_included = total_excluded + tax_amount;
@@ -363,7 +369,8 @@ export const accountTaxHelpers = {
                 tax: tax_data.tax,
                 group: batching_results.group_per_tax[tax_data.tax.id],
                 batch: batching_results.batch_per_tax[tax_data.tax.id],
-                tax_amount: tax_data.tax_amount,
+                tax_amount_unfactorized: tax_data.tax_amount,
+                tax_amount: tax_data.tax_amount_factorized,
                 base_amount: tax_data.base
             })),
             tax_data_index: taxes_data_list.reduce(function(results, tax_data, i){
@@ -389,17 +396,19 @@ export const accountTaxHelpers = {
         }
 
         // Find the price unit without tax.
-        let taxes_computation = this.evaluate_taxes_computation(original_taxes, price_unit, 1.0, {
+        let taxes_computation = this.get_tax_details(original_taxes, price_unit, 1.0, {
             rounding_method: "round_globally",
             product: product,
+            round_price_include: false,
         });
         price_unit = taxes_computation.total_excluded;
 
         // Find the new price unit after applying the price included taxes.
-        taxes_computation = this.evaluate_taxes_computation(new_taxes, price_unit, 1.0, {
+        taxes_computation = this.get_tax_details(new_taxes, price_unit, 1.0, {
             rounding_method: "round_globally",
             product: product,
             special_mode: "total_excluded",
+            round_price_include: false,
         });
         let delta = 0.0;
         for (const tax_data of taxes_computation.taxes_data) {

@@ -195,6 +195,7 @@ class AccountTax(models.Model):
     is_used = fields.Boolean(string="Tax used", compute='_compute_is_used')
     repartition_lines_str = fields.Char(string="Repartition Lines", tracking=True, compute='_compute_repartition_lines_str')
     invoice_legal_notes = fields.Html(string="Legal Notes", help="Legal mentions that have to be printed on the invoices.")
+    total_tax_factor = fields.Float(compute='_compute_total_tax_factor')
 
     @api.constrains('company_id', 'name', 'type_tax_use', 'tax_scope', 'country_id')
     def _constrains_name(self):
@@ -438,6 +439,11 @@ class AccountTax(models.Model):
                     Command.create({'document_type': 'refund', 'repartition_type': 'base', 'tag_ids': []}),
                     Command.create({'document_type': 'refund', 'repartition_type': 'tax', 'tag_ids': []}),
                 ]
+
+    @api.depends('invoice_repartition_line_ids.factor', 'invoice_repartition_line_ids.repartition_type')
+    def _compute_total_tax_factor(self):
+        for tax in self:
+            tax.total_tax_factor = sum(tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').mapped('factor'))
 
     @staticmethod
     def _parse_name_search(name):
@@ -784,7 +790,7 @@ class AccountTax(models.Model):
                 yield tax_after
 
         def add_extra_base(other_tax, sign):
-            tax_amount = taxes_data[tax.id]['tax_amount']
+            tax_amount = taxes_data[tax.id]['tax_amount_factorized']
             if 'tax_amount' not in taxes_data[other_tax.id]:
                 taxes_data[other_tax.id]['extra_base_for_tax'] += sign * tax_amount
             taxes_data[other_tax.id]['extra_base_for_base'] += sign * tax_amount
@@ -886,7 +892,7 @@ class AccountTax(models.Model):
         """
         self.ensure_one()
         if self.amount_type == 'percent':
-            total_percentage = sum(tax.amount for tax in batch) / 100.0
+            total_percentage = sum(tax.total_tax_factor * tax.amount for tax in batch) / 100.0
             to_price_excluded_factor = 1 / (1 + total_percentage) if total_percentage != -1 else 0.0
             return raw_base * to_price_excluded_factor * self.amount / 100.0
 
@@ -909,7 +915,7 @@ class AccountTax(models.Model):
             return raw_base * self.amount / 100.0
 
         if self.amount_type == 'division':
-            total_percentage = sum(tax.amount for tax in batch) / 100.0
+            total_percentage = sum(tax.total_tax_factor * tax.amount for tax in batch) / 100.0
             incl_base_multiplicator = 1.0 if total_percentage == 1.0 else 1 - total_percentage
             return raw_base * self.amount / 100.0 / incl_base_multiplicator
 
@@ -921,6 +927,7 @@ class AccountTax(models.Model):
         rounding_method='round_per_line',
         product=None,
         special_mode=False,
+        round_price_include=True,
     ):
         """ Compute the tax/base amounts for the current taxes.
 
@@ -941,6 +948,15 @@ class AccountTax(models.Model):
                             will give you the same as 100 without any special_mode.
                             Note: You can only expect accurate symmetrical taxes computation with not rounded price_unit
                             as input and 'round_globally' computation. Otherwise, it's not guaranteed.
+        :param round_price_include: Indicate if we want to force the rounding in price_include whatever the tax computation method.
+                                    In case you have 2 invoice lines of 21.53 with 21% price included taxes, the code will compute
+                                    21.53 / 1.21 * 2 ~= 35.59 as untaxed amount, 7.47 as tax amount and 40.06 as total amount.
+                                    However, for now, we decided we want to put the rounding into the tax amount instead of making
+                                    an adjustment on the untaxed amount because we want the untaxed amount being the sum of the price
+                                    excluded amount of each line. Here, 2 * round(21.53 / 1.21) = 35.58. So we are forced to put the
+                                    rounding on the tax instead to have 35.58 + 7.48 = 43.06 and then, round like the round_per_line
+                                    when the tax is price included.
+        :return:                    A python dictionary.
         :return: A dict containing:
             'evaluation_context':       The evaluation_context parameter.
             'taxes_data':               A list of dictionaries, one per tax containing:
@@ -951,10 +967,13 @@ class AccountTax(models.Model):
             'total_included':           The total with tax.
         """
         def add_tax_amount_to_results(tax, tax_amount):
-            taxes_data[tax.id]['tax_amount'] = tax_amount
-            if rounding_method == 'round_per_line':
-                taxes_data[tax.id]['tax_amount'] = float_round(taxes_data[tax.id]['tax_amount'], precision_rounding=precision_rounding)
-
+            tax_data = taxes_data[tax.id]
+            tax_data['tax_amount'] = tax_amount
+            taxes_data[tax.id]['tax_amount_factorized'] = tax_amount * tax.total_tax_factor
+            special_mode = evaluation_context['special_mode']
+            round_price_include = evaluation_context['round_price_include']
+            if rounding_method == 'round_per_line' or (not special_mode and tax_data['price_include'] and round_price_include):
+                taxes_data[tax.id]['tax_amount_factorized'] = float_round(taxes_data[tax.id]['tax_amount_factorized'], precision_rounding=precision_rounding)
             sorted_taxes._propagate_extra_taxes_base(tax, taxes_data, special_mode=special_mode)
 
         def eval_tax_amount(tax_amount_function, tax):
@@ -1006,6 +1025,7 @@ class AccountTax(models.Model):
             'quantity': quantity,
             'raw_base': raw_base,
             'special_mode': special_mode,
+            'round_price_include': round_price_include,
         }
 
         # Define the order in which the taxes must be evaluated.
@@ -1035,7 +1055,7 @@ class AccountTax(models.Model):
             if 'tax_amount' not in taxes_data[tax.id]:
                 continue
 
-            total_tax_amount = sum(taxes_data[other_tax.id]['tax_amount'] for other_tax in taxes_data[tax.id]['batch'])
+            total_tax_amount = sum(taxes_data[other_tax.id]['tax_amount_factorized'] for other_tax in taxes_data[tax.id]['batch'])
             base = raw_base + taxes_data[tax.id]['extra_base_for_base']
             if taxes_data[tax.id]['price_include'] and special_mode in (False, 'total_included'):
                 base -= total_tax_amount
@@ -1045,7 +1065,7 @@ class AccountTax(models.Model):
 
         if taxes_data_list:
             total_excluded = taxes_data_list[0]['base']
-            tax_amount = sum(tax_data['tax_amount'] for tax_data in taxes_data_list)
+            tax_amount = sum(tax_data['tax_amount_factorized'] for tax_data in taxes_data_list)
             total_included = total_excluded + tax_amount
         else:
             total_included = total_excluded = raw_base
@@ -1058,7 +1078,8 @@ class AccountTax(models.Model):
                     'tax': tax_data['tax'],
                     'group': batching_results['group_per_tax'].get(tax_data['tax'].id) or self.env['account.tax'],
                     'batch': batching_results['batch_per_tax'][tax_data['tax'].id],
-                    'tax_amount': tax_data['tax_amount'],
+                    'tax_amount_unfactorized': tax_data['tax_amount'],
+                    'tax_amount': tax_data['tax_amount_factorized'],
                     'base_amount': tax_data['base'],
                 }
                 for tax_data in taxes_data_list
@@ -1105,6 +1126,7 @@ class AccountTax(models.Model):
             1.0,
             rounding_method='round_globally',
             product=product,
+            round_price_include=False,
         )
         price_unit = taxes_computation['total_excluded']
 
@@ -1115,6 +1137,7 @@ class AccountTax(models.Model):
             rounding_method='round_globally',
             product=product,
             special_mode='total_excluded',
+            round_price_include=False,
         )
         delta = sum(x['tax_amount'] for x in taxes_computation['taxes_data'] if x['tax'].price_include)
         return price_unit + delta
@@ -1143,17 +1166,13 @@ class AccountTax(models.Model):
 
             # Split naively by repartition line.
             rep_lines = tax[repartition_lines_field].filtered(lambda x: x.repartition_type == 'tax')
-            repartition_line_amounts = [tax_data['tax_amount'] * line.factor for line in rep_lines]
+            repartition_line_amounts = [tax_data['tax_amount_unfactorized'] * line.factor for line in rep_lines]
             if rounding_method == 'round_per_line':
                 repartition_line_amounts = [currency.round(x) for x in repartition_line_amounts]
             total_repartition_line_amount = sum(repartition_line_amounts)
 
             # Fix the rounding error caused by rounding.
-            total_factor = sum(rep_lines.mapped('factor'))
-            total_tax_amount = tax_data['tax_amount'] * total_factor
-            if rounding_method == 'round_per_line':
-                total_tax_amount = currency.round(total_tax_amount)
-            total_error = total_tax_amount - total_repartition_line_amount
+            total_error = tax_data['tax_amount'] - total_repartition_line_amount
             error_sign = -1 if total_error < 0.0 else 1
             total_error *= error_sign
             for index, _amount in enumerate(repartition_line_amounts):
@@ -1176,12 +1195,14 @@ class AccountTax(models.Model):
                 else:
                     rep_line_tags = rep_line.tag_ids
 
-                tax_rep_values_list.append({
+                tax_rep_values = {
                     **tax_data,
                     'tax_amount': line_amount,
                     'tax_repartition_line': rep_line,
                     'tags': tax_data['tags'] | rep_line_tags,
-                })
+                }
+                tax_rep_values.pop('tax_amount_unfactorized')
+                tax_rep_values_list.append(tax_rep_values)
         return tax_rep_values_list
 
     def flatten_taxes_hierarchy(self):

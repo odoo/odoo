@@ -9,10 +9,10 @@ import {
     getNodeValue,
     getStyle,
     isCheckable,
-    isDisplayed,
     isEmpty,
     isNode,
-    isVisible,
+    isNodeDisplayed,
+    isNodeVisible,
     queryAll,
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
@@ -20,6 +20,7 @@ import { isFirefox, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     HootError,
     Markup,
+    RawString,
     deepCopy,
     deepEqual,
     ensureArguments,
@@ -50,7 +51,6 @@ import { Test } from "./test";
  *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
  * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
- * @typedef {import("@odoo/hoot-dom").Position} Position
  * @typedef {import("@odoo/hoot-dom").QueryRectOptions} QueryRectOptions
  * @typedef {import("@odoo/hoot-dom").QueryTextOptions} QueryTextOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
@@ -61,11 +61,10 @@ import { Test } from "./test";
  * @template [A=R]
  * @typedef {{
  *  acceptedType: ArgumentType | ArgumentType[];
- *  failedDetails: (actual: A) => any[];
+ *  failedDetails: () => any[];
  *  message: (pass: boolean) => string;
  *  name: string;
- *  predicate: (actual: A) => boolean;
- *  transform?: (received: R) => A;
+ *  predicate: () => boolean;
  * }} MatcherSpecifications
  */
 
@@ -105,25 +104,19 @@ const $now = performance.now.bind(performance);
 //-----------------------------------------------------------------------------
 
 /**
- * @param  {string[]} values
- */
-const and = (values) => {
-    const last = values.pop();
-    if (values.length) {
-        return [values.join(", "), last].join(" and ");
-    } else {
-        return last;
-    }
-};
-
-/**
  * @template T
+ * @param {Iterable<T>} iterable
  * @param {(item: T) => boolean} predicate
- * @returns {(value: MaybeIterable<T>) => boolean}
  */
-const each = (predicate) => (value) => {
-    const values = ensureArray(value);
-    return values.length && values.every(predicate);
+const each = (iterable, predicate) => () => {
+    let length = 0;
+    for (const value of iterable) {
+        length++;
+        if (!predicate(value)) {
+            return false;
+        }
+    }
+    return length && true;
 };
 
 /**
@@ -139,18 +132,10 @@ const formatError = (error) => {
 
 /**
  * @param {string} message
- * @param {{ received: unknown; actual: unknown; not: boolean }} params
+ * @param {boolean} not
  */
-const formatMessage = (message, { received, actual, not }) =>
-    message
-        .replace(R_NOT, (_, ifTrue, ifFalse) => (not ? ifFalse || "" : ifTrue || ""))
-        .replace(R_RECEIVED, formatHumanReadable(received))
-        .replace(R_ACTUAL, formatHumanReadable(actual))
-        .replace(R_ELEMENTS, (_, elements) =>
-            typeof received === "string"
-                ? `${elements} matching "${received}"`
-                : formatHumanReadable(actual)
-        );
+const formatMessage = (message, not) =>
+    message.replace(R_NOT, (_, ifTrue, ifFalse) => (not ? ifFalse || "" : ifTrue || ""));
 
 /**
  * @param {string} stack
@@ -196,19 +181,19 @@ const getStyleValues = (node, keys) => {
     );
 };
 
+/** @type {StringConstructor["raw"]} */
+const h = (template, ...substitutions) =>
+    new RawString(String.raw(template, ...substitutions.map((s) => formatHumanReadable(s))));
+
 /**
- *
- * @param {Node} node
- * @param {Record<string, string | RegExp>} styleDef
+ * @param {string} separator
+ * @param {string[]} values
  */
-const hasStyle = (node, styleDef) => {
-    const nodeStyle = getStyleValues(node, $keys(styleDef));
-    for (const [prop, value] of $entries(styleDef)) {
-        if (!regexMatchOrStrictEqual(nodeStyle[prop], value)) {
-            return false;
-        }
-    }
-    return true;
+const hJoin = (separator, values) => {
+    const hValues = values.map(formatHumanReadable);
+    const last = hValues.pop();
+    const str = hValues.length ? [hValues.join(", "), last].join(` ${separator} `) : last;
+    return new RawString(str);
 };
 
 /**
@@ -239,8 +224,8 @@ const includes = (object, item) => {
  */
 const detailsFromValues = (...args) =>
     args.length > 1
-        ? [Markup.green(LABEL_EXPECTED, args[0]), Markup.red(LABEL_ACTUAL, args[1])]
-        : [Markup.red(LABEL_ACTUAL, args[0])];
+        ? [Markup.green(LABEL_EXPECTED, args[0]), Markup.red(LABEL_RECEIVED, args[1])]
+        : [Markup.red(LABEL_RECEIVED, args[0])];
 
 /**
  * @param {...unknown} args
@@ -254,10 +239,10 @@ const detailsFromValuesWithDiff = (...args) => [
  * @param {Record<string, unknown>} valuesObject
  */
 const detailsFromObject = (valuesObject) => {
-    const [expected, actual] = Object.entries(valuesObject);
+    const [expected, received] = Object.entries(valuesObject);
     return [
         Markup.green(expected[0] || LABEL_EXPECTED, expected[1]),
-        Markup.red(actual[0] || LABEL_ACTUAL, actual[1]),
+        Markup.red(received[0] || LABEL_RECEIVED, received[1]),
     ];
 };
 
@@ -274,6 +259,21 @@ const matcherModifierError = (modifier, message) =>
  */
 const parseStyle = (styleString) =>
     $fromEntries(styleString.split(";").map((prop) => prop.split(":").map((v) => v.trim())));
+
+/**
+ * @template T
+ * @param {Target} target
+ * @param {(element: Element) => T} mapFn
+ * @returns {[Element[], Map<Element, T>]}
+ */
+const queryAndMap = (target, mapFn) => {
+    const elements = queryAll(target);
+    const map = new Map();
+    for (const el of elements) {
+        map.set(el, mapFn(el));
+    }
+    return [elements, map];
+};
 
 /**
  * @param {unknown} value
@@ -305,13 +305,10 @@ const roundTo = (value, digits) => {
  */
 const scopeError = (method) => new HootError(`cannot call \`${method}()\` outside of a test`);
 
-const R_ACTUAL = /%(actual)%/i;
-const R_ELEMENTS = /%(elements?)%/i;
 const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/;
-const R_RECEIVED = /%(received)%/i;
 
-const LABEL_ACTUAL = "Received:";
 const LABEL_EXPECTED = "Expected:";
+const LABEL_RECEIVED = "Received:";
 
 /** @type {Set<Matcher>} */
 const unconsumedMatchers = new Set();
@@ -809,17 +806,17 @@ export class Matcher {
 
         ensureArguments(arguments, "any", ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toBe",
             acceptedType: "any",
-            predicate: (actual) => strictEqual(actual, expected),
+            predicate: () => strictEqual(received, expected),
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `received value is[! not] strictly equal to %actual%`
-                    : `expected values to be strictly equal`),
-            failedDetails: (actual) => detailsFromValuesWithDiff(expected, actual),
-        });
+                    ? h`received value is[! not] strictly equal to ${received}`
+                    : h`expected values to be strictly equal`),
+            failedDetails: () => detailsFromValuesWithDiff(expected, received),
+        }));
     }
 
     /**
@@ -839,17 +836,19 @@ export class Matcher {
         ensureArguments(arguments, "number", ["object", null]);
 
         const digits = options?.digits ?? 2;
-        return this._resolve({
-            name: "toBeCloseTo",
-            acceptedType: "number",
-            transform: (value) => roundTo(value, digits),
-            predicate: (actual) => strictEqual(actual, expected),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `received value is[! not] close to %actual%`
-                    : `expected values to be close to the given value`),
-            failedDetails: (actual) => detailsFromValuesWithDiff(expected, actual),
+        return this._resolve((received) => {
+            const rounded = roundTo(received, digits);
+            return {
+                name: "toBeCloseTo",
+                acceptedType: "number",
+                predicate: () => strictEqual(rounded, expected),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`received value is[! not] close to ${received}`
+                        : h`expected values to be close to the given value`),
+                failedDetails: () => detailsFromValuesWithDiff(expected, rounded),
+            };
         });
     }
 
@@ -873,15 +872,15 @@ export class Matcher {
 
         ensureArguments(arguments, ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toBeEmpty",
             acceptedType: ["any"],
-            predicate: isEmpty,
+            predicate: () => isEmpty(received),
             message: (pass) =>
                 options?.message ||
-                (pass ? `%actual% is[! not] empty` : `%actual% should[! not] be empty`),
-            failedDetails: (actual) => detailsFromValues(actual),
-        });
+                (pass ? h`${received} is[! not] empty` : h`${received} should[! not] be empty`),
+            failedDetails: () => detailsFromValues(received),
+        }));
     }
 
     /**
@@ -899,21 +898,21 @@ export class Matcher {
 
         ensureArguments(arguments, "number", ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toBeGreaterThan",
             acceptedType: "number",
-            predicate: (actual) => min < actual,
+            predicate: () => min < received,
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `%actual% is[! not] strictly greater than ${formatHumanReadable(min)}`
-                    : `expected value[! not] to be strictly greater`),
-            failedDetails: (actual) =>
+                    ? h`${received} is[! not] strictly greater than ${min}`
+                    : h`expected value[! not] to be strictly greater`),
+            failedDetails: () =>
                 detailsFromObject({
                     "Minimum:": min,
-                    [LABEL_ACTUAL]: actual,
+                    [LABEL_RECEIVED]: received,
                 }),
-        });
+        }));
     }
 
     /**
@@ -931,21 +930,21 @@ export class Matcher {
 
         ensureArguments(arguments, "function", ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toBeInstanceOf",
             acceptedType: "any",
-            predicate: (actual) => actual instanceof cls,
+            predicate: () => received instanceof cls,
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `%actual% is[! not] an instance of ${cls.name}`
-                    : `expected value[! not] to be an instance of the given class`),
-            failedDetails: (actual) =>
+                    ? h`${received} is[! not] an instance of ${cls.name}`
+                    : h`expected value[! not] to be an instance of the given class`),
+            failedDetails: () =>
                 detailsFromObject({
                     [LABEL_EXPECTED]: cls,
-                    "Actual parent class:": actual.constructor.name,
+                    "Actual parent class:": received.constructor.name,
                 }),
-        });
+        }));
     }
 
     /**
@@ -963,21 +962,21 @@ export class Matcher {
 
         ensureArguments(arguments, "number", ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toBeLessThan",
             acceptedType: "number",
-            predicate: (actual) => actual < max,
+            predicate: () => received < max,
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `%actual% is[! not] strictly less than ${formatHumanReadable(max)}`
-                    : `expected value[! not] to be strictly less`),
-            failedDetails: (actual) =>
+                    ? h`${received} is[! not] strictly less than ${max}`
+                    : h`expected value[! not] to be strictly less`),
+            failedDetails: () =>
                 detailsFromObject({
                     "Maximum:": max,
-                    [LABEL_ACTUAL]: actual,
+                    [LABEL_RECEIVED]: received,
                 }),
-        });
+        }));
     }
 
     /**
@@ -995,21 +994,21 @@ export class Matcher {
 
         ensureArguments(arguments, "string", ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toBeOfType",
             acceptedType: "any",
-            predicate: (actual) => isOfType(actual, type),
+            predicate: () => isOfType(received, type),
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `%actual% is[! not] of type ${formatHumanReadable(type)}`
-                    : `expected value to be of the given type`),
-            failedDetails: (actual) =>
+                    ? h`${received} is[! not] of type ${type}`
+                    : h`expected value to be of the given type`),
+            failedDetails: () =>
                 detailsFromObject({
                     "Expected type:": type,
-                    "Received value:": actual,
+                    "Received value:": received,
                 }),
-        });
+        }));
     }
 
     /**
@@ -1037,19 +1036,17 @@ export class Matcher {
             throw new HootError(`min and max cannot be equal (did you mean to use \`toBe()\`?)`);
         }
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toBeWithin",
             acceptedType: "number",
-            predicate: (actual) => min <= actual && actual <= max,
+            predicate: () => min <= received && received <= max,
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `%actual% is[! not] between ${formatHumanReadable(
-                          min
-                      )} and ${formatHumanReadable(max)}`
-                    : `expected value[! not] to be between given range`),
-            failedDetails: (actual) => detailsFromValues(`${min} - ${max}`, actual),
-        });
+                    ? h`${received} is[! not] between ${min} and ${max}`
+                    : h`expected value[! not] to be between given range`),
+            failedDetails: () => detailsFromValues(`${min} - ${max}`, received),
+        }));
     }
 
     /**
@@ -1067,17 +1064,17 @@ export class Matcher {
 
         ensureArguments(arguments, "any", ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toEqual",
             acceptedType: "any",
-            predicate: (actual) => deepEqual(actual, expected),
+            predicate: () => deepEqual(received, expected),
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `received value is[! not] deeply equal to %actual%`
-                    : `expected values to[! not] be deeply equal`),
-            failedDetails: (actual) => detailsFromValuesWithDiff(expected, actual),
-        });
+                    ? h`received value is[! not] deeply equal to ${received}`
+                    : h`expected values to[! not] be deeply equal`),
+            failedDetails: () => detailsFromValuesWithDiff(expected, received),
+        }));
     }
 
     /**
@@ -1101,20 +1098,23 @@ export class Matcher {
 
         ensureArguments(arguments, "integer", ["object", null]);
 
-        return this._resolve({
-            name: "toHaveLength",
-            acceptedType: ["string", "array", "object"],
-            predicate: (actual) => getLength(actual) === length,
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%actual% has[! not] a length of ${formatHumanReadable(length)}`
-                    : `expected value[! not] to have the given length`),
-            failedDetails: (actual) =>
-                detailsFromObject({
-                    "Expected length:": length,
-                    [LABEL_ACTUAL]: getLength(actual),
-                }),
+        return this._resolve((received) => {
+            const receivedLength = getLength(received);
+            return {
+                name: "toHaveLength",
+                acceptedType: ["string", "array", "object"],
+                predicate: () => strictEqual(receivedLength, length),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${received} has[! not] a length of ${length}`
+                        : h`expected value[! not] to have the given length`),
+                failedDetails: () =>
+                    detailsFromObject({
+                        "Expected length:": length,
+                        [LABEL_RECEIVED]: receivedLength,
+                    }),
+            };
         });
     }
 
@@ -1143,21 +1143,21 @@ export class Matcher {
 
         ensureArguments(arguments, "any", ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toInclude",
             acceptedType: ["string", "any[]", "object"],
-            predicate: (actual) => includes(actual, item),
+            predicate: () => includes(received, item),
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `%actual% [includes!does not include] ${formatHumanReadable(item)}`
-                    : `expected object[! not] to include the given item`),
-            failedDetails: (actual) =>
+                    ? h`${received} [includes!does not include] ${item}`
+                    : h`expected object[! not] to include the given item`),
+            failedDetails: () =>
                 detailsFromObject({
-                    "Object:": actual,
+                    "Object:": received,
                     "Item:": item,
                 }),
-        });
+        }));
     }
 
     /**
@@ -1175,21 +1175,21 @@ export class Matcher {
 
         ensureArguments(arguments, "any", ["object", null]);
 
-        return this._resolve({
+        return this._resolve((received) => ({
             name: "toMatch",
             acceptedType: "any",
-            predicate: (actual) => match(actual, matcher),
+            predicate: () => match(received, matcher),
             message: (pass) =>
                 options?.message ||
                 (pass
-                    ? `%actual% [matches!does not match] ${formatHumanReadable(matcher)}`
-                    : `expected value[! not] to match the given matcher`),
-            failedDetails: (actual) =>
+                    ? h`${received} [matches!does not match] ${matcher}`
+                    : h`expected value[! not] to match the given matcher`),
+            failedDetails: () =>
                 detailsFromObject({
                     "Matcher:": matcher,
-                    [LABEL_ACTUAL]: actual,
+                    [LABEL_RECEIVED]: received,
                 }),
-        });
+        }));
     }
 
     /**
@@ -1207,41 +1207,36 @@ export class Matcher {
 
         ensureArguments(arguments, "any", ["object", null]);
 
-        let name;
-        return this._resolve({
-            name: "toThrow",
-            acceptedType: ["function", "error"],
-            transform: (received) => {
-                name = received.name || "anonymous function";
-                const { rejects, resolves } = this._modifiers;
-                if (rejects || resolves) {
-                    return received;
-                }
+        return this._resolve((received) => {
+            const isAsync = this._modifiers.rejects || this._modifiers.resolves;
+            const name = received.name || "anonymous function";
+            let returnValue;
+            if (isAsync) {
+                returnValue = received;
+            } else {
                 try {
-                    return received();
+                    returnValue = received();
                 } catch (error) {
-                    return error;
+                    returnValue = error;
                 }
-            },
-            predicate: (actual) => match(actual, matcher),
-            message: (pass) => {
-                if (options?.message) {
-                    return options.message;
-                }
-                const { rejects, resolves } = this._modifiers;
-                return pass
-                    ? `${name} did[! not] ${
-                          rejects || resolves ? "reject" : "throw"
-                      } a matching value`
-                    : `${name} ${
-                          rejects || resolves ? "rejected" : "threw"
-                      } a value that did not match the given matcher`;
-            },
-            failedDetails: (actual) =>
-                detailsFromObject({
-                    "Matcher:": matcher,
-                    [LABEL_ACTUAL]: actual,
-                }),
+            }
+            return {
+                name: "toThrow",
+                acceptedType: ["function", "error"],
+                predicate: () => match(returnValue, matcher),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${name} did[! not] ${isAsync ? h`reject` : h`throw`} a matching value`
+                        : h`${name} ${
+                              isAsync ? h`rejected` : h`threw`
+                          } a value that did not match the given matcher`),
+                failedDetails: () =>
+                    detailsFromObject({
+                        "Matcher:": matcher,
+                        [LABEL_RECEIVED]: returnValue,
+                    }),
+            };
         });
     }
 
@@ -1263,17 +1258,19 @@ export class Matcher {
         ensureArguments(arguments, ["object", null]);
 
         const prop = options?.indeterminate ? "indeterminate" : "checked";
-        return this._resolve({
-            name: "toBeChecked",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => node.matches?.(":" + prop)),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% are[! not] ${prop}`
-                    : `expected %elements%[! not] to be ${prop}`),
-            failedDetails: (actual) => detailsFromValues(actual.map((node) => node[prop])),
+        const pseudo = ":" + prop;
+
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => el.matches?.(pseudo));
+            return {
+                name: "toBeChecked",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map.values(), Boolean),
+                message: (pass) =>
+                    options?.message ||
+                    (pass ? h`${els} are[! not] ${prop}` : h`expected ${els}[! not] to be ${prop}`),
+                failedDetails: () => detailsFromValues([...map.values()]),
+            };
         });
     }
 
@@ -1293,31 +1290,32 @@ export class Matcher {
 
         ensureArguments(arguments, ["object", null]);
 
-        return this._resolve({
-            name: "toBeDisplayed",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: isDisplayed,
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% are[! not] displayed`
-                    : `expected %elements%[! not] to be displayed`),
-            failedDetails: (actual) => {
-                const displayed = [];
-                const notDisplayed = [];
-                for (const node of actual) {
-                    if (isDisplayed(node)) {
-                        displayed.push(node);
-                    } else {
-                        notDisplayed.push(node);
-                    }
+        return this._resolve((received) => {
+            const elements = queryAll(received);
+            const displayed = [];
+            const notDisplayed = [];
+            for (const el of elements) {
+                if (isNodeDisplayed(el)) {
+                    displayed.push(el);
+                } else {
+                    notDisplayed.push(el);
                 }
-                return detailsFromObject({
-                    "Displayed:": displayed,
-                    "Not displayed:": notDisplayed,
-                });
-            },
+            }
+            return {
+                name: "toBeDisplayed",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: () => elements.length && elements.length === displayed.length,
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${elements} are[! not] displayed`
+                        : h`expected ${elements}[! not] to be displayed`),
+                failedDetails: () =>
+                    detailsFromObject({
+                        "Displayed:": displayed,
+                        "Not displayed:": notDisplayed,
+                    }),
+            };
         });
     }
 
@@ -1336,17 +1334,19 @@ export class Matcher {
 
         ensureArguments(arguments, ["object", null]);
 
-        return this._resolve({
-            name: "toBeEnabled",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => node.matches?.(":enabled")),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% are [enabled!disabled]`
-                    : `expected %elements% to be [enabled!disabled]`),
-            failedDetails: (actual) => detailsFromValues(actual),
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => el.matches?.(":enabled"));
+            return {
+                name: "toBeEnabled",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map.values(), Boolean),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${els} are [enabled!disabled]`
+                        : h`expected ${els} to be [enabled!disabled]`),
+                failedDetails: () => detailsFromValues(els),
+            };
         });
     }
 
@@ -1360,19 +1360,21 @@ export class Matcher {
 
         ensureArguments(arguments, ["object", null]);
 
-        return this._resolve({
-            name: "toBeFocused",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => node === getActiveElement(node)),
-            message: (pass) =>
-                options?.message ||
-                (pass ? `%elements% are[! not] focused` : `%elements% should[! not] be focused`),
-            failedDetails: (actual) =>
-                detailsFromObject({
-                    "Focused:": getActiveElement(actual),
-                    [LABEL_ACTUAL]: actual,
-                }),
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => getActiveElement(el));
+            return {
+                name: "toBeFocused",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map, ([el, activeEl]) => el === activeEl),
+                message: (pass) =>
+                    options?.message ||
+                    (pass ? h`${els} are[! not] focused` : h`${els} should[! not] be focused`),
+                failedDetails: () =>
+                    detailsFromObject({
+                        "Focused:": [...map.values()],
+                        [LABEL_RECEIVED]: els,
+                    }),
+            };
         });
     }
 
@@ -1393,31 +1395,32 @@ export class Matcher {
 
         ensureArguments(arguments, ["object", null]);
 
-        return this._resolve({
-            name: "toBeVisible",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: isVisible,
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% are [visible!hidden]`
-                    : `expected %elements% to be [visible!hidden]`),
-            failedDetails: (actual) => {
-                const visible = [];
-                const hidden = [];
-                for (const node of actual) {
-                    if (isVisible(node)) {
-                        visible.push(node);
-                    } else {
-                        hidden.push(node);
-                    }
+        return this._resolve((received) => {
+            const elements = queryAll(received);
+            const visible = [];
+            const hidden = [];
+            for (const el of elements) {
+                if (isNodeVisible(el)) {
+                    visible.push(el);
+                } else {
+                    hidden.push(el);
                 }
-                return detailsFromObject({
-                    "Visible:": visible,
-                    "Hidden:": hidden,
-                });
-            },
+            }
+            return {
+                name: "toBeVisible",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: () => elements.length && elements.length === visible.length,
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${elements} are [visible!hidden]`
+                        : h`expected ${elements} to be [visible!hidden]`),
+                failedDetails: () =>
+                    detailsFromObject({
+                        "Visible:": visible,
+                        "Hidden:": hidden,
+                    }),
+            };
         });
     }
 
@@ -1439,28 +1442,29 @@ export class Matcher {
         ensureArguments(arguments, "string", ["string", "number", "regex", null], ["object", null]);
 
         const expectsValue = !isNil(value);
-        return this._resolve({
-            name: "toHaveAttribute",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => {
-                if (!expectsValue) {
-                    return node.hasAttribute(attribute);
-                }
-                const attrValue = getNodeAttribute(node, attribute);
-                return regexMatchOrStrictEqual(attrValue, value);
-            }),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `attribute ${formatHumanReadable(attribute)} on %actual% ${
-                          expectsValue
-                              ? `[matches!does not match] ${formatHumanReadable(value)}`
-                              : "is[! not] set"
-                      }`
-                    : `element does not have the correct attribute${expectsValue ? " value" : ""}`),
-            failedDetails: (actual) =>
-                detailsFromValuesWithDiff(value, getNodeAttribute(actual[0], attribute)),
+        const values = ensureArray(value);
+
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => getNodeAttribute(el, attribute));
+            return {
+                name: "toHaveAttribute",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map, ([el, elAttr]) =>
+                    expectsValue
+                        ? regexMatchOrStrictEqual(elAttr, value)
+                        : el.hasAttribute(attribute)
+                ),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`attribute ${attribute} on ${els} ${
+                              expectsValue ? h`[matches!does not match] ${value}` : h`is[! not] set`
+                          }`
+                        : h`${els} do not have the correct attribute${
+                              expectsValue ? h` value` : h``
+                          }`),
+                failedDetails: () => detailsFromValuesWithDiff(values, [...map.values()]),
+            };
         });
     }
 
@@ -1482,23 +1486,25 @@ export class Matcher {
         const rawClassNames = ensureArray(className);
         const classNames = rawClassNames.flatMap((cls) => cls.trim().split(/\s+/g));
 
-        return this._resolve({
-            name: "toHaveClass",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => classNames.every((cls) => node.classList.contains(cls))),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% [have!do not have] classes ${and(
-                          classNames.map(formatHumanReadable)
-                      )}`
-                    : `expected %elements% [to have all!not to have any] of the given class names`),
-            failedDetails: (actual) =>
-                detailsFromValues(
-                    classNames,
-                    actual.flatMap((node) => [...node.classList])
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => [...el.classList]);
+            return {
+                name: "toHaveClass",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map.values(), (classes) =>
+                    classNames.every((cls) => classes.includes(cls))
                 ),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${els} [have!do not have] classes ${hJoin("and", classNames)}`
+                        : h`expected ${els} [to have all!not to have any] of the given class names`),
+                failedDetails: () =>
+                    detailsFromValues(
+                        classNames.join(" "),
+                        [...map.values()].map((classes) => classes.join(" "))
+                    ),
+            };
         });
     }
 
@@ -1525,21 +1531,23 @@ export class Matcher {
             amount = false;
         }
 
-        return this._resolve({
-            name: "toHaveCount",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: (node) =>
-                amount === false ? node.length > 0 : strictEqual(node.length, amount),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `there are[! not] ${amount} %elements%`
-                    : `there is an incorrect amount of %elements%`),
-            failedDetails: (actual) => [
-                ...detailsFromValues(amount === false ? "any" : amount, actual.length),
-                Markup.red("Nodes:", actual),
-            ],
+        return this._resolve((received) => {
+            const elements = queryAll(received);
+            return {
+                name: "toHaveCount",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: () =>
+                    amount === false ? elements.length > 0 : strictEqual(elements.length, amount),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`there are[! not] ${amount} ${elements}`
+                        : h`there is an incorrect amount of ${elements}`),
+                failedDetails: () => [
+                    ...detailsFromValues(amount === false ? "any" : amount, elements.length),
+                    Markup.red("Elements:", elements),
+                ],
+            };
         });
     }
 
@@ -1557,9 +1565,7 @@ export class Matcher {
     toHaveInnerHTML(expected, options) {
         this._saveStack();
 
-        ensureArguments(arguments, ["string", "regex"], ["object", null]);
-
-        return this._toHaveHTML("innerHTML", expected, options);
+        return this._toHaveHTML("toHaveInnerHTML", "innerHTML", ...arguments);
     }
 
     /**
@@ -1578,9 +1584,7 @@ export class Matcher {
     toHaveOuterHTML(expected, options) {
         this._saveStack();
 
-        ensureArguments(arguments, ["string", "regex"], ["object", null]);
-
-        return this._toHaveHTML("outerHTML", expected, options);
+        return this._toHaveHTML("toHaveOuterHTML", "outerHTML", ...arguments);
     }
 
     /**
@@ -1601,28 +1605,27 @@ export class Matcher {
         ensureArguments(arguments, "string", "any", ["object", null]);
 
         const expectsValue = !isNil(value);
+        const values = ensureArray(value);
 
-        return this._resolve({
-            name: "toHaveProperty",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => {
-                const propValue = node[property];
-                if (!expectsValue) {
-                    return isNil(propValue);
-                }
-                return regexMatchOrStrictEqual(propValue, value);
-            }),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `property ${formatHumanReadable(property)} on %elements% ${
-                          expectsValue
-                              ? `[matches!does not match] ${formatHumanReadable(value)}`
-                              : "is[! not] set"
-                      }`
-                    : `%elements% do not have the correct property${expectsValue ? " value" : ""}`),
-            failedDetails: (actual) => detailsFromValuesWithDiff(value, actual[0][property]),
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => el[property]);
+            return {
+                name: "toHaveProperty",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map.values(), (elProp) =>
+                    expectsValue ? regexMatchOrStrictEqual(elProp, value) : isNil(elProp)
+                ),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`property ${property} on ${els} ${
+                              expectsValue ? h`[matches!does not match] ${value}` : h`is[! not] set`
+                          }`
+                        : h`${els} do not have the correct property${
+                              expectsValue ? h` value` : h``
+                          }`),
+                failedDetails: () => detailsFromValuesWithDiff(values, [...map.values()]),
+            };
         });
     }
 
@@ -1657,26 +1660,26 @@ export class Matcher {
         }
 
         const entries = $entries(refRect);
-        const nodeRects = [];
-        return this._resolve({
-            name: "toHaveRect",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => {
-                const nodeRect = getNodeRect(node, options);
-                nodeRects.push(nodeRect);
-                return entries.every(([key, value]) => strictEqual(nodeRect[key], value));
-            }),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% have the expected DOM rect of ${formatHumanReadable(rect)}`
-                    : `expected %elements% to have the given DOM rect`),
-            failedDetails: () =>
-                detailsFromValuesWithDiff(
-                    rect,
-                    $fromEntries(entries.map(([key]) => [key, nodeRects[0][key]]))
+
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => getNodeRect(el, options));
+            return {
+                name: "toHaveRect",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map.values(), (elRect) =>
+                    entries.every(([key, value]) => strictEqual(elRect[key], value))
                 ),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${els} have the expected DOM rect of ${rect}`
+                        : h`expected ${els} to have the given DOM rect`),
+                failedDetails: () =>
+                    detailsFromValuesWithDiff(
+                        rect,
+                        $fromEntries(entries.map(([key]) => [key, [...map.values()][0][key]]))
+                    ),
+            };
         });
     }
 
@@ -1696,20 +1699,30 @@ export class Matcher {
         ensureArguments(arguments, ["string", "object"], ["object", null]);
 
         const styleDef = typeof style === "string" ? parseStyle(style) : style;
-        return this._resolve({
-            name: "toHaveStyle",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => hasStyle(node, styleDef)),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% have the expected style values for ${and(
-                          $keys(styleDef).map(formatHumanReadable)
-                      )}`
-                    : `expected %elements% [to have all!not to have any] of the given style properties`),
-            failedDetails: (actual) =>
-                detailsFromValuesWithDiff(styleDef, getStyleValues(actual[0], $keys(styleDef))),
+        const entries = $entries(styleDef);
+
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => getStyleValues(el, $keys(styleDef)));
+            return {
+                name: "toHaveStyle",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map.values(), (elStyle) =>
+                    entries.every(([prop, value]) => regexMatchOrStrictEqual(elStyle[prop], value))
+                ),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${els} have the expected style values for ${hJoin(
+                              "and",
+                              $keys(styleDef)
+                          )}`
+                        : h`expected ${els} [to have all!not to have any] of the given style properties`),
+                failedDetails: () =>
+                    detailsFromValuesWithDiff(
+                        styleDef,
+                        $fromEntries(entries.map(([key]) => [key, [...map.values()][0][key]]))
+                    ),
+            };
         });
     }
 
@@ -1732,23 +1745,24 @@ export class Matcher {
 
         const texts = ensureArray(text);
         const expectsText = !isNil(text);
-        return this._resolve({
-            name: "toHaveText",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => {
-                const nodeText = getNodeText(node, options);
-                if (!expectsText) {
-                    return nodeText.length > 0;
-                }
-                return texts.every((text) => regexMatchOrStrictEqual(nodeText, text));
-            }),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% [have!do not have] text ${formatHumanReadable(text)}`
-                    : `expected %elements%[! not] to have the given text`),
-            failedDetails: (actual) => detailsFromValuesWithDiff(texts, actual.map(getNodeText)),
+
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => getNodeText(el, options));
+            return {
+                name: "toHaveText",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map.values(), (elText) =>
+                    expectsText
+                        ? texts.every((text) => regexMatchOrStrictEqual(elText, text))
+                        : elText.length > 0
+                ),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${els} [have!do not have] text ${text}`
+                        : h`expected ${els}[! not] to have the given text`),
+                failedDetails: () => detailsFromValuesWithDiff(texts, [...map.values()]),
+            };
         });
     }
 
@@ -1778,34 +1792,36 @@ export class Matcher {
 
         const values = ensureArray(value);
         const expectsValue = !isNil(value);
-        return this._resolve({
-            name: "toHaveValue",
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) => {
-                if (isCheckable(node)) {
-                    throw new HootError(
-                        `cannot call \`toHaveValue()\` on a checkbox or radio input: use \`toBeChecked()\` instead`
-                    );
-                }
-                let nodeValue = getNodeValue(node);
-                if (!expectsValue) {
-                    return isIterable(nodeValue) ? [...nodeValue].length > 0 : node.value !== "";
-                }
-                if (isIterable(nodeValue)) {
-                    if (isIterable(value)) {
-                        return deepEqual(nodeValue, values);
+
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => getNodeValue(el));
+            return {
+                name: "toHaveValue",
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map, ([el, elValue]) => {
+                    if (isCheckable(el)) {
+                        throw new HootError(
+                            `cannot call \`toHaveValue()\` on a checkbox or radio input: use \`toBeChecked()\` instead`
+                        );
                     }
-                    nodeValue = node.value;
-                }
-                return values.every((value) => regexMatchOrStrictEqual(nodeValue, value));
-            }),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `%elements% [have!do not have] value ${formatHumanReadable(value)}`
-                    : `expected %elements%[! not] to have the given value`),
-            failedDetails: (actual) => detailsFromValuesWithDiff(values, actual.map(getNodeValue)),
+                    if (!expectsValue) {
+                        return isIterable(elValue) ? [...elValue].length > 0 : el.value !== "";
+                    }
+                    if (isIterable(elValue)) {
+                        if (isIterable(value)) {
+                            return deepEqual(elValue, values);
+                        }
+                        elValue = el.value;
+                    }
+                    return values.every((value) => regexMatchOrStrictEqual(elValue, value));
+                }),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${els} [have!do not have] value ${value}`
+                        : h`expected ${els}[! not] to have the given value`),
+                failedDetails: () => detailsFromValuesWithDiff(values, [...map.values()]),
+            };
         });
     }
 
@@ -1814,6 +1830,7 @@ export class Matcher {
     //-------------------------------------------------------------------------
 
     /**
+     * @private
      * @param {Modifiers} modifiers
      */
     _clone(modifiers) {
@@ -1828,10 +1845,10 @@ export class Matcher {
 
     /**
      * @private
-     * @param {MatcherSpecifications<R, A>} specs
+     * @param {() => MatcherSpecifications<R, A>} specCallback
      * @returns {Async extends true ? Promise<void> : void}
      */
-    _resolve(specs) {
+    _resolve(specCallback) {
         unconsumedMatchers.delete(this);
         if (this._modifiers.rejects || this._modifiers.resolves) {
             return Promise.resolve(this._received).then(
@@ -1842,15 +1859,13 @@ export class Matcher {
                             this._result,
                             new Assertion({
                                 label: "rejects",
-                                message: `expected promise to reject, instead resolved with: ${formatHumanReadable(
-                                    result
-                                )}`,
+                                message: h`expected promise to reject, instead resolved with: ${result}`,
                                 pass: false,
                             })
                         );
                     } else {
                         this._received = result;
-                        this._resolveFinalResult(specs);
+                        this._resolveFinalResult(specCallback);
                     }
                 },
                 /** @param {PromiseRejectedResult} reason */
@@ -1860,58 +1875,56 @@ export class Matcher {
                             this._result,
                             new Assertion({
                                 label: "resolves",
-                                message: `expected promise to resolve, instead rejected with: ${formatHumanReadable(
-                                    reason
-                                )}`,
+                                message: h`expected promise to resolve, instead rejected with: ${reason}`,
                                 pass: false,
                             })
                         );
                     } else {
                         this._received = reason;
-                        this._resolveFinalResult(specs);
+                        this._resolveFinalResult(specCallback);
                     }
                 }
             );
         } else {
-            this._resolveFinalResult(specs);
+            this._resolveFinalResult(specCallback);
         }
     }
 
     /**
      * @private
-     * @param {MatcherSpecifications<R, A>} specs
+     * @param {() => MatcherSpecifications<R, A>} specCallback
      * @returns {void}
      */
-    _resolveFinalResult({ acceptedType, name, failedDetails, message, predicate, transform }) {
-        const received = this._received;
+    _resolveFinalResult(specCallback) {
+        const { acceptedType, name, failedDetails, message, predicate } = specCallback(
+            this._received
+        );
+
         const types = ensureArray(acceptedType);
-        if (!types.some((type) => isOfType(received, type))) {
-            const strTypes = types.map(formatHumanReadable);
-            const last = strTypes.pop();
+        if (!types.some((type) => isOfType(this._received, type))) {
             throw new TypeError(
-                `expected received value to be of type ${[strTypes.join(", "), last]
-                    .filter(Boolean)
-                    .join(" or ")}, got ${formatHumanReadable(received)}`
+                h`expected received value to be of type ${hJoin("or", types)}, got ${
+                    this._received
+                }`
             );
         }
 
-        const actual = transform ? transform(received) : received;
         const { not } = this._modifiers;
-        let pass = predicate(actual);
+        let pass = predicate();
         if (not) {
             pass = !pass;
         }
 
         const assertion = new Assertion({
             label: name,
-            message: formatMessage(message(pass), { actual, not, received }),
+            message: formatMessage(message(pass), not),
             modifiers: this._modifiers,
             pass,
         });
         if (!pass) {
             const formattedStack = formatStack(currentStack);
             assertion.failedDetails = [
-                ...failedDetails(deepCopy(actual)),
+                ...failedDetails(),
                 Markup.red("Source:", Markup.text(formattedStack, { technical: true })),
             ].filter(Boolean);
         }
@@ -1930,30 +1943,34 @@ export class Matcher {
 
     /**
      * @private
+     * @param {"toHaveInnerHTML" | "toHaveOuterHTML"} name
      * @param {"innerHTML" | "outerHTML"} property
      * @param {string | RegExp} expected
      * @param {ExpectOptions & FormatXmlOptions} [options]
      */
-    _toHaveHTML(property, expected, options) {
+    _toHaveHTML(name, property, expected, options) {
+        ensureArguments(arguments, "string", "string", ["string", "regex"], ["object", null]);
+
         options = { type: "html", ...options };
         if (!(expected instanceof RegExp)) {
             expected = formatXml(expected, options);
         }
 
-        return this._resolve({
-            name: `toHave${property[0].toUpperCase()}${property.slice(1)}`,
-            acceptedType: ["string", "node", "node[]"],
-            transform: queryAll,
-            predicate: each((node) =>
-                regexMatchOrStrictEqual(formatXml(node[property], options), expected)
-            ),
-            message: (pass) =>
-                options?.message ||
-                (pass
-                    ? `${property} of node is[! not] equal to expected value`
-                    : `expected ${property} of node to match the given value`),
-            failedDetails: (actual) =>
-                detailsFromValuesWithDiff(expected, formatXml(actual[0][property], options)),
+        return this._resolve((received) => {
+            const [els, map] = queryAndMap(received, (el) => formatXml(el[property], options));
+            return {
+                name,
+                acceptedType: ["string", "node", "node[]"],
+                predicate: each(map.values(), (elHtml) =>
+                    regexMatchOrStrictEqual(elHtml, expected)
+                ),
+                message: (pass) =>
+                    options?.message ||
+                    (pass
+                        ? h`${property} of ${els} is[! not] equal to expected value`
+                        : h`expected ${property} of ${els} to match the given value`),
+                failedDetails: () => detailsFromValuesWithDiff(expected, [...map.values()]),
+            };
         });
     }
 }

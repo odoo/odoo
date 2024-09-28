@@ -23,7 +23,7 @@ import {
     waitUntil,
 } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
-import { getParentFrame } from "../../../hoot-dom/helpers/dom";
+import { getParentFrame } from "@web/../lib/hoot-dom/helpers/dom";
 import { parseUrl, waitForIframes } from "../local_helpers";
 
 /**
@@ -179,7 +179,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect(":iframe input").not.toBeFocused();
 
         const input = queryOne(":iframe input");
-        click(input);
+        await click(input);
 
         expect(":iframe input").toBeFocused();
         expect(getActiveElement()).toBe(input);
@@ -191,7 +191,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         expect("hoot-test-shadow-root:shadow input").not.toBeFocused();
 
         const input = queryOne("hoot-test-shadow-root:shadow input");
-        click(input);
+        await click(input);
 
         expect("hoot-test-shadow-root:shadow input").toBeFocused();
         expect(getActiveElement()).toBe(input);
@@ -228,7 +228,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             <button class="button" tabindex="1">Button</button>
         `);
 
-        click(".input");
+        await click(".input");
 
         expect(getNextFocusableElement()).toHaveClass("div");
     });
@@ -257,7 +257,7 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
             <button class="button" tabindex="1">Button</button>
         `);
 
-        click(".input");
+        await click(".input");
 
         expect(getPreviousFocusableElement()).toHaveClass("button");
     });

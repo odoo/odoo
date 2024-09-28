@@ -142,14 +142,35 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return expression.AND(domains)
 
     def sitemap_shop(env, rule, qs):
+        website = env['website'].get_current_website()
+        if website and website.ecommerce_access == 'logged_in' and not qs:
+            # Make sure urls are not listed in sitemap when restriction is active
+            # and no autocomplete query string is provided
+            return
+
         if not qs or qs.lower() in '/shop':
             yield {'loc': '/shop'}
 
         Category = env['product.public.category']
         dom = sitemap_qs2dom(qs, '/shop/category', Category._rec_name)
-        dom += env['website'].get_current_website().website_domain()
+        dom += website.website_domain()
         for cat in Category.search(dom):
             loc = '/shop/category/%s' % env['ir.http']._slug(cat)
+            if not qs or qs.lower() in loc:
+                yield {'loc': loc}
+
+    def sitemap_products(env, rule, qs):
+        website = env['website'].get_current_website()
+        if website and website.ecommerce_access == 'logged_in' and not qs:
+            # Make sure urls are not listed in sitemap when restriction is active
+            # and no autocomplete query string is provided
+            return
+
+        ProductTemplate = env['product.template']
+        dom = sitemap_qs2dom(qs, '/shop', ProductTemplate._rec_name)
+        dom += website.sale_product_domain()
+        for product in ProductTemplate.search(dom):
+            loc = '/shop/%s' % env['ir.http']._slug(product)
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -427,7 +448,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
-    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
+    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products)
     def product(self, product, category='', search='', **kwargs):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
@@ -897,7 +918,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             line.unlink()
 
     def _get_cart_notification_information(self, order, line_ids):
-        """ Get the information about the sale order line to show in the notification.
+        """ Get the information about the sale order lines to show in the notification.
 
         :param recordset order: The sale order containing the lines.
         :param list(int) line_ids: The ids of the lines to display in the notification.
@@ -926,16 +947,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'lines': [
                 { # For the cart_notification
                     'id': line.id,
-                    # Only set the linked line id for combo items, not for optional products.
-                    'linked_line_id': line.linked_line_id.id if line.combo_item_id else None,
                     'image_url': order.website_id.image_url(line.product_id, 'image_128'),
                     'quantity': line._get_displayed_quantity(),
                     'name': line.name_short,
                     'description': line._get_sale_order_line_multiline_description_variants(),
                     'line_price_total': line.price_total if show_tax else line.price_subtotal,
+                    **self._get_additional_notification_information(line),
                 } for line in lines
             ],
         }
+
+    def _get_additional_notification_information(self, line):
+        # Only set the linked line id for combo items, not for optional products.
+        if line.combo_item_id:
+            return {'linked_line_id': line.linked_line_id.id}
+        return {}
 
     # ------------------------------------------------------
     # Checkout

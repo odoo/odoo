@@ -24,7 +24,7 @@ from odoo import http, models, fields, _
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
-from odoo.tools import OrderedSet, escape_psql, html_escape as escape
+from odoo.tools import OrderedSet, escape_psql, html_escape as escape, py_to_js_locale
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -201,7 +201,7 @@ class Website(Home):
 
     @http.route('/website/get_languages', type='json', auth="user", website=True)
     def website_languages(self, **kwargs):
-        return [(lg.code, lg.url_code, lg.name) for lg in request.website.language_ids]
+        return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in request.website.language_ids]
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):

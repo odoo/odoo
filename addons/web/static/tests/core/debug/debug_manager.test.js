@@ -103,7 +103,7 @@ describe.tags("desktop")("DebugMenu", () => {
 
         const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
         for (const item of items) {
-            click(item);
+            await click(item);
         }
 
         expect.verifySteps(["callback item_2", "callback item_1", "callback item_3"]);
@@ -212,7 +212,7 @@ describe.tags("desktop")("DebugMenu", () => {
         const items = [...queryAll(".dropdown-menu .dropdown-item")] || [];
         expect(items.map((el) => el.textContent)).toEqual(["Item 1", "Item 2"]);
         for (const item of items) {
-            click(item);
+            await click(item);
         }
         expect.verifySteps(["callback item_1", "callback item_2"]);
     });
@@ -227,7 +227,7 @@ describe.tags("desktop")("DebugMenu", () => {
         expect(".dropdown-menu .dropdown-item").toHaveCount(1);
         const item = queryOne(".dropdown-menu .dropdown-item");
         expect(item).toHaveText("Regenerate Assets");
-        click(item);
+        await click(item);
         await animationFrame();
         expect.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
     });
@@ -306,7 +306,7 @@ describe.tags("desktop")("DebugMenu", () => {
         expect(".o_breadcrumb .active").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveText("Edit View");
         expect(".o_field_widget[name=id]").toHaveText("18");
-        click(".breadcrumb .o_back_button");
+        await click(".breadcrumb .o_back_button");
         await animationFrame();
         expect(".o_breadcrumb .active").toHaveCount(1);
         expect(".o_breadcrumb .active").toHaveText("Partners");
@@ -513,7 +513,10 @@ describe.tags("desktop")("DebugMenu", () => {
         });
         await contains(".o_debug_manager button").click();
         await contains(".dropdown-menu .dropdown-item:contains(/^Data/)").click();
-        expect(browser.location.pathname).toBe("/json/m-custom/1");
+        expect(".modal").toHaveCount(1);
+        expect(".modal-body pre").toHaveText(
+            '{\n "create_date": "2019-03-11 09:30:00",\n "display_name": "custom1",\n "id": 1,\n "name": "custom1",\n "write_date": "2019-03-11 09:30:00"\n}'
+        );
     });
 
     test("view metadata: basic rendering", async () => {

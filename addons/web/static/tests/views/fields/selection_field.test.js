@@ -1,3 +1,6 @@
+import { expect, test } from "@odoo/hoot";
+import { click, queryAll, queryAllValues, queryFirst, queryOne, select } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
     defineModels,
@@ -6,9 +9,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { test, expect } from "@odoo/hoot";
-import { click, queryAll, queryAllValues, queryFirst, queryOne, select } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
 
 class Partner extends models.Model {
     display_name = fields.Char({ string: "Displayed name" });
@@ -69,7 +69,7 @@ test("SelectionField in a list view", async () => {
     });
 
     expect(".o_data_row").toHaveCount(3);
-    click(queryFirst(".o_data_cell"));
+    await click(".o_data_cell");
     await animationFrame();
     const td = queryFirst("tbody tr.o_selected_row td:not(.o_list_record_selector)");
     expect(queryOne("select", { root: td })).toHaveCount(1, {
@@ -108,8 +108,8 @@ test("SelectionField, edition and on many2one field", async () => {
         message: "should not have any value in trululu field",
     });
 
-    click(".o_field_widget[name='product_id'] select");
-    select("41");
+    await click(".o_field_widget[name='product_id'] select");
+    await select("41");
     await animationFrame();
 
     expect(".o_field_widget[name='product_id'] select").toHaveValue("41", {
@@ -186,8 +186,8 @@ test("unset selection on a many2one field", async () => {
         arch: /* xml */ '<form><field name="trululu" widget="selection" /></form>',
     });
 
-    click(".o_form_view select");
-    select("false");
+    await click(".o_form_view select");
+    await select("false");
     await animationFrame();
     await clickSave();
     await animationFrame();
@@ -239,8 +239,8 @@ test("required selection widget should not have blank option", async () => {
     ).toEqual(["none", "", ""]);
 
     // change value to update widget modifier values
-    click(".o_field_widget[name='feedback_value'] select");
-    select('"bad"');
+    await click(".o_field_widget[name='feedback_value'] select");
+    await select('"bad"');
     await animationFrame();
     expect(queryAll(".o_field_widget[name='color'] option").map((n) => n.style.display)).toEqual([
         "none",
@@ -286,8 +286,8 @@ test("required selection widget should have only one blank option", async () => 
     });
 
     // change value to update widget modifier values
-    click(".o_field_widget[name='feedback_value'] select");
-    select('"bad"');
+    await click(".o_field_widget[name='feedback_value'] select");
+    await select('"bad"');
     await animationFrame();
 
     expect(queryAll(".o_field_widget[name='color'] option").map((n) => n.style.display)).toEqual([
@@ -353,8 +353,8 @@ test("SelectionField - auto save record in kanban view", async () => {
                 </kanban>`,
         domain: [["id", "=", 1]],
     });
-    click(".o_field_widget[name='color'] select");
-    select('"black"');
+    await click(".o_field_widget[name='color'] select");
+    await select('"black"');
     await animationFrame();
     expect.verifySteps(["web_save"]);
 });
@@ -377,7 +377,7 @@ test("SelectionField don't open form view on click in kanban view", async functi
         },
     });
 
-    click(".o_field_widget[name='color'] select");
+    await click(".o_field_widget[name='color'] select");
     await animationFrame();
     expect.verifySteps([]);
 });

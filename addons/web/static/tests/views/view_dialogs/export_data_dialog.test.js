@@ -2,25 +2,25 @@ import { expect, test } from "@odoo/hoot";
 import {
     check,
     dblclick,
-    select,
+    pointerDown,
+    pointerUp,
     queryAll,
     queryAllTexts,
     queryFirst,
-    pointerDown,
-    pointerUp,
+    select,
 } from "@odoo/hoot-dom";
-import { runAllTimers, animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
     fields,
+    getMockEnv,
     models,
     mountView,
     onRpc,
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { utils } from "@web/core/ui/ui_service";
 
 import { download } from "@web/core/network/download";
 
@@ -29,10 +29,10 @@ async function exportAllAction() {
     await contains(".o-dropdown--menu .dropdown-item").click();
 }
 const openExportDialog = async () => {
-    if (utils.isSmall()) {
-        pointerDown(".o_data_row:nth-child(1)");
+    if (getMockEnv().isSmall) {
+        await pointerDown(".o_data_row:nth-child(1)");
         await runAllTimers();
-        pointerUp(".o_data_row:nth-child(1)");
+        await pointerUp(".o_data_row:nth-child(1)");
     } else {
         await contains(".o_list_record_selector input[type='checkbox']").click();
     }
@@ -269,7 +269,7 @@ test("Export dialog: interacting with export templates", async () => {
     });
 
     // load a template which contains the activity_ids field
-    select("1", { target: ".o_exported_lists_select" });
+    await select("1", { target: ".o_exported_lists_select" });
     await animationFrame();
     expect(`.o_fields_list .o_export_field`).toHaveCount(1);
     expect(`.o_fields_list .o_export_field`).toHaveText("Activities");
@@ -283,7 +283,7 @@ test("Export dialog: interacting with export templates", async () => {
         message: "the template has been reset and the added field is no longer in the list",
     });
     await contains(".o_export_tree_item:nth-child(2) .o_add_field").click();
-    select("new_template", { target: ".o_exported_lists_select" });
+    await select("new_template", { target: ".o_exported_lists_select" });
     await animationFrame();
     expect(`.o_exported_lists_select`).toHaveCount(0);
     expect(`input.o_save_list_name`).toHaveCount(1, {
@@ -295,7 +295,7 @@ test("Export dialog: interacting with export templates", async () => {
     expect(`.o_exported_lists_select`).toHaveCount(1);
     await contains(".o_export_tree_item:nth-child(3) .o_add_field").click();
     expect(`.o_fields_list .o_export_field`).toHaveCount(3);
-    select("new_template", { target: ".o_exported_lists_select" });
+    await select("new_template", { target: ".o_exported_lists_select" });
     await animationFrame();
     await contains(".o_save_list_name").edit("Export template");
     await contains(".o_save_list_btn").click();
@@ -307,7 +307,7 @@ test("Export dialog: interacting with export templates", async () => {
         "Foo",
         "Bar",
     ]);
-    select("", { target: ".o_exported_lists_select" });
+    await select("", { target: ".o_exported_lists_select" });
     await animationFrame();
     expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(
         ["Activities", "Foo", "Bar"],
@@ -318,7 +318,7 @@ test("Export dialog: interacting with export templates", async () => {
     expect(".o_delete_exported_list").toHaveCount(0, {
         message: "trash icon is not visible when no template has been selected",
     });
-    select("2", { target: ".o_exported_lists_select" });
+    await select("2", { target: ".o_exported_lists_select" });
     await animationFrame();
     await contains(".o_delete_exported_list").click();
     expect(queryAll(".o_dialog .modal-body")[1]).toHaveText(
@@ -363,7 +363,7 @@ test("Export dialog: interacting with export templates in debug", async () => {
     await openExportDialog();
 
     expect(".o_fields_list .o_export_field").toHaveText("Foo (foo)");
-    select("1", { target: ".o_exported_lists_select" });
+    await select("1", { target: ".o_exported_lists_select" });
     await animationFrame();
     expect(".o_fields_list .o_export_field").toHaveCount(1);
     expect(".o_fields_list .o_export_field").toHaveText("Activities (activity_ids)");
@@ -407,7 +407,7 @@ test.tags("desktop")("Export dialog: interacting with available fields", async (
     ).toHaveCount(0, {
         message: "available fields are limited to 2 levels of subfields",
     });
-    dblclick(".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']");
+    await dblclick(".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']");
     await animationFrame();
     expect(
         ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids'] .o_add_field"
@@ -420,7 +420,7 @@ test.tags("desktop")("Export dialog: interacting with available fields", async (
         "Company",
         "Activities",
     ]);
-    dblclick(".o_export_tree_item[data-field_id='activity_ids']");
+    await dblclick(".o_export_tree_item[data-field_id='activity_ids']");
     await animationFrame();
     expect(queryAllTexts(".o_right_field_panel .o_export_field")).toEqual(
         ["Foo", "Company", "Activities"],
@@ -482,7 +482,7 @@ test("Export dialog: compatible and export type options", async () => {
     expect("input[name='o_export_format_name']").toHaveCount(3);
     expect(queryFirst(".o_export_format div:nth-of-type(3) input").value).toBe("wow");
     expect(".o_export_format div:nth-of-type(3)").toHaveText("WOW");
-    check(".o_export_format div:nth-of-type(3) input");
+    await check(".o_export_format div:nth-of-type(3) input");
     await animationFrame();
     await contains(".o_import_compat input").click();
     await contains(".o_select_button").click();

@@ -846,6 +846,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'price_include': tax.price_include,
             'include_base_amount': tax.include_base_amount,
             'is_base_affected': tax.is_base_affected,
+            'total_tax_factor': tax.total_tax_factor,
             'children_tax_ids': [self._jsonify_tax(child) for child in tax.children_tax_ids],
         }
 
@@ -941,6 +942,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'product': product,
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
+            'round_price_include': False,
         }
         results = {'results': taxes._get_tax_details(price_unit, quantity, **kwargs)}
         if rounding_method == 'round_globally':

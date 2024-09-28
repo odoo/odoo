@@ -3,9 +3,9 @@
 import { describe, expect, mountOnFixture, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Component, reactive, useState, xml } from "@odoo/owl";
 import { parseUrl } from "../local_helpers";
 
-import { Component, reactive, useState, xml } from "@odoo/owl";
 import { HootTechnicalValue } from "../../ui/hoot_technical_value";
 
 const mountTechnicalValue = async (defaultValue) => {
@@ -56,15 +56,17 @@ describe(parseUrl(import.meta.url), () => {
         await updateValue([1, 2, "3"]);
         expect(".hoot-technical").toHaveText(`Array(3)`);
 
-        click(".hoot-object");
+        await click(".hoot-object");
         await animationFrame();
+
         expect(".hoot-technical").toHaveText(`Array(3)[\n1\n,\n2\n,\n"3"\n,\n]`);
 
         await updateValue({ a: true });
         expect(".hoot-technical").toHaveText(`Object(1)`);
 
-        click(".hoot-object");
+        await click(".hoot-object");
         await animationFrame();
+
         expect(".hoot-technical").toHaveText(`Object(1){\na\n:\ntrue\n,\n}`);
 
         await updateValue({
@@ -75,14 +77,16 @@ describe(parseUrl(import.meta.url), () => {
         });
         expect(".hoot-technical").toHaveText(`Object(2)`);
 
-        click(".hoot-object:first");
+        await click(".hoot-object:first");
         await animationFrame();
+
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1)\n}`
         );
 
-        click(".hoot-object:last");
+        await click(".hoot-object:last");
         await animationFrame();
+
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1){\nkey\n:\n"oui"\n,\n}\n}`
         );

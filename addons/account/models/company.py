@@ -535,7 +535,8 @@ class ResCompany(models.Model):
                     )
                 if exception:
                     # The search domain of the exception ensures `exception[soft_lock_date_field] < company[soft_lock_date_field]`
-                    soft_lock_date = max(soft_lock_date, exception[soft_lock_date_field])
+                    # or `exception[soft_lock_date_field] is False`
+                    soft_lock_date = max(soft_lock_date, exception[soft_lock_date_field] or date.min)
                 else:
                     soft_lock_date = max(soft_lock_date, company[soft_lock_date_field])
         return soft_lock_date

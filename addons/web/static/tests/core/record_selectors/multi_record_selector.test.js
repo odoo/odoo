@@ -98,10 +98,10 @@ test("Can be updated from autocomplete", async () => {
     expect(".o_multi_record_selector input").toHaveValue("");
     expect(".o_tag").toHaveCount(0);
     expect(".o-autocomplete--dropdown-menu").toHaveCount(0);
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     await animationFrame();
     expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
-    click("li.o-autocomplete--dropdown-item:eq(1)");
+    await click("li.o-autocomplete--dropdown-item:eq(1)");
     await animationFrame();
     expect(".o_tag").toHaveCount(1);
     expect(".o_tag").toHaveText("Bob");
@@ -140,7 +140,7 @@ test("Can give domain and context props for the name search", async () => {
     });
 
     expect.verifySteps([]);
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     await animationFrame();
     expect.verifySteps(["name_search"]);
 });
@@ -152,7 +152,7 @@ test("Support placeholder", async () => {
         placeholder: "Select a partner",
     });
     expect(".o_multi_record_selector input").toHaveAttribute("placeholder", "Select a partner");
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     await animationFrame();
     await contains("li.o-autocomplete--dropdown-item:eq(0)").click();
     expect(".o_multi_record_selector input").toHaveAttribute("placeholder", "");
@@ -172,9 +172,9 @@ test("Can delete a tag with Backspace", async () => {
         resModel: "partner",
         resIds: [1, 2],
     });
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     await animationFrame();
-    press("Backspace");
+    await press("Backspace");
     await animationFrame();
     expect(".o_tag").toHaveCount(1);
     expect(".o_tag").toHaveText("Alice");
@@ -186,25 +186,25 @@ test("Can focus tags with arrow right and left", async () => {
         resIds: [1, 2],
     });
     // Click twice because to get the focus and make disappear the autocomplete popover
-    click(".o_multi_record_selector input");
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     await animationFrame();
-    press("arrowleft");
+    await press("arrowleft");
     await animationFrame();
     expect(document.activeElement).toHaveText("Bob");
-    press("arrowleft");
+    await press("arrowleft");
     await animationFrame();
     expect(document.activeElement).toHaveText("Alice");
-    press("arrowleft");
+    await press("arrowleft");
     await animationFrame();
     expect(document.activeElement).toHaveClass("o-autocomplete--input");
-    press("arrowright");
+    await press("arrowright");
     await animationFrame();
     expect(document.activeElement).toHaveText("Alice");
-    press("arrowright");
+    await press("arrowright");
     await animationFrame();
     expect(document.activeElement).toHaveText("Bob");
-    press("arrowright");
+    await press("arrowright");
     await animationFrame();
     expect(document.activeElement).toHaveClass("o-autocomplete--input");
 });
@@ -215,15 +215,15 @@ test("Delete the focused element", async () => {
         resIds: [1, 2],
     });
     // Click twice because to get the focus and make disappear the autocomplete popover
-    click(".o_multi_record_selector input");
-    click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
+    await click(".o_multi_record_selector input");
     await animationFrame();
 
-    press("arrowright");
+    await press("arrowright");
     await animationFrame();
     expect(document.activeElement).toHaveText("Alice");
 
-    press("Backspace");
+    await press("Backspace");
     await animationFrame();
     expect(".o_tag").toHaveCount(1);
     expect(".o_tag").toHaveText("Bob");
@@ -234,14 +234,14 @@ test("Backspace do nothing when the input is currently edited", async () => {
         resModel: "partner",
         resIds: [1, 2],
     });
-    click(".o-autocomplete input");
+    await click(".o-autocomplete input");
     await animationFrame();
 
-    fill("a");
+    await fill("a");
     await animationFrame();
     expect(document.activeElement).toHaveValue("a");
 
-    press("Backspace");
+    await press("Backspace");
     await animationFrame();
     expect(".o_tag").toHaveCount(2);
 });
@@ -263,10 +263,10 @@ test.tags("desktop")("Can pass domain to search more", async () => {
         resIds: [],
         domain: [["id", "not in", [1]]],
     });
-    click(".o-autocomplete input");
+    await click(".o-autocomplete input");
     await animationFrame();
 
-    click(".o_multi_record_selector .o_m2o_dropdown_option");
+    await click(".o_multi_record_selector .o_m2o_dropdown_option");
     await animationFrame();
 
     expect(".o_data_row").toHaveCount(8, { message: "should contain 8 records" });

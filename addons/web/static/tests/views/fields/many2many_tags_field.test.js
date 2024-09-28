@@ -152,7 +152,7 @@ test("Many2ManyTagsField with and without color", async () => {
 });
 
 test("Many2ManyTagsField with color: rendering and edition", async () => {
-    expect.assertions(24);
+    expect.assertions(26);
 
     Partner._records[0].timmy = [12, 14];
     PartnerType._records.push({ id: 13, name: "red", color: 8 });
@@ -189,9 +189,9 @@ test("Many2ManyTagsField with color: rendering and edition", async () => {
 
     // add an other existing tag
     await contains("div[name='timmy'] .o-autocomplete.dropdown input").click();
-
+    expect(`.dropdown-item-selected`).toHaveCount(2);
+    expect(queryAllTexts`.dropdown-item-selected`).toEqual(["gold", "silver"]);
     expect(".o-autocomplete--dropdown-menu li").toHaveCount(5);
-
     expect(".o-autocomplete--dropdown-menu li a:eq(2)").toHaveText("red");
 
     await contains(".o-autocomplete--dropdown-menu li a:eq(2)").click();
@@ -733,15 +733,15 @@ test("select a many2many value by pressing tab", async () => {
     expect(".o_field_many2many_tags .badge").toHaveCount(0);
     await contains(".o_field_many2many_tags input").edit("go", { confirm: false });
     await runAllTimers();
-    press("Tab");
+    await press("Tab");
     await animationFrame();
     expect(".o_field_many2many_tags .badge").toHaveCount(1);
     expect(".o_field_many2many_tags .badge").toHaveText("gold");
 
     await contains(".o_field_many2many_tags input").edit("r", { confirm: false });
     await runAllTimers();
-    press("ArrowDown");
-    press("Tab");
+    await press("ArrowDown");
+    await press("Tab");
     await animationFrame();
     expect(".o_field_many2many_tags .badge").toHaveCount(2);
     expect(".o_field_many2many_tags .badge:eq(1)").toHaveText("red");
@@ -761,11 +761,12 @@ test("input and remove text without selecting any tag or option", async () => {
     // enter some text
     await contains(".o_field_many2many_tags input").edit("go", { confirm: false });
     await runAllTimers();
-    // ensure no selection
-    hover(".o-autocomplete--dropdown-item:eq(0)");
-    hover(".o_form_renderer");
 
-    press("Tab");
+    // ensure no selection
+    await hover(".o-autocomplete--dropdown-item:eq(0)");
+    await hover(".o_form_renderer");
+    await press("Tab");
+
     // ensure we're not adding any value
     expect(".modal").toHaveCount(0);
     expect(".o_field_many2many_tags .badge").toHaveCount(0);
@@ -773,10 +774,11 @@ test("input and remove text without selecting any tag or option", async () => {
     // remove the added text to test behaviour with falsy value
     await contains(".o_field_many2many_tags input").clear({ confirm: false });
     await runAllTimers();
-    hover(".o-autocomplete--dropdown-item:eq(0)");
-    hover(".o_form_renderer");
 
-    press("Tab");
+    await hover(".o-autocomplete--dropdown-item:eq(0)");
+    await hover(".o_form_renderer");
+    await press("Tab");
+
     expect(".modal").toHaveCount(0);
     expect(".o_field_many2many_tags .badge").toHaveCount(0);
 });
@@ -1073,7 +1075,7 @@ test("Many2ManyTagsField: conditional create/delete actions", async () => {
         confirm: false,
     });
 
-    press("ArrowDown");
+    await press("ArrowDown");
     await nameSearchProm;
     await animationFrame();
 
@@ -1108,7 +1110,7 @@ test("Many2ManyTagsField: conditional create/delete actions", async () => {
     nameSearchProm = new Deferred();
     await contains(".o_field_many2many_tags input").edit("Pa", { confirm: false });
 
-    press("ArrowUp");
+    await press("ArrowUp");
     await animationFrame();
     await nameSearchProm;
     await animationFrame();
@@ -1177,11 +1179,13 @@ test("navigation in tags (mode 'readonly')", async () => {
             </list>`,
     });
     expect(".o_searchview_input").toBeFocused();
-    press("ArrowDown");
-    press("ArrowDown");
+
+    await press("ArrowDown");
+    await press("ArrowDown");
+
     expect("tr.o_data_row input[type=checkbox]").toBeFocused();
 
-    press("ArrowRight");
+    await press("ArrowRight");
 
     expect("tr.o_data_row td[name=timmy]").toBeFocused();
 });
@@ -1209,27 +1213,27 @@ test("navigation in tags (mode 'edit')", async () => {
     expect("tr.o_data_row:eq(0) [name=timmy] .o-autocomplete--input").toBeFocused();
 
     // press left to focus the rightmost facet
-    press("ArrowLeft");
+    await press("ArrowLeft");
 
     expect("tr.o_data_row:eq(0) [name=timmy] .badge:nth-child(2)").toBeFocused();
 
     // press left to focus the leftmost facet
-    press("ArrowLeft");
+    await press("ArrowLeft");
 
     expect("tr.o_data_row:eq(0) [name=timmy] .badge:nth-child(1)").toBeFocused();
 
     // press left to focus the input
-    press("ArrowLeft");
+    await press("ArrowLeft");
 
     expect("tr.o_data_row:eq(0) [name=timmy] .o-autocomplete--input").toBeFocused();
     // press left to focus the leftmost facet
-    press("ArrowRight");
+    await press("ArrowRight");
 
     expect("tr.o_data_row:eq(0) [name=timmy] .badge:nth-child(1)").toBeFocused();
     expect("tr.o_data_row:eq(0) .o_field_many2many_tags .badge").toHaveCount(2);
     expect(queryAllTexts(".o_field_many2many_tags .badge")).toEqual(["gold", "silver"]);
 
-    press("BackSpace");
+    await press("BackSpace");
     await animationFrame();
 
     expect("tr.o_data_row:eq(0) .o_field_many2many_tags .badge").toHaveCount(1);

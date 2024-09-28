@@ -1,6 +1,3 @@
-import { defineResourceModels } from "@resource/../tests/resource_test_helpers";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAll, queryFirst } from "@odoo/hoot-dom";
 import {
     click,
     contains,
@@ -9,6 +6,9 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { queryAll } from "@odoo/hoot-dom";
+import { defineResourceModels } from "@resource/../tests/resource_test_helpers";
 
 describe.current.tags("desktop");
 const data = {};
@@ -80,17 +80,20 @@ test("many2many_avatar_resource widget in form view", async () => {
     await contains(".fa-wrench", { count: 1 });
     // Second and third records in widget should display employee avatars
     const avatarImages = queryAll(".many2many_tags_avatar_field_container .o_tag img");
-    expect(avatarImages[0].getAttribute("data-src")).toBe(
-        "/web/image/resource.resource/" + data.resourceMarieId + "/avatar_128"
+    expect(avatarImages[0]).toHaveAttribute(
+        "data-src",
+        `/web/image/resource.resource/${data.resourceMarieId}/avatar_128`
     );
-    expect(avatarImages[1].getAttribute("data-src")).toBe(
-        "/web/image/resource.resource/" + data.resourcePierreId + "/avatar_128"
+    expect(avatarImages[1]).toHaveAttribute(
+        "data-src",
+        `/web/image/resource.resource/${data.resourcePierreId}/avatar_128`
     );
     // 1. Clicking on material resource's icon
-    await click(queryFirst(".many2many_tags_avatar_field_container .o_tag i.fa-wrench"));
+    await click(".many2many_tags_avatar_field_container .o_tag i.fa-wrench");
     await contains(".o_avatar_card", { count: 0 });
+
     // 2. Clicking on human resource's avatar with no user associated
-    await click(queryFirst(".many2many_tags_avatar_field_container .o_tag img"));
+    await click(".many2many_tags_avatar_field_container .o_tag img:first");
     await contains(".o_card_user_infos span", { text: "Marie" });
     await contains(
         ".o_avatar_card",
@@ -112,14 +115,12 @@ test("many2many_avatar_resource widget in form view", async () => {
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
-    expect(queryFirst(".o_avatar_card_buttons button").textContent).toBe("Send message");
-    await click(queryFirst(".o_avatar_card_buttons button"));
+    expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
+    await click(".o_avatar_card_buttons button");
     await contains(".o-mail-ChatWindow");
     expect(
-        queryFirst(
-            ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-        ).textContent
-    ).toBe("Pierre");
+        ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate:first"
+    ).toHaveText("Pierre");
 });
 
 test("many2many_avatar_resource widget in list view", async () => {
@@ -138,21 +139,19 @@ test("many2many_avatar_resource widget in list view", async () => {
         "Two material resources with fa-wrench icon should be displayed"
     );
     // Second and third records in widget should display employee avatars
-    expect(
-        document
-            .querySelector(".many2many_tags_avatar_field_container .o_tag img")
-            .getAttribute("data-src")
-    ).toBe("/web/image/resource.resource/" + data.resourceMarieId + "/avatar_128");
-    expect(
-        document
-            .querySelectorAll(".many2many_tags_avatar_field_container .o_tag img")[1]
-            .getAttribute("data-src")
-    ).toBe("/web/image/resource.resource/" + data.resourcePierreId + "/avatar_128");
+    expect(".many2many_tags_avatar_field_container .o_tag img:eq(0)").toHaveAttribute(
+        "data-src",
+        `/web/image/resource.resource/${data.resourceMarieId}/avatar_128`
+    );
+    expect(".many2many_tags_avatar_field_container .o_tag img:eq(1)").toHaveAttribute(
+        "data-src",
+        `/web/image/resource.resource/${data.resourcePierreId}/avatar_128`
+    );
     // 1. Clicking on material resource's icon
     await click(".many2many_tags_avatar_field_container .o_tag i.fa-wrench");
     await contains(".o_avatar_card", { count: 0 });
     // 2. Clicking on human resource's avatar with no user associated
-    await click(queryFirst(".many2many_tags_avatar_field_container .o_tag img"));
+    await click(".many2many_tags_avatar_field_container .o_tag img:first");
     await contains(".o_card_user_infos span", { text: "Marie" });
     await contains(
         ".o_avatar_card",
@@ -174,12 +173,10 @@ test("many2many_avatar_resource widget in list view", async () => {
     );
     await contains(".o_card_user_infos > a", { text: "Pierre@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+32487898933" });
-    expect(queryFirst(".o_avatar_card_buttons button").textContent).toBe("Send message");
+    expect(".o_avatar_card_buttons button:first").toHaveText("Send message");
     await click(".o_avatar_card_buttons button");
     await contains(".o-mail-ChatWindow");
     expect(
-        queryFirst(
-            ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate"
-        ).textContent
-    ).toBe("Pierre");
+        ".o-mail-ChatWindow-header button.o-dropdown.o-mail-ChatWindow-command > .text-truncate:first"
+    ).toHaveText("Pierre");
 });

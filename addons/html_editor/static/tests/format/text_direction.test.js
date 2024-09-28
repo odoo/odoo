@@ -113,16 +113,16 @@ test("should properly switch the direction of nested list (rtl).", async () => {
 
 test("should switch the direction from the powerbox", async () => {
     const { el, editor } = await setupEditor("<p>a[]</p>");
-    insertText(editor, "/Switchdirection");
+    await insertText(editor, "/Switchdirection");
     await animationFrame();
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
     expect(".o-we-powerbox").toHaveCount(1);
-    press("Enter");
+    await press("Enter");
     expect(getContent(el)).toBe(`<p dir="rtl">a[]</p>`);
-    insertText(editor, "/Switchdirection");
+    await insertText(editor, "/Switchdirection");
     await animationFrame();
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
     expect(".o-we-powerbox").toHaveCount(1);
-    press("Enter");
+    await press("Enter");
     expect(getContent(el)).toBe(`<p>a[]</p>`);
 });

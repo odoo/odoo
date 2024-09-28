@@ -65,7 +65,7 @@ const monitorEvents = (target, formatStep) => {
     for (const element of document.querySelectorAll(target)) {
         for (const prop in element) {
             const type = prop.match(/^on(\w+)/)?.[1];
-            if (!type) {
+            if (!type || BLACK_LISTED_EVENT_TYPES.includes(type)) {
                 continue;
             }
             handleEvent(element, type);
@@ -77,6 +77,7 @@ const monitorEvents = (target, formatStep) => {
 };
 
 const ADDITIONAL_EVENT_TYPES = ["focusin", "focusout"];
+const BLACK_LISTED_EVENT_TYPES = ["selectionchange"];
 
 describe(parseUrl(import.meta.url), () => {
     test("clear", async () => {
@@ -85,11 +86,11 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").toHaveValue("Test");
         expect.verifySteps([]);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input");
 
-        clear();
+        await clear({ delay: 0 });
 
         expect("input").not.toHaveValue();
         expect.verifySteps([
@@ -108,8 +109,8 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveValue("john@doe.com");
 
-        click("input");
-        clear();
+        await click("input");
+        await clear();
 
         expect("input").toHaveValue("");
     });
@@ -119,8 +120,8 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveValue(421);
 
-        click("input");
-        clear();
+        await click("input");
+        await clear();
 
         expect("input").not.toHaveValue();
     });
@@ -131,12 +132,12 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").not.toHaveValue();
 
-        click("input");
-        fill(file);
+        await click("input");
+        await fill(file);
 
         expect("input").toHaveValue([file]);
 
-        clear();
+        await clear();
 
         expect("input").not.toHaveValue();
     });
@@ -147,7 +148,7 @@ describe(parseUrl(import.meta.url), () => {
         await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
 
-        const events = click("button");
+        const events = await click("button");
         const clickEvent = events.find((ev) => ev.type === "click");
 
         expect(clickEvent.pointerId).toBeGreaterThan(0);
@@ -176,7 +177,7 @@ describe(parseUrl(import.meta.url), () => {
         await mountOnFixture(/* xml */ `<button autofocus="" type="button">Click me</button>`);
         monitorEvents("button");
 
-        dblclick("button");
+        await dblclick("button");
 
         expect.verifySteps([
             // Hover
@@ -210,9 +211,9 @@ describe(parseUrl(import.meta.url), () => {
 
         const allEvents = [
             // trigger 3 clicks
-            click("button"),
-            click("button"),
-            click("button"),
+            await click("button"),
+            await click("button"),
+            await click("button"),
         ].flat();
 
         const clickEvents = allEvents.filter((ev) => ev.type === "click");
@@ -225,9 +226,31 @@ describe(parseUrl(import.meta.url), () => {
 
         await advanceTime(1_000);
 
-        const clickEvent = click("button").find((ev) => ev.type === "click");
+        const events = await click("button");
+        const clickEvent = events.find((ev) => ev.type === "click");
 
         expect(clickEvent.detail).toBe(1);
+    });
+
+    test("click on disabled element", async () => {
+        await mountOnFixture(/* xml */ `<button type="button" disabled="">Click me</button>`);
+
+        monitorEvents("button");
+
+        await click("button");
+
+        expect.verifySteps([
+            // Hover
+            "button.pointerover",
+            "button.mouseover",
+            "button.pointerenter",
+            "button.mouseenter",
+            "button.pointermove",
+            "button.mousemove",
+            // Click (mouse events disabled)
+            "button.pointerdown",
+            "button.pointerup",
+        ]);
     });
 
     test("click on common parent", async () => {
@@ -244,8 +267,8 @@ describe(parseUrl(import.meta.url), () => {
         monitorEvents(".first");
         monitorEvents(".second");
 
-        pointerDown(".first");
-        pointerUp(".second");
+        await pointerDown(".first");
+        await pointerUp(".second");
 
         expect.verifySteps([
             // Move to first
@@ -309,10 +332,10 @@ describe(parseUrl(import.meta.url), () => {
         on("button", "pointerup", prevent);
         on("button", "mouseup", prevent);
 
-        hover("button");
+        await hover("button");
         monitorEvents("button");
 
-        click("button");
+        await click("button");
 
         expect.verifySteps(["button.pointerdown", "button.pointerup", "button.click"]);
     });
@@ -328,12 +351,12 @@ describe(parseUrl(import.meta.url), () => {
         expect("button").toHaveCount(1);
         expect(":iframe button").toHaveCount(1);
 
-        click("button");
+        await click("button");
 
         expect("button").toBeFocused();
         expect(":iframe button").not.toBeFocused();
 
-        click(":iframe button");
+        await click(":iframe button");
 
         expect("button").not.toBeFocused();
         expect(":iframe button").toBeFocused();
@@ -352,7 +375,7 @@ describe(parseUrl(import.meta.url), () => {
         monitorEvents("li", (ev) => `${ev.target.id}.${ev.type}`);
 
         // Drag & cancel
-        drag("#first-item").cancel();
+        await (await drag("#first-item")).cancel();
 
         expect.verifySteps([
             // Move to first
@@ -365,22 +388,18 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.focus",
-            "first-item.focusin",
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
         ]);
 
         // Drag & drop
-        drag("#first-item").drop("#third-item");
+        await (await drag("#first-item")).drop("#third-item");
 
         expect.verifySteps([
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.focus",
-            "first-item.focusin",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -395,7 +414,7 @@ describe(parseUrl(import.meta.url), () => {
         ]);
 
         // Drag, move & cancel
-        drag("#first-item").moveTo("#third-item").cancel();
+        await (await (await drag("#first-item")).moveTo("#third-item")).cancel();
 
         expect.verifySteps([
             // Leave third
@@ -415,8 +434,6 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.focus",
-            "first-item.focusin",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -432,7 +449,7 @@ describe(parseUrl(import.meta.url), () => {
         ]);
 
         // Drag, move & drop
-        drag("#first-item").moveTo("#third-item").drop();
+        await (await (await drag("#first-item")).moveTo("#third-item")).drop();
 
         expect.verifySteps([
             // Leave third
@@ -452,8 +469,6 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.focus",
-            "first-item.focusin",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -468,7 +483,7 @@ describe(parseUrl(import.meta.url), () => {
         ]);
 
         // Drag, move & drop (different target)
-        drag("#first-item").moveTo("#second-item").drop("#third-item");
+        await (await (await drag("#first-item")).moveTo("#second-item")).drop("#third-item");
 
         expect.verifySteps([
             // Leave third
@@ -488,8 +503,6 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
-            "first-item.focus",
-            "first-item.focusin",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -525,7 +538,7 @@ describe(parseUrl(import.meta.url), () => {
         monitorEvents("li", (ev) => `${ev.target.id}.${ev.type}`);
 
         // Drag & cancel
-        drag("#first-item").cancel();
+        await (await drag("#first-item")).cancel();
 
         expect.verifySteps([
             // Move to first
@@ -544,7 +557,7 @@ describe(parseUrl(import.meta.url), () => {
         ]);
 
         // Drag & drop
-        drag("#first-item").drop("#third-item");
+        await (await drag("#first-item")).drop("#third-item");
 
         expect.verifySteps([
             // Drag first
@@ -570,7 +583,7 @@ describe(parseUrl(import.meta.url), () => {
         ]);
 
         // Drag, move & cancel
-        drag("#first-item").moveTo("#third-item").cancel();
+        await (await (await drag("#first-item")).moveTo("#third-item")).cancel();
 
         expect.verifySteps([
             // Leave third
@@ -610,7 +623,7 @@ describe(parseUrl(import.meta.url), () => {
         ]);
 
         // Drag, move & drop
-        drag("#first-item").moveTo("#third-item").drop();
+        await (await (await drag("#first-item")).moveTo("#third-item")).drop();
 
         expect.verifySteps([
             // Leave third
@@ -650,7 +663,7 @@ describe(parseUrl(import.meta.url), () => {
         ]);
 
         // Drag, move & drop (different target)
-        drag("#first-item").moveTo("#second-item").drop("#third-item");
+        await (await (await drag("#first-item")).moveTo("#second-item")).drop("#third-item");
 
         expect.verifySteps([
             // Leave third
@@ -704,17 +717,55 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("drag & drop: touch environment", async () => {
+        mockTouch(true);
+
+        await mountOnFixture(/* xml */ `
+            <ul>
+                <li id="first-item">Item 1</li>
+                <li id="second-item">Item 2</li>
+                <li id="third-item">Item 3</li>
+            </ul>
+        `);
+
+        const firstItem = queryOne("#first-item");
+        const events = await (await drag("#first-item")).drop("#third-item");
+        const touchEvents = events.filter((e) => e.type.startsWith("touch"));
+
+        expect(touchEvents.map((e) => e.target)).toEqual(
+            [
+                firstItem, // start
+                firstItem, // move (on first)
+                firstItem, // move (on last)
+                firstItem, // end
+            ],
+            { message: "touch events should all target the same element" }
+        );
+
+        const [touchStart, touchMove, , touchEnd] = touchEvents;
+
+        expect(touchStart).not.toInclude("clientX");
+        expect(touchStart).not.toInclude("clientY");
+        expect(touchStart.touches).toHaveLength(1);
+
+        expect(touchMove.touches).toHaveLength(1);
+
+        expect(touchEnd).not.toInclude("clientX");
+        expect(touchEnd).not.toInclude("clientY");
+        expect(touchEnd.touches).toHaveLength(0);
+    });
+
     test("fill: text", async () => {
         await mountOnFixture(/* xml */ `<input type="text" value="" />`);
 
         expect("input").not.toHaveValue();
         expect.verifySteps([]);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input");
 
-        fill("Test value");
+        await fill("Test value");
 
         expect("input").toHaveValue("Test value");
         expect.verifySteps([
@@ -732,8 +783,8 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveValue("Test");
 
-        click("input");
-        fill(" value");
+        await click("input");
+        await fill(" value");
 
         expect("input").toHaveValue("Test value");
     });
@@ -743,8 +794,8 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").not.toHaveValue();
 
-        click("input");
-        fill(42);
+        await click("input");
+        await fill(42);
 
         expect("input").toHaveValue(42);
     });
@@ -754,8 +805,8 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").not.toHaveValue();
 
-        click("input");
-        fill("john@doe.com");
+        await click("input");
+        await fill("john@doe.com");
 
         expect("input").toHaveValue("john@doe.com");
     });
@@ -763,13 +814,13 @@ describe(parseUrl(import.meta.url), () => {
     test("edit on empty value", async () => {
         await mountOnFixture(/* xml */ `<input type="text" />`);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input", formatKeyBoardEvent);
 
         expect("input").not.toHaveValue();
 
-        edit("test value");
+        await edit("test value");
 
         expect("input").toHaveValue("test value");
         expect.verifySteps([
@@ -781,7 +832,7 @@ describe(parseUrl(import.meta.url), () => {
             ]),
         ]);
 
-        click(getFixture());
+        await click(getFixture());
 
         expect.verifySteps([
             // Pointer out
@@ -801,13 +852,15 @@ describe(parseUrl(import.meta.url), () => {
     test("edit on existing value", async () => {
         await mountOnFixture(/* xml */ `<input type="text" value="Test" />`);
 
-        click("input");
+        await click("input");
+        await animationFrame();
 
         monitorEvents("input", formatKeyBoardEvent);
 
         expect("input").toHaveValue("Test");
 
-        edit(" value");
+        await edit(" value");
+        await animationFrame();
 
         expect("input").toHaveValue(" value");
         expect.verifySteps([
@@ -826,6 +879,7 @@ describe(parseUrl(import.meta.url), () => {
                 `input`,
                 `keyup:${char}`,
             ]),
+            "select",
         ]);
     });
 
@@ -843,21 +897,21 @@ describe(parseUrl(import.meta.url), () => {
         on("input", "change", () => expect.step("top:change"));
         on(":iframe input", "change", () => expect.step("iframe:change"));
 
-        click("input");
-        edit("abc");
+        await click("input");
+        await edit("abc");
 
         expect.verifySteps([]);
         expect("input").toHaveValue("abc");
         expect(":iframe input").toHaveValue("");
 
-        click(":iframe input");
-        edit("def");
+        await click(":iframe input");
+        await edit("def");
 
         expect.verifySteps(["top:change"]);
         expect("input").toHaveValue("abc");
         expect(":iframe input").toHaveValue("def");
 
-        click(":iframe body");
+        await click(":iframe body");
         expect.verifySteps(["iframe:change"]);
     });
 
@@ -868,14 +922,14 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").not.toHaveValue();
 
-        click("input");
-        setInputFiles(file1);
+        await click("input");
+        await setInputFiles(file1);
 
         expect("input").toHaveValue(/file1\.txt/);
         expect("input").toHaveValue([file1]);
 
-        click("input");
-        setInputFiles(file2);
+        await click("input");
+        await setInputFiles(file2);
 
         expect("input").toHaveValue(/file2\.txt/);
         expect("input").toHaveValue([file2]);
@@ -888,14 +942,14 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").not.toHaveValue();
 
-        click("input");
-        setInputFiles(file1);
+        await click("input");
+        await setInputFiles(file1);
 
         expect("input").toHaveValue(/file1\.txt/);
         expect("input").toHaveValue([file1]);
 
-        click("input");
-        setInputFiles([file1, file2]);
+        await click("input");
+        await setInputFiles([file1, file2]);
 
         expect("input").toHaveValue([file1, file2]);
     });
@@ -910,8 +964,8 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").not.toHaveValue();
         expect("label").toBeVisible();
 
-        click("label");
-        setInputFiles(new File([""], "file.txt"));
+        await click("label");
+        await setInputFiles(new File([""], "file.txt"));
 
         expect("input").toHaveValue(/file\.txt/);
     });
@@ -928,8 +982,8 @@ describe(parseUrl(import.meta.url), () => {
         expect("input").not.toHaveValue();
         expect("button").toBeVisible();
 
-        click("button");
-        setInputFiles(new File([""], "file.txt"));
+        await click("button");
+        await setInputFiles(new File([""], "file.txt"));
 
         expect("input").toHaveValue(/file\.txt/);
     });
@@ -939,7 +993,7 @@ describe(parseUrl(import.meta.url), () => {
 
         monitorEvents("input");
 
-        setInputRange("input", 30);
+        await setInputRange("input", 30);
 
         expect("input").toHaveValue(30);
         expect.verifySteps([
@@ -968,11 +1022,11 @@ describe(parseUrl(import.meta.url), () => {
     test("setInputRange: out of min and max values", async () => {
         await mountOnFixture(/* xml */ `<input type="range" min="10" max="40" />`);
 
-        setInputRange("input", 5);
+        await setInputRange("input", 5);
 
         expect("input").toHaveValue(10);
 
-        setInputRange("input", 50);
+        await setInputRange("input", 50);
 
         expect("input").toHaveValue(40);
     });
@@ -981,7 +1035,7 @@ describe(parseUrl(import.meta.url), () => {
         await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
-        hover("button");
+        await hover("button");
 
         expect.verifySteps([
             "button.pointerover",
@@ -992,7 +1046,7 @@ describe(parseUrl(import.meta.url), () => {
             "button.mousemove",
         ]);
 
-        hover("button");
+        await hover("button");
 
         expect.verifySteps(["button.pointermove", "button.mousemove"]);
     });
@@ -1000,11 +1054,11 @@ describe(parseUrl(import.meta.url), () => {
     test("leave", async () => {
         await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
 
-        hover("button");
+        await hover("button");
 
         monitorEvents("button");
 
-        leave();
+        await leave();
 
         expect.verifySteps([
             "button.pointermove",
@@ -1019,15 +1073,15 @@ describe(parseUrl(import.meta.url), () => {
     test("keyDown", async () => {
         await mountOnFixture(/* xml */ `<input type="text" />`);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input");
 
-        keyDown("a");
+        await keyDown("a");
 
         expect.verifySteps(["input.keydown", "input.beforeinput", "input.input"]);
 
-        keyUp("a");
+        await keyUp("a");
 
         expect("input").toHaveValue("a");
         expect.verifySteps(["input.keyup"]);
@@ -1039,32 +1093,32 @@ describe(parseUrl(import.meta.url), () => {
 
         await mountOnFixture(/* xml */ `<input type="text" />`);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input");
 
-        events = keyDown("Enter");
+        events = await keyDown("Enter");
         expect(getKeyDownEvent().repeat).toBe(false);
 
-        events = keyDown("Enter");
+        events = await keyDown("Enter");
         expect(getKeyDownEvent().repeat).toBe(true);
 
-        events = keyDown("Enter");
+        events = await keyDown("Enter");
         expect(getKeyDownEvent().repeat).toBe(true);
 
-        events = keyDown("Escape");
+        events = await keyDown("Escape");
         expect(getKeyDownEvent().repeat).toBe(false);
 
-        events = keyDown("Enter");
+        events = await keyDown("Enter");
         expect(getKeyDownEvent().repeat).toBe(false);
 
-        events = keyUp("Enter");
+        events = await keyUp("Enter");
         expect(getKeyDownEvent()).toBe(undefined);
 
-        events = keyDown("Enter");
+        events = await keyDown("Enter");
         expect(getKeyDownEvent().repeat).toBe(false);
 
-        events = keyDown("Enter");
+        events = await keyDown("Enter");
         expect(getKeyDownEvent().repeat).toBe(true);
 
         expect.verifySteps([
@@ -1083,7 +1137,7 @@ describe(parseUrl(import.meta.url), () => {
         await mountOnFixture(/* xml */ `<button type="button">Click me</button>`);
         monitorEvents("button");
 
-        pointerDown("button");
+        await pointerDown("button");
 
         expect.verifySteps([
             // Pointer enter on button
@@ -1100,7 +1154,7 @@ describe(parseUrl(import.meta.url), () => {
             "button.focusin",
         ]);
 
-        pointerUp("button");
+        await pointerUp("button");
 
         expect.verifySteps(["button.pointerup", "button.mouseup", "button.click"]);
     });
@@ -1108,11 +1162,11 @@ describe(parseUrl(import.meta.url), () => {
     test("press key on text input", async () => {
         await mountOnFixture(/* xml */ `<input type="text" />`);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input");
 
-        press("a");
+        await press("a");
 
         expect("input").toHaveValue("a");
         expect.verifySteps(["input.keydown", "input.beforeinput", "input.input", "input.keyup"]);
@@ -1123,12 +1177,12 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").not.toHaveValue();
 
-        click("input");
-        press("4");
+        await click("input");
+        await press("4");
 
         expect("input").toHaveValue(4);
 
-        press("2");
+        await press("2");
 
         expect("input").toHaveValue(42);
     });
@@ -1136,47 +1190,47 @@ describe(parseUrl(import.meta.url), () => {
     test("press arrow keys on input", async () => {
         await mountOnFixture(/* xml */ `<input value="value" />`);
 
-        click("input");
+        await click("input");
 
         expect("input").toHaveProperty("selectionStart", 5);
         expect("input").toHaveProperty("selectionEnd", 5);
 
-        press("left");
+        await press("left");
 
         expect("input").toHaveProperty("selectionStart", 4);
         expect("input").toHaveProperty("selectionEnd", 4);
 
-        press("left");
-        press("left");
-        press("right");
+        await press("left");
+        await press("left");
+        await press("right");
 
         expect("input").toHaveProperty("selectionStart", 3);
         expect("input").toHaveProperty("selectionEnd", 3);
 
-        press(["control", "a"]);
+        await press(["control", "a"]);
 
         expect("input").toHaveProperty("selectionStart", 0);
         expect("input").toHaveProperty("selectionEnd", 5);
 
-        press("right");
+        await press("right");
 
         expect("input").toHaveProperty("selectionStart", 5);
         expect("input").toHaveProperty("selectionEnd", 5);
 
-        press(["ctrl", "a"]);
-        press("down");
+        await press(["ctrl", "a"]);
+        await press("down");
 
         expect("input").toHaveProperty("selectionStart", 5);
         expect("input").toHaveProperty("selectionEnd", 5);
 
-        press(["ctrl", "a"]);
-        press("left");
+        await press(["ctrl", "a"]);
+        await press("left");
 
         expect("input").toHaveProperty("selectionStart", 0);
         expect("input").toHaveProperty("selectionEnd", 0);
 
-        press(["ctrl", "a"]);
-        press("up");
+        await press(["ctrl", "a"]);
+        await press("up");
 
         expect("input").toHaveProperty("selectionStart", 0);
         expect("input").toHaveProperty("selectionEnd", 0);
@@ -1185,19 +1239,19 @@ describe(parseUrl(import.meta.url), () => {
     test("insert character updates selection", async () => {
         await mountOnFixture(/* xml */ `<input value="abc" />`);
 
-        click("input");
+        await click("input");
 
         const input = queryOne("input");
         input.selectionStart = 0;
         input.selectionEnd = 3;
 
-        press("d");
+        await press("d");
 
         expect("input").toHaveValue("d");
         expect("input").toHaveProperty("selectionStart", 1);
         expect("input").toHaveProperty("selectionEnd", 1);
 
-        press("f");
+        await press("f");
 
         expect("input").toHaveValue("df");
         expect("input").toHaveProperty("selectionStart", 2);
@@ -1206,7 +1260,7 @@ describe(parseUrl(import.meta.url), () => {
         input.selectionStart = 1;
         input.selectionEnd = 1;
 
-        press("e");
+        await press("e");
 
         expect("input").toHaveValue("def");
         expect("input").toHaveProperty("selectionStart", 2);
@@ -1224,17 +1278,21 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").not.toBeFocused();
 
-        press("Tab");
+        await press("Tab");
+        await animationFrame();
 
         expect("input").toBeFocused();
 
-        press("Enter");
+        await press("Enter");
+        await animationFrame();
 
         expect.verifySteps([
             // Tab
             "input.focus",
             "input.focusin",
             "form.focusin",
+            "input.select",
+            "form.select",
             // Enter
             "input.keydown",
             "form.keydown",
@@ -1255,11 +1313,11 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("button").not.toBeFocused();
 
-        press("Tab");
+        await press("Tab");
 
         expect("button").toBeFocused();
 
-        press("Enter");
+        await press("Enter");
 
         expect.verifySteps([
             // Tab
@@ -1287,11 +1345,11 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("button").not.toBeFocused();
 
-        press("Tab");
+        await press("Tab");
 
         expect("button").toBeFocused();
 
-        press("Enter");
+        await press("Enter");
 
         expect.verifySteps([
             // Tab
@@ -1312,13 +1370,13 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveProperty("checked", true);
 
-        uncheck("input"); // true -> false
+        await uncheck("input"); // true -> false
 
         expect("input").toHaveProperty("checked", false);
 
         monitorEvents("input");
 
-        press(" "); // false -> true
+        await press(" "); // false -> true
 
         expect("input").toHaveProperty("checked", true);
         expect.verifySteps([
@@ -1339,12 +1397,12 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("input").toHaveValue(421);
 
-        click("input");
-        press("Backspace");
+        await click("input");
+        await press("Backspace");
 
         expect("input").toHaveValue(42);
 
-        press("Backspace");
+        await press("Backspace");
 
         expect("input").toHaveValue(4);
     });
@@ -1354,8 +1412,8 @@ describe(parseUrl(import.meta.url), () => {
 
         expect("textarea").toHaveValue("aaa");
 
-        click("textarea");
-        press("Enter");
+        await click("textarea");
+        await press("Enter");
 
         expect("textarea").toHaveValue("aaa\n");
     });
@@ -1365,23 +1423,23 @@ describe(parseUrl(import.meta.url), () => {
 
         await mountOnFixture(/* xml */ `<input />`);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input", formatKeyBoardEvent);
 
-        press("alt");
+        await press("alt");
 
         expect.verifySteps(["keydown:Alt.alt", "keyup:Alt.alt"]);
 
-        press("ctrl");
+        await press("ctrl");
 
         expect.verifySteps(["keydown:Control.ctrl", "keyup:Control.ctrl"]);
 
-        press("meta");
+        await press("meta");
 
         expect.verifySteps(["keydown:Meta.meta", "keyup:Meta.meta"]);
 
-        press("shift");
+        await press("shift");
 
         expect.verifySteps(["keydown:Shift.shift", "keyup:Shift.shift"]);
     });
@@ -1391,23 +1449,23 @@ describe(parseUrl(import.meta.url), () => {
 
         await mountOnFixture(/* xml */ `<input />`);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input", formatKeyBoardEvent);
 
-        press("alt");
+        await press("alt");
 
         expect.verifySteps(["keydown:Alt.alt", "keyup:Alt.alt"]);
 
-        press("ctrl");
+        await press("ctrl");
 
         expect.verifySteps(["keydown:Control.ctrl", "keyup:Control.ctrl"]);
 
-        press("meta");
+        await press("meta");
 
         expect.verifySteps(["keydown:Meta.meta", "keyup:Meta.meta"]);
 
-        press("shift");
+        await press("shift");
 
         expect.verifySteps(["keydown:Shift.shift", "keyup:Shift.shift"]);
     });
@@ -1415,11 +1473,11 @@ describe(parseUrl(import.meta.url), () => {
     test("compose shift, alt and control and a key", async () => {
         await mountOnFixture(/* xml */ `<input />`);
 
-        click("input");
+        await click("input");
 
         monitorEvents("input", formatKeyBoardEvent);
 
-        press(["ctrl", "b"]);
+        await press(["ctrl", "b"]);
 
         expect.verifySteps([
             "keydown:Control.ctrl",
@@ -1428,7 +1486,7 @@ describe(parseUrl(import.meta.url), () => {
             "keyup:Control.ctrl",
         ]);
 
-        press(["shift", "b"]);
+        await press(["shift", "b"]);
 
         expect.verifySteps([
             "keydown:Shift.shift",
@@ -1439,7 +1497,7 @@ describe(parseUrl(import.meta.url), () => {
             "keyup:Shift.shift",
         ]);
 
-        press(["Alt", "Control", "b"]);
+        await press(["Alt", "Control", "b"]);
 
         expect.verifySteps([
             "keydown:Alt.alt",
@@ -1460,14 +1518,14 @@ describe(parseUrl(import.meta.url), () => {
 
         monitorEvents(".scrollable");
 
-        scroll(".scrollable", { top: 500 });
+        await scroll(".scrollable", { top: 500 });
         await animationFrame();
 
         expect(".scrollable").toHaveProperty("scrollTop", 500);
         expect(".scrollable").toHaveProperty("scrollLeft", 0);
         expect.verifySteps(["div.wheel", "div.scroll", "div.scrollend"]);
 
-        scroll(".scrollable", { left: 1200 });
+        await scroll(".scrollable", { left: 1200 });
         await animationFrame();
 
         expect(".scrollable").toHaveProperty("scrollTop", 500);
@@ -1482,16 +1540,16 @@ describe(parseUrl(import.meta.url), () => {
 
         const { innerHeight } = window;
 
-        window.addEventListener("resize", () => expect.step("window.resize"));
+        on(window, "resize", () => expect.step("window.resize"));
 
-        resize({ width: 300 });
+        await resize({ width: 300 });
 
         expect(window.innerWidth).toBe(300);
         expect(window.innerHeight).toBe(innerHeight);
 
         expect.verifySteps(["window.resize"]);
 
-        resize({ height: 264 });
+        await resize({ height: 264 });
 
         expect(window.innerWidth).toBe(300);
         expect(window.innerHeight).toBe(264);
@@ -1511,11 +1569,11 @@ describe(parseUrl(import.meta.url), () => {
         expect("select").toHaveValue("a"); // default to first option
         expect.verifySteps([]);
 
-        click("select");
+        await click("select");
 
         monitorEvents("select");
 
-        select("b");
+        await select("b");
 
         expect("select").toHaveValue("b");
         expect.verifySteps(["select.change"]);
@@ -1535,7 +1593,7 @@ describe(parseUrl(import.meta.url), () => {
             }
         );
 
-        click("button");
+        await click("button");
 
         expect.verifySteps(["click"]);
     });
@@ -1554,7 +1612,7 @@ describe(parseUrl(import.meta.url), () => {
             }
         );
 
-        click("button");
+        await click("button");
 
         expect.verifySteps(["clack"]);
     });

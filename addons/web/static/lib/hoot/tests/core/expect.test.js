@@ -1,11 +1,11 @@
 /** @odoo-module */
 
 import { describe, expect, makeExpect, mountOnFixture, test } from "@odoo/hoot";
-import { check } from "@odoo/hoot-dom";
-import { tick } from "@odoo/hoot-mock";
+import { check, tick } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
-import { Test } from "../../core/test";
 import { parseUrl } from "../local_helpers";
+
+import { Test } from "../../core/test";
 
 describe(parseUrl(import.meta.url), () => {
     test("makeExpect passing, without a test", () => {
@@ -148,7 +148,7 @@ describe(parseUrl(import.meta.url), () => {
             <input type="text" value="abc" />
         `);
 
-        check("input[type=checkbox]");
+        await check("input[type=checkbox]");
 
         const [customExpect, hooks] = makeExpect({ headless: true });
 
@@ -383,6 +383,16 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     describe("DOM matchers", () => {
+        test("toHaveAttribute", async () => {
+            await mountOnFixture(/* xml */ `
+                <input type="number" disabled="" />
+            `);
+
+            expect("input").toHaveAttribute("disabled");
+            expect("input").not.toHaveAttribute("readonly");
+            expect("input").toHaveAttribute("type", "number");
+        });
+
         test("toHaveCount", async () => {
             await mountOnFixture(/* xml */ `
                 <ul>

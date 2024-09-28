@@ -60,7 +60,7 @@ test.tags("desktop")(
         await mountWithCleanup(Parent);
 
         // Click on ONE
-        click(queryOne(".one"));
+        await click(queryOne(".one"));
         await animationFrame();
 
         expect.verifySteps([]);
@@ -68,7 +68,7 @@ test.tags("desktop")(
         expect(".one").toHaveClass("show");
 
         // Hover on TWO
-        hover(".two");
+        await hover(".two");
         await animationFrame();
         expect.verifySteps(["beforeOpen"]);
         expect(DROPDOWN_MENU).toHaveCount(1);
@@ -80,28 +80,28 @@ test.tags("desktop")(
         expect(".menu-two").toHaveCount(1);
 
         // Hover on THREE
-        hover(".three");
+        await hover(".three");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(1);
         expect(".menu-three").toHaveCount(1);
 
         // Hover on FOUR (Should not open)
         expect(".menu-four").toHaveCount(0);
-        hover(".four");
+        await hover(".four");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(1);
         expect(".menu-three").toHaveCount(1);
         expect(".menu-four").toHaveCount(0);
 
         // Click on OUTSIDE
-        click("div.outside");
+        await click("div.outside");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(0);
 
         // Hover on ONE, TWO, THREE
-        hover(".one");
-        hover(".two");
-        hover(".three");
+        await hover(".one");
+        await hover(".two");
+        await hover(".three");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(0);
     }
@@ -132,12 +132,12 @@ test.tags("desktop")(
         }
         await mountWithCleanup(Parent);
         // Click on One
-        click(".one");
+        await click(".one");
         await animationFrame();
         expect(getDropdownMenu(".one")).toHaveCount(1);
 
         // Hover on Two
-        hover(".two");
+        await hover(".two");
         await animationFrame();
         expect(getDropdownMenu(".one")).toHaveCount(1);
 
@@ -175,17 +175,17 @@ test.tags("desktop")(
         }
         await mountWithCleanup(Parent);
         // Click on BAR1
-        click(".two");
+        await click(".two");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(1);
 
         // Click on FOO
-        click(".one");
+        await click(".one");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(1);
 
         // Hover on BAR1
-        hover(".two");
+        await hover(".two");
         await animationFrame();
         expect(DROPDOWN_MENU).toHaveCount(1);
         expect(".two-menu").toHaveCount(0);
@@ -216,13 +216,13 @@ test.tags("desktop")("DropdownGroup: toggler focused on mouseenter", async () =>
     await mountWithCleanup(Parent);
 
     // Click on one
-    click("button.one");
+    await click("button.one");
     await animationFrame();
     expect("button.one").toBeFocused();
     expect(DROPDOWN_MENU).toHaveText("One Content");
 
     // Hover on two
-    hover("button.two");
+    await hover("button.two");
     await animationFrame();
     expect("button.two").toBeFocused();
     expect(DROPDOWN_MENU).toHaveText("Two Content");

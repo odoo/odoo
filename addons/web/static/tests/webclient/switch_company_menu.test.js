@@ -601,7 +601,7 @@ test("show search input when more that 10 companies & search filters items but i
     expect(".o-dropdown--menu input").toBeFocused();
     expect(".o-dropdown--menu .o_switch_company_item").toHaveCount(10);
 
-    edit("omcom");
+    await edit("omcom");
     await animationFrame();
     expect(".o-dropdown--menu .o_switch_company_item").toHaveCount(3);
 
@@ -620,7 +620,7 @@ test("when less than 10 companies, typing key makes the search input visible", a
     expect(".o-dropdown--menu input").toBeFocused();
     expect(".o-dropdown--menu .visually-hidden input").toHaveCount(1);
 
-    edit("a");
+    await edit("a");
     await animationFrame();
 
     expect(".o-dropdown--menu input").toHaveValue("a");
@@ -682,11 +682,11 @@ test("navigation with search input", async () => {
     for (let i = 0; i < navigationEvents.length; i++) {
         const { hotkey, focused, selectedCompanies, input } = navigationEvents[i];
         if (hotkey) {
-            press(hotkey);
+            await press(hotkey);
         }
 
         if (input) {
-            edit(input);
+            await edit(input);
         }
 
         // Ensure debounced mutation listener update and owl re-render
@@ -713,7 +713,7 @@ test("navigation with search input", async () => {
         }
     }
 
-    keyDown("control+enter");
+    await keyDown("control+enter");
     await animationFrame();
 
     expect.verifySteps(["3-2"]);
@@ -725,7 +725,7 @@ test("select and de-select all", async () => {
     await open();
 
     // Show search
-    edit(" ");
+    await edit(" ");
     await animationFrame();
 
     // One company is selected, there should be a check box with minus inside

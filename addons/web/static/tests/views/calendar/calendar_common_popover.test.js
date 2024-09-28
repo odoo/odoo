@@ -150,7 +150,7 @@ test(`click on delete button`, async () => {
         model: { ...FAKE_MODEL, canDelete: true },
         deleteRecord: () => expect.step("delete"),
     });
-    click(`.o_cw_popover_delete`);
+    await click(`.o_cw_popover_delete`);
     expect.verifySteps(["delete"]);
 });
 
@@ -158,6 +158,6 @@ test(`click on edit button`, async () => {
     await start({
         editRecord: () => expect.step("edit"),
     });
-    click(`.o_cw_popover_edit`);
+    await click(`.o_cw_popover_edit`);
     expect.verifySteps(["edit"]);
 });

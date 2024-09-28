@@ -1447,8 +1447,9 @@
             class="o_accordion_not_initialized accordion accordion-flush my-4"
         >
             <div
+                t-if="is_view_active('website_sale.accordion_more_information')"
                 id="more_information_accordion_item"
-                t-attf-class="accordion-item {{not is_view_active('website_sale.accordion_more_information') and 'border-bottom-0'}}"
+                class="accordion-item"
             />
         </div>
     </template>
@@ -1987,6 +1988,7 @@
                                      t-out="line._get_displayed_unit_price() * line.product_uom_qty"
                                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </t>
+                            <t t-set="product_price" t-value="line._get_cart_display_price()"/>
                             <t t-call="website_sale.cart_product_price"/>
                             <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
                                    class="cart_product_base_unit_price d-block text-muted"
@@ -2035,17 +2037,6 @@
     </template>
 
     <template id="cart_product_price">
-        <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
-        <t
-            t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
-            t-set="product_price"
-            t-value="line._get_combo_price_subtotal() if is_combo else line.price_subtotal"
-        />
-        <t
-            t-else=""
-            t-set="product_price"
-            t-value="line._get_combo_price_total() if is_combo else line.price_total"
-        />
         <span
             t-out="product_price"
             style="white-space: nowrap;"
@@ -2388,10 +2379,13 @@
                                     <t t-if="is_anonymous_cart">
                                         <div id="div_email_public" t-attf-class="col-lg-12">
                                             <label class="col-form-label" for="o_email">Email</label>
-                                            <div class="align-items-center float-end" style="margin-top: -11px">
+                                            <div
+                                                t-if="website.account_on_checkout != 'disabled'"
+                                                class="align-items-center float-end"
+                                                style="margin-top: -11px"
+                                            >
                                                 <span>Already have an account?</span>
                                                 <a
-                                                    t-if="account_on_checkout != 'disabled'"
                                                     role="button"
                                                     href='/web/login?redirect=/shop/checkout'
                                                     class="btn btn-primary"
@@ -2707,7 +2701,11 @@
                                  t-if="website_sale_order and website_sale_order.website_order_line">
                                 <div class="card-body p-0 p-lg-4">
                                     <t t-call="website_sale.total"/>
-                                    <t t-call="payment.express_checkout"/>
+                                    <t
+                                        t-if="website.account_on_checkout != 'mandatory' or
+                                              not website.is_public_user()"
+                                        t-call="payment.express_checkout"
+                                    />
                                     <t t-call="website_sale.navigation_buttons"/>
                                 </div>
                             </div>
@@ -2776,7 +2774,12 @@
                                                         </t>
                                                         <td t-attf-class="#{o_cart_sum_padding_top} td-price pe-0 text-end"
                                                             name="website_sale_cart_summary_line_price">
-                                                            <t t-call="website_sale.cart_product_price"/>
+                                                            <t t-call="website_sale.cart_product_price">
+                                                                <t
+                                                                    t-set="product_price"
+                                                                    t-value="line._get_cart_display_price()"
+                                                                />
+                                                            </t>
                                                         </td>
                                                     </tr>
                                                 </tbody>

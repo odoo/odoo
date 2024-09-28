@@ -1,7 +1,7 @@
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { click, hover, leave, press, queryAll, queryAllTexts, queryLast } from "@odoo/hoot-dom";
+import { click, hover, leave, press, queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     foo = fields.Char({ string: "Foo" });
@@ -115,7 +115,7 @@ test("PriorityField in form view", async () => {
     expect(".o_field_widget .o_priority a.o_priority_star.fa-star-o").toHaveCount(1);
 
     // click on the second star in edit mode
-    click(queryLast(".o_field_widget .o_priority a.o_priority_star.fa-star-o"));
+    await click(".o_field_widget .o_priority a.o_priority_star.fa-star-o:last");
     await animationFrame();
 
     expect(".o_field_widget .o_priority a.o_priority_star").toHaveCount(2);
@@ -145,8 +145,8 @@ test.tags("desktop")("PriorityField hover a star in form view", async () => {
     expect(".o_field_widget .o_priority a.o_priority_star.fa-star-o").toHaveCount(1);
 
     // hover last star
-    const star = queryLast(".o_field_widget .o_priority a.o_priority_star.fa-star-o");
-    hover(star);
+    const star = ".o_field_widget .o_priority a.o_priority_star.fa-star-o:last";
+    await hover(star);
     await animationFrame();
     expect(".o_field_widget .o_priority a.o_priority_star").toHaveCount(2);
     expect(".o_field_widget .o_priority a.o_priority_star.fa-star").toHaveCount(2, {
@@ -156,7 +156,7 @@ test.tags("desktop")("PriorityField hover a star in form view", async () => {
         message: "should temporary have no empty star since we are hovering the third value",
     });
 
-    leave(star);
+    await leave(star);
     await animationFrame();
 
     expect(".o_field_widget .o_priority a.o_priority_star").toHaveCount(2);
@@ -191,17 +191,17 @@ test("PriorityField can write after adding a record -- kanban", async () => {
     });
     expect(".o_kanban_record .fa-star").toHaveCount(0);
 
-    click(".o_priority a.o_priority_star.fa-star-o");
+    await click(".o_priority a.o_priority_star.fa-star-o");
     // wait for web_save
     await animationFrame();
     expect.verifySteps(['web_save [[1],{"selection":"1"}]']);
     expect(".o_kanban_record .fa-star").toHaveCount(1);
-    click(".o_control_panel_main_buttons .o-kanban-button-new");
+    await click(".o_control_panel_main_buttons .o-kanban-button-new");
     await animationFrame();
-    click(".o_kanban_quick_create .o_kanban_add");
+    await click(".o_kanban_quick_create .o_kanban_add");
     await animationFrame();
     expect.verifySteps(["web_save [[],{}]"]);
-    click(".o_priority a.o_priority_star.fa-star-o");
+    await click(".o_priority a.o_priority_star.fa-star-o");
     await animationFrame();
     expect.verifySteps([`web_save [[6],{"selection":"1"}]`]);
     expect(".o_kanban_record .fa-star").toHaveCount(2);
@@ -228,7 +228,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // switch to edit mode and check the result
-    click("tbody td:not(.o_list_record_selector)");
+    await click("tbody td:not(.o_list_record_selector)");
     await animationFrame();
 
     expect(".o_data_row:first-child .o_priority a.o_priority_star").toHaveCount(2, {
@@ -243,7 +243,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // save
-    click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
 
     expect(".o_data_row:first-child .o_priority a.o_priority_star").toHaveCount(2, {
@@ -258,7 +258,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // click on the first star in readonly mode
-    click(".o_priority a.o_priority_star.fa-star");
+    await click(".o_priority a.o_priority_star.fa-star");
     await animationFrame();
 
     expect(".o_data_row:first-child .o_priority a.o_priority_star").toHaveCount(2, {
@@ -272,7 +272,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // re-enter edit mode to force re-rendering the widget to check if the value was correctly saved
-    click("tbody td:not(.o_list_record_selector)");
+    await click("tbody td:not(.o_list_record_selector)");
     await animationFrame();
 
     expect(".o_data_row:first-child .o_priority a.o_priority_star").toHaveCount(2, {
@@ -286,7 +286,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // Click on second star in edit mode
-    click(queryLast(".o_priority a.o_priority_star.fa-star-o"));
+    await click(".o_priority a.o_priority_star.fa-star-o:last");
     await animationFrame();
 
     expect(".o_data_row:last-child .o_priority a.o_priority_star").toHaveCount(2, {
@@ -300,7 +300,7 @@ test("PriorityField in editable list view", async () => {
     });
 
     // save
-    click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
 
     expect(".o_data_row:last-child .o_priority a.o_priority_star").toHaveCount(2, {
@@ -335,8 +335,8 @@ test.tags("desktop")("PriorityField hover in editable list view", async () => {
     });
 
     // hover last star
-    const star = queryLast(".o_data_row:first-child .o_priority a.o_priority_star.fa-star-o");
-    hover(star);
+    const star = ".o_data_row:first-child .o_priority a.o_priority_star.fa-star-o:last";
+    await hover(star);
     await animationFrame();
 
     expect(".o_data_row:first-child .o_priority a.o_priority_star").toHaveCount(2);
@@ -347,7 +347,7 @@ test.tags("desktop")("PriorityField hover in editable list view", async () => {
         message: "should temporary have no empty star since we are hovering the third value",
     });
 
-    leave(star);
+    await leave(star);
     await animationFrame();
 
     expect(".o_data_row:first-child .o_priority a.o_priority_star").toHaveCount(2);
@@ -371,13 +371,13 @@ test("PriorityField with readonly attribute", async () => {
     expect("span.o_priority_star.fa.fa-star-o").toHaveCount(2, {
         message: "stars of priority widget should rendered with span tag if readonly",
     });
-    hover(queryLast(".o_priority_star.fa-star-o"));
+    await hover(".o_priority_star.fa-star-o:last");
     await animationFrame();
     expect.step("hover");
     expect(".o_field_widget .o_priority a.o_priority_star.fa-star").toHaveCount(0, {
         message: "should have no full stars on hover since the field is readonly",
     });
-    click(queryLast(".o_priority_star.fa-star-o"));
+    await click(".o_priority_star.fa-star-o:last");
     await animationFrame();
     expect.step("click");
     expect("span.o_priority_star.fa.fa-star-o").toHaveCount(2, {
@@ -396,14 +396,14 @@ test('PriorityField edited by the smart action "Set priority..."', async () => {
 
     expect("a.fa-star").toHaveCount(1);
 
-    press(["control", "k"]);
+    await press(["control", "k"]);
     await animationFrame();
     const idx = queryAllTexts(".o_command").indexOf("Set priority...\nALT + R");
     expect(idx).toBeGreaterThan(-1);
-    click(queryAll(".o_command")[idx]);
+    await click(queryAll(".o_command")[idx]);
     await animationFrame();
     expect(queryAllTexts(".o_command")).toEqual(["Normal", "Blocked", "Done"]);
-    click("#o_command_2");
+    await click("#o_command_2");
     await animationFrame();
     expect("a.fa-star").toHaveCount(2);
 });
@@ -423,7 +423,7 @@ test("PriorityField - auto save record when field toggled", async () => {
                 </sheet>
             </form>`,
     });
-    click(queryLast(".o_field_widget .o_priority a.o_priority_star.fa-star-o"));
+    await click(".o_field_widget .o_priority a.o_priority_star.fa-star-o:last");
     await animationFrame();
     expect.verifySteps(["web_save"]);
 });
@@ -444,7 +444,7 @@ test("PriorityField - prevent auto save with autosave option", async () => {
             </form>`,
     });
 
-    click(queryLast(".o_field_widget .o_priority a.o_priority_star.fa-star-o"));
+    await click(".o_field_widget .o_priority a.o_priority_star.fa-star-o:last");
     await animationFrame();
     expect.verifySteps([]);
 });

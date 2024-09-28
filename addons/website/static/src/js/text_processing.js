@@ -198,7 +198,10 @@ export const getDOMRectWidth = el => el.getBoundingClientRect().width;
  * @returns {String[]}
  */
 function drawPath(textEl, options) {
-    const {width, height} = textEl.getBoundingClientRect();
+    // Note: cannot use getBoundingClientRect as we want to be able to draw
+    // text highlights in snippets/add page dialogs where iframe is scaled.
+    const width = textEl.offsetWidth;
+    const height = textEl.offsetHeight;
     options = {...options, width, height};
     const yStart = options.position === "center" ? height / 2 : height;
 

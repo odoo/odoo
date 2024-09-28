@@ -40,14 +40,12 @@ export {
     queryAllValues,
     queryAttribute,
     queryFirst,
-    queryLast,
     queryOne,
     queryRect,
     queryText,
     queryValue,
     waitFor,
     waitForNone,
-    waitUntil,
 } from "./helpers/dom";
 export {
     check,
@@ -74,3 +72,17 @@ export {
     uncheck,
     unload,
 } from "./helpers/events";
+export {
+    Deferred,
+    advanceFrame,
+    advanceTime,
+    animationFrame,
+    cancelAllTimers,
+    delay,
+    freezeTime,
+    microTick,
+    runAllTimers,
+    setFrameRate,
+    tick,
+    waitUntil,
+} from "./helpers/time";

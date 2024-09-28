@@ -61,11 +61,13 @@ class TestUBLRO(TestUBLCommon):
             move_type=move_type,
             invoice_line_ids=[
                 {
+                    'name': 'Test Product A',
                     'product_id': self.product_a.id,
                     'price_unit': 500.0,
                     'tax_ids': [Command.set(self.tax_19.ids)],
                 },
                 {
+                    'name': 'Test Product B',
                     'product_id': self.product_b.id,
                     'price_unit': 1000.0,
                     'tax_ids': [Command.set(self.tax_19.ids)],

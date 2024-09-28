@@ -122,7 +122,7 @@ test("custom debounce delay", async () => {
     expect(".o_command").toHaveCount(0);
     await advanceTime(100);
     expect(".o_command").toHaveCount(2);
-    press("backspace");
+    await press("backspace");
     await animationFrame();
     expect(".o_command").toHaveCount(0);
     await contains(".o_command_palette_search input").edit("#", { confirm: false });
@@ -459,7 +459,7 @@ test("check the concurrency during a research", async () => {
 
     await contains(".o_command_palette_search input").edit("b", { confirm: false });
     await runAllTimers();
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect.verifySteps([]);
 
@@ -899,9 +899,9 @@ test("press enter on command", async () => {
     expect(".o_command").toHaveCount(2);
     expect(queryAllTexts(".o_command")).toEqual(["Command1", "Command2"]);
     expect(".o_command.focused").toHaveText(commands[0].name);
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
-    press("enter");
+    await press("enter");
     await animationFrame();
 
     expect.verifySteps(["C2"]);
@@ -967,7 +967,7 @@ test("keyboard navigation scroll", async () => {
         { message: "the focus is at the top border" }
     );
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(isVisible("#o_command_0")).toBe(true);
     expect(isVisible("#o_command_1")).toBe(true);
@@ -981,7 +981,7 @@ test("keyboard navigation scroll", async () => {
         { message: "the focus does not reach a border" }
     );
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(isVisible("#o_command_0")).toBe(true);
     expect(isVisible("#o_command_1")).toBe(true);
@@ -995,7 +995,7 @@ test("keyboard navigation scroll", async () => {
         { message: "the focus has reached the bottom border" }
     );
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(isVisible("#o_command_0")).not.toBe(true);
     expect(isVisible("#o_command_1")).toBe(true);
@@ -1009,7 +1009,7 @@ test("keyboard navigation scroll", async () => {
         { message: "the focus is still at the bottom border" }
     );
 
-    press("arrowup");
+    await press("arrowup");
     await animationFrame();
     expect(isVisible("#o_command_0")).not.toBe(true);
     expect(isVisible("#o_command_1")).toBe(true);
@@ -1023,7 +1023,7 @@ test("keyboard navigation scroll", async () => {
         { message: "the focus does not reach a border" }
     );
 
-    press("arrowup");
+    await press("arrowup");
     await animationFrame();
     expect(isVisible("#o_command_0")).not.toBe(true);
     expect(isVisible("#o_command_1")).toBe(true);
@@ -1037,7 +1037,7 @@ test("keyboard navigation scroll", async () => {
         { message: "the focus has reached the top border" }
     );
 
-    press("arrowup");
+    await press("arrowup");
     await animationFrame();
     expect(isVisible("#o_command_0")).toBe(true);
     expect(isVisible("#o_command_1")).toBe(true);
@@ -1097,7 +1097,7 @@ test("multi level command", async () => {
     expect(".o_command").toHaveCount(1);
     expect(queryAllTexts(".o_command")).toEqual(["Command1"]);
     expect(".o_command.focused").toHaveText(commands[0].name);
-    press("enter");
+    await press("enter");
     await animationFrame();
     expect(".o_command").toHaveCount(1);
     expect(queryAllTexts(".o_command")).toEqual(["Command lvl2"]);
@@ -1164,23 +1164,23 @@ test("navigate in the command palette with the arrows", async () => {
     await animationFrame();
     expect(".o_command.focused").toHaveText(commands[0].name);
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(".o_command.focused").toHaveText(commands[1].name);
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(".o_command.focused").toHaveText(commands[2].name);
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(".o_command.focused").toHaveText(commands[0].name);
 
-    press("arrowup");
+    await press("arrowup");
     await animationFrame();
     expect(".o_command.focused").toHaveText(commands[2].name);
 
-    press("arrowup");
+    await press("arrowup");
     await animationFrame();
     expect(".o_command.focused").toHaveText(commands[1].name);
 });
@@ -1204,12 +1204,12 @@ test("navigate in the command palette with an empty list", async () => {
     expect(".o_command").toHaveCount(0);
     expect(".o_command_palette_listbox_empty").toHaveCount(1);
 
-    press("arrowdown");
+    await press("arrowdown");
     await animationFrame();
     expect(".o_command").toHaveCount(0);
     expect(".o_command_palette_listbox_empty").toHaveCount(1);
 
-    press("arrowup");
+    await press("arrowup");
     await animationFrame();
     expect(".o_command").toHaveCount(0);
     expect(".o_command_palette_listbox_empty").toHaveCount(1);
@@ -1318,7 +1318,7 @@ test("remove namespace with backspace", async () => {
     expect(".o_command_palette .o_namespace").toHaveText("@");
 
     // remove namespace "@" because the input is empty
-    press("backspace");
+    await press("backspace");
     await animationFrame();
     expect(".o_command_palette .o_namespace").toHaveCount(0);
     expect(".o_command_palette_search input").toHaveValue("");
@@ -1329,7 +1329,7 @@ test("remove namespace with backspace", async () => {
     expect(".o_command_palette_search input").toHaveValue("NotEmpty");
 
     // Do not remove the namespace "@" because the input is not empty
-    press("backspace");
+    await press("backspace");
     await animationFrame();
     expect(".o_command_palette .o_namespace").toHaveText("@");
 
@@ -1339,7 +1339,7 @@ test("remove namespace with backspace", async () => {
 
     // Does not remove the namespace if the backspace is repeatedly applied.
     // You don't want to remove the namespace by pressing the "backspace" key
-    press("backspace", { repeat: true });
+    await press("backspace", { repeat: true });
     expect(".o_command_palette .o_namespace").toHaveText("@");
 });
 
@@ -1417,7 +1417,7 @@ test("checks that href is correctly used", async () => {
     // Check that command has link inside it
     expect(".o_command_palette .o_command:eq(0) a").toHaveAttribute("href", "https://www.odoo.com");
     // Check that we get url when doing ctrl+enter on a command having a link inside it
-    press("control+enter");
+    await press("control+enter");
     await animationFrame();
     expect.verifySteps(["https://www.odoo.com"]);
     // Check that command has no link inside it

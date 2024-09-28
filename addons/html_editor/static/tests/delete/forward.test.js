@@ -4,6 +4,7 @@ import { unformat } from "../_helpers/format";
 import { tick } from "@odoo/hoot-mock";
 import { deleteForward, insertText, tripleClick } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
+import { microTick } from "@odoo/hoot-dom";
 
 /**
  * content of the "deleteForward" sub suite in editor.test.js
@@ -161,7 +162,7 @@ describe("Selection collapsed", () => {
                 stepFunction: async (editor) => {
                     deleteForward(editor);
                     deleteForward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfter: '<p>ab<span class="style">x[]</span>ef</p>',
             });
@@ -175,7 +176,7 @@ describe("Selection collapsed", () => {
                     '<p><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span><b>ab</b></p>',
                 stepFunction: async (editor) => {
                     deleteForward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfter: "<p><b>x[]b</b></p>",
             });
@@ -184,7 +185,7 @@ describe("Selection collapsed", () => {
                     '<p><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span><span class="a">cd</span></p>',
                 stepFunction: async (editor) => {
                     deleteForward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfter: '<p><span class="a">x[]d</span></p>',
             });
@@ -193,7 +194,7 @@ describe("Selection collapsed", () => {
                     '<p><span class="removeme" data-oe-zws-empty-inline="">[]\u200B</span><br><b>ef</b></p>',
                 stepFunction: async (editor) => {
                     deleteForward(editor);
-                    insertText(editor, "x");
+                    await insertText(editor, "x");
                 },
                 contentAfter: "<p><b>x[]ef</b></p>",
             });
@@ -1336,6 +1337,7 @@ describe("Selection not collapsed", () => {
     test("should delete a heading (triple click delete) (1)", async () => {
         const { editor, el } = await setupEditor("<h1>abc</h1><p>def</p>", {});
         tripleClick(el.querySelector("h1"));
+        await microTick();
         // Chrome puts the cursor at the start of next sibling
         expect(getContent(el)).toBe("<h1>[abc</h1><p>]def</p>");
         await tick();
@@ -1349,6 +1351,7 @@ describe("Selection not collapsed", () => {
     test("should delete a heading (triple click delete) (2)", async () => {
         const { editor, el } = await setupEditor("<h1>abc</h1><p><br></p><p>def</p>", {});
         tripleClick(el.querySelector("h1"));
+        await microTick();
         // Chrome puts the cursor at the start of next sibling
         expect(getContent(el)).toBe("<h1>[abc</h1><p>]<br></p><p>def</p>");
         await tick();

@@ -61,7 +61,7 @@ test.tags`desktop`("breadcrumbs", async () => {
     expect(breadcrumbItems[1]).toHaveText("Current");
     expect(breadcrumbItems[1]).toHaveClass("active");
 
-    click(breadcrumbItems[0]);
+    await click(breadcrumbItems[0]);
     expect.verifySteps(["controller_7"]);
 });
 
@@ -82,13 +82,13 @@ test.tags`desktop`("view switcher", async () => {
     const views = queryAll`.o_switch_view`;
     expect(views[0]).toHaveAttribute("data-tooltip", "List");
     expect(views[0]).toHaveClass("active");
-    expect(queryAll(`.oi-view-list`, { root: views[0] })).toHaveCount(1);
+    expect(`.o_switch_view:eq(0) .oi-view-list`).toHaveCount(1);
     expect(views[1]).toHaveAttribute("data-tooltip", "Kanban");
     expect(views[1]).not.toHaveClass("active");
-    expect(queryAll(`.oi-view-kanban`, { root: views[1] })).toHaveCount(1);
+    expect(`.o_switch_view:eq(1) .oi-view-kanban`).toHaveCount(1);
 
     getService("action").switchView = (viewType) => expect.step(viewType);
-    click(views[1]);
+    await click(views[1]);
     expect.verifySteps(["kanban"]);
 });
 
@@ -105,7 +105,7 @@ test.tags`mobile`("view switcher on mobile", async () => {
     );
     expect(`.o_control_panel_navigation .o_cp_switch_buttons`).toHaveCount(1);
 
-    click(".o_control_panel_navigation .o_cp_switch_buttons .dropdown-toggle");
+    await click(".o_control_panel_navigation .o_cp_switch_buttons .dropdown-toggle");
     await animationFrame();
 
     expect(`.dropdown-item`).toHaveCount(2);
@@ -119,7 +119,7 @@ test.tags`mobile`("view switcher on mobile", async () => {
     expect(queryAll(`.oi-view-kanban`, { root: views[1] })).toHaveCount(1);
 
     getService("action").switchView = (viewType) => expect.step(viewType);
-    click(views[1]);
+    await click(views[1]);
     expect.verifySteps(["kanban"]);
 });
 
@@ -153,11 +153,11 @@ test("view switcher hotkey cycles through views", async () => {
     });
     expect(`.o_list_view`).toHaveCount(1);
 
-    press(["alt", "shift", "v"]);
+    await press(["alt", "shift", "v"]);
     await animationFrame();
     expect(`.o_kanban_view`).toHaveCount(1);
 
-    press(["alt", "shift", "v"]);
+    await press(["alt", "shift", "v"]);
     await animationFrame();
     expect(`.o_list_view`).toHaveCount(1);
 });

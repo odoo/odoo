@@ -13,8 +13,8 @@ test.tags("desktop")("add an emoji with powerbox", async () => {
     expect(".o-EmojiPicker").toHaveCount(0);
     expect(getContent(el)).toBe("<p>ab[]</p>");
 
-    insertText(editor, "/emoji");
-    press("enter");
+    await insertText(editor, "/emoji");
+    await press("enter");
     await waitFor(".o-EmojiPicker", { timeout: 1000 });
     expect(".o-EmojiPicker").toHaveCount(1);
 
@@ -29,9 +29,9 @@ test("click on emoji command to open emoji picker", async () => {
     expect(".o-EmojiPicker").toHaveCount(0);
     expect(getContent(el)).toBe("<p>ab[]</p>");
 
-    insertText(editor, "/emoji");
+    await insertText(editor, "/emoji");
     await animationFrame();
-    click(".active .o-we-command-name");
+    await click(".active .o-we-command-name");
     await waitFor(".o-EmojiPicker", { timeout: 1000 });
     expect(".o-EmojiPicker").toHaveCount(1);
 });
@@ -41,9 +41,9 @@ test.tags("desktop")("undo an emoji", async () => {
     await loadBundle("web.assets_emoji");
     expect(getContent(el)).toBe("<p>ab[]</p>");
 
-    insertText(editor, "test");
-    insertText(editor, "/emoji");
-    press("enter");
+    await insertText(editor, "test");
+    await insertText(editor, "/emoji");
+    await press("enter");
     await waitFor(".o-EmojiPicker", { timeout: 1000 });
     await click(".o-EmojiPicker .o-Emoji");
     expect(getContent(el)).toBe("<p>abtest😀[]</p>");
@@ -57,12 +57,12 @@ test("close emoji picker with escape", async () => {
     await loadBundle("web.assets_emoji");
     expect(getContent(el)).toBe("<p>ab[]</p>");
 
-    insertText(editor, "/emoji");
-    press("enter");
+    await insertText(editor, "/emoji");
+    await press("enter");
     await waitFor(".o-EmojiPicker", { timeout: 1000 });
     expect(getContent(el)).toBe("<p>ab</p>");
 
-    press("escape");
+    await press("escape");
     await animationFrame();
     expect(".o-EmojiPicker").toHaveCount(0);
     expect(getContent(el)).toBe("<p>ab[]</p>");

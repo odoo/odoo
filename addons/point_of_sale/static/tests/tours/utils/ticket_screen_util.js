@@ -17,6 +17,14 @@ export function selectOrder(orderName) {
         },
     ];
 }
+export function selectOrderByPrice(price) {
+    return [
+        {
+            trigger: `.ticket-screen .order-row > .col:contains("${price}")`,
+            run: "click",
+        },
+    ];
+}
 export function doubleClickOrder(orderName) {
     return [
         {

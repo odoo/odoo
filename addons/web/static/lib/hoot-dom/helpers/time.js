@@ -1,17 +1,6 @@
 /** @odoo-module */
 
-import { isNil } from "../hoot_utils";
-
-/**
- * @typedef DateSpecs
- * @property {number} [year]
- * @property {number} [month] // 1-12
- * @property {number} [day] // 1-31
- * @property {number} [hour] // 0-23
- * @property {number} [minute] // 0-59
- * @property {number} [second] // 0-59
- * @property {number} [millisecond] // 0-999
- */
+import { HootDomError } from "../hoot_dom_utils";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -21,16 +10,14 @@ const {
     cancelAnimationFrame,
     clearInterval,
     clearTimeout,
-    Date,
     Error,
-    Math: { ceil: $ceil, max: $max, min: $min },
+    Math: { ceil: $ceil, floor: $floor, max: $max, min: $min },
     performance,
     Promise,
     requestAnimationFrame,
     setInterval,
     setTimeout,
 } = globalThis;
-const { now: $now, UTC: $UTC } = Date;
 /** @type {Performance["now"]} */
 const $performanceNow = performance.now.bind(performance);
 
@@ -43,11 +30,6 @@ const $performanceNow = performance.now.bind(performance);
  */
 const animationToId = (id) => ID_PREFIX.animation + String(id);
 
-const getDateParams = () => [
-    ...dateParams.slice(0, -1),
-    dateParams.at(-1) + getTimeStampDiff() + timeOffset,
-];
-
 const getNextTimerValues = () => {
     /** @type {[number, () => any, string] | null} */
     let timerValues = null;
@@ -59,23 +41,6 @@ const getNextTimerValues = () => {
     }
     return timerValues;
 };
-
-/**
- * @param {string} timeZone
- * @param {Date} baseDate
- */
-const getOffsetFromTimeZone = (timeZone, baseDate) => {
-    if (!timeZone.includes("/")) {
-        // Time zone is a locale
-        // ! Warning: does not work in Firefox
-        timeZone = new Intl.Locale(timeZone).timeZones?.[0] ?? null;
-    }
-    const utcDate = new Date(baseDate.toLocaleString("en-US", { timeZone: "UTC" }));
-    const tzDate = new Date(baseDate.toLocaleString("en-US", { timeZone }));
-    return (utcDate.getTime() - tzDate.getTime()) / 60_000; // in minutes
-};
-
-const getTimeStampDiff = () => (freezed ? 0 : $now() - dateTimeStamp);
 
 /**
  * @param {string} id
@@ -100,33 +65,6 @@ const intervalToId = (id) => ID_PREFIX.interval + String(id);
 const now = () => $performanceNow() + timeOffset;
 
 /**
- * @param {string | DateSpecs} dateSpecs
- */
-const parseDateParams = (dateSpecs) => {
-    /** @type {DateSpecs} */
-    const specs =
-        (typeof dateSpecs === "string" ? dateSpecs.match(DATE_REGEX)?.groups : dateSpecs) || {};
-    return [
-        specs.year ?? DEFAULT_DATE[0],
-        (specs.month ?? DEFAULT_DATE[1]) - 1,
-        specs.day ?? DEFAULT_DATE[2],
-        specs.hour ?? DEFAULT_DATE[3],
-        specs.minute ?? DEFAULT_DATE[4],
-        specs.second ?? DEFAULT_DATE[5],
-        specs.millisecond ?? DEFAULT_DATE[6],
-    ].map(Number);
-};
-
-/**
- * @param {typeof dateParams} newDateParams
- */
-const setDateParams = (newDateParams) => {
-    dateParams = newDateParams;
-    dateTimeStamp = $now();
-    timeOffset = 0;
-};
-
-/**
  * @param {number} id
  */
 const timeoutToId = (id) => ID_PREFIX.timeout + String(id);
@@ -136,22 +74,14 @@ const ID_PREFIX = {
     interval: "i_",
     timeout: "t_",
 };
-const DATE_REGEX =
-    /(?<year>\d{4})[/-](?<month>\d{2})[/-](?<day>\d{2})([\sT]+(?<hour>\d{2}):(?<minute>\d{2}):(?<second>\d{2})(\.(?<millisecond>\d{3}))?)?/;
-const DEFAULT_DATE = [2019, 2, 11, 9, 30, 0, 0];
-const DEFAULT_TIMEZONE = +1;
 
 /** @type {Map<string, [() => any, number, number]>} */
 const timers = new Map();
 
 let allowTimers = true;
-let dateParams = DEFAULT_DATE;
-let dateTimeStamp = $now();
 let freezed = false;
 let frameDelay = 1000 / 60;
 let nextDummyId = 1;
-/** @type {string | number} */
-let timeZone = DEFAULT_TIMEZONE;
 let timeOffset = 0;
 
 //-----------------------------------------------------------------------------
@@ -161,7 +91,7 @@ let timeOffset = 0;
 /**
  * @param {number} [frameCount]
  */
-export async function advanceFrame(frameCount) {
+export function advanceFrame(frameCount) {
     return advanceTime(frameDelay * $max(1, frameCount));
 }
 
@@ -174,7 +104,7 @@ export async function advanceFrame(frameCount) {
  * @param {number} ms
  * @returns {Promise<number>} time consumed by timers (in ms).
  */
-export async function advanceTime(ms) {
+export function advanceTime(ms) {
     const targetTime = now() + ms;
     let remaining = ms;
     /** @type {ReturnType<typeof getNextTimerValues>} */
@@ -196,20 +126,17 @@ export async function advanceTime(ms) {
     }
 
     // Waits for callbacks to execute
-    await animationFrame();
-
-    return ms;
+    return animationFrame().then(() => ms);
 }
 
 /**
  * Returns a promise resolved after the next animation frame, typically allowing
  * Owl components to render.
  *
- * @returns {Promise<void>}
+ * @returns {Deferred<void>}
  */
-export async function animationFrame() {
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    await delay();
+export function animationFrame() {
+    return new Deferred((resolve) => requestAnimationFrame(() => delay().then(resolve)));
 }
 
 /**
@@ -230,21 +157,19 @@ export function cancelAllTimers() {
 export function cleanupTime() {
     cancelAllTimers();
 
-    setDateParams(DEFAULT_DATE);
     freezed = false;
-    timeZone = DEFAULT_TIMEZONE;
 }
 
 /**
  * Returns a promise resolved after a given amount of milliseconds (default to 0).
  *
  * @param {number} [duration]
- * @returns {Promise<void>}
+ * @returns {Deferred<void>}
  * @example
  *  await delay(1000); // waits for 1 second
  */
-export async function delay(duration) {
-    await new Promise((resolve) => setTimeout(resolve, duration));
+export function delay(duration) {
+    return new Deferred((resolve) => setTimeout(resolve, duration));
 }
 
 /**
@@ -254,36 +179,21 @@ export function freezeTime(setFreeze) {
     freezed = setFreeze ?? !freezed;
 }
 
+export function getTimeOffset() {
+    return timeOffset;
+}
+
+export function isTimeFreezed() {
+    return freezed;
+}
+
 /**
  * Returns a promise resolved after the next microtask tick.
  *
  * @returns {Promise<void>}
  */
-export async function microTick() {
-    await Promise.resolve();
-}
-
-/**
- * Mocks the current date and time, and also the time zone if any.
- *
- * Date can either be an object describing the date and time to mock, or a
- * string in SQL or ISO format (time and millisecond values can be omitted).
- * @see {@link mockTimeZone} for the time zone params.
- *
- * @param {string | DateSpecs} [date]
- * @param  {string | number} [tz]
- * @example
- *  mockDate("2023-12-25T20:45:00"); // 2023-12-25 20:45:00 UTC
- * @example
- *  mockDate({ year: 2023, month: 12, day: 25, hour: 20, minute: 45 }); // same as above
- * @example
- *  mockDate("2019-02-11 09:30:00.001", +2);
- */
-export function mockDate(date, tz) {
-    setDateParams(date ? parseDateParams(date) : DEFAULT_DATE);
-    if (!isNil(tz)) {
-        mockTimeZone(tz);
-    }
+export function microTick() {
+    return Deferred.resolve();
 }
 
 /** @type {typeof cancelAnimationFrame} */
@@ -379,25 +289,8 @@ export function mockedSetTimeout(callback, ms, ...args) {
     return timeoutId;
 }
 
-/**
- * Mocks the current time zone.
- *
- * Time zone can either be a locale, a time zone or an offset.
- *
- * Returns a function restoring the default zone.
- *
- * @param {string | number} [tz]
- * @example
- *  mockTimeZone(+1); // UTC + 1
- * @example
- *  mockTimeZone("Europe/Brussels"); // UTC + 1 (or UTC + 2 in summer)
- * @example
- *  mockTimeZone("ja-JP"); // UTC + 9
- */
-export function mockTimeZone(tz) {
-    timeZone = tz ?? DEFAULT_TIMEZONE;
-
-    mockTimeZone.onCall?.(tz);
+export function resetTimeOffset() {
+    timeOffset = 0;
 }
 
 /**
@@ -442,10 +335,70 @@ export function setFrameRate(frameRate) {
 /**
  * Returns a promise resolved after the next task tick.
  *
- * @returns {Promise<void>}
+ * @returns {Deferred<void>}
  */
-export async function tick() {
-    await delay();
+export function tick() {
+    return delay();
+}
+
+/**
+ * Returns a promise fulfilled when the given `predicate` returns a truthy value,
+ * with the value of the promise being the return value of the `predicate`.
+ *
+ * The `predicate` is run once initially, and then on each animation frame until
+ * it succeeds or fail.
+ *
+ * The promise automatically rejects after a given `timeout` (defaults to 5 seconds).
+ *
+ * @template T
+ * @param {() => T} predicate
+ * @param {WaitOptions} [options]
+ * @returns {Deferred<T>}
+ * @example
+ *  await waitUntil(() => []); // -> []
+ * @example
+ *  const button = await waitUntil(() => queryOne("button:visible"));
+ *  button.click();
+ */
+export function waitUntil(predicate, options) {
+    // Early check before running the loop
+    const result = predicate();
+    if (result) {
+        return Deferred.resolve(result);
+    }
+
+    let handle;
+    let timeoutId;
+    return new Deferred((resolve, reject) => {
+        const runCheck = () => {
+            const result = predicate();
+            if (result) {
+                resolve(result);
+            } else {
+                handle = requestAnimationFrame(runCheck);
+            }
+        };
+
+        const timeout = $floor(options?.timeout ?? 200);
+        timeoutId = setTimeout(() => {
+            // Last check before the timeout expires
+            const result = predicate();
+            if (result) {
+                resolve(result);
+            } else {
+                let message =
+                    options?.message || `'waitUntil' timed out after %timeout% milliseconds`;
+                if (typeof message === "function") {
+                    message = message();
+                }
+                reject(new HootDomError(message.replace("%timeout%", String(timeout))));
+            }
+        }, timeout);
+        handle = requestAnimationFrame(runCheck);
+    }).finally(() => {
+        cancelAnimationFrame(handle);
+        clearTimeout(timeoutId);
+    });
 }
 
 /**
@@ -462,7 +415,7 @@ export class Deferred extends Promise {
     _reject;
 
     /**
-     * @param {(resolve: (value: T) => void, reject: (reason?: any) => void) => void} [executor]
+     * @param {(resolve: (value?: T) => any, reject: (reason?: any) => any) => any} [executor]
      */
     constructor(executor) {
         let _resolve, _reject;
@@ -470,7 +423,7 @@ export class Deferred extends Promise {
         super((resolve, reject) => {
             _resolve = resolve;
             _reject = reject;
-            return executor?.(resolve, reject);
+            executor?.(_resolve, _reject);
         });
 
         this._resolve = _resolve;
@@ -480,42 +433,14 @@ export class Deferred extends Promise {
     /**
      * @param {any} [reason]
      */
-    reject(reason) {
+    async reject(reason) {
         return this._reject(reason);
     }
 
     /**
      * @param {T} [value]
      */
-    resolve(value) {
+    async resolve(value) {
         return this._resolve(value);
-    }
-}
-
-export class MockDate extends Date {
-    constructor(...args) {
-        if (args.length === 1) {
-            super(args[0]);
-        } else {
-            const params = getDateParams();
-            for (let i = 0; i < params.length; i++) {
-                args[i] ??= params[i];
-            }
-            super($UTC(...args));
-        }
-    }
-
-    getTimezoneOffset() {
-        if (typeof timeZone === "string") {
-            // Time zone is a locale or a time zone
-            return getOffsetFromTimeZone(timeZone, this);
-        } else {
-            // Time zone is an offset
-            return -(timeZone * 60);
-        }
-    }
-
-    static now() {
-        return new MockDate().getTime();
     }
 }

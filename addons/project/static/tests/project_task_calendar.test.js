@@ -53,7 +53,7 @@ const calendarMountParams = {
 test("test Project Task Calendar Popover with task_stage_with_state_selection widget", async () => {
     await mountView(calendarMountParams);
 
-    click("a.fc-daygrid-event");
+    await click("a.fc-daygrid-event");
 
     // Skipping setTimeout while clicking event in calendar for calendar popover to appear.
     // There is a timeout set in the useCalendarPopover.
@@ -74,13 +74,13 @@ test("test task_stage_with_state_selection widget with non-editable state", asyn
         `,
     });
 
-    click("a.fc-daygrid-event");
+    await click("a.fc-daygrid-event");
 
     // Skipping setTimeout while clicking event in calendar for calendar popover to appear.
     // There is a timeout set in the useCalendarPopover.
     await runAllTimers();
 
-    click("button[title='In Progress']");
+    await click("button[title='In Progress']");
 
     expect(".project_task_state_selection_menu").toHaveCount(0);
 });
@@ -97,17 +97,17 @@ test("test task_stage_with_state_selection widget with editable state", async ()
         `,
     });
 
-    click("a.fc-daygrid-event");
+    await click("a.fc-daygrid-event");
 
     // Skipping setTimeout while clicking event in calendar for calendar popover to appear.
     // There is a timeout set in the useCalendarPopover.
     await runAllTimers();
 
-    click(".o-dropdown div[title='In Progress']");
+    await click(".o-dropdown div[title='In Progress']");
     await animationFrame();
     expect(".project_task_state_selection_menu").toHaveCount(1);
 
-    click(".o_status_green"); // Checking if click on the state in selection menu works(changes in record)
+    await click(".o_status_green"); // Checking if click on the state in selection menu works(changes in record)
     await animationFrame();
     expect(".o-dropdown .o_status").toHaveStyle({ color: "rgb(0, 136, 24)" });
 });

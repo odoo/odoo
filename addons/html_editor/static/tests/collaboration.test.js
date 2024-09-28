@@ -210,7 +210,7 @@ describe("collaborative makeSavePoint", () => {
         const e1 = peerInfos.c1.editor;
         const e2 = peerInfos.c2.editor;
         const savepoint = e2.shared.makeSavePoint();
-        manuallyDispatchProgrammaticEvent(e1.editable, "beforeinput", {
+        await   manuallyDispatchProgrammaticEvent(e1.editable, "beforeinput", {
             inputType: "insertParagraph",
         });
         mergePeersSteps(peerInfos);
@@ -879,7 +879,7 @@ describe("Collaboration with embedded components", () => {
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
             `<p>a[]<span contenteditable="false" data-embedded="counter" data-oe-protected="true"><span class="counter">Counter:0</span></span></p>`
         );
-        click(e2.editable.querySelector(".counter"));
+        await click(e2.editable.querySelector(".counter"));
         await animationFrame();
         // e1 counter was not clicked, no change
         expect(getContent(e1.editable, { sortAttrs: true })).toBe(

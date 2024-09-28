@@ -27,24 +27,10 @@ commandProviderRegistry.add("debug", {
             });
             result.push({
                 action() {
-                    browser.open("/web/tests/next?debug=assets");
-                },
-                category: "debug",
-                name: _t("Run Unit Tests"),
-            });
-            result.push({
-                action() {
                     browser.open("/web/tests?debug=assets");
                 },
                 category: "debug",
-                name: _t("Run QUnit Tests (legacy)"),
-            });
-            result.push({
-                action() {
-                    browser.open("/web/tests/mobile?debug=assets");
-                },
-                category: "debug",
-                name: _t("Run QUnit Mobile Tests (legacy)"),
+                name: _t("Run Unit Tests"),
             });
         } else {
             const debugKey = "debug";

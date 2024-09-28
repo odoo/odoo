@@ -338,6 +338,7 @@ patch(PosStore.prototype, {
             this.addPendingOrder([order.id]);
         } else {
             const destinationOrder = this.getActiveOrdersOnTable(destinationTable)[0];
+            const linesToUpdate = [];
             for (const orphanLine of order.lines) {
                 const adoptingLine = destinationOrder.lines.find((l) =>
                     l.can_be_merged_with(orphanLine)
@@ -345,9 +346,12 @@ patch(PosStore.prototype, {
                 if (adoptingLine) {
                     adoptingLine.merge(orphanLine);
                 } else {
-                    orphanLine.update({ order_id: destinationOrder });
+                    linesToUpdate.push(orphanLine);
                 }
             }
+            linesToUpdate.forEach((orderline) => {
+                orderline.update({ order_id: destinationOrder });
+            });
             this.set_order(destinationOrder);
             this.addPendingOrder([destinationOrder.id]);
             await this.deleteOrders([order]);

@@ -63,11 +63,11 @@ test("prevents click default with href", async () => {
     // which will turn it into <a href=> So it must be defaultPrevented
     // The other one not contain any href props, it must not be defaultPrevented,
     // so as not to prevent the background change flow for example
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
-    click(".link");
-    click("button.dropdown-toggle");
-    click(".nolink");
+    await click(".link");
+    await click("button.dropdown-toggle");
+    await click(".nolink");
 });
 
 test("can be styled", async () => {
@@ -87,7 +87,7 @@ test("can be styled", async () => {
     await mountWithCleanup(Parent);
     expect(DROPDOWN_TOGGLE).toHaveClass("test-toggler");
 
-    click(DROPDOWN_TOGGLE);
+    await click(DROPDOWN_TOGGLE);
     await animationFrame();
     expect(DROPDOWN_MENU).toHaveClass("test-menu");
     expect(DROPDOWN_ITEM).toHaveClass("test-dropdown-item");
