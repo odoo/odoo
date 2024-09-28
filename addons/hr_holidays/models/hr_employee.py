@@ -231,6 +231,7 @@ class HrEmployee(models.Model):
                 'remaining_leaves': max_leaves,
                 'leaves_taken': 0,
                 'virtual_leaves_taken': 0,
+                'allocation_unit': allocation.type_request_unit,
             })
 
         for employee in employees:
@@ -254,6 +255,7 @@ class HrEmployee(models.Model):
                 leave_type_data = allocations_leaves_consumed[employee][leave_type]
                 for leave in leaves_per_employee_type[employee][leave_type].sorted('date_from'):
                     leave_duration = leave[leave_duration_field]
+                    leave_request_unit = leave.leave_type_request_unit
                     skip_excess = False
 
                     if sorted_leave_allocations.filtered(lambda alloc: alloc.allocation_type == 'accrual') and leave.date_from.date() > target_date:
@@ -263,6 +265,7 @@ class HrEmployee(models.Model):
 
                     if leave_type.requires_allocation == 'yes':
                         for allocation in sorted_leave_allocations:
+                            allocation_request_unit = allocation.type_request_unit
                             # We don't want to include future leaves linked to accruals into the total count of available leaves.
                             # However, we'll need to check if those leaves take more than what will be accrued in total of those days
                             # to give a warning if the total exceeds what will be accrued.
@@ -278,6 +281,9 @@ class HrEmployee(models.Model):
                                 if allocation.date_to else leave.date_to
                             )
                             duration = leave[leave_duration_field]
+                            if leave_request_unit != allocation_request_unit:
+                                duration = self._convert_time_off_amount(duration, leave_request_unit, allocation_request_unit)
+                                leave_duration = self._convert_time_off_amount(leave_duration, leave_request_unit, allocation_request_unit)
                             if leave.date_from != interval_start or leave.date_to != interval_end:
                                 duration_info = employee._get_calendar_attendances(interval_start.replace(tzinfo=pytz.UTC), interval_end.replace(tzinfo=pytz.UTC))
                                 duration = duration_info['hours' if leave_unit == 'hours' else 'days']
@@ -336,3 +342,14 @@ class HrEmployee(models.Model):
                     content['exceeding_duration'] = round(min(0, latest_remaining - additional_leaves_duration), 2)
 
         return (allocations_leaves_consumed, to_recheck_leaves_per_leave_type)
+
+    def _convert_time_off_amount(self, amount, from_unit, to_unit):
+        '''
+        Convert the amount of time off from one unit to another.
+        '''
+        factors = {
+            'hour': 1,
+            'day': self.resource_calendar_id.hours_per_day or HOURS_PER_DAY,
+            'half_day': self.resource_calendar_id.hours_per_day / 2 or HOURS_PER_DAY / 2,
+        }
+        return amount * factors[from_unit] / factors[to_unit]

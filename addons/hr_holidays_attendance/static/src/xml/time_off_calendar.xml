@@ -22,7 +22,7 @@
         </xpath>
         <xpath expr="//t[@name='duration_type']" position="before">
             <t t-if="props.data['overtime_deductible'] == true &amp;&amp; !props.requires_allocation">
-                <strong t-esc="duration" class="o_timeoff_green"/> <t t-if="props.data['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green">Available</span>
+                <strong t-esc="duration" class="o_timeoff_green"/> <t t-if="props.data['display_unit'] == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green">Available</span>
             </t>
         </xpath>
         <xpath expr="//t[@name='duration_type']" position="attributes">

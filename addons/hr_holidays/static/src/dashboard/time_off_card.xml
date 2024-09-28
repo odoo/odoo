@@ -18,7 +18,7 @@
         <span
             t-att-class="'text-uppercase o_timeoff_details p-1' + (warning ? ' alert alert-warning' : '')"
             t-on-click.stop="(ev) => (show_popover &amp;&amp; this.onClickInfo(ev))">
-            <t t-if="data.request_unit == 'hour'" name="duration_unit">hours</t>
+            <t t-if="data.display_unit == 'hour'" name="duration_unit">hours</t>
             <t t-else="">days</t>
             <t t-if="props.requires_allocation" name="duration_type">
                 available
@@ -32,7 +32,7 @@
         </span>
         <span t-if="props.requires_allocation and data.closest_allocation_expire !== false" class="text-uppercase o_timeoff_validity">
             <t t-if="data.closest_allocation_remaining != data.virtual_remaining_leaves">
-                (<t t-esc="data.closest_allocation_remaining"/> <t t-if="data.request_unit == 'hour'">hours</t><t t-else="">days</t>
+                (<t t-esc="data.closest_allocation_remaining"/> <t t-if="data.display_unit == 'hour'">hours</t><t t-else="">days</t>
                 valid until <span t-esc="data.closest_allocation_expire"/>)
             </t>
             <t t-else="">
@@ -47,10 +47,10 @@
 
         <span class="float-end o_timeoff_card_mobile">
             <t t-if="props.requires_allocation" name="duration_type">
-                <strong t-esc="duration" class="o_timeoff_green text-success"/> / <span t-esc="data.max_leaves"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span>
+                <strong t-esc="duration" class="o_timeoff_green text-success"/> / <span t-esc="data.max_leaves"/> <t t-if="data.display_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span>
             </t>
             <t t-else="">
-                <strong t-esc="duration"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-primary">Taken</span>
+                <strong t-esc="duration"/> <t t-if="data.display_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-primary">Taken</span>
             </t>
         </span>
     </t>
@@ -77,7 +77,7 @@
             <span class="d-inline-block m-0 mb-3"
                 t-if="props.closest &amp;&amp; props.closest &lt; props.left">
                 <i class="fa fa-warning"/> Only <t t-esc="props.closest"/>
-                <t t-if="props.request_unit == 'hour'"> hours</t>
+                <t t-if="props.display_unit == 'hour'"> hours</t>
                 <t t-else=""> days</t>
                 can be used before the allocation expires.
             </span>

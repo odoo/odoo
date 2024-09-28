@@ -444,6 +444,7 @@ class HolidaysType(models.Model):
                         'virtual_excess_data': {},
                         'exceeding_duration': extra_data[employee][leave_type]['exceeding_duration'],
                         'request_unit': leave_type.request_unit,
+                        'display_unit': 'hour' if leave_type.request_unit == 'hour' else 'day',
                         'icon': leave_type.sudo().icon_id.url,
                         'allows_negative': leave_type.allows_negative,
                         'max_allowed_negative': leave_type.max_allowed_negative,
@@ -485,6 +486,13 @@ class HolidaysType(models.Model):
                             continue
                         if allocation.date_to and allocation.date_to < target_date:
                             continue
+                    # If the unit for allocation is not the same as the request, convert data to the appropriate unit
+                    display_unit = 'hour' if leave_type.request_unit == 'hour' else 'day'
+                    if data['allocation_unit'] != display_unit:
+                        for key in ['virtual_leaves_taken', 'leaves_taken', 'virtual_remaining_leaves',
+                                    'remaining_leaves', 'max_leaves', 'accrual_bonus']:
+                            amount = data[key]
+                            data[key] = employee._convert_time_off_amount(amount, data['allocation_unit'], display_unit)
                     lt_info[1]['remaining_leaves'] += data['remaining_leaves']
                     lt_info[1]['virtual_remaining_leaves'] += data['virtual_remaining_leaves']
                     lt_info[1]['max_leaves'] += data['max_leaves']
