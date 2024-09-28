@@ -25,7 +25,8 @@ class Company(models.Model):
         '''
         eu_countries = self.env.ref('base.europe').country_ids
         oss_tax_groups = self.env['ir.model.data'].search([
-            ('module', '=', 'l10n_eu_oss'),
+            ('name', 'ilike', 'oss_tax_group'),
+            ('module', '=', 'account'),
             ('model', '=', 'account.tax.group')])
         for company in self:
             # instantiate OSS taxes on the first branch with a TAX ID, default on root company
@@ -35,7 +36,8 @@ class Company(models.Model):
                 *self.env['account.tax']._check_company_domain(company),
                 ('type_tax_use', '=', 'sale'),
                 ('amount_type', '=', 'percent'),
-                ('tax_group_id', 'not in', oss_tax_groups.mapped('res_id'))])
+                ('tax_group_id', 'not in', oss_tax_groups.mapped('res_id'))
+            ])
 
             multi_tax_reports_countries_fpos = self.env['account.fiscal.position'].search([
                 ('foreign_vat', '!=', False),
