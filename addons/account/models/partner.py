@@ -85,14 +85,9 @@ class AccountFiscalPosition(models.Model):
         for record in self:
             if record.foreign_vat:
                 if record.country_id == record.company_id.account_fiscal_country_id:
-                    if record.foreign_vat == record.company_id.vat:
-                        raise ValidationError(_("You cannot create a fiscal position within your fiscal country with the same VAT number as the main one set on your company."))
-
                     if not record.state_ids:
                         if record.company_id.account_fiscal_country_id.state_ids:
                             raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
-                        else:
-                            raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
                 if record.country_group_id and record.country_id:
                     if record.country_id not in record.country_group_id.country_ids:
                         raise ValidationError(_("You cannot create a fiscal position with a country outside of the selected country group."))
