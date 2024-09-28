@@ -84,10 +84,15 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
     }
     // Checks whether an orderline has been deleted from the order since it
     // was last sent to the preparation tools. If so we add this to the changes.
-    for (const [lineKey, lineResume] of Object.entries(order.last_order_preparation_change.lines)) {
-        if (!order.models["pos.order.line"].getBy("uuid", lineResume["uuid"])) {
-            if (!changes[lineKey]) {
-                changes[lineKey] = {
+    for (const [oldLineKey, lineResume] of Object.entries(
+        order.last_order_preparation_change.lines
+    )) {
+        const orderline = order.models["pos.order.line"].getBy("uuid", lineResume["uuid"]);
+        const lineKey = orderline?.preparationKey;
+
+        if (!orderline || oldLineKey != lineKey) {
+            if (!changes[oldLineKey]) {
+                changes[oldLineKey] = {
                     uuid: lineResume["uuid"],
                     product_id: lineResume["product_id"],
                     name: lineResume["name"],
@@ -98,7 +103,7 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                 changeAbsCount += Math.abs(lineResume["quantity"]);
                 changesCount += lineResume["quantity"];
             } else {
-                changes[lineKey]["quantity"] -= lineResume["quantity"];
+                changes[oldLineKey]["quantity"] -= lineResume["quantity"];
             }
         }
     }
