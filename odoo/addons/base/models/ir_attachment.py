@@ -82,6 +82,11 @@ class IrAttachment(models.Model):
     def _migrate(self):
         record_count = len(self)
         storage = self._storage().upper()
+        # When migrating to filestore verifying if the directory has write permission
+        if storage == 'FILE':
+            filestore = self._filestore()
+            if not os.access(filestore, os.W_OK):
+                raise PermissionError("Write permission denied for filestore directory.")
         for index, attach in enumerate(self):
             _logger.debug("Migrate attachment %s/%s to %s", index + 1, record_count, storage)
             # pass mimetype, to avoid recomputation
