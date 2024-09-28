@@ -21,6 +21,6 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_window',
             'name': _("Delivery Methods"),
             'res_model': 'delivery.carrier',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'context': '{"search_default_delivery_type": "in_store"}',
         }
