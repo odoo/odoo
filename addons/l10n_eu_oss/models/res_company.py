@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import re
 from itertools import product
 
 from odoo import Command, api, models
@@ -45,7 +45,7 @@ class Company(models.Model):
             for destination_country in oss_countries:
                 mapping = []
                 fpos = self.env['account.fiscal.position'].search([
-                            *self.env['account.fiscal.position']._check_company_domain(company),
+                            ('company_id', '=', company.id),
                             ('country_id', '=', destination_country.id),
                             ('auto_apply', '=', True),
                             ('vat_required', '=', False),
@@ -154,7 +154,18 @@ class Company(models.Model):
 
     def _get_oss_tags(self):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
-        tag_for_country = EU_TAG_MAP.get(self.chart_template, {
+        country = None
+        # Try to use the VAT country if vat is set and easily guessable
+        if self.vat:
+            country_prefix = re.match('^[a-zA-Z]{2}|^', self.vat).group()
+            if country_prefix:
+                country = self.env['res.country'].search([('code', '=', country_prefix)], limit=1)
+        # otherwise fallback on the fiscal country
+        if not country:
+            country = self.account_fiscal_country_id
+        chart_template = self.env['account.chart.template']._guess_chart_template(country)
+
+        tag_for_country = EU_TAG_MAP.get(chart_template, {
             'invoice_base_tag': None,
             'invoice_tax_tag': None,
             'refund_base_tag': None,
