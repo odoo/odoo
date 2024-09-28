@@ -74,7 +74,7 @@ class HrEmployeeBase(models.AbstractModel):
                 s.requires_allocation='yes' AND
                 h.employee_id in %s
             GROUP BY h.employee_id""", (tuple(self.ids),))
-        return {(row['employee_id'], row['days']) for row in self._cr.dictfetchall()}
+        return {row['employee_id']: row['days'] for row in self._cr.dictfetchall()}
 
     def _compute_remaining_leaves(self):
         remaining = {}
