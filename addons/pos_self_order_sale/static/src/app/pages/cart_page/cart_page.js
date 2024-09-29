@@ -15,8 +15,8 @@ patch(CartPage.prototype, {
             (line) => line.product_id.raw.optional_product_ids
         );
 
-        const products = this.selfOrder.models["product.product"].filter((p) =>
-            optionalProductIds.includes(p.raw.product_tmpl_id)
+        const products = this.selfOrder.models["product.template"].filter((p) =>
+            optionalProductIds.includes(p.id)
         );
 
         return products;
