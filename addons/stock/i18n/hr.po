@@ -30,6 +30,7 @@
 # Alen Komljen, 2024
 # Vladimir Vrgoč, 2024
 # Gordana Bilas, 2024
+# Servisi RAM d.o.o. <support@servisiram.hr>, 2024
 # Luka Carević <luka@uvid.hr>, 2024
 # 
 msgid ""
@@ -127,6 +128,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
+" * Nacrt: Prijenos još nije potvrđen. Rezervacija se ne primjenjuje.\n"
+" * Čeka drugi korak: Ovaj prijenos čeka na dovršetak druge operacije prije nego što bude spreman.\n"
+" * Na čekanju: Prijenos čeka na dostupnost nekih proizvoda.\n"
+"(a) Politika dostave je \"Što je prije moguće\": nijedan proizvod nije mogao biti rezerviran.\n"
+"(b) Politika dostave je \"Kada su svi proizvodi spremni\": ne mogu se rezervirati svi proizvodi.\n"
+" * Spremno: Prijenos je spreman za obradu.\n"
+"(a) Politika dostave je \"Što je prije moguće\": barem jedan proizvod je rezerviran.\n"
+"(b) Politika dostave je \"Kada su svi proizvodi spremni\": svi proizvodi su rezervirani.\n"
+" * Riješeno: Prijenos je obrađen.\n"
+" * Otkazano: Prijenos je otkazan."
 
 #. module: stock
 #. odoo-python
@@ -290,7 +301,7 @@ msgstr ", max:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
