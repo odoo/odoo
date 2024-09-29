@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models, _
+from odoo.api import depends
 
 
 class Partner(models.Model):
@@ -50,3 +51,8 @@ class Partner(models.Model):
             'country': employee_id.private_country_id.code,
         }
         return [pstl_addr] + super()._get_all_addr()
+
+    @depends('employee_ids')
+    def _compute_employee(self):
+        for partner in self:
+            partner.employee = bool(partner.employee_ids)

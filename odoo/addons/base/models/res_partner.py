@@ -253,7 +253,7 @@ class Partner(models.Model):
     category_id: PartnerCategory = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
     active = fields.Boolean(default=True)
-    employee = fields.Boolean(help="Check this box if this contact is an Employee.")
+    employee = fields.Boolean(help="Whether this contact is an Employee.", compute='_compute_employee', store=True)
     function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
@@ -454,6 +454,10 @@ class Partner(models.Model):
         # exists to allow overrides
         for company in self:
             company.company_registry = company.company_registry
+
+    def _compute_employee(self):
+        for partner in self:
+            partner.employee = False
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
