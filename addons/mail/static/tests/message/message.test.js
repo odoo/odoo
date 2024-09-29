@@ -70,10 +70,7 @@ test("Edit message (mobile)", async () => {
         message_type: "comment",
     });
     await start();
-    await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Channel" });
-    await click("button", { text: "general" });
+    await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
@@ -145,7 +142,7 @@ test("Can edit message comment in chatter (mobile)", async () => {
         res_id: partnerId,
     });
     await start();
-    openFormView("res.partner", partnerId);
+    await openFormView("res.partner", partnerId);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message-moreMenu [title='Edit']");
     await contains("button", { text: "Discard editing" });

@@ -170,7 +170,6 @@ test("Composer GIF button should open the GIF picker keyboard for mobile device"
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await click("span", { text: "General" });
     await click("button[aria-label='Emojis']");
     await contains(".o-mail-PickerContent-picker .o-mail-PickerContent-emojiPicker");
     await click("button", { text: "GIFs" });
