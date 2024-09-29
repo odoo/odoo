@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Transfers %(transfer_list)s: Je moet een partij/serienummer ingeven voor de producten %(product_list)s."
+"Overdrachten %(transfer_list)s: Je moet een partij/serienummer ingeven voor de producten %(product_list)s."
 
 #. module: stock
 #. odoo-python
@@ -575,7 +575,7 @@ msgstr "<span class=\"col-6\">Te laat</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Operations</span>"
-msgstr "<span class=\"col-6\">Operaties</span>"
+msgstr "<span class=\"col-6\">Bewerkingen</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -3911,6 +3911,9 @@ msgid ""
 " in package will be generated, using the defined character(s) to separate "
 "each numbers"
 msgstr ""
+"Een QR-code met alle serienummers in de verpakking wordt gegenereerd als een"
+" scheidingsteken is gedefinieerd. Elk nummer wordt gescheiden door het (de) "
+"gedefinieerde teken(s)."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -4192,6 +4195,8 @@ msgid ""
 "In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n"
 "        In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier"
 msgstr ""
+"Valideer in geval van uitgaande flow de overdracht voor deze datum om op de afgesproken datum aan de klant te kunnen leveren.\n"
+"        Valideer in geval van inkomende flow de overdracht voor deze datum om deze producten op voorraad te hebben op de door de leverancier afgesproken datum."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4281,7 +4286,7 @@ msgstr "Installeren"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_install_barcode
 msgid "Install Barcode"
-msgstr ""
+msgstr "Installeer Barcode"
 
 #. module: stock
 #. odoo-python
@@ -4329,7 +4334,7 @@ msgstr "Interne overdracht"
 #: model:ir.actions.act_window,name:stock.action_picking_tree_internal
 #: model:stock.picking.type,name:stock.picking_type_internal
 msgid "Internal Transfers"
-msgstr "Interne verplaatsingen"
+msgstr "Interne overdrachten"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -4350,7 +4355,7 @@ msgstr "Interne locaties onder afstammelingen"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 msgid "Internal locations having stock can't be converted"
-msgstr ""
+msgstr "Interne locaties met voorraad kunnen niet worden geconverteerd"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__ref
@@ -4677,7 +4682,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
 msgid "Labels"
-msgstr ""
+msgstr "Labels"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
@@ -4932,7 +4937,7 @@ msgstr "Lijstweergave van gedetailleerde bewerkingen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of next transfers"
-msgstr ""
+msgstr "Lijstweergave van volgende overdrachten"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5394,7 +5399,7 @@ msgstr "Verplaatsingen"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Verplaatsingsanalyse"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
@@ -5573,7 +5578,7 @@ msgstr "Volgende verwachte telling"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Next Transfers"
-msgstr ""
+msgstr "Volgende overdrachten"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
@@ -5583,7 +5588,7 @@ msgstr "De volgende datum waarop de beschikbare voorraad moet worden geteld."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Next transfer(s) impacted:"
-msgstr "Volgende verplaatsing(en) beïnvloed:"
+msgstr "Volgende overdracht(en) beïnvloed:"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__no
@@ -5622,7 +5627,7 @@ msgstr "Geen toewijzingsbehoefte gevonden."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No delivery to do!"
-msgstr ""
+msgstr "Geen geplande leveringen!"
 
 #. module: stock
 #. odoo-python
@@ -5672,7 +5677,7 @@ msgstr "Geen wegzetregel gevonden. Maak er één aan!"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No receipt yet! Create a new one."
-msgstr ""
+msgstr "Je hebt nog geen ontvangsten! Maak een nieuwe aan."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -5686,6 +5691,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Er is geen regel gevonden die \"%(product)s\" in \"%(location)s\" aanvult.\n"
+"Controleer de routeconfiguratie op het product."
 
 #. module: stock
 #. odoo-python
@@ -5819,6 +5826,10 @@ msgid ""
 "                                        barcode operator and configure the routing of the reports.\n"
 "                                        <br/>"
 msgstr ""
+"Odoo opent standaard een pdf-voorbeeld. Als je (alleen voor Enterprise-gebruikers) direct wilt afdrukken:\n"
+"                                        installeer de IoT-app op een computer die zich op hetzelfde lokale netwerk bevindt als de\n"
+"                                        barcodeoperator en configureer de routering van de rapporten.\n"
+"                                        <br/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6217,7 +6228,7 @@ msgstr "Verpakkingsbarcode (ZPL)"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Contents"
-msgstr ""
+msgstr "Verpakkingsbarcode met inhoud"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
@@ -7060,7 +7071,7 @@ msgstr "Kwaliteitscontrole locatie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__qc_type_id
 msgid "Quality Control Type"
-msgstr ""
+msgstr "Type kwaliteitscontrole"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control_worksheet
@@ -7323,7 +7334,7 @@ msgstr "Gereed"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_get_picking_type_ready_moves
 msgid "Ready Moves"
-msgstr ""
+msgstr "Gereedstaande verplaatsingen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -7435,6 +7446,8 @@ msgid ""
 "Reduce stockouts with alerts, barcode app, replenishment propositions,\n"
 "                        locations management traceability, quality control, etc."
 msgstr ""
+"Verminder stockouts met waarschuwingen, de barcode-app, aanvullingsvoorstellen,\n"
+"                        traceerbaarheid van locatiebeheer, kwaliteitscontrole, enz."
 
 #. module: stock
 #. odoo-javascript
@@ -7518,6 +7531,8 @@ msgid ""
 "Remove manually entered value and replace by the quantity to order based on "
 "the forecasted quantities"
 msgstr ""
+"Verwijder de handmatig ingevoerde waarde en vervang deze door de te "
+"bestellen hoeveelheid op basis van de voorspelde hoeveelheden"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__reordering_max_qty
@@ -7609,7 +7624,7 @@ msgstr "Aanvullingsinformatie"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "Aanvullingsinformatie voor %(product)s in %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -7781,7 +7796,7 @@ msgstr "Retourstrookje"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return for Exchange"
-msgstr ""
+msgstr "Terugsturen voor omruiling"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_id
@@ -7792,7 +7807,7 @@ msgstr "Retour van"
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "Retour van %(picking_name)s"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -7910,6 +7925,8 @@ msgid ""
 "Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
 "%(route_company)s."
 msgstr ""
+"De regel %(rule)s behoort tot %(rule_company)s en de route behoort tot "
+"%(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8127,6 +8144,8 @@ msgid ""
 "Selected storage category does not exist in the 'store to' location or any "
 "of its sublocations"
 msgstr ""
+"De geselecteerde opslagcategorie bestaat niet in de locatie 'opslaan in' of "
+"in een van de sublocaties daarvan"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__picking_warn
@@ -8225,7 +8244,7 @@ msgstr "Reeks voorvoegsel"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence cross dock"
-msgstr ""
+msgstr "Reeks cross-docking"
 
 #. module: stock
 #. odoo-python
@@ -8261,13 +8280,13 @@ msgstr "Reeks picking"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence quality control"
-msgstr ""
+msgstr "Reeks kwaliteitscontrole"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence storage"
-msgstr ""
+msgstr "Reeks opslag"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -8281,6 +8300,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
 msgstr ""
+"Serienummer (%(serial_number)s) bestaat al in locatie(s): %(location_list)s."
+" Corrigeer het gecodeerde serienummer."
 
 #. module: stock
 #. odoo-python
@@ -8290,6 +8311,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Serienummer (%(serial_number)s) bevindt zich niet in %(source_location)s, maar bevindt zich in locatie(s): %(other_locations)s.\n"
+"\n"
+"Corrigeer dit om inconsistente gegevens te voorkomen."
 
 #. module: stock
 #. odoo-python
@@ -8299,6 +8323,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"Serienummer (%(serial_number)s) bevindt zich niet in %(source_location)s, maar bevindt zich in locatie(s): %(other_locations)s.\n"
+"\n"
+"De basislocatie voor deze boeking wordt gewijzigd naar %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -8476,7 +8503,7 @@ msgstr "Toon partijtekst"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_next_pickings
 msgid "Show Next Pickings"
-msgstr ""
+msgstr "Toon volgende Pickings"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_on_hand_qty_status_button
@@ -8487,7 +8514,7 @@ msgstr "Knop voor beschikbare hoeveelheid weergeven"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__is_favorite
 msgid "Show Operation in Overview"
-msgstr ""
+msgstr "Toon bewerking in overzicht"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
@@ -8709,7 +8736,7 @@ msgstr "Voorraad"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode_barcodelookup
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Stock Barcode Database"
-msgstr ""
+msgstr "Voorraad Barcode Database"
 
 #. module: stock
 #. odoo-javascript
@@ -8923,7 +8950,7 @@ msgstr "Opslaglocaties"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__store_type_id
 msgid "Storage Type"
-msgstr ""
+msgstr "Opslagtype"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
@@ -8943,7 +8970,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Store to"
-msgstr ""
+msgstr "Opslaan in"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
@@ -8953,7 +8980,7 @@ msgstr "Opslaan naar sublocatie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__sublocation
 msgid "Sublocation"
-msgstr ""
+msgstr "Sublocatie"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__supplied_wh_id
@@ -9047,7 +9074,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "Partij/serienummer (%s) is gekoppeld aan een ander product."
 
 #. module: stock
 #. odoo-python
@@ -9057,6 +9084,9 @@ msgid ""
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
+"Het serienummer (%(serial_number)s) wordt al gebruikt op locatie(s): %(location_list)s.\n"
+"\n"
+"Wordt dit verwacht? Dit kan bijvoorbeeld gebeuren als een leveringsbewerking wordt bevestigd voordat de bijbehorende ontvangstbewerking wordt bevestigd. In dit geval wordt het probleem automatisch opgelost zodra alle stappen zijn voltooid. Anders moeten de serienummers worden gecorrigeerd om inconsistente gegevens te voorkomen."
 
 #. module: stock
 #. odoo-python
@@ -9089,6 +9119,8 @@ msgid ""
 "The combination of lot/serial number and product must be unique within a company including when no company is defined.\n"
 "The following combinations contain duplicates:\n"
 msgstr ""
+"De combinatie van partij/ serienummer en product moet uniek zijn binnen een bedrijf, ook als er geen bedrijf is gedefinieerd.\n"
+"De volgende combinaties bevatten duplicaten:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -9099,7 +9131,7 @@ msgstr "Het bedrijf is automatisch ingesteld uit gebruikers voorkeuren."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The day after tomorrow"
-msgstr ""
+msgstr "Overmorgen"
 
 #. module: stock
 #. odoo-python
@@ -9250,6 +9282,10 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"De gedane hoeveelheid voor het product \"%(product)s\" doesn't respect komt "
+"niet overeen met de afrondingsprecisie gedefinieerd op de maateenheid "
+"\"%(unit)s\". Wijzig de gedane hoeveelheid van de afrondingsprecisie van je "
+"maateenheid."
 
 #. module: stock
 #. odoo-python
@@ -9293,6 +9329,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Het serienummer is al toegewezen: \n"
+" Product: %(product)s, Serienummer: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -9689,7 +9727,7 @@ msgstr "Te tellen"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Deliver"
-msgstr ""
+msgstr "Te leveren"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -9714,12 +9752,12 @@ msgstr "Te bestellen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_computed
 msgid "To Order Computed"
-msgstr ""
+msgstr "Te bestellen berekend"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_manual
 msgid "To Order Manual"
-msgstr ""
+msgstr "Te bestellen handmatig"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -9738,7 +9776,7 @@ msgstr "Te verwerken"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "Te ontvangen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -9976,6 +10014,7 @@ msgstr "Transitlocaties"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Transport management: organize packs in your fleet, or carriers."
 msgstr ""
+"Transportbeheer: organiseer pakketten in je wagenpark of via vervoerders."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -10211,6 +10250,9 @@ msgid ""
 "\n"
 "To avoid this, please discard the source location change before saving."
 msgstr ""
+"Het wijzigen van de locatie van deze overdracht heeft tot gevolg dat de huidige toegewezen items niet meer worden gereserveerd. Er wordt een poging gedaan om items te reserveren op de nieuwe locatie. De link met voorgaande overdrachten wordt verwijderd.\n"
+"\n"
+"Gelieve de wijziging van de bronlocatie te verwijderen alvorens op te slaan om dit te vermijden."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__1
@@ -10347,7 +10389,7 @@ msgstr "Zichtdagen"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__shipping_volume
 msgid "Volume for Shipping"
-msgstr ""
+msgstr "Volume voor levering"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -10535,7 +10577,7 @@ msgstr "Waarschuwing!"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Warning: change source location"
-msgstr ""
+msgstr "Waarschuwing: bronlocatie wijzigen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10652,6 +10694,9 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need."
 msgstr ""
+"Wanneer producten nodig zijn in <b>%(destination)s</b>, worden<br/> "
+"<b>%(operation)s</b> aangemaakt in <b>%(source_location)s</b> om de voorraad"
+" aan te vullen."
 
 #. module: stock
 #. odoo-python
@@ -10660,6 +10705,9 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br/> "
 "<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
+"Wanneer producten nodig zijn in <b>%(source_location)s</b>, worden <br/> "
+"<b>%(operation)s</b> aangemaakt om deze te verplaatsen naar "
+"<b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -10878,6 +10926,10 @@ msgid ""
 "reserved on a stock move. If you need to change the inventory tracking, you "
 "should first unreserve the stock move."
 msgstr ""
+"Je kunt de voorraadtracering van een product niet veranderen voor een "
+"product welke gereserveerd is in een voorraadverplaatsing. Wanneer je de "
+"voorraadtracering moet veranderen, zul je de reservering voor deze "
+"voorraadverplaatsing eerst ongedaan moeten maken."
 
 #. module: stock
 #. odoo-python
@@ -10886,6 +10938,8 @@ msgid ""
 "You can not change the inventory tracking of a product that was already "
 "used."
 msgstr ""
+"Je kunt de voorraadtracering van een product dat al in gebruik is niet "
+"wijzigen."
 
 #. module: stock
 #. odoo-python
@@ -10988,6 +11042,8 @@ msgid ""
 "You cannot archive location %(location)s because it is used by warehouse "
 "%(warehouse)s"
 msgstr ""
+"Je kunt de locatie %(location)s niet archiveren omdat deze gebruikt wordt in"
+" je magazijn %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11081,7 +11137,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot duplicate stock quants."
-msgstr ""
+msgstr "Je kunt hoeveelheden voorraad niet kopiëren."
 
 #. module: stock
 #. odoo-python
@@ -11116,6 +11172,8 @@ msgid ""
 "You cannot perform moves because their unit of measure has a different "
 "category from their product unit of measure."
 msgstr ""
+"Je kunt geen verplaatsingen uitvoeren omdat de maateenheid een andere "
+"categorie heeft als de maateenheid van het product."
 
 #. module: stock
 #. odoo-python
@@ -11124,6 +11182,8 @@ msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
+"Je kunt een locatie niet instellen als afkeurlocatie wanneer deze is "
+"toegewezen als bestemmingslocatie voor een bewerking van het productietype."
 
 #. module: stock
 #. odoo-python
@@ -11299,6 +11359,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
+"Je hebt nog lopende bewerkingen voor bewerkingsoorten %(operations)s in het "
+"magazijn %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11501,7 +11563,7 @@ msgstr "in"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "in barcode."
-msgstr ""
+msgstr "in barcode."
 
 #. module: stock
 #. odoo-javascript
@@ -11587,7 +11649,7 @@ msgstr "voorraad.putaway.regel"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "the barcode app"
-msgstr ""
+msgstr "de Barcode-app"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id

@@ -5,8 +5,9 @@
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
 # Chloe Wang, 2024
+# Wil Odoo, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 13:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2119,6 +2120,8 @@ msgid ""
 "\n"
 "Add support to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 msgstr ""
+"\n"
+"Add supports to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -29294,6 +29297,8 @@ msgid ""
 "Module for synchronization of Inventory Documents between several companies.\n"
 "   For example, this allows you to have a delivery receipt created automatically in the receiving company when another company of the system confirms a delivery order.\n"
 msgstr ""
+"此模块用于在多个公司之间，同步库存文件。\n"
+"   例如，当系统中另一家公司确认送货订单时，收货公司就可以自动创建收货单。\n"
 
 #. module: base
 #. odoo-python
@@ -29302,6 +29307,8 @@ msgid ""
 "Module loading %(module)s failed: file %(file)s could not be processed:\n"
 "%(message)s"
 msgstr ""
+"模块 %(module)s 加载失败：文件 %(file)s 未能处理：\n"
+"%(message)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_ids
@@ -29312,7 +29319,7 @@ msgstr "模块"
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
 msgid "Modules \"%(module)s\" and \"%(incompatible_module)s\" are incompatible."
-msgstr ""
+msgstr "模块 “%(module)s” 及 “%(incompatible_module)s” 不相容。"
 
 #. module: base
 #: model:res.country,name:base.md
@@ -29551,7 +29558,7 @@ msgstr "保存 res.currency 的 Many2one 字段名称"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Name or id “%(name_or_id)s” in %(use)s does not exist."
-msgstr ""
+msgstr "名称或识别码 %(name_or_id)s（由 %(use)s 使用）不存在。"
 
 #. module: base
 #. odoo-python
@@ -29559,7 +29566,7 @@ msgstr ""
 msgid ""
 "Name or id “%(name_or_id)s” in %(use)s must be present in view but is "
 "missing."
-msgstr ""
+msgstr "名称或识别码 %(name_or_id)s（由 %(use)s 使用）必须存在于视图画面中，但目前缺失。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -29833,7 +29840,7 @@ msgstr "目前没有任何小组允许进行此操作。"
 #. odoo-python
 #: code:addons/fields.py:0
 msgid "No inverse field \"%(inverse_field)s\" found for \"%(comodel)s\""
-msgstr ""
+msgstr "未能为模型找到相反字段 %(inverse_field)s。模型：%(comodel)s"
 
 #. module: base
 #. odoo-python
@@ -29878,7 +29885,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "No spaces allowed in view_mode: “%s”"
-msgstr ""
+msgstr "在 view_mode 中，不允许有空格：%s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -29891,13 +29898,13 @@ msgstr "不可更新"
 msgid ""
 "Non-relational field name \"%(field_name)s\" in related field "
 "\"%(related_field)s\""
-msgstr ""
+msgstr "非关系字段名称 “%(field_name)s ” 在关联字段 “%(related_field)s” 内"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Non-relational field “%(field)s” in dependency “%(dependency)s”"
-msgstr ""
+msgstr "有非关系字段 %(field)s 在依赖项 %(dependency)s 中"
 
 #. module: base
 #. odoo-python
@@ -31946,7 +31953,7 @@ msgstr "Odoo 无法合并生成的 PDF。"
 msgid ""
 "Odoo is unable to merge the generated PDFs because of {num_errors} corrupted"
 " file(s)"
-msgstr ""
+msgstr "由于有 {num_errors} 个文件损坏，Odoo 不能合并生成 PDF"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
@@ -41532,7 +41539,7 @@ msgstr "查看线索的即时聊天会话"
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "View Problematic Record(s)"
-msgstr ""
+msgstr "查看有问题的记录"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view

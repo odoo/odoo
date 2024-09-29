@@ -96,6 +96,7 @@ msgstr "%s %% chiếu khấu"
 #. odoo-python
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
+#: code:addons/product/models/product_pricelist.py:0
 msgid "%s (copy)"
 msgstr "%s (bản sao)"
 
@@ -111,7 +112,7 @@ msgstr "'Nhãn sản phẩm - %s' % (object.name)"
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.name)"
-msgstr "'Bao bì sản phẩm - %s' % (object.name)"
+msgstr "'Gói hàng - %s' % (object.name)"
 
 #. module: product
 #. odoo-python
@@ -315,7 +316,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr "Mỗi mã vạch chỉ có thể được gán cho một bao bì."
+msgstr "Mỗi mã vạch chỉ có thể được gán cho một gói hàng."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -333,7 +334,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "A packaging already uses the barcode"
-msgstr "Một bao bì đã sử dụng mã vạch này"
+msgstr "Một gói hàng đã sử dụng mã vạch này"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -658,8 +659,8 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
-"Mã vạch được sử dụng để nhận dạng bao bì. Quét mã vạch bao bì này từ một "
-"điều chuyển trong ứng dụng Mã vạch để dịch chuyển tất cả các sản phẩm có "
+"Mã vạch được sử dụng để nhận dạng gói hàng. Quét mã vạch gói hàng này từ một"
+" lệnh chuyển hàng trong ứng dụng Mã vạch để dịch chuyển tất cả sản phẩm có "
 "trong đó"
 
 #. module: product
@@ -1853,7 +1854,7 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
-msgstr "Quản lý bao bì sản phẩm"
+msgstr "Quản lý gói hàng"
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
@@ -2140,7 +2141,7 @@ msgstr "Kiện hàng loại A"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Packaging"
-msgstr "Bao bì"
+msgstr "Gói hàng"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -2498,12 +2499,12 @@ msgstr "Kiện sản phẩm"
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr "Bao bì sản phẩm"
+msgstr "Gói hàng"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr "Bao bì sản phẩm (PDF)"
+msgstr "Gói hàng (PDF)"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -2511,7 +2512,7 @@ msgstr "Bao bì sản phẩm (PDF)"
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "Bao bì sản phẩm"
+msgstr "Gói hàng"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
@@ -2728,7 +2729,7 @@ msgstr "Số lượng đã có (%s)."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
-msgstr "Số lượng sản phẩm có trong kiện hàng."
+msgstr "Số lượng sản phẩm có trong gói hàng."
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio

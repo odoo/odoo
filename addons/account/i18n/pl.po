@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-12 07:44+0000\n"
+"POT-Creation-Date: 2024-09-17 13:58+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Marta Waclawek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -2592,12 +2592,12 @@ msgstr "Kwota:"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_amounts_to_settle
 msgid "Amounts to Settle"
-msgstr ""
+msgstr "Kwoty do rozliczenia"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_amounts_to_settle
 msgid "Amounts to settle"
-msgstr ""
+msgstr "Kwoty do rozliczenia"
 
 #. module: account
 #. odoo-python
@@ -2651,6 +2651,7 @@ msgstr ""
 "Wystąpił problem podczas obliczania niezmienności. Wykryto przerwę w ciągu."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
 msgstr "Analityczne"
@@ -3197,7 +3198,7 @@ msgstr "Wyciągi bankowe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 msgid "Bank Suspense"
-msgstr ""
+msgstr "Rachunek przejściowy"
 
 #. module: account
 #. odoo-python
@@ -4227,7 +4228,7 @@ msgstr "Dopełnij dane partnera e-mailem"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
 msgid "Composite Report"
-msgstr ""
+msgstr "Raport zbiorczy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__engine
@@ -5716,7 +5717,7 @@ msgstr "Wyświetl dni w następnym miesiącu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
 msgid "Display Force Post"
-msgstr ""
+msgstr "Pokaż \"Wymuś księgowanie\""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -6099,7 +6100,7 @@ msgstr "Wewnątrzwspólnotowa sprzedaż na odległość w UE"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
 msgid "EX WORKS"
-msgstr ""
+msgstr "EX WORKS (z zakładu)"
 
 #. module: account
 #. odoo-python
@@ -7239,7 +7240,7 @@ msgstr "Wytyczanie HTTP"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Half-up (away from 0)"
-msgstr ""
+msgstr "Połowa do góry (od 0)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7353,7 +7354,7 @@ msgstr "Ukryj, jeśli zero"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_hide_0_lines
 msgid "Hide lines at 0"
-msgstr ""
+msgstr "Ukryj wiersze na 0"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -7365,7 +7366,7 @@ msgstr "Najwyższa nazwa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
 msgid "Horizontal Split Side"
-msgstr ""
+msgstr "Strona podziału pionowego"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9332,7 +9333,7 @@ msgstr "Zablokuj wysłane faktury z szyfrowaniem"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__lock_trust_fields
 msgid "Lock Trust Fields"
-msgstr ""
+msgstr "Zablokuj zaufane pola"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -9490,7 +9491,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -9720,7 +9721,7 @@ msgstr "Brak 'active_model' w kontekście."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__missing_account_partners
 msgid "Missing Account Partners"
-msgstr ""
+msgstr "Brakujący partnerzy konta"
 
 #. module: account
 #. odoo-python
@@ -9878,7 +9879,7 @@ msgstr "Łatwo przeglądaj raporty i sprawdzaj, co kryje się za liczbami"
 #: model:ir.model.fields,field_description:account.field_account_move__need_cancel_request
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
-msgstr ""
+msgstr "Potrzeba anulowania żądania"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -11515,7 +11516,7 @@ msgstr "Suma cząstkowa poprzedzająca"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
 msgid "Prefix Groups Threshold"
-msgstr ""
+msgstr "Próg grupy prefiksów"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__account_codes
@@ -12526,12 +12527,12 @@ msgstr "Ta sama waluta"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Sample Memo"
-msgstr ""
+msgstr "Przykładowa notatka"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Sample Ref"
-msgstr ""
+msgstr "Przykładowa referencja"
 
 #. module: account
 #. odoo-python
@@ -12933,12 +12934,12 @@ msgstr "Wysyłane do klientów z ich fakturami w załączniku"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_expense_allocation_id
 msgid "Separate account for expense discount"
-msgstr ""
+msgstr "Oddzielne konto na dyskonto kosztów"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_income_allocation_id
 msgid "Separate account for income discount"
-msgstr ""
+msgstr "Osobne konto na dyskonto przychodów"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -15375,6 +15376,7 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot archive it"
 msgstr ""
+"Ten dziennik jest powiązany z metodą płatności. Nie można go zarchiwizować"
 
 #. module: account
 #. odoo-python
@@ -17970,7 +17972,7 @@ msgstr "użytkownik"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will auto-confirm on their respective dates."
-msgstr ""
+msgstr "zostaną automatycznie potwierdzone w odpowiednich datach."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

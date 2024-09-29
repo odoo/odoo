@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~17.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-12 07:44+0000\n"
+"POT-Creation-Date: 2024-09-17 13:58+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
 "Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
@@ -2407,7 +2407,7 @@ msgstr "Todas las cuentas en las líneas deben ser del mismo tipo."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "All our contractual relations will be governed exclusively by"
-msgstr "Nuestras relaciones contractuales serán gobernadas exclusivamente por"
+msgstr "Nuestras relaciones contractuales se regirán por"
 
 #. module: account
 #. odoo-python
@@ -2490,8 +2490,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the company "
 "currency."
 msgstr ""
-"Importe siempre positivo afectado por este emparejamiento expresado en la "
-"divisa de la empresa."
+"Importe siempre positivo que el emparejamiento expresado en la moneda de la "
+"empresa está afectando."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__credit_amount_currency
@@ -2500,7 +2500,7 @@ msgid ""
 "line foreign currency."
 msgstr ""
 "Importe siempre positivo afectado por este emparejamiento expresado en "
-"divisa extranjera de la línea de crédito."
+"moneda extranjera de la línea de crédito."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__debit_amount_currency
@@ -2669,6 +2669,7 @@ msgstr ""
 " secuencia."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic"
 msgstr "Analítica"
@@ -7677,9 +7678,9 @@ msgid ""
 "related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
-"Si esta casilla se encuentra seleccionada, significa que el usuario no "
-"estaba seguro de toda la información relacionada al momento de la creación "
-"del movimiento y que el movimiento necesita ser revisado de nuevo."
+"Si esta casilla está seleccionada, entonces el usuario no estaba seguro de "
+"toda la información relacionada al crear el movimiento y que es necesario "
+"revisarlo de nuevo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -14470,8 +14471,8 @@ msgid ""
 "The Journal Entry will be accounted on %(invoice_date)s upon posting."
 msgstr ""
 "La fecha se establece antes de la fecha de bloqueo %(lock_type)s "
-"%(lock_date)s. El asiento se contabilizará en %(invoice_date)s tras su "
-"publicación."
+"%(lock_date)s. El asiento se contabilizará el %(invoice_date)s luego de "
+"registrarlo."
 
 #. module: account
 #. odoo-python
@@ -14734,9 +14735,9 @@ msgid ""
 " Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
 msgstr ""
-"La operación se rechaza ya que impactaría una declaración de impuestos ya "
-"emitida. Cambie la fecha de asiento contable o la fecha de bloqueo de "
-"impuestos establecida en los ajustes (%s) para continuar."
+"La operación se rechaza porque afectaría una declaración de impuestos que ya"
+" fue emitida. Cambie la fecha del asiento contable o la fecha de bloqueo de "
+"los impuestos establecida en los ajustes (%s) para continuar."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id

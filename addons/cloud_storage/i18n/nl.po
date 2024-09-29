@@ -34,7 +34,7 @@ msgstr "Cloudopslag"
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
-msgstr ""
+msgstr "Cloudopslagprovider voor nieuwe bijlagen"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
@@ -51,7 +51,7 @@ msgstr "Cloudopslag is niet beschikbaar"
 #. odoo-python
 #: code:addons/cloud_storage/controllers/attachment.py:0
 msgid "Cloud storage configuration has been changed. Please refresh the page."
-msgstr ""
+msgstr "De cloudopslagconfiguratie is gewijzigd. Ververs de pagina."
 
 #. module: cloud_storage
 #. odoo-javascript
@@ -72,23 +72,25 @@ msgstr "HTTP routing"
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_res_config_settings__cloud_storage_min_file_size
 msgid "Minimum File Size (bytes)"
-msgstr ""
+msgstr "Minimale bestandsgrootte (bytes)"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Minimum size(bytes) for attachments to be stored in the cloud storage"
 msgstr ""
+"Minimumgrootte (bytes) voor bijlagen die moeten worden opgeslagen in de "
+"cloudopslag"
 
 #. module: cloud_storage
 #. odoo-python
 #: code:addons/cloud_storage/models/res_config_settings.py:0
 msgid "Please configure the Cloud Storage before enabling it"
-msgstr ""
+msgstr "Configureer de cloudopslag voordat je deze inschakelt"
 
 #. module: cloud_storage
 #: model_terms:ir.ui.view,arch_db:cloud_storage.cloud_storage_config_settings_view_form
 msgid "Select the cloud storage provider to store new attachments."
-msgstr ""
+msgstr "Selecteer de cloudopslagprovider om nieuwe bijlagen op te slaan."
 
 #. module: cloud_storage
 #: model:ir.model.fields,field_description:cloud_storage.field_ir_attachment__type
@@ -99,7 +101,7 @@ msgstr "Soort"
 #. odoo-javascript
 #: code:addons/cloud_storage/static/src/core/common/attachment_upload_service_patch.js:0
 msgid "You are not allowed to upload file to the cloud storage"
-msgstr ""
+msgstr "Je kunt geen bestanden naar de cloudopslag uploaden"
 
 #. module: cloud_storage
 #: model:ir.model.fields,help:cloud_storage.field_ir_attachment__type
@@ -117,3 +119,6 @@ msgid ""
 "        (in bytes) as url attachments to the server and then upload the file to\n"
 "        the cloud storage."
 msgstr ""
+"De webklant kan bestanden die groter zijn dan de minimale bestandsgrootte\n"
+"        (in bytes) als url-bijlage uploaden naar de server en het bestand vervolgens uploaden naar\n"
+"        de cloudopslag."

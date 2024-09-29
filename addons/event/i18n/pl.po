@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Dawid Prus, 2024
+# Marta Waclawek, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -1983,6 +1984,12 @@ msgid "Event Registration Answer"
 msgstr "Odpowiedź dotycząca rejestracji na wydarzenie"
 
 #. module: event
+#. odoo-python
+#: code:addons/event/controllers/main.py:0
+msgid "Event Registrations"
+msgstr "Rejestracja wydarzenia"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
 msgstr "Odpowiedzialny za wydarzenie"
@@ -2819,7 +2826,7 @@ msgstr "odpowiedź obowiązkowa"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -2937,7 +2944,7 @@ msgstr "Typ następnej czynności"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "Nie ma jeszcze odpowiedzi!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
@@ -3475,6 +3482,12 @@ msgstr ""
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan a badge"
 msgstr "Zeskanuj identyfikator"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_barcode.xml:0
+msgid "Scan or Tap"
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4134,6 +4147,12 @@ msgstr ""
 "powiązane z Twoimi wydarzeniami."
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Undo"
+msgstr "Cofnij"
+
+#. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Understand the various modules;"
 msgstr "Zrozumienie różnych modułów;"
@@ -4492,4 +4511,10 @@ msgstr "jutro"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
+msgid "'%(name)s' badge sent to printer '%(printer)s'"
 msgstr ""

@@ -37,7 +37,7 @@ msgstr "\" waarschuwing met een"
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 msgid "\"%(company)s form submission\" <%(email)s>"
-msgstr ""
+msgstr "\"%(company)s formulierinzending\" <%(email)s>"
 
 #. module: website
 #. odoo-python
@@ -963,6 +963,9 @@ msgid ""
 "                                        Block 3rd-party services that track users (e.g. YouTube, Google Maps, Facebook...) when the user has not given their consent.\n"
 "                                    </small>"
 msgstr ""
+"<small class=\"text-muted\">\n"
+"                                        Blokkeer diensten van derden die gebruikers volgen (bijv. YouTube, Google Maps, Facebook...) als de gebruiker daar geen toestemming voor heeft gegeven.\n"
+"                                    </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1384,18 +1387,22 @@ msgid ""
 "<strong>Google services:</strong> Google Maps, Google Analytics, Google Tag "
 "Manager, etc."
 msgstr ""
+"<strong>Google services:</strong> Google Maps, Google Analytics, Google Tag "
+"Manager, etc."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid ""
 "<strong>Social platforms:</strong> Facebook, Instagram, Twitter, TikTok"
-msgstr ""
+msgstr "<strong>Sociale platformen:</strong> Facebook, Instagram, X, TikTok"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid ""
 "<strong>Video hosting platforms:</strong> YouTube, Vimeo, Dailymotion, Youku"
 msgstr ""
+"<strong>Video hosting platformen:</strong> YouTube, Vimeo, Dailymotion, "
+"Youku"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1470,6 +1477,8 @@ msgid ""
 "A font with the same name already exists.\n"
 "Try renaming the uploaded file."
 msgstr ""
+"Er bestaat al een lettertype met dezelfde naam.\n"
+"Probeer het geüploade bestand te hernoemen."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_image_text_template
@@ -1693,6 +1702,8 @@ msgid ""
 "Add 3rd-party service domains <em>(\"www.example.com\" or "
 "\"example.com\")</em>, one per line."
 msgstr ""
+"Voeg servicedomeinen van derden toe <em>('www.example.com' of "
+"'example.com')</em>, een per regel."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
@@ -1773,13 +1784,13 @@ msgstr "Jaar toevoegen"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Add a Custom Font"
-msgstr ""
+msgstr "Een aangepast lettertype toevoegen"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Add a Google font or upload a custom font"
-msgstr ""
+msgstr "Een Google-lettertype toevoegen of een aangepast lettertype uploaden"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1827,13 +1838,13 @@ msgstr "Voeg aan het einde een nieuw veld toe"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Add domains to the block list"
-msgstr ""
+msgstr "Domeinen toevoegen aan de zwarte lijst"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/res_config_settings.py:0
 msgid "Add external websites"
-msgstr ""
+msgstr "Externe websites toevoegen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
@@ -1855,7 +1866,7 @@ msgstr "Nieuwe %s toevoegen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "Add other domains here"
-msgstr ""
+msgstr "Andere domeinen hier toevoegen"
 
 #. module: website
 #. odoo-javascript
@@ -2570,7 +2581,7 @@ msgstr "Blok"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_block_third_party_domains
 #: model:ir.model.fields,field_description:website.field_website__block_third_party_domains
 msgid "Block 3rd-party domains"
-msgstr ""
+msgstr "Domeinen van derden blokkeren"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_block_third_party_domains
@@ -2578,11 +2589,13 @@ msgstr ""
 msgid ""
 "Block 3rd-party domains that may track users (YouTube, Google Maps, etc.)."
 msgstr ""
+"Domeinen van derden blokkeren die gebruikers kunnen volgen (YouTube, Google "
+"Maps, enz.)."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Block tracking 3rd-party services"
-msgstr ""
+msgstr "Trackingdiensten van derden blokkeren"
 
 #. module: website
 #. odoo-javascript
@@ -2797,7 +2810,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
 msgid "By default, the domains of the following services are already blocked:"
-msgstr ""
+msgstr "De domeinen van de volgende services zijn standaard al geblokkeerd:"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -3089,7 +3102,7 @@ msgstr "Kies een ander thema"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Choose from list"
-msgstr ""
+msgstr "Kies uit de lijst"
 
 #. module: website
 #. odoo-javascript
@@ -3566,7 +3579,7 @@ msgstr "Copyright"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "Could be used in many places, see here:"
-msgstr ""
+msgstr "Kan op verschillende plaatsen worden gebruikt, zie hier:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -3770,7 +3783,7 @@ msgstr "Eigen veld"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Custom Font"
-msgstr ""
+msgstr "Aangepast lettertype"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4459,7 +4472,7 @@ msgstr "Dropdown"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Dropdown List"
-msgstr ""
+msgstr "Vervolgkeuzelijst"
 
 #. module: website
 #. odoo-javascript
@@ -4529,7 +4542,7 @@ msgstr "bijv. https://www.mijndomein.com"
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 msgid "EXTERNAL SUBMISSION - Customer not verified"
-msgstr ""
+msgstr "EXTERNE INDIENING - Klant niet geverifieerd"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -4743,7 +4756,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 msgid "Empty field name in “%s”"
-msgstr ""
+msgstr "Lege veldnaam in “%s”"
 
 #. module: website
 #. odoo-javascript
@@ -4937,7 +4950,7 @@ msgstr "Ontdekken"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Explore on"
-msgstr ""
+msgstr "Zoeken op"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_text_block_2nd
@@ -5109,13 +5122,13 @@ msgstr "Velden"
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "File '%s' exceeds maximum allowed file size"
-msgstr ""
+msgstr "Bestand '%s' is groter dan de maximaal toegestane bestandgrootte"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "File '%s' is not recognized as a font"
-msgstr ""
+msgstr "Bestand '%s' wordt niet herkend als lettertype"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -5331,19 +5344,19 @@ msgstr "Lettertype grootte"
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font access"
-msgstr ""
+msgstr "Toegang lettertype"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font exists"
-msgstr ""
+msgstr "Lettertype bestaat"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Font name already used"
-msgstr ""
+msgstr "Lettertypenaam al in gebruik"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__footer_visible
@@ -6012,7 +6025,7 @@ msgstr "Uitgelicht"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Highlight Animated Text"
-msgstr ""
+msgstr "Bewegende tekst highlighten"
 
 #. module: website
 #. odoo-javascript
@@ -6113,7 +6126,7 @@ msgstr "Hoe kunnen we helpen?"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "How to create my Plausible Shared Link"
-msgstr ""
+msgstr "Hoe maak ik mijn plausibele gedeelde link?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7299,7 +7312,7 @@ msgstr "Lijst"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__blocked_third_party_domains
 msgid "List of blocked 3rd-party domains"
-msgstr ""
+msgstr "Lijst met geblokkeerde domeinen van derden"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -8261,6 +8274,8 @@ msgid ""
 "Note that the \"Website / Editor and Designer\" group is implicitly added "
 "when saving if any group is specified."
 msgstr ""
+"Merk op dat de groep “Website / Bewerker en Ontwerper” impliciet wordt "
+"toegevoegd bij het opslaan als er een groep is opgegeven."
 
 #. module: website
 #. odoo-javascript
@@ -8633,7 +8648,7 @@ msgstr "Onze waarden"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_popup/000.js:0
 msgid "Our cookies bar was blocked by your browser or an extension."
-msgstr ""
+msgstr "Onze cookie-balk is geblokkeerd door je browser of door een extensie."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
@@ -8861,13 +8876,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/js/utils.js:0
 msgid "Page description not set."
-msgstr ""
+msgstr "Paginabeschrijving niet ingesteld."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/utils.js:0
 msgid "Page title not set."
-msgstr ""
+msgstr "Paginatitel niet ingesteld."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__copy_ids
@@ -9078,6 +9093,8 @@ msgid ""
 "Please fill in the form correctly. The file “%(file name)s” is too large. "
 "(Maximum %(max)s MB)"
 msgstr ""
+"Vul het formulier correct in. Het bestand \"%(file name)s\" is te groot. "
+"(Maximum %(max)s MB)"
 
 #. module: website
 #. odoo-javascript
@@ -9634,6 +9651,8 @@ msgstr "Thema verwijderen"
 #: code:addons/website/models/res_users.py:0
 msgid "Remove website on related partner before they become internal user."
 msgstr ""
+"Verwijder de website van een gerelateerde relatie voordat deze een interne "
+"gebruiker wordt."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__replace
@@ -10078,7 +10097,7 @@ msgstr "Veilige en comfortabele pasvorm"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Select a Google Font..."
-msgstr ""
+msgstr "Selecteer een Google-lettertype ..."
 
 #. module: website
 #. odoo-javascript
@@ -10104,7 +10123,7 @@ msgstr "Selectie"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Selection type"
-msgstr ""
+msgstr "Type selectie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_cover
@@ -11102,6 +11121,8 @@ msgid ""
 "The company “%(company_name)s” cannot be archived because it has a linked website “%(website_name)s”.\n"
 "Change that website's company first."
 msgstr ""
+"Het bedrijf “%(company_name)s” kan niet worden gearchiveerd omdat het een gekoppelde website “%(website_name)s” bevat.\n"
+"Wijzig eerst het bedrijf van die website."
 
 #. module: website
 #. odoo-javascript
@@ -11138,13 +11159,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 msgid "The field “%(field)s” is mandatory for the action “%(action)s”."
-msgstr ""
+msgstr "Het veld “%(field)s” is verplicht voor de actie “%(action)s”."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/wizard/blocked_third_party_domains.py:0
 msgid "The following domain is not valid:"
-msgstr ""
+msgstr "Het volgende domein is niet geldig:"
 
 #. module: website
 #. odoo-javascript
@@ -11237,13 +11258,13 @@ msgstr "De naam van de pagina die bruikbaar is in een URL"
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "The quick brown fox jumps over the lazy dog."
-msgstr ""
+msgstr "De snelle bruine vos springt over de luie hond."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "The selected font cannot be accessed."
-msgstr ""
+msgstr "Het geselecteerde lettertype kan niet worden geopend."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -11409,6 +11430,8 @@ msgid ""
 "This %(model_name)s was submitted by %(user_name)s (%(user_email)s) on "
 "behalf of %(form_email)s"
 msgstr ""
+"Het model %(model_name)s is ingediend door %(user_name)s (%(user_email)s) "
+"namens %(form_email)s"
 
 #. module: website
 #. odoo-javascript
@@ -11594,6 +11617,8 @@ msgid ""
 "This uploaded font already exists.\n"
 "To replace an existing font, remove it first."
 msgstr ""
+"Dit geüploade lettertype bestaat al.\n"
+"Verwijder eerst een bestaand lettertype om het te vervangen."
 
 #. module: website
 #. odoo-javascript
@@ -11634,6 +11659,8 @@ msgid ""
 "Those services will be blocked on your website for users until they accept "
 "optional cookies."
 msgstr ""
+"Deze diensten worden op je website geblokkeerd voor gebruikers totdat ze de "
+"optionele cookies accepteren."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -11757,7 +11784,7 @@ msgstr "Om succesvol te zijn, moet je inhoud nuttig zijn voor je lezers."
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "To comply with some local regulations"
-msgstr ""
+msgstr "Om te voldoen aan bepaalde plaatselijke voorschriften"
 
 #. module: website
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_2
@@ -11777,7 +11804,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_warning.xml:0
 msgid "To see the interactive content, you need to accept optional cookies."
-msgstr ""
+msgstr "Accepteer de optionele cookies om de interactieve inhoud te bekijken."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -12299,12 +12326,14 @@ msgstr "Gebruiker"
 #: model:ir.model,name:website.model_website_custom_blocked_third_party_domains
 #: model:ir.model.fields,field_description:website.field_website__custom_blocked_third_party_domains
 msgid "User list of blocked 3rd-party domains"
-msgstr ""
+msgstr "Gebruikerslijst met geblokkeerde domeinen van derden"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_menu__group_ids
 msgid "User needs to be at least in one of these groups to see the menu"
 msgstr ""
+"Gebruiker moet minimaal in een van deze groepen zijn om het menu te kunnen "
+"zien"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -13175,7 +13204,7 @@ msgstr "X Account"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "X Scroller"
-msgstr ""
+msgstr "X-Scroller"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
@@ -13441,7 +13470,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid "Your message has been sent."
-msgstr ""
+msgstr "Je bericht is verzonden."
 
 #. module: website
 #. odoo-javascript
@@ -13507,7 +13536,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "a Color Palette"
-msgstr ""
+msgstr "een kleurenpalet"
 
 #. module: website
 #. odoo-javascript
@@ -14015,7 +14044,7 @@ msgstr "ja"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "zip, ttf, woff, woff2, otf"
-msgstr ""
+msgstr "zip, ttf, woff, woff2, otf"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options

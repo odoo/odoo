@@ -4631,7 +4631,7 @@ msgstr "未完税总额"
 msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
-msgstr ""
+msgstr "链接至此订单、通过网上付款表单进行，以及处于 “完成” 或“已授权” 状态的交易的总和。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -4895,7 +4895,7 @@ msgstr "确认报价所需支付金额的百分比。"
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "产品（%(product)s）有不相容的值：%(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -4923,6 +4923,16 @@ msgstr "您的账户目前没有销售订单。"
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "有现有的"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5265,7 +5275,7 @@ msgstr "验证订单"
 msgid ""
 "Validated expenses can be re-invoiced to a customer at its cost or sales "
 "price."
-msgstr ""
+msgstr "经过验证的费用开支，可按成本或销售价格向客户重新开具发票。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
