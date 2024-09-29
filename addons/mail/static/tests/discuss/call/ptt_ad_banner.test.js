@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     mockGetMedia,
+    openDiscuss,
     patchUiSize,
     SIZES,
     start,
@@ -17,7 +18,7 @@ defineMailModels();
 test("display banner when ptt extension is not enabled", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     mockService("discuss.ptt_extension", {
         get isEnabled() {
             return false;
@@ -25,8 +26,7 @@ test("display banner when ptt extension is not enabled", async () => {
     });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "General" });
+    await openDiscuss(channelId);
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Call Settings" });
     await click("button", { text: "Push to Talk" });
