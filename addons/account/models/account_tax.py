@@ -1060,11 +1060,6 @@ class AccountTax(models.Model):
                 continue
 
             total_tax_amount = sum(taxes_data[other_tax.id]['tax_amount'] for other_tax in taxes_data[tax.id]['batch'])
-            total_tax_amount += sum(
-                reverse_charge_taxes_data[other_tax.id]['tax_amount']
-                for other_tax in taxes_data[tax.id]['batch']
-                if other_tax.has_negative_factor
-            )
             base = raw_base + taxes_data[tax.id]['extra_base_for_base']
             if taxes_data[tax.id]['price_include'] and special_mode in (False, 'total_included'):
                 base -= total_tax_amount
