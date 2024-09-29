@@ -60,7 +60,7 @@ test.tags("mobile")("show Push-to-Talk button on mobile", async () => {
     mockGetMedia();
     mockUserAgent("android");
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     mockService("discuss.ptt_extension", {
         get isEnabled() {
             return false;
@@ -68,8 +68,7 @@ test.tags("mobile")("show Push-to-Talk button on mobile", async () => {
     });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "General" });
+    await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Call Settings" });

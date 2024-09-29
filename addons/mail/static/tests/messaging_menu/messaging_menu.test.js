@@ -584,7 +584,7 @@ test("open chat window from preview", async () => {
 });
 
 test('"Start a conversation" in mobile shows channel selector (+ click away)', async () => {
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
@@ -599,7 +599,7 @@ test('"Start a conversation" in mobile shows channel selector (+ click away)', a
     await contains("input[placeholder='Start a conversation']", { count: 0 });
 });
 test('"New Channel" in mobile shows channel selector (+ click away)', async () => {
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
@@ -618,7 +618,7 @@ test("'Start a conversation' button should open a thread in mobile", async () =>
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "Start a conversation" });

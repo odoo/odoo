@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    openDiscuss,
     patchUiSize,
     SIZES,
     start,
@@ -36,11 +37,10 @@ test("Renders the call settings", async () => {
         },
     });
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "test" });
+    await openDiscuss(channelId);
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Call Settings" });
     await contains(".o-discuss-CallSettings");
@@ -56,11 +56,10 @@ test("Renders the call settings", async () => {
 
 test("activate push to talk", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "test" });
+    await openDiscuss(channelId);
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Call Settings" });
     await click("button", { text: "Push to Talk" });
@@ -71,11 +70,10 @@ test("activate push to talk", async () => {
 
 test("activate blur", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "test" });
+    await openDiscuss(channelId);
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Call Settings" });
     await click("input[title='Blur video background']");
@@ -85,7 +83,7 @@ test("activate blur", async () => {
 
 test("local storage for call settings", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             if (key === "mail_user_setting_background_blur_amount") {
@@ -111,9 +109,8 @@ test("local storage for call settings", async () => {
     });
     patchUiSize({ size: SIZES.SM });
     await start();
+    await openDiscuss(channelId);
     // testing load from local storage
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "test" });
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Call Settings" });
     await contains("input[title='Show video participants only']:checked");

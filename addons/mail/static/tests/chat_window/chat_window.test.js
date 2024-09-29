@@ -59,15 +59,14 @@ test("Mobile: chat window shouldn't open automatically after receiving a new mes
 
 test('chat window: post message on channel with "CTRL-Enter" keyboard shortcut for small screen size', async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
     });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
+    await openDiscuss(channelId);
     await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
     await contains(".o-mail-Message");
@@ -221,8 +220,7 @@ test("Mobile: opening a chat window should not update channel state on the serve
     });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
+    await openDiscuss(channelId);
     await click(".o-mail-ChatWindow");
     const [member] = pyEnv["discuss.channel.member"].search_read([
         ["channel_id", "=", channelId],
@@ -318,9 +316,7 @@ test("Mobile: closing a chat window should not update channel state on the serve
     });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow");
+    await openDiscuss(channelId);
     await click("[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     const [member] = pyEnv["discuss.channel.member"].search_read([
@@ -843,15 +839,15 @@ test("folded chat window should hide member-list and settings buttons", async ()
 
 test("Chat window in mobile are not foldable", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ fold_state: "open", partner_id: serverState.partnerId }),
         ],
     });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click("button i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
+    await openDiscuss(channelId);
+    await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow-header.cursor-pointer", { count: 0 });
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-Thread"); // content => non-folded
@@ -875,12 +871,10 @@ test("Server-synced chat windows should not open at page load on mobile", async 
 
 test("chat window of channels should not have 'Open in Discuss' (mobile)", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     patchUiSize({ size: SIZES.SM });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow");
+    await openDiscuss(channelId);
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await contains(".o-dropdown-item", { text: "Open in Discuss", count: 0 });

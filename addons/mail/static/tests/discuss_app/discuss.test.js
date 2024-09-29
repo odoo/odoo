@@ -2,6 +2,7 @@ import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import {
+    SIZES,
     assertSteps,
     click,
     contains,
@@ -1545,7 +1546,7 @@ test("Channel is added to discuss after invitation", async () => {
 });
 
 test("select another mailbox", async () => {
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss");
@@ -1556,7 +1557,7 @@ test("select another mailbox", async () => {
 });
 
 test('auto-select "Inbox nav bar" when discuss had inbox as active thread', async () => {
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
