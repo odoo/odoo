@@ -1319,7 +1319,8 @@ test("Can make sidebar smaller", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar");
     const normalWidth = queryFirst(".o-mail-DiscussSidebar").getBoundingClientRect().width;
-    await click(".o-mail-DiscussSidebar [aria-label='Collapse']");
+    await click(".o-mail-DiscussSidebar [title='Options']");
+    await click(".dropdown-item", { text: "Collapse panel" });
     await contains(".o-mail-DiscussSidebar.o-compact");
     const compactWidth = queryFirst(".o-mail-DiscussSidebar").getBoundingClientRect().width;
     expect(normalWidth).toBeGreaterThan(compactWidth);
@@ -1333,10 +1334,12 @@ test("Sidebar compact is locally persistent (saved in local storage)", async () 
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar.o-compact");
-    await click(".o-mail-DiscussSidebar [aria-label='Expand']");
+    await click(".o-mail-DiscussSidebar [title='Options']");
+    await click(".dropdown-item", { text: "Expand panel" });
     await contains(".o-mail-DiscussSidebar:not(.o-compact)");
     expect(browser.localStorage.getItem("mail.user_setting.discuss_sidebar_compact")).toBe(null);
-    await click(".o-mail-DiscussSidebar [aria-label='Collapse']");
+    await click(".o-mail-DiscussSidebar [title='Options']");
+    await click(".dropdown-item", { text: "Collapse panel" });
     await contains(".o-mail-DiscussSidebar.o-compact");
     expect(browser.localStorage.getItem("mail.user_setting.discuss_sidebar_compact")).toBe("true");
 });
