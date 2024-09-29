@@ -11,9 +11,6 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
     --border-opacity: var(--mail-DiscussSidebarChannel-borderOpacity, #{$o-mail-DiscussSidebarChannel-borderOpacity});
     gap: 1px;
 
-    margin-left: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
-    margin-right: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
-
     &.o-bordered {
         background-color: var(---mail-DiscussSidebarChannel-borderedBgColor, mix($white, $dark, 99%)) !important;
     }
@@ -31,6 +28,8 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 }
 
 .o-mail-DiscussSidebar-item {
+    line-height: 2; // so that same height as actions
+
     &:hover .o-mail-DiscussSidebarChannel-commands {
         display: flex !important;
         .btn-group .btn {
@@ -46,15 +45,12 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
     }
 }
 
-.o-mail-DiscussSidebar-item {
-    line-height: 2.15; // so that same height as actions, so folding doesn't resize
-}
-
 .o-mail-DiscussSidebarCategory-toggler {
-    line-height: 2.15; // so that same height as actions, so folding doesn't resize
-
     &.o-compact {
         font-size: .65rem;
+    }
+    &:not(.o-compact) {
+        line-height: 2.35; // so that same height as actions, so folding doesn't resize
     }
 }
 
@@ -64,11 +60,6 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 
 .o-mail-DiscussSidebarChannel-itemMain {
     background-color: inherit !important; // Not 'bg-inherit' so it cancels btn hover effect too
-}
-
-.o-mail-DiscussSidebarChannel-marginEnd::before {
-    // invisible character so that typing status bar has constant height, regardless of text content.
-    content: "\200b"; /* unicode zero width space character */
 }
 
 .o-mail-DiscussSidebarChannel-threadIcon {
@@ -89,10 +80,14 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .1;
 .o-mail-DiscussSidebar-unreadIndicator {
     font-size: 0.35rem;
     left: 6px;
-    opacity: 50%;
+    opacity: 35%;
 
     &.o-compact {
         left: 1px;
+    }
+
+    .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
+        left: 12px;
     }
 }
 
