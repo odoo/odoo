@@ -1,0 +1,362 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_contract
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_contract__work_entry_source
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry__work_entry_source
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working hours below.\n"
+"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"\n"
+"Określa źródło dla generowania wpisów pracy\n"
+"\n"
+"Harmonogram pracy: Wpisy pracy będą generowane na podstawie poniższych godzin pracy.\n"
+"Frekwencja: Wpisy pracy będą generowane z obecności pracownika. (wymaga aplikacji Attendance)\n"
+"Planowanie: Wpisy pracy zostaną wygenerowane z planowania pracownika. (wymaga aplikacji Planowanie)"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+msgid ""
+"%(employee)s does not have a contract from %(date_start)s to %(date_end)s."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
+msgid ""
+"%(employee)s has multiple contracts from %(date_start)s to %(date_end)s. A "
+"work entry cannot overlap multiple contracts."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>You are not "
+"allowed to regenerate validated work entries"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Nie można "
+"regenerować zatwierdzonych wpisów pracy"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
+msgstr ""
+"<span class=\"text-muted\">Ostrzeżenie: Regeneracja wpisu pracy spowoduje "
+"usunięcie wszystkich zmian wprowadzonych ręcznie w wybranym okresie.</span>"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr "Zezwól na powiązanie typu wpisu pracy z typami dni wolnych."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "Anuluj"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
+msgid "Compensatory Time Off"
+msgstr "Rekompensata za dni wolne"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
+msgid "Contract"
+msgstr "Umowa"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_uid
+msgid "Created by"
+msgstr "Utworzył(a)"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_date
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
+msgid "Earliest Available Date Message"
+msgstr "Wiadomość o najwcześniejszej dostępnej dacie"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__earliest_available_date
+msgid "Earliest date"
+msgstr "Najwcześniejsza data"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__employee_id
+msgid "Employee"
+msgstr "Pracownik"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "Umowa pracownika"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__employee_ids
+msgid "Employees"
+msgstr "Pracownicy"
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
+msgid "Everybody's work entries"
+msgstr "Wpisy pracy wszystkich osób"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
+msgid "Extra Hours"
+msgstr "Dodatkowe godziny"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
+msgid "From"
+msgstr "Od"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_contract_view_form_inherit_work_entry
+msgid "Fully Flexible"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
+msgid "Generate Missing Work Entries"
+msgstr "Generowanie brakujących wpisów pracy"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
+msgid "Generated From"
+msgstr "Wygenerowano z"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_to
+msgid "Generated To"
+msgstr "Wygenerowano do"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
+msgid "Generic Time Off"
+msgstr "Ogólne dni wolne"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "Wpis pracy HR"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
+msgid "HR Work Entry Type"
+msgstr "Typ zapisu pracy"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
+msgid "Home Working"
+msgstr "Praca z domu"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"In order to regenerate the work entries, you need to provide the wizard with"
+" an employee_id, a date_from and a date_to. In addition to that, the time "
+"interval defined by date_from and date_to must not contain any validated "
+"work entries."
+msgstr ""
+"Aby zregenerować wpisy pracy, należy podać kreatorowi identyfikator "
+"pracownika (employee_id), datę od (date_from) i datę do (date_to). Ponadto "
+"przedział czasowy zdefiniowany przez date_from i date_to nie może zawierać "
+"żadnych zatwierdzonych wpisów pracy."
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/components/work_entry_source_field/work_entry_source_field.js:0
+msgid ""
+"Invalid option: For fully flexible calendars, the work entry source cannot "
+"be 'Working Hours'."
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__last_generation_date
+msgid "Last Generation Date"
+msgstr "Data ostatniej generacji"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio aktualizowane przez"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_date
+msgid "Last Updated on"
+msgstr "Data ostatniej aktualizacji"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date_message
+msgid "Latest Available Date Message"
+msgstr "Komunikat o ostatniej dostępnej dacie"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__latest_available_date
+msgid "Latest date"
+msgstr "Ostatnia data"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
+msgid "Long Term Time Off"
+msgstr "Długoterminowe dni wolne"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Płatny urlop"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr "Wygeneruj ponownie wpisy pracy pracownika"
+
+#. module: hr_work_entry_contract
+#. odoo-javascript
+#: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Regenerate Work Entries"
+msgstr "Regeneracja wpisów pracy"
+
+#. module: hr_work_entry_contract
+#: model:ir.model,name:hr_work_entry_contract.model_resource_calendar
+msgid "Resource Working Time"
+msgstr "Czas pracy w zasobach"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__search_criteria_completed
+msgid "Search Criteria Completed"
+msgstr "Kryteria wyszukiwania zostały spełnione"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
+msgid "Sick Time Off"
+msgstr "Urlop chorobowy"
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/models/hr_contract.py:0
+msgid ""
+"Sorry, generating work entries from cancelled contracts is not allowed."
+msgstr ""
+"Przepraszamy, generowanie wpisów pracy z anulowanych umów jest niedozwolone."
+
+#. module: hr_work_entry_contract
+#. odoo-python
+#: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
+msgid ""
+"The from date must be >= '%(earliest_available_date)s' and the to date must "
+"be <= '%(latest_available_date)s', which correspond to the generated work "
+"entries time interval."
+msgstr ""
+"Data od musi być >= '%(earliest_available_date)s', a data do musi być <= "
+"'%(latest_available_date)s', co odpowiada wygenerowanemu przedziałowi "
+"czasowemu wpisów pracy."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
+msgid "This work entry cannot be validated. The work entry type is undefined."
+msgstr ""
+"Nie można zatwierdzić tego wpisu pracy. Typ wpisu pracy jest "
+"niezdefiniowany."
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Time Off"
+msgstr "Dni wolne"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_to
+msgid "To"
+msgstr "Do"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_unpaid_leave
+msgid "Unpaid"
+msgstr "Nieopłacone"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__valid
+msgid "Valid"
+msgstr "Ważny"
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Work Entries"
+msgstr "Zapisy pracy"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__validated_work_entry_ids
+msgid "Work Entries Within Interval"
+msgstr "Wpisy pracy w przedziale czasowym"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
+msgid "Work Entry Regeneration"
+msgstr "Wpis pracy Regeneracja"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__work_entry_source
+msgid "Work Entry Source"
+msgstr "Źródło wpisu pracy"
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source_calendar_invalid
+msgid "Work Entry Source Calendar Invalid"
+msgstr ""
+
+#. module: hr_work_entry_contract
+#: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
+msgid "Working Schedule"
+msgstr "Godziny pracy"

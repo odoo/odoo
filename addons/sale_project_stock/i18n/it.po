@@ -1,0 +1,81 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_stock
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_project_stock
+#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
+msgid "No stock move found"
+msgstr "Nessun movimento di magazzino trovato"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Riga ordine di vendita"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Movimento di magazzino"
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s is cancelled. "
+"You cannot validate a stock picking on a cancelled Sales Order."
+msgstr ""
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s is currently "
+"locked. You cannot validate a stock picking on a locked Sales Order. Please "
+"create a new SO linked to this Project."
+msgstr ""
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s must be "
+"validated before validating the stock picking."
+msgstr ""
+
+#. module: sale_project_stock
+#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
+msgid ""
+"This menu gives you the full traceability of inventory\n"
+"                operations on a specific product. You can filter on the product\n"
+"                to see all the past or future movements for the product."
+msgstr ""
+"Questo menu offre una completa tracciabilità delle operazioni\n"
+"                di magazzino per un determinato prodotto. Si può filtrare sul prodotto\n"
+"                per visualizzare tutti i movimenti passati o futuri del prodotto. "
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Trasferisci"
+
+#. module: sale_project_stock
+#: model:ir.actions.act_window,name:sale_project_stock.stock_move_per_sale_order_line_action
+msgid "Transfers"
+msgstr "Trasferimenti"

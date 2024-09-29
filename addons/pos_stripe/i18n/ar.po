@@ -1,0 +1,122 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_stripe
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Complete the Stripe onboarding for company %s."
+msgstr "إكمال تهيئة Stripe للعمل للشركة %s. "
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Do not have access to fetch token from Stripe"
+msgstr "لا تملك صلاحية إحضار الرمز من Stripe "
+
+#. module: pos_stripe
+#: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
+msgid ""
+"Don't forget to complete Stripe connect before using this payment method."
+msgstr "لا تنسَ إكمال توصيل Stripe قبل استخدام طريقة الدفع هذه. "
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Failed to discover: %s"
+msgstr "تعذر اكتشافه: %s "
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
+msgstr "تعذر تحميل المورد: net::ERR_INTERNET_DISCONNECTED. "
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "No available Stripe readers."
+msgstr "لا توجد أجهزة قراءة Stripe متاحة. "
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Payment cancelled because not reader connected"
+msgstr "تم إلغاء الدفع لعدم وجود جهاز قراءة متصل "
+
+#. module: pos_stripe
+#: model:ir.model,name:pos_stripe.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "طرق الدفع في نقطة البيع "
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Reader disconnected"
+msgstr "انقطع الاتصال بجهاز القراءة "
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Stripe Error"
+msgstr "خطأ في Stripe "
+
+#. module: pos_stripe
+#: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__stripe_serial_number
+msgid "Stripe Serial Number"
+msgstr "رقم Stripe التسلسلي "
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Stripe payment provider for company %s is missing"
+msgstr "مزود دفع Stripe للشركة %s غير موجود "
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Stripe readers %s not listed in your account"
+msgstr "أجهزة قراءة Stripe %s غير مدرجة في حسابك "
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid ""
+"Terminal %(terminal)s is already used on payment method %(payment_method)s."
+msgstr ""
+"جهاز الدفع بالبطاقة %(terminal)s مستخدم بالفعل في طريقة دفع "
+"%(payment_method)s. "
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "There are some issues between us and Stripe, try again later."
+msgstr "طرأت بعض المشكلات بيننا وبين Stripe، يرجى المحاولة مجدداً لاحقاً. "
+
+#. module: pos_stripe
+#: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
+msgid "[Serial number of the stripe terminal], for example: WSC513105011295"
+msgstr "[الرقم التسلسلي لجهاز دفع Stripe]، على سبيل المثال: WSC513105011295 "

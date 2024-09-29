@@ -1,56 +1,71 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_customer
-#
+# 
 # Translators:
-# Piia Paurson <piia@avalah.ee>, 2022
-# Andre Roomet <andreroomet@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Rivo Zängov <eraser@eraser.ee>, 2022
-# Algo Kärp <algokarp@gmail.com>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
-# Arma Gedonsky <armagedonsky@hot.ee>, 2022
-# Triine Aavik <triine@avalah.ee>, 2022
-# Anna, 2023
-#
+# Stevin Lilla, 2024
+# Siim Raasuke, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Anna, 2023\n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Siim Raasuke, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
-"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
-msgid "<span class=\"fa fa-1x fa-tags\"/> All"
-msgstr "<span class=\"fa fa-1x fa-tags\"/> Kõik"
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to references"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid ""
+"<i class=\"fa fa-info-circle me-2\"/>\n"
+"                        There are no matching customers found for the selected country. Displaying results across all countries instead."
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
-msgid "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External link\" title=\"External link\"/>"
-msgstr "<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External link\" title=\"External link\"/>"
+msgid ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Open map\"/>"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
+msgid "<span class=\"fa fa-1x fa-tags\"/> All"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
+msgid "<span class=\"small text-muted\">Implemented by</span>"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
 msgid "Active"
-msgstr "Tegev"
+msgstr "Aktiivne"
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/controllers/main.py:0
 msgid "All Countries"
-msgstr "Kõik riigid"
+msgstr ""
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/controllers/main.py:0
 msgid "All Industries"
-msgstr "Kõik valdkonnad"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
@@ -58,26 +73,32 @@ msgid "Archived"
 msgstr "Arhiveeritud"
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "Back to references list"
+msgstr ""
+
+#. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
-msgstr "Bootstrap class to customize the color"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
 msgid "Can Publish"
-msgstr "Võib avalikustada"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
 msgid "Category Name"
-msgstr "Kategooria nimi"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__classname
 msgid "Class"
-msgstr "Klass"
+msgstr ""
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "Close"
 msgstr "Sulge"
@@ -90,12 +111,12 @@ msgstr "Kontakt"
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
 msgid "Countries Filter"
-msgstr "Riikide filter"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Create a new contact tag"
-msgstr "Looge uus kontakti silt"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
@@ -105,12 +126,53 @@ msgstr "Loonud"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
-msgstr "Loomise kuupäev"
+msgstr "Loodud"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL CUSTOMERS"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
-msgstr "Näidatav nimi"
+msgstr "Kuvatav nimi"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Enter a short description"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Country"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Industry"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filter by Tags"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,help:website_customer.field_res_users__website_tag_ids
+msgid "Filter published customers on the .../customers website page"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Filters"
+msgstr "Filtrid"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "Go to customer"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
@@ -118,29 +180,19 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
-msgid "Implemented By"
-msgstr "Implementeerija"
-
-#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
 msgid "Industry Filter"
-msgstr "Valdkonna filter"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
 msgid "Is Published"
-msgstr "On avalikustatud"
-
-#. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
-msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendas"
+msgstr "Viimati uuendatud"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
@@ -149,60 +201,59 @@ msgstr "Viimati uuendatud"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Manage contact tags to better classify them for tracking and analysis purposes."
-msgstr "Hallake kontaktide silte, et neid paremini klassifitseerida jälgimise ja analüüsi eesmärgil"
+msgid ""
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "No result found"
-msgstr "Tulemusi ei leitud"
+msgid "No results found for \""
+msgstr ""
 
 #. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.details
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
+msgid "Open countries dropdown"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "Open industries dropdown"
+msgstr ""
+
+#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "Our References"
-msgstr "Meie viited"
+msgid "Our references"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_form
 msgid "Partner Tag"
-msgstr "Partneri silt"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner_tag
-msgid "Partner Tags - These tags can be used on website to find customers by sector, or ..."
-msgstr "Partnerite sildid - Neid silte saab kasutada veebilehel, et leida kliente sektori kaupa või ..."
+msgid ""
+"Partner Tags - These tags can be used on website to find customers by "
+"sector, or ..."
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
-msgstr "Partnerid"
+msgstr ""
 
 #. module: website_customer
+#. odoo-python
 #: code:addons/website_customer/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
 msgid "References"
-msgstr "Viited"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
 msgid "References Page"
-msgstr "Viidete leht"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
-msgid "References by Country"
-msgstr "Viited riigiti"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
-msgid "References by Industries"
-msgstr "Viited valdkonniti"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
-msgid "References by Tag"
-msgstr "Viited siltide kaup"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
@@ -212,32 +263,42 @@ msgstr "Otsi"
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
 msgid "Search Partner Tag"
-msgstr "Otsi partneri silti"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See all customers"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See countries filters"
+msgstr ""
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
+msgid "See industries filters"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
 msgid "Show Map"
-msgstr "Kuva kaart"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.snippet_options
 msgid "Tags Filter"
-msgstr "Siltide filter"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Dokumendile veebisaidi kaudu juurdepääsuks täielik URL."
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.index
-msgid "Trusted by millions worldwide"
-msgstr "Üleilmselt miljonite poolt usaldatud"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
 msgid "Visible on current website"
-msgstr "Nähtav praegusel veebilehel"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_website
@@ -250,25 +311,20 @@ msgstr "Veebileht"
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_list
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partners_form_website
 msgid "Website Tags"
-msgstr "Veebilehe sildid"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
 msgid "Website URL"
-msgstr "Veebilehe URL"
+msgstr ""
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids
 #: model:ir.model.fields,field_description:website_customer.field_res_users__website_tag_ids
 msgid "Website tags"
-msgstr "Veebilehe sildid"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
-msgstr "Maailma kaart"
-
-#. module: website_customer
-#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
-msgid "reference(s))"
-msgstr "viitedq"
+msgstr ""
