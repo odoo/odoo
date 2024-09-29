@@ -80,7 +80,7 @@
                 <t t-out="thread.needactionCounter"/>
             </div>
             <t t-foreach="partitionedActions.quick.slice(0, ui.isSmall ? 2 : 3).reverse()" t-as="action" t-key="action.id" t-call="mail.ChatWindow.quickAction">
-                <t t-if="action_last" t-set="itemClass" t-value="'me-1'"/>
+                <t t-if="action_last" t-set="itemClass" t-value="ui.isSmall ? 'mx-2' : 'me-1'"/>
             </t>
             <t t-if="this.store.inPublicPage and this.store.self.type === 'guest'">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
@@ -115,7 +115,7 @@
 </t>
 
 <t t-name="mail.ChatWindow.quickAction">
-    <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-class="itemClass" t-att-title="action.name" t-att-disabled="state.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i t-att-class="action.icon"/></button>
+    <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-class="ui.isSmall ? 'border' : ''" t-attf-class="{{ itemClass }}" t-att-title="action.name" t-att-disabled="state.actionsDisabled" t-on-click.stop="() => action.onSelect()"><i t-att-class="ui.isSmall ? 'fa-lg' : ''" t-attf-class="{{ action.icon }}"/></button>
 </t>
 
 <t t-name="mail.ChatWindow.dropdownAction">
