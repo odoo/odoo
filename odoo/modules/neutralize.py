@@ -9,8 +9,8 @@ _logger = logging.getLogger(__name__)
 
 def get_installed_modules(cursor):
     """
-    Récupère la liste des modules installés ou en attente de mise à jour/suppression.
-    Optimisation : Utilisation d'une seule requête SQL.
+    Retrieves the list of installed modules or those pending update/removal.
+    Optimization: Use of a single SQL query.
     """
     cursor.execute('''
         SELECT name
@@ -22,8 +22,8 @@ def get_installed_modules(cursor):
 
 def get_neutralization_queries(modules):
     """
-    Génère les requêtes de neutralisation pour les modules installés.
-    Optimisation : Utilisation de suppress avec logging pour les fichiers manquants.
+    Generates neutralization queries for the installed modules.
+    Optimization: Use of suppress with logging for missing files.
     """
     for module in modules:
         filename = f'{module}/data/neutralize.sql'
@@ -39,8 +39,8 @@ def get_neutralization_queries(modules):
 
 def neutralize_database(cursor):
     """
-    Exécute les requêtes de neutralisation pour chaque module installé.
-    Optimisation : Regroupement des requêtes pour réduire les appels multiples à la base de données.
+    Executes neutralization queries for each installed module.
+    Optimization: Batch the queries to reduce multiple database calls.
     """
     installed_modules = get_installed_modules(cursor)
     queries = get_neutralization_queries(installed_modules)
@@ -50,6 +50,6 @@ def neutralize_database(cursor):
         batch_queries.append(query)
 
     if batch_queries:
-        cursor.execute(';'.join(batch_queries))  # Exécution groupée des requêtes
+        cursor.execute(';'.join(batch_queries))  # Batch query execution
 
     _logger.info("Neutralization finished")
