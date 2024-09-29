@@ -84,7 +84,7 @@
                                     onerror="this.remove()"/>
                             </div>
                             <div>
-                                <span class="fs-4" t-esc="combo.combo_item_id.product_id.name"/>
+                                <span class="fs-4" t-esc="combo.combo_item_id.product_id.display_name"/>
                                 <ul t-if="combo.configuration.attribute_value_ids.length > 0">
                                     <li t-foreach="this.getSelectedValues(combo.configuration.attribute_value_ids)" t-as="attrVal" t-key="attrVal.attribute_id.id">
                                         <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />

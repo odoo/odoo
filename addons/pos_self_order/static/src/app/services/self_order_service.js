@@ -222,6 +222,21 @@ export class SelfOrder extends Reactive {
         };
 
         if (Object.entries(selectedValues).length > 0) {
+            const productVariant = this.models["product.product"].find(
+                (prd) =>
+                    prd.product_tmpl_id.id === productTemplate.id &&
+                    prd.product_template_variant_value_ids.every((ptav) => {
+                        return Object.values(selectedValues).some((value) => ptav.id == value);
+                    })
+            );
+            if (productVariant) {
+                Object.assign(values, {
+                    product_id: productVariant,
+                    price_unit: productVariant.lst_price,
+                    tax_ids: productVariant.taxes_id.map((tax) => ["link", tax]),
+                });
+            }
+
             values.attribute_value_ids = Object.entries(selectedValues).reduce(
                 (acc, [attributeId, options]) => {
                     const optionEntries = Object.entries(
@@ -232,8 +247,10 @@ export class SelfOrder extends Reactive {
                         const attrVal = this.models["product.template.attribute.value"].get(
                             Number(optionId)
                         );
-                        values.price_extra += attrVal.price_extra;
-                        acc.push(["link", attrVal]);
+                        if (attrVal.attribute_id.create_variant !== "always") {
+                            values.price_extra += attrVal.price_extra;
+                            acc.push(["link", attrVal]);
+                        }
                     });
                     return acc;
                 },
