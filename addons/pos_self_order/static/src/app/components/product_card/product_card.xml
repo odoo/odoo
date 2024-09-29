@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.ProductCard">
         <article class="self_order_product_card d-flex flex-row-reverse flex-md-column align-items-start gap-2 user-select-none"
             role="button"
-            t-att-title="props.product.display_name"
+            t-att-title="props.product.name"
             t-on-click="() => this.selectProduct()"
             t-ref="selfProductCard">
             <div t-if="!this.isHtmlEmpty" class="product-information-tag" t-on-click.prevent.stop="showProductInfo">
@@ -16,7 +16,7 @@
                 }">
                 <div class="placeholder-glow o_self_order_item_card_no_image">
                     <div t-attf-class="{{ props.product.image_128 ? 'placeholder' : 'd-flex align-items-center justify-content-center h-100' }} bg-200 w-100 h-100 rounded">
-                        <span t-if="!props.product.image_128" t-esc="props.product.display_name" class="text-center text-white fs-2 fw-bold mb-1 mb-sm-2"/>
+                        <span t-if="!props.product.image_128" t-esc="props.product.name" class="text-center text-white fs-2 fw-bold mb-1 mb-sm-2"/>
                     </div>
                 </div>
                 <img
@@ -28,7 +28,7 @@
                     onerror="this.remove()"/>
             </div>
             <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 w-100 lh-1">
-                <span t-esc="props.product.display_name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
+                <span t-esc="props.product.name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
                 <div class="d-flex justify-content-between align-items-end gap-3">
                     <span t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(props.product))" class="o-so-tabular-nums fs-4 text-muted flex-grow-1" />
                     <div class="text-center ms-2 fs-lighter">
