@@ -1,4 +1,5 @@
 import {
+    SIZES,
     click,
     contains,
     defineMailModels,
@@ -25,7 +26,7 @@ describe.current.tags("desktop");
 defineMailModels();
 
 test('"Start a conversation" item selection opens chat', async () => {
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -42,7 +43,7 @@ test('"Start a conversation" item selection opens chat', async () => {
 });
 
 test('"New channel" item selection opens channel (existing)', async () => {
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
     await start();
@@ -57,7 +58,7 @@ test('"New channel" item selection opens channel (existing)', async () => {
 });
 
 test('"New channel" item selection opens channel (new)', async () => {
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
