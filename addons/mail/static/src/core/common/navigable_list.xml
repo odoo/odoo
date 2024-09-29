@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NavigableList">
-        <div class="o-mail-NavigableList bg-view m-0 p-0" t-ref="root" t-att-class="props.class">
+        <div class="o-mail-NavigableList bg-view m-0 p-0 shadow-sm" t-ref="root" t-att-class="props.class">
             <div t-if="show" class="o-open border d-flex flex-column bg-inherit" t-on-mousedown.prevent="">
                 <div t-if="state.showLoading" t-att-class="{ 'position-absolute bg-inherit smaller o-mail-NavigableList-floatingLoading': props.options.length, 'bg-300': props.options.length and state.activeIndex === 0, 'o-mail-NavigableList-item': !props.options.length }">
                     <t t-call="mail.NavigableList.spinner"/>
@@ -15,7 +15,7 @@
                     t-on-click="(ev) => this.selectOption(ev, option_index)"
                 >
                     <hr class="my-2" t-if="option.group != lastGroup and option_index != 0"/>
-                    <a role="button" class="d-flex align-items-center w-100 px-3 py-1 small" t-att-class="{ 'o-mail-NavigableList-active bg-300': state.activeIndex === option_index }">
+                    <a role="button" class="d-flex align-items-center w-100 px-3 py-1 small" t-att-class="{ 'o-mail-NavigableList-active': state.activeIndex === option_index }">
                         <t t-if="option.optionTemplate" t-call="{{ option.optionTemplate }}"/>
                         <t t-elif="props.optionTemplate" t-call="{{ props.optionTemplate }}"/>
                         <t t-else="" t-esc="option.label"/>
