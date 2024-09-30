@@ -290,16 +290,12 @@ export class Record extends DataPoint {
 
     _applyChanges(changes, serverChanges = {}) {
         // We need to generate the undo function before applying the changes
-        const fieldNameChanges = [...Object.keys({ ...changes, ...serverChanges })];
         const initialTextValues = { ...this._textValues };
         const initialChanges = { ...this._changes };
         const initialData = { ...toRaw(this.data) };
-        const invalidFields = toRaw(this._invalidFields);
-        const invalidFieldNames = fieldNameChanges.filter((fieldName) =>
-            invalidFields.has(fieldName)
-        );
+        const invalidFields = [...toRaw(this._invalidFields)];
         const undoChanges = () => {
-            for (const fieldName of invalidFieldNames) {
+            for (const fieldName of invalidFields) {
                 this.setInvalidField(fieldName);
             }
             Object.assign(this.data, initialData);
@@ -329,7 +325,11 @@ export class Record extends DataPoint {
         Object.assign(this._textValues, this._getTextValues(serverChanges));
 
         this._setEvalContext();
-        this._removeInvalidFields(fieldNameChanges);
+
+        // mark changed fields as valid if they were not, and re-evaluate required attributes
+        // for all fields, as some of them might still be unset but become valid with those changes
+        this._removeInvalidFields(Object.keys({ ...changes, ...serverChanges }));
+        this._checkValidity({ removeInvalidOnly: true });
         return undoChanges;
     }
 
@@ -362,8 +362,8 @@ export class Record extends DataPoint {
         this._setEvalContext();
     }
 
-    _checkValidity({ silent, displayNotification } = {}) {
-        const unsetRequiredFields = [];
+    _checkValidity({ silent, displayNotification, removeInvalidOnly } = {}) {
+        const unsetRequiredFields = new Set();
         for (const fieldName in this.activeFields) {
             const fieldType = this.fields[fieldName].type;
             if (this._isInvisible(fieldName) || this.fields[fieldName].relatedPropertyField) {
@@ -377,7 +377,7 @@ export class Record extends DataPoint {
                     continue;
                 case "html":
                     if (this._isRequired(fieldName) && this.data[fieldName].length === 0) {
-                        unsetRequiredFields.push(fieldName);
+                        unsetRequiredFields.add(fieldName);
                     }
                     break;
                 case "one2many":
@@ -385,9 +385,11 @@ export class Record extends DataPoint {
                     const list = this.data[fieldName];
                     if (
                         (this._isRequired(fieldName) && !list.count) ||
-                        !list.records.every((r) => !r.dirty || r._checkValidity({ silent }))
+                        !list.records.every(
+                            (r) => !r.dirty || r._checkValidity({ silent, removeInvalidOnly })
+                        )
                     ) {
-                        unsetRequiredFields.push(fieldName);
+                        unsetRequiredFields.add(fieldName);
                     }
                     break;
                 }
@@ -402,7 +404,7 @@ export class Record extends DataPoint {
                                 propertyDefinition.string.length
                         );
                         if (!ok) {
-                            unsetRequiredFields.push(fieldName);
+                            unsetRequiredFields.add(fieldName);
                         }
                     }
                     break;
@@ -412,28 +414,37 @@ export class Record extends DataPoint {
                         this._isRequired(fieldName) &&
                         (!this.data[fieldName] || !Object.keys(this.data[fieldName]).length)
                     ) {
-                        unsetRequiredFields.push(fieldName);
+                        unsetRequiredFields.add(fieldName);
                     }
                     break;
                 }
                 default:
                     if (!this.data[fieldName] && this._isRequired(fieldName)) {
-                        unsetRequiredFields.push(fieldName);
+                        unsetRequiredFields.add(fieldName);
                     }
             }
         }
 
         if (silent) {
-            return !unsetRequiredFields.length;
+            return !unsetRequiredFields.size;
         }
 
-        for (const fieldName of Array.from(this._unsetRequiredFields)) {
-            this._invalidFields.delete(fieldName);
-        }
-        this._unsetRequiredFields.clear();
-        for (const fieldName of unsetRequiredFields) {
-            this._unsetRequiredFields.add(fieldName);
-            this._setInvalidField(fieldName);
+        if (removeInvalidOnly) {
+            for (const fieldName of Array.from(this._unsetRequiredFields)) {
+                if (!unsetRequiredFields.has(fieldName)) {
+                    this._unsetRequiredFields.delete(fieldName);
+                    this._invalidFields.delete(fieldName);
+                }
+            }
+        } else {
+            for (const fieldName of Array.from(this._unsetRequiredFields)) {
+                this._invalidFields.delete(fieldName);
+            }
+            this._unsetRequiredFields.clear();
+            for (const fieldName of unsetRequiredFields) {
+                this._unsetRequiredFields.add(fieldName);
+                this._setInvalidField(fieldName);
+            }
         }
         const isValid = !this._invalidFields.size;
         if (!isValid && displayNotification) {
@@ -990,7 +1001,11 @@ export class Record extends DataPoint {
         if (!this._checkValidity({ displayNotification: true })) {
             return false;
         }
-        if (this.model._urgentSave && this.model.useSendBeaconToSaveUrgently && !this.model.env.inDialog) {
+        if (
+            this.model._urgentSave &&
+            this.model.useSendBeaconToSaveUrgently &&
+            !this.model.env.inDialog
+        ) {
             // We are trying to save urgently because the user is closing the page. To
             // ensure that the save succeeds, we can't do a classic rpc, as these requests
             // can be cancelled (payload too heavy, network too slow, computer too fast...).
