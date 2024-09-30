@@ -20,30 +20,23 @@ export class MediaPlugin extends Plugin {
     /** @type { (p: MediaPlugin) => Record<string, any> } */
     static resources = (p) => {
         const powerboxItems = [];
+        // @todo @phoenix: consider renaming this config option to "disableMedia"
         if (!p.config.disableImage) {
             powerboxItems.push({
-                name: _t("Image"),
-                description: _t("Insert an image"),
+                name: _t("Media"),
+                description: p.config.disableVideo
+                    ? _t("Insert image, document or icon")
+                    : _t("Insert image, document, icon or video"),
+                searchKeywords: [
+                    _t("Images"),
+                    _t("Documents"),
+                    _t("Icons"),
+                    ...(p.config.disableVideo ? [] : [_t("Videos")]),
+                ],
                 category: "media",
                 fontawesome: "fa-file-image-o",
                 action() {
                     p.openMediaDialog();
-                },
-            });
-        }
-        if (!p.config.disableVideo) {
-            powerboxItems.push({
-                name: _t("Video"),
-                description: _t("Insert a video"),
-                category: "media",
-                fontawesome: "fa-file-video-o",
-                action() {
-                    p.openMediaDialog({
-                        noVideos: false,
-                        noImages: true,
-                        noIcons: true,
-                        noDocuments: true,
-                    });
                 },
             });
         }
