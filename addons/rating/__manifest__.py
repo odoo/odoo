@@ -27,10 +27,13 @@ This module allows a customer to give rating.
         'web.assets_unit_tests': [
             'rating/static/tests/**/*',
         ],
+        "im_livechat.assets_embed_core": [
+            "rating/static/src/core/common/**/*",
+        ],
         "mail.assets_public": [
             "rating/static/src/core/common/**/*",
         ],
-        "portal.assets_chatter": [
+        "portal.assets_chatter_helpers": [
             "rating/static/src/core/common/**/*",
         ],
     },

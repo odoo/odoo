@@ -1,23 +1,10 @@
 import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
-import { fields } from "@mail/model/export";
-import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 
 /** @type {import("models").Thread} */
 const threadPatch = {
-    setup() {
-        super.setup();
-        /** @type {number|undefined} */
-        this.recipientsCount = undefined;
-        this.recipients = fields.Many("mail.followers");
-        this.activities = fields.Many("mail.activity", {
-            sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
-            onDelete: (r) => r?.remove(),
-        });
-        /** @type {boolean} */
-    },
     get recipientsFullyLoaded() {
         return this.recipientsCount === this.recipients.length;
     },

@@ -227,8 +227,14 @@
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
+        "im_livechat.assets_embed_core": [
+            "website/static/src/mail/core/common/**/*",
+        ],
         "mail.assets_public": [
-            "website/static/src/**/common/**/*",
+            "website/static/src/mail/core/common/**/*",
+        ],
+        "portal.assets_chatter_helpers": [
+            "website/static/src/mail/core/common/**/*",
         ],
         'web.assets_frontend': [
             'html_builder/static/src/utils/scrolling.js',
@@ -333,7 +339,7 @@
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/xml/website.xml',
             'website/static/src/scss/website_controller_page_kanban.scss',
-            'website/static/src/**/common/**/*',
+            'website/static/src/mail/core/common/**/*',
 
             'website/static/src/xml/website_form_editor.xml',
             # TODO Remove the module's form js - this is for testing.
@@ -403,6 +409,7 @@
             'website/static/src/xml/website_form.xml',
             'website/static/src/xml/website_form_editor.xml',
             'website/static/src/xml/website.cookies_bar.xml',
+            'website/static/src/mail/core/common/**/*',
         ],
         'website.assets_all_wysiwyg': [
             ('include', 'website.assets_wysiwyg'),

@@ -35,8 +35,12 @@ declare module "models" {
         livechat_channel_id: LivechatChannel;
         livechat_channel_member_history_ids: LivechatChannelMemberHistory[];
         livechat_customer_history_ids: LivechatChannelMemberHistory[];
+        livechat_expertise_ids: LivechatExpertise[];
+        livechat_lang_id: ResLang;
         livechat_looking_for_help_since_dt: import("luxon").DateTime;
+        livechat_status: "in_progress"|"need_help"|undefined;
         livechatShouldAskLeaveConfirmation: Readonly<boolean>;
+        unpinOnThreadSwitch: boolean;
     }
     export interface LivechatChannel {
         channel_ids: DiscussChannel[];
@@ -64,7 +68,11 @@ declare module "models" {
     }
     export interface Thread {
         composerHidden: Readonly<boolean>;
+        country_id: Country;
         livechat_end_dt: import("luxon").DateTime;
+        livechat_note: ReturnType<import("@odoo/owl").markup>|string;
+        livechat_outcome: "no_answer"|"no_agent"|"no_failure"|"escalated"|undefined;
+        livechatNoteText: string|undefined;
         livechatVisitorMember: ChannelMember;
         transcriptUrl: Readonly<string>;
     }

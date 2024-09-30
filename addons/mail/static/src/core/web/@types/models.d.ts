@@ -29,12 +29,10 @@ declare module "models" {
         updateAppBadge: () => void;
     }
     export interface Thread {
-        activities: Activity[];
         follow: () => Promise<void>;
         loadMoreFollowers: () => Promise<void>;
         loadMoreRecipients: () => Promise<void>;
-        recipients: Follower[];
-        recipientsCount: number|undefined;
+        openRecordActionRequest: Readonly<object>;
         recipientsFullyLoaded: Readonly<boolean>;
     }
 }

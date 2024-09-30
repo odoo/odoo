@@ -1,8 +1,8 @@
 declare module "models" {
-    import { Website as WebsiteClass } from "@website/common/website_model";
-    import { WebsitePage as WebsitePageClass } from "@website/common/website_page_model";
-    import { WebsiteTrack as WebsiteTrackClass } from "@website/common/website_track_model";
-    import { WebsiteVisitor as WebsiteVisitorClass } from "@website/common/website_visitor_model";
+    import { Website as WebsiteClass } from "@website/mail/core/common/website_model";
+    import { WebsitePage as WebsitePageClass } from "@website/mail/core/common/website_page_model";
+    import { WebsiteTrack as WebsiteTrackClass } from "@website/mail/core/common/website_track_model";
+    import { WebsiteVisitor as WebsiteVisitorClass } from "@website/mail/core/common/website_visitor_model";
 
     export interface Website extends WebsiteClass {}
     export interface WebsitePage extends WebsitePageClass {}

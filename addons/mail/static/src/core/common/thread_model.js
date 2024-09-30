@@ -1,7 +1,8 @@
 import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
-import { rpc } from "@web/core/network/rpc";
+import { compareDatetime } from "@mail/utils/common/misc";
 
+import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -52,6 +53,10 @@ export class Thread extends Record {
     }
 
     autofocus = 0;
+    activities = fields.Many("mail.activity", {
+        sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
+        onDelete: (r) => r?.remove(),
+    });
     create_uid = fields.One("res.users");
     /**
      * Server-side value used in chatter to determine if the thread has pinned messages without
@@ -192,6 +197,9 @@ export class Thread extends Record {
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" field of the Chatter. */
     additionalRecipients = fields.Attr([]);
+    /** @type {number|undefined} */
+    recipients = fields.Many("mail.followers");
+    recipientsCount = undefined;
     /* The suggested recipients are the recipients that are suggested by the
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
@@ -203,6 +211,8 @@ export class Thread extends Record {
     hasLoadingFailed = false;
     /** @type {Error} */
     hasLoadingFailedError;
+    /** @type {boolean|undefined} */
+    hasReadAccess;
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;

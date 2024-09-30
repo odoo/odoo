@@ -35,9 +35,6 @@ const discussChannelPatch = {
                 return this._computeDiscussAppCategory();
             },
         });
-        this.discuss_category_id = fields.One("discuss.category", {
-            inverse: "channel_ids",
-        });
         this.isDisplayInSidebar = fields.Attr(false, {
             compute() {
                 return this._computeIsDisplayInSidebar();

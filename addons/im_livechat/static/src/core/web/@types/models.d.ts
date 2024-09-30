@@ -9,12 +9,10 @@ declare module "models" {
         goToOldestUnreadLivechatThread: () => boolean;
         has_access_livechat: boolean;
         livechatChannels: ReturnType<Store['makeCachedFetchData']>;
+        livechatSelfExpertises: ReturnType<Store['makeCachedFetchData']>;
         livechatStatusButtons: Readonly<object[]>;
     }
     export interface Thread {
         hasFetchedLivechatSessionData: boolean;
-        livechat_note: ReturnType<import("@odoo/owl").markup>|string;
-        livechat_outcome: "no_answer"|"no_agent"|"no_failure"|"escalated"|undefined;
-        livechatNoteText: string|undefined;
     }
 }

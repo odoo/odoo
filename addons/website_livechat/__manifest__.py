@@ -20,8 +20,7 @@
     ],
     'assets': {
         "im_livechat.assets_embed_core": [
-            "website/static/src/**/common/**/*",
-            "website_livechat/static/src/**/common/**/*",
+            "website_livechat/static/src/core/common/**/*",
         ],
         'im_livechat.embed_assets_unit_tests_setup': [
             ('remove', 'website_livechat/static/**'),
@@ -32,20 +31,20 @@
             "website_livechat/static/tests/mock_server/**/*",
         ],
         "mail.assets_public": [
-            "website_livechat/static/src/**/common/**/*",
+            "website_livechat/static/src/core/common/**/*",
         ],
-        'website.assets_wysiwyg': [
-            "website/static/src/**/common/**/*",
+        "portal.assets_chatter_helpers": [
+            "website_livechat/static/src/core/common/**/*",
         ],
         'website.assets_editor': [
             'website_livechat/static/src/js/**/*',
         ],
         'web.assets_frontend': [
-            "website_livechat/static/src/**/common/**/*",
+            "website_livechat/static/src/core/common/**/*",
             'website_livechat/static/src/**/frontend/**/*',
         ],
         'web.assets_backend': [
-            "website_livechat/static/src/**/common/**/*",
+            "website_livechat/static/src/core/common/**/*",
             'website_livechat/static/src/**/*',
         ],
         'web.assets_unit_tests': [
