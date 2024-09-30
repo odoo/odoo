@@ -52,7 +52,7 @@
             <xpath expr="//div[@name='info_avg_rating']" position="after">
                 <div class="d-flex" invisible="enroll != 'payment'">
                     <label for="product_sale_revenues" class="mb0 me-auto">Sales</label>
-                    <field name="product_sale_revenues" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field class="text-nowrap" name="product_sale_revenues" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="currency_id" invisible="True"/>
                 </div>
             </xpath>
