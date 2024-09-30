@@ -50,7 +50,7 @@ export class LinkPastePlugin extends Plugin {
             this.handlePasteTextUrlInsideLink(text, url);
             return;
         }
-        if (delegate(this.getResource("handle_paste_url", text, url))) {
+        if (delegate(this.getResource("handle_paste_url"), text, url)) {
             return;
         }
         this.shared.insertLink(url, text);

@@ -231,9 +231,9 @@ test("insert the response from ChatGPT translate dialog", async () => {
     loadLanguages.installedLanguages = false;
 
     // Expect to undo and redo the inserted text.
-    editor.dispatch("HISTORY_UNDO");
+    editor.shared.execCommand("historyUndo");
     expect(getContent(el)).toBe(`<p>[Hello]</p>`);
-    editor.dispatch("HISTORY_REDO");
+    editor.shared.execCommand("historyRedo");
     expect(getContent(el)).toBe(`<p>Bonjour[]</p>`);
 });
 

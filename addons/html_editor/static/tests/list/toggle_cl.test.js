@@ -3,6 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { insertText, toggleCheckList } from "../_helpers/user_actions";
+import { trigger } from "@html_editor/utils/resource";
 
 describe("Range collapsed", () => {
     describe("Insert", () => {
@@ -56,7 +57,7 @@ describe("Range collapsed", () => {
             );
 
             await insertText(editor, "a");
-            editor.dispatch("NORMALIZE", { node: el });
+            trigger(editor.resources["normalize_listeners"], el);
             expect(getContent(el)).toBe(`<ul class="o_checklist"><li><h1>a[]</h1></li></ul>`);
         });
 

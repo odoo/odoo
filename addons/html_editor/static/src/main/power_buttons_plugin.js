@@ -13,34 +13,31 @@ export class PowerButtonsPlugin extends Plugin {
     };
 
     setup() {
-        this.buttons = this.getResource("powerButtons")
-            .map((id) => this.getResource("powerboxItems").find((item) => item.id === id))
+        const powerboxItemsDict = Object.fromEntries(
+            this.shared.getPowerboxItems().map((item) => [item.id, item])
+        );
+        this.powerboxItems = this.getResource("powerButtons")
+            .map((id) => powerboxItemsDict[id])
             .filter(Boolean);
-        this.buttons.push({
+        this.powerboxItems.push({
             id: "more_options",
-            name: _t("More options"),
-            fontawesome: "fa-ellipsis-v",
-            action: () => {
-                this.openPowerbox();
-            },
+            label: _t("More options"),
+            icon: "fa-ellipsis-v",
+            run: this.openPowerbox.bind(this),
         });
         this.powerButtonsOverlay = this.shared.makeLocalOverlay("oe-power-buttons-overlay");
         this.categories = this.getResource("powerboxCategory");
-        this.commands = this.getResource("powerboxItems").map((command) => ({
-            ...command,
-            categoryName: this.categories.find((category) => category.id === command.category).name,
-        }));
         this.createPowerButtons();
     }
 
     createPowerButtons() {
         this.powerButtons = document.createElement("div");
         this.powerButtons.className = `o_we_power_buttons d-flex justify-content-center d-none`;
-        for (const button of this.buttons) {
+        for (const powerboxItem of this.powerboxItems) {
             const btn = document.createElement("div");
-            btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${button.fontawesome}`;
-            btn.title = button.name;
-            btn.addEventListener("click", () => this.applyCommand(button));
+            btn.className = `power_button btn px-2 py-1 cursor-pointer fa ${powerboxItem.icon}`;
+            btn.title = powerboxItem.label;
+            btn.addEventListener("click", () => this.applyCommand(powerboxItem));
             this.powerButtons.appendChild(btn);
         }
         this.powerButtonsOverlay.appendChild(this.powerButtons);
@@ -101,17 +98,13 @@ export class PowerButtonsPlugin extends Plugin {
     async applyCommand(command) {
         const btns = [...this.powerButtons.querySelectorAll(".btn")];
         btns.forEach((btn) => btn.classList.add("disabled"));
-        await command.action(this.dispatch);
+        await command.run();
         btns.forEach((btn) => btn.classList.remove("disabled"));
     }
 
     openPowerbox() {
-        const selection = this.shared.getEditableSelection();
-        this.enabledCommands = this.commands.filter(
-            (cmd) => !cmd.isAvailable?.(selection.anchorNode)
-        );
         this.shared.openPowerbox({
-            commands: this.enabledCommands,
+            commands: this.shared.getAvailablePowerboxItems(),
             categories: this.categories,
         });
     }

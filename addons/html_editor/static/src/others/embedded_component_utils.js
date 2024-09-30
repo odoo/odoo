@@ -258,7 +258,8 @@ export class StateChangeManager {
     /**
      * @param {StateChangeManagerConfig} config
      * @param {HostElement} config.host
-     * @param {Function} config.dispatch plugin dispatch to send editor commands
+     * @param {Function} config.commitChanges notify the host that we can commit
+     *                                        changes
      */
     constructor(config) {
         this.config = config;
@@ -439,7 +440,7 @@ export class StateChangeManager {
             this.config.host.dataset.embeddedProps = JSON.stringify(
                 this.stateToEmbeddedProps(this.config.host, sortedState)
             );
-            this.config.dispatch("ADD_STEP");
+            this.config.commitStateChanges();
         }
         observeAllKeys(this.embeddedStateProxy);
     }

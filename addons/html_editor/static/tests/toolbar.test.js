@@ -373,9 +373,9 @@ test("toolbar correctly show namespace button group and stop showing when namesp
                 {
                     id: "test_btn",
                     category: "test_group",
-                    title: "Test Button",
+                    label: "Test Button",
                     icon: "fa-square",
-                    action: () => null,
+                    run: () => null,
                 },
             ],
         };
@@ -399,15 +399,15 @@ test("toolbar correctly process inheritance buttons chain", async () => {
                 {
                     id: "test_btn",
                     category: "test_group",
-                    title: "Test Button",
+                    label: "Test Button",
                     icon: "fa-square",
-                    action: () => null,
+                    run: () => null,
                 },
                 {
                     id: "test_btn2",
                     category: "test_group",
                     inherit: "test_btn",
-                    title: "Test Button 2",
+                    label: "Test Button 2",
                 },
             ],
         };
@@ -435,10 +435,8 @@ test("toolbar does not evaluate isFormatApplied when namespace does not match", 
                 {
                     id: "test_btn",
                     category: "test_group",
-                    action(dispatch) {
-                        dispatch("test_cmd");
-                    },
-                    title: "Test Button",
+                    commandId: "test_cmd",
+                    label: "Test Button",
                     icon: "fa-square",
                     isFormatApplied: () => expect.step("image format evaluated"),
                 },
@@ -472,10 +470,8 @@ test("plugins can create buttons with text in toolbar", async () => {
                 {
                     id: "test_btn",
                     category: "test_group",
-                    action(dispatch) {
-                        dispatch("test_cmd");
-                    },
-                    title: "Test Button",
+                    commandId: "test_cmd",
+                    label: "Test Button",
                     text: "Text button",
                 },
             ],
@@ -530,24 +526,30 @@ test("toolbar buttons should have title attribute", async () => {
     }
 });
 
-test("toolbar buttons should have title attribute with translated text", async () => {
+test("toolbar buttons should have label attribute with translated text", async () => {
     // Retrieve toolbar buttons descriptions in English
-    const { editor } = await setupEditor("");
-    // item.title could be a LazyTranslatedString so we ensure it is a string with toString()
-    const titles = editor.resources.toolbarItems.map((item) => item.title.toString());
+    const { editor, plugins } = await setupEditor("");
+    // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
+    const labels = plugins
+        .get("toolbar")
+        .getButtons()
+        .map((item) => item.label.toString());
     editor.destroy();
 
     // Patch translations to return "Translated" for these terms
-    patchTranslations(Object.fromEntries(titles.map((title) => [title, "Translated"])));
+    patchTranslations(Object.fromEntries(labels.map((label) => [label, "Translated"])));
 
     // Instantiate a new editor.
-    const { editor: postPatchEditor } = await setupEditor("<p>[abc]</p>");
+    const { plugins: postPatchPlugins } = await setupEditor("<p>[abc]</p>");
 
     // Check that every registered button has the result of the call to _t
-    postPatchEditor.resources.toolbarItems.forEach((item) => {
-        // item.title could be a LazyTranslatedString so we ensure it is a string with toString()
-        expect(item.title.toString()).toBe("Translated");
-    });
+    postPatchPlugins
+        .get("toolbar")
+        .getButtons()
+        .forEach((item) => {
+            // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
+            expect(item.label.toString()).toBe("Translated");
+        });
 
     await waitFor(".o-we-toolbar");
 

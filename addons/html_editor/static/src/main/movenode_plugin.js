@@ -12,7 +12,7 @@ const ALLOWED_ELEMENTS =
 
 export class MoveNodePlugin extends Plugin {
     static name = "movenode";
-    static dependencies = ["selection", "position", "local-overlay"];
+    static dependencies = ["selection", "history", "position", "local-overlay"];
     resources = {
         layoutGeometryChange: () => {
             if (this.currentMovableElement) {
@@ -389,7 +389,7 @@ export class MoveNodePlugin extends Plugin {
                 anchorNode: selectionPosition[0],
                 anchorOffset: selectionPosition[1],
             });
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         }
     }
     onMousemove(e) {

@@ -135,9 +135,9 @@ test("Can change an emoji banner", async () => {
     await click(".o-EmojiPicker .o-Emoji");
     await animationFrame();
     expect("i.o_editor_banner_icon").toHaveText("😀");
-    editor.dispatch("HISTORY_UNDO");
+    editor.shared.execCommand("historyUndo");
     expect("i.o_editor_banner_icon").toHaveText("💡");
-    editor.dispatch("HISTORY_REDO");
+    editor.shared.execCommand("historyRedo");
     expect("i.o_editor_banner_icon").toHaveText("😀");
 });
 

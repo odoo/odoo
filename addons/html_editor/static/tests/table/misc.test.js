@@ -5,7 +5,7 @@ import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setSelection } from "../_helpers/selection";
 
 function insertTable(editor, cols, rows) {
-    editor.dispatch("INSERT_TABLE", { cols, rows });
+    editor.shared.execCommand("insertTable", { cols, rows });
 }
 
 test("can insert a table", async () => {

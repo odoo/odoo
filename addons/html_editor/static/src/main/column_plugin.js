@@ -30,52 +30,53 @@ function columnisAvailable(numberOfColumns) {
 
 export class ColumnPlugin extends Plugin {
     static name = "column";
-    static dependencies = ["selection"];
+    static dependencies = ["selection", "history"];
     resources = {
+        user_commands: [
+            {
+                id: "columnize",
+                label: _t("Columnize"),
+                description: _t("Convert into columns"),
+                icon: "fa-columns",
+                run: this.columnize.bind(this),
+            },
+        ],
         isUnremovable: isUnremovableColumn,
         powerboxItems: [
             {
-                name: _t("2 columns"),
+                label: _t("2 columns"),
                 description: _t("Convert into 2 columns"),
                 category: "structure",
-                fontawesome: "fa-columns",
                 isAvailable: columnisAvailable(2),
-                action(dispatch) {
-                    dispatch("COLUMNIZE", { numberOfColumns: 2 });
-                },
+                commandId: "columnize",
+                commandParams: { numberOfColumns: 2 },
             },
             {
-                name: _t("3 columns"),
+                label: _t("3 columns"),
                 description: _t("Convert into 3 columns"),
                 category: "structure",
-                fontawesome: "fa-columns",
                 isAvailable: columnisAvailable(3),
-                action(dispatch) {
-                    dispatch("COLUMNIZE", { numberOfColumns: 3 });
-                },
+                commandId: "columnize",
+                commandParams: { numberOfColumns: 3 },
             },
             {
-                name: _t("4 columns"),
+                label: _t("4 columns"),
                 description: _t("Convert into 4 columns"),
                 category: "structure",
-                fontawesome: "fa-columns",
                 isAvailable: columnisAvailable(4),
-                action(dispatch) {
-                    dispatch("COLUMNIZE", { numberOfColumns: 4 });
-                },
+                commandId: "columnize",
+                commandParams: { numberOfColumns: 4 },
             },
             {
-                name: _t("Remove columns"),
+                label: _t("Remove columns"),
                 description: _t("Back to one column"),
                 category: "structure",
-                fontawesome: "fa-columns",
                 isAvailable(node) {
                     const row = closestElement(node, ".o_text_columns .row");
                     return !row;
                 },
-                action(dispatch) {
-                    dispatch("COLUMNIZE", { numberOfColumns: 0 });
-                },
+                commandId: "columnize",
+                commandParams: { numberOfColumns: 0 },
             },
         ],
         hints: [
@@ -88,17 +89,11 @@ export class ColumnPlugin extends Plugin {
         showPowerButtons: (selection) => !closestElement(selection.anchorNode, ".o_text_columns"),
     };
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "COLUMNIZE": {
-                const { numberOfColumns, addParagraphAfter } = payload;
-                this.columnize(numberOfColumns, addParagraphAfter);
-                this.dispatch("ADD_STEP");
-                break;
-            }
-        }
+    columnize({ numberOfColumns, addParagraphAfter } = {}) {
+        this._columnize(numberOfColumns, addParagraphAfter);
+        this.shared.addStep();
     }
-    columnize(numberOfColumns, addParagraphAfter = true) {
+    _columnize(numberOfColumns, addParagraphAfter = true) {
         const selectionToRestore = this.shared.getEditableSelection();
         const anchor = selectionToRestore.anchorNode;
         const hasColumns = !!closestElement(anchor, ".o_text_columns");

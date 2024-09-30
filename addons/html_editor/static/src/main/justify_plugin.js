@@ -5,23 +5,14 @@ import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 export class JustifyPlugin extends Plugin {
     static name = "justify";
     static dependencies = ["selection"];
-
-    handleCommand(command) {
-        switch (command) {
-            case "JUSTIFY_LEFT":
-                this.align("left");
-                break;
-            case "JUSTIFY_RIGHT":
-                this.align("right");
-                break;
-            case "JUSTIFY_CENTER":
-                this.align("center");
-                break;
-            case "JUSTIFY_FULL":
-                this.align("justify");
-                break;
-        }
-    }
+    resources = {
+        user_commands: [
+            { id: "justifyLeft", run: () => this.align("left") },
+            { id: "justifyRight", run: () => this.align("right") },
+            { id: "justifyCenter", run: () => this.align("center") },
+            { id: "justifyFull", run: () => this.align("justify") },
+        ],
+    };
 
     align(mode) {
         const visitedBlocks = new Set();

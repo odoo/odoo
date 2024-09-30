@@ -196,7 +196,7 @@ export class HtmlField extends Component {
         this.state.showCodeView = !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {
             this.editor.editable.innerHTML = this.value;
-            this.editor.dispatch("ADD_STEP");
+            this.editor.shared.addStep();
         }
     }
 
@@ -248,17 +248,21 @@ export class HtmlField extends Component {
         }
         if (this.props.codeview) {
             config.resources = {
+                user_commands: [
+                    {
+                        id: "codeview",
+                        label: _t("Code view"),
+                        icon: "fa-code",
+                        run: this.toggleCodeView.bind(this),
+                    },
+                ],
                 toolbarCategory: withSequence(100, {
                     id: "codeview",
                 }),
                 toolbarItems: {
                     id: "codeview",
                     category: "codeview",
-                    title: _t("Code view"),
-                    icon: "fa-code",
-                    action: () => {
-                        this.toggleCodeView();
-                    },
+                    commandId: "codeview",
                 },
             };
         }

@@ -6,17 +6,21 @@ import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 
 export class TextDirectionPlugin extends Plugin {
     static name = "text_direction";
-    static dependencies = ["selection", "split", "format"];
+    static dependencies = ["selection", "history", "split", "format"];
     resources = {
+        user_commands: [
+            {
+                id: "switchDirection",
+                label: _t("Switch direction"),
+                description: _t("Switch the text's direction"),
+                icon: "fa-exchange",
+                run: this.switchDirection.bind(this),
+            },
+        ],
         powerboxItems: [
             {
-                name: _t("Switch direction"),
-                description: _t("Switch the text's direction"),
                 category: "format",
-                fontawesome: "fa-exchange",
-                action(dispatch) {
-                    dispatch("SWITCH_DIRECTION");
-                },
+                commandId: "switchDirection",
             },
         ],
     };
@@ -26,14 +30,6 @@ export class TextDirectionPlugin extends Plugin {
             this.editable.setAttribute("dir", this.config.direction);
         }
         this.direction = this.config.direction || "ltr";
-    }
-
-    handleCommand(command) {
-        switch (command) {
-            case "SWITCH_DIRECTION":
-                this.switchDirection();
-                break;
-        }
     }
 
     switchDirection() {
@@ -70,6 +66,6 @@ export class TextDirectionPlugin extends Plugin {
                 element.style.setProperty("text-align", "right");
             }
         }
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 }

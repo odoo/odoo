@@ -38,7 +38,7 @@ import {
     startPos,
 } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
-import { delegate, withSequence } from "@html_editor/utils/resource";
+import { delegate, trigger, withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef {Object} RangeLike
@@ -51,21 +51,29 @@ import { delegate, withSequence } from "@html_editor/utils/resource";
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["selection"];
+    static dependencies = ["selection", "history"];
     static name = "delete";
-    static shared = ["deleteRange", "isUnmergeable"];
+    static shared = ["deleteRange", "isUnmergeable", "deleteSelection"];
     resources = {
         onBeforeInput: [
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
+        user_commands: [
+            { id: "deleteBackward", run: () => this.delete("backward", "character") },
+            { id: "deleteForward", run: () => this.delete("forward", "character") },
+            { id: "deleteBackwardWord", run: () => this.delete("backward", "word") },
+            { id: "deleteForwardWord", run: () => this.delete("forward", "word") },
+            { id: "deleteBackwardLine", run: () => this.delete("backward", "line") },
+            { id: "deleteForwardLine", run: () => this.delete("forward", "line") },
+        ],
         shortcuts: [
-            { hotkey: "backspace", command: "DELETE_BACKWARD" },
-            { hotkey: "delete", command: "DELETE_FORWARD" },
-            { hotkey: "control+backspace", command: "DELETE_BACKWARD_WORD" },
-            { hotkey: "control+delete", command: "DELETE_FORWARD_WORD" },
-            { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
-            { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
+            { hotkey: "backspace", commandId: "deleteBackward" },
+            { hotkey: "delete", commandId: "deleteForward" },
+            { hotkey: "control+backspace", commandId: "deleteBackwardWord" },
+            { hotkey: "control+delete", commandId: "deleteForwardWord" },
+            { hotkey: "control+shift+backspace", commandId: "deleteBackwardLine" },
+            { hotkey: "control+shift+delete", commandId: "deleteForwardLine" },
         ],
         handle_delete_backward: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
         handle_delete_backward_word: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
@@ -87,32 +95,6 @@ export class DeletePlugin extends Plugin {
     setup() {
         this.findPreviousPosition = this.makeFindPositionFn("backward");
         this.findNextPosition = this.makeFindPositionFn("forward");
-    }
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "DELETE_SELECTION":
-                this.deleteSelection();
-                break;
-            case "DELETE_BACKWARD":
-                this.delete("backward", "character");
-                break;
-            case "DELETE_FORWARD":
-                this.delete("forward", "character");
-                break;
-            case "DELETE_BACKWARD_WORD":
-                this.delete("backward", "word");
-                break;
-            case "DELETE_FORWARD_WORD":
-                this.delete("forward", "word");
-                break;
-            case "DELETE_BACKWARD_LINE":
-                this.delete("backward", "line");
-                break;
-            case "DELETE_FORWARD_LINE":
-                this.delete("forward", "line");
-                break;
-        }
     }
 
     // --------------------------------------------------------------------------
@@ -163,8 +145,8 @@ export class DeletePlugin extends Plugin {
         } else {
             throw new Error("Invalid direction");
         }
-
-        this.dispatch("ADD_STEP");
+        trigger(this.getResource("delete_listeners"));
+        this.shared.addStep();
     }
 
     // --------------------------------------------------------------------------

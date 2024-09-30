@@ -118,12 +118,12 @@ describe("search", () => {
                 powerboxCategory: { id: "test", name: "Test" },
                 powerboxItems: [
                     {
-                        name: "Test1",
+                        label: "Test1",
                         description: "Test1",
                         category: "test",
                     },
                     {
-                        name: "Test12",
+                        label: "Test12",
                         description: "Test12",
                         category: "test",
                     },
@@ -258,13 +258,13 @@ describe("search", () => {
                     powerboxCategory: { id: "test", name: "Test" },
                     powerboxItems: [
                         {
-                            name: "Test1",
+                            label: "Test1",
                             description: "Test1",
                             category: "test",
                             searchKeywords: ["apple", "orange"],
                         },
                         {
-                            name: "Test2",
+                            label: "Test2",
                             description: "Test2 has apples and oranges in its description",
                             category: "test",
                         },
@@ -305,17 +305,17 @@ describe("search", () => {
                     powerboxCategory: { id: "test", name: "Test" },
                     powerboxItems: [
                         {
-                            name: "Change direction", // "icon" fuzzy matches this
+                            label: "Change direction", // "icon" fuzzy matches this
                             description: "test",
                             category: "test",
                         },
                         {
-                            name: "Some command",
+                            label: "Some command",
                             description: "add a big section", // "icon" fuzzy matches this
                             category: "test",
                         },
                         {
-                            name: "Insert a pictogram",
+                            label: "Insert a pictogram",
                             description: "test",
                             category: "test",
                             searchKeywords: ["icon"],
@@ -498,16 +498,20 @@ test("should toggle list on empty paragraph", async () => {
 class NoOpPlugin extends Plugin {
     static name = "no_op";
     resources = {
+        user_commands: [
+            {
+                id: "noOp",
+                run: () => {},
+            },
+        ],
         powerboxCategory: { id: "no_op", name: "No-op" },
         powerboxItems: [
             {
-                name: "No-op",
+                label: "No-op",
                 description: "No-op",
                 category: "no_op",
-                fontawesome: "fa-header",
-                action(dispatch) {
-                    dispatch("NO_OP");
-                },
+                icon: "fa-header",
+                commandId: "noOp",
             },
         ],
     };
@@ -571,17 +575,17 @@ test("should discard /command insertion from history when command is executed", 
     expect(commandNames(el)).toEqual(["Heading 1"]);
     await press("Enter");
     expect(getContent(el)).toBe("<h1>abc[]</h1>");
-    editor.dispatch("HISTORY_UNDO");
+    editor.shared.execCommand("historyUndo");
     expect(getContent(el)).toBe("<p>abc[]</p>");
-    editor.dispatch("HISTORY_REDO");
+    editor.shared.execCommand("historyRedo");
     expect(getContent(el)).toBe("<h1>abc[]</h1>");
-    editor.dispatch("HISTORY_UNDO");
+    editor.shared.execCommand("historyUndo");
     expect(getContent(el)).toBe("<p>abc[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    editor.shared.execCommand("historyUndo");
     expect(getContent(el)).toBe("<p>ab[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    editor.shared.execCommand("historyUndo");
     expect(getContent(el)).toBe("<p>a[]</p>");
-    editor.dispatch("HISTORY_UNDO");
+    editor.shared.execCommand("historyUndo");
     expect(getContent(el)).toBe(
         `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
     );

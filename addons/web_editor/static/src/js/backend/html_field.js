@@ -185,16 +185,13 @@ export class HtmlField extends Component {
         let dynamicPlaceholderOptions = {};
         if (this.props.dynamicPlaceholder) {
             dynamicPlaceholderOptions = {
-                // Add the powerbox option to open the Dynamic Placeholder
-                // generator.
-                powerboxItems: [
+                user_commands: [
                     {
-                        category: _t('Marketing Tools'),
-                        name: _t('Dynamic Placeholder'),
-                        priority: 10,
-                        description: _t('Insert a field'),
-                        fontawesome: 'fa-magic',
-                        callback: () => {
+                        id: "insertDynamicPlaceholder",
+                        label: _t("Dynamic Placeholder"),
+                        description: _t("Insert a field"),
+                        icon: "fa-magic",
+                        run: () => {
                             this.wysiwygRangePosition = getRangePosition(document.createElement('x'), this.wysiwyg.options.document || document);
                             this.dynamicPlaceholder.updateModel(this.props.dynamicPlaceholderModelReferenceField);
                             // The method openDynamicPlaceholder need to be triggered
@@ -208,7 +205,15 @@ export class HtmlField extends Component {
                                     }
                                 );
                             });
-                        },
+                        }
+                    },
+                ],
+                // Add the powerbox option to open the Dynamic Placeholder
+                // generator.
+                powerboxItems: [
+                    {
+                        category: _t('Marketing Tools'),
+                        commandId: "insertDynamicPlaceholder",
                     }
                 ],
                 powerboxFilters: [this._filterPowerBoxCommands.bind(this)],

@@ -41,110 +41,103 @@ function hasFormat(formatPlugin) {
 
 export class FormatPlugin extends Plugin {
     static name = "format";
-    static dependencies = ["selection", "split", "delete"];
+    static dependencies = ["selection", "history", "split", "delete"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = ["isSelectionFormat", "insertAndSelectZws", "mergeAdjacentInlines"];
     resources = {
+        user_commands: [
+            {
+                id: "formatBold",
+                label: _t("Toggle bold"),
+                icon: "fa-bold",
+                run: this.formatSelection.bind(this, "bold"),
+            },
+            {
+                id: "formatItalic",
+                label: _t("Toggle italic"),
+                icon: "fa-italic",
+                run: this.formatSelection.bind(this, "italic"),
+            },
+            {
+                id: "formatUnderline",
+                label: _t("Toggle underline"),
+                icon: "fa-underline",
+                run: this.formatSelection.bind(this, "underline"),
+            },
+            {
+                id: "formatStrikethrough",
+                label: _t("Toggle strikethrough"),
+                icon: "fa-strikethrough",
+                run: this.formatSelection.bind(this, "strikeThrough"),
+            },
+            {
+                id: "formatFontSize",
+                run: ({ size }) => {
+                    return this.formatSelection("fontSize", {
+                        applyStyle: true,
+                        formatProps: { size },
+                    });
+                },
+            },
+            {
+                id: "formatFontSizeClassName",
+                run: ({ className }) => {
+                    return this.formatSelection("setFontSizeClassName", {
+                        formatProps: { className },
+                    });
+                },
+            },
+            {
+                id: "removeFormat",
+                label: _t("Remove Format"),
+                icon: "fa-eraser",
+                run: this.removeFormat.bind(this),
+            },
+        ],
         shortcuts: [
-            { hotkey: "control+b", command: "FORMAT_BOLD" },
-            { hotkey: "control+i", command: "FORMAT_ITALIC" },
-            { hotkey: "control+u", command: "FORMAT_UNDERLINE" },
-            { hotkey: "control+5", command: "FORMAT_STRIKETHROUGH" },
+            { hotkey: "control+b", commandId: "formatBold" },
+            { hotkey: "control+i", commandId: "formatItalic" },
+            { hotkey: "control+u", commandId: "formatUnderline" },
+            { hotkey: "control+5", commandId: "formatStrikethrough" },
         ],
         toolbarCategory: withSequence(20, { id: "decoration" }),
         toolbarItems: [
             {
                 id: "bold",
                 category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_BOLD");
-                },
-                icon: "fa-bold",
-                title: _t("Toggle bold"),
+                commandId: "formatBold",
                 isFormatApplied: isFormatted(this, "bold"),
             },
             {
                 id: "italic",
                 category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_ITALIC");
-                },
-                icon: "fa-italic",
-                title: _t("Toggle italic"),
+                commandId: "formatItalic",
                 isFormatApplied: isFormatted(this, "italic"),
             },
             {
                 id: "underline",
                 category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_UNDERLINE");
-                },
-                icon: "fa-underline",
-                title: _t("Toggle underline"),
+                commandId: "formatUnderline",
                 isFormatApplied: isFormatted(this, "underline"),
             },
             {
                 id: "strikethrough",
                 category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_STRIKETHROUGH");
-                },
-                icon: "fa-strikethrough",
-                title: _t("Toggle strikethrough"),
+                commandId: "formatStrikethrough",
                 isFormatApplied: isFormatted(this, "strikeThrough"),
             },
             {
                 id: "remove_format",
                 category: "decoration",
-                action(dispatch) {
-                    dispatch("FORMAT_REMOVE_FORMAT");
-                },
-                icon: "fa-eraser",
-                title: _t("Remove Format"),
+                commandId: "removeFormat",
                 hasFormat: hasFormat(this),
             },
         ],
         arrows_should_skip: (ev, char, lastSkipped) => char === "\u200b",
         onBeforeInput: withSequence(20, this.onBeforeInput.bind(this)),
+        clean_for_save_listeners: this.cleanForSave.bind(this),
+        normalize_listeners: this.normalize.bind(this),
     };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "FORMAT_BOLD":
-                this.formatSelection("bold");
-                break;
-            case "FORMAT_ITALIC":
-                this.formatSelection("italic");
-                break;
-            case "FORMAT_UNDERLINE":
-                this.formatSelection("underline");
-                break;
-            case "FORMAT_STRIKETHROUGH":
-                this.formatSelection("strikeThrough");
-                break;
-            case "FORMAT_FONT_SIZE":
-                this.formatSelection("fontSize", {
-                    applyStyle: true,
-                    formatProps: { size: payload.size },
-                });
-                break;
-            case "FORMAT_FONT_SIZE_CLASSNAME":
-                this.formatSelection("setFontSizeClassName", {
-                    formatProps: { className: payload.className },
-                });
-                break;
-            case "FORMAT_REMOVE_FORMAT":
-                this.removeFormat();
-                break;
-            case "CLEAN_FOR_SAVE": {
-                this.cleanForSave(payload);
-                break;
-            }
-            case "NORMALIZE":
-                this.normalize(payload.node);
-                break;
-        }
-    }
 
     removeFormat() {
         for (const format of Object.keys(formatsSpecs)) {
@@ -154,7 +147,7 @@ export class FormatPlugin extends Plugin {
             this._formatSelection(format, { applyStyle: false });
         }
         trigger(this.getResource("removeFormat"));
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     /**
@@ -188,7 +181,7 @@ export class FormatPlugin extends Plugin {
 
     formatSelection(...args) {
         if (this._formatSelection(...args)) {
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         }
     }
 

@@ -1,38 +1,25 @@
-import { delegate } from "@html_editor/utils/resource";
+import { delegate, trigger } from "@html_editor/utils/resource";
 import { Plugin } from "../plugin";
 import { CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 
 export class LineBreakPlugin extends Plugin {
-    static dependencies = ["selection", "split"];
+    static dependencies = ["selection", "history", "split", "delete"];
     static name = "line_break";
-    static shared = ["insertLineBreakElement"];
+    static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
         onBeforeInput: this.onBeforeInput.bind(this),
+        split_unsplittable_handlers: this.insertLineBreakElement.bind(this),
     };
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "INSERT_LINEBREAK":
-                this.insertLineBreak();
-                break;
-            case "INSERT_LINEBREAK_NODE":
-                this.insertLineBreakNode(payload);
-                break;
-            case "INSERT_LINEBREAK_ELEMENT":
-                this.insertLineBreakElement(payload);
-                break;
-        }
-    }
-
     insertLineBreak() {
+        trigger(this.getResource("before_line_break_listeners"));
         let selection = this.shared.getEditableSelection();
         if (!selection.isCollapsed) {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
-            this.dispatch("RESET_TABLE_SELECTION");
-            this.dispatch("DELETE_SELECTION");
+            this.shared.deleteSelection();
             selection = this.shared.getEditableSelection();
         }
 
@@ -40,7 +27,7 @@ export class LineBreakPlugin extends Plugin {
         const targetOffset = selection.anchorOffset;
 
         this.insertLineBreakNode({ targetNode, targetOffset });
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
     insertLineBreakNode({ targetNode, targetOffset }) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
@@ -108,6 +95,7 @@ export class LineBreakPlugin extends Plugin {
                 break;
             }
         }
+        return true;
     }
 
     onBeforeInput(e) {

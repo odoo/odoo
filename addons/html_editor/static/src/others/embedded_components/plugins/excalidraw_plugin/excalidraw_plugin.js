@@ -5,18 +5,20 @@ import { ExcalidrawDialog } from "@html_editor/others/embedded_components/plugin
 
 export class ExcalidrawPlugin extends Plugin {
     static name = "excalidraw";
-    static dependencies = ["embedded_components", "dom", "selection", "link"];
+    static dependencies = ["embedded_components", "dom", "selection", "link", "history"];
     resources = {
+        user_commands: [
+            {
+                id: "insertDrawingBoard",
+                label: _t("Drawing Board"),
+                description: _t("Insert an Excalidraw Board"),
+                icon: "fa-pencil-square-o",
+            },
+        ],
         powerboxItems: [
             {
                 category: "navigation",
-                name: _t("Drawing Board"),
-                priority: 70,
-                description: _t("Insert an Excalidraw Board"),
-                fontawesome: "fa-pencil-square-o",
-                action: () => {
-                    this.insertDrawingBoard();
-                },
+                commandId: "insertDrawingBoard",
             },
         ],
     };
@@ -37,8 +39,7 @@ export class ExcalidrawPlugin extends Plugin {
                         }
                     );
                     this.shared.domInsert(templateBlock);
-
-                    this.dispatch("ADD_STEP");
+                    this.shared.addStep();
 
                     restoreSelection = () => {};
                 },
