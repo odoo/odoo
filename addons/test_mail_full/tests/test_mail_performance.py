@@ -1,14 +1,15 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
 from markupsafe import Markup
 
+from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
-from odoo.tests.common import users, warmup
+from odoo.tests.common import HttpCase, users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from odoo.tools.misc import limited_field_access_token
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -106,213 +107,336 @@ class TestMailPerformance(FullBaseMailPerformance):
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
-class TestPortalFormatPerformance(FullBaseMailPerformance):
-    """Test performance of `portal_message_format` with multiple messages
-    with multiple attachments, with ratings.
-
-    Those messages might not make sense functionally but they are crafted to
-    cover as much of the code as possible in regard to number of queries.
-
-    Setup :
-      * 5 records (self.containers -> 5 mail.test.rating records, with
-        a different customer_id each)
-      * 2 messages / record
-      * 2 attachments / message
-    """
+class TestPortalFormatPerformance(FullBaseMailPerformance, HttpCase):
+    """Test the performance of the portal messages format. The messages may not make sense
+    functionally, but they are designed to cover as much of the code as possible in terms of
+    number of queries.
+    The message with the subtype note is created to emphasize that messages with this subtype
+    are not fetched in the portal."""
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        # rating-enabled test records
-        cls.record_ratings = cls.env['mail.test.rating'].create([
+        cls.record = cls.env['mail.test.rating'].create([
             {
-                'customer_id': cls.customers[idx].id,
-                'name': f'TestRating_{idx}',
-                'user_id': cls.test_users[idx].id,
+                'customer_id': cls.customers[0].id,
+                'name': 'TestRating',
+                'user_id': cls.test_users[0].id,
 
             }
-            for idx in range(5)
         ])
-
-        # messages and ratings
-        user_id_field = cls.env['ir.model.fields']._get(cls.record_ratings._name, 'user_id')
-        comment_subtype_id = cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-        cls.messages_all = cls.env['mail.message'].sudo().create([
+        cls.comment_1 = cls.env['mail.message'].create([
             {
                 'attachment_ids': [
                     (0, 0, {
                         'datas': 'data',
-                        'name': f'Test file {att_idx}',
-                        'res_id': record.id,
-                        'res_model': record._name,
+                        'name': 'Test file',
+                        'res_id': cls.record.id,
+                        'res_model': cls.record._name,
                     })
-                    for att_idx in range(2)
                 ],
-                'author_id': record.customer_id.id,
-                'body': f'<p>Test {msg_idx}</p>',
+                'author_id': cls.record.customer_id.id,
+                'body': '<p>Comment 1</p>',
                 'date': datetime(2023, 5, 15, 10, 30, 5),
-                'email_from': record.customer_id.email_formatted,
-                'link_preview_ids': [
-                    (0, 0, {
-                        'source_url': 'https://www.odoo.com',
-                    }), (0, 0, {
-                        'source_url': 'https://www.example.com',
-                    }),
-                ],
+                'email_from': cls.record.customer_id.email_formatted,
+                'link_preview_ids': [(0, 0, {'source_url': 'https://www.odoo.com'})],
                 'notification_ids': [
                     (0, 0, {
                         'is_read': False,
                         'notification_type': 'inbox',
-                        'res_partner_id': cls.customers[(msg_idx * 2)].id,
-                    }),
-                    (0, 0, {
-                        'is_read': True,
-                        'notification_type': 'email',
-                        'notification_status': 'sent',
-                        'res_partner_id': cls.customers[(msg_idx * 2) + 1].id,
-                    }),
+                        'res_partner_id': cls.customers[0].id,
+                    })
                 ],
                 'message_type': 'comment',
-                'model': record._name,
-                'partner_ids': [
-                    (4, cls.customers[(msg_idx * 2)].id),
-                    (4, cls.customers[record_idx].id),
-                ],
+                'model': cls.record._name,
+                'partner_ids': [(4, cls.customers[0].id), (4, cls.customers[1].id)],
                 'reaction_ids': [
                     (0, 0, {
-                        'content': 'https://www.odoo.com',
-                        'partner_id': cls.customers[(msg_idx * 2) + 1].id
+                        'content': '😊',
+                        'partner_id': cls.customers[0].id
                     }), (0, 0, {
-                        'content': 'https://www.example.com',
-                        'partner_id': cls.customers[record_idx].id
+                        'content': '👍',
+                        'partner_id': cls.customers[1].id
                     }),
                 ],
-                'res_id': record.id,
-                'subject': f'Test Rating {msg_idx}',
-                'subtype_id': comment_subtype_id,
+                'res_id': cls.record.id,
+                'subject': 'Test Rating',
+                'subtype_id': cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
                 'starred_partner_ids': [
-                    (4, cls.customers[(msg_idx * 2)].id),
-                    (4, cls.customers[(msg_idx * 2) + 1].id),
+                    (4, cls.customers[0].id),
+                    (4, cls.customers[1].id),
                 ],
                 'tracking_value_ids': [
                     (0, 0, {
-                        'field_id': user_id_field.id,
+                        'field_id': cls.env['ir.model.fields']._get(cls.record._name, 'user_id').id,
                         'new_value_char': 'new 1',
-                        'new_value_integer': record.user_id.id,
+                        'new_value_integer': cls.record.user_id.id,
                         'old_value_char': 'old 1',
                         'old_value_integer': cls.user_admin.id,
                     }),
                 ]
             }
-            for msg_idx in range(2)
-            for record_idx, record in enumerate(cls.record_ratings)
+        ])
+        cls.comment_2 = cls.env["mail.message"].create([
+            {
+                "body": "Comment 2",
+                'message_type': 'comment',
+                'model': cls.record._name,
+                "res_id": cls.record.id,
+                "subtype_id": cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
+            }
+        ])
+        cls.note = cls.env["mail.message"].create([
+            {
+                "body": "Note",
+                'message_type': 'comment',
+                'model': cls.record._name,
+                "res_id": cls.record.id,
+                "subtype_id": cls.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            }
         ])
 
-        cls.messages_records = [cls.env[message.model].browse(message.res_id) for message in cls.messages_all]
-        # ratings values related to rating-enabled records
-        cls.ratings_all = cls.env['rating.rating'].sudo().create([
+        cls.rating = cls.env['rating.rating'].create([
             {
                 'consumed': True,
-                'message_id': message.id,
-                'partner_id': record.customer_id.id,
+                'message_id': cls.comment_1.id,
+                'partner_id': cls.record.customer_id.id,
                 'publisher_comment': 'Comment',
                 'publisher_id': cls.user_admin.partner_id.id,
                 'publisher_datetime': datetime(2023, 5, 15, 10, 30, 5) - timedelta(days=2),
-                'rated_partner_id': record.user_id.partner_id.id,
+                'rated_partner_id': cls.record.user_id.partner_id.id,
                 'rating': 4,
-                'res_id': message.res_id,
-                'res_model_id': cls.env['ir.model']._get_id(message.model),
+                'res_id': cls.comment_1.res_id,
+                'res_model_id': cls.env['ir.model']._get_id(cls.comment_1.model),
             }
-            for rating_idx in range(2)
-            for message, record in zip(cls.messages_all, cls.messages_records)
         ])
 
-    def test_assert_initial_values(self):
-        self.assertEqual(len(self.messages_all), 5 * 2)
-        self.assertEqual(len(self.ratings_all), len(self.messages_all) * 2)
-
-    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    @users('employee')
+    @mute_logger("odoo.tests", "odoo.addons.mail.models.mail_mail", "odoo.models.unlink")
+    @users("employee")
     @warmup
-    def test_portal_message_format_norating(self):
-        messages_all = self.messages_all.with_user(self.env.user)
-
-        with self.assertQueryCount(employee=15):
-            # res = messages_all.portal_message_format(options=None)
-            res = messages_all.portal_message_format(options={'rating_include': False})
-
-        comment_subtype = self.env.ref('mail.mt_comment')
-        self.assertEqual(len(res), len(messages_all))
-        for format_res, message, record in zip(res, messages_all, self.messages_records):
-            self.assertEqual(len(format_res['attachment_ids']), 2)
-            self.assertEqual(
-                format_res['attachment_ids'],
-                [
+    def test_portal_message_format(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        messages_count = self.env["mail.message"].search_count(
+            [("res_id", "=", self.record.id), ("model", "=", self.record._name)]
+        )
+        with self.assertQueryCount(employee=34):
+            res = self.make_jsonrpc_request(
+                route="/mail/thread/messages",
+                params={
+                    "thread_model": self.record._name,
+                    "thread_id": self.record.id,
+                    "fetch_portal_message": True,
+                },
+            )
+        self.assertNotEqual(len(res["messages"]), messages_count)
+        expected_data = {
+            "data": {
+                "MessageReactions": [
                     {
-                        'access_token': message.attachment_ids[0].access_token,
-                        'checksum': message.attachment_ids[0].checksum,
-                        'filename': 'Test file 1',
-                        'id': message.attachment_ids[0].id,
-                        'mimetype': 'application/octet-stream',
-                        'name': 'Test file 1',
-                        'res_id': record.id,
-                        'res_model': record._name,
-                    }, {
-                        'access_token': message.attachment_ids[1].access_token,
-                        'checksum': message.attachment_ids[1].checksum,
-                        'filename': 'Test file 0',
-                        'id': message.attachment_ids[1].id,
-                        'mimetype': 'application/octet-stream',
-                        'name': 'Test file 0',
-                        'res_id': record.id,
-                        'res_model': record._name,
+                        "content": "👍",
+                        "count": 1,
+                        "message": self.comment_1.id,
+                        "personas": [{"id": self.customers[1].id, "type": "partner"}],
+                        "sequence": min(
+                            self.comment_1.reaction_ids.filtered(lambda r: r.content == "👍").ids
+                        ),
+                    },
+                    {
+                        "content": "😊",
+                        "count": 1,
+                        "message": self.comment_1.id,
+                        "personas": [{"id": self.customers[0].id, "type": "partner"}],
+                        "sequence": min(
+                            self.comment_1.reaction_ids.filtered(lambda r: r.content == "😊").ids
+                        ),
+                    },
+                ],
+                "ir.attachment": [
+                    {
+                        "checksum": "8f06741ba6002d0e0df1118d1f32472205fa8fe2",
+                        "create_date": fields.Datetime.to_string(
+                            self.comment_1.attachment_ids.create_date
+                        ),
+                        "id": self.comment_1.attachment_ids.id,
+                        "mimetype": "application/octet-stream",
+                        "name": "Test file",
+                        "res_name": "TestRating",
+                        "thread": {"id": self.record.id, "model": self.record._name},
+                        "type": "binary",
+                        "url": False,
+                        "voice": False,
                     }
-                ]
-            )
-            self.assertEqual(format_res["author"]["id"], record.customer_id.id)
-            self.assertEqual(format_res["author"]["name"], record.customer_id.display_name)
-            self.assertEqual(format_res['author_avatar_url'], f'/web/image/mail.message/{message.id}/author_avatar/50x50')
-            self.assertEqual(format_res['date'], datetime(2023, 5, 15, 10, 30, 5))
-            self.assertEqual(' '.join(format_res['published_date_str'].split()), 'May 15, 2023, 10:30:05 AM')
-            self.assertEqual(format_res['id'], message.id)
-            self.assertFalse(format_res['is_internal'])
-            self.assertFalse(format_res['is_message_subtype_note'])
-            self.assertEqual(format_res['subtype_id'], (comment_subtype.id, comment_subtype.name))
-            # should not be in, not asked
-            self.assertNotIn('rating', format_res)
-            self.assertNotIn('rating_stats', format_res)
-            self.assertNotIn('rating_value', format_res)
-
-    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    @users('employee')
-    @warmup
-    def test_portal_message_format_rating(self):
-        messages_all = self.messages_all.with_user(self.env.user)
-
-        with self.assertQueryCount(employee=29):
-            res = messages_all.portal_message_format(options={'rating_include': True})
-
-        self.assertEqual(len(res), len(messages_all))
-        for format_res, _message, _record in zip(res, messages_all, self.messages_records):
-            self.assertEqual(format_res['rating']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
-            self.assertEqual(format_res['rating']['publisher_comment'], 'Comment')
-            self.assertEqual(format_res['rating']['publisher_id'], self.partner_admin.id)
-            self.assertEqual(" ".join(format_res['rating']['publisher_datetime'].split()), 'May 13, 2023, 10:30:05 AM')
-            self.assertEqual(format_res['rating']['publisher_name'], self.partner_admin.display_name)
-            self.assertDictEqual(
-                format_res['rating_stats'],
-                {'avg': 4.0, 'total': 4, 'percent': {1: 0.0, 2: 0.0, 3: 0.0, 4: 100.0, 5: 0.0}}
-            )
-            self.assertEqual(format_res['rating_value'], 4)
-
-    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    @users('employee')
-    @warmup
-    def test_portal_message_format_monorecord(self):
-        message = self.messages_all[0].with_user(self.env.user)
-
-        with self.assertQueryCount(employee=20):
-            res = message.portal_message_format(options={'rating_include': True})
-
-        self.assertEqual(len(res), 1)
+                ],
+                "mail.link.preview": [
+                    {
+                        "id": self.comment_1.link_preview_ids.id,
+                        "image_mimetype": False,
+                        "message_id": self.comment_1.id,
+                        "og_description": False,
+                        "og_image": False,
+                        "og_mimetype": False,
+                        "og_site_name": False,
+                        "og_title": False,
+                        "og_type": False,
+                        "source_url": "https://www.odoo.com",
+                    },
+                ],
+                "mail.message": [
+                    {
+                        "attachment_ids": [],
+                        "author": {"id": self.comment_2.author_id.id, "type": "partner"},
+                        "body": "<p>Comment 2</p>",
+                        "create_date": fields.Datetime.to_string(self.comment_2.create_date),
+                        "date": fields.Datetime.to_string(self.comment_2.date),
+                        "default_subject": "TestRating",
+                        "email_from": '"OdooBot" <odoobot@example.com>',
+                        "id": self.comment_2.id,
+                        "incoming_email_cc": False,
+                        "incoming_email_to": False,
+                        "is_discussion": True,
+                        "is_note": False,
+                        "link_preview_ids": [],
+                        "message_type": "comment",
+                        "model": self.record._name,
+                        "needaction": False,
+                        "notification_ids": [],
+                        "pinned_at": False,
+                        "rating_id": False,
+                        "reactions": [],
+                        "recipients": [],
+                        "record_name": "TestRating",
+                        "res_id": self.record.id,
+                        "scheduledDatetime": False,
+                        "starred": False,
+                        "subject": False,
+                        "subtype_description": False,
+                        "thread": {"id": self.record.id, "model": self.record._name},
+                        "trackingValues": [],
+                        "write_date": fields.Datetime.to_string(self.comment_2.write_date),
+                    },
+                    {
+                        "attachment_ids": [self.comment_1.attachment_ids.id],
+                        "author": {"id": self.comment_1.author_id.id, "type": "partner"},
+                        "body": "<p>Comment 1</p>",
+                        "create_date": fields.Datetime.to_string(self.comment_1.create_date),
+                        "date": fields.Datetime.to_string(self.comment_1.date),
+                        "default_subject": "TestRating",
+                        "email_from": '"Test Full Customer 0" <customer.full.test.0@example.com>',
+                        "id": self.comment_1.id,
+                        "incoming_email_cc": False,
+                        "incoming_email_to": False,
+                        "is_discussion": True,
+                        "is_note": False,
+                        "link_preview_ids": self.comment_1.link_preview_ids.ids,
+                        "message_type": "comment",
+                        "model": self.record._name,
+                        "needaction": False,
+                        "notification_ids": self.comment_1.notification_ids.ids,
+                        "pinned_at": False,
+                        "rating_id": self.rating.id,
+                        "reactions": [
+                            {"message": self.comment_1.id, "content": "👍"},
+                            {"message": self.comment_1.id, "content": "😊"},
+                        ],
+                        "recipients": [
+                            {"id": self.customers[0].id, "type": "partner"},
+                            {"id": self.customers[1].id, "type": "partner"},
+                        ],
+                        "record_name": "TestRating",
+                        "res_id": self.record.id,
+                        "scheduledDatetime": False,
+                        "starred": False,
+                        "subject": "Test Rating",
+                        "subtype_description": False,
+                        "thread": {"id": self.record.id, "model": self.record._name},
+                        "trackingValues": [
+                            {
+                                "changedField": "Responsible",
+                                "id": self.comment_1.tracking_value_ids.id,
+                                "fieldName": "user_id",
+                                "fieldType": "many2one",
+                                "newValue": {"currencyId": False, "value": "new 1"},
+                                "oldValue": {"currencyId": False, "value": "old 1"},
+                            }
+                        ],
+                        "write_date": fields.Datetime.to_string(self.comment_1.write_date),
+                    },
+                ],
+                "mail.notification": [
+                    {
+                        "failure_type": False,
+                        "id": self.comment_1.notification_ids.id,
+                        "mail_message_id": self.comment_1.id,
+                        "notification_status": "ready",
+                        "notification_type": "inbox",
+                        "persona": {"id": self.customers[0].id, "type": "partner"},
+                    }
+                ],
+                "mail.thread": [
+                    {
+                        "display_name": "TestRating",
+                        "id": self.record.id,
+                        "model": self.record._name,
+                        "module_icon": "/base/static/description/icon.png",
+                        "rating_avg": 4.0,
+                        "rating_count": 1,
+                    }
+                ],
+                "rating.rating": [
+                    {
+                        "id": self.rating.id,
+                        "message_id": self.comment_1.id,
+                        "publisher_comment": "Comment",
+                        "publisher_datetime": fields.Datetime.to_string(self.rating.publisher_datetime),
+                        "publisher_id": {"id": self.user_admin.partner_id.id, "type": "partner"},
+                        "rating": 4.0,
+                        "rating_image_url": "/rating/static/src/img/rating_5.png",
+                        "rating_text": "top",
+                    }
+                ],
+                "res.partner": [
+                    {
+                        "avatar_128_access_token": limited_field_access_token(
+                            self.customers[1], "avatar_128"
+                        ),
+                        "id": self.customers[1].id,
+                        "name": "Test Full Customer 1",
+                        "write_date": fields.Datetime.to_string(self.customers[1].write_date),
+                    },
+                    {
+                        "avatar_128_access_token": limited_field_access_token(
+                            self.customers[0], "avatar_128"
+                        ),
+                        "email": "customer.full.test.0@example.com",
+                        "id": self.customers[0].id,
+                        "isInternalUser": False,
+                        "is_company": False,
+                        "name": "Test Full Customer 0",
+                        "userId": False,
+                        "write_date": fields.Datetime.to_string(self.customers[0].write_date),
+                    },
+                    {
+                        "id": self.user_admin.partner_id.id,
+                        "isInternalUser": True,
+                        "is_company": False,
+                        "name": "Mitchell Admin",
+                        "userId": self.user_admin.id,
+                        "write_date": fields.Datetime.to_string(self.user_admin.partner_id.write_date),
+                    },
+                    {
+                        "avatar_128_access_token": limited_field_access_token(
+                            self.user_root.partner_id, "avatar_128"
+                        ),
+                        "id": self.user_root.partner_id.id,
+                        "isInternalUser": True,
+                        "is_company": False,
+                        "name": "OdooBot",
+                        "userId": self.user_root.id,
+                        "write_date": fields.Datetime.to_string(
+                            self.user_root.partner_id.write_date),
+                    },
+                ],
+            },
+            "messages": [self.comment_2.id, self.comment_1.id],
+        }
+        self.assertEqual(res, expected_data)
