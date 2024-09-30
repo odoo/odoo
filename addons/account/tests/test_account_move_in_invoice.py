@@ -2718,3 +2718,16 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         bill = self.init_invoice(move_type='in_invoice', products=[product])
         bill_uom = bill.invoice_line_ids[0].product_uom_id
         self.assertEqual(bill_uom, uom_kgm)
+
+    def test_manual_label_change_on_payment_term_line(self):
+        """
+        Ensure label of the payment term line can be changed manually
+        """
+        payment_term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        index = self.invoice.line_ids.ids.index(payment_term_line.id)
+        with Form(self.invoice) as move_form:
+            with move_form.line_ids.edit(index) as line_form:
+                line_form.name = 'XYZ'
+        move_form.save()
+        self.invoice.action_post()
+        self.assertEqual(payment_term_line.name, 'XYZ', 'Manual name of payment term line should be kept')
