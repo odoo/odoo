@@ -4102,3 +4102,58 @@ class TestStockValuation(TestStockValuationBase):
         ]).account_move_id
 
         self.assertIn('OdooBot changed stock valuation from  15.0 to 25.0 -', account_move.line_ids[0].name)
+
+    def test_journal_entries_from_change_product_cost_method(self):
+        """ Changing between non-standard cost methods when an underlying product has real_time
+        accounting and a negative on hand quantity should result in journal entries with offsetting
+        debit/credits for the stock valuation and stock output accounts (inverse of positive qty).
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        move1 = self.env['stock.move'].create({
+            'name': 'IN 10 units @ 7.20 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 7.2,
+        })
+        move2 = self.env['stock.move'].create({
+            'name': 'IN 20 units @ 15.30 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom_qty': 20.0,
+            'price_unit': 15.3,
+        })
+        (move1 + move2)._action_confirm()
+        (move1 + move2)._action_assign()
+        move1.quantity = 10
+        move2.quantity = 20
+        (move1 + move2).picked = True
+        (move1 + move2)._action_done()
+        move3 = self.env['stock.move'].create({
+            'name': 'OUT 100 units',
+            'product_id': self.product1.id,
+            'product_uom_qty': 100,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move3._action_confirm()
+        move3._action_assign()
+        move3.quantity = 100
+        move3.picked = True
+        move3._action_done()
+        self.product1.categ_id.property_cost_method = 'average'
+        amls = self.env['account.move.line'].search([
+            ('product_id', '=', self.product1.id),
+            ('name', 'ilike', 'Costing method change%'),
+        ], order='id')
+        self.assertRecordValues(
+            amls,
+            [
+                {'account_id': self.stock_valuation_account.id, 'debit': 1071, 'credit': 0},
+                {'account_id': self.stock_output_account.id, 'debit': 0, 'credit': 1071},
+                {'account_id': self.stock_output_account.id, 'debit': 1071, 'credit': 0},
+                {'account_id': self.stock_valuation_account.id, 'debit': 0, 'credit': 1071},
+            ]
+        )
