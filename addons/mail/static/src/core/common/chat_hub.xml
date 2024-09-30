@@ -60,7 +60,7 @@
             <ul class="m-0 p-0 overflow-auto" role="menu" t-ref="more-menu">
                 <t t-foreach="chatHub.folded.slice(chatHub.maxFolded)" t-as="cw" t-key="cw.localId">
                     <li class="o-mail-ChatHub-hiddenItem gap-2 px-2 py-1" role="menuitem" t-att-name="cw.displayName" t-on-click="() => cw.open()">
-                        <img class="o-mail-ChatHub-hiddenAvatar rounded-circle" t-att-src="cw.thread?.avatarUrl" alt="Thread image" draggable="false"/>
+                        <img class="o-mail-ChatHub-hiddenAvatar rounded-circle o_object_fit_cover" t-att-src="cw.thread?.avatarUrl" alt="Thread image" draggable="false"/>
                         <p class="text-truncate fw-bold mb-0" t-esc="cw.displayName"/>
                         <div t-if="cw.thread?.importantCounter > 0" class="o-mail-ChatHub-hiddenCounter badge rounded-pill fw-bold o-discuss-badge" style="padding: 3px 6px">
                             <t t-out="cw.thread?.importantCounter"/>
