@@ -167,6 +167,27 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         with self.assertRaises(ValidationError):
             journal.action_archive()
 
+    def test_archive_multiple_journals(self):
+        journals = self.env['account.journal'].create([{
+                'name': 'Test Journal 1',
+                'type': 'sale',
+                'code': 'A1'
+            }, {
+                'name': 'Test Journal 2',
+                'type': 'sale',
+                'code': 'A2'
+            }])
+
+        # Archive the Journals
+        journals.action_archive()
+        self.assertFalse(journals[0].active)
+        self.assertFalse(journals[1].active)
+
+        # Unarchive the Journals
+        journals.action_unarchive()
+        self.assertTrue(journals[0].active)
+        self.assertTrue(journals[1].active)
+
 
 @tagged('post_install', '-at_install', 'mail_alias')
 class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
