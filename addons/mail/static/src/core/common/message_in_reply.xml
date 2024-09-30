@@ -8,7 +8,7 @@
             <small class="position-relative d-block text-small mb-1" t-attf-class="{{ env.inChatWindow and props.alignedRight ? 'justify-content-end pe-5': 'ps-5' }}">
                 <span class="o-mail-MessageInReply-corner position-absolute bottom-0 top-50 pe-4 border-top text-300" t-attf-class="{{ env.inChatWindow and props.alignedRight ? 'o-isRightAlign border-end' : 'o-isLeftAlign border-start' }}" t-att-class="{ 'ms-n2': store.discuss.isActive }"/>
                 <span t-if="!props.message.parentMessage.isEmpty" class="d-inline-flex align-items-center text-muted opacity-75" t-att-class="{ 'cursor-pointer opacity-100-hover': props.onClick }" t-on-click="() => this.props.onClick?.()">
-                    <img class="o-mail-MessageInReply-avatar me-2 rounded" t-att-src="authorAvatarUrl" t-att-title="props.message.parentMessage.author?.name ?? props.message.parentMessage.email_from" alt="Avatar"/>
+                    <img class="o-mail-MessageInReply-avatar me-2 rounded o_object_fit_cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parentMessage.author?.name ?? props.message.parentMessage.email_from" alt="Avatar"/>
                     <span class="o-mail-MessageInReply-content overflow-hidden smaller">
                         <b>@<t t-out="props.message.parentMessage.author?.name ?? props.message.parentMessage.email_from"/></b>:
                         <br t-if="env.inChatWindow and !props.alignedRight"/>
