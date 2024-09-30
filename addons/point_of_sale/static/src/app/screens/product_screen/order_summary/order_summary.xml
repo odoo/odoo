@@ -2,8 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderSummary">
     <OrderWidget lines="currentOrder.getSortedOrderlines()" t-slot-scope="scope" class="'bg-light'"
-      total="env.utils.formatCurrency(currentOrder.getTotalWithTax())"
-      tax="!env.utils.floatIsZero(currentOrder.getTotalTax()) and env.utils.formatCurrency(currentOrder.getTotalTax()) or ''"
+      taxTotals="currentOrder.taxTotals"
       generalCustomerNote="currentOrder.general_customer_note or ''"
       internalNote="currentOrder.internal_note or ''">
           <t t-set="line" t-value="scope.line" />
