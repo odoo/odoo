@@ -1,5 +1,4 @@
 import {
-    App,
     Component,
     onMounted,
     onWillStart,
@@ -162,10 +161,10 @@ export class HtmlViewer extends Component {
     // Embedded Components
     //--------------------------------------------------------------------------
 
-    destroyComponent({ app, host }) {
+    destroyComponent({ root, host }) {
         const { getEditableDescendants } = this.getEmbedding(host);
         const editableDescendants = getEditableDescendants?.(host) || {};
-        app.destroy();
+        root.destroy();
         this.components.delete(arguments[0]);
         host.append(...Object.values(editableDescendants));
     }
@@ -205,8 +204,6 @@ export class HtmlViewer extends Component {
 
     mountComponent(host, { Component, getEditableDescendants, getProps, name }) {
         const props = getProps?.(host) || {};
-        const mainApp = this.__owl__.app;
-        const { dev, translateFn, getRawTemplate } = mainApp;
         // TODO ABD TODO @phoenix: check if there is too much info in the htmlViewer env.
         // i.e.: env has X because of parent component,
         // embedded component descendant sometimes uses X from env which is set conditionally:
@@ -221,31 +218,25 @@ export class HtmlViewer extends Component {
             env,
             props,
         });
-        const app = new App(Component, {
-            test: dev,
-            env,
-            translateFn,
-            getTemplate: getRawTemplate,
+        const root = this.__owl__.app.createRoot(Component, {
             props,
+            env,
         });
-        app.rawTemplates = mainApp.rawTemplates;
-        // Can't copy compiled templates because they have a reference to the main app
-        // app.templates = mainApp.templates;
-        const promise = app.mount(host);
+        const promise = root.mount(host);
         // Don't show mounting errors as they will happen often when the host
         // is disconnected from the DOM because of a patch
         promise.catch();
-        // Patch mount fiber to hook into the exact call stack where app is
+        // Patch mount fiber to hook into the exact call stack where root is
         // mounted (but before). This will remove host children synchronously
-        // just before adding the app rendered html.
-        const fiber = Array.from(app.scheduler.tasks)[0];
+        // just before adding the root rendered html.
+        const fiber = root.node.fiber;
         const fiberComplete = fiber.complete;
         fiber.complete = function () {
             host.replaceChildren();
             fiberComplete.call(this);
         };
         const info = {
-            app,
+            root,
             host,
         };
         this.components.add(info);
