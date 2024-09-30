@@ -2252,3 +2252,57 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosRewardProductScanGS1",
             login="pos_admin",
         )
+
+    def test_coupon_pricelist(self):
+        self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "is_storable": True,
+                "list_price": 25,
+                "available_in_pos": True,
+            }
+        )
+
+        alt_pos_config = self.main_pos_config.copy()
+        pricelist_1 = self.env['product.pricelist'].create(
+            {
+                "name": "test pricelist 1",
+                "currency_id": self.env.ref("base.USD").id,
+            }
+        )
+        alt_pos_config.write({
+            'use_pricelist': True,
+            'available_pricelist_ids': [(4, pricelist_1.id)],
+            'pricelist_id': pricelist_1.id,
+        })
+
+        self.env["loyalty.program"].create(
+            {
+                "name": "Test Loyalty Program",
+                "program_type": "promotion",
+                "trigger": "with_code",
+                'pos_ok': True,
+                "pricelist_ids": [(4, pricelist_1.id)],
+                "rule_ids": [
+                    Command.create({"mode": "with_code", "code": "hellopromo", "minimum_amount": 10}),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "percent",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    }),
+                ],
+                'pos_config_ids': [Command.link(alt_pos_config.id)],
+
+            }
+        )
+
+        alt_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % alt_pos_config.id,
+            "PosLoyaltyPromocodePricelist",
+            login="pos_user",
+        )
