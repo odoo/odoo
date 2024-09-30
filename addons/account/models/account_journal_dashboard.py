@@ -563,7 +563,7 @@ class account_journal(models.Model):
 
             query, selects = journals._get_open_sale_purchase_query(journal_type)
             sql = SQL("""%s
-                    GROUP BY account_move_line.company_id, account_move_line.journal_id, account_move_line.currency_id, late, to_pay""",
+                    GROUP BY account_move.company_id, account_move.journal_id, account_move.currency_id, late, to_pay""",
                       query.select(*selects),
             )
             self.env.cr.execute(sql)
@@ -713,23 +713,20 @@ class account_journal(models.Model):
 
     def _get_open_sale_purchase_query(self, journal_type):
         assert journal_type in ('sale', 'purchase')
-        query = self.env['account.move.line']._where_calc([
-            ('move_id', 'in', self.env['account.move']._where_calc([
-                *self.env['account.move.line']._check_company_domain(self.env.companies),
-                ('journal_id', 'in', self.ids),
-                ('payment_state', 'in', ('not_paid', 'partial')),
-                ('move_type', '=', 'out_invoice' if journal_type == 'sale' else 'in_invoice'),
-                ('state', '=', 'posted'),
-            ])),
-            ('account_type', '=', 'asset_receivable' if journal_type == 'sale' else 'liability_payable'),
+        query = self.env['account.move']._where_calc([
+            *self.env['account.move']._check_company_domain(self.env.companies),
+            ('journal_id', 'in', self.ids),
+            ('payment_state', 'in', ('not_paid', 'partial')),
+            ('move_type', '=', 'out_invoice' if journal_type == 'sale' else 'in_invoice'),
+            ('state', '=', 'posted'),
         ])
         selects = [
-            SQL("account_move_line.journal_id"),
-            SQL("account_move_line.company_id"),
-            SQL("account_move_line.currency_id AS currency"),
-            SQL("account_move_line.date_maturity < %s AS late", fields.Date.context_today(self)),
-            SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
-            SQL("SUM(account_move_line.amount_residual_currency) AS amount_total"),
+            SQL("journal_id"),
+            SQL("company_id"),
+            SQL("currency_id AS currency"),
+            SQL("invoice_date_due < %s AS late", fields.Date.context_today(self)),
+            SQL("SUM(amount_residual_signed) AS amount_total_company"),
+            SQL("SUM((CASE WHEN move_type = 'in_invoice' THEN -1 ELSE 1 END) * amount_residual) AS amount_total"),
             SQL("COUNT(*)"),
             SQL("TRUE AS to_pay")
         ]
