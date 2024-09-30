@@ -214,7 +214,7 @@ test("Manager: user change", async () => {
     expectedUserId = 2;
     await contains(".lunch_user li:not(.o_m2o_dropdown_option) .dropdown-item:eq(3)").click();
 
-    expect(".o_lunch_banner .col-8 > .d-flex > span:nth-child(2)").toHaveText("-10000.00\n€", {
+    expect(".o_lunch_banner .w-100 > .d-flex > span:nth-child(2)").toHaveText("-10000.00\n€", {
         message: "David Elora is poor",
     });
 
@@ -378,11 +378,11 @@ test("Confirm existing order", async () => {
         return true;
     });
     await mountLunchView();
-    expect(".o_lunch_banner .col-8 > .d-flex > span:nth-child(2)").toHaveText("12.05\n€");
+    expect(".o_lunch_banner .w-100 > .d-flex > span:nth-child(2)").toHaveText("12.05\n€");
 
     await contains("div.o_lunch_banner > .row > div:nth-child(3) button").click();
 
-    expect(".o_lunch_banner .col-8 > .d-flex > span:nth-child(2)").toHaveText("7.10\n€", {
+    expect(".o_lunch_banner .w-100 > .d-flex > span:nth-child(2)").toHaveText("7.10\n€", {
         message: "Wallet should update",
     });
 });
