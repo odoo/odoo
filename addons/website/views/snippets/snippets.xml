@@ -368,23 +368,13 @@
 
             <!-- Inner snippets -->
             <snippets id="snippet_content" string="Inner content">
-                <t t-snippet="website.s_button" string="Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.svg">
-                    <keywords>button, action</keywords>
-                </t>
-                <t t-snippet="website.s_image" string="Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image.svg">
-                    <keywords>image, picture, photo</keywords>
-                </t>
-                <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg">
-                    <keywords>video, youtube, vimeo, dailymotion, youku</keywords>
-                </t>
-                <t t-snippet="website.s_hr" string="Separator" t-thumbnail="/website/static/src/img/snippets_thumbs/s_hr.svg">
-                    <keywords>separator, divider</keywords>
-                </t>
+                <t t-snippet="website.s_button" string="Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_button.svg"/>
+                <t t-snippet="website.s_image" string="Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image.svg"/>
+                <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg"/>
+                <t t-snippet="website.s_hr" string="Separator" t-thumbnail="/website/static/src/img/snippets_thumbs/s_hr.svg"/>
                 <t t-snippet="website.s_accordion" string="Accordion" t-thumbnail="/website/static/src/img/snippets_thumbs/s_accordion.svg"/>
                 <t t-snippet="website.s_alert" string="Alert" t-thumbnail="/website/static/src/img/snippets_thumbs/s_alert.svg"/>
-                <t t-snippet="website.s_rating" string="Rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.svg">
-                    <keywords>valuation, rank</keywords>
-                </t>
+                <t t-snippet="website.s_rating" string="Rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.svg"/>
                 <t t-snippet="website.s_card" string="Card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.svg"/>
                 <t t-snippet="website.s_share" string="Share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg"/>
                 <t t-snippet="website.s_social_media" string="Social Media" t-thumbnail="/website/static/src/img/snippets_thumbs/s_social_media.svg"/>
@@ -393,19 +383,11 @@
                 <t id="mass_mailing_newsletter_hook"/>
                 <t id="mail_group_hook"/>
                 <t t-snippet="website.s_text_highlight" string="Text Highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
-                <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg">
-                    <keywords>chart, table, diagram, pie</keywords>
-                </t>
-                <t t-snippet="website.s_progress_bar" string="Progress Bar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_progress_bar.svg">
-                    <keywords>evolution, growth</keywords>
-                </t>
+                <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg"/>
+                <t t-snippet="website.s_progress_bar" string="Progress Bar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_progress_bar.svg"/>
                 <t t-snippet="website.s_badge" string="Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_badge.svg"/>
-                <t t-snippet="website.s_cta_badge" string="CTA Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cta_badge.svg">
-                    <keywords>cta, button, btn, action, engagement, link, appeal, trigger, promotion, promote</keywords>
-                </t>
-                <t t-snippet="website.s_blockquote" string="Blockquote" t-thumbnail="/website/static/src/img/snippets_thumbs/s_blockquote.svg">
-                    <keywords>cite</keywords>
-                </t>
+                <t t-snippet="website.s_cta_badge" string="CTA Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_cta_badge.svg"/>
+                <t t-snippet="website.s_blockquote" string="Blockquote" t-thumbnail="/website/static/src/img/snippets_thumbs/s_blockquote.svg"/>
                 <!--
                 Note: this inner snippet is still allowed to be dropped as a
                 main snippet. Indeed, this handles the fact that the snippet
@@ -415,9 +397,7 @@
                 snippet by other snippets in there.
                 -->
                 <t t-snippet="website.s_website_form" string="Form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
-                <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
-                    <keywords>celebration, launch</keywords>
-                </t>
+                <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg"/>
                 <t t-snippet="website.s_embed_code" string="Embed Code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" t-forbid-sanitize="true"/>
                 <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_map.svg"/>
                 <t t-if="debug or google_maps_api_key" t-snippet="website.s_google_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg"/>
