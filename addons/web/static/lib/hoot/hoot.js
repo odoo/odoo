@@ -114,6 +114,7 @@ export const globals = {
     setTimeout: globalThis.setTimeout,
 };
 export const __debug__ = runner;
+export const __version__ = "1.0.0";
 
 //-----------------------------------------------------------------------------
 // Main
