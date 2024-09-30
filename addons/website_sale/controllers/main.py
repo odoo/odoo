@@ -2021,13 +2021,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if (
             not order_sudo.only_services
             and not self._check_delivery_address(delivery_partner_sudo)
+            and delivery_partner_sudo._can_be_edited_by_current_customer(order_sudo, 'delivery')
         ):
             return request.redirect(
                 f'/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery'
             )
         # Check that the billing address is complete.
         invoice_partner_sudo = order_sudo.partner_invoice_id
-        if not self._check_billing_address(invoice_partner_sudo):
+        if (
+            not self._check_billing_address(invoice_partner_sudo)
+            and invoice_partner_sudo._can_be_edited_by_current_customer(order_sudo, 'billing')
+        ):
             return request.redirect(
                 f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
             )
