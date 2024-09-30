@@ -8,7 +8,7 @@ import time
 
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
-import odoo
+from odoo import api
 from odoo.tools import config, topological_sort, unique
 from odoo.modules.registry import Registry
 from odoo.netsvc import init_logger
@@ -30,7 +30,7 @@ INSTALL_BLACKLIST = {
 
 def install(db_name, module_id, module_name):
     with Registry(db_name).cursor() as cr:
-        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+        env = api.Environment(cr, api.SUPERUSER_ID, {})
         module = env['ir.module.module'].browse(module_id)
         module.button_immediate_install()
     _logger.info('%s installed', module_name)
@@ -38,7 +38,7 @@ def install(db_name, module_id, module_name):
 
 def uninstall(db_name, module_id, module_name):
     with Registry(db_name).cursor() as cr:
-        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+        env = api.Environment(cr, api.SUPERUSER_ID, {})
         module = env['ir.module.module'].browse(module_id)
         module.button_immediate_uninstall()
     _logger.info('%s uninstalled', module_name)
@@ -125,7 +125,7 @@ class StandaloneAction(argparse.Action):
 def test_cycle(args):
     """ Test full install/uninstall/reinstall cycle for all modules """
     with Registry(args.database).cursor() as cr:
-        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+        env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
 
         def valid(module):
             return not (
@@ -160,7 +160,7 @@ def test_uninstall(args):
     """ Tries to uninstall/reinstall one ore more modules"""
     for module_name in args.uninstall.split(','):
         with Registry(args.database).cursor() as cr:
-            env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+            env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
             module = env['ir.module.module'].search([('name', '=', module_name)])
             module_id, module_state = module.id, module.state
 
@@ -193,7 +193,7 @@ def test_standalone(args):
     start_time = time.time()
     for index, func in enumerate(funcs, start=1):
         with Registry(args.database).cursor() as cr:
-            env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+            env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
             _logger.info("Executing standalone script: %s (%d / %d)",
                          func.__name__, index, len(funcs))
             try:

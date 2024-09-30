@@ -5,7 +5,6 @@ from . import models
 from . import wizard
 from . import report
 
-from odoo import api, SUPERUSER_ID
 
 def _create_warehouse_data(env):
     """ This hook is used to add default repair picking types on every warehouse.

@@ -22,9 +22,6 @@ assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Od
 # ----------------------------------------------------------
 # Shortcuts
 # ----------------------------------------------------------
-# The hard-coded super-user id (a.k.a. administrator, or root user).
-SUPERUSER_ID = 1
-
 
 def registry(database_name=None):
     """
@@ -47,6 +44,9 @@ def registry(database_name=None):
 from . import _monkeypatches
 _monkeypatches.patch_all()
 
+# ----------------------------------------------------------
+# Export admin user constant
+from .orm.utils import SUPERUSER_ID
 
 # ----------------------------------------------------------
 # Imports
