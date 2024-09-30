@@ -1025,8 +1025,9 @@ class AccountPayment(models.Model):
                     method_name=self.payment_method_line_id.name,
                     partner=payment.partner_id.display_name,
                 ))
-
-        self.state = 'in_process'
+        # Avoid going back one state when clicking on the confirm action in the payment list view and having paid expenses selected
+        # We need to set values to each payment to avoid recomputation later
+        self.filtered(lambda pay: pay.state in {False, 'draft', 'in_process'}).state = 'in_process'
 
     def action_validate(self):
         self.state = 'paid'
