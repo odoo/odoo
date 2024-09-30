@@ -12,7 +12,7 @@ from odoo.addons.payment.controllers import portal as payment_portal
 class PaymentPortal(payment_portal.PaymentPortal):
 
     @route('/invoice/transaction/<int:invoice_id>', type='json', auth='public')
-    def invoice_transaction(self, invoice_id, access_token, **kwargs):
+    def invoice_transaction(self, invoice_id, access_token=None, **kwargs):
         """ Create a draft transaction and return its processing values.
 
         :param int invoice_id: The invoice to pay, as an `account.move` id
