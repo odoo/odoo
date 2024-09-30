@@ -40,7 +40,9 @@
                 role="button"
                 title="Edit order"/>
             <td t-else="" t-esc="line.product[1]"/>
-            <td t-esc="line.state" t-attf-class="badge rounded-pill text-bg-#{badgeClass} border-#{badgeClass}"/>
+            <td>
+                <span t-esc="line.state" t-attf-class="badge rounded-pill text-bg-#{badgeClass} border-#{badgeClass}" style="vertical-align: bottom;"/>
+            </td>
             <td t-esc="line.location"/>
             <td t-esc="line.date" class="mx-4"/>
             <td>
@@ -108,14 +110,14 @@
     <t t-name="lunch.LunchDashboardOrder">
         <LunchAlerts alerts="state.infos.alerts"/>
 
-        <div class="o_lunch_banner container-fluid p-4 bg-view">
-            <div class="row h-100">
-                <div class="col-8 col-md-3 px-0">
-                    <div class="row h-100 align-content-center">
-                        <div class="col-3">
+        <div class="o_lunch_banner container-fluid mt-3 mt-md-0 py-md-4 bg-view">
+            <div class="row row-gap-3 h-100">
+                <div class="col-12 col-lg-3">
+                    <div class="d-flex gap-2 align-content-center h-100">
+                        <div>
                             <img class="o_image_64_cover rounded" t-att-src="state.infos.userimage"/>
                         </div>
-                        <div class="col-8 pe-0">
+                        <div class="w-100">
                             <LunchUser
                                 isManager="state.infos.is_manager"
                                 username="state.infos.username"
@@ -134,14 +136,14 @@
 
                             <div class="d-flex pb-1">
                                 <span class="flex-grow-1">Your Account</span>
-                                <span class="col-3">
+                                <span>
                                     <LunchCurrency currency="currency" amount="state.infos.wallet"/>
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-7" t-if="hasLines">
+                <div class="col-12 col-lg-6" t-if="hasLines">
                     <h4 class="">
                         Your Order
                         <button
@@ -149,22 +151,22 @@
                             class="btn btn-sm btn-icon btn-link fa fa-trash"
                             t-on-click.prevent="emptyCart"/>
                     </h4>
-                    <table class="o_lunch_widget_lines col-10">
+                    <table class="o_lunch_widget_lines w-100">
                         <t t-foreach="state.infos.lines" t-as="line" t-key="line.id">
                             <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine" infos="state.infos"/>
                         </t>
                     </table>
                 </div>
-                <div class="col-6 col-md-2 d-flex flex-column justify-content-between" t-if="hasLines">
+                <div class="col-12 col-lg-2 offset-lg-1 d-flex flex-column row-gap-1" t-if="hasLines">
                     <span class="d-flex flex-row text-muted">
-                        <span class="flex-grow-1">
+                        <span class="flex-grow-1 column-gap-1">
                             Total
                         </span>
                         <span class="col-5">
                             <LunchCurrency currency="currency" amount="state.infos.total"/>
                         </span>
                     </span>
-                    <span class="d-flex flex-row mt-1 text-muted">
+                    <span class="d-flex column-gap-1 text-muted">
                         <span class="flex-grow-1">
                             Already Paid
                         </span>
@@ -172,7 +174,7 @@
                             <LunchCurrency currency="currency" amount="state.infos.paid_subtotal"/>
                         </span>
                     </span>
-                    <h4 class="d-flex flex-row mt-1">
+                    <h4 class="d-flex column-gap-1 mt-auto">
                         <span class="flex-grow-1">
                             To Pay
                         </span>
@@ -192,7 +194,7 @@
             <t t-call="lunch.LunchDashboardOrder"/>
         </t>
         <t t-else="">
-            <details class="fixed-bottom bg-view p-2" t-att-open="state.mobileOpen">
+            <details class="fixed-bottom mh-100 bg-view p-2 overflow-y-auto" t-att-open="state.mobileOpen">
                 <summary class="btn btn-primary w-100" t-on-click="() => state.mobileOpen = !state.mobileOpen">
                     <i class="fa fa-fw fa-shopping-cart"/>
                     Your Cart (<LunchCurrency currency="currency" amount="state.infos.total || 0"/>)
