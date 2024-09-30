@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { clickOnSave, dragNDrop, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
+import { clickOnSave, insertSnippet, registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('website_multi_edition', {
     test: true,
@@ -12,7 +12,7 @@ registerWebsitePreviewTour('website_multi_edition', {
         trigger: ':iframe body:not(:has(.s_text_image)):not(:has(.s_hr))',
     },
     // Edit the main element of the page
-    ...dragNDrop({
+    ...insertSnippet({
         id: 's_text_image',
         name: 'Text - Image',
         groupName: "Content",
@@ -22,7 +22,7 @@ registerWebsitePreviewTour('website_multi_edition', {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
     {
-        trigger: `#oe_snippets .oe_snippet[name="Separator"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        trigger: `#oe_snippets .oe_snippet[name="Separator"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
         content: "Drag the Separator building block and drop it at the bottom of the page.",
         run: "drag_and_drop :iframe .oe_drop_zone:last",
     },

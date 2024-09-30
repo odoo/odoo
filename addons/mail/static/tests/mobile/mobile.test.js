@@ -1,4 +1,5 @@
 import {
+    SIZES,
     click,
     contains,
     defineMailModels,
@@ -17,9 +18,10 @@ defineMailModels();
 test("auto-select 'Inbox' when discuss had channel as active thread", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
+    await click(".o-mail-ChatWindow [title*='Close Chat Window']");
     await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Channel" });
     await click("button", { text: "Mailboxes" });
     await contains(".o-mail-MessagingMenu-tab.text-primary.fw-bolder", { text: "Mailboxes" });
@@ -41,7 +43,7 @@ test("show loading on initial opening", async () => {
     });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
-    patchUiSize({ height: 360, width: 640 });
+    patchUiSize({ size: SIZES.SM });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin");

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { dragNDrop, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 import { FileSelectorControlPanel } from "@web_editor/components/media_dialog/file_selector";
 import { patch } from "@web/core/utils/patch";
@@ -47,12 +47,12 @@ const setupSteps = function () {
                 unpatchMediaDialog = patchMediaDialog();
             },
         },
-        ...dragNDrop({
+        ...insertSnippet({
             id: "s_text_image",
             name: "Text - Image",
             groupName: "Content",
         }),
-        ...dragNDrop({
+        ...insertSnippet({
             id: "s_image_gallery",
             name: "Image Gallery",
             groupName: "Images",

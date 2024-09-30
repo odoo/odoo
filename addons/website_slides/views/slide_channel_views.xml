@@ -270,38 +270,38 @@
                                 <div class="col-6">
                                     <div class="d-flex">
                                         <label for="total_views" class="mb0 me-auto">Views</label>
-                                        <field name="total_views"/>
+                                        <field class="text-nowrap" name="total_views"/>
                                     </div>
                                     <div class="d-flex" name="info_total_slides">
                                         <label for="total_slides" class="mb0 me-auto">Contents</label>
-                                        <field name="total_slides"/>
+                                        <field class="text-nowrap" name="total_slides"/>
                                     </div>
                                     <div class="d-flex" name="info_total_time">
                                         <label for="total_time" class="mb0 me-auto">Duration</label>
-                                        <field name="total_time" widget="float_time"/>
+                                        <field class="text-nowrap" name="total_time" widget="float_time"/>
                                     </div>
                                     <div class="d-flex" name="info_avg_rating" t-if="record.rating_count.raw_value">
                                         <a name="action_view_ratings" type="object" class="me-auto"><field name="rating_count"/> Reviews</a>
-                                        <span><field name="rating_avg_stars"/> / 5</span>
+                                        <span class="text-nowrap"><field name="rating_avg_stars"/> / 5</span>
                                     </div>
                                 </div>
                             </div>
                             <div name="card_content" class="row mt-auto">
                                 <a name="action_redirect_to_invited_members" type="object" class="d-flex flex-column align-items-center col-3 border-end">
                                     <field name="members_invited_count" class="fw-bold"/>
-                                    <span class="text-muted">Invited</span>
+                                    <span class="text-muted text-truncate mw-100" title="Invited">Invited</span>
                                 </a>
                                 <a name="action_redirect_to_engaged_members" type="object" class="d-flex flex-column align-items-center col-3 border-end">
                                     <field name="members_engaged_count" class="fw-bold"/>
-                                    <span class="text-muted">Ongoing</span>
+                                    <span class="text-muted text-truncate mw-100" title="Ongoing">Ongoing</span>
                                 </a>
                                 <a name="action_redirect_to_completed_members" type="object" class="d-flex flex-column align-items-center col-3 border-end">
                                     <field name="members_completed_count" class="fw-bold"/>
-                                    <span name="done_members_count_label" class="text-muted">Finished</span>
+                                    <span name="done_members_count_label" class="text-muted text-truncate mw-100" title="Finished">Finished</span>
                                 </a>
                                 <a name="action_redirect_to_members" type="object" class="d-flex flex-column align-items-center col-3">
                                     <field name="members_all_count" class="fw-bold"/>
-                                    <span class="text-muted">Total</span>
+                                    <span class="text-muted text-truncate mw-100" title="Total">Total</span>
                                 </a>
                             </div>
                         </t>

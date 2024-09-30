@@ -530,7 +530,7 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(registration.sale_status, 'free', "Price of $0.00 without so_line should be free")
         registration.sale_order_id = sale_order
         registration.sale_order_line_id = so_line
-        registration.sale_order_line_id.price_total = 0.01
+        registration.sale_order_id.amount_total = 0.01
         self.assertEqual(registration.sale_status, 'to_pay', "Price of $0.01 should be paid")
         registration.sale_order_id.action_confirm()
         self.assertEqual(registration.sale_status, 'sold')

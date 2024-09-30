@@ -237,7 +237,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
 export function clickOnSave(position = "bottom", timeout) {
     return [
         {
-            trigger: "#oe_snippets:not(:has(.o_we_already_dragging))",
+            trigger: "#oe_snippets:not(:has(.o_we_ongoing_insertion))",
         },
         {
             trigger: "body:not(:has(.o_dialog))",
@@ -288,39 +288,47 @@ export function clickOnText(snippet, element, position = "bottom") {
 }
 
 /**
- * Drag a snippet from the Blocks area and drop it in the Edit area
+ * Selects a category or an inner snippet from the snippets menu and insert it
+ * in the page.
  * @param {*} snippet contain the id and the name of the targeted snippet. If it
  * contains a group it means that the snippet is shown in the "add snippets"
  * dialog.
  * @param {*} position Where the purple arrow will show up
  */
-export function dragNDrop(snippet, position = "bottom") {
+export function insertSnippet(snippet, position = "bottom") {
     const blockEl = snippet.groupName || snippet.name;
-    let dragNDropSteps = [{
+    const insertSnippetSteps = [{
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
         noPrepend: true,
-    },
-    {
-        trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
-        content: markup(_t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)),
-        tooltipPosition: position,
-        // Normally no main snippet can be dropped in the default footer but
-        // targeting it allows to force "dropping at the end of the page".
-        run: "drag_and_drop :iframe #wrapwrap > footer",
     }];
     if (snippet.groupName) {
-        dragNDropSteps.push({
-            content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
-            trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="${snippet.id}"]`,
-            noPrepend: true,
+        insertSnippetSteps.push({
+            content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
+            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
             tooltipPosition: position,
             run: "click",
         },
         {
-            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+            content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
+            // FIXME `:not(.d-none)` should obviously not be needed but it seems
+            // currently needed when using a tour in user/interactive mode.
+            trigger: `:iframe .o_snippet_preview_wrap[data-snippet-id="${snippet.id}"]:not(.d-none)`,
+            noPrepend: true,
+            tooltipPosition: "top",
+            run: "click",
+        },
+        {
+            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+        });
+    } else {
+        insertSnippetSteps.push({
+            content: markup(_t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)),
+            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+            tooltipPosition: position,
+            run: "drag_and_drop :iframe #wrapwrap > footer",
         });
     }
-    return dragNDropSteps;
+    return insertSnippetSteps;
 }
 
 export function goBackToBlocks(position = "bottom") {

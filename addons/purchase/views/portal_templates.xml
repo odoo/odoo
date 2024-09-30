@@ -451,8 +451,10 @@
 
   <template id="purchase_order_portal_content_totals_table">
       <table class="table table-sm">
-          <t t-set="tax_totals" t-value="order.tax_totals"/>
-          <t t-call="purchase.document_tax_totals"/>
+          <t t-call="purchase.document_tax_totals">
+                <t t-set="tax_totals" t-value="order.tax_totals"/>
+                <t t-set="currency" t-value="order.currency_id"/>
+          </t>
       </table>
   </template>
 

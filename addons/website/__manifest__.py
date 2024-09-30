@@ -19,6 +19,9 @@
         'google_recaptcha',
         'utm',
     ],
+    'external_dependencies': {
+        'python': ['geoip2'],
+    },
     'installable': True,
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
@@ -357,7 +360,7 @@
             'website/static/src/snippets/s_embed_code/options.js',
         ],
         'web_editor.assets_media_dialog': [
-            'website/static/src/components/media_dialog/image_selector.js',
+            'website/static/src/components/media_dialog/*',
         ],
         'website.assets_editor': [
             ('include', 'web._assets_helpers'),

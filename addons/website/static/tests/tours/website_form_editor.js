@@ -5,7 +5,7 @@ import {
     changeOption,
     clickOnEditAndWaitEditMode,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
@@ -921,7 +921,7 @@ registerWebsitePreviewTour("website_form_editable_content", {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
     {
-        trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
         run: "drag_and_drop :iframe #wrap",
     },
     {
@@ -941,7 +941,7 @@ registerWebsitePreviewTour("website_form_editable_content", {
         trigger: ".o_we_add_snippet_btn",
         run: "click",
     },
-    ...dragNDrop({id: "s_three_columns", name: "Columns", groupName: "Columns"}),
+    ...insertSnippet({id: "s_three_columns", name: "Columns", groupName: "Columns"}),
     {
         content: "Select the first column",
         trigger: ":iframe .s_three_columns .row > :nth-child(1)",
@@ -986,7 +986,7 @@ registerWebsitePreviewTour("website_form_special_characters", {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
     },
     {
-        trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
+        trigger: `#oe_snippets .oe_snippet[name="Form"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
         run: "drag_and_drop :iframe #wrap",
     },
     {

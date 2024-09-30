@@ -104,7 +104,7 @@ registerWebsitePreviewTour('test_restricted_editor_test_admin', {
     },
     {
         content: "Drag the Intro snippet group",
-        trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
         run: "drag_and_drop :iframe [data-oe-expression='record.website_description']",
     },
     {

@@ -319,7 +319,7 @@ patch(PosStore.prototype, {
         );
     },
     tableHasOrders(table) {
-        return this.getActiveOrdersOnTable(table).length > 0;
+        return Boolean(table.getOrder());
     },
     async transferOrder(destinationTable) {
         const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
@@ -353,7 +353,9 @@ patch(PosStore.prototype, {
                 orderline.update({ order_id: destinationOrder });
             });
             this.set_order(destinationOrder);
-            this.addPendingOrder([destinationOrder.id]);
+            if (destinationOrder?.id) {
+                this.addPendingOrder([destinationOrder.id]);
+            }
             await this.deleteOrders([order]);
         }
         await this.setTable(destinationTable);

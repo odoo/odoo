@@ -7,17 +7,11 @@
     }
 }
 
-.o-mail-DiscussSidebar-compactBtn {
-    color: $o-action !important;
-    padding-left: map-get($spacers, 2) + map-get($spacers, 1) + $border-width;
-    padding-right: map-get($spacers, 2) + map-get($spacers, 1) + $border-width;
-
-    &:hover {
-        border-color: rgba($o-action, .75);
-    }
+.o-mail-DiscussSidebar-optionsBtn {
+    padding: map-get($spacers, 1) / 2;
 
     &:not(.o-compact) {
-        right: map-get($spacers, 3) / 2;
+        right: map-get($spacers, 2) + map-get($spacers, 1);
     }
 }
 

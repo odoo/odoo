@@ -401,7 +401,7 @@ class Location(models.Model):
 
     def should_bypass_reservation(self):
         self.ensure_one()
-        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
+        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
 
     def _check_access_putaway(self):
         return self
@@ -455,6 +455,14 @@ class Location(models.Model):
     def _child_of(self, other_location):
         self.ensure_one()
         return other_location.parent_path in self.parent_path
+
+    def _is_outgoing(self):
+        self.ensure_one()
+        if self.usage == 'customer':
+            return True
+        # Can also be True if location is inter-company transit
+        inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
+        return self._child_of(inter_comp_location)
 
     def _get_weight(self, excluded_sml_ids=False):
         """Returns a dictionary with the net and forecasted weight of the location.

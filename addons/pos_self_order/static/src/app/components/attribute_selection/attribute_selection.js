@@ -17,7 +17,7 @@ export class AttributeSelection extends Component {
         for (const attr of this.props.product.attribute_line_ids) {
             this.gridsRef[attr.id] = useRef(`attribute_grid_${attr.id}`);
             this.valuesRef[attr.id] = {};
-            for (const value of attr.attribute_id.template_value_ids) {
+            for (const value of attr.product_template_value_ids) {
                 this.valuesRef[attr.id][value.id] = useRef(`value_${attr.id}_${value.id}`);
             }
         }
@@ -84,8 +84,14 @@ export class AttributeSelection extends Component {
 
     availableAttributeValue(attribute) {
         return this.selfOrder.config.self_ordering_mode === "kiosk"
-            ? attribute.attribute_id.template_value_ids.filter((a) => !a.is_custom)
-            : attribute.attribute_id.template_value_ids;
+            ? attribute.product_template_value_ids.filter((a) => !a.is_custom)
+            : attribute.product_template_value_ids;
+    }
+
+    availableAttributes() {
+        return this.props.product.attribute_line_ids.filter(
+            (a) => a.attribute_id.create_variant !== "always"
+        );
     }
 
     initAttribute() {
@@ -109,10 +115,10 @@ export class AttributeSelection extends Component {
             return false;
         };
 
-        for (const attr of this.props.product.attribute_line_ids) {
+        for (const attr of this.availableAttributes()) {
             this.selectedValues[attr.id] = {};
 
-            for (const value of attr.attribute_id.template_value_ids) {
+            for (const value of attr.product_template_value_ids) {
                 if (attr.attribute_id.display_type === "multi") {
                     this.selectedValues[attr.id][value.id] = initValue(value);
                 } else if (typeof this.selectedValues[attr.id] !== "number") {

@@ -31,7 +31,7 @@ class WebsiteVisitor(models.Model):
         compose_ctx = dict(self.env.context)
         compose_ctx.update(**visitor_composer_ctx)
         return {
-            "name": _("Send SMS Text Message"),
+            "name": _("Send SMS"),
             "type": "ir.actions.act_window",
             "res_model": "sms.composer",
             "view_mode": 'form',

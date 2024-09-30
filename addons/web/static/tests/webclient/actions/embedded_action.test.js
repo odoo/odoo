@@ -292,8 +292,11 @@ test("breadcrumbs are updated when clicking on embeddeds", async () => {
 
 test("a view coming from a embedded can be saved in the embedded actions", async () => {
     onRpc("create", ({ args }) => {
-        expect(args[0][0].name).toBe("Custom Embedded Action 2");
-        return [4, args[0][0].name]; // Fake new embedded action id
+        const values = args[0][0];
+        expect(values.name).toBe("Custom Embedded Action 2");
+        expect(values.action_id).toBe(3);
+        expect(values).not.toInclude("python_method");
+        return [4, values.name]; // Fake new embedded action id
     });
     onRpc("create_or_replace", ({ args }) => {
         expect(args[0].domain).toBe(`[["name", "=", "Applejack"]]`);
@@ -312,6 +315,65 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     await contains(".o_embedded_actions > button > span:contains('Embedded Action 2')").click();
     await runAllTimers();
     expect(router.current.action).toBe(3, {
+        message: "the current action should be the one of the embedded action previously clicked",
+    });
+    expect(".o_list_view").toHaveCount(1, { message: "the view should be a list view" });
+    await contains("button.o_switch_view.o_kanban").click();
+    expect(".o_kanban_view").toHaveCount(1, { message: "the view should be a kanban view" });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My filter");
+    await toggleSearchBarMenu();
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1, {
+        message: "There should be one record",
+    });
+    await contains(".o_embedded_actions .dropdown").click();
+    await contains(".o_save_current_view ").click();
+    await contains("input.form-check-input").click();
+    await contains(".o_save_favorite ").click();
+    expect(".o_embedded_actions > button").toHaveCount(4, {
+        message: "Should have 2 embedded actions in the embedded + the dropdown button",
+    });
+});
+
+test("a view coming from a embedded with python_method can be saved in the embedded actions", async () => {
+    onRpc(({ args, method }) => {
+        let values;
+        if (method === "create") {
+            values = args[0][0];
+            expect(values.name).toBe("Custom Embedded Action 3");
+            expect(values.python_method).toBe("do_python_method");
+            expect(values).not.toInclude("action_id");
+            return [4, values.name]; // Fake new embedded action id
+        } else if (method === "create_or_replace") {
+            values = args[0][0];
+            expect(args[0].domain).toBe(`[["name", "=", "Applejack"]]`);
+            expect(args[0].embedded_action_id).toBe(4);
+            expect(args[0].user_id).toBe(false);
+            return 5; // Fake new filter id
+        } else if (method === "do_python_method") {
+            return {
+                id: 4,
+                name: "Favorite Ponies from python action",
+                res_model: "pony",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "kanban"],
+                ],
+            };
+        }
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    browser.localStorage.clear();
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(".o_embedded_actions .dropdown").click();
+    await contains(
+        ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 3')"
+    ).click();
+    await contains(".o_embedded_actions > button > span:contains('Embedded Action 3')").click();
+    await runAllTimers();
+    expect(router.current.action).toBe(4, {
         message: "the current action should be the one of the embedded action previously clicked",
     });
     expect(".o_list_view").toHaveCount(1, { message: "the view should be a list view" });

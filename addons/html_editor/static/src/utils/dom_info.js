@@ -3,6 +3,9 @@ import { closestElement, firstLeaf, lastLeaf } from "./dom_traversal";
 import { DIRECTIONS, nodeSize } from "./position";
 
 export function isEmpty(el) {
+    if (isProtecting(el) || isProtected(el)) {
+        return false;
+    }
     const content = el.innerHTML.trim();
     if (content === "" || content === "<br>") {
         return true;
@@ -151,6 +154,9 @@ export function isVisibleTextNode(testedNode) {
     if (!testedNode || !testedNode.length || testedNode.nodeType !== Node.TEXT_NODE) {
         return false;
     }
+    if (isProtected(testedNode)) {
+        return true;
+    }
     if (
         visibleCharRegex.test(testedNode.textContent) ||
         (isInPre(testedNode) && isWhitespace(testedNode))
@@ -248,7 +254,8 @@ export function isVisible(node) {
             isSelfClosingElement(node) ||
             // @todo: handle it in resources?
             isMediaElement(node) ||
-            hasVisibleContent(node))
+            hasVisibleContent(node) ||
+            isProtecting(node))
     );
 }
 export function hasVisibleContent(node) {
@@ -395,6 +402,9 @@ export function isPhrasingContent(node) {
  * @returns {boolean}
  */
 export function isProtected(node) {
+    if (!node) {
+        return false;
+    }
     const candidate = node.parentElement
         ? closestElement(node.parentElement, "[data-oe-protected]")
         : null;
@@ -411,11 +421,21 @@ export function isProtected(node) {
  * @returns {boolean}
  */
 export function isProtecting(node) {
+    if (!node) {
+        return false;
+    }
     return (
         node.nodeType === Node.ELEMENT_NODE &&
         node.dataset.oeProtected !== "false" &&
         node.dataset.oeProtected !== undefined
     );
+}
+
+export function isUnprotecting(node) {
+    if (!node) {
+        return false;
+    }
+    return node.nodeType === Node.ELEMENT_NODE && node.dataset.oeProtected === "false";
 }
 
 // This is a list of "paragraph-related elements", defined as elements that
@@ -443,7 +463,7 @@ export function allowsParagraphRelatedElements(node) {
     return isBlock(node) && !paragraphRelatedElements.includes(node.nodeName);
 }
 
-const phrasingContent = new Set(["#text", ...phrasingTagNames]);
+export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
 const flowContent = new Set([...phrasingContent, ...paragraphRelatedElements, "DIV", "HR"]);
 const listItem = new Set(["LI"]);
 
@@ -498,7 +518,7 @@ export function isEmptyBlock(blockEl) {
     if (blockEl.querySelectorAll("br").length >= 2) {
         return false;
     }
-    if (isProtecting(blockEl)) {
+    if (isProtecting(blockEl) || isProtected(blockEl)) {
         // Protecting nodes should never be considered empty for editor
         // operations, as their content is a "black box". Their content should
         // be managed by a specialized plugin.
@@ -510,7 +530,7 @@ export function isEmptyBlock(blockEl) {
         // this visible is a "visible empty" node like an image.
         if (
             node.nodeName != "BR" &&
-            (isSelfClosingElement(node) || isIconElement(node) || isProtecting(node))
+            (isSelfClosingElement(node) || isMediaElement(node) || isProtecting(node))
         ) {
             return false;
         }

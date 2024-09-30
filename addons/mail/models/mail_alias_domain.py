@@ -149,7 +149,12 @@ class AliasDomain(models.Model):
 
         # alias domain init: populate companies and aliases at first creation
         if alias_domains and self.search_count([]) == len(alias_domains):
-            self.env['res.company'].search(
+            # during first init we assume that we want to attribute this
+            # alias domain to all companies, irrespective of the fact
+            # that they are archived or not. So we run active_test=False
+            # on the just created alias domain
+
+            self.env['res.company'].with_context(active_test=False).search(
                 [('alias_domain_id', '=', False)]
             ).alias_domain_id = alias_domains[0].id
             self.env['mail.alias'].sudo().search(

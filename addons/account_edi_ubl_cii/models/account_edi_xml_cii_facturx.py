@@ -131,8 +131,8 @@ class AccountEdiXmlCII(models.AbstractModel):
             # Facturx requires the monetary values to be rounded to 2 decimal values
             return float_repr(number, decimal_places)
 
-        def grouping_key_generator(base_line, tax_values):
-            tax = tax_values['tax_repartition_line'].tax_id
+        def grouping_key_generator(base_line, tax_data):
+            tax = tax_data['tax']
             customer = invoice.commercial_partner_id
             supplier = invoice.company_id.partner_id.commercial_partner_id
             grouping_key = {

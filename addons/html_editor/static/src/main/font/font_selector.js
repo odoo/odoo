@@ -40,13 +40,15 @@ export class FontSelector extends Component {
             return item.tagName === tagName;
         });
 
+        const matchingItemsWitoutExtraClass = matchingItems.filter((item) => !item.extraClass);
+
         if (!matchingItems.length) {
             return "Normal";
         }
 
         return (
             matchingItems.find((item) => block.classList.contains(item.extraClass)) ||
-            matchingItems[0]
+            (matchingItemsWitoutExtraClass.length && matchingItemsWitoutExtraClass[0])
         ).name;
     }
 

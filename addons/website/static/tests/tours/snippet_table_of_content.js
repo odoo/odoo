@@ -4,7 +4,7 @@ import { isVisible } from '@odoo/hoot-dom';
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
-    dragNDrop,
+    insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
@@ -30,11 +30,10 @@ registerWebsitePreviewTour('snippet_table_of_content', {
     url: '/',
     edition: true,
 }, () => [
-    ...dragNDrop({id: "s_table_of_content", name: "Table of Content", groupName: "Text"}),
-    // We don't use the dragNDrop function here to avoid snippets being dropped inside the toc's.
+    ...insertSnippet({id: "s_table_of_content", name: "Table of Content", groupName: "Text"}),
     {
         content: "Drag the Text snippet group and drop it.",
-        trigger: '#oe_snippets .oe_snippet[name="Text"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        trigger: '#oe_snippets .oe_snippet[name="Text"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
         run: "drag_and_drop :iframe #wrap",
     },
     {
@@ -43,10 +42,10 @@ registerWebsitePreviewTour('snippet_table_of_content', {
         run: "click",
     },
     // To make sure that the public widgets of the two previous ones started.
-    ...dragNDrop({id: "s_banner", name: "Banner", groupName: "Intro"}),
+    ...insertSnippet({id: "s_banner", name: "Banner", groupName: "Intro"}),
     {
         content: "Drag the Intro snippet group and drop it.",
-        trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+        trigger: '#oe_snippets .oe_snippet[name="Intro"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
         run: "drag_and_drop :iframe #wrap",
     },
     {

@@ -58,27 +58,35 @@ export class TablePlugin extends Plugin {
         switch (command) {
             case "INSERT_TABLE":
                 this.insertTable(payload);
+                this.dispatch("ADD_STEP");
                 break;
             case "ADD_COLUMN":
                 this.addColumn(payload);
+                this.dispatch("ADD_STEP");
                 break;
             case "ADD_ROW":
                 this.addRow(payload);
+                this.dispatch("ADD_STEP");
                 break;
             case "REMOVE_COLUMN":
                 this.removeColumn(payload);
+                this.dispatch("ADD_STEP");
                 break;
             case "REMOVE_ROW":
                 this.removeRow(payload);
+                this.dispatch("ADD_STEP");
                 break;
             case "MOVE_COLUMN":
                 this.moveColumn(payload);
+                this.dispatch("ADD_STEP");
                 break;
             case "MOVE_ROW":
                 this.moveRow(payload);
+                this.dispatch("ADD_STEP");
                 break;
             case "RESET_SIZE":
                 this.resetSize(payload);
+                this.dispatch("ADD_STEP");
                 break;
             case "DELETE_TABLE":
                 this.deleteTable(payload);
@@ -149,7 +157,6 @@ export class TablePlugin extends Plugin {
     }
     insertTable({ rows = 2, cols = 2 } = {}) {
         const table = this._insertTable({ rows, cols });
-        this.dispatch("ADD_STEP");
         this.shared.setCursorStart(table.querySelector("p"));
     }
     addColumn({ position, reference } = {}) {
@@ -490,10 +497,13 @@ export class TablePlugin extends Plugin {
     onMousedown(ev) {
         this._currentMouseState = ev.type;
         this._lastMousedownPosition = [ev.x, ev.y];
+        this.deselectTable();
         if (this.isPointerInsideCell(ev)) {
             this.editable.addEventListener("mousemove", this.onMousemove);
+            const currentSelection = this.shared.getEditableSelection();
+            // disable dragging on table
+            this.shared.setCursorStart(currentSelection.anchorNode);
         }
-        this.deselectTable();
     }
 
     onMouseup(ev) {
