@@ -75,7 +75,12 @@ test("simple chatter on a record", async () => {
             ],
             [
                 "/mail/thread/messages",
-                { thread_id: partnerId, thread_model: "res.partner", fetch_params: { limit: 30 } },
+                {
+                    thread_id: partnerId,
+                    thread_model: "res.partner",
+                    access_params: {},
+                    fetch_params: { limit: 30 },
+                },
             ],
         ],
         { ignoreOrder: true }

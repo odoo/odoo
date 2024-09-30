@@ -46,26 +46,34 @@ class MailMessage(models.Model):
         records_by_model = self._records_by_model_name()
         r_stats = {}
 
-        def has_rating_access(records):
-            return (
-                records
-                and issubclass(self.pool[records._name], self.pool["rating.mixin"])
-                and records.has_field_access(records._fields["rating_avg"], "read")
-            )
+        def is_rating_mixin(model_name):
+            return issubclass(self.pool[model_name], self.pool["rating.mixin"])
 
-        for records in records_by_model.values():
-            if has_rating_access(records) and records._allow_publish_rating_stats():
-                r_stats.update(records._rating_get_stats_per_record())
+        valid_models = set()
+        for model_name, records in records_by_model.items():
+            if not is_rating_mixin(model_name):
+                continue
+            valid_models.add(model_name)
+            if records.has_access("read") and records._allow_publish_rating_stats():
+                # sudo: rating.rating - reading rating stats on readable records is allowed
+                r_stats.update(records.sudo()._rating_get_stats_per_record())
         res.many(
             "records",
             lambda res: (
-                res.extend(["rating_avg", "rating_count"]),
-                res.attr("rating_stats", lambda t: r_stats[t], predicate=lambda t: t in r_stats),
+                res.attr(
+                    "rating_avg",
+                    predicate=lambda r: r.has_field_access(r._fields["rating_avg"], "read"),
+                ),
+                res.attr(
+                    "rating_count",
+                    predicate=lambda r: r.has_field_access(r._fields["rating_count"], "read"),
+                ),
+                res.attr("rating_stats", lambda r: r_stats[r], predicate=lambda r: r in r_stats),
             ),
             as_thread=True,
             only_data=True,
             value=lambda m: records_by_model.get(m.model),
-            predicate=lambda m: has_rating_access(records_by_model.get(m.model)),
+            predicate=lambda m: m.model in valid_models,
         )
 
     def _is_empty(self):

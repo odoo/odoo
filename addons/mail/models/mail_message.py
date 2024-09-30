@@ -473,10 +473,14 @@ class MailMessage(models.Model):
 
         return super()._search(domain, offset, limit, order, **kwargs)
 
+    def _get_share_domain(self):
+        """Raw domain for shared content."""
+        return Domain("is_internal", "=", False) & Domain("subtype_id.internal", "=", False)
+
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
-        return Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
+        return self._get_share_domain()
 
     def _check_access(self, operation: str) -> tuple | None:
         """ Access rules of mail.message:
