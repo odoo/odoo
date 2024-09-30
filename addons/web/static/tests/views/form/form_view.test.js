@@ -2321,6 +2321,39 @@ test(`two occurrences of invalid integer fields in form view`, async () => {
     expect(`.o_field_integer.o_field_invalid`).toHaveCount(0);
 });
 
+test(`mutually exclusive required fields in form view`, async () => {
+    delete Partner._fields.foo.default;
+
+    onRpc("web_save", () => expect.step("saved"));
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <group>
+                    <field name="foo" required="not name"/>
+                    <field name="name" required="not foo"/>
+                </group>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(".o_field_widget[name=foo] input").edit("");
+    await contains(".o_field_widget[name=name] input").edit("");
+
+    await contains(`.o_form_button_save`).click();
+    expect(`.o_field_widget.o_field_invalid`).toHaveCount(2);
+    expect(`.o_form_button_save`).toHaveAttribute("disabled");
+
+    await contains(`.o_field_widget[name=foo] input`).edit("some value");
+    expect(`.o_field_widget.o_field_invalid`).toHaveCount(0);
+    expect(`.o_form_button_save`).not.toHaveAttribute("disabled");
+
+    await contains(`.o_form_button_save`).click();
+    expect.verifySteps(["saved"]);
+});
+
 test(`twice same field with different required attributes`, async () => {
     Partner._fields.foo = fields.Char();
 
