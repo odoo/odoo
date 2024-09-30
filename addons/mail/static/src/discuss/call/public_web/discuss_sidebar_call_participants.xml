@@ -31,7 +31,7 @@
         <t t-set="channelMember" t-value="session.channelMember"/>
         <div class="d-flex text-reset overflow-hidden align-items-center" t-att-class="{ 'justify-content-center bg-inherit': compact, 'me-2': !compact and props.compact === undefined }">
             <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:24px;height:24px">
-                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle" t-att-src="channelMember.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar"/>
+                <img class="o-mail-DiscussSidebarCallParticipants-avatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-src="channelMember.persona.avatarUrl" t-att-class="{'o-isTalking': !session.isMute and session.isTalking}" alt="Participant avatar"/>
             </div>
             <span t-if="!compact" class="o-mail-DiscussSidebarCallParticipants-name mx-1 text-truncate fw-bolder smaller user-select-none" t-att-title="channelMember.persona.name" t-att-class="{ 'o-isTalking': !session.isMute and session.isTalking }">
                 <t t-esc="channelMember.persona.name"/>

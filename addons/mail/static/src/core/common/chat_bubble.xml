@@ -18,7 +18,7 @@
             <ImStatus t-if="thread?.correspondent?.persona?.im_status and thread?.correspondent?.persona?.im_status != 'offline'" className="'o-mail-ChatBubble-status position-absolute o-mail-brighter'" member="thread.correspondent"/>
             <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatBubble-country position-absolute bottom-0 border'"/>
             <button class="o-mail-ChatHub-bubbleBtn btn bg-view">
-                <img class="o-mail-ChatBubble-avatar rounded-circle" t-att-class="{ 'o-big': env.embedLivechat }" t-att-src="thread?.avatarUrl" alt="Thread image" draggable="false"/>
+                <img class="o-mail-ChatBubble-avatar rounded-circle o_object_fit_cover" t-att-class="{ 'o-big': env.embedLivechat }" t-att-src="thread?.avatarUrl" alt="Thread image" draggable="false"/>
             </button>
         </div>
     </t>
