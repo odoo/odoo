@@ -104,6 +104,10 @@ export class PowerboxPlugin extends Plugin {
     }
 
     closePowerbox() {
+        if (!this.overlay.isOpen) {
+            return;
+        }
+        this.onClose();
         this.overlay.close();
     }
 
