@@ -9,6 +9,7 @@ from PIL import Image
 
 import odoo
 from odoo.exceptions import AccessError
+from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools.image import image_to_base64
 
@@ -376,3 +377,10 @@ class TestPermissions(TransactionCaseWithUserDemo):
         # even from a record with write permissions
         with self.assertRaises(AccessError):
             copied.copy({'res_model': unwritable._name, 'res_id': unwritable.id})
+
+    def test_write_error(self):
+        # try to write a file in a place where we have no access
+        # /proc is not writeable, check if we have an error raised
+        self.patch(IrAttachment, '_get_path', lambda self, binary, _checksum: (binary, '/proc/dummy_test'))
+        with self.assertRaises(OSError):
+            self.env['ir.attachment']._file_write(b'test', 'test')
