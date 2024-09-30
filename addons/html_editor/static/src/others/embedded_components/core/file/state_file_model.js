@@ -5,7 +5,7 @@ export class StateFileModel extends FileModel {
         super();
         this.state = state;
         for (const property of [
-            "accessToken",
+            "access_token",
             "checksum",
             "extension",
             "filename",
