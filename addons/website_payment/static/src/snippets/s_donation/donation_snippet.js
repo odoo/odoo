@@ -18,6 +18,7 @@ export class DonationSnippet extends Interaction {
         },
         ".s_donation_donate_btn": { "t-on-click.withTarget": this.onDonateClick },
         "#s_donation_range_slider": { "t-on-input": this.onRangeSliderInput },
+        "#s_donation_amount_input": { "t-on-input": this.onChangeAmountInput },
     };
 
     setup() {
@@ -76,10 +77,23 @@ export class DonationSnippet extends Interaction {
 
     /**
      * @param {Event} ev
+     */
+    onChangeAmountInput(ev) {
+        const inputEl = ev.currentTarget;
+        const alertEl = this.el.querySelector(".alert");
+        alertEl?.classList.toggle("d-none", !inputEl.length);
+    }
+
+    /**
+     * @param {Event} ev
      * @param {HTMLElement} currentTargetEl
      */
     onPrefilledClick(ev, currentTargetEl) {
         this.activeButtonEl = currentTargetEl;
+
+        if (!currentTargetEl.classList.contains("s_donation_custom_btn")) {
+            this.el.querySelector("p.alert")?.classList.add("d-none");
+        }
         if (this.rangeSliderEl) {
             this.rangeSliderEl.value = this.activeButtonEl.dataset.donationValue;
             this.setBubble();
