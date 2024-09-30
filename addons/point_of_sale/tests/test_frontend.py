@@ -528,6 +528,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
             return
 
+        self.tip.write({
+            'taxes_id': False,
+        })
         self.main_pos_config.write({
             'iface_tipproduct': True,
             'tip_product_id': self.tip.id,
