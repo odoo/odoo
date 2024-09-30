@@ -399,6 +399,11 @@ describe("search", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(getContent(el)).toBe(`<p>/[]</p>`);
+
+            await insertText(editor, "h");
+            await animationFrame();
+            expect(".o-we-powerbox").toHaveCount(0);
+            expect(getContent(el)).toBe(`<p>/h[]</p>`);
         });
     });
 });
