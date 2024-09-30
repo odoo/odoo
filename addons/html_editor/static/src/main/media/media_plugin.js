@@ -15,7 +15,7 @@ const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 
 export class MediaPlugin extends Plugin {
     static name = "media";
-    static dependencies = ["selection", "history", "dom"];
+    static dependencies = ["selection", "history", "dom", "dialog"];
     static shared = ["savePendingImages"];
     /** @type { (p: MediaPlugin) => Record<string, any> } */
     static resources = (p) => {
@@ -159,27 +159,23 @@ export class MediaPlugin extends Plugin {
 
     openMediaDialog(params = {}) {
         const { resModel, resId, field, type } = this.recordInfo;
-        this.services.dialog.add(
-            MediaDialog,
-            {
-                resModel,
-                resId,
-                useMediaLibrary: !!(
-                    field &&
-                    ((resModel === "ir.ui.view" && field === "arch") || type === "html")
-                ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
-                media: params.node,
-                save: (element) => {
-                    this.onSaveMediaDialog(element, { node: params.node });
-                },
-                onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-                noVideos: !!this.config.disableVideo,
-                noImages: !!this.config.disableImage,
-                ...this.config.mediaModalParams,
-                ...params,
+        this.shared.addDialog(MediaDialog, {
+            resModel,
+            resId,
+            useMediaLibrary: !!(
+                field &&
+                ((resModel === "ir.ui.view" && field === "arch") || type === "html")
+            ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
+            media: params.node,
+            save: (element) => {
+                this.onSaveMediaDialog(element, { node: params.node });
             },
-            { onClose: () => this.shared.focusEditable() }
-        );
+            onAttachmentChange: this.config.onAttachmentChange || (() => {}),
+            noVideos: !!this.config.disableVideo,
+            noImages: !!this.config.disableImage,
+            ...this.config.mediaModalParams,
+            ...params,
+        });
     }
 
     async savePendingImages() {

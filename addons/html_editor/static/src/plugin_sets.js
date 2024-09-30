@@ -2,6 +2,7 @@ import { DynamicPlaceholderPlugin } from "@html_editor/others/dynamic_placeholde
 import { ClipboardPlugin } from "./core/clipboard_plugin";
 import { CommentPlugin } from "./core/comment_plugin";
 import { DeletePlugin } from "./core/delete_plugin";
+import { DialogPlugin } from "./core/dialog_plugin";
 import { DomPlugin } from "./core/dom_plugin";
 import { FormatPlugin } from "./core/format_plugin";
 import { HistoryPlugin } from "./core/history_plugin";
@@ -28,9 +29,9 @@ import { OdooLinkSelectionPlugin } from "./main/link/link_selection_odoo_plugin"
 import { LinkSelectionPlugin } from "./main/link/link_selection_plugin";
 import { ListPlugin } from "./main/list/list_plugin";
 import { LocalOverlayPlugin } from "./main/local_overlay_plugin";
-import { ImagePlugin } from "./main/media/image_plugin";
 import { IconPlugin } from "./main/media/icon_plugin";
 import { ImageCropPlugin } from "./main/media/image_crop_plugin";
+import { ImagePlugin } from "./main/media/image_plugin";
 import { MediaPlugin } from "./main/media/media_plugin";
 import { MoveNodePlugin } from "./main/movenode_plugin";
 import { PositionPlugin } from "./main/position_plugin";
@@ -60,6 +61,7 @@ export const CORE_PLUGINS = [
     ClipboardPlugin,
     CommentPlugin,
     DeletePlugin,
+    DialogPlugin,
     DomPlugin,
     FormatPlugin,
     HistoryPlugin,
