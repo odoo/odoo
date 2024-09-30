@@ -89,6 +89,7 @@ export class SubChannelList extends Component {
     async onClickCreate() {
         await this.props.thread.createSubChannel({ name: this.state.searchTerm });
         this._refreshSubChannelList();
+        this.props.close?.();
     }
 
     async search() {
