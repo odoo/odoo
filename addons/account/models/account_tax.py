@@ -1870,6 +1870,8 @@ class AccountTax(models.Model):
             company_currency_id:                    The id of the company's currency used.
             company_currency_pd:                    The company's currency rounding (to be used js-side by the widget).
             has_tax_groups:                         Flag indicating if there is at least one involved tax group.
+            same_tax_base:                          Flag indicating the base amount of all tax groups are the same and it's
+                                                    redundant to display them.
             base_amount_currency:                   The untaxed amount expressed in foreign currency.
             base_amount:                            The untaxed amount expressed in local currency.
             tax_amount_currency:                    The tax amount expressed in foreign currency.
@@ -2016,9 +2018,14 @@ class AccountTax(models.Model):
         elif cash_rounding:
             strategy = cash_rounding.strategy
             cash_rounding_pd = cash_rounding.rounding
+            cash_rounding_method = cash_rounding.rounding_method
             total_amount_currency = tax_totals_summary['base_amount_currency'] + tax_totals_summary['tax_amount_currency']
             total_amount = tax_totals_summary['base_amount'] + tax_totals_summary['tax_amount']
-            expected_total_amount_currency = float_round(total_amount_currency, precision_rounding=cash_rounding_pd)
+            expected_total_amount_currency = float_round(
+                total_amount_currency,
+                precision_rounding=cash_rounding_pd,
+                rounding_method=cash_rounding_method,
+            )
             cash_rounding_base_amount_currency = expected_total_amount_currency - total_amount_currency
             if not currency.is_zero(cash_rounding_base_amount_currency):
                 rate = abs(total_amount_currency / total_amount) if total_amount else 0.0

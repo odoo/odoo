@@ -12,4 +12,4 @@ class AccountTaxGroup(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'pos_receipt_label']
+        return ['id', 'name', 'pos_receipt_label']
