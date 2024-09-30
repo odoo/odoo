@@ -75,7 +75,7 @@ export class Record extends DataPoint {
 
     _setData(data) {
         this._isEvalContextReady = false;
-        if (this.resId) {
+        if (this.resId && this._config.resModel.split(".")[1] !== 'wizard') {
             this._values = this._parseServerValues(data);
             this._changes = markRaw({});
             Object.assign(this._textValues, this._getTextValues(data));
