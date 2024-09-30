@@ -26,6 +26,10 @@ def MockRequest(
     from odoo.tests.common import HttpCase  # noqa: PLC0415
     lang_code = context.get('lang', env.context.get('lang', 'en_US'))
     env = env(context=dict(context, lang=lang_code))
+    if HttpCase.http_port():
+        base_url = HttpCase.base_url()
+    else:
+        base_url = f"http://{HOST}:{odoo.tools.config['http_port']}"
     request = Mock(
         # request
         httprequest=Mock(
@@ -35,7 +39,7 @@ def MockRequest(
             environ=dict(
                 EnvironBuilder(
                     path=path,
-                    base_url=HttpCase.base_url(),
+                    base_url=base_url,
                     environ_base=environ_base,
                 ).get_environ(),
                 REMOTE_ADDR=remote_addr,
