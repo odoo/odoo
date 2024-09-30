@@ -165,6 +165,9 @@
         'website.backend_assets_all_wysiwyg': [
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
         ],
+        'portal.assets_chatter': [
+            'website_sale/static/src/chatter/frontend/**/*',
+        ],
         'web.assets_tests': [
             'website_sale/static/tests/**/*',
             'website_sale/static/src/js/tours/product_configurator_tour_utils.js',
