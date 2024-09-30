@@ -159,6 +159,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
+                                    "custom_status": False,
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
@@ -203,6 +204,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
+                                    "custom_status": False,
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",

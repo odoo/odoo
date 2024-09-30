@@ -319,6 +319,7 @@
                                     </div>
                                 </div>
                                 <field t-if="record.job_title.raw_value" name="job_title"/>
+                                <field name="custom_status" />
                                 <div t-if="record.work_email.raw_value" class="o_text_overflow">
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email" />

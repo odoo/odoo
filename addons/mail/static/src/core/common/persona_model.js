@@ -3,7 +3,7 @@ import { imageUrl } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 
 /**
- * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
+ * @typedef {'offline' | 'bot' | 'online' | 'away' | 'busy' | 'im_partner' | undefined} ImStatus
  * @typedef Data
  * @property {number} id
  * @property {string} name

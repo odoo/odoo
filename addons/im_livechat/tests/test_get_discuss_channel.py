@@ -70,6 +70,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
                 {
                     "active": False,
+                    "custom_status": False,
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "isInternalUser": True,
@@ -133,6 +134,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
                 {
                     "active": False,
+                    "custom_status": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
@@ -214,6 +216,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
                 {
                     "active": False,
+                    "custom_status": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",

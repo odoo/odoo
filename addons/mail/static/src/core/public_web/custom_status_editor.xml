@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CustomStatusEditor">
+        <div class="d-flex flex-column p-3">
+            <label for="custom-status-input" class="form-label">Custom Status</label>
+            <div class="input-group">
+                <button class="btn btn-outline-secondary" type="button" t-ref="emoji-button">
+                    <i class="fa fa-lg fa-smile-o"/>
+                </button>
+                <input type="text" class="form-control" id="custom-status-input" placeholder="Status message" t-model="state.customStatus" />
+                <button class="btn btn-outline-success" type="button" t-on-click="onConfirm"><i class="fa fa-check"/></button>
+                <button class="btn btn-outline-danger" type="button" t-on-click="onClear"><i class="fa fa-times"/></button>
+            </div>
+            <label for="reset-after-select" class="form-label mt-3">Reset after</label>
+            <div class="input-group">
+                <select class="form-control" id="reset-after-select" t-model="state.resetAfter">
+                    <option value="today">Today</option>
+                    <option value="1_hour">1 hour</option>
+                    <option value="4_hour">4 hour</option>
+                    <option value="never">Never</option>
+                </select>
+            </div>
+        </div>
+    </t>
+
+</templates>

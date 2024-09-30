@@ -17,6 +17,7 @@
                 </div>
             </div>
             <t t-foreach="discussSidebarItems" t-as="item" t-key="item_index" t-component="item"/>
+            <UserStatusPanel t-if="!store.inPublicPage"/>
         </div>
     </t>
 </templates>
