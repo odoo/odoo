@@ -89,15 +89,15 @@ publicWidget.registry.AddressForm = publicWidget.Widget.extend({
         this.cityInput.value = address.city || '';
 
         // Selects based on odoo ids
-        if (address.country) {
-            this.countrySelect.value = address.country;
+        if (address.country_id) {
+            this.countrySelect.value = address.country_id[0];
             // Let the state select know that the country has changed so that it may fetch the correct states or disappear.
             this.countrySelect.dispatchEvent(new Event('change', {bubbles: true}));
         }
-        if (address.state) {
+        if (address.state_id) {
             // Waits for the stateSelect to update before setting the state.
             new MutationObserver((entries, observer) => {
-                this.stateSelect.value = address.state;
+                this.stateSelect.value = address.state_id[0];
                 observer.disconnect();
             }).observe(this.stateSelect, {
                 childList: true, // Trigger only if the options change

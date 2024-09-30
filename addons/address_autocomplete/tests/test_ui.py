@@ -10,16 +10,7 @@ MOCK_API_KEY = 'Tm9ib2R5IGV4cGVjdHMgdGhlIFNwYW5pc2ggaW5xdWlzaXRpb24gIQ=='
 
 @tagged('post_install', '-at_install')
 class TestUI(HttpCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.product = cls.env['product.product'].create({
-            'name': 'A test product',
-            'website_published': True,
-            'list_price': 1
-        })
-
-    def test_autocomplete(self):
+    def test_address_autocomplete(self):
         with patch.object(AutoCompleteController, '_perform_complete_place_search',
                           lambda controller, *args, **kwargs: {
                               'country_id': [self.env['res.country'].search([('code', '=', 'USA')]).id, 'United States'],
@@ -27,6 +18,7 @@ class TestUI(HttpCase):
                               'zip': '12345',
                               'city': 'A Fictional City',
                               'street': 'A fictional Street',
+                              'street2': 'A fictional Street 2',
                               'number': 42,
                               'formatted_street_number': '42 A fictional Street'
                           }), \
@@ -37,4 +29,4 @@ class TestUI(HttpCase):
                                      'google_place_id': MOCK_GOOGLE_ID
                                  } for x in range(5)]}):
             self.env['ir.config_parameter'].sudo().set_param('address_autocomplete.google_places_api_key', MOCK_API_KEY)
-            self.start_tour('/shop/address', 'autocomplete_tour')
+            self.start_tour('/odoo/companies', 'autocomplete_address_tour', login='admin')

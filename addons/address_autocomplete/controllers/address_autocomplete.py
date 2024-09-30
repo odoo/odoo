@@ -15,6 +15,7 @@ FIELDS_MAPPING = {
     'street_number': ['number'],
     'locality': ['city'],  # If locality exists, use it instead of the more general administrative area
     'route': ['street'],
+    'sublocality_level_1': ['sublocality_level_1'],
     'postal_code': ['zip'],
     'administrative_area_level_1': ['state', 'city'],
     'administrative_area_level_2': ['state', 'country']
@@ -33,21 +34,20 @@ class AutoCompleteController(http.Controller):
         standard_data = {}
 
         for google_field in google_fields:
-            fields_standard = FIELDS_MAPPING[google_field['type']] if google_field['type'] in FIELDS_MAPPING else []
+            fields_standard = FIELDS_MAPPING.get(google_field['type'], [])
 
             for field_standard in fields_standard:
                 if field_standard in standard_data:  # if a value is already assigned, do not overwrite it.
                     continue
-                # Convert state and countries to odoo ids
                 if field_standard == 'country':
-                    standard_data[field_standard] = request.env['res.country'].search(
-                        [('code', '=', google_field['short_name'].upper())])[0].id
+                    country = request.env['res.country'].search([('code', '=', google_field['short_name'].upper())], limit=1)
+                    standard_data['country_id'] = [country.id, country.name]
                 elif field_standard == 'state':
                     state = request.env['res.country.state'].search(
                         [('code', '=', google_field['short_name'].upper()),
-                         ('country_id', '=', standard_data['country'])])
+                         ('country_id', '=', standard_data['country_id'][0])])
                     if len(state) == 1:
-                        standard_data[field_standard] = state.id
+                        standard_data['state_id'] = [state.id, state.name]
                 else:
                     standard_data[field_standard] = google_field['long_name']
         return standard_data
@@ -158,15 +158,21 @@ class AutoCompleteController(http.Controller):
                 standard_address['formatted_street_number'] = formatted_from_html
             else:
                 standard_address['formatted_street_number'] = formatted_manually
+        standard_address['street2'] = standard_address.get("sublocality_level_1", "")
         return standard_address
 
     @http.route('/autocomplete/address', methods=['POST'], type='json', auth='public', website=True)
     def _autocomplete_address(self, partial_address, session_id=None):
-        api_key = request.env['website'].get_current_website().sudo().google_places_api_key
+        api_key = request.env['ir.config_parameter'].sudo().get_param('address_autocomplete.google_places_api_key')
+        if not api_key:
+            return {
+                'results': [],
+                'session_id': session_id
+            }
         return self._perform_place_search(partial_address, session_id=session_id, api_key=api_key)
 
     @http.route('/autocomplete/address_full', methods=['POST'], type='json', auth='public', website=True)
     def _autocomplete_address_full(self, address, session_id=None, google_place_id=None, **kwargs):
-        api_key = request.env['website'].get_current_website().sudo().google_places_api_key
+        api_key = request.env['ir.config_parameter'].sudo().get_param('address_autocomplete.google_places_api_key')
         return self._perform_complete_place_search(address, google_place_id=google_place_id,
                                                    session_id=session_id, api_key=api_key, **kwargs)
