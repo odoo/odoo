@@ -86,7 +86,7 @@ class DeliveryCarrier(models.Model):
             # Format the pickup location values of the warehouse.
             try:
                 pickup_location_values = {
-                    'id': wh_location['id'],
+                    'id': wh.id,
                     'name': wh_location['name'].title(),
                     'street': wh_location['street'].title(),
                     'city': wh_location.city.title(),
@@ -94,7 +94,6 @@ class DeliveryCarrier(models.Model):
                     'country_code': wh_location.country_code,
                     'latitude': wh_location.partner_latitude,
                     'longitude': wh_location.partner_longitude,
-                    'warehouse_id': wh.id,
                     'additional_data': {'in_store_stock': in_store_stock_data},
                 }
             except AttributeError:
