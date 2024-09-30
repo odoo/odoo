@@ -20,7 +20,8 @@ except ImportError:
 
 from rjsmin import jsmin as rjsmin
 
-from odoo import release, SUPERUSER_ID, _
+from odoo import release, _
+from odoo.api import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import (func, misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler, OrderedSet)

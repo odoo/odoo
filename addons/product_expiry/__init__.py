@@ -3,7 +3,8 @@
 from . import models
 from . import wizard
 
-from odoo import api, SUPERUSER_ID, Command
+from odoo import Command
+
 
 def _enable_tracking_numbers(env):
     """ This hook ensures the tracking numbers are enabled when the module is installed since the

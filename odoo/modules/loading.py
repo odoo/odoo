@@ -17,7 +17,7 @@ import traceback
 import odoo.sql_db
 import odoo.tools.sql
 import odoo.tools.translate
-from odoo import SUPERUSER_ID, api, tools
+from odoo import api, tools
 from odoo.tools.misc import SENTINEL
 
 from . import db as modules_db
@@ -466,7 +466,7 @@ def load_modules(registry: Registry, force_demo: bool = False, status: None = No
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
         report = registry._assertion_report
-        env = api.Environment(cr, SUPERUSER_ID, {})
+        env = api.Environment(cr, api.SUPERUSER_ID, {})
         loaded_modules, processed_modules = load_module_graph(
             env,
             graph,

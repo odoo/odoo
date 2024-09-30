@@ -14,5 +14,6 @@ from odoo.orm.decorators import (
     readonly,
 )
 from odoo.orm.environments import Environment
+from odoo.orm.utils import SUPERUSER_ID
 
 from odoo.orm.types import ContextType, DomainType, IdType, Self, ValuesType

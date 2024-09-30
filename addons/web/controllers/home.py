@@ -4,6 +4,7 @@ import json
 import logging
 import psycopg2
 
+import odoo.api
 import odoo.exceptions
 import odoo.modules.registry
 from odoo import http
