@@ -6,7 +6,8 @@ import signal
 import sys
 import threading
 
-import odoo
+import odoo  # to expose in the shell
+from odoo import api
 from odoo.modules.registry import Registry
 from odoo.service import server
 from odoo.tools import config
@@ -135,9 +136,9 @@ class Shell(Command):
             threading.current_thread().dbname = dbname
             registry = Registry(dbname)
             with registry.cursor() as cr:
-                uid = odoo.SUPERUSER_ID
-                ctx = odoo.api.Environment(cr, uid, {})['res.users'].context_get()
-                env = odoo.api.Environment(cr, uid, ctx)
+                uid = api.SUPERUSER_ID
+                ctx = api.Environment(cr, uid, {})['res.users'].context_get()
+                env = api.Environment(cr, uid, ctx)
                 local_vars['env'] = env
                 local_vars['self'] = env.user
                 self.console(local_vars)
