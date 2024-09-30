@@ -45,7 +45,7 @@
         // make them compensate the grid item horizontal padding (to avoid an
         // overflow).
         .o_grid_item > .row {
-            --grid-inner-row-gutter-x: clamp(0px, 2 * var(--grid-item-padding-x), 30px);
+            --grid-inner-row-gutter-x: clamp(0px, 2 * var(--grid-item-padding-x), #{$grid-gutter-width});
             margin-left: calc(-0.5 * var(--grid-inner-row-gutter-x));
             margin-right: calc(-0.5 * var(--grid-inner-row-gutter-x));
         }
@@ -70,7 +70,7 @@
 }
 
 .container-fluid > .o_grid_mode {
-    --gutter-x: 30px;
+    --gutter-x: #{$grid-gutter-width};
 }
 
 .o_extra_menu_items .o_grid_mode {
