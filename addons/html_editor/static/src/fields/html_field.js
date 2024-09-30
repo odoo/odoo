@@ -2,8 +2,14 @@ import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration
 import {
     COLLABORATION_PLUGINS,
     DYNAMIC_PLACEHOLDER_PLUGINS,
+    EMBEDDED_COMPONENT_PLUGINS,
     MAIN_PLUGINS,
 } from "@html_editor/plugin_sets";
+import {
+    MAIN_EMBEDDINGS,
+    READONLY_MAIN_EMBEDDINGS,
+} from "@html_editor/others/embedded_components/embedding_sets";
+import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { Component, status, useRef, useState } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
@@ -43,6 +49,7 @@ export class HtmlField extends Component {
         sandboxedPreview: { type: Boolean, optional: true },
         codeview: { type: Boolean, optional: true },
         editorConfig: { type: Object, optional: true },
+        embeddedComponents: { type: Boolean, optional: true },
     };
     static defaultProps = {
         dynamicPlaceholder: false,
@@ -70,16 +77,17 @@ export class HtmlField extends Component {
         this.state = useState({
             key: 0,
             showCodeView: false,
-            containsComplexHTML: computeContainsComplexHTML(
-                this.props.record.data[this.props.name]
-            ),
+            containsComplexHTML: computeContainsComplexHTML(this.value),
         });
 
         useRecordObserver((record) => {
             // Reset Wysiwyg when we discard or onchange value
             const newValue = record.data[this.props.name];
             if (!this.isDirty) {
-                const value = this.clearValueToCompare(newValue.toString());
+                const value = normalizeHTML(
+                    newValue.toString(),
+                    this.clearElementToCompare.bind(this)
+                );
                 if (this.lastValue !== value) {
                     this.state.key++;
                     this.state.containsComplexHTML = computeContainsComplexHTML(
@@ -119,17 +127,16 @@ export class HtmlField extends Component {
         return this.props.record.fields[this.props.name].translate;
     }
 
-    clearValueToCompare(value) {
+    clearElementToCompare(element) {
         if (this.props.isCollaborative) {
-            value = stripHistoryIds(value);
+            stripHistoryIds(element);
         }
-        return value;
     }
 
     async updateValue(value) {
-        this.lastValue = this.clearValueToCompare(value);
+        this.lastValue = normalizeHTML(value, this.clearElementToCompare.bind(this));
         this.isDirty = false;
-        await this.props.record.update({ [this.props.name]: this.lastValue }).catch(() => {
+        await this.props.record.update({ [this.props.name]: value }).catch(() => {
             this.isDirty = true;
         });
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
@@ -149,13 +156,14 @@ export class HtmlField extends Component {
                 await this.updateValue(this.codeViewRef.el.value);
                 return;
             }
-
             if (urgent) {
                 await this.updateValue(this.editor.getContent());
             }
             const el = await this.getEditorContent();
             const content = el.innerHTML;
-            if (!urgent || (urgent && this.lastValue !== content)) {
+            this.clearElementToCompare(el);
+            const comparisonValue = el.innerHTML;
+            if (!urgent || (urgent && this.lastValue !== comparisonValue)) {
                 await this.updateValue(content);
             }
         }
@@ -193,11 +201,12 @@ export class HtmlField extends Component {
 
     getConfig() {
         const config = {
-            content: this.props.record.data[this.props.name],
+            content: this.value,
             Plugins: [
                 ...MAIN_PLUGINS,
                 ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
                 ...(this.props.dynamicPlaceholder ? DYNAMIC_PLACEHOLDER_PLUGINS : []),
+                ...(this.props.embeddedComponents ? EMBEDDED_COMPONENT_PLUGINS : []),
             ],
             classList: this.classList,
             onChange: this.onChange.bind(this),
@@ -220,8 +229,14 @@ export class HtmlField extends Component {
                 const { resModel, resId } = this.props.record;
                 return { resModel, resId };
             },
+            resources: {},
             ...this.props.editorConfig,
         };
+
+        if (this.props.embeddedComponents) {
+            // TODO @engagement: fill this array with default/base components
+            config.resources.embeddedComponents = [...MAIN_EMBEDDINGS];
+        }
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];
         if (
@@ -246,6 +261,18 @@ export class HtmlField extends Component {
                     },
                 },
             };
+        }
+        return config;
+    }
+
+    getReadonlyConfig() {
+        const config = {
+            value: this.value,
+            cssAssetId: this.props.cssReadonlyAssetId,
+            hasFullHtml: this.sandboxedPreview,
+        };
+        if (this.props.embeddedComponents) {
+            config.embeddedComponents = [...READONLY_MAIN_EMBEDDINGS];
         }
         return config;
     }
@@ -278,12 +305,17 @@ export const htmlField = {
         if ("disableVideo" in options) {
             editorConfig.disableVideo = Boolean(options.disableVideo);
         }
+        if ("disableFile" in options) {
+            editorConfig.disableFile = Boolean(options.disableFile);
+        }
         return {
             editorConfig,
             isCollaborative: options.collaborative,
             dynamicPlaceholder: options.dynamic_placeholder,
             dynamicPlaceholderModelReferenceField:
                 options.dynamic_placeholder_model_reference_field,
+            embeddedComponents:
+                "embedded_components" in options ? options.embedded_components : true,
             sandboxedPreview: Boolean(options.sandboxedPreview),
             cssReadonlyAssetId: options.cssReadonly,
             codeview: Boolean(odoo.debug && options.codeview),

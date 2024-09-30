@@ -1,7 +1,7 @@
 import { HtmlField } from "@html_editor/fields/html_field";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
-import { parseHTML } from "@html_editor/utils/html";
+import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
@@ -31,7 +31,14 @@ import { assets } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { FormController } from "@web/views/form/form_controller";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
-import { insertText, pasteText, undo } from "./_helpers/user_actions";
+import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
+import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
+import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
+import {
+    getEditableDescendants,
+    getEmbeddedProps,
+} from "@html_editor/others/embedded_component_utils";
+import { onWillDestroy, xml } from "@odoo/owl";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -153,6 +160,119 @@ test("html field in readonly updated by onchange", async () => {
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML("<p>hello</p>");
 });
 
+test("html field in readonly with embedded components", async () => {
+    patchWithCleanup(Counter, {
+        template: xml`
+            <span t-ref="root" class="counter" t-on-click="increment"><t t-esc="props.name || ''"/>:<t t-esc="state.value"/></span>`,
+    });
+    patchWithCleanup(Counter.prototype, {
+        setup() {
+            super.setup();
+            onWillDestroy(() => {
+                expect.step("destroyed");
+            });
+        },
+    });
+    // patchWithCleanup Array => cleanup keeps the last array entry set to undefined,
+    // so it can not be used
+    READONLY_MAIN_EMBEDDINGS.push({
+        name: "counter",
+        Component: Counter,
+        getProps: (host) => ({
+            ...getEmbeddedProps(host),
+        }),
+    });
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div><span data-embedded="counter" data-embedded-props='{"name":"name"}'></span></div>`,
+        },
+    ];
+    Partner._onChanges = {
+        name(record) {
+            record.txt = `<div><span data-embedded="counter"></span></div>`;
+        },
+    };
+    const view = await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" readonly="1" options="{'embedded_components': True}"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div><span data-embedded="counter" data-embedded-props='{"name":"name"}'><span class="counter">name:0</span></div>`
+    );
+    click(".counter");
+    await animationFrame();
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div><span data-embedded="counter" data-embedded-props='{"name":"name"}'><span class="counter">name:1</span></div>`
+    );
+    // trigger the onchange method for name, which will replace the txt value.
+    await contains(`.o_field_widget[name=name] input`).edit("hello");
+    await animationFrame();
+    expect.verifySteps(["destroyed"]);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div><span data-embedded="counter"><span class="counter">:0</span></div>`
+    );
+    view.__owl__.app.destroy();
+    expect.verifySteps(["destroyed"]);
+    READONLY_MAIN_EMBEDDINGS.pop();
+});
+
+test("html field in readonly with embedded components and editable descendants", async () => {
+    const Wrapper = EmbeddedWrapperMixin("editable");
+    // patchWithCleanup Array => cleanup keeps the last array entry set to undefined,
+    // so it can not be used
+    READONLY_MAIN_EMBEDDINGS.push(
+        {
+            name: "wrapper",
+            Component: Wrapper,
+            getProps: (host) => ({ host }),
+            getEditableDescendants,
+        },
+        {
+            name: "counter",
+            Component: Counter,
+        }
+    );
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div data-embedded="wrapper"><div data-embedded-editable="editable"><span data-embedded="counter"></span></div></div>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" readonly="1" options="{'embedded_components': True}"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div data-embedded="wrapper"><div class="editable"><div data-embedded-editable="editable"><span data-embedded="counter"><span class="counter">Counter:0</span></span></div></div></div>`
+    );
+    click(".counter");
+    await animationFrame();
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
+        `<div data-embedded="wrapper"><div class="editable"><div data-embedded-editable="editable"><span data-embedded="counter"><span class="counter">Counter:1</span></span></div></div></div>`
+    );
+    READONLY_MAIN_EMBEDDINGS.pop();
+    READONLY_MAIN_EMBEDDINGS.pop();
+});
+
 test("links should open on a new tab in readonly", async () => {
     Partner._records = [
         {
@@ -232,6 +352,43 @@ test("edit and save a html field", async () => {
     expect.verifySteps(["web_save"]);
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_save`).not.toBeVisible();
+});
+
+test("edit and save a html field containing JSON as some attribute values should keep the same wysiwyg", async () => {
+    patchWithCleanup(Wysiwyg.prototype, {
+        setup() {
+            super.setup();
+            expect.step("Setup Wysiwyg");
+        },
+    });
+    onRpc("partner", "web_save", ({ args }) => {
+        expect.step("web_save");
+        // server representation does not have HTML entities
+        args[1].txt = `<div data-value='{"myString":"myString"}'><p>content</p></div><p>first</p>`;
+    });
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    const value = JSON.stringify({
+        myString: "myString",
+    });
+    pasteOdooEditorHtml(htmlEditor, `<div data-value=${value}><p>content</p></div>`);
+    const txtField = queryOne('.o_field_html[name="txt"] .odoo-editor-editable');
+    expect(txtField).toHaveInnerHTML(
+        `<div data-value="{&quot;myString&quot;:&quot;myString&quot;}"><p>content</p></div><p>first</p>`
+    );
+    expect.verifySteps(["Setup Wysiwyg"]);
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
 });
 
 test("edit a html field in new form view dialog and close the dialog with 'escape'", async () => {
@@ -769,7 +926,7 @@ test("'Video' command is available by default", async () => {
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await waitFor(".o-we-powerbox");
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video"]);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video", "Video Link"]);
 });
 
 test("'Video' command is not available when 'disableVideo' = true", async () => {
@@ -785,8 +942,8 @@ test("'Video' command is not available when 'disableVideo' = true", async () => 
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
-    expect(queryAllTexts(".o-we-command-name")).toEqual([]);
+    expect(".o-we-powerbox").toHaveCount(1);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
 });
 
 test("'Video' command is not available by default when sanitize_tags = true", async () => {
@@ -810,8 +967,8 @@ test("'Video' command is not available by default when sanitize_tags = true", as
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
-    expect(queryAllTexts(".o-we-command-name")).toEqual([]);
+    expect(".o-we-powerbox").toHaveCount(1);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
 });
 
 test("'Video' command is not available by default when sanitize = true", async () => {
@@ -835,8 +992,8 @@ test("'Video' command is not available by default when sanitize = true", async (
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/video");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
-    expect(queryAllTexts(".o-we-command-name")).toEqual([]);
+    expect(".o-we-powerbox").toHaveCount(1);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video Link"]);
 });
 
 test("'Video' command is available when sanitize_tags = true and 'disableVideo' = false", async () => {
@@ -861,7 +1018,7 @@ test("'Video' command is available when sanitize_tags = true and 'disableVideo' 
     await insertText(htmlEditor, "/video");
     await animationFrame();
     expect(".o-we-powerbox").toHaveCount(1);
-    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video"]);
+    expect(queryAllTexts(".o-we-command-name")).toEqual(["Video", "Video Link"]);
 });
 
 test("MediaDialog contains 'Videos' tab by default in html field", async () => {
@@ -1078,7 +1235,7 @@ test("edit and save a html field in collaborative should keep the same wysiwyg",
 
     onRpc("partner", "web_save", ({ args }) => {
         const txt = args[1].txt;
-        expect(stripHistoryIds(txt)).toBe("<p>Hello first</p>");
+        expect(normalizeHTML(txt, stripHistoryIds)).toBe("<p>Hello first</p>");
         expect.step("web_save");
         args[1].txt = txt.replace(
             /\sdata-last-history-steps="[^"]*?"/,

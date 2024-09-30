@@ -4,7 +4,7 @@
             <t t-if="props.toolbar and state.showToolbar and editor.shared.getToolbarInfo">
                 <Toolbar toolbar="editor.shared.getToolbarInfo()" class="'shadow-sm'"/>
             </t>
-            <div class="o-wysiwyg-local-overlay position-relative h-0 w-0" t-ref="localOverlay" />
+            <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
             <div class="flex-grow-1" t-att-class="{'overflow-auto': !props.iframe}">
                 <t t-if="props.iframe">
                     <iframe t-ref="content" class="w-100 h-100" t-att-data-class="props.contentClass" t-on-blur="props.onBlur"/>

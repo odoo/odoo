@@ -7,6 +7,7 @@ import {
     isEmpty,
     isInPre,
     isMediaElement,
+    isProtected,
     isSelfClosingElement,
     isShrunkBlock,
     isTangible,
@@ -553,6 +554,7 @@ export class DeletePlugin extends Plugin {
         const root = node;
         const remove = (node) => {
             let customHandling = false;
+            let customIsUnremovable;
             for (const cb of this.resources["filter_descendants_to_remove"] || []) {
                 const descendantsToRemove = cb(node);
                 if (descendantsToRemove) {
@@ -560,11 +562,15 @@ export class DeletePlugin extends Plugin {
                         remove(descendant);
                     }
                     customHandling = true;
-                    node.remove();
+                    customIsUnremovable = this.isUnremovable(node, root);
+                    if (!customIsUnremovable) {
+                        // TODO ABD: test protected + unremovable
+                        node.remove();
+                    }
                 }
             }
             if (customHandling) {
-                return true;
+                return !customIsUnremovable;
             }
             for (const child of [...node.childNodes]) {
                 remove(child);
@@ -1044,6 +1050,11 @@ export class DeletePlugin extends Plugin {
     // @todo @phoenix: there are not enough tests for visibility of characters
     // (invisible whitespace, separate nodes, etc.)
     isVisibleChar(char, textNode, offset) {
+        // Protected nodes are always "visible" for the editor
+        if (isProtected(textNode)) {
+            // TODO ABD: add test
+            return true;
+        }
         // ZWS and ZWNBSP are invisible.
         if (["\u200B", "\uFEFF"].includes(char)) {
             return false;
