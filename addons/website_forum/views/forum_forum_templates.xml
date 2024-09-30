@@ -90,7 +90,8 @@
             <div class="row mb-3">
                 <label class="form-label col-lg-2" for="content">Description</label>
                 <div class="col">
-                    <textarea name="content" required="required" id="content" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor">
+                    <textarea name="content" required="required" id="content" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor"
+                    t-att-content="question_content">
                         <t t-out="question_content"/>
                     </textarea>
                     <div class="d-flex">
@@ -181,7 +182,7 @@
                 <label t-if="not is_answer" class="form-label col-lg-2" for="content">Description</label>
                 <label t-else="" class="form-label col-lg-2">Your Answer</label>
                 <div class="col">
-                    <textarea name="content" id="content" required="required" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor" t-out="post.content"/>
+                    <textarea name="content" id="content" required="required" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor" t-out="post.content" t-att-content="post.content"/>
                     <div t-if="not is_answer" class="d-flex mb-2">
                         <span class="form-text small text-muted me-1"><i class="fa fa-lightbulb-o"></i> Tip:</span>
                         <div class="carousel slide" data-bs-ride="carousel">
