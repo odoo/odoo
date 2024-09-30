@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
-from datetime import datetime
+from datetime import datetime, timedelta
+
+from odoo.tests import users, tagged
 from odoo.addons.hr_calendar.tests.common import TestHrCalendarCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('work_hours')
@@ -10,6 +12,14 @@ class TestWorkingHours(TestHrCalendarCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.user_bxls = mail_new_test_user(
+            cls.env,
+            email='brussels@test.example.com',
+            groups='base.group_user',
+            name='Employee Brussels',
+            notification_type='email',
+            login='user_bxls',
+        )
         if 'hr.contract' in cls.env:
             cls.skipTest(cls,
                 "hr_contract module is installed. To test these features you need to install test_hr_contract_calendar")
@@ -256,3 +266,33 @@ class TestWorkingHours(TestHrCalendarCommon):
             {'daysOfWeek': [5], 'startTime': '07:00', 'endTime': '11:00'},
             {'daysOfWeek': [5], 'startTime': '12:00', 'endTime': '15:00'},
         ])
+
+    @users('user_bxls')
+    def test_partner_on_leave_with_calendar_leave(self):
+        """Check that resource leaves are correctly reflected in the unavailable_partner_ids field.
+        Overlapping times between the leave time of an employee and the meeting should add the partner
+        to the list of unavailable partners.
+        """
+        test_date = datetime(2022, 2, 14, 7, 0, 0)
+        self.employeeA.user_id = self.user_bxls
+        self.env['calendar.event'].search([('user_id', '=', self.user_bxls.id)]).unlink()
+        self.env['resource.calendar.leaves'].sudo().search([('calendar_id', '=', self.user_bxls.resource_calendar_id.id)]).unlink()
+
+        meeting = self.env['calendar.event'].with_context(company_id=self.company_A.id).create([
+            {
+                'start': test_date,
+                'stop': test_date + timedelta(hours=3),
+                'name': "Event",
+                'attendee_ids': [(0, 0, {'partner_id': self.user_bxls.partner_id.id})],
+            },
+        ])
+        self.assertFalse(meeting.unavailable_partner_ids)
+
+        self.env['resource.calendar.leaves'].sudo().create({
+            'calendar_id': self.user_bxls.resource_calendar_id.id,
+            'date_from': test_date,
+            'date_to': test_date + timedelta(days=1),
+            'name': 'Casual Leave'
+        })
+        meeting.invalidate_recordset()
+        self.assertEqual(meeting.unavailable_partner_ids, self.user_bxls.partner_id)
