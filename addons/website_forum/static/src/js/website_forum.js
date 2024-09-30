@@ -647,6 +647,9 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
         'click .o_wforum_mark_spam': 'async _onMarkSpamClick',
         'input #spamSearch': '_onSpamSearchInput',
     },
+    assetLibs: [
+        "website_forum.assets_widget_xml",
+    ],
 
     init() {
         this._super(...arguments);

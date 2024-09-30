@@ -7,6 +7,9 @@ import { renderToElement } from "@web/core/utils/render";
 const ForumShare = publicWidget.Widget.extend({
     selector: '',
     events: {},
+    assetLibs: [
+        "website_forum.assets_widget_xml",
+    ],
 
     /**
      * @override
