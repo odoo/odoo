@@ -9,7 +9,7 @@ const chatterPatch = {
             rating_stats: this.ratingStats,
             selectedRating: star,
         });
-        thread.messages = await thread.fetchMessages();
+        thread.messages = await thread.fetchMessages({ routeParams: this.messageFetchRouteParams });
         thread.loadOlder = thread.messages.length === this.store.FETCH_LIMIT;
     },
 
@@ -19,12 +19,12 @@ const chatterPatch = {
             loadOlder: false,
             selectedRating: false,
         });
-        thread.messages = await thread.fetchMessages();
+        thread.messages = await thread.fetchMessages({ routeParams: this.messageFetchRouteParams });
         thread.loadOlder = thread.messages.length === this.store.FETCH_LIMIT;
     },
 
     get ratingStats() {
-        return this.state.thread?.messages.at(-1)?.rating_stats || this.state.thread?.rating_stats;
+        return this.state.thread?.rating_stats;
     },
 };
 

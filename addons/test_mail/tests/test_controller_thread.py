@@ -188,3 +188,13 @@ class TestMessageController(MailControllerThreadCommon):
             files={"ufile": base64.b64decode(b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=")},
         )
         self.assertEqual(response.status_code, 404)
+
+    def test_message_fetch_access(self):
+        """Test access to fetch the messages on a record with group_user access."""
+        record = self.env["mail.performance.thread"].create({"name": "Test"})
+        self._execute_message_fetch_subtests(
+            (self.user_admin, self.user_employee), record, allowed="all"
+        )
+        self._execute_message_fetch_subtests(
+            (self.guest, self.user_portal, self.user_public), record, allowed=False
+        )

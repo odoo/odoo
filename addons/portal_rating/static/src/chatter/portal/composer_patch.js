@@ -47,16 +47,16 @@ patch(Composer.prototype, {
             rating_id: this.message.rating_id.id,
             publisher_comment: this.props.composer.composerText.trim(),
         });
-        this.message.rating_id = data;
+        this.store.insert(data);
         this.props.onPostCallback();
     },
 
     get canProcessMessage() {
-        return super.canProcessMessage || (this.message && this.message.rating_value);
+        return super.canProcessMessage || (this.message && this.message.rating_id);
     },
 
     get askDeleteFromEdit() {
-        return super.askDeleteFromEdit && !this.message.rating_value;
+        return super.askDeleteFromEdit && !this.message.rating_id;
     },
 
     get visibleRatingValue() {

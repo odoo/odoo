@@ -17,15 +17,11 @@ patch(Message.prototype, {
         return !this.state.editRating && super.isEditing;
     },
 
-    get ratingValue() {
-        return this.message.rating_value || this.message.rating_id?.rating;
-    },
-
     onClikEditComment() {
         this.state.editRating = !this.state.editRating;
         if (this.state.editRating) {
             const messageContent = convertBrToLineBreak(
-                this.props.message.rating_id.publisher_comment
+                this.props.message.rating_id.publisher_comment || ""
             );
             this.props.message.composer = {
                 message: this.props.message,
@@ -53,6 +49,6 @@ patch(Message.prototype, {
             rating_id: this.message.rating_id.id,
             publisher_comment: "",
         });
-        this.message.rating_id = data;
+        this.store.insert(data);
     },
 });
