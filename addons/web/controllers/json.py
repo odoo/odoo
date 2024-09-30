@@ -253,7 +253,8 @@ def get_view_id_and_type(action, view_type: str | None) -> tuple[int | None, str
 def get_default_domain(model, action, context, eval_context):
     for ir_filter in model.env['ir.filters'].get_filters(model._name, action._origin.id):
         if ir_filter['is_default']:
-            default_domain = safe_eval(ir_filter['domain'], eval_context)
+            # user filters, static parsing only
+            default_domain = ast.literal_eval(ir_filter['domain'])
             break
     else:
         def filters_from_context():
