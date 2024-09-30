@@ -46,4 +46,13 @@
             }
         }
     }
+
+    .dynamic_snippet_template .col-12:not(:has(.o_template_product_product_banner)) {
+    // When a single element has been fetched, it takes up the entire width and becomes
+    // too tall according to the page height.
+    // This forces the same size to be used as when two elements are fetched.
+        @include media-breakpoint-up(lg) {
+            max-width: 50%;
+        }
+    }
 }

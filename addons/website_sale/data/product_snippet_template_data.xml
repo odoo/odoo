@@ -246,7 +246,7 @@
         <template id="dynamic_filter_template_product_product_banner" name="Large Banner">
             <t t-foreach="records" t-as="data" data-number-of-elements="1" data-number-of-elements-sm="1" data-thumb="/website_sale/static/src/img/snippets_options/product_banner.svg">
                 <t t-set="record" t-value="data['_record']"/>
-                <div class="o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
+                <div class="o_template_product_product_banner o_carousel_product_card card w-100" t-att-data-add2cart-rerender="data.get('_add2cart_rerender')">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <div class="row flex-row-reverse">
                         <div class="col-lg-6 d-flex align-items-center justify-content-center justify-content-lg-end o_wrap_product_img position-relative">
