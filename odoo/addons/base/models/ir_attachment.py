@@ -116,7 +116,7 @@ class IrAttachment(models.Model):
         try:
             with open(full_path, 'rb') as f:
                 return f.read()
-        except (IOError, OSError):
+        except OSError:
             _logger.info("_read_file reading %s", full_path, exc_info=True)
         return b''
 
@@ -130,8 +130,9 @@ class IrAttachment(models.Model):
                     fp.write(bin_value)
                 # add fname to checklist, in case the transaction aborts
                 self._mark_for_gc(fname)
-            except IOError:
-                _logger.info("_file_write writing %s", full_path, exc_info=True)
+            except OSError:
+                _logger.info("_file_write writing %s", full_path)
+                raise
         return fname
 
     @api.model
