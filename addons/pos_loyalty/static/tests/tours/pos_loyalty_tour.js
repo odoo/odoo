@@ -520,3 +520,14 @@ registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
             PosLoyalty.finalizeOrder("Cash", "575.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyPromocodePricelist", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.orderTotalIs("25.87"),
+        ].flat(),
+});
