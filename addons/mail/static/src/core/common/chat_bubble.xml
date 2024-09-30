@@ -16,7 +16,7 @@
             <button t-if="state.showClose and !env.embedLivechat" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Window" t-on-click.stop="() => this.props.chatWindow.close()"><i class="oi oi-close"/></button>
             <ImStatus t-if="thread?.correspondent?.persona?.im_status and thread?.correspondent?.persona?.im_status != 'offline'" className="'o-mail-ChatBubble-status position-absolute o-mail-brighter'" persona="thread.correspondent.persona" thread="thread"/>
             <button class="o-mail-ChatHub-bubbleBtn btn bg-view">
-                <img class="o-mail-ChatBubble-avatar rounded-circle" t-att-class="{ 'o-big': env.embedLivechat }" t-att-src="thread?.avatarUrl" alt="Thread image" draggable="false"/>
+                <img class="o-mail-ChatBubble-avatar rounded-circle o_object_fit_cover" t-att-class="{ 'o-big': env.embedLivechat }" t-att-src="thread?.avatarUrl" alt="Thread image" draggable="false"/>
             </button>
         </div>
     </t>

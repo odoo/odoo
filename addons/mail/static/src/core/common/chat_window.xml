@@ -93,7 +93,7 @@
 
 <t t-name="mail.ChatWindow.headerContent">
     <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-attf-class="{{ threadActions.actions.length > 4 ? 'ms-1' : 'ms-3' }} me-1">
-        <img class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+        <img class="rounded o_object_fit_cover" t-att-src="thread.avatarUrl" alt="Thread Image"/>
     </div>
     <ThreadIcon t-if="thread and thread.channel_type === 'chat' and thread.correspondent" thread="thread"/>
     <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
