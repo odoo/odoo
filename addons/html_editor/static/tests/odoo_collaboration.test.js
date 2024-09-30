@@ -1150,3 +1150,33 @@ describe("History steps Ids", () => {
         editor.destroy();
     });
 });
+
+describe("Selection", () => {
+    test("Selection info is propagated after delete backward", async () => {
+        const pool = await createPeers(["p1", "p2"]);
+        // editor content : <p>a</p>
+        const peers = pool.peers;
+        const e1 = peers.p1.editor;
+        await peers.p1.focus(); // <p>a[]</p>
+        await peers.p2.focus();
+        await peers.p1.openDataChannel(peers.p2);
+        // This timeout is necessary for the selection to be set
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(
+            peers.p2.plugins.collaboration_selection_avatar.selectionInfos.get("p1").selection
+                .anchorOffset
+        ).toBe(1);
+        expect(
+            peers.p2.plugins.collaboration_selection.selectionInfos.get("p1").selection.anchorOffset
+        ).toBe(1);
+        e1.dispatch("DELETE_BACKWARD");
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(
+            peers.p2.plugins.collaboration_selection_avatar.selectionInfos.get("p1").selection
+                .anchorOffset
+        ).toBe(0);
+        expect(
+            peers.p2.plugins.collaboration_selection.selectionInfos.get("p1").selection.anchorOffset
+        ).toBe(0);
+    });
+});

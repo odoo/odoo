@@ -70,11 +70,11 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
         const anchorNode = this.shared.getNodeById(selection.anchorNodeId);
         const focusNode = this.shared.getNodeById(selection.focusNodeId);
         if (!anchorNode || !focusNode) {
-            return;
+            return false;
         }
         const anchorBlock = closestBlock(anchorNode);
         if (!anchorBlock) {
-            return;
+            return false;
         }
 
         const containerRect = this.avatarOverlay.getBoundingClientRect();
@@ -109,6 +109,7 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
         const left = anchorX - containerRect.x - AVATAR_SIZE;
         avatarElement.style.left = left + "px";
         selectionInfo.avatarPositionKey = `${left}|${top}`;
+        return true;
     }
     updateAvatarCounters() {
         const avatarsOverlaps = {};
@@ -133,13 +134,27 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
             }
         }
     }
-    refreshSelection() {
+    async retryRefreshSelection(unsuccessfulPeerSelectionSet) {
+        for (const peerId of unsuccessfulPeerSelectionSet) {
+            await this.shared.resetCollaborativeSelection(peerId);
+        }
+        this.refreshSelection(false);
+    }
+    refreshSelection(retry = true) {
         this.avatarOverlay.replaceChildren();
         this.avatarsCountersOverlay.replaceChildren();
+        const unsuccessfulPeerSelectionSet = new Set();
         for (const selection of this.selectionInfos.values()) {
-            this.drawPeerAvatar(selection);
+            if (!this.drawPeerAvatar(selection)) {
+                unsuccessfulPeerSelectionSet.add(selection.peerId);
+            }
         }
-        this.updateAvatarCounters();
+        if (!retry || !unsuccessfulPeerSelectionSet.size) {
+            this.updateAvatarCounters();
+        }
+        if (retry && unsuccessfulPeerSelectionSet.size) {
+            this.retryRefreshSelection(unsuccessfulPeerSelectionSet);
+        }
     }
 
     disableAvatarForElement(element) {
