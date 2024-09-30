@@ -21,7 +21,10 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
 
         if free_shipping_lines:
             currency = order.currency_id
-            amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
+            if request.env.user.has_group('account.group_show_line_subtotals_tax_excluded'):
+                amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
+            else:
+                amount_free_shipping = sum(free_shipping_lines.mapped('price_total'))
             result.update({
                 'new_amount_delivery_discounted': Monetary.value_to_html(order.amount_delivery + amount_free_shipping, {'display_currency': currency}),
                 'new_amount_delivery_discount': Monetary.value_to_html(amount_free_shipping, {'display_currency': currency}),
