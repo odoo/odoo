@@ -1196,7 +1196,7 @@ class SaleOrder(models.Model):
 
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
-            self = self.with_user(SUPERUSER_ID)
+            self = self.with_user(SUPERUSER_ID)  # noqa: PLW0642
 
         self.with_context(force_send=True).message_post_with_source(
             mail_template,

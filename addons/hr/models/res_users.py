@@ -203,7 +203,7 @@ class ResUsers(models.Model):
         # avoid breaking `groups` mecanism on res.users form view.
         profile_view = self.env.ref("hr.res_users_view_form_profile")
         if profile_view and view_id == profile_view.id:
-            self = self.with_user(SUPERUSER_ID)
+            self = self.with_user(api.SUPERUSER_ID)  # noqa: PLW0642
         result = super().get_view(view_id, view_type, **options)
         return result
 

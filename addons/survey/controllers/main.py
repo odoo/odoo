@@ -9,7 +9,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, http, SUPERUSER_ID, _
+from odoo import fields, http, _
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
 from odoo.osv import expression

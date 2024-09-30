@@ -6,8 +6,9 @@ import os
 import re
 import shutil
 
-import odoo
-from odoo.tools.config import config
+import odoo.modules
+from odoo import api
+from .config import config
 
 VERSION = 1
 DEFAULT_EXCLUDE = [
@@ -289,8 +290,8 @@ class Cloc(object):
     def count_database(self, database):
         registry = odoo.modules.registry.Registry(database)
         with registry.cursor() as cr:
-            uid = odoo.SUPERUSER_ID
-            env = odoo.api.Environment(cr, uid, {})
+            uid = api.SUPERUSER_ID
+            env = api.Environment(cr, uid, {})
             self.count_env(env)
 
     #------------------------------------------------------

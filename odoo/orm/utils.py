@@ -10,6 +10,9 @@ regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.IGNORECASE)
 # match private methods, to prevent their remote invocation
 regex_private = re.compile(r'^(_.*|init)$')
 
+# The hard-coded super-user id (a.k.a. administrator, or root user).
+SUPERUSER_ID = 1
+
 # read_group stuff
 READ_GROUP_TIME_GRANULARITY = {
     'hour': dateutil.relativedelta.relativedelta(hours=1),
