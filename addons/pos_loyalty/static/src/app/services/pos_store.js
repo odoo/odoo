@@ -259,7 +259,8 @@ patch(PosStore.prototype, {
             const program_pricelists = rule.program_id.pricelist_ids;
             if (
                 program_pricelists.length > 0 &&
-                (!order.pricelist_id || !program_pricelists.includes(order.pricelist_id.id))
+                (!order.pricelist_id ||
+                    !program_pricelists.some((pr) => pr.id === order.pricelist_id.id))
             ) {
                 return _t("That promo code program requires a specific pricelist.");
             }
