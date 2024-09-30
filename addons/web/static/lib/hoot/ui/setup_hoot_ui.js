@@ -94,10 +94,6 @@ export function setupHootUI() {
         document.body.appendChild(container);
 
         mount(HootMain, container.shadowRoot, {
-            // TODO <<< remove when lib is stable
-            dev: true,
-            warnIfNoStaticProps: true,
-            // TODO >>>
             env: {
                 runner: getRunner(),
                 ui: makeUiState(),
