@@ -141,7 +141,7 @@
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <input type="hidden" name="product-id" t-att-data-product-id="record.id"/>
                     <a class="o_carousel_product_img_link position-absolute mx-auto" t-att-href="record.website_url">
-                        <img class="card-img-top" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
+                        <img class="card-img-top rounded-0" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
                         <div class="card-title h5 text-center" t-field="record.display_name"/>
