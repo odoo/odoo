@@ -14,7 +14,7 @@ from collections import defaultdict
 from random import randint
 from werkzeug import urls
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
+from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
 import typing
@@ -392,7 +392,7 @@ class ResPartner(models.Model):
 
     @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):
-        super_partner = self.env['res.users'].browse(SUPERUSER_ID).partner_id
+        super_partner = self.env['res.users'].browse(api.SUPERUSER_ID).partner_id
         if super_partner in self:
             super_partner.partner_share = False
         for partner in self - super_partner:

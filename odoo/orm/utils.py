@@ -14,6 +14,8 @@ regex_private = re.compile(r'^(_.*|init)$')
 
 # types handled as collections
 COLLECTION_TYPES = (list, tuple, AbstractSet)
+# The hard-coded super-user id (a.k.a. root user, or OdooBot).
+SUPERUSER_ID = 1
 
 # read_group stuff
 READ_GROUP_TIME_GRANULARITY = {

@@ -14,12 +14,11 @@ from psycopg2.extensions import quote_ident
 from decorator import decorator
 from pytz import country_timezones
 
-import odoo
+import odoo.api
 import odoo.modules.neutralize
 import odoo.release
 import odoo.sql_db
 import odoo.tools
-from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessDenied
 from odoo.release import version_info
 from odoo.sql_db import db_connect
@@ -72,7 +71,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
         registry = odoo.modules.registry.Registry.new(db_name, demo, update_module=True)
 
         with closing(registry.cursor()) as cr:
-            env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+            env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
 
             if lang:
                 modules = env['ir.module.module'].search([('state', '=', 'installed')])
@@ -174,7 +173,7 @@ def exp_duplicate_database(db_original_name, db_name, neutralize_database=False)
     registry = odoo.modules.registry.Registry.new(db_name)
     with registry.cursor() as cr:
         # if it's a copy of a database, force generation of a new dbuuid
-        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+        env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
         env['ir.config_parameter'].init(force=True)
         if neutralize_database:
             odoo.modules.neutralize.neutralize_database(cr)
@@ -342,7 +341,7 @@ def restore_db(db, dump_file, copy=False, neutralize_database=False):
 
         registry = odoo.modules.registry.Registry.new(db)
         with registry.cursor() as cr:
-            env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+            env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
             if copy:
                 # if it's a copy of a database, force generation of a new dbuuid
                 env['ir.config_parameter'].init(force=True)
