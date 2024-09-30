@@ -2255,6 +2255,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             Command.update(pay1_rec_line.id, {'credit': 36511.34}),
         ]})
         pay1.action_post()
+        pay1.move_id.action_post()  # No synchronicity between the payment and its move states
 
         pay2 = self.env['account.payment'].create({
             'partner_type': 'customer',
