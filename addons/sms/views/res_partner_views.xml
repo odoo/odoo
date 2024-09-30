@@ -64,16 +64,4 @@
         <field name="binding_model_id" ref="base.model_res_partner"/>
         <field name="binding_view_types">form</field>
     </record>
-
-    <record id="res_partner_view_search" model="ir.ui.view">
-        <field name="name">res.partner.view.search.inherit.sms</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='phone']" position="replace">
-                <field name="phone_mobile_search"/>
-            </xpath>
-        </field>
-    </record>
-
 </odoo>

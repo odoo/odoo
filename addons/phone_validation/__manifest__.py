@@ -22,6 +22,7 @@ records numbers. """,
     'data': [
         'security/ir.model.access.csv',
         'views/phone_blacklist_views.xml',
+        'views/res_partner_views.xml',
         'wizard/phone_blacklist_remove_view.xml',
     ],
     'depends': [
