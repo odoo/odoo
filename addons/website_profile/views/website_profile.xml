@@ -156,7 +156,7 @@
                                 <div class="mb-3 col-12">
                                     <label class="mb-1 text-primary" for="description"><span class="fw-bold">Biography</span></label>
                                     <textarea name="description" id="description" style="min-height: 120px"
-                                        class="form-control o_wysiwyg_loader" placeholder="Write a few words about yourself..."><t t-out="user.partner_id.website_description"/></textarea>
+                                        class="form-control o_wysiwyg_loader" placeholder="Write a few words about yourself..." t-att-content="user.partner_id.website_description"><t t-out="user.partner_id.website_description"/></textarea>
                                 </div>
                                 <div class="col">
                                     <button type="submit" class="btn btn-primary o_wprofile_submit_btn">Update</button>
@@ -318,7 +318,8 @@
             <div class="row">
                 <div class="mb-1 col-12">
                     <textarea name="description" id="description" style="min-height: 120px"
-                        class="form-control o_wysiwyg_loader" placeholder="Write a few words about yourself...">
+                        class="form-control o_wysiwyg_loader" placeholder="Write a few words about yourself..."
+                        t-att-content="user.partner_id.website_description">
                         <t t-out="user.partner_id.website_description"/>
                     </textarea>
                 </div>
