@@ -35,6 +35,8 @@ import {
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
 const { toZone } = spreadsheet.helpers;
+const { cellMenuRegistry } = spreadsheet.registries;
+
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -621,6 +623,46 @@ test("Cannot see record of a list in dashboard mode if wrong list formula", asyn
     model.updateMode("dashboard");
     selectCell(model, "A2");
     expect.verifySteps([]);
+});
+
+test("Can see record on vectorized list index", async function () {
+    mockService("action", {
+        async doAction(params) {
+            expect.step(`${params.res_model},${params.res_id}`);
+        },
+    });
+    const { model, env } = await createSpreadsheetWithList();
+    model.dispatch("CREATE_SHEET", { sheetId: "42" });
+    model.dispatch("ACTIVATE_SHEET", {
+        sheetIdFrom: model.getters.getActiveSheetId(),
+        sheetIdTo: "42"
+    });
+    setCellContent(model, "C1", "1");
+    setCellContent(model, "C2", "2");
+    setCellContent(model, "D1", "3");
+    setCellContent(model, "D2", "4");
+    setCellContent(model, "A1", '=ODOO.LIST(1, C1:D2, "foo")');
+    const seeRecordAction = cellMenuRegistry.getAll().find((item) => item.id === "list_see_record");
+
+    selectCell(model, "A1");
+    expect(seeRecordAction.isVisible(env)).toBe(true);
+    await seeRecordAction.execute(env);
+    expect.verifySteps(["partner,1"]);
+
+    selectCell(model, "A2");
+    expect(seeRecordAction.isVisible(env)).toBe(true);
+    await seeRecordAction.execute(env);
+    expect.verifySteps(["partner,2"]);
+
+    selectCell(model, "B1");
+    expect(seeRecordAction.isVisible(env)).toBe(true);
+    await seeRecordAction.execute(env);
+    expect.verifySteps(["partner,3"]);
+
+    selectCell(model, "B2");
+    expect(seeRecordAction.isVisible(env)).toBe(true);
+    await seeRecordAction.execute(env);
+    expect.verifySteps(["partner,4"]);
 });
 
 test("field matching is removed when filter is deleted", async function () {
