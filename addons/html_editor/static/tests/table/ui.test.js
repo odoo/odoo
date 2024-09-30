@@ -855,3 +855,85 @@ test("preserve table rows width on move row below operation", async () => {
         </table>`)
     );
 });
+
+test("reset table size to remove custom width", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table style="width: 150px;">
+            <tbody>
+            <tr><td style="width: 100px;" class="a">1[]</td></tr>
+            <tr><td style="width: 50px;" class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await click(queryOne(".dropdown-menu [name='reset_size']"));
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td style="" class="a">1[]</td></tr>
+                <tr><td style="" class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+
+    undo(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table style="width: 150px;">
+            <tbody>
+            <tr><td style="width: 100px;" class="a">1[]</td></tr>
+            <tr><td style="width: 50px;" class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+});
+
+test("reset table size to remove custom height", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+            <tr style="height: 100px;"><td class="a">1[]</td></tr>
+            <tr style="height: 50px;"><td class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+    expect(".o-we-table-menu").toHaveCount(0);
+
+    await hover(el.querySelector("td.a"));
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor(".dropdown-menu");
+    await click(queryOne(".dropdown-menu [name='reset_size']"));
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+                <tr style=""><td class="a">1[]</td></tr>
+                <tr style=""><td class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+
+    undo(editor);
+    expect(getContent(el)).toBe(
+        unformat(`
+        <table>
+            <tbody>
+            <tr style="height: 100px;"><td class="a">1[]</td></tr>
+            <tr style="height: 50px;"><td class="b">2</td></tr>
+            </tbody>
+        </table>`)
+    );
+});
