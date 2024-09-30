@@ -1379,7 +1379,7 @@ class SaleOrderLine(models.Model):
 
     def _get_partner_display(self):
         self.ensure_one()
-        commercial_partner = self.order_partner_id.commercial_partner_id
+        commercial_partner = self.sudo().order_partner_id.commercial_partner_id
         return f'({commercial_partner.ref or commercial_partner.name})'
 
     def _additional_name_per_id(self):
