@@ -17,6 +17,57 @@ class SlidesPortalChatter(PortalChatter):
             return True
         return super()._portal_post_has_content(thread_model, thread_id, message, attachment_ids=attachment_ids, **kw)
 
+<<<<<<< 18.0
+||||||| ae41fc7286566b720f07207491d779f1335b9544
+    @http.route()
+    def portal_chatter_post(self, thread_model, thread_id, post_data, **kwargs):
+        previous_post = request.env['mail.message'].search([('res_id', '=', thread_id),
+                                                            ('author_id', '=', request.env.user.partner_id.id),
+                                                            ('model', '=', 'slide.channel'),
+                                                            ('subtype_id', '=', request.env.ref('mail.mt_comment').id)])
+        if previous_post:
+            raise ValidationError(_("Only a single review can be posted per course."))
+
+        result = super().portal_chatter_post(thread_model, thread_id, post_data, **kwargs)
+        if result and thread_model == 'slide.channel':
+            rating_value = kwargs.get('rating_value', False)
+            slide_channel = request.env[thread_model].sudo().browse(int(thread_id))
+            if rating_value and slide_channel and request.env.user.partner_id.id == int(kwargs.get('pid')):
+                request.env.user._add_karma(slide_channel.karma_gen_channel_rank, slide_channel, _('Course Ranked'))
+            result.update({
+                'default_rating_value': rating_value,
+                'rating_avg': slide_channel.rating_avg,
+                'rating_count': slide_channel.rating_count,
+                'force_submit_url': result.get('default_message_id') and '/slides/mail/update_comment',
+            })
+        return result
+
+=======
+    @http.route()
+    def portal_chatter_post(self, thread_model, thread_id, post_data, **kwargs):
+        if thread_model == 'slide.channel':
+            previous_post = request.env['mail.message'].search([('res_id', '=', thread_id),
+                                                                ('author_id', '=', request.env.user.partner_id.id),
+                                                                ('model', '=', 'slide.channel'),
+                                                                ('subtype_id', '=', request.env.ref('mail.mt_comment').id)])
+            if previous_post:
+                raise ValidationError(_("Only a single review can be posted per course."))
+
+        result = super().portal_chatter_post(thread_model, thread_id, post_data, **kwargs)
+        if result and thread_model == 'slide.channel':
+            rating_value = kwargs.get('rating_value', False)
+            slide_channel = request.env[thread_model].sudo().browse(int(thread_id))
+            if rating_value and slide_channel and request.env.user.partner_id.id == int(kwargs.get('pid')):
+                request.env.user._add_karma(slide_channel.karma_gen_channel_rank, slide_channel, _('Course Ranked'))
+            result.update({
+                'default_rating_value': rating_value,
+                'rating_avg': slide_channel.rating_avg,
+                'rating_count': slide_channel.rating_count,
+                'force_submit_url': result.get('default_message_id') and '/slides/mail/update_comment',
+            })
+        return result
+
+>>>>>>> 8dbb88e930dc319255ce4f6e3486a9260743a10e
     @http.route([
         '/slides/mail/update_comment',
         ], type='json', auth="user", methods=['POST'])
