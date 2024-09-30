@@ -868,6 +868,12 @@ class MailThread(models.AbstractModel):
         if alias:
             if thread_id:
                 obj = record_set[0]
+                if obj._name == 'mail.group':
+                    if obj.alias_id and obj.alias_id != alias:
+                        self._routing_warn(
+                            _('Detected message forward, reseting route for alias %(name)s', name=alias.alias_name), message_id, route, False)
+                        return ()
+
             elif alias.alias_parent_model_id and alias.alias_parent_thread_id:
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
             else:
