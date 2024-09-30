@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.event_crm.tests.common import TestEventCrmCommon
-from odoo.tests.common import tagged, users
+from odoo.tests.common import RecordCapturer, tagged, users
 
 
 @tagged('event_crm', 'post_install', '-at_install')
@@ -34,6 +34,12 @@ class EventRegistrationCase(TestEventCrmCommon):
             'name': 'test visitor language',
             'lang_id': cls.env.ref('base.lang_en').id,
             'access_token': 'f9d2ffa0427d4e4b1d740cf5eb3cdc20',
+            'website_id': cls.test_lang_website.id,
+        })
+        cls.test_lang_visitor_fr = cls.env['website.visitor'].sudo().create({
+            'name': 'test visitor language 2',
+            'lang_id': cls.env.ref('base.lang_fr').id,
+            'access_token': 'f9d2ffa0427d4e4b1d740cf5eb3cdc21',
             'website_id': cls.test_lang_website.id,
         })
 
@@ -92,7 +98,6 @@ class EventRegistrationCase(TestEventCrmCommon):
                 "Answers should be escaped")
             self.assertIn('<li>', lead.description, 'HTML around the text box value should not be escaped')
 
-    @users('user_eventregistrationdesk')
     def test_visitor_language_propagation(self):
         """
         This test makes sure that visitor and its language are propagated to the lead when a lead is
@@ -104,17 +109,31 @@ class EventRegistrationCase(TestEventCrmCommon):
         self.env.invalidate_all()
 
         # 3 leads created w/ Lead Generation rules in TestEventCrmCommon: 1 per attendee and 1 per order
-        reg1, reg2 = self.env['event.registration'].create([
-            {
-                'event_id': self.event_0.id,
-                'visitor_id': self.test_lang_visitor.id,
-                'email': 'test@test.example.com',
-            }, {
-                'event_id': self.event_0.id,
-                'visitor_id': self.test_lang_visitor.id,
-                'email': 'test2@test.example.com',
-            },
-        ])
-        leads = reg1.lead_ids + reg2.lead_ids
-        self.assertEqual(leads.visitor_ids, self.test_lang_visitor)
-        self.assertEqual(leads.lang_id, self.test_lang_visitor.lang_id)
+        with RecordCapturer(self.env['crm.lead'], []) as capture:
+            _attendees = self.env['event.registration'].with_user(self.user_eventmanager).create([
+                {
+                    'event_id': self.event_0.id,
+                    'visitor_id': self.test_lang_visitor.id,
+                    'email': 'test@test.example.com',
+                }, {
+                    'event_id': self.event_0.id,
+                    'visitor_id': self.test_lang_visitor.id,
+                    'email': 'test2@test.example.com',
+                }, {
+                    'event_id': self.event_0.id,
+                    'visitor_id': self.test_lang_visitor_fr.id,
+                    'email': 'test.fr@test.example.com',
+                },
+            ])
+        leads = capture.records
+        self.assertEqual(len(leads), 4)
+
+        # grouped: first found lang
+        global_lead = leads.filtered(lambda l: l.event_lead_rule_id == self.test_rule_order)
+        self.assertEqual(global_lead.visitor_ids, self.test_lang_visitor + self.test_lang_visitor_fr)
+        self.assertEqual(global_lead.lang_id, self.test_lang_visitor.lang_id)
+
+        # attendee-based: lead / registration, hence all visitor / langs
+        attendee_lead = leads.filtered(lambda l: l.event_lead_rule_id == self.test_rule_attendee)
+        self.assertEqual(attendee_lead.visitor_ids, self.test_lang_visitor + self.test_lang_visitor_fr)
+        self.assertEqual(leads.lang_id, self.test_lang_visitor.lang_id + self.test_lang_visitor_fr.lang_id)
