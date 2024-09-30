@@ -65,7 +65,7 @@ def get_field_variation_date(model: Model, field: Field, factor: int, series_ali
 
     def redistribute(value):
         return SQL(
-            "(%(value)s - (%(factor)s - %(series_alias)s) * floor(%(total_days)s/%(factor)s) * interval '1 days')::%(cast_type)s",
+            "(%(value)s - (%(factor)s - %(series_alias)s) * (%(total_days)s::float/%(factor)s) * interval '1 days')::%(cast_type)s",
             value=value,
             factor=factor,
             series_alias=SQL.identifier(series_alias),
