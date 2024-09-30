@@ -24,40 +24,28 @@ function isIndentationTab(tab) {
 
 export class TabulationPlugin extends Plugin {
     static name = "tabulation";
-    static dependencies = ["dom", "selection", "delete", "split"];
+    static dependencies = ["dom", "selection", "history", "delete", "split"];
     static shared = ["indentBlocks", "outdentBlocks"];
     resources = {
+        user_commands: [
+            { id: "tab", run: this.handleTab.bind(this) },
+            { id: "shiftTab", run: this.handleShiftTab.bind(this) },
+        ],
         handle_tab: [],
         handle_shift_tab: [],
         handle_delete_forward: this.handleDeleteForward.bind(this),
         shortcuts: [
-            { hotkey: "tab", command: "TAB" },
-            { hotkey: "shift+tab", command: "SHIFT_TAB" },
+            { hotkey: "tab", commandId: "tab" },
+            { hotkey: "shift+tab", commandId: "shiftTab" },
         ],
         isUnsplittable: isEditorTab, // avoid merge
-    };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "TAB":
-                this.handleTab();
-                break;
-            case "SHIFT_TAB":
-                this.handleShiftTab();
-                break;
-            case "NORMALIZE": {
-                for (const tab of payload.node.querySelectorAll(".oe-tabs")) {
-                    tab.setAttribute("contenteditable", "false");
-                }
-                this.alignTabs(payload.node);
-                break;
+        clean_for_save_listeners: ({ root }) => {
+            for (const tab of root.querySelectorAll("span.oe-tabs")) {
+                tab.removeAttribute("contenteditable");
             }
-            case "CLEAN_FOR_SAVE":
-                for (const tab of payload.root.querySelectorAll("span.oe-tabs")) {
-                    tab.removeAttribute("contenteditable");
-                }
-        }
-    }
+        },
+        normalize_listeners: this.normalize.bind(this),
+    };
 
     handleTab() {
         if (delegate(this.getResource("handle_tab"))) {
@@ -71,7 +59,7 @@ export class TabulationPlugin extends Plugin {
             const traversedBlocks = this.shared.getTraversedBlocks();
             this.indentBlocks(traversedBlocks);
         }
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     handleShiftTab() {
@@ -80,7 +68,7 @@ export class TabulationPlugin extends Plugin {
         }
         const traversedBlocks = this.shared.getTraversedBlocks();
         this.outdentBlocks(traversedBlocks);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     insertTab() {
@@ -209,5 +197,11 @@ export class TabulationPlugin extends Plugin {
             });
             return true;
         }
+    }
+    normalize(el) {
+        for (const tab of el.querySelectorAll(".oe-tabs")) {
+            tab.setAttribute("contenteditable", "false");
+        }
+        this.alignTabs(el);
     }
 }

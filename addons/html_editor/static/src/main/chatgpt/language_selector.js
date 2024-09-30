@@ -7,7 +7,10 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 
 export class LanguageSelector extends Component {
     static template = "html_editor.LanguageSelector";
-    static props = toolbarButtonProps;
+    static props = {
+        ...toolbarButtonProps,
+        onSelected: { type: Function },
+    };
     static components = { Dropdown, DropdownItem };
 
     setup() {
@@ -22,6 +25,6 @@ export class LanguageSelector extends Component {
         });
     }
     onSelected(language) {
-        this.props.dispatch("OPEN_CHATGPT_DIALOG", { language });
+        this.props.onSelected(language);
     }
 }

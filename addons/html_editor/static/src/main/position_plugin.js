@@ -14,6 +14,7 @@ export class PositionPlugin extends Plugin {
         // todo: it is strange that the position plugin is aware of onExternalHistorySteps and historyResetFromSteps.
         onExternalHistorySteps: this.layoutGeometryChange.bind(this),
         historyResetFromSteps: this.layoutGeometryChange.bind(this),
+        step_added_listeners: this.layoutGeometryChange.bind(this),
     };
 
     setup() {
@@ -36,13 +37,6 @@ export class PositionPlugin extends Plugin {
         }
     }
 
-    handleCommand(commandName) {
-        switch (commandName) {
-            case "ADD_STEP":
-                this.layoutGeometryChange();
-                break;
-        }
-    }
     destroy() {
         this.resizeObserver.disconnect();
         super.destroy();

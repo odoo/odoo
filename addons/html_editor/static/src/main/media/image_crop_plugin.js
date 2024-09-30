@@ -7,8 +7,16 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
     static name = "image_crop";
-    static dependencies = ["image", "selection"];
+    static dependencies = ["image", "selection", "history"];
     resources = {
+        user_commands: [
+            {
+                id: "cropImage",
+                run: this.openCropImage.bind(this),
+                label: _t("Crop image"),
+                icon: "fa-crop",
+            },
+        ],
         toolbarCategory: withSequence(27, {
             id: "image_crop",
             namespace: "image",
@@ -16,12 +24,8 @@ export class ImageCropPlugin extends Plugin {
         toolbarItems: [
             {
                 id: "image_crop",
-                category: "image_crop",
-                title: _t("Crop image"),
-                icon: "fa-crop",
-                action(dispatch) {
-                    dispatch("CROP_IMAGE");
-                },
+                commandId: "cropImage",
+                categoryId: "image_crop",
             },
         ],
     };
@@ -33,32 +37,25 @@ export class ImageCropPlugin extends Plugin {
         };
     }
 
-    handleCommand(command, payload) {
-        switch (command) {
-            case "CROP_IMAGE": {
-                const selectedImg = this.getSelectedImage();
-                if (!selectedImg) {
-                    return;
-                }
-                this.imageCropProps.media = selectedImg;
-                this.openCropImage();
-                break;
-            }
-        }
-    }
-
     getSelectedImage() {
         const selectedNodes = this.shared.getSelectedNodes();
         return selectedNodes.find((node) => node.tagName === "IMG");
     }
 
     async openCropImage() {
+        const selectedImg = this.getSelectedImage();
+        if (!selectedImg) {
+            return;
+        }
+
+        this.imageCropProps.media = selectedImg;
+
         const onClose = () => {
             registry.category("main_components").remove("ImageCropping");
         };
 
         const onSave = () => {
-            this.dispatch("ADD_STEP");
+            this.shared.addStep();
         };
 
         await loadBundle("html_editor.assets_image_cropper");

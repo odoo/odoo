@@ -1,12 +1,15 @@
 /**
  * @typedef { import("./editor").Editor } Editor
  * @typedef { import("./editor").EditorConfig } EditorConfig
+ * @typedef { import("./core/user_command_plugin").UserCommandPlugin } UserCommandPlugin
  * @typedef { import("./core/history_plugin").HistoryPlugin } HistoryPlugin
  * @typedef { import("./core/selection_plugin").SelectionPlugin } SelectionPlugin
  * @typedef { import("./core/delete_plugin").DeletePlugin } DeletePlugin
  * @typedef { import("./core/dom_plugin").DomPlugin } DomPlugin
  * @typedef { import("./core/split_plugin").SplitPlugin } SplitPlugin
  * @typedef { import("./core/overlay_plugin").OverlayPlugin } OverlayPlugin
+ * @typedef { import("./core/line_break_plugin").LineBreakPlugin } LineBreakPlugin
+ * @typedef { import("./main/table/table_plugin").TablePlugin } TablePlugin
  * @typedef { import("./main/local_overlay_plugin").LocalOverlayPlugin } LocalOverlayPlugin
  * @typedef { import("./main/powerbox/powerbox_plugin").PowerboxPlugin } PowerboxPlugin
  * @typedef { import("./main/link/link_plugin").LinkPlugin } LinkPlugin
@@ -17,6 +20,8 @@
  *
  * @typedef { Object } SharedMethods
  *
+ * @property { UserCommandPlugin['execCommand'] } execCommand
+ * @property { UserCommandPlugin['getCommands'] } getCommands
  * @property { HistoryPlugin['reset'] } reset
  * @property { HistoryPlugin['makeSavePoint'] } makeSavePoint
  * @property { HistoryPlugin['makeSnapshotStep'] } makeSnapshotStep
@@ -27,6 +32,8 @@
  * @property { HistoryPlugin['historyResetFromSteps'] } historyResetFromSteps
  * @property { HistoryPlugin['serializeSelection'] } serializeSelection
  * @property { HistoryPlugin['getNodeById'] } getNodeById
+ * @property { HistoryPlugin['stageSelection'] } stageSelection
+ * @property { HistoryPlugin['addStep'] } addStep
  * @property { SelectionPlugin['getSelectionData'] } getSelectionData
  * @property { SelectionPlugin['getEditableSelection'] } getEditableSelection
  * @property { SelectionPlugin['getSelectedNodes'] } getSelectedNodes
@@ -41,13 +48,17 @@
  * @property { SelectionPlugin['getSelectedNodes'] } getSelectedNodes
  * @property { SelectionPlugin['getTraversedNodes'] } getTraversedNodes
  * @property { SelectionPlugin['modifySelection'] } modifySelection
+ * @property { SelectionPlugin['resetActiveSelection'] } resetActiveSelection
  * @property { FormatPlugin['isSelectionFormat'] } isSelectionFormat
  * @property { LocalOverlayPlugin['makeLocalOverlay'] } makeLocalOverlay
+ * @property { PowerboxPlugin['getPowerboxItems'] } getPowerboxItems
+ * @property { PowerboxPlugin['getAvailablePowerboxItems'] } getAvailablePowerboxItems
  * @property { PowerboxPlugin['openPowerbox'] } openPowerbox
  * @property { PowerboxPlugin['updatePowerbox'] } updatePowerbox
  * @property { PowerboxPlugin['closePowerbox'] } closePowerbox
  * @property { SanitizePlugin['sanitize'] } sanitize
  * @property { DeletePlugin['deleteRange'] } deleteRange
+ * @property { DeletePlugin['deleteshareSelection'] } deleteSelection
  * @property { LinkPlugin['createLink'] } createLink
  * @property { LinkPlugin['insertLink'] } insertLink
  * @property { LinkPlugin['getPathAsUrlCommand'] } getPathAsUrlCommand
@@ -60,7 +71,18 @@
  * @property { SplitPlugin['splitSelection'] } splitSelection
  * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
  * @property { SplitPlugin['splitTextNode'] } splitTextNode
+ * @property { SplitPlugin['splitBlockNode'] } splitBlockNode
  * @property { OverlayPlugin['createOverlay'] } createOverlay
+ * @property { LineBreakPlugin['insertLineBreak'] } insertLineBreak
+ * @property { LineBreakPlugin['insertLineBreakNode'] } insertLineBreakNode
+ * @property { LineBreakPlugin['insertLineBreakElement'] } insertLineBreakElement
+ * @property { TablePlugin['addColumn'] } addColumn
+ * @property { TablePlugin['addRow'] } addRow
+ * @property { TablePlugin['removeColumn'] } removeColumn
+ * @property { TablePlugin['removeRow'] } removeRow
+ * @property { TablePlugin['moveColumn'] } moveColumn
+ * @property { TablePlugin['moveRow'] } moveRow
+ * @property { TablePlugin['resetTableSize'] } resetTableSize
  * @property { CollaborationPlugin['onExternalHistorySteps'] } onExternalHistorySteps
  * @property { CollaborationPlugin['historyGetMissingSteps'] } historyGetMissingSteps
  * @property { CollaborationPlugin['setInitialBranchStepId'] } setInitialBranchStepId
@@ -81,11 +103,10 @@ export class Plugin {
      * @param {Editor['document']} document
      * @param {Editor['editable']} editable
      * @param {SharedMethods} shared
-     * @param {Editor['dispatch']} dispatch
      * @param {import("./editor").EditorConfig} config
      * @param {*} services
      */
-    constructor(document, editable, shared, dispatch, config, services) {
+    constructor(document, editable, shared, config, services) {
         /** @type { Document } **/
         this.document = document;
         /** @type { HTMLElement } **/
@@ -95,7 +116,6 @@ export class Plugin {
         this.services = services;
         /** @type { SharedMethods } **/
         this.shared = shared;
-        this.dispatch = dispatch;
         this._cleanups = [];
         /**
          * The resources aggregated from all the plugins by the editor.
@@ -105,17 +125,6 @@ export class Plugin {
     }
 
     setup() {}
-
-    /**
-     * add it here so it is available in tooling
-     *
-     * @param {string} command
-     * @param {any} payload
-     * @returns { any }
-     */
-    dispatch(command, payload) {}
-
-    handleCommand(command) {}
 
     addDomListener(target, eventName, fn, capture) {
         const handler = (ev) => {

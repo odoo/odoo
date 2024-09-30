@@ -7,22 +7,21 @@ import { isBlock } from "@html_editor/utils/blocks";
 
 export class FilePlugin extends Plugin {
     static name = "file";
-    static dependencies = ["embedded_components", "dom", "selection"];
+    static dependencies = ["embedded_components", "dom", "selection", "history"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "media",
-                name: _t("File"),
-                priority: 20,
+                id: "openMediaDialog",
+                label: _t("File"),
                 description: _t("Upload a file"),
-                fontawesome: "fa-file",
+                icon: "fa-file",
                 isAvailable: (node) => {
                     return (
                         !this.config.disableFile &&
                         !!closestElement(node, "[data-embedded='clipboard']")
                     );
                 },
-                action: () => {
+                run: () => {
                     this.openMediaDialog({
                         noVideos: true,
                         noImages: true,
@@ -32,16 +31,14 @@ export class FilePlugin extends Plugin {
                 },
             },
         ],
+        powerboxItems: [
+            {
+                category: "media",
+                commandId: "openMediaDialog",
+            },
+        ],
+        mount_component_listeners: this.setupNewFile.bind(this),
     };
-
-    handleCommand(command, payload) {
-        switch (command) {
-            case "SETUP_NEW_COMPONENT":
-                this.setupNewFile(payload);
-                break;
-        }
-        super.handleCommand(command);
-    }
 
     get recordInfo() {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
@@ -75,7 +72,7 @@ export class FilePlugin extends Plugin {
     onSaveMediaDialog(element, { restoreSelection }) {
         restoreSelection();
         this.shared.domInsert(element);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     setupNewFile({ name, env }) {

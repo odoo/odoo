@@ -12,11 +12,12 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property {string} sequence
  *
  * @typedef {Object} Command
- * @property {string} name
+ * @property {string} label
  * @property {string} description
  * @property {string} category
- * @property {string} fontawesome
- * @property {Function} action
+ * @property {string} icon
+ * @property {string} commandId
+ * @property {string} commandParams
  *
  * @typedef {Object} CommandGroup
  * @property {string} id
@@ -41,8 +42,14 @@ function target(selectionData) {
 
 export class PowerboxPlugin extends Plugin {
     static name = "powerbox";
-    static dependencies = ["overlay", "selection", "history"];
-    static shared = ["openPowerbox", "updatePowerbox", "closePowerbox"];
+    static dependencies = ["overlay", "selection", "history", "user_command"];
+    static shared = [
+        "getPowerboxItems",
+        "getAvailablePowerboxItems",
+        "openPowerbox",
+        "updatePowerbox",
+        "closePowerbox",
+    ];
     resources = {
         hints: {
             text: _t('Type "/" for commands'),
@@ -68,8 +75,32 @@ export class PowerboxPlugin extends Plugin {
             },
             applyCommand: this.applyCommand.bind(this),
         };
-
+        this.defaultPowerboxItems = this.makeDefaultPowerboxItems();
         this.addDomListener(this.editable.ownerDocument, "keydown", this.onKeyDown);
+    }
+    getPowerboxItems() {
+        return this.defaultPowerboxItems;
+    }
+    getAvailablePowerboxItems() {
+        const selection = this.shared.getEditableSelection();
+        return this.defaultPowerboxItems.filter((cmd) => !cmd.isAvailable?.(selection.anchorNode));
+    }
+    makeDefaultPowerboxItems() {
+        const powerboxItems = this.getResource("powerboxItems");
+        const userCommands = this.shared.getCommands();
+        const categories = this.getResource("powerboxCategory");
+        const categoryDict = Object.fromEntries(
+            categories.map((category) => [category.id, category])
+        );
+        return powerboxItems.map((item) => {
+            const userCommand = userCommands[item.commandId];
+            return {
+                ...userCommand,
+                ...item,
+                categoryName: categoryDict[item.category].name,
+                run: () => this.shared.execCommand(item.commandId, item.commandParams),
+            };
+        });
     }
 
     /**
@@ -147,7 +178,7 @@ export class PowerboxPlugin extends Plugin {
 
     applyCommand(command) {
         this.onApplyCommand(command);
-        command.action(this.dispatch);
+        command.run();
         this.closePowerbox();
     }
 }

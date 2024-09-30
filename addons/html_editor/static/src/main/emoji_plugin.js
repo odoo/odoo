@@ -4,18 +4,22 @@ import { _t } from "@web/core/l10n/translation";
 
 export class EmojiPlugin extends Plugin {
     static name = "emoji";
-    static dependencies = ["overlay", "dom", "selection"];
+    static dependencies = ["history", "overlay", "dom", "selection"];
     static shared = ["showEmojiPicker"];
     resources = {
+        user_commands: [
+            {
+                id: "addEmoji",
+                label: _t("Emoji"),
+                description: _t("Add an emoji"),
+                icon: "fa-smile-o",
+                run: this.showEmojiPicker.bind(this),
+            },
+        ],
         powerboxItems: [
             {
                 category: "widget",
-                name: _t("Emoji"),
-                description: _t("Add an emoji"),
-                fontawesome: "fa-smile-o",
-                action: () => {
-                    this.showEmojiPicker();
-                },
+                commandId: "addEmoji",
             },
         ],
     };
@@ -46,7 +50,7 @@ export class EmojiPlugin extends Plugin {
                         return;
                     }
                     this.shared.domInsert(str);
-                    this.dispatch("ADD_STEP");
+                    this.shared.addStep();
                 },
             },
             target,

@@ -5,20 +5,25 @@ import { renderToElement } from "@web/core/utils/render";
 
 export class VideoPlugin extends Plugin {
     static name = "video";
-    static dependencies = ["embedded_components", "dom", "selection", "link"];
+    static dependencies = ["embedded_components", "dom", "selection", "link", "history"];
     resources = {
-        powerboxItems: [
+        user_commands: [
             {
-                category: "navigation",
-                name: _t("Video Link"),
-                priority: 70,
+                id: "openVideoSelectorDialog",
+                label: _t("Video Link"),
                 description: _t("Insert a Video"),
-                fontawesome: "fa-play",
-                action: () => {
+                icon: "fa-play",
+                run: () => {
                     this.openVideoSelectorDialog((media) => {
                         this.insertVideo(media);
                     });
                 },
+            },
+        ],
+        powerboxItems: [
+            {
+                category: "navigation",
+                commandId: "openVideoSelectorDialog",
             },
         ],
     };
@@ -36,7 +41,7 @@ export class VideoPlugin extends Plugin {
             }),
         });
         this.shared.domInsert(videoBlock);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     /**

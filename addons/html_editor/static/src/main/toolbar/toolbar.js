@@ -7,7 +7,6 @@ export class Toolbar extends Component {
         toolbar: {
             type: Object,
             shape: {
-                dispatch: Function,
                 getSelection: Function,
                 focusEditable: Function,
                 buttonGroups: {
@@ -25,7 +24,7 @@ export class Toolbar extends Component {
                                         const base = {
                                             id: String,
                                             category: String,
-                                            title: String,
+                                            label: String,
                                             inherit: { type: String, optional: true },
                                         };
                                         if (button.Component) {
@@ -38,7 +37,7 @@ export class Toolbar extends Component {
                                         } else {
                                             validate(button, {
                                                 ...base,
-                                                action: Function,
+                                                run: Function,
                                                 icon: { type: String, optional: true },
                                                 text: { type: String, optional: true },
                                                 isFormatApplied: { type: Function, optional: true },
@@ -86,13 +85,12 @@ export class Toolbar extends Component {
     }
 
     onButtonClick(button) {
-        button.action(this.props.toolbar.dispatch);
+        button.run();
         this.props.toolbar.focusEditable();
     }
 }
 
 export const toolbarButtonProps = {
-    title: String,
-    dispatch: Function,
+    label: String,
     getSelection: Function,
 };

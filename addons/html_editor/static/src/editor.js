@@ -1,7 +1,7 @@
 import { MAIN_PLUGINS } from "./plugin_sets";
 import { removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
-import { resourceSequenceSymbol, withSequence } from "./utils/resource";
+import { resourceSequenceSymbol, trigger, withSequence } from "./utils/resource";
 import { initElementForEdition } from "./utils/sanitize";
 
 /**
@@ -121,7 +121,6 @@ export class Editor {
     preparePlugins() {
         const Plugins = sortPlugins(this.config.Plugins || MAIN_PLUGINS);
         const plugins = new Map();
-        const dispatch = this.dispatch.bind(this);
         for (const P of Plugins) {
             if (P.name === "") {
                 throw new Error(`Missing plugin name (class ${P.constructor.name})`);
@@ -140,14 +139,7 @@ export class Editor {
                 }
             }
             plugins.set(P.name, P);
-            const plugin = new P(
-                this.document,
-                this.editable,
-                _shared,
-                dispatch,
-                this.config,
-                this.services
-            );
+            const plugin = new P(this.document, this.editable, _shared, this.config, this.services);
             this.plugins.push(plugin);
             for (const h of P.shared) {
                 if (h in this.shared) {
@@ -170,8 +162,8 @@ export class Editor {
         for (const plugin of this.plugins) {
             plugin.setup();
         }
-        this.dispatch("NORMALIZE", { node: this.editable });
-        this.dispatch("START_EDITION");
+        trigger(this.resources["normalize_listeners"], this.editable);
+        trigger(this.resources["start_edition_listeners"]);
     }
 
     createResources() {
@@ -212,22 +204,13 @@ export class Editor {
         return Object.freeze(resources);
     }
 
-    dispatch(command, payload = {}) {
-        if (!this.editable) {
-            throw new Error("Cannot dispatch command while not attached to an element");
-        }
-        for (const p of this.plugins) {
-            p.handleCommand(command, payload);
-        }
-    }
-
     getContent() {
         return this.getElContent().innerHTML;
     }
 
     getElContent() {
         const el = this.editable.cloneNode(true);
-        this.dispatch("CLEAN_FOR_SAVE", { root: el });
+        trigger(this.resources["clean_for_save_listeners"], { root: el });
         return el;
     }
 

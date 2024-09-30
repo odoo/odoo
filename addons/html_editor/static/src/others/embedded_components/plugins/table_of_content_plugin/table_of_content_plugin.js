@@ -8,20 +8,32 @@ import {
 
 export class TableOfContentPlugin extends Plugin {
     static name = "tableOfContent";
-    static dependencies = ["dom", "selection", "embedded_components", "link"];
+    static dependencies = ["dom", "selection", "embedded_components", "link", "history"];
     resources = {
+        user_commands: [
+            {
+                id: "insertTableOfContent",
+                label: _t("Table Of Content"),
+                description: _t("Highlight the structure (headings) of this field"),
+                icon: "fa-bookmark",
+                run: this.insertTableOfContent.bind(this),
+            },
+        ],
         powerboxItems: [
             {
                 category: "navigation",
-                name: _t("Table Of Content"),
-                description: _t("Highlight the structure (headings) of this field"),
-                fontawesome: "fa-bookmark",
-                action: () => {
-                    this.insertTableOfContent();
-                },
+                commandId: "insertTableOfContent",
             },
         ],
         mutation_filtered_classes: ["o_embedded_toc_header_highlight"],
+        restore_savepoint_listeners: this.delayedUpdateTableOfContents.bind(this),
+        history_reseted_listeners: () => this.delayedUpdateTableOfContents(),
+        history_reseted_from_steps_listeners: this.delayedUpdateTableOfContents.bind(this),
+        step_added_listeners: ({ stepCommonAncestor }) =>
+            this.delayedUpdateTableOfContents(stepCommonAncestor),
+        external_step_added_listeners: this.delayedUpdateTableOfContents.bind(this),
+        clean_for_save_listeners: this.cleanForSave.bind(this),
+        mount_component_listeners: this.setupNewToc.bind(this),
     };
 
     setup() {
@@ -31,38 +43,16 @@ export class TableOfContentPlugin extends Plugin {
         this.alive = true;
     }
 
-    /**
-     * @param {string} command
-     * @param {Object} payload
-     */
-    handleCommand(command, payload) {
-        switch (command) {
-            case "CLEAN_FOR_SAVE":
-                this.cleanForSave(payload.root);
-                break;
-            case "RESTORE_SAVEPOINT":
-            case "ADD_EXTERNAL_STEP":
-            case "HISTORY_RESET_FROM_STEPS":
-            case "HISTORY_RESET":
-            case "STEP_ADDED":
-                this.delayedUpdateTableOfContents(payload.stepCommonAncestor);
-                break;
-            case "SETUP_NEW_COMPONENT":
-                this.setupNewToc(payload);
-                break;
-        }
-    }
-
     insertTableOfContent() {
         const tableOfContentBlueprint = renderToElement("html_editor.TableOfContentBlueprint");
         this.shared.domInsert(tableOfContentBlueprint);
-        this.dispatch("ADD_STEP");
+        this.shared.addStep();
     }
 
     /**
      * @param {HTMLElement} root
      */
-    cleanForSave(root) {
+    cleanForSave({ root }) {
         for (const el of root.querySelectorAll(".o_embedded_toc_header_highlight")) {
             el.classList.remove("o_embedded_toc_header_highlight");
         }

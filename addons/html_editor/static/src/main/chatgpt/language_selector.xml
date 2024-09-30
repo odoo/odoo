@@ -3,7 +3,7 @@
         <button t-if="state.languages.length === 1"
             class="btn btn-light px-1"
             name="translate"
-            t-att-title="props.title"
+            t-att-title="props.label"
             t-on-click="() => this.onSelected(state.languages[0][1])">
                 Translate
         </button>
