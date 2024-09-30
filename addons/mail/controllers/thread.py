@@ -6,6 +6,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import http
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import verify_limited_field_access_token
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
@@ -58,10 +59,32 @@ class ThreadController(http.Controller):
     # main routes
     # ------------------------------------------------------------
 
-    @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="user")
-    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None):
-        thread = self._get_thread_with_access(thread_model, thread_id, mode="read")
-        res = request.env["mail.message"]._message_fetch(domain=None, thread=thread, **(fetch_params or {}))
+    def _should_apply_share_domain(self, thread, **kwargs):
+        """Determines if the share domain should be applied based on context of fetch."""
+        return not request.env.user._is_internal() or not thread.sudo(False).has_access("read")
+
+    def _get_fetch_domain(self, thread, **kwargs):
+        """Defines the fetch domain and restricts the fetched messages by user type. As a security
+        matter, non-internal users can only read the messages with non-internal subtypes. This early
+        check ensures that they won't pass the ACL, even if they are superusers.
+        """
+        if self._should_apply_share_domain(thread, **kwargs):
+            return Domain(request.env["mail.message"]._get_share_domain())
+        return None
+
+    def _prepare_fetch_context(self, thread, **kwargs):
+        """To override to update the context before fetching thread messages if needed."""
+        return thread
+
+    @http.route("/mail/thread/messages", methods=["POST"], type="jsonrpc", auth="public")
+    def mail_thread_messages(self, thread_model, thread_id, fetch_params=None, **kwargs):
+        thread = self._get_thread_with_access(thread_model, thread_id, mode="read", **kwargs)
+        if not thread:
+            raise NotFound()
+        thread = self._prepare_fetch_context(thread, **kwargs)
+        res = thread.env["mail.message"]._message_fetch(
+            domain=self._get_fetch_domain(thread, **kwargs), thread=thread, **(fetch_params or {})
+        )
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()

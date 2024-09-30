@@ -1,9 +1,30 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from itertools import product
+
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
 from odoo.tests import tagged
 
 
 @tagged("-at_install", "post_install", "mail_controller")
 class TestPortalThreadController(MailControllerThreadCommon):
+    def _check_fetched_messages(self, record, messages, allowed, route_kw):
+        """Check which messages should be displayed in portal."""
+        super()._check_fetched_messages(record, messages, allowed, route_kw)
+        if allowed == "only_comments":
+            if not self.env.user._is_internal():
+                self._fetch_and_assert_is_not_note(record, messages, route_kw)
+            route_kw["only_portal"] = True
+            self._fetch_and_assert_is_not_note(record, messages, route_kw)
+
+    def _fetch_and_assert_is_not_note(self, record, messages, route_kw):
+        fetched_data = self._message_fetch(record, route_kw)
+        fetched_messages = fetched_data["data"]["mail.message"]
+        self.assertNotEqual(len(fetched_messages), len(messages))
+        self.assertEqual(len(fetched_messages), 1)
+        self.assertMessageFields(
+            fetched_messages[0], {"subtype_id": self.env.ref("mail.mt_comment").id}
+        )
 
     def test_message_post_portal_no_partner(self):
         """Test access of message post for portal without partner."""
@@ -168,4 +189,24 @@ class TestPortalThreadController(MailControllerThreadCommon):
                 test_partners(self.user_employee, True, all_partners, route_kw=token),
                 test_partners(self.user_employee, True, all_partners, route_kw=sign),
             ),
+        )
+
+    def test_message_fetch_access_portal(self):
+        """Test access to fetch the messages on a portal record."""
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
+        token, bad_token, sign, bad_sign, _ = self._get_sign_token_params(record)
+        route_kws = ({}, token, bad_token, sign, bad_sign)
+        # Subtest format: (user, security params)
+        self._execute_message_fetch_subtests(
+            product((self.guest, self.user_public), ({}, bad_token, bad_sign)),
+            record,
+            allowed=False,
+        )
+        self._execute_message_fetch_subtests(
+            product((self.guest, self.user_public), (token, sign)), record, allowed="only_comments"
+        )
+        self._execute_message_fetch_subtests(
+            product((self.user_admin, self.user_employee, self.user_portal), route_kws),
+            record,
+            allowed="only_comments",
         )
