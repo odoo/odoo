@@ -2147,3 +2147,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         order_payment.with_context(payment_context).check()
         self.pos_config.current_session_id.action_pos_session_closing_control()
         self.assertEqual(order.picking_ids.move_line_ids_without_package.lot_id.name, '1001')
+
+    def test_pos_creation_in_branch(self):
+        branch = self.env['res.company'].create({
+            'name': 'Branch 1',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+        })
+
+        self.env["pos.config"].with_company(branch).create({
+            "name": "Branch Point of Sale"
+        })
