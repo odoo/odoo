@@ -2016,11 +2016,33 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo._is_anonymous_cart():
             return request.redirect('/shop/address')
 
+<<<<<<< 18.0
+||||||| 017ef09fc7de52661a96e443d83bb74d15ba999a
+        # Check that the billing address is complete.
+        invoice_partner_sudo = order_sudo.partner_invoice_id
+        if not self._check_billing_address(invoice_partner_sudo):
+            return request.redirect(
+                f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
+            )
+
+=======
+        # Check that the billing address is complete.
+        invoice_partner_sudo = order_sudo.partner_invoice_id
+        if (
+            not self._check_billing_address(invoice_partner_sudo)
+            and invoice_partner_sudo._can_be_edited_by_current_customer(order_sudo, 'billing')
+        ):
+            return request.redirect(
+                f'/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing'
+            )
+
+>>>>>>> 7ea18449b1fec5f913002b2244fdf0b4aefccfb4
         # Check that the delivery address is complete.
         delivery_partner_sudo = order_sudo.partner_shipping_id
         if (
             not order_sudo.only_services
             and not self._check_delivery_address(delivery_partner_sudo)
+            and delivery_partner_sudo._can_be_edited_by_current_customer(order_sudo, 'delivery')
         ):
             return request.redirect(
                 f'/shop/address?partner_id={delivery_partner_sudo.id}&address_type=delivery'
