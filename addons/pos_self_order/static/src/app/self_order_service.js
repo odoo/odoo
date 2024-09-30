@@ -95,7 +95,7 @@ export class SelfOrder extends Reactive {
         if (this.config.self_ordering_mode === "kiosk") {
             this.onNotified("STATUS", ({ status }) => {
                 if (status === "closed") {
-                    this.pos_session = [];
+                    this.pos_session = null;
                     this.ordering = false;
                 } else {
                     // reload to get potential new settings
