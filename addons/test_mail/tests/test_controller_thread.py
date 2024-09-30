@@ -164,3 +164,16 @@ class TestMessageController(MailControllerThreadCommon):
             files={"ufile": b""},
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_message_fetch_access(self):
+        record = self.env["res.partner"].create({"name": "Test Partner"})
+        self._execute_message_fetch_subtests(
+            record,
+            (
+                (self.user_public, False),
+                (self.guest, False),
+                (self.user_portal, False),
+                (self.user_employee, "all"),
+                (self.user_admin, "all"),
+            ),
+        )

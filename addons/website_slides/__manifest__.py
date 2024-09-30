@@ -177,6 +177,9 @@ Featuring
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',
             'website_slides/static/src/js/slides_embed.js',
         ],
+        'portal.assets_chatter': [
+            'website_slides/static/src/chatter/frontend/**/*',
+        ],
         'web.qunit_suite_tests': [
             'website_slides/static/tests/legacy/**/*',
         ],

@@ -4,6 +4,7 @@ import datetime
 import markupsafe
 
 from odoo import _, api, fields, models, tools
+from odoo.addons.mail.tools.discuss import Store
 
 
 class MailThread(models.AbstractModel):
@@ -208,3 +209,15 @@ class MailThread(models.AbstractModel):
         return super()._message_update_content(
             message, body, *args, rating_value=rating_value, **kwargs
         )
+
+    def _thread_to_store(self, store: Store, fields, *, request_list=None):
+        super()._thread_to_store(store, fields, request_list=request_list)
+        for thread in self:
+            if (
+                request_list
+                and "ratingStats" in request_list
+                and hasattr(thread, "rating_get_stats")
+            ):
+                store.add(
+                    thread, {"rating_stats": thread.sudo().rating_get_stats()}, as_thread=True
+                )
