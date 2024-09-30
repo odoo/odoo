@@ -882,9 +882,9 @@ class PosConfig(models.Model):
         payment_methods |= cash_pm
 
         # only create bank and customer account payment methods per company
-        bank_pm = self.env['pos.payment.method'].search([('journal_id.type', '=', 'bank'), ('company_id', '=', self.env.company.id)])
+        bank_pm = self.env['pos.payment.method'].search([('journal_id.type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)])
         if not bank_pm:
-            bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.env.company.id)], limit=1)
+            bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
             if not bank_journal:
                 raise UserError(_('Ensure that there is an existing bank journal. Check if chart of accounts is installed in your company.'))
             bank_pm = self.env['pos.payment.method'].create({
@@ -896,7 +896,7 @@ class PosConfig(models.Model):
 
         payment_methods |= bank_pm
 
-        pay_later_pm = self.env['pos.payment.method'].search([('journal_id', '=', False), ('company_id', '=', self.env.company.id)])
+        pay_later_pm = self.env['pos.payment.method'].search([('journal_id', '=', False), ('company_id', 'in', self.env.company.parent_ids.ids)])
         if not pay_later_pm:
             pay_later_pm = self.env['pos.payment.method'].create({
                 'name': _('Customer Account'),
