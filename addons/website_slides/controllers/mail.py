@@ -20,12 +20,13 @@ class SlidesPortalChatter(PortalChatter):
 
     @http.route()
     def portal_chatter_post(self, thread_model, thread_id, post_data, **kwargs):
-        previous_post = request.env['mail.message'].search([('res_id', '=', thread_id),
-                                                            ('author_id', '=', request.env.user.partner_id.id),
-                                                            ('model', '=', 'slide.channel'),
-                                                            ('subtype_id', '=', request.env.ref('mail.mt_comment').id)])
-        if previous_post:
-            raise ValidationError(_("Only a single review can be posted per course."))
+        if thread_model == 'slide.channel':
+            previous_post = request.env['mail.message'].search([('res_id', '=', thread_id),
+                                                                ('author_id', '=', request.env.user.partner_id.id),
+                                                                ('model', '=', 'slide.channel'),
+                                                                ('subtype_id', '=', request.env.ref('mail.mt_comment').id)])
+            if previous_post:
+                raise ValidationError(_("Only a single review can be posted per course."))
 
         result = super().portal_chatter_post(thread_model, thread_id, post_data, **kwargs)
         if result and thread_model == 'slide.channel':
