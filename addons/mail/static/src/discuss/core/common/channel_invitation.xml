@@ -19,8 +19,7 @@
                             <li class="o-discuss-ChannelInvitation-selectable o_object_fit_cover d-flex align-items-center px-1 py-0 btn list-group-item border-0 rounded-0" t-att-class="{ 'o-odd': selectablePartner_index % 2 === 1, 'o-selected': selectablePartner.in(state.selectedPartners) }" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
                                 <div class="d-flex align-items-center p-1 bg-inherit">
                                     <div class="o-discuss-ChannelInvitation-avatar position-relative d-flex flex-shrink-0 bg-inherit">
-                                        <img class="w-100 h-100 rounded o_object_fit_cover"
-                                            t-att-src="selectablePartner.avatarUrl"/>
+                                        <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="selectablePartner.avatarUrl"/>
                                         <ImStatus persona="selectablePartner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
                                     </div>
                                 </div>
