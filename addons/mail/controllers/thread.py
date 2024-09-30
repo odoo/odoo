@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from markupsafe import Markup
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import http
 from odoo.http import request
@@ -23,14 +23,37 @@ class ThreadController(http.Controller):
             ).get_result()
         return Store(thread, as_thread=True, request_list=request_list).get_result()
 
-    @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="user")
-    def mail_thread_messages(self, thread_model, thread_id, search_term=None, before=None, after=None, around=None, limit=30):
-        domain = [
-            ("res_id", "=", int(thread_id)),
+    def _get_fetch_domain(self, thread_model, thread_id, **kwargs):
+        return [
+            ("res_id", "=", thread_id),
             ("model", "=", thread_model),
             ("message_type", "!=", "user_notification"),
         ]
-        res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
+
+    @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="public")
+    def mail_thread_messages(
+        self,
+        thread_model,
+        thread_id,
+        search_term=None,
+        before=None,
+        after=None,
+        around=None,
+        limit=30,
+        **kwargs
+    ):
+        thread = request.env[thread_model]._get_thread_with_access(thread_id, **kwargs)
+        if not thread:
+            raise Forbidden()
+        domain = self._get_fetch_domain(thread_model, int(thread_id), **kwargs)
+        # sudo: mail.thread - reading messages on accessible thread is allowed
+        res = (
+            thread.sudo()
+            .env["mail.message"]
+            ._message_fetch(
+                domain, search_term=search_term, before=before, after=after, around=around, limit=limit
+            )
+        )
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()

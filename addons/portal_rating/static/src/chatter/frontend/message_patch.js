@@ -14,11 +14,18 @@ patch(Message.prototype, {
         return this.message.rating_id?.rating || this.message.rating_value;
     },
 
+    get commentPublishDate() {
+        return luxon.DateTime.fromFormat(
+            this.message.rating_id.publisher_datetime,
+            "yyyy-MM-dd HH:mm:ss"
+        );
+    },
+
     onClikEditComment() {
         this.state.editRating = !this.state.editRating;
         if (this.state.editRating) {
             const messageContent = convertBrToLineBreak(
-                this.props.message.rating.publisher_comment
+                this.props.message.rating_id.publisher_comment || ""
             );
             this.props.message.composer = {
                 message: this.props.message,
@@ -40,9 +47,9 @@ patch(Message.prototype, {
 
     async deleteComment() {
         const data = await rpc("/website/rating/comment", {
-            rating_id: this.message.rating.id,
+            rating_id: this.message.rating_id.id,
             publisher_comment: "",
         });
-        this.message.rating = data;
+        this.store.insert(data);
     },
 });
