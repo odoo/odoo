@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, api
 from odoo.tools import Query
 
 
@@ -12,6 +12,9 @@ class AccountCodeMapping(models.Model):
         comodel_name='account.account',
         string="Account",
         compute='_compute_self',
+        # suppress warning about field not being searchable (due to being used in depends);
+        # searching is actually implemented in the `_search` override.
+        search=True,
     )
     company_id = fields.Many2one(
         comodel_name='res.company',
@@ -23,6 +26,7 @@ class AccountCodeMapping(models.Model):
         compute='_compute_self',
         inverse='_inverse_code',
     )
+    is_required = fields.Boolean(compute='_compute_is_required')
 
     def browse(self, ids=()):
         if isinstance(ids, str):
@@ -61,3 +65,8 @@ class AccountCodeMapping(models.Model):
     def _inverse_code(self):
         for record in self:
             record.account_id.with_company(record.company_id._origin).code = record.code
+
+    @api.depends('account_id.company_ids')
+    def _compute_is_required(self):
+        for record in self:
+            record.is_required = record.company_id in record.account_id.company_ids

@@ -78,7 +78,8 @@
                                 <field name="code_mapping_ids" nolabel="1">
                                     <list editable="bottom">
                                         <field name="company_id"/>
-                                        <field name="code"/>
+                                        <field name="is_required" column_invisible="1"/>
+                                        <field name="code" required="is_required"/>
                                     </list>
                                 </field>
                             </page>

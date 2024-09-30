@@ -385,7 +385,7 @@ export class Record extends DataPoint {
                     const list = this.data[fieldName];
                     if (
                         (this._isRequired(fieldName) && !list.count) ||
-                        !list.records.every((r) => !r.dirty || r._checkValidity({ silent }))
+                        !list.records.every((r) => r._checkValidity({ silent }))
                     ) {
                         unsetRequiredFields.push(fieldName);
                     }
@@ -437,8 +437,8 @@ export class Record extends DataPoint {
         }
         const isValid = !this._invalidFields.size;
         if (!isValid && displayNotification) {
-            const items = [...this._invalidFields].map((fieldName) => {
-                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
+            const items = this._getInvalidFieldNames().map((fieldName) => {
+                return `<li>${fieldName}</li>`;
             }, this);
             this._closeInvalidFieldsNotification = this.model.notification.add(
                 markup(`<ul>${items.join("")}</ul>`),
@@ -449,6 +449,25 @@ export class Record extends DataPoint {
             );
         }
         return isValid;
+    }
+
+    _getInvalidFieldNames() {
+        return [...this._invalidFields].flatMap((fieldName) => {
+            const fieldType = this.fields[fieldName].type;
+            const prettyFieldName = escape(this.fields[fieldName].string || fieldName);
+            if (["one2many", "many2many"].includes(fieldType)) {
+                const list = this.data[fieldName];
+                const invalidComodelFieldNames = new Set(
+                    list.records.flatMap((r) => r._getInvalidFieldNames())
+                );
+
+                return [...invalidComodelFieldNames].map(
+                    (comodelFieldName) => `${prettyFieldName} > ${comodelFieldName}`
+                );
+            } else {
+                return prettyFieldName;
+            }
+        });
     }
 
     /**
