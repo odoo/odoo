@@ -669,7 +669,7 @@ class SaleOrder(models.Model):
     def _compute_tax_totals(self):
         for order in self:
             order = order.with_company(order.company_id)
-            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order_lines = order._get_amounts_order_lines()
             order.tax_totals = order.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id or order.company_id.currency_id,
