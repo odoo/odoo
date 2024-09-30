@@ -980,6 +980,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         can_skip_delivery = True  # Delivery is only needed for deliverable products.
         if order_sudo._has_deliverable_products():
+            can_skip_delivery = False
             available_dms = order_sudo._get_delivery_methods()
             checkout_page_values['delivery_methods'] = available_dms
             if delivery_method := order_sudo._get_preferred_delivery_method(available_dms):
@@ -990,7 +991,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     or order_sudo.amount_delivery != rate['price']
                 ):
                     order_sudo._set_delivery_method(delivery_method, rate=rate)
-            can_skip_delivery = self.can_skip_delivery_step(order_sudo, available_dms)
 
         if try_skip_step and can_skip_delivery:
             return request.redirect('/shop/confirm_order')
@@ -1039,29 +1039,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'only_services': order_sudo.only_services,
             'json_pickup_location_data': json.dumps(order_sudo.pickup_location_data or {}),
         }
-
-    def can_skip_delivery_step(self, order_sudo, delivery_methods):
-        """Check if the delivery step should be skipped based on the available delivery methods.
-
-        A delivery method not being set on the cart means that either `get_rate` failed, or no dms
-        are available; the user should not skip the delivery step.
-
-        :param sale.order order_sudo: The cart being paid.
-        :param delivery.carrier delivery_methods: The available delivery methods.
-        :return: Whether the delivery step can be skipped.
-        :rtype: bool
-        """
-        if not order_sudo.carrier_id or len(delivery_methods) > 1:
-            # The user must choose a delivery method or see a warning if no available ones.
-            return False
-        delivery_method = delivery_methods[0]
-        if hasattr(delivery_method, delivery_method.delivery_type + '_use_locations'):
-            # Check if the user must choose a pickup point.
-            use_location = getattr(
-                delivery_method, delivery_method.delivery_type + '_use_locations'
-            )
-            return not use_location
-        return True
 
     @route(
         '/shop/address', type='http', methods=['GET'], auth='public', website=True, sitemap=False
