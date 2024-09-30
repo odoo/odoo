@@ -27,6 +27,12 @@ inclusion of rating directly within the customer portal discuss widget.
             'portal_rating/static/src/js/portal_rating_composer.js',
             'portal_rating/static/src/xml/portal_rating_composer.xml',
             'portal_rating/static/src/xml/portal_tools.xml',
+            # needed for fields definition on lazy loading the portal chatter
+            'mail/static/src/utils/common/misc.js',
+            'mail/static/src/model/**.js',
+            'mail/static/src/core/common/record.js',
+            'rating/static/src/core/common/rating_model.js',
+            'portal_rating/static/src/core/common/rating_model_patch.js',
         ],
         'portal.assets_chatter': [
             'portal_rating/static/src/chatter/frontend/**/*',
