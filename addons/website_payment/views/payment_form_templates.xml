@@ -87,7 +87,7 @@
                                        t-att-checked="is_checked or None"
                                 />
                                 <label class="form-check-label mt-0" t-attf-for="amount_#{donation_amount_index}">
-                                    <t t-out="donation_amount"/>
+                                    <t t-out="float(donation_amount)" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                     <span t-if="donation_options.get('descriptions')" class="text-muted fst-italic ms-1">
                                         - <t t-out="donation_descriptions[donation_amount_index]"/>
                                     </span>
@@ -126,11 +126,24 @@
                type="number"
                class="form-control o_amount_input"
                t-att-min="donation_options.get('minimumAmount')"
-               t-att-max="donation_options.get('maximumAmount')"
+               t-att-max="donation_options.get('customAmount') == 'slider' and donation_options.get('maximumAmount') or undefined"
                t-att-value="amount"
-               placeholder="Custom Amount"
+               placeholder="Amount to donate"
                id="other_amount_value"
         />
+        <small class="text-danger d-none" id="warning_message_id">Please enter the amount to donate.</small>
+        <small class="text-danger d-none" id="warning_min_message_id">
+            <t t-if="donation_options.get('minimumAmount')">
+                The minimum donation amount is
+                <t t-set="amount" t-value="donation_options.get('minimumAmount')"/>
+                <t t-set="before" t-value="currency.symbol if currency.position == 'before' else ''"/>
+                <t t-set="after" t-value="currency.symbol if currency.position != 'before' else ''"/>
+                <t t-out="'%s%s%s.' % (before, amount, after)"/>
+            </t>
+            <t t-else="">
+                Enter a valid number!
+            </t>
+        </small>
     </template>
 
 </odoo>
