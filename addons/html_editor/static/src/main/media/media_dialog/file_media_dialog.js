@@ -41,7 +41,7 @@ export class FileMediaDialog extends MediaDialog {
         const dotSplit = selectedMedia.name.split(".");
         const extension = dotSplit.length > 1 ? dotSplit.pop() : undefined;
         const fileData = {
-            accessToken,
+            access_token: accessToken,
             checksum: selectedMedia.checksum,
             extension,
             filename: selectedMedia.name,
