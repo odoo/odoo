@@ -284,7 +284,7 @@ describe("Mount and Destroy embedded components", () => {
         expect.verifySteps(["willunmount"]);
     });
 
-    test("embedded component plugin does not try to destroy the same app twice", async () => {
+    test("embedded component plugin does not try to destroy the same subroot twice", async () => {
         patchWithCleanup(EmbeddedComponentPlugin.prototype, {
             destroyComponent() {
                 expect.step("destroy from plugin");
@@ -439,7 +439,7 @@ describe("Mount and Destroy embedded components", () => {
         // destroying 1 removes 3 from the dom, therefore 3 is destroyed in
         // the process of destroying 1, that is why it is done before 2.
         expect.verifySteps(["destroy 1", "destroy 3", "destroy 2"]);
-        // OWL:App.destroy removes every node inside its host during destroy,
+        // OWL:Root.destroy removes every node inside its host during destroy,
         // so after the full operation, nothing should be left except the
         // outermost host.
         expect(getContent(el)).toBe(
@@ -740,18 +740,26 @@ describe("Mount processing", () => {
             expect.step("minimal asynchronous time");
         });
         patchWithCleanup(App.prototype, {
-            mount(elem) {
-                const result = super.mount(...arguments);
-                if (elem.dataset.embedded === "labeledCounter") {
-                    const fiber = Array.from(this.scheduler.tasks)[0];
-                    const fiberComplete = fiber.complete;
-                    fiber.complete = function () {
-                        expect.step("html prop suppression");
-                        asyncControl.resolve();
-                        fiberComplete.call(this);
-                    };
+            createRoot(Root, config) {
+                if (Root.name !== "LabeledCounter") {
+                    return super.createRoot(...arguments);
                 }
-                return result;
+                const root = super.createRoot(...arguments);
+                const mount = root.mount;
+                root.mount = (target, options) => {
+                    const result = mount(target, options);
+                    if (target.dataset.embedded === "labeledCounter") {
+                        const fiber = root.node.fiber;
+                        const fiberComplete = fiber.complete;
+                        fiber.complete = function () {
+                            expect.step("html prop suppression");
+                            asyncControl.resolve();
+                            fiberComplete.call(this);
+                        };
+                    }
+                    return result;
+                };
+                return root;
             },
         });
         const delayedWillStart = new Deferred();

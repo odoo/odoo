@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { App } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
 
 /**
@@ -163,7 +162,6 @@ export class EmbeddedComponentPlugin extends Plugin {
         { Component, getEditableDescendants, getProps, name, getStateChangeManager }
     ) {
         const props = getProps?.(host) || {};
-        const { dev, translateFn, getRawTemplate } = this.app;
         const env = Object.create(this.env);
         if (getStateChangeManager) {
             env.getStateChangeManager = this.getStateChangeManager.bind(this);
@@ -176,28 +174,22 @@ export class EmbeddedComponentPlugin extends Plugin {
             env,
             props,
         });
-        const app = new App(Component, {
-            test: dev,
-            env,
-            translateFn,
-            getTemplate: getRawTemplate,
+        const root = this.app.createRoot(Component, {
             props,
+            env,
         });
-        app.rawTemplates = this.app.rawTemplates;
-        // Can't copy compiled templates because they have a reference to the main app
-        // app.templates = mainApp.templates;
-        app.mount(host);
-        // Patch mount fiber to hook into the exact call stack where app is
+        root.mount(host);
+        // Patch mount fiber to hook into the exact call stack where root is
         // mounted (but before). This will remove host children synchronously
-        // just before adding the app rendered html.
-        const fiber = Array.from(app.scheduler.tasks)[0];
+        // just before adding the root rendered html.
+        const fiber = root.node.fiber;
         const fiberComplete = fiber.complete;
         fiber.complete = function () {
             host.replaceChildren();
             fiberComplete.call(this);
         };
         const info = {
-            app,
+            root,
             host,
         };
         this.components.add(info);
@@ -249,10 +241,10 @@ export class EmbeddedComponentPlugin extends Plugin {
      * Should not be called directly as it will not handle recursivity and
      * removed components @see deepDestroyComponent
      */
-    destroyComponent({ app, host }) {
+    destroyComponent({ root, host }) {
         const { getEditableDescendants } = this.getEmbedding(host);
         const editableDescendants = getEditableDescendants?.(host) || {};
-        app.destroy();
+        root.destroy();
         this.components.delete(arguments[0]);
         this.nodeMap.delete(host);
         host.append(...Object.values(editableDescendants));
@@ -279,8 +271,8 @@ export class EmbeddedComponentPlugin extends Plugin {
 
     cleanForSave(clone) {
         this.forEachEmbeddedComponentHost(clone, (host, { getEditableDescendants }) => {
-            // In this case, host is a cloned element, there is no
-            // live app attached to it.
+            // In this case, host is a cloned element, there is no OWL root
+            // attached to it.
             const editableDescendants = getEditableDescendants?.(host) || {};
             host.replaceChildren();
             for (const editableDescendant of Object.values(editableDescendants)) {
