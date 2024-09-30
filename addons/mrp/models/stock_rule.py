@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import float_compare, OrderedSet
 
@@ -95,7 +95,7 @@ class StockRule(models.Model):
         for company_id in new_productions_values_by_company:
             productions_vals_list = new_productions_values_by_company[company_id]['values']
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-            productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_vals_list)
+            productions = self.env['mrp.production'].with_user(api.SUPERUSER_ID).sudo().with_company(company_id).create(productions_vals_list)
             productions.filtered(self._should_auto_confirm_procurement_mo).action_confirm()
             productions._post_run_manufacture(new_productions_values_by_company[company_id]['procurements'])
         return True

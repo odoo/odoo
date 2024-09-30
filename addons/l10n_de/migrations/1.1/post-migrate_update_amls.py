@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details
-from odoo import api, SUPERUSER_ID
+from odoo import api
 
 
 def migrate(cr, version):
@@ -7,7 +7,7 @@ def migrate(cr, version):
     # But, it was referenced in the account.sales.report
     # So, we update amls of this line only, to make this report consistent.
 
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, api.SUPERUSER_ID, {})
     country = env['res.country'].search([('code', '=', 'DE')], limit=1)
     tags_68 = env['account.account.tag']._get_tax_tags('68', country.id)
     tags_60 = env['account.account.tag']._get_tax_tags('60', country.id)

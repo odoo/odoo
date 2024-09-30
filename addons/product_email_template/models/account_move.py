@@ -1,4 +1,4 @@
-from odoo import models, SUPERUSER_ID
+from odoo import api, models
 
 
 class AccountMove(models.Model):
@@ -7,7 +7,7 @@ class AccountMove(models.Model):
     def invoice_validate_send_email(self):
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
-            self = self.with_user(SUPERUSER_ID)  # noqa: PLW0642
+            self = self.with_user(api.SUPERUSER_ID)  # noqa: PLW0642
         for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):
             # send template only on customer invoice
             # subscribe the partner to the invoice

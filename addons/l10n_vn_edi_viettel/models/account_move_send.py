@@ -3,7 +3,7 @@
 import base64
 import json
 
-from odoo import SUPERUSER_ID, _, api, models
+from odoo import _, api, models
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -127,7 +127,7 @@ class AccountMoveSend(models.AbstractModel):
             json_file_data = [file for file in invoice_data.get('sinvoice_attachments', []) if file['mimetype'] == 'application/json']
 
             if not invoice.l10n_vn_edi_sinvoice_file and json_file_data:
-                self.env['ir.attachment'].with_user(SUPERUSER_ID).create(json_file_data)
+                self.env['ir.attachment'].with_user(api.SUPERUSER_ID).create(json_file_data)
                 invoice.invalidate_recordset(fnames=[
                     'l10n_vn_edi_sinvoice_file_id',
                     'l10n_vn_edi_sinvoice_file',
@@ -163,7 +163,7 @@ class AccountMoveSend(models.AbstractModel):
                 })
 
             if attachments_data:
-                attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_data)
+                attachments = self.env['ir.attachment'].with_user(api.SUPERUSER_ID).create(attachments_data)
                 invoice.invalidate_recordset(fnames=[
                     'l10n_vn_edi_sinvoice_xml_file_id',
                     'l10n_vn_edi_sinvoice_xml_file',

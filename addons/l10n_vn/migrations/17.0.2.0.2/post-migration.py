@@ -1,4 +1,4 @@
-from odoo import api, SUPERUSER_ID
+from odoo import api
 from odoo.osv import expression
 
 FIXED_ACCOUNTS_TYPE = {
@@ -23,5 +23,5 @@ def _fix_accounts_type(env):
 
 
 def migrate(cr, version):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, api.SUPERUSER_ID, {})
     _fix_accounts_type(env)
