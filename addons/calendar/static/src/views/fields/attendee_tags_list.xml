@@ -16,6 +16,9 @@
         </xpath>
 
         <xpath expr="//div[hasclass('o_tag_badge_text')]" position="after">
+            <div t-if="tag.isUnavailable" title="unavailable" class="ms-1">
+                <i class="fa fa-moon-o position-relative" role="img"/>
+            </div>
             <div t-if="tag.noEmail" title="no email" class="ms-1">
                 <i class="fa fa-exclamation-triangle position-relative" role="img"/>
             </div>
