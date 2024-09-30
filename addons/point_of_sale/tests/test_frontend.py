@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from contextlib import contextmanager
 from unittest.mock import patch
 from odoo import Command
 
@@ -27,7 +28,17 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         return f"/pos/ui?config_id={pos_config.id}"
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
-        self.start_tour(self._get_url(kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+        self.start_tour(self._get_url(pos_config=kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+
+    @contextmanager
+    def with_new_session(self, config=None, user=None):
+        config = config or self.main_pos_config
+        user = user or self.pos_user
+        config.with_user(user).open_ui()
+        session = config.current_session_id
+        yield session
+        session.post_closing_cash_details(0)
+        session.close_session_from_ui()
 
     @classmethod
     def setUpClass(cls):
@@ -110,13 +121,13 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         cls.tip = env.ref('point_of_sale.product_product_tip')
 
-        pos_desk_misc_test = env['pos.category'].create({
+        cls.pos_desk_misc_test = env['pos.category'].create({
             'name': 'Misc test',
         })
-        pos_cat_chair_test = env['pos.category'].create({
+        cls.pos_cat_chair_test = env['pos.category'].create({
             'name': 'Chair test',
         })
-        pos_cat_desk_test = env['pos.category'].create({
+        cls.pos_cat_desk_test = env['pos.category'].create({
             'name': 'Desk test',
         })
 
@@ -128,7 +139,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'taxes_id': False,
             'weight': 0.01,
             'to_weight': True,
-            'pos_categ_ids': [(4, pos_desk_misc_test.id)],
+            'pos_categ_ids': [(4, cls.pos_desk_misc_test.id)],
         })
         cls.wall_shelf = env['product.template'].create({
             'name': 'Wall Shelf Unit',
@@ -162,7 +173,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
-            'pos_categ_ids': [(4, pos_cat_desk_test.id)],
+            'pos_categ_ids': [(4, cls.pos_cat_desk_test.id)],
         })
         cls.letter_tray = env['product.template'].create({
             'name': 'Letter Tray',
@@ -170,7 +181,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'list_price': 4.80,
             'taxes_id': False,
             'categ_id': env.ref('product.product_category_services').id,
-            'pos_categ_ids': [(4, pos_cat_chair_test.id)],
+            'pos_categ_ids': [(4, cls.pos_cat_chair_test.id)],
         })
         cls.desk_organizer = env['product.template'].create({
             'name': 'Desk Organizer',
@@ -784,50 +795,6 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="pos_user")
-
-    def test_rounding_half_up_cash_and_bank(self):
-        self.env['res.partner'].create({'name': 'Nicole Ford'})
-        company = self.main_pos_config.company_id
-        rouding_method = self.env['account.cash.rounding'].create({
-            'name': 'Rounding HALF-UP',
-            'rounding': 5,
-            'rounding_method': 'HALF-UP',
-            'strategy': 'add_invoice_line',
-            'profit_account_id': company['default_cash_difference_income_account_id'].id,
-            'loss_account_id': company['default_cash_difference_expense_account_id'].id,
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 40',
-            'available_in_pos': True,
-            'list_price': 40,
-            'taxes_id': False,
-        })
-
-        self.env['product.product'].create({
-            'name': 'Product Test 41',
-            'available_in_pos': True,
-            'list_price': 41,
-            'taxes_id': False,
-        })
-
-        self.main_pos_config.write({
-            'rounding_method': rouding_method.id,
-            'cash_rounding': True,
-            'only_round_cash_method': True
-        })
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUpCashAndBank', login="pos_user")
-
-        invoiced_orders = self.env['pos.order'].search([('state', '=', 'invoiced')])
-        self.assertEqual(len(invoiced_orders), 2, 'There should be 2 invoiced orders.')
-
-        for order in invoiced_orders:
-            rounding_line = order.account_move.line_ids.filtered(lambda line: line.display_type == 'rounding')
-            self.assertEqual(len(rounding_line), 1, 'There should be 1 rounding line.')
-            rounding_applied = order.amount_total - order.amount_paid
-            self.assertEqual(rounding_line.balance, rounding_applied, 'Rounding amount is incorrect!')
 
     def test_pos_closing_cash_details(self):
         """Test cash difference *loss* at closing.

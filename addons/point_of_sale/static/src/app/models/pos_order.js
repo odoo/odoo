@@ -8,6 +8,8 @@ import { renderToElement } from "@web/core/utils/render";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { changesToOrder } from "./utils/order_change";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
+import { getTaxesAfterFiscalPosition } from "./utils/tax_utils";
 
 const { DateTime } = luxon;
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
@@ -96,6 +98,140 @@ export class PosOrder extends Base {
         return [_t("the receipt")].concat(this.isToInvoice() ? [_t("the invoice")] : []);
     }
 
+    /**
+     * Get the details total amounts with and without taxes, the details of taxes per subtotal and per tax group.
+     * @returns See '_get_tax_totals_summary' in account_tax.py for the full details.
+     */
+    get taxTotals() {
+        const currency = this.config_id.currency_id;
+        const company = this.company_id;
+        const extraValues = { currency_id: currency };
+        const orderLines = this.lines;
+
+        const baseLines = [];
+        for (const line of orderLines) {
+            let taxes = line.tax_ids;
+            if (this.fiscal_position_id) {
+                taxes = getTaxesAfterFiscalPosition(taxes, this.fiscal_position_id, this.models);
+            }
+            baseLines.push(
+                accountTaxHelpers.prepare_base_line_for_taxes_computation(line, {
+                    ...extraValues,
+                    quantity: line.qty,
+                    tax_ids: taxes,
+                })
+            );
+        }
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
+
+        // For the generic 'get_tax_totals_summary', we only support the cash rounding that round the whole document.
+        let cashRounding =
+            !this.config.only_round_cash_method && this.config.cash_rounding
+                ? this.config.rounding_method
+                : null;
+
+        const taxTotals = accountTaxHelpers.get_tax_totals_summary(baseLines, currency, company, {
+            cash_rounding: cashRounding,
+        });
+
+        cashRounding = this.config.rounding_method;
+        taxTotals.order_total =
+            taxTotals.total_amount_currency - (taxTotals.cash_rounding_base_amount_currency || 0.0);
+        taxTotals.order_rounding = taxTotals.cash_rounding_base_amount_currency || 0.0;
+        taxTotals.order_to_pay = taxTotals.total_amount_currency;
+
+        // Compute the amount left to pay (exclude the payment line for change).
+        let amountPaid = 0.0;
+        for (const payment of this.payment_ids) {
+            if (payment.isDone() && !payment.is_change) {
+                amountPaid += payment.getAmount();
+            }
+        }
+
+        // Compute the cash rounding amounts.
+        // Basically, we have to determine if the residual amount if due to a cash rounding or not.
+        let amountLeft = taxTotals.total_amount_currency - amountPaid;
+        if (
+            this.config.cash_rounding &&
+            cashRounding &&
+            this.payment_ids.some((x) => x.payment_method_id.is_cash_count)
+        ) {
+            if (!floatIsZero(amountLeft, this.currency.decimal_places)) {
+                const roundingMethod = cashRounding.rounding_method;
+                let lowerBound = 0.0;
+                let upperBound = 0.0;
+                if (roundingMethod === "UP") {
+                    // Paid 15.70. It can be a cash rounding if in [15.66, 15.70].
+                    lowerBound = -cashRounding.rounding + this.currency.rounding;
+                } else if (roundingMethod === "DOWN") {
+                    // Paid 15.70. It can be a cash rounding if in [15.70, 15.74].
+                    upperBound = cashRounding.rounding - this.currency.rounding;
+                } else if (roundingMethod === "HALF-UP") {
+                    // Paid 15.70. It can be a cash rounding if in [15.66, 15.74].
+                    const halfUpDelta =
+                        this.currency.rounding *
+                        Math.ceil(cashRounding.rounding / this.currency.rounding / 2);
+                    lowerBound = -halfUpDelta;
+                    upperBound = halfUpDelta;
+                }
+                const amountLeftWithRounding = amountLeft - taxTotals.order_rounding;
+                if (
+                    (lowerBound < amountLeftWithRounding && amountLeftWithRounding < upperBound) ||
+                    floatIsZero(
+                        lowerBound - amountLeftWithRounding,
+                        this.currency.decimal_places
+                    ) ||
+                    floatIsZero(upperBound - amountLeftWithRounding, this.currency.decimal_places)
+                ) {
+                    taxTotals.payment_cash_rounding_amount_currency = -amountLeft;
+                    taxTotals.order_rounding -= amountLeft;
+                    taxTotals.order_to_pay -= amountLeft;
+                    amountLeft = 0.0;
+                }
+            }
+        }
+
+        if (!floatIsZero(Math.min(0, amountLeft), this.currency.decimal_places)) {
+            taxTotals.order_change = -amountLeft;
+        }
+
+        if (floatIsZero(taxTotals.order_rounding, this.currency.decimal_places)) {
+            delete taxTotals.order_rounding;
+        }
+
+        return taxTotals;
+    }
+
+    /**
+     * Get the amount to pay by default when creating a new payment.
+     * @param paymentMethod: The payment method of the payment to be created.
+     * @returns A monetary value.
+     */
+    getDefaultAmountDueToPayIn(paymentMethod) {
+        let totalAmountDue = this.getDue();
+        if (paymentMethod.is_cash_count && this.config.cash_rounding) {
+            const cashRounding = this.config.rounding_method;
+
+            // Suppose you have a cash rounding 0.05 DOWN on the whole pos order.
+            // Your pos order has a total amount of 15.72.
+            // After the cash rounding, the total of your pos order becomes 15.70.
+            // Now you pay 0.67 in bank. The residual amount to pay becomes 15.03.
+            // Now you pay the rest using a cash payment method.
+            // Without adding the cash rounding amount, the suggested amount to pay in cash will be 15.0 and
+            // the total paid on the pos order will be 0.67 + 15.0 = 15.67 so a rounding of -0.05 has been applied.
+            // This result is weird since the cash rounding method is on 0.05.
+            // To avoid that, we add the collected rounding so far to compute the suggested amount.
+            // That way, the suggested cash amount will be computed on 15.05 and not 15.03.
+            totalAmountDue = roundPrecision(
+                totalAmountDue - (this.taxTotals.cash_rounding_base_amount_currency || 0.0),
+                cashRounding.rounding,
+                cashRounding.rounding_method
+            );
+        }
+        return totalAmountDue;
+    }
+
     exportForPrinting(baseUrl, headerData) {
         const paymentlines = this.payment_ids
             .filter((p) => !p.is_change)
@@ -104,13 +240,17 @@ export class PosOrder extends Base {
             orderlines: this.getSortedOrderlines().map((l) =>
                 omit(l.getDisplayData(), "internalNote")
             ),
+            taxTotals: this.taxTotals,
+            label_total: _t("TOTAL"),
+            label_rounding: _t("Rounding"),
+            label_change: _t("CHANGE"),
+            label_discounts: _t("Discounts"),
             paymentlines,
             amount_total: this.getTotalWithTax(),
             total_without_tax: this.getTotalWithoutTax(),
             amount_tax: this.getTotalTax(),
             total_paid: this.getTotalPaid(),
             total_discount: this.getTotalDiscount(),
-            rounding_applied: this.getRoundingApplied(),
             tax_details: this.getTaxDetails(),
             change: this.amount_return,
             name: this.pos_reference,
@@ -481,24 +621,21 @@ export class PosOrder extends Base {
         if (this.electronicPaymentInProgress()) {
             return false;
         } else {
-            const newPaymentline = this.models["pos.payment"].create({
+            const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
+            const newPaymentLine = this.models["pos.payment"].create({
                 pos_order_id: this,
                 payment_method_id: payment_method,
             });
-
-            this.selectPaymentline(newPaymentline);
-            if (this.config.cash_rounding) {
-                newPaymentline.setAmount(0);
-            }
-            newPaymentline.setAmount(this.getDue());
+            this.selectPaymentline(newPaymentLine);
+            newPaymentLine.setAmount(totalAmountDue);
 
             if (
                 payment_method.payment_terminal ||
                 payment_method.payment_method_type === "qr_code"
             ) {
-                newPaymentline.setPaymentStatus("pending");
+                newPaymentLine.setPaymentStatus("pending");
             }
-            return newPaymentline;
+            return newPaymentLine;
         }
     }
 
@@ -569,16 +706,11 @@ export class PosOrder extends Base {
     }
 
     getTotalWithTax() {
-        return this.getTotalWithoutTax() + this.getTotalTax();
+        return this.taxTotals.total_amount_currency;
     }
 
     getTotalWithoutTax() {
-        return roundPrecision(
-            this.lines.reduce(function (sum, line) {
-                return sum + line.getPriceWithoutTax();
-            }, 0),
-            this.currency.rounding
-        );
+        return this.taxTotals.base_amount_currency;
     }
 
     _getIgnoredProductIdsTotalDiscount() {
@@ -619,39 +751,7 @@ export class PosOrder extends Base {
     }
 
     getTotalTax() {
-        if (this.company.tax_calculation_rounding_method === "round_globally") {
-            // As always, we need:
-            // 1. For each tax, sum their amount across all order lines
-            // 2. Round that result
-            // 3. Sum all those rounded amounts
-            const groupTaxes = {};
-            this.lines.forEach(function (line) {
-                const taxDetails = line.getTaxDetails();
-                const taxIds = Object.keys(taxDetails);
-                for (const taxId of taxIds) {
-                    if (!(taxId in groupTaxes)) {
-                        groupTaxes[taxId] = 0;
-                    }
-                    groupTaxes[taxId] += taxDetails[taxId].amount;
-                }
-            });
-
-            let sum = 0;
-            const taxIds = Object.keys(groupTaxes);
-            for (var j = 0; j < taxIds.length; j++) {
-                var taxAmount = groupTaxes[taxIds[j]];
-                sum += roundPrecision(taxAmount, this.currency.rounding);
-            }
-
-            return sum;
-        } else {
-            return roundPrecision(
-                this.lines.reduce(function (sum, orderLine) {
-                    return sum + orderLine.getTax();
-                }, 0),
-                this.currency.rounding
-            );
-        }
+        return this.taxTotals.tax_amount_currency;
     }
 
     getTotalPaid() {
@@ -689,7 +789,7 @@ export class PosOrder extends Base {
         return Object.values(taxDetails);
     }
 
-    // FIXME tax_id is an array of number ?
+    // TODO: deprecated. Remove it and fix l10n_de_pos_cert accordingly.
     getTotalForTaxes(tax_id) {
         let total = 0;
 
@@ -716,119 +816,26 @@ export class PosOrder extends Base {
         return total;
     }
 
-    getChange(paymentline) {
-        if (!paymentline) {
-            var change = this.getTotalPaid() - this.getTotalWithTax() - this.getRoundingApplied();
-        } else {
-            change = -this.getTotalWithTax();
-            var lines = this.payment_ids;
-            for (var i = 0; i < lines.length; i++) {
-                change += lines[i].getAmount();
-                if (lines[i] === paymentline) {
-                    break;
-                }
-            }
-        }
-        return roundPrecision(Math.max(0, change), this.currency.rounding);
+    hasRemainingAmount() {
+        const dueAmount = this.getDue();
+        const changeAmount = this.getChange();
+        return (
+            floatIsZero(changeAmount, this.currency.rounding) &&
+            (floatIsZero(dueAmount, this.currency.rounding) || dueAmount > 0.0)
+        );
     }
 
-    getDue(paymentline) {
-        let due = 0;
-        if (!paymentline) {
-            due = this.getTotalWithTax() - this.getTotalPaid() + this.getRoundingApplied();
-        } else {
-            due = this.getTotalWithTax();
+    getChange() {
+        return this.taxTotals.order_change || 0.0;
+    }
 
-            for (const payment of this.payment_ids) {
-                if (payment.uuid !== paymentline.uuid) {
-                    due -= payment.getAmount();
-                }
-            }
-        }
+    getDue() {
+        const due = this.getTotalWithTax() - this.getTotalPaid() + this.getRoundingApplied();
         return roundPrecision(due, this.currency.rounding);
     }
 
     getRoundingApplied() {
-        if (this.config.cash_rounding) {
-            const only_cash = this.config.only_round_cash_method;
-            const paymentlines = this.payment_ids;
-            const last_line = paymentlines ? paymentlines[paymentlines.length - 1] : false;
-            const last_line_is_cash = last_line
-                ? last_line.payment_method_id.is_cash_count == true
-                : false;
-            if (!only_cash || (only_cash && last_line_is_cash)) {
-                var rounding_method = this.config.rounding_method.rounding_method;
-                var remaining = this.getTotalWithTax() - this.getTotalPaid();
-                var sign = this.getTotalWithTax() > 0 ? 1.0 : -1.0;
-                if (
-                    ((this.getTotalWithTax() < 0 && remaining > 0) ||
-                        (this.getTotalWithTax() > 0 && remaining < 0)) &&
-                    rounding_method !== "HALF-UP"
-                ) {
-                    rounding_method = rounding_method === "UP" ? "DOWN" : "UP";
-                }
-
-                remaining *= sign;
-                var total = roundPrecision(remaining, this.config.rounding_method.rounding);
-                var rounding_applied = total - remaining;
-
-                // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
-                if (floatIsZero(rounding_applied, this.currency.decimal_places)) {
-                    // https://xkcd.com/217/
-                    return 0;
-                } else if (
-                    Math.abs(this.getTotalWithTax()) < this.config.rounding_method.rounding
-                ) {
-                    return 0;
-                } else if (rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
-                    rounding_applied += this.config.rounding_method.rounding;
-                } else if (rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
-                    rounding_applied -= this.config.rounding_method.rounding;
-                } else if (rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0) {
-                    rounding_applied -= this.config.rounding_method.rounding;
-                } else if (rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0) {
-                    rounding_applied += this.config.rounding_method.rounding;
-                } else if (
-                    rounding_method === "HALF-UP" &&
-                    rounding_applied === this.config.rounding_method.rounding / -2
-                ) {
-                    rounding_applied += this.config.rounding_method.rounding;
-                }
-                return sign * rounding_applied;
-            } else {
-                return 0;
-            }
-        }
-        return 0;
-    }
-
-    hasNotValidRounding() {
-        if (
-            !this.config.rounding_method ||
-            this.getTotalWithTax() < this.config.rounding_method.rounding
-        ) {
-            return false;
-        }
-
-        const only_cash = this.config.only_round_cash_method;
-        const lines = this.payment_ids;
-
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            if (only_cash && !line.payment_method_id.is_cash_count) {
-                continue;
-            }
-
-            if (
-                !floatIsZero(
-                    line.amount - roundPrecision(line.amount, this.config.rounding_method.rounding),
-                    6
-                )
-            ) {
-                return line;
-            }
-        }
-        return false;
+        return this.taxTotals.payment_cash_rounding_amount_currency || 0.0;
     }
 
     isPaid() {
@@ -839,31 +846,6 @@ export class PosOrder extends Base {
         return !!this.payment_ids.find(function (pl) {
             return pl.payment_method_id.is_cash_count;
         });
-    }
-
-    checkPaymentlinesRounding() {
-        if (this.config.cash_rounding) {
-            var cash_rounding = this.config.rounding_method.rounding;
-            var default_rounding = this.currency.rounding;
-            for (var id in this.payment_ids) {
-                const line = this.payment_ids[id];
-                const diff = roundPrecision(
-                    roundPrecision(line.amount, cash_rounding) -
-                        roundPrecision(line.amount, default_rounding),
-                    default_rounding
-                );
-                if (this.getTotalWithTax() < this.config.rounding_method.rounding) {
-                    return true;
-                }
-                if (diff && line.payment_method_id.is_cash_count) {
-                    return false;
-                } else if (!this.config.only_round_cash_method && diff) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return true;
     }
 
     getTotalCost() {
