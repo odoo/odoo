@@ -1051,7 +1051,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: Whether the delivery step can be skipped.
         :rtype: bool
         """
-        if not order_sudo.carrier_id or len(delivery_methods) > 1:
+        if not order_sudo.carrier_id or len(delivery_methods) != 1:
             # The user must choose a delivery method or see a warning if no available ones.
             return False
         delivery_method = delivery_methods[0]
