@@ -4,7 +4,7 @@
         <field name="name">account.analytic.distribution.model.list</field>
         <field name="model">account.analytic.distribution.model</field>
         <field name="arch" type="xml">
-            <list string="Analytic Distribution Model" editable="top" multi_edit="1" default_order="sequence, id desc">
+            <list string="Analytic Distribution Model" open_form_view="True" editable="top" multi_edit="1" default_order="sequence, id desc">
                 <field name="sequence" widget="handle"/>
                 <field name="partner_id" optional="show"/>
                 <field name="partner_category_id" optional="hide"/>
@@ -12,7 +12,6 @@
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
                 <field name="analytic_distribution" widget="analytic_distribution" optional="show"
                        options="{'force_applicability': 'optional', 'disable_save': true}"/>
-                <button name="action_read_distribution_model" type="object" string="View" class="float-end btn-secondary"/>
             </list>
         </field>
     </record>
