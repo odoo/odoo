@@ -30,8 +30,8 @@ class WebsiteSaleCollect(WebsiteSale):
         location. """
         res = super()._prepare_checkout_page_values(order_sudo, **query_params)
         if order_sudo.carrier_id.delivery_type == 'in_store' and order_sudo.pickup_location_data:
-            res['unavailable_products'] = order_sudo._get_unavailable_products(
-                order_sudo.pickup_location_data.get('warehouse_id')
+            res['unavailable_order_lines'] = order_sudo._get_unavailable_order_lines(
+                order_sudo.pickup_location_data.get('id')
             )
         return res
 
@@ -46,7 +46,7 @@ class WebsiteSaleCollect(WebsiteSale):
                     _("Please choose a store to collect your order."),
                 ))
             else:
-                selected_wh_id = order.pickup_location_data['warehouse_id']
+                selected_wh_id = order.pickup_location_data['id']
                 if not order._is_in_stock(selected_wh_id):
                     errors.append((
                         _("Sorry, we are unable to ship your order."),

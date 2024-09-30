@@ -32,8 +32,3 @@ class OnSitePaymentPortal(PaymentPortal):
             raise ValidationError(
                 _("You can only pay on site when selecting the pick up in store delivery method.")
             )
-
-        if sale_order.carrier_id.delivery_type == 'in_store':
-            sale_order.warehouse_id = sale_order.env['stock.warehouse'].browse(
-                sale_order.pickup_location_data['warehouse_id']
-            )
