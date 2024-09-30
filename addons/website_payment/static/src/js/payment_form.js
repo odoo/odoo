@@ -88,7 +88,11 @@ PaymentForm.include({
                 return;
             }
         }
-        await this._super(...arguments);
+        // This prevents unnecessary toaster notifications on payment failure
+        // by catching the Promise.reject as we are already displaying error popup.
+        await this._super(...arguments).catch((error) => {
+            console.log(error.data.message);
+        });
     },
 
     /**
@@ -119,4 +123,35 @@ PaymentForm.include({
         } : transactionRouteParams;
     },
 
+    /**
+     * Checks constraints on submit:
+     * 1. The value must be greater than the minimum value.
+     * 2. A radio button must be checked, if the custom amount is selected.
+     * 3. The custom input must have a value.
+     *
+     * @override method from payment.payment_form
+     * @private
+     * @param {Event} ev
+     */
+    async _submitForm(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        const donationAmountInputEl = this.el.querySelector("#other_amount_value");
+        const otherAmountRadioEl = this.el.querySelector("#other_amount");
+        const isOtherAmountChecked = otherAmountRadioEl ? otherAmountRadioEl.checked : true;
+        if (
+            donationAmountInputEl &&
+            isOtherAmountChecked &&
+            (!donationAmountInputEl.value || parseFloat(donationAmountInputEl.value) <= 0)
+        ) {
+            // If the warning message is already displayed, we don't need to display it again.
+            if (this.el.querySelector("#warningMinMessageId").classList.contains("d-none")) {
+                this.el.querySelector("#warningMessageId").classList.remove("d-none");
+            }
+            return donationAmountInputEl.focus();
+        }
+
+        await this._super(...arguments);
+    },
 });

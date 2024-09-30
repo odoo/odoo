@@ -18,6 +18,11 @@ export class DonationSnippet extends Interaction {
         },
         ".s_donation_donate_btn": { "t-on-click.withTarget": this.onDonateClick },
         "#s_donation_range_slider": { "t-on-input": this.onRangeSliderInput },
+        "#s_donation_amount_input": {
+            "t-on-input": () => {
+                this.el.querySelector(".alert")?.classList.add("d-none");
+            },
+        },
     };
 
     setup() {
@@ -80,6 +85,11 @@ export class DonationSnippet extends Interaction {
      */
     onPrefilledClick(ev, currentTargetEl) {
         this.activeButtonEl = currentTargetEl;
+
+        if (!currentTargetEl.classList.contains("s_donation_custom_btn")) {
+            this.el.querySelector("p.alert")?.classList.add("d-none");
+            this.el.querySelector("#s_donation_amount_input").value = "";
+        }
         if (this.rangeSliderEl) {
             this.rangeSliderEl.value = this.activeButtonEl.dataset.donationValue;
             this.setBubble();
