@@ -457,12 +457,14 @@ class Project(models.Model):
     def _get_revenues_items_from_invoices_domain(self, domain=None):
         if domain is None:
             domain = []
+        included_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
         return expression.AND([
             domain,
             [('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
             ('parent_state', 'in', ['draft', 'posted']),
             ('price_subtotal', '!=', 0),
-            ('is_downpayment', '=', False)],
+            ('is_downpayment', '=', False),
+            ('id', 'not in', included_invoice_line_ids)],
         ])
 
     def _get_revenues_items_from_invoices(self, excluded_move_line_ids=None):
