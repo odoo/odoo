@@ -1,7 +1,9 @@
 import {
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     registerWebsitePreviewTour,
     insertSnippet,
+    changeOption,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -63,6 +65,70 @@ registerWebsitePreviewTour(
         {
             content: "Verify that other_amount is not checked",
             trigger: ":iframe input#other_amount:not(:checked)",
+        },
+        {
+            content: "Click on the custom amount radio button",
+            trigger: ":iframe input#other_amount",
+            run: "click",
+        },
+        {
+            content: "Submit the donation form",
+            trigger: ":iframe button[name='o_payment_submit_button']",
+            run: "click",
+        },
+        {
+            content: "Check if the warning message is displayed",
+            trigger: ":iframe .o_donation_payment_form:has(small#warning_message_id)",
+        },
+        {
+            content: "Enter an amount less than the minimum value",
+            trigger: ":iframe input#other_amount_value",
+            run: "edit 1",
+        },
+        {
+            content:
+                "Verify whether the minimum value warning message is displayed while other warning messages remain hidden",
+            trigger:
+                ":iframe small#warning_min_message_id:contains('The minimum donation amount is $5.'), :iframe .o_donation_payment_form:has(small#warning_message_id.d-none)",
+        },
+        {
+            content: "Click on the first radio button",
+            trigger: ":iframe input[name='o_donation_amount']:first-child",
+            run: "click",
+        },
+        {
+            content: "Ensure the custom amount value is cleared",
+            trigger:
+                ":iframe input#other_amount_value:empty, :iframe #warning_min_message_id.d-none",
+        },
+        {
+            content: "Go to home page",
+            trigger: ":iframe a[href='/'].nav-link",
+            run: "click",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Click on 'Custom Amount' button",
+            trigger: ":iframe .s_donation_donate_btn",
+            run: "click",
+        },
+        changeOption("Donation", "we-toggler"),
+        changeOption("Donation", '[data-name="slider_opt"]'),
+        ...clickOnSave(),
+        {
+            content: "Click on $10 button",
+            trigger: ":iframe .s_donation_btn_description button",
+            run: "click",
+        },
+        {
+            content: "Donate using the selected amount",
+            trigger: ":iframe .s_donation_donate_btn",
+            run: "click",
+        },
+        {
+            content: "Click on the 'Amount to donate' input field",
+            trigger: ":iframe input#other_amount_value",
+            run: "click",
         },
         {
             content: "Change custom amount to 67",
