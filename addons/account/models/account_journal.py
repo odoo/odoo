@@ -853,7 +853,7 @@ class AccountJournal(models.Model):
             journal.display_name = name
 
     def action_archive(self):
-        if self.env['account.payment.method.line'].search_count([('journal_id', '=', self.id)], limit=1):
+        if self.env['account.payment.method.line'].search_count([('journal_id', 'in', self.ids)], limit=1):
             raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
         return super().action_archive()
 
