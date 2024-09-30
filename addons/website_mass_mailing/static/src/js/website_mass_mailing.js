@@ -130,7 +130,6 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             let toastType = result.toast_type;
             if (toastType === 'success') {
                 self._updateSubscribeControlsStatus(true);
-
                 const popupEl = self.el.closest(".o_newsletter_modal");
                 if (popupEl) {
                     const modal = Modal.getOrCreateInstance(popupEl);

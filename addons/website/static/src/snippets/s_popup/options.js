@@ -76,8 +76,13 @@ options.registry.SnippetPopup = options.Class.extend({
      */
     onTargetShow: async function () {
         //Todo: visp ask this to MSH as this model get appended in document body.
-        const modal = Modal.getOrCreateInstance(this.$bsTarget[0]);
-        modal.show();
+        const model = Modal.getOrCreateInstance(this.$bsTarget[0]);
+        model.show();
+        // Temporary fix.Find better fix for it.
+        document
+            .querySelector("iframe")
+            .contentDocument.querySelector(".s_popup")
+            .append(this.$target[0]);
         $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
     },
     /**
@@ -95,7 +100,7 @@ options.registry.SnippetPopup = options.Class.extend({
             });
             // The following line is in charge of hiding .s_popup at the same
             // time the modal is closed when the page is saved in edit mode.
-            this.$target[0].closest('.s_popup')?.classList.add('d-none');
+            this.$target[0].closest(".s_popup")?.classList.add("d-none");
             const modal = Modal.getOrCreateInstance(this.$bsTarget[0]);
             modal.hide();
         });
