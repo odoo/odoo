@@ -29,6 +29,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { assets } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
+import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
 import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
@@ -165,12 +166,15 @@ test("html field in readonly with embedded components", async () => {
         template: xml`
             <span t-ref="root" class="counter" t-on-click="increment"><t t-esc="props.name || ''"/>:<t t-esc="state.value"/></span>`,
     });
-    patchWithCleanup(Counter.prototype, {
+    const unpatch = patch(Counter.prototype, {
         setup() {
             super.setup();
             onWillDestroy(() => {
-                expect.step("destroyed");
+                this.testOnWillDestroy?.();
             });
+        },
+        testOnWillDestroy() {
+            expect.step("destroyed");
         },
     });
     // patchWithCleanup Array => cleanup keeps the last array entry set to undefined,
@@ -193,7 +197,7 @@ test("html field in readonly with embedded components", async () => {
             record.txt = `<div><span data-embedded="counter"></span></div>`;
         },
     };
-    const view = await mountView({
+    await mountView({
         type: "form",
         resId: 1,
         resIds: [1],
@@ -221,8 +225,7 @@ test("html field in readonly with embedded components", async () => {
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
         `<div><span data-embedded="counter"><span class="counter">:0</span></div>`
     );
-    view.__owl__.app.destroy();
-    expect.verifySteps(["destroyed"]);
+    unpatch();
     READONLY_MAIN_EMBEDDINGS.pop();
 });
 
