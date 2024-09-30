@@ -131,7 +131,7 @@
         'ms-1': thread and threadActions.actions.length > 4,
         'ms-3': threadActions.actions.length lte 4 or !thread,
     }">
-        <img t-if="thread" class="rounded" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
+        <img t-if="thread" class="rounded o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
         <i t-else="" class="fa fa-pencil fa-lg fa-fw py-1"/>
         <t t-if="thread?.parent_channel_id">
             <span class="fw-bolder small ms-1 p-1 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded" t-esc="thread.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.thread.parent_channel_id.open()"/>

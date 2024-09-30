@@ -21,15 +21,10 @@
             <!-- card -->
             <CallParticipantVideo t-if="hasVideo" session="rtcSession" type="props.cardData.type" inset="props.inset"/>
             <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-1" t-att-class="{ 'o-minimized': props.minimized }" draggable="false">
-                <img alt="Avatar"
-                        t-att-class="{
-                        'o-isTalking': isTalking,
-                        'o-isInvitation': !rtcSession,
-                        }"
-                        class="h-100 rounded-circle border-5 o_object_fit_cover"
-                        t-att-src="channelMember?.persona.avatarUrl"
-                        draggable="false"
-                />
+                <img alt="Avatar" class="h-100 rounded-circle border-5 o_object_fit_cover" t-att-src="channelMember?.persona.avatarUrl" draggable="false" t-att-class="{
+                    'o-isTalking': isTalking,
+                    'o-isInvitation': !rtcSession,
+                }"/>
             </div>
             <t t-if="rtcSession">
                 <!-- overlay -->

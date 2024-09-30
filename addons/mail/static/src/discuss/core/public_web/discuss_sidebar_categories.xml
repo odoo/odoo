@@ -162,7 +162,7 @@
         >
             <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0" t-att-class="{ 'overflow-hidden': !store.discuss.isSidebarCompact }" t-att-title="store.discuss.isSidebarCompact ? undefined : thread.displayName">
                 <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px" t-att-class="{ 'ms-3': !store.discuss.isSidebarCompact }">
-                    <img class="w-100 h-100 rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
+                    <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="thread.avatarUrl" alt="Thread Image"/>
                     <ThreadIcon t-if="thread.channel_type?.includes('chat') or (thread.channel_type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
                     <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'position-absolute o-mail-DiscussSidebarChannel-country border'"/>
                 </div>

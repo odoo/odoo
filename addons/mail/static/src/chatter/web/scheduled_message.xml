@@ -6,7 +6,7 @@
         <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
             <div class="o-mail-Message-sidebar d-flex flex-shrink-0">
                 <div class="o-mail-Message-avatarContainer position-relative bg-view" t-on-click="ev => this.onClickAuthor(ev)">
-                    <img class="o-mail-Message-avatar w-100 h-100 rounded o_redirect cursor-pointer" t-att-src="props.scheduledMessage.author.avatarUrl"/>
+                    <img class="o-mail-Message-avatar w-100 h-100 rounded o_redirect cursor-pointer o_object_fit_cover" t-att-src="props.scheduledMessage.author.avatarUrl"/>
                 </div>
             </div>
             <div class="w-100 o-min-width-0">
