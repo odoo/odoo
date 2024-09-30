@@ -276,6 +276,20 @@ class Channel(models.Model):
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX mail_channel_member_seen_message_id_idx ON mail_channel_member (channel_id,partner_id,seen_message_id)')
 
+    @api.model
+    def _filter_accessible_for_message_operation(self, model_name, doc_ids, operation):
+        """Override to grant extra access to members."""
+        channels = super()._filter_accessible_for_message_operation(model_name, doc_ids, operation)
+        member_domain = [("channel_id", "in", tuple(doc_ids - set(channels.ids)))]
+        if self.env.user._is_public():
+            guest = self.env["mail.guest"]._get_guest_from_context()
+            if not guest:
+                return channels
+            member_domain.append(("guest_id", "=", guest.id))
+        else:
+            member_domain.append(("partner_id", "=", self.env.user.partner_id.id))
+        return channels | self.env["mail.channel.member"].sudo().search(member_domain).channel_id
+
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
     # ------------------------------------------------------------
