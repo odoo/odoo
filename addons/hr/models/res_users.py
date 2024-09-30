@@ -3,7 +3,7 @@
 
 from markupsafe import Markup
 
-from odoo import api, models, fields, _, SUPERUSER_ID
+from odoo import api, models, fields, _
 from odoo.exceptions import AccessError
 from odoo.tools.misc import clean_context
 

@@ -80,10 +80,18 @@ class HrLeaveReportCalendar(models.Model):
 
     def _compute_display_name(self):
         if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
+<<<<<<< HEAD
             for record in self:
                 record.display_name = record.name.removeprefix(f"{record.employee_id.name}: ")
         else:
             super()._compute_display_name()
+=======
+            self.env.cache.update(records, self._fields['name'], [
+                record.name.split(':')[-1].strip()
+                for record in records.with_user(api.SUPERUSER_ID)
+            ])
+        return records
+>>>>>>> 7f5c07b9033 ([IMP] core: api.SUPERUSER_ID mass replace)
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):

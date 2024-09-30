@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, SUPERUSER_ID
+from odoo import api
 
 
 def migrate(cr, version):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, api.SUPERUSER_ID, {})
     for company in env['res.company'].search([('chart_template', 'like', 'es_%')], order="parent_path"):
         taxes_to_disable = (
             f'{company.id}_account_tax_template_p_iva5_ic_bc',

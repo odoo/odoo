@@ -3,7 +3,7 @@
 from . import models
 from . import wizard
 
-from odoo import Command
+from odoo.fields import Command
 
 
 def _enable_tracking_numbers(env):

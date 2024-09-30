@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, SUPERUSER_ID
+from odoo import api
 
 
 def migrate(cr, version):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, api.SUPERUSER_ID, {})
     for company in env['res.company'].search([('chart_template', '=', 'ch')], order="parent_path"):
         # We had corrupted data, handle the correction so the tax update can proceed.
         # See https://github.com/odoo/odoo/commit/7b07df873535446f97abc1de9176b9332de5cb07

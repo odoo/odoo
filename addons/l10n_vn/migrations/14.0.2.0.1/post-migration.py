@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, SUPERUSER_ID
+from odoo import api
 
 FIXED_ACCOUNTS_MAP = {
     '5221': '5211',
@@ -18,5 +18,5 @@ def _fix_revenue_deduction_accounts_code(env):
 
 
 def migrate(cr, version):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, api.SUPERUSER_ID, {})
     _fix_revenue_deduction_accounts_code(env)

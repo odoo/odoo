@@ -13,7 +13,7 @@ import werkzeug.utils
 
 import odoo
 from odoo import api, models, tools
-from odoo import SUPERUSER_ID
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools.json import scriptsafe as json_scriptsafe
