@@ -123,3 +123,21 @@ test("create sub thread from sub-thread list", async () => {
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-Discuss-threadName", { value: "MyEpicThread" });
 });
+
+test("'Thread' menu available in threads", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    const subChannelID = pyEnv["discuss.channel"].create({
+        name: "ThreadOne",
+        parent_channel_id: channelId,
+    });
+    await start();
+    await openDiscuss(subChannelID);
+    await click(".o-mail-DiscussSidebar-item", { text: "ThreadOne" });
+    await click("button[title='Threads']");
+    await insertText(".o-mail-ActionPanel input[placeholder='Search by name']", "ThreadTwo");
+    await click(".o-mail-ActionPanel button", { text: "Create" });
+    await click(".o-mail-DiscussSidebar-item", { text: "ThreadTwo" });
+});
