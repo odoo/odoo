@@ -2314,33 +2314,35 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         sale order line cost does not change"""
         kit = self._cls_create_product('Super Kit', self.uom_unit)
         (kit + self.component_a).categ_id.property_cost_method = 'fifo'
+        (kit + self.component_a).categ_id.property_valuation = 'real_time'
 
         self.env['mrp.bom'].create({
             'product_tmpl_id': kit.product_tmpl_id.id,
-            'product_qty': 1.0,
+            'product_qty': 2.0,
             'type': 'phantom',
             'bom_line_ids': [(0, 0, {
                 'product_id': self.component_a.id,
-                'product_qty': 1.0,
+                'product_qty': 4.0,
             })]
         })
 
-        self.component_a.standard_price = 10
+        self.component_a.standard_price = 5
         kit.button_bom_cost()
 
         stock_location = self.company_data['default_warehouse'].lot_stock_id
-        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 24)
 
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.partner_a
         with so_form.order_line.new() as line:
             line.product_id = kit
+            line.product_uom_qty = 6
         so = so_form.save()
         so.action_confirm()
 
         line = so.order_line
         price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
-        self.assertEqual(price, 10)
+        self.assertEqual(price, 5 * 4 / 2)
 
         picking = so.picking_ids
         action = picking.button_validate()
@@ -2354,6 +2356,18 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         self.assertEqual(price, 10)
+
+        invoice01 = so._create_invoices()
+        invoice01.action_post()
+
+        categ = kit.categ_id
+        amls = invoice01.line_ids
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == categ.property_stock_account_output_categ_id)
+        self.assertEqual(stock_out_aml.debit, 0)
+        self.assertEqual(stock_out_aml.credit, 6 * 10)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == categ.property_account_expense_categ_id)
+        self.assertEqual(cogs_aml.debit, 6 * 10)
+        self.assertEqual(cogs_aml.credit, 0)
 
     def test_kit_decrease_sol_qty(self):
         """
