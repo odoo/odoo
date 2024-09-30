@@ -37,15 +37,27 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
         const noEmailPartnerIds = this.props.record.data.invalid_email_partner_ids
             ? this.props.record.data.invalid_email_partner_ids.records
             : [];
+        const unavailablePartnerIds = this.props.record.data.unavailable_partner_ids
+            ? this.props.record.data.unavailable_partner_ids.records
+            : [];
         const tags = super.tags.map((tag) => {
             const partner = partnerIds.find((partner) => tag.resId === partner.id);
-            const noEmail = noEmailPartnerIds.find((partner) => (tag.resId == partner.resId));
+            const noEmail = noEmailPartnerIds.find(
+                (noEmailPartner) => tag.resId == noEmailPartner.resId
+            );
             if (partner) {
                 tag.status = partner.status;
                 tag.statusIcon = ICON_BY_STATUS[partner.status];
             }
             if (noEmail) {
                 tag.noEmail = true;
+            }
+            if (
+                unavailablePartnerIds.find(
+                    (unavailablePartner) => tag.resId == unavailablePartner.resId
+                )
+            ) {
+                tag.isUnavailable = true;
             }
             return tag;
         });
