@@ -6,9 +6,9 @@ import { router } from "@web/core/browser/router";
 patch(Thread.prototype, {
     setup() {
         super.setup(...arguments);
-        this.discussAppCategory = Record.one("DiscussAppCategory", {
+        this.channel_category_id = Record.one("DiscussAppCategory", {
             compute() {
-                return this._computeDiscussAppCategory();
+                return this.channel_category_id ?? this._computeDiscussAppCategory();
             },
         });
     },

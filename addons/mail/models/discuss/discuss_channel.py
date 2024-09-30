@@ -62,6 +62,9 @@ class Channel(models.Model):
     parent_channel_id = fields.Many2one("discuss.channel", help="Parent channel", ondelete="cascade", index=True, readonly=True)
     sub_channel_ids = fields.One2many("discuss.channel", "parent_channel_id", string="Sub Channels", readonly=True)
     from_message_id = fields.Many2one("mail.message", help="The message the channel was created from.", readonly=True)
+    channel_category_id = fields.Many2one(
+        "discuss.channel.category",
+        "Channel category")
     pinned_message_ids = fields.One2many('mail.message', 'res_id', domain=[('model', '=', 'discuss.channel'), ('pinned_at', '!=', False)], string='Pinned Messages')
     sfu_channel_uuid = fields.Char(groups="base.group_system")
     sfu_server_url = fields.Char(groups="base.group_system")
@@ -906,6 +909,7 @@ class Channel(models.Model):
             info["fetchChannelInfoState"] = "fetched"
             info["parent_channel_id"] = Store.one(channel.parent_channel_id)
             info["from_message_id"] = Store.one(channel.from_message_id)
+            info["channel_category_id"] = Store.one(channel.channel_category_id)
             # find the channel member state
             if current_partner or current_guest:
                 info['message_needaction_counter'] = channel.message_needaction_counter

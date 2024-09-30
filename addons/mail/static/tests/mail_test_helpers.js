@@ -37,6 +37,7 @@ import { DEFAULT_MAIL_VIEW_ID } from "./mock_server/mock_models/constants";
 
 import { DiscussChannel } from "./mock_server/mock_models/discuss_channel";
 import { DiscussChannelMember } from "./mock_server/mock_models/discuss_channel_member";
+import { DiscussChannelCategory } from "./mock_server/mock_models/discuss_channel_category";
 import { DiscussChannelRtcSession } from "./mock_server/mock_models/discuss_channel_rtc_session";
 import { DiscussGifFavorite } from "./mock_server/mock_models/discuss_gif_favorite";
 import { DiscussVoiceMetadata } from "./mock_server/mock_models/discuss_voice_metadata";
@@ -109,6 +110,7 @@ export const mailModels = {
     Base,
     DiscussChannel,
     DiscussChannelMember,
+    DiscussChannelCategory,
     DiscussChannelRtcSession,
     DiscussGifFavorite,
     DiscussVoiceMetadata,

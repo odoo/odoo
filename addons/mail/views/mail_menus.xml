@@ -32,6 +32,12 @@
         action="mail.mail_canned_response_action"
         sequence="15"
     />
+    <menuitem name="Channel Categories"
+        id="mail.menu_channel_categories"
+        parent="mail.menu_configuration"
+        action="mail.discuss_channel_category_action"
+        sequence="20"
+    />
 
     <record id="base.menu_email" model="ir.ui.menu">
         <field name="sequence">3</field>

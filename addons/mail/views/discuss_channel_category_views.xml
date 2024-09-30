@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="discuss_channel_category_view_form" model="ir.ui.view">
+            <field name="name">discuss.channel.category.form</field>
+            <field name="model">discuss.channel.category</field>
+            <field name="arch" type="xml">
+                <form string="Channel category">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="channel_ids" domain="[('channel_type', '=', 'channel'), ('parent_channel_id', '=', None)]" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="discuss_channel_category_view_tree" model="ir.ui.view">
+            <field name="name">discuss.channel.category.list</field>
+            <field name="model">discuss.channel.category</field>
+            <field name="arch" type="xml">
+                <list string="Channel Categories">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="discuss_channel_category_action" model="ir.actions.act_window">
+            <field name="name">Channel Categories</field>
+            <field name="res_model">discuss.channel.category</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new channel category
+                </p><p>
+                    Canned responses allow you to insert prewritten responses in
+                    your messages by typing <i>:shortcut</i>. The shortcut is
+                    replaced directly in your message, so that you can still edit
+                    it before sending.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
