@@ -798,7 +798,7 @@ class AccountGroup(models.Model):
     name = fields.Char(required=True, translate=True)
     code_prefix_start = fields.Char(compute='_compute_code_prefix_start', readonly=False, store=True, precompute=True)
     code_prefix_end = fields.Char(compute='_compute_code_prefix_end', readonly=False, store=True, precompute=True)
-    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', required=True, readonly=True, default=lambda self: self.env.company.root_id)
 
     _sql_constraints = [
         (
@@ -908,20 +908,19 @@ class AccountGroup(models.Model):
         self.env['account.account'].flush_model(['code'])
 
         if company:
-            company_ids = company.root_id.ids
+            root_companies = company.root_id
         elif account_ids:
-            company_ids = account_ids.company_id.root_id.ids
-            account_ids = account_ids.ids
+            root_companies = account_ids.company_id.root_id
         else:
-            company_ids = []
-            for company in self.company_id:
-                company_ids.extend(company._accessible_branches().ids)
-            account_ids = []
+            root_companies = self.company_id
+        company_ids = []
+        for root in root_companies:
+            company_ids.extend(root._accessible_branches().ids)
         if not company_ids and not account_ids:
             return
         account_where_clause = SQL('account.company_id IN %s', tuple(company_ids))
         if account_ids:
-            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids))
+            account_where_clause = SQL('%s AND account.id IN %s', account_where_clause, tuple(account_ids.ids))
 
         self._cr.execute(SQL("""
             WITH relation AS (

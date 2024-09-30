@@ -485,3 +485,27 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.assertEqual(group_10.parent_id, group_1)
         self.assertEqual(group_100.parent_id, group_10)
         self.assertEqual(group_101.parent_id, group_10)
+
+    def test_muticompany_account_groups(self):
+        branch_company = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': self.env.company.id,
+        })
+
+        child_group = self.env['account.group'].with_company(branch_company).create({
+            'name': 'child group',
+            'code_prefix_start': '125',
+            'code_prefix_end': '126',
+        })
+        parent_group = self.env['account.group'].create({
+            'name': 'parent group',
+            'code_prefix_start': '123',
+            'code_prefix_end': '124'
+        })
+        branch_account = self.env['account.account'].with_company(branch_company).create({
+            'name': 'branch account',
+            'code': '1234',
+        })
+
+        self.assertEqual(child_group.company_id, self.env.company)
+        self.assertEqual(branch_account.group_id, parent_group)
