@@ -8,7 +8,7 @@ import { LanguageSelector } from "./language_selector";
 
 export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
-    static dependencies = ["selection", "history", "dom", "sanitize"];
+    static dependencies = ["selection", "history", "dom", "sanitize", "dialog"];
     /** @type { (p: ChatGPTPlugin) => Record<string, any> } */
     static resources = (p) => ({
         toolbarCategory: {
@@ -103,21 +103,15 @@ export class ChatGPTPlugin extends Plugin {
             },
             ...params,
         };
-        const onClose = () => this.shared.focusEditable();
         // collapse to end
         const sanitize = this.shared.sanitize;
         if (selection.isCollapsed) {
-            this.services.dialog.add(
-                ChatGPTPromptDialog,
-                { ...dialogParams, sanitize },
-                { onClose }
-            );
+            this.shared.addDialog(ChatGPTPromptDialog, { ...dialogParams, sanitize });
         } else {
             const originalText = selection.textContent() || "";
-            this.services.dialog.add(
+            this.shared.addDialog(
                 params.language ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
-                { ...dialogParams, originalText, sanitize },
-                { onClose }
+                { ...dialogParams, originalText, sanitize }
             );
         }
         if (this.services.ui.isSmall) {
