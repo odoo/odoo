@@ -202,6 +202,9 @@ export class DiscussChannel extends Record {
         }
         return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
     }
+    discuss_category_id = fields.One("discuss.category", {
+        inverse: "channel_ids",
+    });
     get displayName() {
         if (this.default_display_mode === "video_full_screen" && this.create_date && !this.name) {
             const localizedDatetime = this.store.self?.tz

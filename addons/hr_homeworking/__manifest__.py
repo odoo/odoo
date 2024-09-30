@@ -19,6 +19,15 @@
         'web.assets_unit_tests': [
             'hr_homeworking/static/tests/**/*',
         ],
+        "im_livechat.assets_embed_core": [
+            "hr_homeworking/static/src/core/common/**/*",
+        ],
+        "mail.assets_public": [
+            "hr_homeworking/static/src/core/common/**/*",
+        ],
+        "portal.assets_chatter_helpers": [
+            "hr_homeworking/static/src/core/common/**/*",
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

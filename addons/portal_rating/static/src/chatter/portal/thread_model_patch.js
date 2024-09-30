@@ -6,7 +6,6 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.selectedRating;
-        this.rating_stats;
     }, 
 
     getFetchParams() {

@@ -3,11 +3,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
-    setup() {
-        super.setup(...arguments);
-        /** @type {boolean|undefined} */
-        this.hasReadAccess;
-    },
     get effectiveSelf() {
         if (this.portal_partner && !this.store.self_user?.partner_id) {
             return this.portal_partner;

@@ -1,5 +1,6 @@
 import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
+import { convertBrToLineBreak } from "@mail/utils/common/format";
 
 import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
@@ -7,7 +8,20 @@ import { url } from "@web/core/utils/urls";
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        this.country_id = fields.One("res.country");
         this.livechat_end_dt = fields.Datetime();
+        this.livechat_note = fields.Html();
+        /** @type {string|undefined} */
+        this.livechatNoteText = fields.Attr(undefined, {
+            compute() {
+                if (this.livechat_note !== undefined) {
+                    return convertBrToLineBreak(this.livechat_note || "");
+                }
+                return this.livechatNoteText;
+            },
+        });
+        /** @type {"no_answer"|"no_agent"|"no_failure"|"escalated"|undefined} */
+        this.livechat_outcome = undefined;
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
                 if (this.channel?.channel_type !== "livechat") {

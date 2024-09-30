@@ -19,6 +19,7 @@ declare module "models" {
         employee_ids: HrEmployee[];
     }
     export interface Store {
+        employees: {[key: number]: {id: number, user_id: number, hasCheckedUser: boolean}};
         "hr.department": StaticMailRecord<HrDepartment, typeof HrDepartmentClass>;
         "hr.employee": StaticMailRecord<HrEmployee, typeof HrEmployeeClass>;
         "hr.employee.public": StaticMailRecord<HrEmployeePublic, typeof HrEmployeePublicClass>;

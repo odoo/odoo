@@ -9,6 +9,9 @@ declare module "models" {
     export interface Store {
         "rating.rating": StaticMailRecord<Rating, typeof RatingClass>;
     }
+    export interface Thread {
+        rating_stats: { avg: number, total: number, percent: Object<number, number>};
+    }
 
     export interface Models {
         "rating.rating": Rating;
