@@ -6,7 +6,7 @@
 from contextlib import contextmanager
 import unittest
 
-from odoo import api, SUPERUSER_ID
+from odoo import api
 from odoo.tests import common
 from odoo.tests.common import BaseCase
 
@@ -20,7 +20,7 @@ def environment():
     """
     reg = Registry(common.get_db_name())
     with reg.cursor() as cr:
-        yield api.Environment(cr, SUPERUSER_ID, {})
+        yield api.Environment(cr, api.SUPERUSER_ID, {})
 
 
 MODULE = 'test_uninstall'

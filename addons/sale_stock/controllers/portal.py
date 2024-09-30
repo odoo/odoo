@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from werkzeug.exceptions import NotFound
 
-from odoo import exceptions, SUPERUSER_ID
+from odoo import exceptions
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.http import request, route
 from odoo.tools import consteq

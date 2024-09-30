@@ -201,8 +201,10 @@ class User(models.Model):
         # avoid breaking `groups` mecanism on res.users form view.
         profile_view = self.env.ref("hr.res_users_view_form_profile")
         if profile_view and view_id == profile_view.id:
-            self = self.with_user(SUPERUSER_ID)
-        result = super(User, self).get_view(view_id, view_type, **options)
+            model = self.with_user(SUPERUSER_ID)  # noqa: PLW0642
+        else:
+            model = self
+        result = super(User, model).get_view(view_id, view_type, **options)
         return result
 
     @api.model_create_multi
