@@ -34,6 +34,13 @@ class SaleOrder(models.Model):
             total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
             sale_order.amount_unpaid = sale_order.amount_total - (total_invoice_paid + total_pos_paid)
 
+    @api.depends('invoice_ids.state', 'currency_id', 'amount_total')
+    def _compute_amount_to_invoice(self):
+        super()._compute_amount_to_invoice()
+        for order in self:
+            down_payment_total = sum(line.price_subtotal_incl for line in order.pos_order_line_ids if line.down_payment_details)
+            order.amount_to_invoice -= down_payment_total
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 

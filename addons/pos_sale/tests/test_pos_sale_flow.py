@@ -719,3 +719,77 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({'ship_later': True})
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosShipLaterNoDefault', login="accountman")
+
+    def test_pos_payment_reflected_in_amount_to_invoice(self):
+        '''
+            Ensure that a downpayment paid from POS updates the 'already invoiced'
+             field on the SO correctly.
+        '''
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'name': self.product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+                'product_uom': self.product_a.uom_id.id
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.assertEqual(sale_order.amount_total, 115)
+        self.assertEqual(sale_order.amount_invoiced, 0)
+        self.assertEqual(sale_order.amount_to_invoice, 115)
+
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
+        downpayment_product = self.env['product.product'].create({
+            'name': 'Down Payment',
+            'available_in_pos': True,
+            'type': 'service',
+        })
+        self.main_pos_config.write({
+            'down_payment_product_id': downpayment_product.id,
+        })
+
+        pos_order = {'data':
+          {'amount_paid': 10,
+           'amount_return': 0,
+           'amount_tax': 0,
+           'amount_total': 10,
+           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'to_invoice': True,
+           'partner_id': partner_test.id,
+           'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'pack_lot_ids': [],
+              'price_unit': 10,
+              'product_id': downpayment_product.id,
+              'price_subtotal': 10,
+              'price_subtotal_incl': 10,
+              'sale_order_line_id': sale_order.order_line[0],
+              'sale_order_origin_id': sale_order,
+              'down_payment_details': 'PoS downpayment detail',
+              'qty': 1,
+              'tax_ids': []}]],
+           'name': 'Order 00044-003-0019',
+           'pos_session_id': current_session.id,
+           'sequence_number': self.main_pos_config.journal_id.id,
+           'statement_ids': [[0,
+             0,
+             {'amount': 10,
+              'name': fields.Datetime.now(),
+              'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
+           'uid': '00044-003-0019',
+           'user_id': self.env.uid},
+            }
+
+        self.env['pos.order'].create_from_ui([pos_order])
+
+        self.assertEqual(sale_order.amount_total, 115)
+        self.assertEqual(sale_order.amount_invoiced, 10)
+        self.assertEqual(sale_order.amount_to_invoice, 105)
