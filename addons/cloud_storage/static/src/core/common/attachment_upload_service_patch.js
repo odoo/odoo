@@ -16,8 +16,9 @@ patch(AttachmentUploadService.prototype, {
             return;
         }
         function removeAttachment() {
-            const { Attachment } = this.store.insert(data);
-            const [attachment] = Attachment;
+            const { "ir.attachment": attachments } = this.store.insert(data);
+            /** @type {import("models").Attachment} */
+            const attachment = attachments[0];
             attachment.remove();
         }
         const xhr = new window.XMLHttpRequest();

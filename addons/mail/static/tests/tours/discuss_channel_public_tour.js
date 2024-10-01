@@ -79,10 +79,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             content: "Check the image attachment is listed",
             trigger: '.o-mail-AttachmentImage[title="image.png"]',
             async run() {
+                /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
                 if (store.self.type === "guest") {
                     const src = this.anchor.querySelector("img").src;
-                    const token = store.Attachment.get(
+                    const token = store["ir.attachment"].get(
                         (src.match("/web/image/([0-9]+)") || []).at(-1)
                     )?.access_token;
                     if (!(token && src.includes(`access_token=${token}`))) {

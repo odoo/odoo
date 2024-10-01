@@ -38,13 +38,13 @@ declare module "models" {
 
     // required to propagate types in relational fields
     export interface Models {
-        "Attachment": Attachment,
         "ChatHub": ChatHub,
         "ChatWindow": ChatWindow,
         "Composer": Composer,
         "Country": Country,
         "Failure": Failure,
         "Follower": Follower,
+        "ir.attachment": Attachment,
         "LinkPreview": LinkPreview,
         "mail.canned.response": CannedResponse,
         "Message": Message,
