@@ -77,7 +77,28 @@ class StockValuationLayer(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'unit_cost' in fields:
             fields.remove('unit_cost')
-        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        # A product's current value may not align with the value of its SVLs tied to stock moves:
+        # E.g., product cost manually changed after reception -> adjusting SVL has no stock_move_id
+        # and thus the value returned by the read_group will not reflect up-to-date valuation.
+        does_query_move_location_dest = False
+        if any(field.partition(':')[0] == 'value' for field in fields):
+            does_query_move_location_dest = any('stock_move_id.location_dest_id' in d[0] for d in domain)
+            if does_query_move_location_dest:
+                fields = [field for field in fields if field.partition(':')[0] != 'id']
+                fields += ['id:array_agg']
+        r = super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        if does_query_move_location_dest:
+            svl_ids = [ids for res in r if res.get('id') for ids in res['id']]
+            if svl_ids:
+                new_value = sum(self.env['stock.valuation.layer'].browse(svl_ids).mapped(
+                        lambda svl: svl.quantity * svl.product_id.standard_price
+                    ), False)
+                if new_value is not False:
+                    for res in r:
+                        if 'value' in res:
+                            res['value'] = new_value
+
+        return r
 
     def action_open_layer(self):
         self.ensure_one()
