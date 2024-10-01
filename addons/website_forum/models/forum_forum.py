@@ -29,7 +29,7 @@ class ForumForum(models.Model):
         return Markup("""
                 <h2 class="display-3-fs" style="text-align: center;clear-both;font-weight: bold;">%(message_intro)s</h2>
                 <div class="text-white">
-                    <p class="lead o_default_snippet_text" style="text-align: center;">%(message_post)s</p>
+                    <p class="lead" style="text-align: center;">%(message_post)s</p>
                     <p style="text-align: center;">
                         <a class="btn btn-primary forum_register_url" href="/web/login">%(register_text)s</a>
                         <button type="button" class="btn btn-light js_close_intro" aria-label="Dismiss message">

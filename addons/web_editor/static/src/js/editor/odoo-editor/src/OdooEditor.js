@@ -243,7 +243,6 @@ export class OdooEditor extends EventTarget {
                     }
                 },
                 preHistoryUndo: () => {},
-                beforeAnyCommand: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
                 /**
@@ -2521,8 +2520,6 @@ export class OdooEditor extends EventTarget {
                 return true;
             }
         }
-
-        this.options.beforeAnyCommand();
 
         if (editorCommands[method]) {
             return editorCommands[method](this, ...args);

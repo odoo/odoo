@@ -5472,7 +5472,6 @@ registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
 
             // Create default text content.
             const pEl = document.createElement('p');
-            pEl.classList.add('o_default_snippet_text');
             pEl.textContent = _t("Write something...");
 
             newColumnEl.appendChild(pEl);

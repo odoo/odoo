@@ -250,10 +250,10 @@ class CardCampaign(models.Model):
 
 <div class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
     <div class="container s_allow_columns">
-        <p class="o_default_snippet_text">Hello everyone</p>
-        <p class="o_default_snippet_text">Here's the link to advertise your participation.
+        <p>Hello everyone</p>
+        <p>Here's the link to advertise your participation.
         <br> Your help with this promotion would be greatly appreciated!`</p>
-        <p class="o_default_snippet_text">Many thanks</p>
+        <p>Many thanks</p>
     </div>
 </div>
 

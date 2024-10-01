@@ -19,7 +19,7 @@
                             />
                             <t t-foreach="categories" t-as="category">
                                 <div class="col-12 col-lg-4 py-2">
-                                    <h4 class="o_default_snippet_text">
+                                    <h4>
                                         <a
                                             t-att-href="'/shop/category/%s' % category.id"
                                             class="col-lg-4 nav-link text-black p-0"
@@ -31,7 +31,7 @@
                                             <a
                                                 t-if="sub_category_index &lt; 3"
                                                 t-att-href="'/shop/category/%s' % sub_category.id"
-                                                class="nav-link o_default_snippet_text px-0"
+                                                class="nav-link px-0"
                                                 t-esc="sub_category.name"
                                             />
                                         </t>
@@ -41,9 +41,9 @@
                         </div>
                     </div>
                     <div class="col-12 col-lg-4 py-4 d-flex align-items-center justify-content-center s_mega_menu_gray_area">
-                        <a href="#" class="nav-link o_default_snippet_text text-center px-0" data-name="Menu Item">
+                        <a href="#" class="nav-link text-center px-0" data-name="Menu Item">
                             <img src="/web/image/website.s_mega_menu_menus_logos_default_image" class="mb-3 rounded shadow img-fluid" alt=""/>
-                            <h4 class="o_default_snippet_text">Spring collection has arrived!</h4>
+                            <h4>Spring collection has arrived!</h4>
                         </a>
                     </div>
                 </div>
