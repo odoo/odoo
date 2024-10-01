@@ -92,3 +92,15 @@ class TestSpreadsheetDashboard(DashboardTestCommon):
         self.assertFalse(group.published_dashboard_ids)
         dashboard.is_published = True
         self.assertEqual(group.published_dashboard_ids, dashboard)
+
+    def test_get_sample_dashboard(self):
+        sample_dashboard_path = "spreadsheet_dashboard/tests/data/sample_dashboard.json"
+        dashboard = self.create_dashboard()
+        dashboard.sample_dashboard_file_path = sample_dashboard_path
+        dashboard.main_data_model_ids = [(4, self.env.ref("base.model_res_users").id)]
+        self.env["res.users"].search([]).action_archive()
+
+        self.assertEqual(dashboard.with_user(self.user).get_readonly_dashboard(), {
+            "is_sample": True,
+            "snapshot": {"sheets": []},
+        })

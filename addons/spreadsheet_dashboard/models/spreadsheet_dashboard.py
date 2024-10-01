@@ -46,7 +46,7 @@ class SpreadsheetDashboard(models.Model):
             return
 
     def _dashboard_is_empty(self):
-        return any(self.env[model.model].search_count([], limit=1) == 0 for model in self.main_data_model_ids)
+        return any(self.env[model].search_count([], limit=1) == 0 for model in self.main_data_model_ids.sudo().mapped("model"))
 
     def copy_data(self, default=None):
         default = dict(default or {})
