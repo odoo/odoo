@@ -1507,16 +1507,22 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mo.move_byproduct_ids.product_uom_qty, 3)
 
     def test_bom_kit_with_sub_kit(self):
-        p1, p2, p3, p4 = self.make_prods(4)
+        p1, p2, p3, p4, p5, p6 = self.make_prods(6)
         self.make_bom(p1, p2, p3)
         self.make_bom(p2, p3, p4)
+        bom = self.make_bom(p5, p6)
+        bom.bom_line_ids[0].product_qty = 0.1
 
         loc = self.env.ref("stock.stock_location_stock")
         self.env["stock.quant"]._update_available_quantity(p3, loc, 10)
         self.env["stock.quant"]._update_available_quantity(p4, loc, 10)
+        self.env["stock.quant"]._update_available_quantity(p6, loc, 5.5)
+        self.env["stock.quant"]._update_available_quantity(p6, loc, -4.8)
+
         self.assertEqual(p1.qty_available, 5.0)
         self.assertEqual(p2.qty_available, 10.0)
         self.assertEqual(p3.qty_available, 10.0)
+        self.assertEqual(p5.qty_available, 7.0)
 
     def test_bom_updates_mo(self):
         """ Creates a Manufacturing Order using a BoM, then modifies the BoM.
