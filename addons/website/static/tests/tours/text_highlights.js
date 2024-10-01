@@ -18,7 +18,14 @@ registerWebsitePreviewTour("text_highlights", {
     {
         content: "Select the snippet title",
         trigger: ":iframe .s_cover h1",
-        run: "dblclick",
+        async run(actions) {
+            await actions.click();
+            const range = document.createRange();
+            const selection = this.anchor.ownerDocument.getSelection();
+            range.selectNode(this.anchor);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        },
     },
     {
         content: "Click on the 'Highlight Effects' button to activate the option",

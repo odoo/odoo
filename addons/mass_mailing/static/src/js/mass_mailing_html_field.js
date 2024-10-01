@@ -695,12 +695,6 @@ export class MassMailingHtmlField extends HtmlField {
         old_layout && old_layout.remove();
         this.wysiwyg.odooEditor.resetContent($newLayout[0].outerHTML);
 
-        $newWrapperContent.find('*').addBack()
-            .contents()
-            .filter(function () {
-                return this.nodeType === 3 && this.textContent.match(/\S/);
-            }).parent().addClass('o_default_snippet_text');
-
         if (themeParams.name === 'basic') {
             this.wysiwyg.$editable[0].focus();
         }

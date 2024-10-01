@@ -54,7 +54,7 @@ const SNIPPETS_TEMPLATE = `
                     <div class="row">
                         <div class="col-lg-10 offset-lg-1 pt32 pb32">
                             <h2>Title</h2>
-                            <p class="lead o_default_snippet_text">Content</p>
+                            <p class="lead">Content</p>
                         </div>
                     </div>
                 </div>

@@ -17,10 +17,10 @@
                     />
                     <t t-foreach="categories" t-as="category">
                         <div class="col-12 col-lg-3 pt16 pb24">
-                            <h4 class="o_default_snippet_text text-uppercase h5 fw-bold mt-0">
+                            <h4 class="text-uppercase h5 fw-bold mt-0">
                                 <a
                                     t-att-href="'/shop/category/%s' % category.id"
-                                    class="nav-link o_default_snippet_text p-0 text-black"
+                                    class="nav-link p-0 text-black"
                                     t-esc="category.name"
                                 />
                             </h4>
@@ -32,7 +32,7 @@
                             <nav class="nav flex-column">
                                 <t t-foreach="category.child_id" t-as="sub_category">
                                     <a t-att-href="'/shop/category/%s' % sub_category.id"
-                                        class="nav-link o_default_snippet_text px-0"
+                                        class="nav-link px-0"
                                         t-esc="sub_category.name"/>
                                 </t>
                             </nav>

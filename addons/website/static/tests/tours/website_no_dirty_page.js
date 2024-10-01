@@ -76,17 +76,14 @@ registerWebsitePreviewTour('website_no_dirty_page', {
         trigger: ':iframe .s_text_image img',
         run: "click",
     }, {
+        // There was a feature that auto-selected default text and was known to
+        // break the dirty behavior. It was removed but it does not hurt to
+        // still click on default text anyway.
         content: "Click on default paragraph",
-        trigger: ':iframe .s_text_image h2 + p.o_default_snippet_text',
+        trigger: ':iframe .s_text_image h2 + p',
         run: "click",
     }, {
-        // TODO this should be done in a dedicated test which would be testing
-        // all default snippet texts behaviors. Will be done in master where a
-        // task will review this feature.
-        // TODO also test that applying an editor command removes that class.
-        content: "Make sure the paragraph still acts as a default paragraph",
-        trigger: ':iframe .s_text_image h2 + p.o_default_snippet_text',
-    }, {
+        // Link edition was also known to break the dirty behavior.
         content: "Click on button",
         trigger: ':iframe .s_text_image .btn',
         async run(actions) {

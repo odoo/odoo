@@ -15,9 +15,16 @@ registerWebsitePreviewTour("text_animations", {
         groupName: "Intro",
     }),
     {
-        content: "Click on the snippet title",
+        content: "Select the snippet title",
         trigger: ":iframe .s_cover h1",
-        run: "dblclick", // Make sure the title is selected.
+        async run(actions) {
+            await actions.click();
+            const range = document.createRange();
+            const selection = this.anchor.ownerDocument.getSelection();
+            range.selectNodeContents(this.anchor);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        },
     },
     {
         content: "Click on the 'Animate Text' button to activate the option",

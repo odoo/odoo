@@ -37,8 +37,15 @@ registerWebsitePreviewTour(
         }),
         {
             content: "Select the first text block in the snippet",
-            trigger: ":iframe #wrap .s_text_block p:first",
-            run: "dblclick",
+            trigger: ":iframe #wrap .s_text_block p",
+            async run(actions) {
+                await actions.click();
+                const range = document.createRange();
+                const selection = this.anchor.ownerDocument.getSelection();
+                range.selectNodeContents(this.anchor);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            },
         },
         {
             content: "Click on the 'Animate Text' button to activate the option",
@@ -48,7 +55,14 @@ registerWebsitePreviewTour(
         {
             content: "Select the second text block in the snippet",
             trigger: ":iframe #wrap .s_text_block p:last",
-            run: "dblclick",
+            async run(actions) {
+                await actions.click();
+                const range = document.createRange();
+                const selection = this.anchor.ownerDocument.getSelection();
+                range.selectNodeContents(this.anchor);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            },
         },
         {
             content: "Click on the 'Highlight Effects' button to activate the option",
