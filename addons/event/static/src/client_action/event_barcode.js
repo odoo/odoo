@@ -13,7 +13,7 @@ import { scanBarcode } from "@web/core/barcode/barcode_dialog";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class EventScanView extends Component {
-    static template = "event.EventScanView";
+    static template = "event.EventScanViewNoKiosk";
     static components = { BarcodeScanner };
     static props = { ...standardActionServiceProps };
 
