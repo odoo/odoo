@@ -39,6 +39,7 @@ export class WithSearch extends Component {
         hideCustomGroupBy: { type: Boolean, optional: true },
         searchMenuTypes: { type: Array, element: String, optional: true },
         canOrderByCount: { type: Boolean, optional: true },
+        defaultGroupBy: { type: Array, element: String, optional: true },
     };
 
     setup() {

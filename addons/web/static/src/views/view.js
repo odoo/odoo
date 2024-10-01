@@ -395,6 +395,9 @@ export class View extends Component {
 
         const searchMenuTypes =
             props.searchMenuTypes || descr.searchMenuTypes || this.constructor.searchMenuTypes;
+        const defaultGroupBy = archXmlDoc.hasAttribute("default_group_by")
+            ? archXmlDoc.getAttribute("default_group_by").split(",")
+            : null;
         viewProps.searchMenuTypes = searchMenuTypes;
         const canOrderByCount = descr.canOrderByCount || this.constructor.canOrderByCount;
 
@@ -435,6 +438,10 @@ export class View extends Component {
                 }
             }
             this.withSearchProps.display = display;
+        }
+
+        if (defaultGroupBy && defaultGroupBy.length) {
+            this.withSearchProps.defaultGroupBy = defaultGroupBy;
         }
 
         for (const key in this.withSearchProps) {
