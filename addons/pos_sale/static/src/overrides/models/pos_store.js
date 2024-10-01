@@ -221,9 +221,10 @@ patch(PosStore.prototype, {
             const total_price = group.reduce((total, line) => (total += line.price_total), 0);
             const ratio = total_price / sale_order.amount_total;
             const down_payment_line_price = total_down_payment * ratio;
+            const taxes_to_apply = group[0].tax_id.filter((tax) => tax.amount_type !== "fixed");
             // We apply the taxes and keep the same price
             const new_price = compute_price_force_price_include(
-                group[0].tax_id,
+                taxes_to_apply,
                 down_payment_line_price,
                 this.config.down_payment_product_id,
                 this.config._product_default_values,
@@ -236,7 +237,7 @@ patch(PosStore.prototype, {
                 product_id: this.config.down_payment_product_id,
                 price_unit: new_price,
                 sale_order_origin_id: sale_order,
-                tax_ids: [["link", ...group[0].tax_id]],
+                tax_ids: [["link", ...taxes_to_apply]],
                 down_payment_details: sale_order.order_line
                     .filter(
                         (line) =>
