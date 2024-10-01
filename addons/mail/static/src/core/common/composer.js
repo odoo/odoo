@@ -650,7 +650,7 @@ export class Composer extends Component {
 
     /**
      * @typedef postData
-     * @property {import('@mail/attachments/attachment_model').Attachment[]} attachments
+     * @property {import("models").Attachment[]} attachments
      * @property {boolean} isNote
      * @property {number} parentId
      * @property {integer[]} mentionedChannelIds

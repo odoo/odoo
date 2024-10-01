@@ -20,7 +20,6 @@ let temporaryIdOffset = 0.01;
 
 export const pyToJsModels = {
     "discuss.channel": "Thread",
-    "ir.attachment": "Attachment",
     "mail.activity": "Activity",
     "mail.guest": "Persona",
     "mail.followers": "Follower",
@@ -52,8 +51,6 @@ export class Store extends BaseStore {
 
     /** @type {typeof import("@mail/core/web/activity_model").Activity} */
     Activity;
-    /** @type {typeof import("@mail/core/common/attachment_model").Attachment} */
-    Attachment;
     /** @type {typeof import("@mail/core/common/canned_response_model").CannedResponse} */
     ["mail.canned.response"];
     /** @type {typeof import("@mail/core/common/chat_window_model").ChatWindow} */
@@ -64,6 +61,8 @@ export class Store extends BaseStore {
     Failure;
     /** @type {typeof import("@mail/core/common/follower_model").Follower} */
     Follower;
+    /** @type {typeof import("@mail/core/common/attachment_model").Attachment} */
+    ["ir.attachment"];
     /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
     LinkPreview;
     /** @type {typeof import("@mail/core/common/message_model").Message} */

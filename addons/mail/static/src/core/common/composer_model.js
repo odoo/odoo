@@ -21,7 +21,7 @@ export class Composer extends Record {
         });
     }
 
-    attachments = Record.many("Attachment");
+    attachments = Record.many("ir.attachment");
     message = Record.one("Message");
     mentionedPartners = Record.many("Persona");
     mentionedChannels = Record.many("Thread");

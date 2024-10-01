@@ -7,7 +7,7 @@ defineMailModels();
 
 test("Attachment model properties", async () => {
     await start();
-    const attachment = getService("mail.store").Attachment.insert({
+    const attachment = getService("mail.store")["ir.attachment"].insert({
         filename: "test.txt",
         id: 750,
         mimetype: "text/plain",

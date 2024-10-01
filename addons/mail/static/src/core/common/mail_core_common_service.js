@@ -19,7 +19,7 @@ export class MailCoreCommon {
             if (messageData) {
                 this.store.Message.insert(messageData);
             }
-            const attachment = this.store.Attachment.get(attachmentId);
+            const attachment = this.store["ir.attachment"].get(attachmentId);
             attachment?.delete();
         });
         this.busService.subscribe("mail.message/delete", (payload, { id: notifId }) => {

@@ -9,6 +9,7 @@ import { useSequential, useVisible } from "@mail/utils/common/hooks";
 /**
  * @typedef {Object} Props
  * @property {import("models").Thread} thread
+ * @extends {Component<Props, Env>}
  */
 export class AttachmentPanel extends Component {
     static components = { ActionPanel, AttachmentList, DateSection };

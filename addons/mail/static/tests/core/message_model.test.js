@@ -18,7 +18,7 @@ test("Message model properties", async () => {
         model: "res.partner",
         name: "general",
     });
-    store.Attachment.insert({
+    store["ir.attachment"].insert({
         filename: "test.txt",
         id: 750,
         mimetype: "text/plain",

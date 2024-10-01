@@ -38,7 +38,7 @@ export class Message extends Record {
         }
     }
 
-    attachment_ids = Record.many("Attachment", { inverse: "message" });
+    attachment_ids = Record.many("ir.attachment", { inverse: "message" });
     author = Record.one("Persona");
     body = Record.attr("", { html: true });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });

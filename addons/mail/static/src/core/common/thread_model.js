@@ -72,7 +72,7 @@ export class Thread extends Record {
     });
     /** @type {boolean} */
     areAttachmentsLoaded = false;
-    attachments = Record.many("Attachment", {
+    attachments = Record.many("ir.attachment", {
         /**
          * @param {import("models").Attachment} a1
          * @param {import("models").Attachment} a2
@@ -198,7 +198,7 @@ export class Thread extends Record {
             this.onPinStateUpdated();
         },
     });
-    mainAttachment = Record.one("Attachment");
+    mainAttachment = Record.one("ir.attachment");
     memberCount = 0;
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;
