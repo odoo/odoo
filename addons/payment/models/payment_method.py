@@ -300,41 +300,25 @@ class PaymentMethod(models.Model):
             )
 
         # Filter pms that does not support manual capture.
-        supported_provider_per_method = {}
+        unfiltered_pms = payment_methods
+        non_supported_manual_capture_pms = payment_methods.filtered(
+            lambda p: not p.support_manual_capture
+        )
         providers = self.env['payment.provider'].browse(provider_ids)
-        for provider in providers:
-            if provider.capture_manually:
-                supported_methods = provider.payment_method_ids.filtered(lambda m: not m.support_manual_capture) & payment_methods
-                if len(supported_methods):
-                    supported_provider_per_method[provider] = supported_methods
+        capture_manually_supported_pp = providers.filtered('capture_manually')
+        if non_supported_manual_capture_pms and capture_manually_supported_pp:
+            for pm in non_supported_manual_capture_pms:
+                if any(p in pm.provider_ids for p in capture_manually_supported_pp):
+                    payment_methods -= pm
+
         payment_utils.add_to_report(
             report,
-            supported_provider_per_method,
+            unfiltered_pms - payment_methods,
             available=False,
             reason=REPORT_REASONS_MAPPING['manual_capture_not_supported'],
-            filter_provider=True,
         )
 
         return payment_methods
-
-    def _get_supported_provider_for_methods(self, payment_methods, provider_ids):
-        """
-            Determine the supported payment providers for each payment method and whether the method is available.
-
-            :param list provider_ids: A list of availabe payment providers
-            :param list payment_methods: A list of payment methods
-
-            Returns:
-                dict: A dictionary with payment methods as keys and a list of available providers
-        """
-        record = {}
-        for method in payment_methods:
-            if method.support_manual_capture:
-                provider_list = method.provider_ids & provider_ids
-            else:
-                provider_list = method.provider_ids.filtered(lambda p: not p.capture_manually) & provider_ids
-            record[method] = provider_list
-        return record
 
     def _get_from_code(self, code, mapping=None):
         """ Get the payment method corresponding to the given provider-specific code.

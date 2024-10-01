@@ -136,10 +136,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
             partner_sudo.id,
             currency_id=currency_id.id,
         )  # In sudo mode to read the fields of providers.
-        supported_provider_per_method = request.env['payment.method'].sudo()._get_supported_provider_for_methods(
-            payment_methods_sudo,
-            providers_sudo,
-        )
         if logged_in:
             tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
                 providers_sudo.ids, partner_sudo.id
@@ -153,7 +149,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
         rendering_context.update({
             'providers_sudo': providers_sudo,
             'payment_methods_sudo': payment_methods_sudo,
-            'supported_methods': supported_provider_per_method,
             'tokens_sudo': tokens_sudo,
             'show_tokenize_input_mapping': show_tokenize_input_mapping,
             **self._get_extra_payment_form_values(**kwargs),

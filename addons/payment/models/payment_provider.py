@@ -251,9 +251,9 @@ class PaymentProvider(models.Model):
         if self.capture_manually:
             unsupported_pms = self.payment_method_ids.filtered(
                 lambda method: not method.support_manual_capture and method.active
-                ).mapped('name')
-            pms = ' , '.join(unsupported_pms)
+            ).mapped('name')
             if unsupported_pms:
+                pms = ', '.join(unsupported_pms)
                 return {'warning': {
                     'title': _("Warning"),
                     'message': _("%s do not support manual capture", pms)
