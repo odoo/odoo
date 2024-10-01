@@ -5,7 +5,7 @@ import {standardFieldProps} from '@web/views/fields/standard_field_props';
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import {registry} from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
-import { Component } from "@odoo/owl";
+import { Component, useEffect, useRef } from "@odoo/owl";
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
@@ -22,6 +22,27 @@ class PageUrlField extends UrlField {
     setup() {
         super.setup();
         this.serverUrl = `${window.location.origin}/`;
+        this.inputRef = useRef("input");
+
+        // Trigger onchange api on input event to display redirection
+        // parameters as soon as the user types.
+        // TODO should find a way to do this more automatically (and option in
+        // the framework? or at least a t-on-input?)
+        useEffect(
+            (inputEl) => {
+                if (inputEl) {
+                    const fireChangeEvent = () => {
+                        inputEl.dispatchEvent(new Event("change"));
+                    };
+
+                    inputEl.addEventListener("input", fireChangeEvent);
+                    return () => {
+                        inputEl.removeEventListener("input", fireChangeEvent);
+                    };
+                }
+            },
+            () => [this.inputRef.el],
+        );
     }
 
     get value() {
