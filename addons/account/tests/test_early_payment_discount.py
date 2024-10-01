@@ -1048,3 +1048,82 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
 
         for line in payments.line_ids.filtered(lambda line: line.tax_repartition_line_id or line.tax_ids):
             self.assertTrue(line.tax_tag_invert)
+
+    def test_epd_multiple_tax_grids(self):
+        """
+        In the case of multi repartition lines tax definition with an early payment discount
+        We want to make sure that the EPD lines are correct.
+        We want the roundind difference to be added to the "biggest" base line.
+        """
+
+        def _create_tax_repartition_line(account, factor_percent, tax_tag):
+            tax_negate = '-' in tax_tag
+            return {
+                'account_id': account.id if account else None,
+                'factor_percent': factor_percent,
+                'tag_ids': [Command.create({'name': tax_tag, 'tax_negate': tax_negate})],
+            }
+        self.tax_purchase_a.write({
+            'amount': 17,
+            'invoice_repartition_line_ids': [
+                Command.clear(),
+                Command.create({'repartition_type': 'base', 'tag_ids': [Command.create({'name': '+001'})]}),
+                Command.create(_create_tax_repartition_line(self.company_data['default_account_payable'], 100, '+002')),
+                Command.create(_create_tax_repartition_line(self.company_data['default_account_tax_purchase'], -100, '-003')),
+            ],
+            'refund_repartition_line_ids': [
+                Command.clear(),
+                Command.create({'repartition_type': 'base', 'tag_ids': [Command.create({'name': '-001'})]}),
+                Command.create(_create_tax_repartition_line(self.company_data['default_account_payable'], 100, '-002')),
+                Command.create(_create_tax_repartition_line(self.company_data['default_account_tax_purchase'], -100, '+003')),
+            ],
+        })
+        self.tax_purchase_b.write({
+            'amount': 17,
+            'invoice_repartition_line_ids': [
+                Command.clear(),
+                Command.create({'repartition_type': 'base', 'tag_ids': [Command.create({'name': '+004'})]}),
+                Command.create(_create_tax_repartition_line(self.company_data['default_account_deferred_revenue'], 100, '+005')),
+                Command.create(_create_tax_repartition_line(self.company_data['default_account_expense'], -100, '-006')),
+            ],
+            'refund_repartition_line_ids': [
+                Command.clear(),
+                Command.create({'repartition_type': 'base', 'tag_ids': [Command.create({'name': '-004'})]}),
+                Command.create(_create_tax_repartition_line(self.company_data['default_account_deferred_revenue'], 100, '-005')),
+                Command.create(_create_tax_repartition_line(self.company_data['default_account_expense'], -100, '+006')),
+            ],
+        })
+        ref = 'REF001'
+        self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_id': self.partner_a.id,
+            'amount': 762.2,
+            'payment_reference': ref,
+        })
+
+        bill = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'ref': ref,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'Line One',
+                    'price_unit': 739.95,
+                    'tax_ids': [Command.set(self.tax_purchase_a.ids)],
+                }),
+                Command.create({
+                    'name': 'Line Two',
+                    'price_unit': 37.80,
+                    'tax_ids': [Command.set(self.tax_purchase_b.ids)],
+                }),
+            ],
+        })
+        bill.action_post()
+        epd_line = bill._get_invoice_counterpart_amls_for_early_payment_discount_per_payment_term_line()
+        tax_lines = epd_line['tax_lines'][bill.line_ids.filtered(lambda line: line.display_type == 'payment_term')]
+
+        expected_amounts = [2.51, -2.51, 0.13, -0.13]
+        actual_amounts = [line['amount_currency'] for line in tax_lines.values()]
+        for expected, actual in zip(expected_amounts, actual_amounts):
+            self.assertAlmostEqual(actual, expected, places=2, msg=f"Expected {expected} but got {actual}")
