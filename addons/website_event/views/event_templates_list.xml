@@ -335,7 +335,7 @@
                     
                     <!-- Body -->
                     <main t-attf-class="card-body position-relative d-flex flex-column justify-content-between gap-2 #{opt_events_list_columns and 'col-12 py-3' or 'col-8 col-lg-9 px-4'} #{not opt_events_list_cards and opt_events_list_columns and 'bg-transparent px-0'} #{not opt_events_list_cards and not opt_events_list_columns and 'bg-transparent py-0'}">
-                        <div>
+                        <div id="event_details">
                             <div class="d-flex flex-wrap gap-1 small">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
@@ -394,8 +394,8 @@
 <template id="opt_events_list_cards" inherit_id="website_event.events_list" active="True" name="'Cards' Design"/>
 
 <template id="opt_events_list_categories" inherit_id="website_event.events_list" active="False" name="Show Templates">
-    <xpath expr="//main/*" position="before">
-        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'position-absolute bottom-0 end-0'} #{not opt_events_list_columns and opt_events_list_cards and 'me-3 mb-3'}" t-field="event.event_type_id"/>
+    <xpath expr="//main/div[@id='event_details']" position="after">
+        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'position-absolute bottom-0 end-0 end-sm-0 start-sm-0'} #{not opt_events_list_columns and opt_events_list_cards and 'me-sm-3 mb-sm-3'}" t-field="event.event_type_id"/>
     </xpath>
 </template>
 
