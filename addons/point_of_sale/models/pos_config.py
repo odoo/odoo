@@ -666,13 +666,23 @@ class PosConfig(models.Model):
         }
 
     def open_opened_rescue_session_form(self):
-        self.ensure_one()
-        return {
-            'res_model': 'pos.session',
-            'view_mode': 'form',
-            'res_id': self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue).id,
-            'type': 'ir.actions.act_window',
-        }
+        rescue_session_ids = self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue)
+
+        if len(rescue_session_ids) == 1:
+            return {
+                'res_model': 'pos.session',
+                'view_mode': 'form',
+                'res_id': rescue_session_ids.id,
+                'type': 'ir.actions.act_window',
+            }
+        else:
+            return {
+                'name': _('Rescue Sessions'),
+                'res_model': 'pos.session',
+                'view_mode': 'tree,form',
+                'domain': [('id', 'in', rescue_session_ids.ids)],
+                'type': 'ir.actions.act_window',
+            }
 
     def _get_available_categories(self):
         return (
