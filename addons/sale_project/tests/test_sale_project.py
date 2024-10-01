@@ -899,3 +899,23 @@ class TestSaleProject(TestSaleProjectCommon):
         action = order.action_view_project_ids()
         self.assertEqual(action['type'], 'ir.actions.act_window', 'Should return a window action')
         self.assertFalse(action['context']['default_sale_line_id'], 'No SOL should be set by default since the product changed')
+
+    def test_onchange_partner_id(self):
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': self.product_order_service2.id})],
+        })
+
+        self.assertFalse(self.project_global.task_ids, "At the start project doesn't have any tasks.")
+        # Confirming the order of type service that creates a task
+        sale_order.action_confirm()
+        self.assertEqual(len(self.project_global.task_ids), 1, "Project should have a task created from the Sale order.")
+
+        with Form(self.project_global.task_ids) as task_form:
+            self.assertEqual(task_form.partner_id, self.partner, "Task must have same partner as Sale order.")
+            self.assertEqual(task_form.sale_line_id, sale_order.order_line, "Task must have Sale Line from Sale order lines.")
+            # Changing partner to trigger onchange method
+            task_form.partner_id = self.partner_a
+
+            self.assertEqual(task_form.partner_id, self.partner_a, "Task partner change should be reflected as there is change in the form.")
+            self.assertFalse(task_form.sale_line_id, "Sale Line id must be set as False as we have changed partner.")
