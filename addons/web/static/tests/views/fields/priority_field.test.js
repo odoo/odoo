@@ -200,6 +200,7 @@ test("PriorityField can write after adding a record -- kanban", async () => {
     expect(".o_kanban_record .fa-star").toHaveCount(1);
     click(".o_control_panel_main_buttons .o-kanban-button-new");
     await animationFrame();
+    await animationFrame();
     click(".o_kanban_quick_create .o_kanban_add");
     await animationFrame();
     expect.verifySteps(["web_save [[],{}]"]);
