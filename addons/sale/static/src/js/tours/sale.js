@@ -59,24 +59,13 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".o_sale_order",
         },
         {
-            trigger:
-                ".o_field_widget[name='product_id'], .o_field_widget[name='product_template_id']",
+            trigger: `
+                .o_field_widget[name='product_id'] input,
+                .o_field_widget[name='product_template_id'] input
+            `,
             content: _t("Select a product, or create a new one on the fly."),
             tooltipPosition: "right",
-            async run(actions) {
-                const input = this.anchor.querySelector("input");
-                await actions.edit("DESK0001", input || this.anchor);
-                const descriptionElement = document.querySelector(
-                    ".o_form_editable textarea[name='name']"
-                );
-                // when description changes, we know the product has been created
-                if (descriptionElement) {
-                    descriptionElement.addEventListener("change", () => {
-                        descriptionElement.classList.add("product_creation_success");
-                    });
-                }
-            },
-            id: "product_selection_step",
+            run: "edit DESK0001",
         },
         {
             isActive: ["auto"],
@@ -91,11 +80,11 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".o_field_widget[name='price_unit'] input",
             content: _t("add the price of your product."),
             tooltipPosition: "right",
-            run: "edit 10.0 && click .o_selected_row",
+            run: "edit 10.0 && click body",
         },
         {
             isActive: ["auto"],
-            trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
+            trigger: ".o_field_cell[name='price_subtotal']:contains(10.00)",
             run: "click",
         },
         {
@@ -107,7 +96,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             markup(_t("<b>Send the quote</b> to yourself and check what the customer will receive.")),
         ),
         {
-            isActive: ["body:not(:has(.modal-footer button[name='action_send_mail']))"],
+            isActive: ["body:not(:has(.modal-footer button.o_mail_send))"],
             trigger: ".modal-footer button[name='document_layout_save']",
             content: _t("let's continue"),
             tooltipPosition: "bottom",
