@@ -160,8 +160,10 @@ def initialize_sys_path() -> None:
     sys.modules["odoo.addons.base.maintenance"] = maintenance_pkg
     sys.modules["odoo.addons.base.maintenance.migrations"] = odoo.upgrade
 
-    # hook deprecated module alias from openerp to odoo and "crm"-like to odoo.addons
+    # hook for upgrades and namespace freeze
     if not getattr(initialize_sys_path, 'called', False):  # only initialize once
+        odoo.addons.__path__._path_finder = lambda *a: None  # prevent path invalidation
+        odoo.upgrade.__path__._path_finder = lambda *a: None  # prevent path invalidation
         sys.meta_path.insert(0, UpgradeHook())
         initialize_sys_path.called = True  # type: ignore
 
