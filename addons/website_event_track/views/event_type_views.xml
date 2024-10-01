@@ -6,15 +6,9 @@
         <field name="model">event.type</field>
         <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
-                <xpath expr="//span[@name='website_menu']" position='after'>
-                <span>
-                    <label for="website_track" string="Tracks Menu Item"/>
-                    <field name="website_track"/>
-                </span>
-                <span name="website_track_proposal">
-                    <label for="website_track_proposal" string="Track Proposals Menu Item"/>
-                    <field name="website_track_proposal"/>
-                </span>
+            <xpath expr="//group[@name='sub_menu_left']" position="inside">
+                <field name="website_track" string="Talks"/>
+                <field name="website_track_proposal" string="Talk Proposal"/>
             </xpath>
         </field>
     </record>
