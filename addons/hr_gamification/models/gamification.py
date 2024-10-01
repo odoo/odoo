@@ -32,6 +32,7 @@ class GamificationBadge(models.Model):
     _inherit = 'gamification.badge'
 
     granted_users_count = fields.Integer(compute="_compute_granted_users_count")
+    granted_employees_count = fields.Integer(compute="_compute_granted_employees_count")
 
     @api.depends('owner_ids.user_id')
     def _compute_granted_users_count(self):
@@ -40,12 +41,19 @@ class GamificationBadge(models.Model):
                 ('badge_id', '=', badge.id),
             ])
 
-    def get_granted_employees(self):
-        employee_ids = self.mapped('owner_ids.employee_id').ids
+    @api.depends('owner_ids.employee_id')
+    def _compute_granted_employees_count(self):
+        for badge in self:
+            badge.granted_employees_count = self.env['gamification.badge.user'].search_count([
+                ('badge_id', '=', badge.id),
+            ])
+
+    def get_granted_users(self):
+        user_ids = self.mapped('owner_ids.user_id').ids
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Granted Employees',
+            'name': 'Granted Users',
             'view_mode': 'kanban,tree,form',
-            'res_model': 'hr.employee.public',
-            'domain': [('id', 'in', employee_ids)]
+            'res_model': 'res.users',
+            'domain': [('id', 'in', user_ids)]
         }

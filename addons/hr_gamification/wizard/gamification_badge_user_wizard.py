@@ -28,6 +28,6 @@ class GamificationBadgeUserWizard(models.TransientModel):
         return self.env['gamification.badge.user'].create(values)._send_badge()
 
     @api.depends('user_id')
-    def _compute_eployee_id(self):
+    def _compute_employee_id(self):
         for wizard in self:
             wizard.employee_id = wizard.user_id.employee_id
