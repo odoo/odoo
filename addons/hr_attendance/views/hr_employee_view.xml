@@ -43,7 +43,7 @@
                 </button>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user"/>
+                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -95,7 +95,7 @@
                 </button>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user"/>
+                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -159,7 +159,7 @@
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_location_id']" position="after">
-                <field name="attendance_manager_id" optional="hide" string="Attendance" widget="many2one_avatar_user"/>
+                <field name="attendance_manager_id" optional="hide" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
             </xpath>
         </field>
     </record>
