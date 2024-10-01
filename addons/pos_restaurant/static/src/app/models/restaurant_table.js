@@ -71,10 +71,11 @@ export class RestaurantTable extends Base {
         );
     }
     getOrder() {
-        return this.parent_id?.getOrder?.() || this["<-pos.order.table_id"][0];
+        return (
+            this.parent_id?.getOrder?.() || this["<-pos.order.table_id"].find((o) => !o.finalized)
+        );
     }
     setPositionAsIfLinked(parent, side) {
-        // console.log("132")
         this.parent_id = parent;
         this.parent_side = side;
         this.position_h = this.getX();
