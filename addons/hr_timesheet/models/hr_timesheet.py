@@ -335,7 +335,7 @@ class AccountAnalyticLine(models.Model):
         if not project:
             return {}
         company = self.env['res.company'].browse(vals.get('company_id'))
-        mandatory_plans = self._get_mandatory_plans(company, business_domain='timesheet')
+        mandatory_plans = [plan for plan in self._get_mandatory_plans(company, business_domain='timesheet') if plan['column_name'] != 'account_id']
         missing_plan_names = [plan['name'] for plan in mandatory_plans if not project[plan['column_name']]]
         if missing_plan_names:
             raise ValidationError(_(
