@@ -400,7 +400,7 @@ class AccountPayment(models.Model):
             if not payment.state:
                 payment.state = 'draft'
             if (
-                not payment.move_id
+                not payment.outstanding_account_id
                 and payment.invoice_ids
                 and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids)
             ):
