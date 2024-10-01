@@ -18,6 +18,7 @@ import {
     useRef,
     useState,
     useExternalListener,
+    useEffect,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
@@ -49,6 +50,7 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
+        this.title = useService("title");
         useChildSubEnv({
             inDiscussApp: true,
             messageHighlight: this.messageHighlight,
@@ -69,10 +71,40 @@ export class Discuss extends Component {
         );
         onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));
+        useEffect(
+            () => {
+                this.updateTitle();
+            },
+            () => [this.thread?.displayName, this.thread?.importantCounter]
+        );
+    }
+
+    updateTitle() {
+        if (!this.thread) {
+            return;
+        }
+        const threadName = this.thread.displayName;
+        const counter = this.thread.importantCounter;
+        if (threadName) {
+            let name;
+            if (counter > 0) {
+                name = _t("%(threadName)s (%(unreadMessageCount)s)", {
+                    threadName,
+                    unreadMessageCount: counter,
+                });
+            } else {
+                name = threadName;
+            }
+            this.title.setParts({ action: name });
+        }
     }
 
     get thread() {
         return this.store.discuss.thread;
+    }
+
+    controllerSetName(name) {
+        return this.env.config?.setDisplayName(name);
     }
 
     async onFileUploaded(file) {

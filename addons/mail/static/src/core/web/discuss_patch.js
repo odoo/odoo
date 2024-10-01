@@ -15,14 +15,6 @@ patch(Discuss.prototype, {
         super.setup();
         this.prevInboxCounter = this.store.inbox.counter;
         useEffect(
-            (threadName) => {
-                if (threadName) {
-                    this.env.config?.setDisplayName(threadName);
-                }
-            },
-            () => [this.thread?.displayName]
-        );
-        useEffect(
             () => {
                 if (
                     this.thread?.id === "inbox" &&
@@ -39,5 +31,12 @@ patch(Discuss.prototype, {
             },
             () => [this.store.inbox.counter]
         );
+    },
+    updateTitle() {
+        const threadName = this.thread?.displayName;
+        if (threadName) {
+            this.env.config?.setDisplayName(threadName);
+        }
+        super.updateTitle();
     },
 });
