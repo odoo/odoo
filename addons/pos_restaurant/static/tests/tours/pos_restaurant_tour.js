@@ -275,6 +275,12 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            {
+                content:
+                    "As the font can't be loaded, we wait printing failed modal before close tour",
+                trigger: ".modal:contains(printing failed)",
+            },
         ].flat(),
 });
 registry.category("web_tour.tours").add("CategLabelCheck", {

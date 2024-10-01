@@ -42,9 +42,6 @@ registry.category("web_tour.tours").add("crm_rainbowman", {
             trigger: ".o_reward_rainbow",
         },
         {
-            trigger: ".o_reward_rainbow",
-        },
-        {
             // This step and the following simulates the fact that after drag and drop,
             // from the previous steps, a click event is triggered on the window element,
             // which closes the currently shown .o_kanban_quick_create.

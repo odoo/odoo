@@ -20,6 +20,7 @@ registerWebsitePreviewTour('link_tools', {
     test: true,
     url: '/',
     edition: true,
+    checkDelay: 200,
 }, () => [
     // 1. Create a new link from scratch.
     ...insertSnippet({
