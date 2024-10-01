@@ -392,7 +392,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
             const down_payment_line_price = total_down_payment * ratio;
 
             // We apply the taxes and keep the same price
-            const taxes_to_apply = group[0].tax_id.map((id) => {
+            const taxes_to_apply = group[0].tax_id.filter(id => this.pos.taxes_by_id[id].amount_type !== "fixed").map((id) => {
                 return { ...this.pos.taxes_by_id[id], price_include: true };
             });
             const tax_res = this.pos.compute_all(
@@ -416,7 +416,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         price_type: "automatic",
                         sale_order_origin_id: clickedOrder,
                         down_payment_details: tab,
-                        tax_ids: group[0].tax_id,
+                        tax_ids: group[0].tax_id.filter(id => this.pos.taxes_by_id[id].amount_type !== "fixed"),
                     }
                 )
             );
