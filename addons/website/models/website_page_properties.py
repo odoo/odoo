@@ -77,6 +77,11 @@ class PagePropertiesBase(models.TransientModel):
                 # Check we are in a non-custom state to avoid messing with
                 # manually set values.
                 record.can_publish = self._is_ir_ui_view_published(target) or self._is_ir_ui_view_unpublished(target)
+
+                # FIXME disabled for the moment because it does not hide the url
+                # in the sitemap and it is difficult to find a fix that would be
+                # consistent. To revisit later.
+                record.can_publish = False
             elif 'can_publish' in target._fields:
                 record.can_publish = target.can_publish
             else:
