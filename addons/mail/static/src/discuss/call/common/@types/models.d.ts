@@ -6,16 +6,20 @@ declare module "models" {
         rtcSession: RtcSession,
     }
     export interface Store {
-        ringingThreads: Thread[],
+        allActiveRtcSessions: RtcSession[],
+        ["discuss.channel.rtc.session"]: typeof RtcSessionClass,
         nextTalkingTime: number,
+        ringingThreads: Thread[],
     }
     export interface Rtc extends RtcClass {}
     export interface RtcSession extends RtcSessionClass {}
     export interface Thread {
+        activeRtcSession: RtcSession,
+        rtcInvitingSession: RtcSession,
         rtcSessions: RtcSession[],
     }
 
     export interface Models {
-        "RtcSession": RtcSession,
+        "discuss.channel.rtc.session": RtcSession,
     }
 }

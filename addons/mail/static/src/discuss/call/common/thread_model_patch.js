@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 const ThreadPatch = {
     setup() {
         super.setup(...arguments);
-        this.activeRtcSession = Record.one("RtcSession", {
+        this.activeRtcSession = Record.one("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onAdd(r) {
                 this.store.allActiveRtcSessions.add(r);
@@ -19,7 +19,7 @@ const ThreadPatch = {
         });
         this.hadSelfSession = false;
         this.lastSessionIds = new Set();
-        this.rtcInvitingSession = Record.one("RtcSession", {
+        this.rtcInvitingSession = Record.one("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onAdd(r) {
                 this.rtcSessions.add(r);
@@ -30,7 +30,7 @@ const ThreadPatch = {
                 this.store.ringingThreads.delete(this);
             },
         });
-        this.rtcSessions = Record.many("RtcSession", {
+        this.rtcSessions = Record.many("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onDelete(r) {
                 this.store.env.services["discuss.rtc"].deleteSession(r.id);
@@ -58,8 +58,9 @@ const ThreadPatch = {
         });
     },
     get videoCount() {
-        return Object.values(this.store.RtcSession.records).filter((session) => session.hasVideo)
-            .length;
+        return Object.values(this.store["discuss.channel.rtc.session"].records).filter(
+            (session) => session.hasVideo
+        ).length;
     },
 };
 patch(Thread.prototype, ThreadPatch);
