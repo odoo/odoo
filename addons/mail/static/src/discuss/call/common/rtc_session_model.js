@@ -21,7 +21,7 @@ export class RtcSession extends Record {
 
     // Server data
     /** @type {boolean} */
-    channelMember = Record.one("ChannelMember", { inverse: "rtcSession" });
+    channelMember = Record.one("discuss.channel.member", { inverse: "rtcSession" });
     /** @type {boolean} */
     isCameraOn;
     /** @type {boolean} */

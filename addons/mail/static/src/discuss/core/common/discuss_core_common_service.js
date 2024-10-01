@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 export class DiscussCoreCommon {
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
         this.busService = services.bus_service;
@@ -75,7 +75,7 @@ export class DiscussCoreCommon {
         });
         this.busService.subscribe("discuss.channel.member/fetched", (payload) => {
             const { channel_id, id, last_message_id, partner_id } = payload;
-            this.store.ChannelMember.insert({
+            this.store["discuss.channel.member"].insert({
                 id,
                 fetched_message_id: { id: last_message_id },
                 persona: { type: "partner", id: partner_id },
@@ -202,7 +202,7 @@ export const discussCoreCommon = {
     ],
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
         const discussCoreCommon = reactive(new DiscussCoreCommon(env, services));
