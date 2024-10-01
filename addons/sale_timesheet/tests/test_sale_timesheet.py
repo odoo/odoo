@@ -1089,6 +1089,37 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet[other_analytic_plan2._column_name()])
         self.assertEqual(timesheet[other_analytic_plan3._column_name()], analytic_account3)
 
+    def test_timesheet_get_accounts_from_sol_fallback_on_project(self):
+        _project_analytic_plan, other_plans = self.env['account.analytic.plan']._get_all_plans()
+        other_analytic_plan2 = other_plans[0] if other_plans else self.env['account.analytic.plan'].create({'name': 'Analytic Plan 2'})
+        analytic_account2 = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account 2',
+            'plan_id': other_analytic_plan2.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'name': 'SO Test',
+            'partner_id': self.partner_a.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'product_id': self.product_order_timesheet3.id,
+            'order_id': sale_order.id,
+        })
+        sale_order.action_confirm()
+        so_project = sale_order.project_id
+        so_line.analytic_distribution = {str(analytic_account2.id): 100}
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'Timesheet',
+            'project_id': so_project.id,
+            'unit_amount': 1,
+            'employee_id': self.employee_manager.id,
+            'so_line': so_line.id,
+        })
+        self.assertEqual(
+            timesheet._get_analytic_accounts(),
+            so_project.account_id | analytic_account2,
+            "The analytic accounts should be the account_id from the project and the accounts from the SOL's distribution",
+        )
+
     def test_mandatory_plan_timesheet_applicability_from_sol(self):
         AnalyticPlan = self.env['account.analytic.plan']
         plan_a = self.analytic_plan
