@@ -8,6 +8,7 @@ from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveSto
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo import fields
+from odoo import Command
 
 
 class TestMrpAccount(TestMrpCommon):
@@ -228,6 +229,14 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
                 "property_account_expense_id": cls.company_data["default_account_expense"].id,
             }
         )
+        cls.product_C = cls.env["product.product"].create(
+            {
+                "name": "Product C",
+                "is_storable": True,
+                "default_code": "prdc",
+                "categ_id": cls.auto_categ.id,
+            }
+        )
         cls.bom = cls.env['mrp.bom'].create({
             'product_id': cls.product_A.id,
             'product_tmpl_id': cls.product_A.product_tmpl_id.id,
@@ -238,6 +247,11 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         # if for some reason this default property doesn't exist, the tests that reference it will fail due to missing journal
         field = cls.env['product.category']._fields['property_stock_valuation_account_id']
         cls.default_sv_account_id = field.get_company_dependent_fallback(cls.env['product.category']).id
+        cls.workcenter = cls.env['mrp.workcenter'].create({
+            'name': 'Workcenter',
+            'default_capacity': 1,
+            'time_efficiency': 100,
+        })
 
     def test_unbuild_account_00(self):
         """Test when after unbuild, the journal entries are the reversal of the
@@ -458,4 +472,84 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             {'account_id': self.default_sv_account_id,                                     'debit': 0.0, 'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0, 'credit': 0.0},
+        ])
+
+    def test_labor_cost_balancing(self):
+        """ When the workcenter_cost ends up like x.xx5 with a currency rounding of 0.01,
+        the valuation 'account.move' was unbalanced.
+        This happened because the credit value rounded up twice, and instead of having -0.005 + 0.005 => 0,
+        we had -0 + 0.01 => +0.01, which made the credit differ from the debit by 0.01.
+        This test ensures that if the workcenter_cost is rounded to 0.01, then the credit value is correctly
+        decremented by 0.01.
+        """
+        # Setup
+        self.workcenter.write({'costs_hour': 10})
+        self.bom.write({
+            'operation_ids': [
+                Command.create({'name': 'work', 'workcenter_id': self.workcenter.id, 'time_cycle': 5, 'sequence': 1}),
+            ],
+        })
+
+        # Build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_A
+        production_form.bom_id = self.bom
+        production_form.product_qty = 1
+        production = production_form.save()
+        production.action_confirm()
+        workorder = production.workorder_ids
+        workorder.duration = 0.03  # ~= 2 seconds (1.8 seconds exactly)
+        workorder.time_ids.write({'duration': 0.03})  # Ensure that the duration is correct
+        self.assertEqual(workorder._cal_cost(), 0.005)  # 2 seconds at $10/h
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        account_move = production.move_finished_ids.stock_valuation_layer_ids.account_move_id
+        self.assertRecordValues(account_move.line_ids, [
+            {'credit': 9.99, 'debit': 0.00},  # Credit Line
+            {'credit': 0.00, 'debit': 10.00},  # Debit Line
+            {'credit': 0.01, 'debit': 0.00},  # Labor Credit Line
+        ])
+
+    def test_labor_cost_balancing_with_cost_share(self):
+        """ Same test as test_labor_cost_balancing, however, instead of having the worcenter_cost to 0.05,
+        we have it at 0.01, and it is the cost_share that bring it back to 0.005 before rounding it back up to 0.01.
+        """
+        # Setup
+        self.workcenter.write({'costs_hour': 20})
+        self.bom.write({
+            'operation_ids': [
+                Command.create({'name': 'work', 'workcenter_id': self.workcenter.id, 'time_cycle': 5, 'sequence': 1}),
+            ],
+            'byproduct_ids': [Command.create({'product_id': self.product_C.id, 'product_qty': 1, 'cost_share': 50})],
+        })
+
+        # Build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_A
+        production_form.bom_id = self.bom
+        production_form.product_qty = 1
+        production = production_form.save()
+        production.action_confirm()
+        workorder = production.workorder_ids
+        workorder.duration = 0.03  # ~= 2 seconds (1.8 seconds exactly)
+        workorder.time_ids.write({'duration': 0.03})  # Ensure that the duration is correct
+        self.assertEqual(workorder._cal_cost(), 0.01)  # 2 seconds at $20/h
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        account_move = production.move_finished_ids.filtered(lambda fm: fm.product_id == self.product_A)\
+            .stock_valuation_layer_ids.account_move_id
+        self.assertRecordValues(account_move.line_ids, [
+            {'credit': 9.99, 'debit': 0.00},  # Credit Line
+            {'credit': 0.00, 'debit': 10.00},  # Debit Line
+            {'credit': 0.01, 'debit': 0.00},  # Labor Credit Line
         ])
