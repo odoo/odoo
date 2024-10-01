@@ -4,12 +4,17 @@ import { convertToEmbedURL } from "@mail/utils/common/misc";
 const VIDEO_EXTENSIONS = new Set(["mp4", "mov", "avi", "mkv", "webm", "mpeg", "mpg", "ogv", "3gp"]);
 
 export class LinkPreview extends Record {
+    static _name = "mail.link.preview";
     static id = "id";
     /** @returns {import("models").LinkPreview} */
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").LinkPreview|import("models").LinkPreview[]} */
+    /**
+     * @template T
+     * @param {T} data
+     * @returns {T extends any[] ? import("models").LinkPreview[] : import("models").LinkPreview}
+     */
     static insert(data) {
         return super.insert(...arguments);
     }
