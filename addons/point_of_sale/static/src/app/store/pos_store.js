@@ -1169,6 +1169,32 @@ export class PosStore extends Reactive {
     async getClosePosInfo() {
         return await this.data.call("pos.session", "get_closing_control_data", [[this.session.id]]);
     }
+<<<<<<< saas-17.4
+||||||| 8e868885a73c06a04d175ea66abd11c6428e9e2c
+    set_start_order() {
+        if (this.orders.length && !this.selectedOrder) {
+            this.selectedOrder = this.orders[0];
+            if (this.isOpenOrderShareable()) {
+                this.ordersToUpdateSet.add(this.orders[0]);
+            }
+        } else {
+            this.add_new_order();
+        }
+    }
+
+=======
+    set_start_order() {
+        if (this.orders.length && !this.selectedOrder) {
+            this.selectedOrder = this.orders[this.orders.length - 1];
+            if (this.isOpenOrderShareable()) {
+                this.ordersToUpdateSet.add(this.orders[this.orders.length - 1]);
+            }
+        } else {
+            this.add_new_order();
+        }
+    }
+
+>>>>>>> bdef150ef1044947feffbfa32a5b7ffa573503ed
     // return the current order
     get_order() {
         if (!this.selectedOrderUuid) {

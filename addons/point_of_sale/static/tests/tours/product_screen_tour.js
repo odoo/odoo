@@ -11,9 +11,16 @@ import {
     back,
     inLeftSide,
     selectButton,
+<<<<<<< saas-17.4:addons/point_of_sale/static/tests/tours/product_screen_tour.js
     scan_barcode,
 } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
+||||||| 8e868885a73c06a04d175ea66abd11c6428e9e2c:addons/point_of_sale/static/tests/tours/ProductScreen.tour.js
+} from "@point_of_sale/../tests/tours/helpers/utils";
+=======
+    refresh,
+} from "@point_of_sale/../tests/tours/helpers/utils";
+>>>>>>> bdef150ef1044947feffbfa32a5b7ffa573503ed:addons/point_of_sale/static/tests/tours/ProductScreen.tour.js
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     test: true,
@@ -334,6 +341,7 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
         ].flat(),
 });
 
+<<<<<<< saas-17.4:addons/point_of_sale/static/tests/tours/product_screen_tour.js
 registry.category("web_tour.tours").add("PosPopupPriceAndQuantity", {
     test: true,
     url: "/pos/ui",
@@ -383,5 +391,22 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
             {
                 trigger: '.category-button:eq(3) > span:contains("AAY")',
             },
+||||||| 8e868885a73c06a04d175ea66abd11c6428e9e2c:addons/point_of_sale/static/tests/tours/ProductScreen.tour.js
+=======
+registry.category("web_tour.tours").add("ParkOrderTour", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickShowProductsMobile(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.clickReview(),
+            ProductScreen.controlButtonMore(),
+            ProductScreen.controlButton("Park Order"),
+            refresh(),
+            ProductScreen.orderIsEmpty(),
+>>>>>>> bdef150ef1044947feffbfa32a5b7ffa573503ed:addons/point_of_sale/static/tests/tours/ProductScreen.tour.js
         ].flat(),
 });
