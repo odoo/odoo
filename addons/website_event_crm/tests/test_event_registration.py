@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo.addons.event_crm.tests.common import TestEventCrmCommon
 from odoo.tests.common import RecordCapturer, tagged, users
 
@@ -97,6 +99,48 @@ class EventRegistrationCase(TestEventCrmCommon):
                 f'&lt;div&gt;answer from {customer_data.get("name", "no_name")}&lt;/div&gt;', lead.description,
                 "Answers should be escaped")
             self.assertIn('<li>', lead.description, 'HTML around the text box value should not be escaped')
+
+    def test_event_registration_generation_from_existing(self):
+        """ Test flow: select registrations, force creation of leads based on some
+        rules. In that case, considering all registrations to be part of the same
+        group when no SO is linked is problematic as it merges unrelated data. """
+        now = datetime(2024, 10, 1, 13, 30, 0)
+        with RecordCapturer(self.env['crm.lead'], []) as capture:
+            Attendee = self.env['event.registration'].with_context(event_lead_rule_skip=True).with_user(self.user_eventmanager)
+            with self.mock_datetime_and_now(now):
+                attendees_1 = Attendee.create([
+                    {
+                        'email': 'test@test.example.com',
+                        'event_id': self.event_0.id,
+                        'visitor_id': self.test_lang_visitor.id,
+                    }, {
+                        'email': 'test2@test.example.com',
+                        'event_id': self.event_0.id,
+                        'visitor_id': self.test_lang_visitor.id,
+                    },
+                ])
+            with self.mock_datetime_and_now(now + timedelta(hours=1)):
+                attendees_2 = Attendee.create([
+                    {
+                        'email': 'test.fr.later@test.example.com',
+                        'event_id': self.event_0.id,
+                        'visitor_id': self.test_lang_visitor_fr.id,
+                    }, {
+                        'email': 'test.fr.later.2@test.example.com',
+                        'event_id': self.event_0.id,
+                        'visitor_id': self.test_lang_visitor_fr.id,
+                    },
+                ])
+
+        # no lead created currently (thanks for context key)
+        self.assertFalse(len(capture.records), 4)
+
+        # run order-based rule
+        test_rule_order = self.test_rule_order.with_user(self.user_eventmanager)
+        leads = test_rule_order.sudo()._run_on_registrations(attendees_1 + attendees_2)
+        self.assertEqual(len(leads), 2, "Should have created one lead / batch (event + create_date key)")
+        self.assertEqual(leads[0].registration_ids, attendees_1)
+        self.assertEqual(leads[1].registration_ids, attendees_2)
 
     def test_visitor_language_propagation(self):
         """
