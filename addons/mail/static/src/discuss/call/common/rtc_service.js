@@ -167,7 +167,7 @@ export class Rtc extends Record {
             return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
         },
     });
-    selfSession = Record.one("RtcSession");
+    selfSession = Record.one("discuss.channel.rtc.session");
     serverInfo;
     /**
      * @type {Network}
@@ -412,7 +412,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("@mail/discuss/call/common/rtc_session_model").RtcSession} session
+     * @param {import("models").RtcSession} session
      * @param {boolean} active
      */
     setRemoteRaiseHand(session, active) {
@@ -534,7 +534,7 @@ export class Rtc extends Record {
         this.network.addEventListener("stateChange", this._handleSfuClientStateChange);
         this.network.addEventListener("update", this._handleNetworkUpdates);
         this.network.addEventListener("log", ({ detail: { id, level, message } }) => {
-            const session = this.store.RtcSession.get(id);
+            const session = this.store["discuss.channel.rtc.session"].get(id);
             if (session) {
                 this.log(session, message, { step: "p2p", level });
             }
@@ -542,7 +542,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {RtcSession} session
+     * @param {import("models").RtcSession} session
      * @param {String} entry
      * @param {Object} [param2]
      * @param {Error} [param2.error]
@@ -590,7 +590,7 @@ export class Rtc extends Record {
             case "connection_change":
                 {
                     const { id, state } = payload;
-                    const session = this.store.RtcSession.get(id);
+                    const session = this.store["discuss.channel.rtc.session"].get(id);
                     if (!session) {
                         return;
                     }
@@ -600,7 +600,7 @@ export class Rtc extends Record {
             case "disconnect":
                 {
                     const { sessionId } = payload;
-                    const session = this.store.RtcSession.get(sessionId);
+                    const session = this.store["discuss.channel.rtc.session"].get(sessionId);
                     if (!session) {
                         return;
                     }
@@ -612,7 +612,7 @@ export class Rtc extends Record {
                     return;
                 }
                 for (const [id, info] of Object.entries(payload)) {
-                    const session = this.store.RtcSession.get(Number(id));
+                    const session = this.store["discuss.channel.rtc.session"].get(Number(id));
                     if (!session) {
                         return;
                     }
@@ -625,7 +625,7 @@ export class Rtc extends Record {
             case "track":
                 {
                     const { sessionId, type, track, active } = payload;
-                    const session = this.store.RtcSession.get(sessionId);
+                    const session = this.store["discuss.channel.rtc.session"].get(sessionId);
                     if (!session) {
                         return;
                     }
@@ -701,7 +701,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("@mail/discuss/call/common/rtc_session_model").RtcSession} session
+     * @param {import("models").RtcSession} session
      * @param {MediaStreamTrack} track
      * @param {streamType} type
      * @param {boolean} active false if the track is muted/disabled
@@ -1209,7 +1209,7 @@ export class Rtc extends Record {
      * @param {import("models").id} id
      */
     deleteSession(id) {
-        const session = this.store.RtcSession.get(id);
+        const session = this.store["discuss.channel.rtc.session"].get(id);
         if (session) {
             if (this.selfSession && session.eq(this.selfSession)) {
                 this.endCall();
@@ -1226,7 +1226,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {RtcSession} session
+     * @param {import("models").RtcSession} session
      * @param {MediaStreamTrack} track
      * @param {Object} [parm1]
      * @param {boolean} [parm1.mute]
@@ -1262,7 +1262,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {RtcSession} session
+     * @param {import("models").RtcSession} session
      * @param {String} [videoType]
      */
     removeVideoFromSession(session, videoType = false) {
@@ -1278,7 +1278,7 @@ export class Rtc extends Record {
         }
     }
     /**
-     * @param {RtcSession} session
+     * @param {import("models").RtcSession} session
      */
     removeAudioFromSession(session) {
         closeStream(session.audioStream);
@@ -1294,7 +1294,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {RtcSession} session
+     * @param {import("models").RtcSession} session
      * @param {"screen"|"camera"} [videoType]
      * @param {Object} [parm2]
      * @param {boolean} [parm2.addVideo]
@@ -1327,7 +1327,7 @@ export class Rtc extends Record {
     }
 
     /**
-     * @param {import("@mail/discuss/call/common/rtc_session_model").RtcSession} rtcSession
+     * @param {import("models").RtcSession} rtcSession
      * @param {Object} [param1]
      * @param {number} [param1.viewCountIncrement=0] negative value to decrement
      */

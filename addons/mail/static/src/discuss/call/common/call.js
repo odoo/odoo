@@ -158,7 +158,7 @@ export class Call extends Component {
     }
 
     /**
-     * @param {RtcSession} session
+     * @param {import("models").RtcSession} session
      * @param {String} [videoType]
      */
     setInset(session, videoType) {

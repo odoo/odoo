@@ -19,7 +19,6 @@ let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
 
 export const pyToJsModels = {
-    "discuss.channel.rtc.session": "RtcSession",
     "discuss.channel": "Thread",
     "ir.attachment": "Attachment",
     "mail.activity": "Activity",

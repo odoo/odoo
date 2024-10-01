@@ -1,6 +1,5 @@
 import { Record } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
-import { RtcSession } from "@mail/discuss/call/common/rtc_session_model";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -9,7 +8,7 @@ const StorePatch = {
     setup() {
         super.setup(...arguments);
         /** @type {typeof import("@mail/discuss/call/common/rtc_session_model").RtcSession} */
-        this.RtcSession = RtcSession;
+        this["discuss.channel.rtc.session"] = undefined;
         this.rtc = Record.one("Rtc", {
             compute() {
                 return {};
@@ -27,7 +26,7 @@ const StorePatch = {
                 }
             },
         });
-        this.allActiveRtcSessions = Record.many("RtcSession");
+        this.allActiveRtcSessions = Record.many("discuss.channel.rtc.session");
         this.nextTalkingTime = 1;
     },
     onStarted() {

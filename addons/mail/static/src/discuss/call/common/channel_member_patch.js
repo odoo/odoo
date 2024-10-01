@@ -7,7 +7,7 @@ import { patch } from "@web/core/utils/patch";
 const ChannelMemberPatch = {
     setup() {
         super.setup(...arguments);
-        this.rtcSession = Record.one("RtcSession");
+        this.rtcSession = Record.one("discuss.channel.rtc.session");
     },
 };
 patch(ChannelMember.prototype, ChannelMemberPatch);

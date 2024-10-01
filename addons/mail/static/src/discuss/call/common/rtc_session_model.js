@@ -1,6 +1,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class RtcSession extends Record {
+    static _name = "discuss.channel.rtc.session";
     static id = "id";
     /** @type {Object.<number, import("models").RtcSession>} */
     static records = {};
@@ -8,7 +9,11 @@ export class RtcSession extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").RtcSession|import("models").RtcSession[]} */
+    /**
+     * @template T
+     * @param {T} data
+     * @returns {T extends any[] ? import("models").RtcSession[] : import("models").RtcSession}
+     */
     static insert(data) {
         return super.insert(...arguments);
     }
