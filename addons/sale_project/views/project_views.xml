@@ -20,12 +20,42 @@
         </field>
     </record>
 
+    <record model="ir.actions.server" id="project_server_action_invoices">
+        <field name="name">Invoices</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_open_project_invoices()
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="project_server_action_sales_orders">
+        <field name="name">Sales Orders</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_view_sos()
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="project_server_action_vendor_bills">
+        <field name="name">Vendor Bills</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_open_project_vendor_bills()
+        </field>
+    </record>
+
     <record id="project_embedded_action_invoices" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">60</field>
-        <field name="name">Invoices</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
-        <field name="python_method">action_open_project_invoices</field>
+        <field name="python_method" eval="False"/>
+        <field name="action_id" ref="sale_project.project_server_action_invoices"/>
         <field name="context">{"from_embedded_action": true}</field>
         <field name="groups_ids" eval="[(4, ref('account.group_account_invoice')), (4, ref('sales_team.group_sale_salesman'))]" />
         <field name="domain">[('allow_billable', '=', True)]</field>
@@ -34,9 +64,9 @@
     <record id="project_embedded_action_sales_orders" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">50</field>
-        <field name="name">Sales Orders</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
-        <field name="python_method">action_view_sos</field>
+        <field name="python_method" eval="False"/>
+        <field name="action_id" ref="sale_project.project_server_action_sales_orders"/>
         <field name="context">{"from_embedded_action": true}</field>
         <field name="groups_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
         <field name="domain">[('allow_billable', '=', True)]</field>
@@ -45,9 +75,9 @@
     <record id="project_embedded_action_invoices_dashboard" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">70</field>
-        <field name="name">Invoices</field>
         <field name="parent_action_id" ref="project.project_update_all_action"/>
-        <field name="python_method">action_open_project_invoices</field>
+        <field name="python_method" eval="False"/>
+        <field name="action_id" ref="sale_project.project_server_action_invoices"/>
         <field name="context">{"from_embedded_action": true}</field>
         <field name="groups_ids" eval="[(4, ref('account.group_account_invoice')), (4, ref('sales_team.group_sale_salesman'))]" />
         <field name="domain">[('allow_billable', '=', True)]</field>
@@ -56,9 +86,9 @@
     <record id="project_embedded_action_sales_orders_dashboard" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">50</field>
-        <field name="name">Sales Orders</field>
         <field name="parent_action_id" ref="project.project_update_all_action"/>
-        <field name="python_method">action_view_sos</field>
+        <field name="python_method" eval="False"/>
+        <field name="action_id" ref="sale_project.project_server_action_sales_orders"/>
         <field name="context">{"from_embedded_action": true}</field>
         <field name="groups_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]" />
         <field name="domain">[('allow_billable', '=', True)]</field>
@@ -67,9 +97,9 @@
     <record id="project_embedded_action_vendor_bills" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">75</field>
-        <field name="name">Vendor Bills</field>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
-        <field name="python_method">action_open_project_vendor_bills</field>
+        <field name="python_method" eval="False"/>
+        <field name="action_id" ref="sale_project.project_server_action_vendor_bills"/>
         <field name="context">{"from_embedded_action": true}</field>
         <field name="groups_ids" eval="[(4, ref('account.group_account_invoice')), (4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="domain">[('allow_billable', '=', True)]</field>
