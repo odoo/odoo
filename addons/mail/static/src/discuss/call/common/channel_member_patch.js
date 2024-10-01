@@ -1,4 +1,4 @@
-import { ChannelMember } from "@mail/core/common/channel_member_model";
+import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { Record } from "@mail/core/common/record";
 
 import { patch } from "@web/core/utils/patch";

@@ -1375,7 +1375,7 @@ export const rtcService = {
     ],
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
         const rtc = env.services["mail.store"].rtc;

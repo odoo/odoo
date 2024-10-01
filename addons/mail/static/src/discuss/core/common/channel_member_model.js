@@ -8,6 +8,7 @@ import { user } from "@web/core/user";
 const { DateTime } = luxon;
 
 export class ChannelMember extends Record {
+    static _name = "discuss.channel.member";
     static id = "id";
     /** @type {Object.<number, import("models").ChannelMember>} */
     static records = {};
@@ -15,7 +16,11 @@ export class ChannelMember extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").ChannelMember|import("models").ChannelMember[]} */
+    /**
+     * @template T
+     * @param {T} data
+     * @returns {T extends any[] ? import("models").ChannelMember[] : import("models").ChannelMember}
+     */
     static insert(data) {
         return super.insert(...arguments);
     }

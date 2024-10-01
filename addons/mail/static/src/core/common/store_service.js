@@ -19,7 +19,6 @@ let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
 
 export const pyToJsModels = {
-    "discuss.channel.member": "ChannelMember",
     "discuss.channel.rtc.session": "RtcSession",
     "discuss.channel": "Thread",
     "ir.attachment": "Attachment",
@@ -58,8 +57,6 @@ export class Store extends BaseStore {
     Attachment;
     /** @type {typeof import("@mail/core/common/canned_response_model").CannedResponse} */
     ["mail.canned.response"];
-    /** @type {typeof import("@mail/core/common/channel_member_model").ChannelMember} */
-    ChannelMember;
     /** @type {typeof import("@mail/core/common/chat_window_model").ChatWindow} */
     ChatWindow;
     /** @type {typeof import("@mail/core/common/composer_model").Composer} */
@@ -750,7 +747,8 @@ export const storeService = {
     dependencies: ["bus_service", "ui"],
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
+     * @returns {import("models").Store}
      */
     start(env, services) {
         const store = makeStore(env);

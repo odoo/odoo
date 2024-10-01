@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 export class SuggestionService {
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
         this.env = env;
@@ -282,7 +282,7 @@ export const suggestionService = {
     dependencies: ["orm", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
         return new SuggestionService(env, services);

@@ -25,7 +25,6 @@ export class Persona extends Record {
         return super.insert(...arguments);
     }
 
-    channelMembers = Record.many("ChannelMember");
     /** @type {number} */
     id;
     /** @type {boolean | undefined} */
@@ -72,6 +71,8 @@ export class Persona extends Record {
     userId;
     /** @type {ImStatus} */
     im_status;
+    /** @type {boolean} */
+    is_public;
     /** @type {'email' | 'inbox'} */
     notification_preference;
     isAdmin = false;
