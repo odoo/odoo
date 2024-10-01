@@ -219,6 +219,21 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      */
     _computeSnippetTemplates(html) {
         const $html = $(html);
+
+        // TODO Remove in master. This patches the snippet move selectors.
+        const oldSelector = ".s_showcase .row:not(.s_col_no_resize) > div";
+        let optionEl = $html[0].querySelector(`[data-js="SnippetMove"][data-selector*="${oldSelector}"]`);
+        if (optionEl) {
+            const newSelector = oldSelector.replace(".row", ".row .row");
+            optionEl.dataset.selector = optionEl.dataset.selector.replace(oldSelector, newSelector);
+        }
+        const oldExclude = ".s_showcase .row > div";
+        optionEl = $html[0].querySelector(`[data-js="SnippetMove"][data-exclude*="${oldExclude}"]`);
+        if (optionEl) {
+            const newExclude = oldExclude.replace(".row", ".row .row");
+            optionEl.dataset.exclude = optionEl.dataset.exclude.replace(oldExclude, newExclude);
+        }
+
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
