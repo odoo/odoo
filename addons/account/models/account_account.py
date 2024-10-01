@@ -1042,16 +1042,23 @@ class AccountAccount(models.Model):
 
         self._action_unmerge_get_user_confirmation()
 
-        self._action_unmerge()
+        # Keep active company
+        for account in self.with_context({'allowed_company_ids': (self.env.company | self.env.user.company_ids).ids}):
+            account._action_unmerge()
 
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def _check_action_unmerge_possible(self):
         """ Raises an error if the recordset `self` cannot be unmerged. """
-        if len(self) != 1:
-            raise UserError(_("You must select a single account to un-merge."))
+        self.check_access('write')
 
-        if len(self.company_ids) == 1:
+        if forbidden_companies := (self.sudo().company_ids - self.env.user.company_ids):
+            raise UserError(_(
+                "You do not have the right to perform this operation as you do not have access to the following companies: %s.",
+                ", ".join(c.name for c in forbidden_companies)
+            ))
+
+        if any(len(a.company_ids) == 1 for a in self):
             raise UserError(_(
                 "Account %s cannot be unmerged as it already belongs to a single company. "
                 "The unmerge operation only splits an account based on its companies.",
@@ -1063,13 +1070,15 @@ class AccountAccount(models.Model):
         if self.env.context.get('account_unmerge_confirm'):
             return
 
-        msg = _(
-            "Are you sure? This will split the account into one account per company:",
-            account=self.display_name,
-            num_accounts=len(self.company_ids),
-        )
-        msg += ''.join(f'\n    - {company.name}: {self.with_company(company).display_name}' for company in self.company_ids)
-        action = self.env['ir.actions.actions']._for_xml_id('account.action_unmerge_accounts')
+        msg = _("Are you sure? This will perform the following operations:\n")
+        for account in self:
+            msg += _(
+                "Account %(account)s will be split in %(num_accounts)s, one for each company:\n",
+                account=account.display_name,
+                num_accounts=len(account.company_ids),
+            )
+            msg += ''.join(f'    - {company.name}: {account.with_company(company).display_name}\n' for company in account.company_ids)
+            action = self.env['ir.actions.actions']._for_xml_id('account.action_unmerge_accounts')
         raise RedirectWarning(msg, action, _("Unmerge"), additional_context={**self.env.context, 'account_unmerge_confirm': True})
 
     def _action_unmerge(self):
@@ -1104,12 +1113,7 @@ class AccountAccount(models.Model):
                 )
 
         # Step 1: Check access rights.
-        self.check_access('write')
-        if forbidden_companies := (self.sudo().company_ids - self.env.companies):
-            raise UserError(_(
-                "You do not have the right to perform this operation as you do not have access to the following companies: %s.",
-                ", ".join(c.name for c in forbidden_companies)
-            ))
+        self._check_action_unmerge_possible()
 
         # Step 2: Create new accounts.
         base_company = self.env.company if self.env.company in self.company_ids else self.company_ids[0]
