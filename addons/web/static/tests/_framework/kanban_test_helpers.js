@@ -1,4 +1,10 @@
-import { queryAll, queryAllAttributes, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    queryAll,
+    queryAllAttributes,
+    queryAllTexts,
+    queryOne,
+} from "@odoo/hoot-dom";
 import { contains } from "./dom_test_helpers";
 import { buildSelector } from "./view_test_helpers";
 import { getDropdownMenu } from "./component_test_helpers";
@@ -17,8 +23,9 @@ export async function clickKanbanRecord(options) {
     await contains(buildSelector(`.o_kanban_record`, options)).click();
 }
 
-export function createKanbanRecord() {
-    return contains(".o_control_panel_main_buttons button.o-kanban-button-new").click();
+export async function createKanbanRecord() {
+    await contains(".o_control_panel_main_buttons button.o-kanban-button-new").click();
+    return animationFrame(); // the kanban quick create is rendered in a second animation frame
 }
 
 export function discardKanbanRecord() {
@@ -110,8 +117,9 @@ export function quickCreateKanbanColumn() {
 /**
  * @param {number} [columnIndex=0]
  */
-export function quickCreateKanbanRecord(columnIndex = 0) {
-    return contains(".o_kanban_quick_add", { root: getKanbanColumn(columnIndex) }).click();
+export async function quickCreateKanbanRecord(columnIndex = 0) {
+    await contains(".o_kanban_quick_add", { root: getKanbanColumn(columnIndex) }).click();
+    return animationFrame(); // the kanban quick create is rendered in a second animation frame
 }
 
 /**
