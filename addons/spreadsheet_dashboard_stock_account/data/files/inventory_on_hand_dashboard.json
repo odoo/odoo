@@ -741,7 +741,7 @@
                     "field": "value"
                 }
             ],
-            "model": "stock.valuation.layer",
+            "model": "stock.quant",
             "rowGroupBys": [],
             "name": "total inventory value",
             "sortedColumn": null
@@ -880,7 +880,7 @@
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
                 "1": {
-                    "field": "stock_move_id.location_dest_id",
+                    "field": "location_id",
                     "type": "many2one"
                 },
                 "2": {
@@ -950,7 +950,7 @@
             "defaultsToCurrentPeriod": false,
             "pivotFields": {
                 "1": {
-                    "field": "stock_move_id.lot_ids",
+                    "field": "lot_id",
                     "type": "many2many"
                 },
                 "2": {
