@@ -327,3 +327,20 @@ registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
             negateStep(PaymentScreen.shippingLaterHighlighted()),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PoSDownPaymentLinesPerFixedTax", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.downPayment20PercentFirstOrder(),
+            Order.hasLine({
+                productName: "Down Payment",
+                quantity: "1.0",
+                price: "22",
+            }),
+            Order.hasNoTax(),
+            ProductScreen.totalAmountIs(22.0),
+        ].flat(),
+});
