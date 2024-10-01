@@ -10,7 +10,7 @@ from urllib.parse import urlencode
 import psycopg2.errors
 from dateutil.relativedelta import relativedelta
 from lxml import etree
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo import http
 from odoo.exceptions import AccessError
@@ -29,6 +29,7 @@ class WebJsonController(http.Controller):
     # for /json, the route should work in a browser, therefore type=http
     @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
     def web_json(self, subpath, **kwargs):
+        self._check_json_route_active()
         return request.redirect(
             f'/json/1/{subpath}?{urlencode(kwargs)}',
             HTTPStatus.TEMPORARY_REDIRECT
@@ -63,6 +64,7 @@ class WebJsonController(http.Controller):
         :param start_date: When applicable, minimum date (inclusive bound)
         :param end_date: When applicable, maximum date (exclusive bound)
         """
+        self._check_json_route_active()
         if not request.env.user.has_group('base.group_allow_export'):
             raise AccessError(request.env._("You need export permissions to use the /json route"))
 
@@ -187,6 +189,12 @@ class WebJsonController(http.Controller):
                 offset=offset,
             )
         return request.make_json_response(res)
+
+    def _check_json_route_active(self):
+        # experimental route, only enabled in demo mode or when explicitly set
+        if not (request.env.ref('base.module_base').demo
+                or request.env['ir.config_parameter'].sudo().get_param('web.json.enabled')):
+            raise NotFound()
 
     def _get_action(self, subpath):
         def get_action_triples_():
