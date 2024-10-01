@@ -9,12 +9,12 @@ publicWidget.registry.websiteSlidesCoursePrerequisite = publicWidget.Widget.exte
     async start() {
         await this._super(...arguments);
         const channels = this.$el.data('channels');
-        this.$el.popover({
-            trigger: 'focus',
-            placement: 'bottom',
-            container: 'body',
+        Popover.getOrCreateInstance(this.el, {
+            trigger: "focus",
+            placement: "bottom",
+            container: "body",
             html: true,
-            content: renderToElement('slide.course.prerequisite', {channels: channels}),
+            content: renderToElement("slide.course.prerequisite", { channels: channels }),
         });
     },
 });

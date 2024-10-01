@@ -167,12 +167,14 @@ function prompt(options, _qweb) {
             if (fill) {
                 field.fillWith(fill);
             }
-            dialog.modal('show');
+            const modal = Modal.getOrCreateInstance(dialog);
+            modal.show();
             field.focus();
             dialog.on('click', '.btn-primary', function () {
                 var backdrop = $('.modal-backdrop');
                 resolve({ val: field.val(), field: field, dialog: dialog });
-                dialog.modal('hide').remove();
+                modal.hide();
+                dialog.remove();
                     backdrop.remove();
             });
         });

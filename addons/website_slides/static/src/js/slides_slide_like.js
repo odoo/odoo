@@ -22,16 +22,17 @@ var SlideLikeWidget = publicWidget.Widget.extend({
      * @param {String} message
      */
     _popoverAlert: function ($el, message) {
-        $el.popover({
-            trigger: 'focus',
-            delay: {'hide': 300},
-            placement: 'bottom',
-            container: 'body',
+        const popover = Popover.getOrCreateInstance($el[0], {
+            trigger: "focus",
+            delay: { hide: 300 },
+            placement: "bottom",
+            container: "body",
             html: true,
             content: function () {
                 return message;
-            }
-        }).popover('show');
+            },
+        });
+        popover.show();
     },
 
     //--------------------------------------------------------------------------

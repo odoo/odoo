@@ -361,7 +361,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 .setAttribute('content', shareImageSrc);
 
             if ($images.attr('id') === 'o-carousel-product') {
-                $images.carousel(0);
+                window.Carousel.getOrCreateInstance($images[0]).to(0);
             }
             this._startZoom();
             // fix issue with carousel height
@@ -824,10 +824,11 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      */
     _onMouseWheel: function (ev) {
         ev.preventDefault();
+        const carousel = window.Carousel.getOrCreateInstance(this.el);
         if (ev.originalEvent.deltaY > 0) {
-            this.$el.carousel('next');
+            carousel.next();
         } else {
-            this.$el.carousel('prev');
+            carousel.prev();
         }
     },
 });

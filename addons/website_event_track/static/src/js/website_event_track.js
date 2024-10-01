@@ -18,7 +18,9 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
      */
     start: function () {
         this._super.apply(this, arguments).then(() => {
-            this.$el.find('[data-bs-toggle="popover"]').popover();
+            this.el.querySelectorAll('[data-bs-toggle="popover"]').forEach((el) => {
+                Popover.getOrCreateInstance(el);
+            });
 
             this.agendas = Array.from(this.target.getElementsByClassName('o_we_online_agenda'));
 
