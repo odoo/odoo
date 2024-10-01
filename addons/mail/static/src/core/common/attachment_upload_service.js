@@ -32,7 +32,7 @@ export class AttachmentUploadService {
                 const { thread, composer } = this.targetsByTmpId.get(tmpId);
                 const tmpUrl = upload.data.get("tmp_url");
                 this.abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
-                const attachment = this.store.Attachment.insert(
+                const attachment = this.store["ir.attachment"].insert(
                     this._makeAttachmentData(upload, tmpId, composer ? undefined : thread, tmpUrl)
                 );
                 composer?.attachments.push(attachment);
@@ -85,8 +85,9 @@ export class AttachmentUploadService {
     }
 
     _processLoaded(thread, composer, { data }, tmpId, def) {
-        const { Attachment } = this.store.insert(data);
-        const [attachment] = Attachment;
+        const { "ir.attachment": attachments } = this.store.insert(data);
+        /** @type {import("models").Attachment} */
+        const attachment = attachments[0];
         if (composer) {
             const index = composer.attachments.findIndex(({ id }) => id === tmpId);
             if (index >= 0) {
@@ -105,7 +106,7 @@ export class AttachmentUploadService {
         this.deferredByAttachmentId.delete(tmpId);
         this.uploadingAttachmentIds.delete(tmpId);
         this.targetsByTmpId.delete(tmpId);
-        this.store.Attachment.get(tmpId).remove();
+        this.store["ir.attachment"].get(tmpId).remove();
     }
 
     getUploadURL(thread) {

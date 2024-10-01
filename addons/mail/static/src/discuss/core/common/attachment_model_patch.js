@@ -2,7 +2,8 @@ import { Attachment } from "@mail/core/common/attachment_model";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Attachment.prototype, {
+/** @type {import("models").Attachment} */
+const attachmentPatch = {
     get isDeletable() {
         if (this.message && this.thread?.model === "discuss.channel") {
             return this.message.editable;
@@ -17,4 +18,5 @@ patch(Attachment.prototype, {
         }
         return super.urlRoute;
     },
-});
+};
+patch(Attachment.prototype, attachmentPatch);

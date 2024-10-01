@@ -19,13 +19,13 @@ export class ProductDocumentKanbanRecord extends KanbanRecord {
         if (ev.target.closest(CANCEL_GLOBAL_CLICK)) {
             return;
         } else if (ev.target.closest(".o_kanban_previewer")) {
-            const attachment = this.store.Attachment.insert({
+            const attachment = this.store["ir.attachment"].insert({
                 id: this.props.record.data.ir_attachment_id[0],
                 filename: this.props.record.data.name,
                 name: this.props.record.data.name,
                 mimetype: this.props.record.data.mimetype,
             });
-            this.fileViewer.open(attachment)
+            this.fileViewer.open(attachment);
             return;
         }
         return super.onGlobalClick(...arguments);

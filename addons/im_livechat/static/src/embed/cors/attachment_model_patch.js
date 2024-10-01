@@ -1,7 +1,8 @@
 import { Attachment } from "@mail/core/common/attachment_model";
 import { patch } from "@web/core/utils/patch";
 
-patch(Attachment.prototype, {
+/** @type {import("models").Attachment} */
+const attachmentPatch = {
     get urlQueryParams() {
         return {
             ...super.urlQueryParams,
@@ -16,4 +17,5 @@ patch(Attachment.prototype, {
         }
         return super.urlRoute;
     },
-});
+};
+patch(Attachment.prototype, attachmentPatch);

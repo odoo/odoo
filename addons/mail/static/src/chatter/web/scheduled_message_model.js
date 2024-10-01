@@ -12,7 +12,7 @@ export class ScheduledMessage extends Record {
     }
     /** @type {number} */
     id;
-    attachment_ids = Record.many("Attachment");
+    attachment_ids = Record.many("ir.attachment");
     author = Record.one("Persona");
     body = Record.attr("", { html: true });
     /** @type {boolean} */
@@ -65,14 +65,14 @@ export class ScheduledMessage extends Record {
             action = await this.store.env.services.orm.call(
                 "mail.scheduled.message",
                 "open_edit_form",
-                [this.id],
+                [this.id]
             );
         } catch {
             this.notifyAlreadySent();
             return;
         }
         return new Promise((resolve) =>
-            this.store.env.services.action.doAction(action, { onClose: resolve }),
+            this.store.env.services.action.doAction(action, { onClose: resolve })
         );
     }
 
@@ -87,7 +87,9 @@ export class ScheduledMessage extends Record {
      */
     async send() {
         try {
-            await this.store.env.services.orm.call("mail.scheduled.message", "post_message", [this.id]);
+            await this.store.env.services.orm.call("mail.scheduled.message", "post_message", [
+                this.id,
+            ]);
         } catch {
             // already sent (by someone else or by cron)
             return;
