@@ -84,7 +84,7 @@ export class CollaborationOdooPlugin extends Plugin {
             this.editable.addEventListener("focus", this.joinPeerToPeer);
         }
 
-        this.removeHistoryIds(this.editable);
+        stripHistoryIds(this.editable);
     }
     destroy() {
         this.collaborationStopBus && this.collaborationStopBus();
@@ -597,7 +597,7 @@ export class CollaborationOdooPlugin extends Plugin {
         content = content || "<p><br></p>";
         // content here is trusted
         this.editable.innerHTML = content;
-        this.removeHistoryIds(this.editable);
+        stripHistoryIds(this.editable);
         this.dispatch("NORMALIZE", { node: this.editable });
         this.shared.reset(content);
 
@@ -772,17 +772,12 @@ export class CollaborationOdooPlugin extends Plugin {
         );
     }
     async getCurrentRecord() {
-        const [record] = await this.options.collaboration.ormService.read(
-            this.options.collaboration.collaborationChannel.collaborationModelName,
-            [this.options.collaboration.collaborationChannel.collaborationResId],
+        const [record] = await this.config.collaboration.ormService.read(
+            this.config.collaboration.collaborationChannel.collaborationModelName,
+            [this.config.collaboration.collaborationChannel.collaborationResId],
             [this.config.collaboration.collaborationChannel.collaborationFieldName]
         );
         return record;
-    }
-    removeHistoryIds(editable) {
-        editable
-            .querySelectorAll("[data-last-history-steps]")
-            .forEach((el) => el.removeAttribute("data-last-history-steps"));
     }
     attachHistoryIds(editable) {
         const historyIds = this.shared.getBranchIds().join(",");
@@ -807,9 +802,8 @@ function isPeerFirst(peerA, peerB) {
     }
 }
 
-/**
- * @param {string} value
- */
-export function stripHistoryIds(value) {
-    return (value && value.replace(/\sdata-last-history-steps="[^"]*?"/, "")) || value;
+export function stripHistoryIds(element) {
+    element
+        .querySelectorAll("[data-last-history-steps]")
+        .forEach((el) => el.removeAttribute("data-last-history-steps"));
 }

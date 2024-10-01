@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { Mutex } from "@web/core/utils/concurrency";
+import { normalizeHTML } from "@html_editor/utils/html";
 import { patch } from "@web/core/utils/patch";
 import { getContent, getSelection, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
@@ -79,7 +80,8 @@ class PeerTest {
         });
     }
     getValue() {
-        return stripHistoryIds(getContent(this.editor.editable));
+        const content = getContent(this.editor.editable);
+        return normalizeHTML(content, stripHistoryIds);
     }
     async writeToServer() {
         this.pool.lastRecordSaved = this.editor.getContent();

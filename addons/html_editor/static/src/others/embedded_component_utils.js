@@ -1,5 +1,6 @@
 import {
     onMounted,
+    onRendered,
     onPatched,
     onWillDestroy,
     reactive,
@@ -92,10 +93,23 @@ export function useEditableDescendants(host) {
         refs[name] = useRef(name);
         renders[name] = () => refs[name].el.replaceChildren(editableDescendants[name]);
     }
+    let _restoreSelection;
+    const restoreSelection = () => {
+        if (_restoreSelection) {
+            _restoreSelection();
+            _restoreSelection = undefined;
+        }
+    };
+    if (component.env.editorShared?.preserveSelection) {
+        onRendered(() => {
+            _restoreSelection = component.env.editorShared.preserveSelection().restore;
+        });
+    }
     onMounted(() => {
         for (const render of Object.values(renders)) {
             render();
         }
+        restoreSelection();
     });
     onPatched(() => {
         for (const [name, render] of Object.entries(renders)) {
@@ -104,6 +118,7 @@ export function useEditableDescendants(host) {
                 render();
             }
         }
+        restoreSelection();
     });
     return editableDescendants;
 }
@@ -130,7 +145,10 @@ function embeddedStateProxyHandler(state, stateChangeManager) {
         // the target through serialization, which will be used as a reference
         // point for a comparison (before <-> after).
         set(target, key, value, receiver) {
-            if (!stateChangeManager.previousEmbeddedState) {
+            if (
+                value !== Reflect.get(target, key, receiver) &&
+                !stateChangeManager.previousEmbeddedState
+            ) {
                 stateChangeManager.previousEmbeddedState = JSON.parse(
                     JSON.stringify(stateChangeManager.embeddedState)
                 );
@@ -138,7 +156,7 @@ function embeddedStateProxyHandler(state, stateChangeManager) {
             return Reflect.set(target, key, value, receiver);
         },
         deleteProperty(target, key) {
-            if (!stateChangeManager.previousEmbeddedState) {
+            if (Reflect.has(target, key) && !stateChangeManager.previousEmbeddedState) {
                 stateChangeManager.previousEmbeddedState = JSON.parse(
                     JSON.stringify(stateChangeManager.embeddedState)
                 );
@@ -382,7 +400,7 @@ export class StateChangeManager {
         let scheduled = false;
         const batchId = this.batchId;
         return async () => {
-            if (!scheduled) {
+            if (this.isLiveComponent && !scheduled) {
                 scheduled = true;
                 await Promise.resolve();
                 scheduled = false;

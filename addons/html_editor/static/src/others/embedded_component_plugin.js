@@ -28,6 +28,8 @@ export class EmbeddedComponentPlugin extends Plugin {
         this.embeddedComponents = memoize((embeddedComponents = []) => {
             const result = {};
             for (const embedding of embeddedComponents) {
+                // TODO ABD: Any embedding with the same name as another will overwrite it.
+                // File currently relies on this system. Change it ?
                 result[embedding.name] = embedding;
             }
             return result;
@@ -157,7 +159,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         return this.hostToStateChangeManagerMap.get(host);
     }
 
-    mountComponent(host, { Component, getEditableDescendants, getProps, getStateChangeManager }) {
+    mountComponent(
+        host,
+        { Component, getEditableDescendants, getProps, name, getStateChangeManager }
+    ) {
         const props = getProps?.(host) || {};
         const { dev, translateFn, getRawTemplate } = this.app;
         const env = Object.create(this.env);
@@ -167,6 +172,11 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (getEditableDescendants) {
             env.getEditableDescendants = getEditableDescendants;
         }
+        this.dispatch("SETUP_NEW_COMPONENT", {
+            name,
+            env,
+            props,
+        });
         const app = new App(Component, {
             test: dev,
             env,
@@ -174,9 +184,9 @@ export class EmbeddedComponentPlugin extends Plugin {
             getTemplate: getRawTemplate,
             props,
         });
-        // copy templates so they don't have to be recompiled.
         app.rawTemplates = this.app.rawTemplates;
-        app.templates = this.app.templates;
+        // Can't copy compiled templates because they have a reference to the main app
+        // app.templates = mainApp.templates;
         app.mount(host);
         // Patch mount fiber to hook into the exact call stack where app is
         // mounted (but before). This will remove host children synchronously
