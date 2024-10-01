@@ -1,10 +1,9 @@
-/** @odoo-module */
-
 import { Notification } from "@mail/core/common/notification_model";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
-patch(Notification.prototype, {
+/** @type {import("models").Notification} */
+const notificationPatch = {
     get icon() {
         if (this.notification_type === "sms") {
             return "fa fa-mobile";
@@ -17,4 +16,5 @@ patch(Notification.prototype, {
         }
         return super.label;
     },
-});
+};
+patch(Notification.prototype, notificationPatch);

@@ -22,7 +22,6 @@ export const pyToJsModels = {
     "discuss.channel": "Thread",
     "mail.guest": "Persona",
     "mail.message": "Message",
-    "mail.notification": "Notification",
     "mail.scheduled.message": "ScheduledMessage",
     "mail.thread": "Thread",
     "res.partner": "Persona",
@@ -62,12 +61,12 @@ export class Store extends BaseStore {
     ["mail.followers"];
     /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
     ["mail.link.preview"];
+    /** @type {typeof import("@mail/core/common/notification_model").Notification} */
+    ["mail.notification"];
     /** @type {typeof import("@mail/core/common/message_model").Message} */
     Message;
     /** @type {typeof import("@mail/core/common/message_reactions_model").MessageReactions} */
     MessageReactions;
-    /** @type {typeof import("@mail/core/common/notification_model").Notification} */
-    Notification;
     /** @type {typeof import("@mail/core/common/persona_model").Persona} */
     Persona;
     /** @type {typeof import "@mail/chatter/web/scheduled_message_model).ScheduledMessage"} */

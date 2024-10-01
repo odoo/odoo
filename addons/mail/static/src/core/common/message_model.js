@@ -140,7 +140,7 @@ export class Message extends Record {
          */
         sort: (r1, r2) => r1.sequence - r2.sequence,
     });
-    notifications = Record.many("Notification", { inverse: "message" });
+    notifications = Record.many("mail.notification", { inverse: "message" });
     recipients = Record.many("Persona");
     thread = Record.one("Thread");
     threadAsNeedaction = Record.one("Thread", {
