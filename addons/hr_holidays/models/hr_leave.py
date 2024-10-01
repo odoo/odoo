@@ -7,6 +7,7 @@ from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from math import ceil
 from pytz import timezone, UTC
+from markupsafe import Markup
 
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
@@ -1151,20 +1152,24 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 responsibles = leave.employee_id.leave_manager_id.partner_id
                 responsibles |= leave.holiday_status_id.responsible_ids.partner_id
 
+            leave.sudo().state = "cancel"
             if responsibles:
-                self.env['mail.thread'].sudo().message_notify(
-                    partner_ids=responsibles.ids,
-                    model_description='Time Off',
-                    subject=_('Cancelled Time Off'),
-                    body=_(
-                        "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s.",
-                        leave_name=leave.display_name,
+                body = _(
+                    "%(leave_name)s has been cancelled with the justification: %(reason)s",
+                    leave_name=leave.display_name,
+                    reason=Markup("<blockquote>{reason}</blockquote>").format(
                         reason=reason
                     ),
-                    email_layout_xmlid='mail.mail_notification_light',
+                )
+
+                leave.message_notify(
+                    partner_ids=responsibles.ids,
+                    model_description="Time Off",
+                    subject=_("Cancelled Time Off"),
+                    body=body,
+                    email_layout_xmlid="mail.mail_notification_layout",
                 )
         leave_sudo = self.sudo()
-        leave_sudo.state = 'cancel'
         leave_sudo.activity_update()
         leave_sudo._post_leave_cancel()
 
