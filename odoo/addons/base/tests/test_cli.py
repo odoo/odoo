@@ -117,12 +117,12 @@ class TestCommand(BaseCase):
                 'print(message)\n'
                 'exit()\n'
             )
-        shell.wait()
+        self.assertFalse(shell.wait(), "exited with a non 0 code")
 
         self.assertEqual(shell.stdout.read().splitlines(), [
             Like("No environment set..."),
-            Like("odoo: <module 'odoo' from '/.../odoo/__init__.py'>"),
-            Like("openerp: <module 'odoo' from '/.../odoo/__init__.py'>"),
+            Like("odoo: <module 'odoo' ...>"),
+            Like("openerp: <module 'odoo' ...>"),
             ">>> Hello from Python!",
             '>>> '
         ])

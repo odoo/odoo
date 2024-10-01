@@ -46,8 +46,9 @@ class TestInit(BaseCase):
 
     def test_import(self):
         """Test that importing a sub-module in any order works."""
+        EXPECT_UTC = ('init', 'cli', 'http', 'modules', 'service', 'api', 'fields', 'models', 'orm', 'tests')
         for module in sorted(self.odoo_modules_to_test()):
-            set_timezone = True
+            set_timezone = any(expect in module for expect in EXPECT_UTC)
             env = {'TZ': 'CET'}
             timezone = 'UTC' if set_timezone else 'CET'
             code = f"import {module}; import sys, time; sys.exit(0 if (time.tzname[0] == '{timezone}') else 5)"

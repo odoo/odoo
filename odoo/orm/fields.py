@@ -11,14 +11,13 @@ from operator import attrgetter
 
 from psycopg2.extras import Json as PsycopgJson
 
-from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import Query, SQL, lazy_property, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel
 
 from .domains import NEGATIVE_CONDITION_OPERATORS, Domain
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids
 
 if typing.TYPE_CHECKING:
     from .models import BaseModel
