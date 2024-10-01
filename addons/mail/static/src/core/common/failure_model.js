@@ -17,7 +17,7 @@ export class Failure extends Record {
         return super.insert(...arguments);
     }
 
-    notifications = Record.many("Notification", {
+    notifications = Record.many("mail.notification", {
         /** @this {import("models").Failure} */
         onUpdate() {
             if (this.notifications.length === 0) {

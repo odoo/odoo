@@ -3,6 +3,7 @@ import { Record } from "@mail/core/common/record";
 import { _t } from "@web/core/l10n/translation";
 
 export class Notification extends Record {
+    static _name = "mail.notification";
     static id = "id";
     /** @type {Object.<number, import("models").Notification>} */
     static records = {};
@@ -10,7 +11,11 @@ export class Notification extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").Notification|import("models").Notification[]} */
+    /**
+     * @template T
+     * @param {T} data
+     * @returns {T extends any[] ? import("models").Notification[] : import("models").Notification}
+     * */
     static insert(data) {
         return super.insert(...arguments);
     }

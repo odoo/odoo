@@ -1,10 +1,9 @@
-/** @odoo-module */
-
 import { Notification } from "@mail/core/common/notification_model";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 
-patch(Notification.prototype, {
+/** @type {import("models").Notification} */
+const notificationPatch = {
     get icon() {
         if (this.notification_type === "snail") {
             return "fa fa-paper-plane";
@@ -43,4 +42,5 @@ patch(Notification.prototype, {
         }
         return super.statusTitle;
     },
-});
+};
+patch(Notification.prototype, notificationPatch);
