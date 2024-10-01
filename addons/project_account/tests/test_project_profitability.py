@@ -85,3 +85,38 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
             },
             'The profitability data of the project should return the total amount for the revenues and costs from tha AAL of the account of the project.'
         )
+
+        account_move = self.env['account.move'].create({
+            "name": "I have 3 lines",
+            "state": "draft",
+            "partner_id": self.partner.id,
+        })
+        # Create new move line with analytic distribution
+        account = self.env['account.account'].search([('company_id', '=', account_move.company_id.id)], limit=1)
+        self.env['account.move.line'].create([{
+            "analytic_distribution": {project.analytic_account_id.id: 100},
+            "debit": 500,
+            "move_id": account_move.id,
+            "account_id": account.id
+        }, {
+            "analytic_distribution": {project.analytic_account_id.id: 100},
+            "credit": 350,
+            "move_id": account_move.id,
+            "account_id": account.id
+        }, {
+            "credit": 150,
+            "move_id": account_move.id,
+            "account_id": account.id
+        }])
+        account_move.action_post()
+        # Ensure that the move line have correctly generate an AAL, and that those AAL are correctly computed into the project profitability.
+        self.assertDictEqual(
+            project._get_profitability_items(False),
+            {
+                'revenues': {'data': [{'id': 'other_revenues', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_revenues'],
+                    'invoiced': 530.0, 'to_invoice': 0.0}], 'total': {'invoiced': 530.0, 'to_invoice': 0.0}},
+                'costs': {'data': [{'id': 'other_costs', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                    'billed': -680.0, 'to_bill': 0.0}], 'total': {'billed': -680.0, 'to_bill': 0.0}}
+            },
+            'The profitability data of the project should return the total amount for the revenues and costs from tha AAL of the account of the project.'
+        )
