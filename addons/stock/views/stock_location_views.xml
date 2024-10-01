@@ -38,7 +38,7 @@
                             <field name="active" invisible="1"/>
                             <field name="usage"/>
                             <field name="storage_category_id" invisible="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                             <field name="scrap_location" invisible="usage not in ('inventory', 'internal')"/>
                             <field name="replenish_location" invisible="usage != 'internal'"/>
                         </group>
