@@ -1,25 +1,33 @@
 .popover .o-EmojiPicker {
+    width: 285px + 2 * map-get($spacers, 1);
     width: 285px;
     height: 350px;
 }
 
+.o-EmojiPicker-content {
+    padding-left: map-get($spacers, 1);
+    padding-right: map-get($spacers, 1);
+}
+
 .o-EmojiPicker {
-    --o-emoji-picker-active: #{$gray-200};
-    .o-active {
-        background-color: var(--o-emoji-picker-active) !important;
-    }
+    --EmojiPicker-active: #{rgba($o-action, .15)};
 
     .o-Emoji {
         width: 30px;
         font-size: 0.8rem;
         &:hover {
-            background-color: var(--o-emoji-picker-active) !important;
+            background-color: var(--EmojiPicker-active) !important;
+        }
+        &.o-active {
+            background-color: var(--EmojiPicker-active) !important;
         }
     }
 
 
     .o-EmojiPicker-navbar {
+        background-color: var(--EmojiPicker-navbarBg, mix($gray-100, $gray-200));
         .o-Emoji {
+            padding: map-get($spacers, 1) / 2;
             filter: grayscale(1);
         }
     }
@@ -41,6 +49,9 @@
 
 .o-EmojiPicker-search {
     input {
+        &::placeholder {
+            opacity: var(--EmojiPicker-placeholderOpacity, 50%);
+        }
         &:not(:focus) {
             & + .oi-search {
                 color: $text-muted;
