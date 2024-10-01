@@ -29,7 +29,8 @@ class HrAttendance(models.Model):
     _inherit = ["mail.thread"]
 
     def _default_employee(self):
-        return self.env.user.employee_id
+        if self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
+            return self.env.user.employee_id
 
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True,
         ondelete='cascade', index=True, group_expand='_read_group_employee_id')
@@ -37,6 +38,9 @@ class HrAttendance(models.Model):
         readonly=True)
     manager_id = fields.Many2one(comodel_name='hr.employee', related="employee_id.parent_id", readonly=True,
         export_string_translation=False)
+    attendance_manager_id = fields.Many2one('res.users', related="employee_id.attendance_manager_id",
+        export_string_translation=False)
+    is_manager = fields.Boolean(compute="_compute_is_manager")
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True)
     check_out = fields.Datetime(string="Check Out", tracking=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
@@ -188,6 +192,14 @@ class HrAttendance(models.Model):
                     check_in=format_time(self.env, attendance.check_in, time_format=None, tz=tz, lang_code=self.env.lang),
                     check_out=format_time(self.env, attendance.check_out, time_format=None, tz=tz, lang_code=self.env.lang),
                 )
+
+    @api.depends('employee_id')
+    def _compute_is_manager(self):
+        have_manager_right = self.env.user.has_group('hr_attendance.group_hr_attendance_manager')
+        have_officer_right = self.env.user.has_group('hr_attendance.group_hr_attendance_officer')
+        for attendance in self:
+            attendance.is_manager = have_manager_right or \
+                (have_officer_right and attendance.attendance_manager_id.id == self.env.user.id)
 
     def _get_employee_calendar(self):
         self.ensure_one()
@@ -658,14 +670,17 @@ class HrAttendance(models.Model):
 
     def _read_group_employee_id(self, resources, domain):
         user_domain = self.env.context.get('user_domain')
+        employee_domain = [('company_id', 'in', self.env.context.get('allowed_company_ids', []))]
+        if not self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
+            employee_domain.append(('attendance_manager_id', '=', self.env.user.id))
         if not user_domain:
-            return self.env['hr.employee'].search([('company_id', 'in', self.env.context.get('allowed_company_ids', []))])
+            return self.env['hr.employee'].search(employee_domain)
         else:
             employee_name_domain = []
             for leaf in user_domain:
                 if len(leaf) == 3 and leaf[0] == 'employee_id':
                     employee_name_domain.append([('name', leaf[1], leaf[2])])
-            return resources | self.env['hr.employee'].search(OR(employee_name_domain))
+            return resources | self.env['hr.employee'].search(AND([OR(employee_name_domain), employee_domain]))
 
     def action_approve_overtime(self):
         self.write({
