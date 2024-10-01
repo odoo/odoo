@@ -65,9 +65,11 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_occurrence(self, occurrence_from):
         self.ensure_one()
-        if self.repeat_type == 'until' and fields.Date.today() > self.repeat_until:
-            return
-        occurrence_from.with_context(copy_project=True).sudo().copy(self._create_next_occurrence_values(occurrence_from))
+        # Prevent double mail_followers creation
+        create_values = self._create_next_occurrence_values(occurrence_from)
+        date_deadline = create_values['date_deadline']
+        if not (self.repeat_type == 'until' and date_deadline and date_deadline.date() > self.repeat_until):
+            occurrence_from.with_context(copy_project=True).sudo().copy(create_values)
 
     def _create_next_occurrence_values(self, occurrence_from):
         self.ensure_one()
