@@ -14,6 +14,7 @@ Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03 od
 =========================================================================================
 
 German accounting chart and localization.
+By default, the audit trail is enabled for GoBD compliance.
     """,
     'depends': [
         'base_iban',
