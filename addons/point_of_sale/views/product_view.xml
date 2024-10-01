@@ -179,6 +179,10 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="after">
+                <field name="is_storable" invisible="type != 'consu'"/>
+                <field name="tracking" invisible="not is_storable" groups="stock.group_production_lot"/>
+            </xpath>
             <div name="tax_info" position="after">
                 <field name="pos_categ_ids" string="POS Category" class="oe_inline" widget="many2many_tags" placeholder="Unsaleable"/>
             </div>
