@@ -70,9 +70,6 @@ export class RestaurantTable extends Base {
                 (!o.finalized || o.uiState.screen_data?.value?.name === "TipScreen")
         );
     }
-    getOrder() {
-        return this.parent_id?.getOrder?.() || this["<-pos.order.table_id"][0];
-    }
     setPositionAsIfLinked(parent, side) {
         // console.log("132")
         this.parent_id = parent;

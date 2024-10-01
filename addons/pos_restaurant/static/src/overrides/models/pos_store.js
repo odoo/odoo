@@ -319,7 +319,7 @@ patch(PosStore.prototype, {
         );
     },
     tableHasOrders(table) {
-        return Boolean(table.getOrder());
+        return table.orders.length > 0;
     },
     async transferOrder(destinationTable) {
         const order = this.models["pos.order"].getBy("uuid", this.orderToTransferUuid);
