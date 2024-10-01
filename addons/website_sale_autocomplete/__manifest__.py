@@ -18,6 +18,7 @@
         'web.assets_frontend': [
             'website_sale_autocomplete/static/src/js/address_form.js',
             'website_sale_autocomplete/static/src/xml/autocomplete.xml',
+            '''To check whether to move this to other bundle'''
         ],
         'web.assets_tests': [
             'website_sale_autocomplete/static/tests/**/*.js'
