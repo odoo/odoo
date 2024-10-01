@@ -1645,8 +1645,12 @@ class AccountTax(models.Model):
                     continue
 
                 amount_to_distribute = total_error / nb_of_errors
-                for tax_rep in sorted_tax_reps_data[:nb_of_errors]:
+                index = 0
+                while nb_of_errors:
+                    tax_rep = sorted_tax_reps_data[index]
                     tax_rep[field] += amount_to_distribute
+                    nb_of_errors -= 1
+                    index = (index + 1) % len(sorted_tax_reps_data)
 
         subsequent_taxes = self.env['account.tax']
         subsequent_tags = self.env['account.account.tag']
