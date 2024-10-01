@@ -33,6 +33,12 @@
             .card-header {
                 min-height: 130px;
             }
+            @include media-breakpoint-down(md) {
+                .o_wevent_badge {
+                    position: relative !important;
+                    max-width: fit-content;
+                }
+            }
         }
         .o_wevent_badge_event {
             @include o-position-absolute($top: 0, $right: 0);
