@@ -14,11 +14,11 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
         },
         {
             trigger: 'div[name="quantity"] input',
-            run: "edit 16.0 && click body",
+            run: "edit 16.0",
         },
         {
             trigger: 'div[name="picked"] input',
-            run: 'click',
+            run: "click",
         },
         {
             content: "Click Pager",
