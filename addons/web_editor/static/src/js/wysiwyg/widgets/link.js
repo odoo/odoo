@@ -159,7 +159,6 @@ export class Link extends Component {
             target: data.isNewWindow ? '_blank' : '',
         });
         if (typeof data.classes === "string") {
-            data.classes = data.classes.replace(/o_default_snippet_text/, '');
             attrs.class = `${data.classes}`;
         }
         if (data.rel) {

@@ -29,7 +29,14 @@ registerWebsitePreviewTour('website_text_edition', {
     {
         content: "Click on the text block first paragraph (to auto select)",
         trigger: ':iframe .s_text_block p',
-        run: "click",
+        async run(actions) {
+            await actions.click();
+            const range = document.createRange();
+            const selection = this.anchor.ownerDocument.getSelection();
+            range.selectNodeContents(this.anchor);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        },
     },
     {
         content: "Open the foreground colorpicker",

@@ -42,9 +42,16 @@ function getFontSizeTestSteps(fontSizeClass) {
     return [
         ...insertSnippet({id: "s_text_block", name: "Text", groupName: "Text"}),
         {
-            content: `[${fontSizeClass}] Click on the text block first paragraph (to auto select)`,
+            content: `[${fontSizeClass}] Select the text block first paragraph`,
             trigger: ":iframe .s_text_block p",
-            run: "click",
+            async run(actions) {
+                await actions.click();
+                const range = document.createRange();
+                const selection = this.anchor.ownerDocument.getSelection();
+                range.selectNodeContents(this.anchor);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            },
         }, {
             content: `Open the font size dropdown to select ${fontSizeClass}`,
             trigger: "#font-size button",
