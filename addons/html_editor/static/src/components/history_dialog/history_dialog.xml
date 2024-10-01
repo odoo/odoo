@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="web_editor.HistoryDialog">
+    <t t-name="html_editor.HistoryDialog">
         <Dialog size="size" title="title" contentClass="'h-100'">
             <div class="dialog-container html-history-dialog">
                 <div class="revision-list d-flex flex-column align-content-stretch">
@@ -22,11 +22,17 @@
                 <div class="history-container">
                     <Notebook defaultPage="'history'">
                         <t t-set-slot="history" name="'history'" isVisible="true" title="notebookTabs[0]">
-                            <t t-if="state.revisionContent?.length" t-out="state.revisionContent"/>
+                            <t t-if="state.revisionContent?.length">
+                                <div class="pe-none">
+                                    <HtmlViewer config="getConfig('revisionContent')"/>
+                                </div>
+                            </t>
                             <t t-else="" t-out="props.noContentHelper" />
                         </t>
                         <t t-set-slot="comparison" name="'comparison'" isVisible="true" title="notebookTabs[1]">
-                            <t t-out="state.revisionComparison"/>
+                            <div class="pe-none">
+                                <HtmlViewer config="getConfig('revisionComparison')"/>
+                            </div>
                         </t>
                     </Notebook>
                 </div>

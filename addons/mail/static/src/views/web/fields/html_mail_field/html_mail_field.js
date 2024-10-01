@@ -38,6 +38,11 @@ export const htmlMailField = {
     ...htmlField,
     component: HtmlMailField,
     additionalClasses: ["o_field_html"],
+    extractProps({ attrs, options }, dynamicInfo) {
+        const props = htmlField.extractProps({ attrs, options }, dynamicInfo);
+        props.embeddedComponents = false;
+        return props;
+    },
 };
 
 registry.category("fields").add("html_mail", htmlMailField);

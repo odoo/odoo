@@ -1,5 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
-import { getDeepestPosition } from "@html_editor/utils/dom_info";
+import {
+    getDeepestPosition,
+    isProtected,
+    isProtecting,
+    isUnprotecting,
+} from "@html_editor/utils/dom_info";
+import { childNodes } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { getCursorDirection } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
@@ -58,6 +64,15 @@ export class CollaborationSelectionPlugin extends Plugin {
             focusNode = this.editable.children[0];
             anchorOffset = 0;
             focusOffset = 0;
+        }
+        const anchorTarget = childNodes(anchorNode).at(anchorOffset);
+        const focusTarget = childNodes(focusNode).at(focusOffset);
+        const protectionCheck = (node) =>
+            isProtecting(node) || (isProtected(node) && !isUnprotecting(node));
+        if (protectionCheck(anchorTarget) || protectionCheck(focusTarget)) {
+            // TODO @phoenix, TODO ABD: better handle collaborative selection
+            // on protected elements.
+            return;
         }
         if (anchorNode.isConnected && focusNode.isConnected) {
             [anchorNode, anchorOffset] = getDeepestPosition(anchorNode, anchorOffset);
