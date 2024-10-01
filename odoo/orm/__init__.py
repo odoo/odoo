@@ -16,3 +16,5 @@ You may now define relational fields.
 We export the needed features in various packages and developers should not
 import directly from here.
 """
+# import first for core setup
+import odoo.init  # noqa: F401
