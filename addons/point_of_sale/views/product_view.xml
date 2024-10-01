@@ -179,6 +179,13 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="after">
+                <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
+                <div class="o_row w-100" invisible="type != 'consu'">
+                    <field name="is_storable"/>
+                    <field name="tracking" invisible="not is_storable" groups="stock.group_production_lot"/>
+                </div>
+            </xpath>
             <div name="tax_info" position="after">
                 <field name="pos_categ_ids" string="POS Category" class="oe_inline" widget="many2many_tags" placeholder="Unsaleable"/>
             </div>
@@ -190,7 +197,7 @@
         <field name="res_model">product.product</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="context" eval="{'default_available_in_pos': True, 'create_variant_never': 'no_variant', 'dialog_size': 'medium', 'can_be_sold': True}"/>
+        <field name="context" eval="{'default_available_in_pos': True, 'create_variant_never': 'no_variant', 'dialog_size': 'medium', 'can_be_sold': True, 'default_is_storable': True}"/>
         <field name="view_id" ref="product_product_view_form_normalized_pos"/>
     </record>
     <record id="product_product_action_edit_pos" model="ir.actions.act_window">
