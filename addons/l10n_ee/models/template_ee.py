@@ -32,6 +32,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_ee_430',
                 'default_cash_difference_income_account_id': 'l10n_ee_420',
                 'default_cash_difference_expense_account_id': 'l10n_ee_671',
+                'l10n_ee_rounding_difference_loss_account_id': 'l10n_ee_6851',
+                'l10n_ee_rounding_difference_profit_account_id': 'l10n_ee_431',
                 'account_sale_tax_id': 'l10n_ee_vat_out_22_g',
                 'account_purchase_tax_id': 'l10n_ee_vat_in_22_g',
             },
