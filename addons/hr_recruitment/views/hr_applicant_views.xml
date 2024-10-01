@@ -193,8 +193,9 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <pivot string="Job Applications" sample="1">
-                <field name="create_date" type="row"/>
-                <field name="stage_id" type="col"/>
+                <field name="create_date" type="col" interval="month"/>
+                <field name="job_id" type="col"/>
+                <field name="stage_id" type="row"/>
                 <field name="color" invisible="1"/>
             </pivot>
         </field>
