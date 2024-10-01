@@ -28,13 +28,20 @@ class AccountMove(models.Model):
     @api.depends('delivery_date')
     def _compute_show_delivery_date(self):
         # EXTENDS 'account'
-        for move in self.filtered(lambda move: move.country_code == 'PL'):
+        pl_moves = self.filtered(lambda move: move.country_code == 'PL')
+        for move in pl_moves:
             move.show_delivery_date = bool(move.delivery_date)
+        super(AccountMove, self - pl_moves)._compute_show_delivery_date()
 
     @api.depends('delivery_date')
     def _compute_date(self):
         # EXTENDS 'account'
-        for move in self.filtered(lambda move: move.country_code == 'PL' and move.delivery_date and move.state == 'draft'):
+        pl_drafts = self.filtered(lambda move:
+            move.country_code == 'PL'
+            and move.delivery_date
+            and move.state == 'draft'
+        )
+        for move in pl_drafts:
             accounting_date = move.date
             if move.is_sale_document(True):
                 accounting_date = move.delivery_date
@@ -47,3 +54,4 @@ class AccountMove(models.Model):
                 self.env.add_to_compute(move.line_ids._fields['date'], move.line_ids)
                 # might be protected because `_get_accounting_date` requires the `name`
                 self.env.add_to_compute(self._fields['name'], move)
+        super(AccountMove, self - pl_drafts)._compute_date()
