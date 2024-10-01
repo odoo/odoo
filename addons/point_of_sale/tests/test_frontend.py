@@ -1382,6 +1382,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashRoundingPayment', login="accountman")
 
+    def test_park_order_reload(self):
+
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 110,
+            'available_in_pos': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ParkOrderTour', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
