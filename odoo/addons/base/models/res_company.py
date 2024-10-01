@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 class Company(models.Model):
     _name = "res.company"
     _description = 'Companies'
-    _order = 'sequence, name'
+    _order = 'parent_id desc, sequence, name'
     _parent_store = True
 
     def copy(self, default=None):
