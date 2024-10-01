@@ -124,6 +124,7 @@
                             t-if="create.type === 'create'"
                             href="#"
                             role="button"
+                            t-att-data-hotkey="create.dataHotkey"
                             t-att-class="create_index !== 0 ? 'ml16' : ''"
                             t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: create.context })"
