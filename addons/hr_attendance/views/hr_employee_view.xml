@@ -43,7 +43,7 @@
                 </button>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user"/>
+                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -95,7 +95,7 @@
                 </button>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user"/>
+                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>
@@ -159,7 +159,7 @@
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_location_id']" position="after">
-                <field name="attendance_manager_id" optional="hide" string="Attendance" widget="many2one_avatar_user"/>
+                <field name="attendance_manager_id" optional="hide" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
             </xpath>
         </field>
     </record>
@@ -173,6 +173,38 @@
                 <field name="check_out"/>
                 <field name="worked_hours" string="Work Hours" widget="float_time"/>
             </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_employee_simple_form_view" model="ir.ui.view">
+        <field name="name">hr.attendance.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <field name="overtime_status" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <xpath expr="//field[@id='employee_no_manager']" position="replace"/>
+            <xpath expr="//field[@id='employee_manager']" position="replace"/>
+            <xpath expr="//field[@id='employee_no_officer']" position="attributes">
+                <attribute name="groups"/>
+            </xpath>
+            <field name="check_in" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="check_out" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="validated_overtime_hours" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <button name="action_approve_overtime" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_refuse_overtime" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
         </field>
     </record>
 

@@ -14,7 +14,7 @@ class HrEmployee(models.Model):
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
-        groups="hr_attendance.group_hr_attendance_manager",
+        groups="hr_attendance.group_hr_attendance_officer",
         help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
     attendance_ids = fields.One2many(
         'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
