@@ -696,7 +696,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         values = list(records)
         for name in self.related.split('.')[:-1]:
             try:
-                values = [first(value[name]) for value in values]
+                values = [value[name] for value in values]
             except AccessError as e:
                 description = records.env['ir.model']._get(records._name).name
                 env = records.env
