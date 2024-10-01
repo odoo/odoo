@@ -2,11 +2,12 @@
 
 from contextlib import nullcontext
 from datetime import datetime
+from hashlib import sha256
 import logging
 
 from odoo import api, fields, models, tools
 from odoo.http import GeoIP, request, root
-from odoo.tools import SQL, OrderedSet, unique
+from odoo.tools import consteq, hash_sign, SQL, OrderedSet, unique, verify_hash_signed
 from odoo.tools.translate import _
 from .res_users import check_identity
 
@@ -71,20 +72,40 @@ class ResDeviceLog(models.Model):
         return platform.lower() in mobile_platform
 
     @api.model
+    def _generate_no_trace_token(self, sid):
+        message = sha256(sid.encode()).hexdigest()
+        return hash_sign(self.sudo().env, 'disable_trace', message, expiration_hours=24)
+
+    @api.model
+    def _verify_no_trace_token(self, sid, token):
+        message = verify_hash_signed(self.sudo().env, 'disable_trace', token)
+        if not message:
+            return False
+        return consteq(message, sha256(sid.encode()).hexdigest())
+
+    @api.model
     def _update_device(self, request):
         """
             Must be called when we want to update the device for the current request.
             Passage through this method must leave a "trace" in the session.
 
+            The request will not generate a trace if the 'no_trace' cookie is present
+            and the token is validated.
+
             :param request: Request or WebsocketRequest object
         """
+        sid = request.session.sid
+        token = request.cookies.get('no_trace')
+        if token and self._verify_no_trace_token(sid, token):
+            return
+
         trace = request.session.update_trace(request)
         if not trace:
             return
 
         geoip = GeoIP(trace['ip_address'])
         user_id = request.session.uid
-        session_identifier = request.session.sid[:42]
+        session_identifier = sid[:42]
 
         if self.env.cr.readonly:
             self.env.cr.rollback()
