@@ -24,21 +24,21 @@ export const fontItems = [
         extraClass: "display-1",
     },
     // TODO @phoenix use them if showExtendedTextStylesOptions is true
-    {
-        name: _t("Header 1 Display 2"),
-        tagName: "h1",
-        extraClass: "display-2",
-    },
-    {
-        name: _t("Header 1 Display 3"),
-        tagName: "h1",
-        extraClass: "display-3",
-    },
-    {
-        name: _t("Header 1 Display 4"),
-        tagName: "h1",
-        extraClass: "display-4",
-    },
+    // {
+    //     name: _t("Header 1 Display 2"),
+    //     tagName: "h1",
+    //     extraClass: "display-2",
+    // },
+    // {
+    //     name: _t("Header 1 Display 3"),
+    //     tagName: "h1",
+    //     extraClass: "display-3",
+    // },
+    // {
+    //     name: _t("Header 1 Display 4"),
+    //     tagName: "h1",
+    //     extraClass: "display-4",
+    // },
     // ----
 
     { name: _t("Header 1"), tagName: "h1" },
@@ -51,16 +51,16 @@ export const fontItems = [
     { name: _t("Normal"), tagName: "p" },
 
     // TODO @phoenix use them if showExtendedTextStylesOptions is true
-    {
-        name: _t("Light"),
-        tagName: "p",
-        extraClass: "lead",
-    },
-    {
-        name: _t("Small"),
-        tagName: "p",
-        extraClass: "small",
-    },
+    // {
+    //     name: _t("Light"),
+    //     tagName: "p",
+    //     extraClass: "lead",
+    // },
+    // {
+    //     name: _t("Small"),
+    //     tagName: "p",
+    //     extraClass: "small",
+    // },
     // ----
 
     { name: _t("Code"), tagName: "pre" },
