@@ -11,10 +11,9 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, getFixture, test } from "@odoo/hoot";
 
 import { queryFirst } from "@odoo/hoot-dom";
-import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -29,7 +28,7 @@ test("emoji picker works well with translation with double quotes", async () => 
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search for an emoji']", "ici");
+    await insertText("input[placeholder='Search emoji']", "ici");
     await contains(`.o-Emoji[title='Bouton "ici" japonais']`);
 });
 
@@ -39,7 +38,7 @@ test("search emoji from keywords", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search for an emoji']", "mexican");
+    await insertText("input[placeholder='Search emoji']", "mexican");
     await contains(".o-Emoji", { text: "🌮" });
 });
 
@@ -49,7 +48,7 @@ test("search emoji from keywords should be case insensitive", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search for an emoji']", "ok");
+    await insertText("input[placeholder='Search emoji']", "ok");
     await contains(".o-Emoji", { text: "🆗" }); // all search terms are uppercase OK
 });
 
@@ -59,7 +58,7 @@ test("search emoji from keywords with special regex character", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search for an emoji']", "(blood");
+    await insertText("input[placeholder='Search emoji']", "(blood");
     await contains(".o-Emoji", { text: "🆎" });
 });
 
@@ -71,7 +70,7 @@ test("updating search emoji should scroll top", async () => {
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-content", { scroll: 0 });
     await scroll(".o-EmojiPicker-content", 150);
-    await insertText("input[placeholder='Search for an emoji']", "m");
+    await insertText("input[placeholder='Search emoji']", "m");
     await contains(".o-EmojiPicker-content", { scroll: 0 });
 });
 
@@ -92,6 +91,13 @@ test("Basic keyboard navigation", async () => {
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-content .o-Emoji[data-index='0'].o-active");
+    // detect amount of emojis per row for navigation
+    const emojis = Array.from(
+        getFixture().querySelectorAll(".o-EmojiPicker-category[data-category='1'] ~ .o-Emoji")
+    );
+    const baseOffset = emojis[0].offsetTop;
+    const breakIndex = emojis.findIndex((item) => item.offsetTop > baseOffset);
+    const EMOJI_PER_ROW = breakIndex === -1 ? emojis.length : breakIndex;
     triggerHotkey("ArrowRight");
     await contains(".o-EmojiPicker-content .o-Emoji[data-index='1'].o-active");
     triggerHotkey("ArrowDown");
@@ -135,7 +141,7 @@ test("search emojis prioritize frequently used emojis", async () => {
     await click(".o-EmojiPicker-content .o-Emoji", { text: "🤥" });
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
-    await insertText("input[placeholder='Search for an emoji']", "lie");
+    await insertText("input[placeholder='Search emoji']", "lie");
     await contains(".o-EmojiPicker-sectionIcon", { count: 0 }); // await search performed
     await contains(".o-EmojiPicker-content .o-Emoji:eq(0)", { text: "🤥" });
 });

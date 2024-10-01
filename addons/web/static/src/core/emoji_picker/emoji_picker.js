@@ -71,7 +71,6 @@ export async function loadEmoji() {
     }
 }
 
-export const EMOJI_PER_ROW = 9;
 export const PICKER_PROPS = [
     "PickerComponent?",
     "close?",
@@ -109,18 +108,29 @@ export class EmojiPicker extends Component {
             this.emojiByCodepoints = Object.fromEntries(
                 this.emojis.map((emoji) => [emoji.codepoints, emoji])
             );
-            this.state.categoryId = this.categories[0]?.sortId;
             this.recentCategory = {
                 name: "Frequently used",
                 displayName: _t("Frequently used"),
                 title: "🕓",
                 sortId: 0,
             };
+            this.state.categoryId = this.recentEmojis.length
+                ? this.recentCategory.sortId
+                : this.categories[0].sortId;
         });
         onMounted(() => {
             if (this.emojis.length === 0) {
                 return;
             }
+            // detect amount of emojis per row for navigation
+            const emojis = Array.from(
+                this.gridRef.el.querySelectorAll(
+                    ".o-EmojiPicker-category[data-category='1'] ~ .o-Emoji"
+                )
+            );
+            const baseOffset = emojis[0].offsetTop;
+            const breakIndex = emojis.findIndex((item) => item.offsetTop > baseOffset);
+            this.EMOJI_PER_ROW = breakIndex === -1 ? emojis.length : breakIndex;
             this.highlightActiveCategory();
             if (this.props.storeScroll) {
                 this.gridRef.el.scrollTop = this.props.storeScroll.get();
@@ -204,16 +214,67 @@ export class EmojiPicker extends Component {
     onKeydown(ev) {
         switch (ev.key) {
             case "ArrowUp": {
-                const newIndex = this.state.activeEmojiIndex - EMOJI_PER_ROW;
-                if (newIndex >= 0) {
+                const newIndex = Math.max(this.state.activeEmojiIndex - this.EMOJI_PER_ROW, 0);
+                const prevEl = this.gridRef.el.querySelector(
+                    `.o-Emoji[data-index='${this.state.activeEmojiIndex}']`
+                );
+                const newEl = this.gridRef.el.querySelector(`.o-Emoji[data-index='${newIndex}']`);
+                if (prevEl.dataset.category === newEl.dataset.category) {
                     this.state.activeEmojiIndex = newIndex;
+                    if (!isElementVisible(newEl, this.gridRef.el, { offset: 50 })) {
+                        // top-offset takes sticky section into account
+                        this.gridRef.el.scrollTop -= this.gridRef.el.clientHeight / 2;
+                    }
+                    break;
+                }
+                const targetEls = this.gridRef.el.querySelectorAll(
+                    `.o-Emoji[data-category='${newEl.dataset.category}']`
+                );
+                let idx = targetEls.length - 1;
+                const prevCol =
+                    parseInt(prevEl.dataset.index) - parseInt(targetEls[idx].dataset.index) - 1;
+                while (idx % this.EMOJI_PER_ROW !== prevCol && idx > 0) {
+                    idx--;
+                }
+                this.state.activeEmojiIndex = parseInt(targetEls[idx].dataset.index);
+                if (!isElementVisible(newEl, this.gridRef.el, { offset: 50 })) {
+                    // top-offset takes sticky section into account
+                    this.gridRef.el.scrollTop -= this.gridRef.el.clientHeight / 2;
                 }
                 break;
             }
             case "ArrowDown": {
-                const newIndex = this.state.activeEmojiIndex + EMOJI_PER_ROW;
-                if (newIndex < this.itemsNumber) {
+                const newIndex = Math.min(
+                    this.state.activeEmojiIndex + this.EMOJI_PER_ROW,
+                    this.itemsNumber - 1
+                );
+                const prevEl = this.gridRef.el.querySelector(
+                    `.o-Emoji[data-index='${this.state.activeEmojiIndex}']`
+                );
+                const newEl = this.gridRef.el.querySelector(`.o-Emoji[data-index='${newIndex}']`);
+                if (prevEl.dataset.category === newEl.dataset.category) {
                     this.state.activeEmojiIndex = newIndex;
+                    if (!isElementVisible(newEl, this.gridRef.el, { offset: 20 })) {
+                        this.gridRef.el.scrollTop += this.gridRef.el.clientHeight / 2;
+                    }
+                    break;
+                }
+                const prevEls = this.gridRef.el.querySelectorAll(
+                    `.o-Emoji[data-category='${prevEl.dataset.category}']`
+                );
+                const prevCol =
+                    (parseInt(prevEl.dataset.index) - parseInt(prevEls[0].dataset.index)) %
+                    this.EMOJI_PER_ROW;
+                const targetEls = this.gridRef.el.querySelectorAll(
+                    `.o-Emoji[data-category='${newEl.dataset.category}']`
+                );
+                let idx = Math.min(this.EMOJI_PER_ROW - 1, targetEls.length);
+                while (idx % this.EMOJI_PER_ROW > prevCol && idx > 0) {
+                    idx--;
+                }
+                this.state.activeEmojiIndex = parseInt(targetEls[idx].dataset.index);
+                if (!isElementVisible(newEl, this.gridRef.el, { offset: 10 })) {
+                    this.gridRef.el.scrollTop += this.gridRef.el.clientHeight / 2;
                 }
                 break;
             }
@@ -222,6 +283,12 @@ export class EmojiPicker extends Component {
                     break;
                 }
                 this.state.activeEmojiIndex++;
+                const newEl = this.gridRef.el.querySelector(
+                    `.o-Emoji[data-index='${this.state.activeEmojiIndex}']`
+                );
+                if (!isElementVisible(newEl, this.gridRef.el, { offset: 20 })) {
+                    this.gridRef.el.scrollTop += this.gridRef.el.clientHeight / 2;
+                }
                 ev.preventDefault();
                 break;
             }
@@ -229,6 +296,13 @@ export class EmojiPicker extends Component {
                 const newIndex = Math.max(this.state.activeEmojiIndex - 1, 0);
                 if (newIndex !== this.state.activeEmojiIndex) {
                     this.state.activeEmojiIndex = newIndex;
+                    const newEl = this.gridRef.el.querySelector(
+                        `.o-Emoji[data-index='${this.state.activeEmojiIndex}']`
+                    );
+                    if (!isElementVisible(newEl, this.gridRef.el, { offset: 50 })) {
+                        // top-offset takes sticky section into account
+                        this.gridRef.el.scrollTop -= this.gridRef.el.clientHeight / 2;
+                    }
                     ev.preventDefault();
                 }
                 break;
@@ -289,11 +363,12 @@ export class EmojiPicker extends Component {
             return;
         }
         const coords = this.gridRef.el.getBoundingClientRect();
-        const res = document.elementFromPoint(coords.x, coords.y + 1); // +1 for Firefox
+        const res = document.elementFromPoint(coords.x + 10, coords.y + 10);
         if (!res) {
             return;
         }
         this.state.categoryId = parseInt(res.dataset.category);
+        console.log(this.state.categoryId);
     }
 }
 
@@ -475,4 +550,14 @@ class PickerMobileInDialog extends PickerMobile {
             { capture: true }
         );
     }
+}
+
+function isElementVisible(el, holder, { offset = 0 } = {}) {
+    holder = holder || document.body;
+    const { top, bottom, height } = el.getBoundingClientRect();
+    let { top: holderTop, bottom: holderBottom } = holder.getBoundingClientRect();
+    holderTop += offset;
+    holderBottom -= offset;
+
+    return top - offset <= holderTop ? holderTop - top <= height : bottom - holderBottom <= height;
 }
