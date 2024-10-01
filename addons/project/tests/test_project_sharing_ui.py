@@ -109,6 +109,7 @@ class TestProjectSharingUi(HttpCase):
             })],
         })
         self.start_tour("/my/projects", 'portal_project_sharing_tour', login='georges1')
+        self.start_tour("/my/projects", 'project_sharing_with_project_breadcrumb', login="georges1")
 
     def test_03_project_sharing(self):
         self.env['project.share.wizard'].create({

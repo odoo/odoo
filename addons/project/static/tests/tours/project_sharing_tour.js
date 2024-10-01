@@ -211,3 +211,23 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disall
     ],
 });
 
+registry.category("web_tour.tours").add("project_sharing_with_project_breadcrumb", {
+    test: true,
+    url: "/my/projects",
+    steps: () => [{
+        trigger: 'table > tbody > tr a:has(span:contains("Project Sharing"))',
+        content: 'Click on the portal project.',
+        run: "click",
+    }, {
+        trigger: ':iframe .o_back_button > a[href="/my/projects"]',
+        run: "click",
+    }, {
+        content: "Check if we have been redirected to my/projects",
+        trigger: "body",
+        run: () => {
+            if (window.location.pathname !== '/my/projects') {
+                console.log("We should be on /my/projects.");
+            }
+        }
+    },
+]});
