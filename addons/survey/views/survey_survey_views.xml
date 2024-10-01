@@ -187,7 +187,18 @@
                             <field name="description" placeholder="e.g. &quot;The following Survey will help us...&quot;" nolabel="1"></field>
                         </page>
                         <page string="End Message" name="description_done">
-                            <field name="description_done" placeholder="e.g. &quot;Thank you very much for your feedback!&quot;" nolabel="1"></field>
+                            <label for="end_message_selection"/>
+                            <field name="end_message_selection" />
+                            <field name="description_done" invisible="end_message_selection == 'most_answered'"
+                                placeholder="e.g. &quot;Thank you very much for your feedback!&quot;"
+                                nolabel="1"></field>
+                            <field name="answer_tag_ids" nolabel="1" widget="one2many" invisible="end_message_selection == 'unique'">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" />
+                                    <field name="end_message" placeholder="e.g. &quot;You have a majority of blue answers, you are...&quot;" />
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>

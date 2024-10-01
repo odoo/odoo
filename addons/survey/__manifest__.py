@@ -57,6 +57,7 @@ sent mails with personal token for the invitation of the survey.
         'data/survey_demo_quiz_user_input.xml',
         'data/survey_demo_quiz_user_input_line.xml',
         'data/survey_demo_conditional.xml',
+        'data/survey_demo_conditional_end_message.xml',
     ],
     'installable': True,
     'application': True,
