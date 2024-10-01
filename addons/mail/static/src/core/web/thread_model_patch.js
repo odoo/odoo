@@ -9,7 +9,7 @@ patch(Thread.prototype, {
     recipientsCount: undefined,
     setup() {
         super.setup();
-        this.recipients = Record.many("Follower");
+        this.recipients = Record.many("mail.followers");
         this.activities = Record.many("mail.activity", {
             sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
             onDelete(r) {
