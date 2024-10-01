@@ -1,6 +1,7 @@
 import { Record } from "@mail/core/common/record";
 
 export class Follower extends Record {
+    static _name = "mail.followers";
     static id = "id";
     /** @type {Object.<number, import("models").Follower>} */
     static records = {};
@@ -8,7 +9,11 @@ export class Follower extends Record {
     static get(data) {
         return super.get(data);
     }
-    /** @returns {import("models").Follower|import("models").Follower[]} */
+    /**
+     * @template T
+     * @param {T} data
+     * @returns {T extends any[] ? import("models").Follower[] : import("models").Follower}
+     */
     static insert(data) {
         return super.insert(...arguments);
     }

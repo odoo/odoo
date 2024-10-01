@@ -136,14 +136,14 @@ export class Thread extends Record {
             this.onPinStateUpdated();
         },
     });
-    followers = Record.many("Follower", {
+    followers = Record.many("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
         },
         onDelete: (r) => r.delete(),
     });
-    selfFollower = Record.one("Follower", {
+    selfFollower = Record.one("mail.followers", {
         /** @this {import("models").Thread} */
         onAdd(r) {
             r.thread = this;
