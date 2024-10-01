@@ -17,6 +17,6 @@ declare module "models" {
     }
 
     export interface Models {
-        "Activity": Activity,
+        "mail.activity": Activity,
     }
 }

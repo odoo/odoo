@@ -10,7 +10,7 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.recipients = Record.many("Follower");
-        this.activities = Record.many("Activity", {
+        this.activities = Record.many("mail.activity", {
             sort: (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id,
             onDelete(r) {
                 r.remove();

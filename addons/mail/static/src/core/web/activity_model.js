@@ -35,6 +35,7 @@ import { formatDate, formatDateTime } from "@web/core/l10n/dates";
  */
 
 export class Activity extends Record {
+    static name = "mail.activity";
     static id = "id";
     /** @type {Object.<number, import("models").Activity>} */
     static records = {};
@@ -43,10 +44,11 @@ export class Activity extends Record {
         return super.get(data);
     }
     /**
-     * @param {Data} data
+     * @template T
+     * @param {T} data
      * @param {Object} [param1]
      * @param {boolean} param1.broadcast
-     * @returns {import("models").Activity|import("models").Activity[]}
+     * @returns {T extends any[] ? import("models").Activity[] : import("models").Activity}
      */
     static insert(data, { broadcast = true } = {}) {
         return super.insert(...arguments);

@@ -103,10 +103,10 @@ const StorePatch = {
     _onActivityBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "INSERT":
-                this.Activity.insert(data.payload, { broadcast: false, html: true });
+                this["mail.activity"].insert(data.payload, { broadcast: false, html: true });
                 break;
             case "DELETE": {
-                const activity = this.Activity.insert(data.payload, { broadcast: false });
+                const activity = this["mail.activity"].insert(data.payload, { broadcast: false });
                 activity.remove({ broadcast: false });
                 break;
             }

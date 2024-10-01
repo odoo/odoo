@@ -39,7 +39,7 @@ export class ActivityListPopover extends Component {
 
     get activities() {
         /** @type {import("models").Activity[]} */
-        const allActivities = Object.values(this.store.Activity.records);
+        const allActivities = Object.values(this.store["mail.activity"].records);
         return allActivities
             .filter((activity) => this.props.activityIds.includes(activity.id))
             .sort((a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id);
