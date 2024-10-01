@@ -53,14 +53,7 @@ class PagePropertiesBase(models.TransientModel):
     @api.depends('url', 'website_id.homepage_url')
     def _compute_is_homepage(self):
         for record in self:
-            url = record.url
-            current_homepage_url = record.website_id.homepage_url or '/'
-            # If the url field matches the website's homepage_url, we know this
-            # is the homepage.
-            # However, the url field contains the url of the accessed route.
-            # Therefore, being on '/' means we went through the homepage
-            # controller and the request was rerouted.
-            record.is_homepage = url == current_homepage_url or url == '/'
+            record.is_homepage = self._is_homepage(record.website_id, record.url)
 
     def _inverse_is_homepage(self):
         self.ensure_one()
@@ -123,6 +116,15 @@ class PagePropertiesBase(models.TransientModel):
             if not record.url.startswith('/'):
                 raise ValidationError(_("The URL should be relative and start with '/'."))
 
+    def _is_homepage(self, website, url):
+        current_homepage_url = website.homepage_url or '/'
+        # If the url field matches the website's homepage_url, we know this
+        # is the homepage.
+        # However, the url field contains the url of the accessed route.
+        # Therefore, being on '/' means we went through the homepage
+        # controller and the request was rerouted.
+        return url == current_homepage_url or url == '/'
+
     def _get_ir_ui_view_unpublish_group(self):
         return self.env.ref('base.group_user')
 
@@ -176,6 +178,13 @@ class PageProperties(models.TransientModel):
             current_homepage_url = record.website_id.homepage_url or '/'
             record.is_homepage = url == current_homepage_url
 
+    @api.onchange('url')
+    def _onchange_url(self):
+        self.ensure_one()
+        # If the old url was the homepage url, keep is_homepage to True.
+        if self._is_homepage(self.website_id, self.old_url):
+            self.is_homepage = True
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
@@ -205,5 +214,10 @@ class PageProperties(models.TransientModel):
                             }
                         )
                     record.old_url = new_url
+
+        # Set homepage
+        for record in self:
+            if record.is_homepage:
+                record.website_id.homepage_url = vals.get('url') or record.url
 
         return write_result
