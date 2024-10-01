@@ -1070,9 +1070,9 @@ export class PosStore extends Reactive {
     }
     set_start_order() {
         if (this.orders.length && !this.selectedOrder) {
-            this.selectedOrder = this.orders[0];
+            this.selectedOrder = this.orders[this.orders.length - 1];
             if (this.isOpenOrderShareable()) {
-                this.ordersToUpdateSet.add(this.orders[0]);
+                this.ordersToUpdateSet.add(this.orders[this.orders.length - 1]);
             }
         } else {
             this.add_new_order();
