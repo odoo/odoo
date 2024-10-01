@@ -278,6 +278,37 @@ Content-ID: <f_lfosfm0l0>
 --000000000000b951de05f7c47a9e--
 """
 
+MAIL_MULTIPART_BIN_PLAIN = """X-Original-To: john@doe.com
+Delivered-To: johndoe@example.com
+Received: by mail.example.com (Postfix, from userid 10002)
+    id E8166BFACB; Fri, 23 Aug 2013 13:18:02 +0200 (CEST)
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+Subject: test
+Message-ID: <c0c20fdd-a38e-b296-865b-d9232bf30ce5@odoo.com>
+Date: Mon, 26 Aug 2019 16:55:09 +0200
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------------FACA7766210AAA981EAE01F3"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------FACA7766210AAA981EAE01F3
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+plop
+
+
+--------------FACA7766210AAA981EAE01F3
+Content-Type: bin/plain; charset="ISO 8859-1"
+Content-Disposition: attachment; filename="20241007.pdf"
+Content-Transfer-Encoding: base64
+
+SSBhbSBhIGZpbGUgd2l0aCBhIHZhbGlkIHdpbmRvd3MgZmlsZW5hbWUK
+--------------FACA7766210AAA981EAE01F3--
+"""
+
+
 MAIL_MULTIPART_BINARY_OCTET_STREAM = """X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
 Received: by mail1.grosbedon.com (Postfix, from userid 10002)
