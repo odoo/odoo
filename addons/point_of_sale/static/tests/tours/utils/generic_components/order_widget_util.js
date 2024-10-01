@@ -95,3 +95,10 @@ export function hasTax(amount) {
         trigger: `.order-summary .tax:contains("${amount}")`,
     };
 }
+
+export function hasNoTax() {
+    return {
+        content: "order has not tax",
+        trigger: ".order-summary:not(:has(.tax))",
+    };
+}
