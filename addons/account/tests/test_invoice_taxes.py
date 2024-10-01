@@ -651,7 +651,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
         self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
             'tax_base_amount': 48098.24,    # 20000 * 2.82 / 1.1726
-            'credit': 10100.64,             # tax_base_amount * 0.21
+            'credit': 10100.63,             # tax_base_amount * 0.21
         }])
 
     def test_ensure_no_unbalanced_entry(self):
