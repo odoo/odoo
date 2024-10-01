@@ -304,7 +304,7 @@
                     </div>
                 </we-select>
             </we-row>
-            <we-row  t-if="!state.isButton and !props.forceNewWindow">
+            <we-row t-if="!state.isButton and !props.forceNewWindow and !state.isDocument">
                 <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{this.initialNewWindow ? 'active' : ''}">
                     <we-title class="o_long_title">Open in New Window</we-title>
                         <div class="o_switch">
