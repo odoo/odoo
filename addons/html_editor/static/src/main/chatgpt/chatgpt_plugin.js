@@ -5,16 +5,15 @@ import { ChatGPTPromptDialog } from "./chatgpt_prompt_dialog";
 import { ChatGPTAlternativesDialog } from "./chatgpt_alternatives_dialog";
 import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class ChatGPTPlugin extends Plugin {
     static name = "chatgpt";
-    static dependencies = ["selection", "history", "dom", "sanitize"];
-    /** @type { (p: ChatGPTPlugin) => Record<string, any> } */
-    static resources = (p) => ({
-        toolbarCategory: {
+    static dependencies = ["selection", "history", "dom", "sanitize", "dialog"];
+    resources = {
+        toolbarCategory: withSequence(50, {
             id: "ai",
-            sequence: 50,
-        },
+        }),
         toolbarItems: [
             {
                 id: "translate",
@@ -37,10 +36,11 @@ export class ChatGPTPlugin extends Plugin {
             },
         ],
 
-        powerboxCategory: { id: "ai", name: _t("AI Tools"), sequence: 70 },
+        powerboxCategory: withSequence(70, { id: "ai", name: _t("AI Tools") }),
         powerboxItems: {
             name: _t("ChatGPT"),
             description: _t("Generate or transform content with AI."),
+            searchKeywords: [_t("AI")],
             category: "ai",
             fontawesome: "fa-magic",
             action(dispatch) {
@@ -48,7 +48,7 @@ export class ChatGPTPlugin extends Plugin {
             },
             // isAvailable: () => !this.odooEditor.isSelectionInBlockRoot(), // TODO!
         },
-    });
+    };
 
     handleCommand(command, payload) {
         switch (command) {
@@ -103,21 +103,15 @@ export class ChatGPTPlugin extends Plugin {
             },
             ...params,
         };
-        const onClose = () => this.shared.focusEditable();
         // collapse to end
         const sanitize = this.shared.sanitize;
         if (selection.isCollapsed) {
-            this.services.dialog.add(
-                ChatGPTPromptDialog,
-                { ...dialogParams, sanitize },
-                { onClose }
-            );
+            this.shared.addDialog(ChatGPTPromptDialog, { ...dialogParams, sanitize });
         } else {
             const originalText = selection.textContent() || "";
-            this.services.dialog.add(
+            this.shared.addDialog(
                 params.language ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
-                { ...dialogParams, originalText, sanitize },
-                { onClose }
+                { ...dialogParams, originalText, sanitize }
             );
         }
         if (this.services.ui.isSmall) {

@@ -28,6 +28,13 @@ export class TableMenu extends Component {
         this.items = this.props.type === "column" ? this.colItems() : this.rowItems();
     }
 
+    get hasCustomSize() {
+        return (
+            !!this.props.target.closest("tr").style.height ||
+            !!this.props.target.closest("td").style.width
+        );
+    }
+
     onSelected(item) {
         item.action(this.props.target);
         this.props.overlay.close();
@@ -66,6 +73,12 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: this.deleteColumn.bind(this),
             },
+            this.hasCustomSize && {
+                name: "reset_size",
+                icon: "fa-table",
+                text: _t("Reset Size"),
+                action: this.resetSize.bind(this),
+            },
         ].filter(Boolean);
     }
 
@@ -101,6 +114,12 @@ export class TableMenu extends Component {
                 text: _t("Delete"),
                 action: this.deleteRow.bind(this),
             },
+            this.hasCustomSize && {
+                name: "reset_size",
+                icon: "fa-table",
+                text: _t("Reset Size"),
+                action: this.resetSize.bind(this),
+            },
         ].filter(Boolean);
     }
 
@@ -126,5 +145,9 @@ export class TableMenu extends Component {
 
     deleteRow(target) {
         this.props.dispatch("REMOVE_ROW", { row: target.parentElement });
+    }
+
+    resetSize(target) {
+        this.props.dispatch("RESET_SIZE", { table: target.closest("table") });
     }
 }

@@ -21,6 +21,7 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TranslationButton } from "@web/views/fields/translation_button";
 import { HtmlViewer } from "./html_viewer";
+import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * Check whether the current value contains nodes that would break
@@ -247,10 +248,9 @@ export class HtmlField extends Component {
         }
         if (this.props.codeview) {
             config.resources = {
-                toolbarCategory: {
+                toolbarCategory: withSequence(100, {
                     id: "codeview",
-                    sequence: 100,
-                },
+                }),
                 toolbarItems: {
                     id: "codeview",
                     category: "codeview",

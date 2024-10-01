@@ -12,16 +12,15 @@ import { TablePicker } from "./table_picker";
 export class TableUIPlugin extends Plugin {
     static name = "table_ui";
     static dependencies = ["overlay", "table"];
-    /** @type { (p: TableUIPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         powerboxItems: [
             {
                 name: _t("Table"),
                 description: _t("Insert a table"),
                 category: "structure",
                 fontawesome: "fa-table",
-                action(dispatch) {
-                    if (p.services.ui.isSmall) {
+                action: (dispatch) => {
+                    if (this.services.ui.isSmall) {
                         dispatch("INSERT_TABLE", { cols: 3, rows: 3 });
                     } else {
                         dispatch("OPEN_TABLE_PICKER");
@@ -29,7 +28,7 @@ export class TableUIPlugin extends Plugin {
                 },
             },
         ],
-    });
+    };
 
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */

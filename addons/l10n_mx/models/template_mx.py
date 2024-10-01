@@ -37,6 +37,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_loss_account_id': 'cuenta9993',
                 'account_journal_early_pay_discount_gain_account_id': 'cuenta9994',
                 'tax_cash_basis_journal_id': 'cbmx',
+                'tax_calculation_rounding_method': 'round_globally',
                 'account_sale_tax_id': 'tax12',
                 'account_purchase_tax_id': 'tax14',
             },

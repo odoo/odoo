@@ -10,61 +10,68 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { rightPos } from "@html_editor/utils/position";
+import { withSequence } from "@html_editor/utils/resource";
 
 const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 
+/**
+ * @param {MediaPlugin} plugin
+ */
+const getPowerboxItems = (plugin) => {
+    const powerboxItems = [];
+    if (!plugin.config.disableImage) {
+        powerboxItems.push({
+            name: _t("Image"),
+            description: _t("Insert an image"),
+            category: "media",
+            fontawesome: "fa-file-image-o",
+            action() {
+                plugin.openMediaDialog();
+            },
+        });
+    }
+    if (!plugin.config.disableVideo) {
+        powerboxItems.push({
+            name: _t("Video"),
+            description: _t("Insert a video"),
+            category: "media",
+            fontawesome: "fa-file-video-o",
+            action() {
+                plugin.openMediaDialog({
+                    noVideos: false,
+                    noImages: true,
+                    noIcons: true,
+                    noDocuments: true,
+                });
+            },
+        });
+    }
+    return powerboxItems;
+};
+
 export class MediaPlugin extends Plugin {
     static name = "media";
-    static dependencies = ["selection", "history", "dom"];
+    static dependencies = ["selection", "history", "dom", "dialog"];
     static shared = ["savePendingImages"];
-    /** @type { (p: MediaPlugin) => Record<string, any> } */
-    static resources = (p) => {
-        const powerboxItems = [];
-        if (!p.config.disableImage) {
-            powerboxItems.push({
-                name: _t("Image"),
-                description: _t("Insert an image"),
-                category: "media",
-                fontawesome: "fa-file-image-o",
-                action() {
-                    p.openMediaDialog();
+    resources = {
+        powerboxCategory: withSequence(40, { id: "media", name: _t("Media") }),
+        powerboxItems: getPowerboxItems(this),
+        toolbarCategory: withSequence(29, {
+            id: "replace_image",
+            namespace: "image",
+        }),
+        toolbarItems: [
+            {
+                id: "replace_image",
+                category: "replace_image",
+                action(dispatch) {
+                    dispatch("REPLACE_IMAGE");
                 },
-            });
-        }
-        if (!p.config.disableVideo) {
-            powerboxItems.push({
-                name: _t("Video"),
-                description: _t("Insert a video"),
-                category: "media",
-                fontawesome: "fa-file-video-o",
-                action() {
-                    p.openMediaDialog({
-                        noVideos: false,
-                        noImages: true,
-                        noIcons: true,
-                        noDocuments: true,
-                    });
-                },
-            });
-        }
-        const resources = {
-            powerboxCategory: { id: "media", name: _t("Media"), sequence: 40 },
-            powerboxItems,
-            toolbarCategory: { id: "replace_image", sequence: 29, namespace: "image" },
-            toolbarItems: [
-                {
-                    id: "replace_image",
-                    category: "replace_image",
-                    action(dispatch) {
-                        dispatch("REPLACE_IMAGE");
-                    },
-                    title: _t("Replace media"),
-                    text: "Replace",
-                },
-            ],
-            isUnsplittable: isIconElement, // avoid merge
-        };
-        return resources;
+                title: _t("Replace media"),
+                text: "Replace",
+            },
+        ],
+        isUnsplittable: isIconElement, // avoid merge
     };
 
     get recordInfo() {
@@ -159,27 +166,23 @@ export class MediaPlugin extends Plugin {
 
     openMediaDialog(params = {}) {
         const { resModel, resId, field, type } = this.recordInfo;
-        this.services.dialog.add(
-            MediaDialog,
-            {
-                resModel,
-                resId,
-                useMediaLibrary: !!(
-                    field &&
-                    ((resModel === "ir.ui.view" && field === "arch") || type === "html")
-                ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
-                media: params.node,
-                save: (element) => {
-                    this.onSaveMediaDialog(element, { node: params.node });
-                },
-                onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-                noVideos: !!this.config.disableVideo,
-                noImages: !!this.config.disableImage,
-                ...this.config.mediaModalParams,
-                ...params,
+        this.shared.addDialog(MediaDialog, {
+            resModel,
+            resId,
+            useMediaLibrary: !!(
+                field &&
+                ((resModel === "ir.ui.view" && field === "arch") || type === "html")
+            ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
+            media: params.node,
+            save: (element) => {
+                this.onSaveMediaDialog(element, { node: params.node });
             },
-            { onClose: () => this.shared.focusEditable() }
-        );
+            onAttachmentChange: this.config.onAttachmentChange || (() => {}),
+            noVideos: !!this.config.disableVideo,
+            noImages: !!this.config.disableImage,
+            ...this.config.mediaModalParams,
+            ...params,
+        });
     }
 
     async savePendingImages() {

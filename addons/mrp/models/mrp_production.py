@@ -826,6 +826,8 @@ class MrpProduction(models.Model):
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
+        if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
+            return
         self._set_qty_producing(False)
 
     @api.onchange('lot_producing_id')
@@ -1955,15 +1957,6 @@ class MrpProduction(models.Model):
                         assigned_moves.add(move.id)
                         move = moves and moves.pop(0)
                         move_qty_to_reserve = move and move.product_qty or 0
-
-                # Unreserve the quantity removed from initial `stock.move.line` and
-                # not assigned to a move anymore. In case of a split smaller than initial
-                # quantity and fully reserved
-                if quantity and not move_line.move_id._should_bypass_reservation():
-                    self.env['stock.quant']._update_reserved_quantity(
-                        move_line.product_id, move_line.location_id, -quantity,
-                        lot_id=move_line.lot_id, package_id=move_line.package_id,
-                        owner_id=move_line.owner_id, strict=True)
 
             if move and move_qty_to_reserve != move.product_qty:
                 partially_assigned_moves.add(move.id)

@@ -42,8 +42,8 @@ export class OrderTabs extends Component {
     }
     get orders() {
         return this.props.orders.sort((a, b) => {
-            const noteA = a.note || "";
-            const noteB = b.note || "";
+            const noteA = a.floating_order_name || "";
+            const noteB = b.floating_order_name || "";
             if (noteA && noteB) {
                 // Both have notes
                 const timePattern = /^\d{1,2}:\d{2}/;

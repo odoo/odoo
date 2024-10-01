@@ -16,7 +16,6 @@ export class Toolbar extends Component {
                         type: Object,
                         shape: {
                             id: String,
-                            sequence: Number,
                             namespace: { type: String, optional: true },
                             buttons: {
                                 type: Array,

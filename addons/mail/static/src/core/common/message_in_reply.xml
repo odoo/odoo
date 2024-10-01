@@ -8,7 +8,7 @@
                 'o-otherMessageOrange border border-warning': props.message.parentMessage.bubbleColor === 'orange',
             }">
                 <span t-if="!props.message.parentMessage.isEmpty" class="d-inline-flex align-items-center text-muted" t-att-class="{ 'cursor-pointer': props.onClick }" t-on-click="() => this.props.onClick?.()">
-                    <img class="o-mail-MessageInReply-avatar me-2 rounded" t-att-src="authorAvatarUrl" t-att-title="props.message.parentMessage.author?.name ?? props.message.parentMessage.email_from" alt="Avatar"/>
+                    <img class="o-mail-MessageInReply-avatar me-2 rounded o_object_fit_cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parentMessage.author?.name ?? props.message.parentMessage.email_from" alt="Avatar"/>
                     <span class="o-mail-MessageInReply-content overflow-hidden smaller">
                         <b><t t-out="props.message.parentMessage.author?.name ?? props.message.parentMessage.email_from"/></b>:
                         <span class="o-mail-MessageInReply-message ms-1 text-break">

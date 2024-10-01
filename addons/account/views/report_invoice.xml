@@ -186,7 +186,7 @@
                                         <table class="o_total_table table table-borderless avoid-page-break-inside">
 
                                             <!-- Tax totals summary (invoice currency) -->
-                                            <t t-if="tax_totals" t-call="account.document_tax_totals">
+                                            <t t-if="o.tax_totals" t-call="account.document_tax_totals">
                                                 <t t-set="tax_totals" t-value="o.tax_totals"/>
                                                 <t t-set="currency" t-value="o.currency_id"/>
                                             </t>

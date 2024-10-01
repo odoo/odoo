@@ -1,6 +1,7 @@
 import { MAIN_PLUGINS } from "./plugin_sets";
 import { removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
+import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { initElementForEdition } from "./utils/sanitize";
 
 /**
@@ -160,7 +161,7 @@ export class Editor {
         }
         const resources = this.createResources();
         for (const plugin of this.plugins) {
-            plugin.resources = resources;
+            plugin._resources = resources;
         }
         this.resources = resources;
     }
@@ -188,16 +189,27 @@ export class Editor {
             registerResources(this.config.resources);
         }
         for (const plugin of this.plugins) {
-            if (plugin.constructor.resources) {
-                registerResources(plugin.constructor.resources(plugin));
+            if (plugin.resources) {
+                registerResources(plugin.resources);
             }
         }
 
         for (const key in resources) {
-            resources[key] = resources[key].flat();
+            const resource = resources[key]
+                .flat()
+                .map((r) => {
+                    const isObjectWithSequence =
+                        typeof r === "object" && r !== null && resourceSequenceSymbol in r;
+                    return isObjectWithSequence ? r : withSequence(10, r);
+                })
+                .sort((a, b) => a[resourceSequenceSymbol] - b[resourceSequenceSymbol])
+                .map((r) => r.object);
+
+            resources[key] = resource;
+            Object.freeze(resources[key]);
         }
 
-        return resources;
+        return Object.freeze(resources);
     }
 
     dispatch(command, payload = {}) {

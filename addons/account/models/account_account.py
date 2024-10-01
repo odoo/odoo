@@ -106,6 +106,9 @@ class AccountAccount(models.Model):
     company_ids = fields.Many2many('res.company', string='Companies', required=True, readonly=False,
         default=lambda self: self.env.company)
     code_mapping_ids = fields.One2many(comodel_name='account.code.mapping', inverse_name='account_id')
+    # Ensure `code_mapping_ids` is written before `company_ids` so we don't trigger the `_ensure_code_is_unique`
+    # constraint when writing multiple code mappings and multiple companies in the same call to `write`.
+    code_mapping_ids.write_sequence = 19
     tag_ids = fields.Many2many(
         comodel_name='account.account.tag',
         relation='account_account_account_tag',
@@ -134,6 +137,9 @@ class AccountAccount(models.Model):
     non_trade = fields.Boolean(default=False,
                                help="If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
                                     "If not, this account will belong to Trade Receivable/Payable in reports and filters.")
+
+    # Form view: show code mapping tab or not
+    display_mapping_tab = fields.Boolean(default=lambda self: len(self.env.user.company_ids) > 1, store=False)
 
     def _field_to_sql(self, alias: str, fname: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         if fname == 'internal_group':
@@ -239,13 +245,16 @@ class AccountAccount(models.Model):
                 account=account.display_name
             ))
 
-    @api.constrains('company_ids')
+    @api.constrains('company_ids', 'account_type')
     def _check_company_consistency(self):
         if accounts_without_company := self.filtered(lambda a: not a.sudo().company_ids):
             raise ValidationError(
                 _("The following accounts must be assigned to at least one company:")
                 + "\n" + "\n".join(f"- {account.display_name}" for account in accounts_without_company)
             )
+        if self.filtered(lambda a: a.account_type == 'asset_cash' and len(a.company_ids) > 1):
+            raise ValidationError(_("Bank & Cash accounts cannot be shared between companies."))
+
         for companies, accounts in self.grouped(lambda a: a.company_ids).items():
             if self.env['account.move.line'].sudo().search_count([
                 ('account_id', 'in', accounts.ids),
@@ -653,19 +662,23 @@ class AccountAccount(models.Model):
         """If we're creating a new account through a many2one, there are chances that we typed the account code
         instead of its name. In that case, switch both fields values.
         """
-        if 'name' not in default_fields and 'code' not in default_fields:
-            return super().default_get(default_fields)
-        default_name = self._context.get('default_name')
-        default_code = self._context.get('default_code')
-        if default_name and not default_code:
-            try:
-                default_code = int(default_name)
-            except ValueError:
-                pass
-            if default_code:
-                default_name = False
-        contextual_self = self.with_context(default_name=default_name, default_code=default_code)
-        return super(AccountAccount, contextual_self).default_get(default_fields)
+        context = {}
+        if 'name' in default_fields or 'code' in default_fields:
+            default_name = self.env.context.get('default_name')
+            default_code = self.env.context.get('default_code')
+            if default_name and not default_code:
+                with contextlib.suppress(ValueError):
+                    default_code = int(default_name)
+                if default_code:
+                    default_name = False
+            context.update({'default_name': default_name, 'default_code': default_code})
+
+        defaults = super(AccountAccount, self.with_context(**context)).default_get(default_fields)
+
+        if 'code_mapping_ids' in default_fields and 'code_mapping_ids' not in defaults:
+            defaults['code_mapping_ids'] = [Command.create({'company_id': c.id}) for c in self.env.user.company_ids]
+
+        return defaults
 
     @api.model
     def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None):
@@ -779,14 +792,14 @@ class AccountAccount(models.Model):
             company_ids = self._fields['company_ids'].convert_to_cache(vals['company_ids'], account)
             companies = self.env['res.company'].browse(company_ids)
 
-            if 'code_by_company' not in default and ('code' not in default or len(companies) > 1):
+            if 'code_mapping_ids' not in default and ('code' not in default or len(companies) > 1):
                 companies_to_get_new_account_codes = companies if 'code' not in default else companies[1:]
-                vals['code_by_company'] = {}
+                vals['code_mapping_ids'] = []
 
                 for company in companies_to_get_new_account_codes:
                     start_code = account.with_company(company).code or account.with_company(account.company_ids[0]).code
                     new_code = account.with_company(company)._search_new_account_code(start_code, cache[company.id])
-                    vals['code_by_company'][company.id] = new_code
+                    vals['code_mapping_ids'].append(Command.create({'company_id': company.id, 'code': new_code}))
                     cache[company.id].add(new_code)
 
             if 'name' not in default:
@@ -893,17 +906,24 @@ class AccountAccount(models.Model):
             companies = self.env['res.company'].browse(company_ids) or self.env.company
 
             # Create the accounts with a single company and a single code.
+            code_by_company_list = []
             for vals in vals_list_for_company:
                 if 'prefix' in vals:
                     prefix, digits = vals.pop('prefix'), vals.pop('code_digits')
                     start_code = prefix.ljust(digits - 1, '0') + '1' if len(prefix) < digits else prefix
                     vals['code'] = self.with_company(companies[0])._search_new_account_code(start_code, cache)
                     cache.add(vals['code'])
-                elif 'code' not in vals and 'code_by_company' in vals:
-                    vals['code'] = vals['code_by_company'][companies[0].id]
+
+                # Intercept any values in `code_mapping_ids` to write the codes on the newly-created accounts.
+                # note: 'code_mapping_ids' should contain only CREATEs.
+                code_by_company = {v[2]['company_id']: v[2]['code'] for v in vals.get('code_mapping_ids', [])}
+                vals['code_mapping_ids'] = []  # Prevent requesting a default for `code_mapping_ids` in super().create()
+                if code_by_company and 'code' not in vals:
+                    vals['code'] = code_by_company[companies[0].id]
+                code_by_company_list.append(code_by_company)
+
                 vals['company_ids'] = [Command.set(companies[0].ids)]
 
-            code_by_company_list = [vals.pop('code_by_company', {}) for vals in vals_list_for_company]
             check_company_vals_list = [{fname: vals.pop(fname) for fname in check_company_fields if fname in vals} for vals in vals_list_for_company]
 
             new_accounts = super(AccountAccount, self.with_context({**self.env.context, 'allowed_company_ids': companies.ids})) \
@@ -949,10 +969,10 @@ class AccountAccount(models.Model):
             for company in account.company_ids:
                 if not account.with_company(company).code:
                     raise ValidationError(_("The code must be set for every company to which this account belongs."))
-        accounts_with_code = accounts.filtered(lambda a: a.code)
-        accounts_by_code = accounts_with_code.grouped('code')
+        accounts_to_check = accounts.filtered(lambda a: a.code and self.env.company in a.company_ids)
+        accounts_by_code = accounts_to_check.grouped('code')
         duplicate_codes = None
-        if len(accounts_by_code) < len(accounts_with_code):
+        if len(accounts_by_code) < len(accounts_to_check):
             duplicate_codes = [code for code, accounts in accounts_by_code.items() if len(accounts) > 1]
         # search for duplicates of self in database
         elif duplicates := self.sudo().search_fetch(
@@ -1022,16 +1042,23 @@ class AccountAccount(models.Model):
 
         self._action_unmerge_get_user_confirmation()
 
-        self._action_unmerge()
+        # Keep active company
+        for account in self.with_context({'allowed_company_ids': (self.env.company | self.env.user.company_ids).ids}):
+            account._action_unmerge()
 
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def _check_action_unmerge_possible(self):
         """ Raises an error if the recordset `self` cannot be unmerged. """
-        if len(self) != 1:
-            raise UserError(_("You must select a single account to un-merge."))
+        self.check_access('write')
 
-        if len(self.company_ids) == 1:
+        if forbidden_companies := (self.sudo().company_ids - self.env.user.company_ids):
+            raise UserError(_(
+                "You do not have the right to perform this operation as you do not have access to the following companies: %s.",
+                ", ".join(c.name for c in forbidden_companies)
+            ))
+
+        if any(len(a.company_ids) == 1 for a in self):
             raise UserError(_(
                 "Account %s cannot be unmerged as it already belongs to a single company. "
                 "The unmerge operation only splits an account based on its companies.",
@@ -1043,13 +1070,15 @@ class AccountAccount(models.Model):
         if self.env.context.get('account_unmerge_confirm'):
             return
 
-        msg = _(
-            "Are you sure? This will split the account into one account per company:",
-            account=self.display_name,
-            num_accounts=len(self.company_ids),
-        )
-        msg += ''.join(f'\n    - {company.name}: {self.with_company(company).display_name}' for company in self.company_ids)
-        action = self.env['ir.actions.actions']._for_xml_id('account.action_unmerge_accounts')
+        msg = _("Are you sure? This will perform the following operations:\n")
+        for account in self:
+            msg += _(
+                "Account %(account)s will be split in %(num_accounts)s, one for each company:\n",
+                account=account.display_name,
+                num_accounts=len(account.company_ids),
+            )
+            msg += ''.join(f'    - {company.name}: {account.with_company(company).display_name}\n' for company in account.company_ids)
+            action = self.env['ir.actions.actions']._for_xml_id('account.action_unmerge_accounts')
         raise RedirectWarning(msg, action, _("Unmerge"), additional_context={**self.env.context, 'account_unmerge_confirm': True})
 
     def _action_unmerge(self):
@@ -1084,12 +1113,7 @@ class AccountAccount(models.Model):
                 )
 
         # Step 1: Check access rights.
-        self.check_access('write')
-        if forbidden_companies := (self.sudo().company_ids - self.env.companies):
-            raise UserError(_(
-                "You do not have the right to perform this operation as you do not have access to the following companies: %s.",
-                ", ".join(c.name for c in forbidden_companies)
-            ))
+        self._check_action_unmerge_possible()
 
         # Step 2: Create new accounts.
         base_company = self.env.company if self.env.company in self.company_ids else self.company_ids[0]

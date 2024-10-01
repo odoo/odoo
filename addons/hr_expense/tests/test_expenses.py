@@ -211,17 +211,16 @@ class TestExpenses(TestExpenseCommon):
             (self.analytic_account_1 | self.analytic_account_2).unlink()
 
         # Unlinking moves
-        (payment_1 | payment_2).move_id.button_draft()
+        (payment_1 | payment_2).action_draft()
         self.assertRecordValues(expense_sheet_by_employee, [{'payment_state': 'not_paid', 'state': 'post'}])
         expense_sheet_by_employee.account_move_ids.button_draft()
         expense_sheet_by_employee.account_move_ids.unlink()
+        self.assertFalse(expense_sheet_by_employee.account_move_ids)
 
         with self.assertRaises(UserError, msg="For company-paid expenses report, deleting payments is an all-or-nothing situation"):
-            expense_sheet_by_company.account_move_ids[:-1].button_draft()
-            expense_sheet_by_company.account_move_ids[:-1].unlink()
+            expense_sheet_by_company.account_move_ids[:-1].origin_payment_id.unlink()
         expense_sheet_by_company.account_move_ids.origin_payment_id.unlink()
-        expense_sheet_by_company.account_move_ids.button_draft()
-        expense_sheet_by_company.account_move_ids.unlink()
+        self.assertFalse(expense_sheet_by_company.account_move_ids)
 
         self.assertRecordValues(expense_sheets.sorted('payment_mode'), [
             {'payment_mode': 'company_account', 'state': 'approve', 'payment_state': 'not_paid', 'account_move_ids': []},

@@ -1069,11 +1069,6 @@ class AccountTax(models.Model):
                 continue
 
             total_tax_amount = sum(taxes_data[other_tax.id]['tax_amount'] for other_tax in taxes_data[tax.id]['batch'])
-            total_tax_amount += sum(
-                reverse_charge_taxes_data[other_tax.id]['tax_amount']
-                for other_tax in taxes_data[tax.id]['batch']
-                if other_tax.has_negative_factor
-            )
             base = raw_base + taxes_data[tax.id]['extra_base_for_base']
             if taxes_data[tax.id]['price_include'] and special_mode in (False, 'total_included'):
                 base -= total_tax_amount
@@ -1654,8 +1649,12 @@ class AccountTax(models.Model):
                     continue
 
                 amount_to_distribute = total_error / nb_of_errors
-                for tax_rep in sorted_tax_reps_data[:nb_of_errors]:
+                index = 0
+                while nb_of_errors:
+                    tax_rep = sorted_tax_reps_data[index]
                     tax_rep[field] += amount_to_distribute
+                    nb_of_errors -= 1
+                    index = (index + 1) % len(sorted_tax_reps_data)
 
         subsequent_taxes = self.env['account.tax']
         subsequent_tags = self.env['account.account.tag']

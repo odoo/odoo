@@ -96,7 +96,7 @@
     <!-- ============================================================ -->
 
     <template id="survey_button_form_view" name="Survey: back to form view">
-        <div t-ignore="true" class="alert alert-info p-2 border-0 rounded-0 d-print-none css_editable_mode_hidden mb-0 text-center">
+        <div t-ignore="true" t-if="answer and answer.test_entry" class="alert alert-info p-2 border-0 rounded-0 d-print-none css_editable_mode_hidden mb-0 text-center">
             <p class="mb-1">This is a Test Survey Entry.</p>
             <div class="survey_button_form_view_hook d-inline-block">
                 <a t-if="env.user.has_group('survey.group_survey_user')" t-attf-href="/odoo/action-survey.action_survey_form/{{survey.id}}">

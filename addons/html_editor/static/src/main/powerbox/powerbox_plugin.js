@@ -4,6 +4,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rotate } from "@web/core/utils/arrays";
 import { Powerbox } from "./powerbox";
+import { withSequence } from "@html_editor/utils/resource";
 
 /**
  * @typedef {Object} CategoriesConfig
@@ -42,16 +43,16 @@ export class PowerboxPlugin extends Plugin {
     static name = "powerbox";
     static dependencies = ["overlay", "selection", "history"];
     static shared = ["openPowerbox", "updatePowerbox", "closePowerbox"];
-    static resources = () => ({
+    resources = {
         hints: {
             text: _t('Type "/" for commands'),
             target,
         },
         powerboxCategory: [
-            { id: "structure", name: _t("Structure"), sequence: 10 },
-            { id: "widget", name: _t("Widget"), sequence: 60 },
+            withSequence(10, { id: "structure", name: _t("Structure") }),
+            withSequence(60, { id: "widget", name: _t("Widget") }),
         ],
-    });
+    };
 
     setup() {
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
@@ -104,6 +105,10 @@ export class PowerboxPlugin extends Plugin {
     }
 
     closePowerbox() {
+        if (!this.overlay.isOpen) {
+            return;
+        }
+        this.onClose();
         this.overlay.close();
     }
 

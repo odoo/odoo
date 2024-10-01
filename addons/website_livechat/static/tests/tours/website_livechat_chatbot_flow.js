@@ -5,6 +5,7 @@ const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:conta
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     test: true,
+    checkDelay: 50,
     steps: () => [
         {
             trigger: messagesContain("Hello! I'm a bot!"),

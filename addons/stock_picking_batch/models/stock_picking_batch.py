@@ -49,6 +49,8 @@ class StockPickingBatch(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', check_company=True, copy=False,
         index=True)
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', related='picking_type_id.warehouse_id')
     picking_type_code = fields.Selection(
         related='picking_type_id.code')
     scheduled_date = fields.Datetime(

@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
@@ -21,6 +21,9 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText, redo, undo } from "./_helpers/user_actions";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { PowerboxPlugin } from "@html_editor/main/powerbox/powerbox_plugin";
+import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
 function commandNames() {
     return queryAllTexts(".o-we-command-name");
@@ -111,7 +114,7 @@ describe("search", () => {
     test("press 'backspace' should adapt adapt the search in the Powerbox", async () => {
         class TestPlugin extends Plugin {
             static name = "test";
-            static resources = () => ({
+            resources = {
                 powerboxCategory: { id: "test", name: "Test" },
                 powerboxItems: [
                     {
@@ -125,7 +128,7 @@ describe("search", () => {
                         category: "test",
                     },
                 ],
-            });
+            };
         }
         const { editor, el } = await setupEditor(`<p>[]</p>`, {
             config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
@@ -247,6 +250,100 @@ describe("search", () => {
         expect(getContent(el)).toBe("<h1>ab[]</h1>");
     });
 
+    describe("search keywords", () => {
+        test("should search commands by optional keywords", async () => {
+            class TestPlugin extends Plugin {
+                static name = "test";
+                resources = {
+                    powerboxCategory: { id: "test", name: "Test" },
+                    powerboxItems: [
+                        {
+                            name: "Test1",
+                            description: "Test1",
+                            category: "test",
+                            searchKeywords: ["apple", "orange"],
+                        },
+                        {
+                            name: "Test2",
+                            description: "Test2 has apples and oranges in its description",
+                            category: "test",
+                        },
+                    ],
+                };
+            }
+            const { editor, el } = await setupEditor(`<p>[]</p>`, {
+                config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+            });
+            expect(".o-we-powerbox").toHaveCount(0);
+            insertText(editor, "/apple");
+            await animationFrame();
+            expect(".o-we-powerbox").toHaveCount(1);
+            // Both commands should be found with the keyword "apple", being the first
+            // one with a higher score
+            expect(commandNames(el)).toEqual(["Test1", "Test2"]);
+
+            // Replace "apple" by "orange"
+            for (let i = 0; i < 5; i++) {
+                press("backspace");
+            }
+            insertText(editor, "/orange");
+            await animationFrame();
+            // Same as above
+            expect(commandNames(el)).toEqual(["Test1", "Test2"]);
+
+            insertText(editor, "s");
+            // "/oranges"
+            await animationFrame();
+            // It no longer matches anything in the Test1 command
+            expect(commandNames(el)).toEqual(["Test2"]);
+        });
+
+        test("match order: full match on keyword should come before partial matches on names or descriptions", async () => {
+            class TestPlugin extends Plugin {
+                static name = "test";
+                resources = {
+                    powerboxCategory: { id: "test", name: "Test" },
+                    powerboxItems: [
+                        {
+                            name: "Change direction", // "icon" fuzzy matches this
+                            description: "test",
+                            category: "test",
+                        },
+                        {
+                            name: "Some command",
+                            description: "add a big section", // "icon" fuzzy matches this
+                            category: "test",
+                        },
+                        {
+                            name: "Insert a pictogram",
+                            description: "test",
+                            category: "test",
+                            searchKeywords: ["icon"],
+                        },
+                    ],
+                };
+            }
+            const { editor, el } = await setupEditor(`<p>[]</p>`, {
+                config: {
+                    Plugins: [...CORE_PLUGINS, PowerboxPlugin, SearchPowerboxPlugin, TestPlugin],
+                },
+            });
+            expect(".o-we-powerbox").toHaveCount(0);
+            insertText(editor, "/icon");
+            await animationFrame();
+            expect(".o-we-powerbox").toHaveCount(1);
+
+            const matchedCommands = commandNames(el);
+            // All three commands are found, as they all match "icon" in some way.
+            expect(matchedCommands).toInclude("Change direction");
+            expect(matchedCommands).toInclude("Some command");
+            expect(matchedCommands).toInclude("Insert a pictogram");
+
+            // The one with the exact keyword match should come first.
+            expect(matchedCommands[0]).toBe("Insert a pictogram");
+        });
+    });
+
     describe("close", () => {
         test("should close powerbox if there is no result", async () => {
             const { el, editor } = await setupEditor("<p>a[]</p>");
@@ -303,6 +400,11 @@ describe("search", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(getContent(el)).toBe(`<p>/[]</p>`);
+
+            await insertText(editor, "h");
+            await animationFrame();
+            expect(".o-we-powerbox").toHaveCount(0);
+            expect(getContent(el)).toBe(`<p>/h[]</p>`);
         });
     });
 });
@@ -395,7 +497,7 @@ test("should toggle list on empty paragraph", async () => {
 
 class NoOpPlugin extends Plugin {
     static name = "no_op";
-    static resources = () => ({
+    resources = {
         powerboxCategory: { id: "no_op", name: "No-op" },
         powerboxItems: [
             {
@@ -408,7 +510,7 @@ class NoOpPlugin extends Plugin {
                 },
             },
         ],
-    });
+    };
 }
 
 test("should restore state before /command insertion when command is executed (1)", async () => {
@@ -621,14 +723,14 @@ test.todo("add plugins with the same powerboxCategory should crash", async () =>
         warn: (msg) => expect.step(msg),
     });
     class Plugin1 extends Plugin {
-        static resources = () => ({
-            powerboxCategory: { id: "test", name: "Test", sequence: 10 },
-        });
+        resources = {
+            powerboxCategory: withSequence(10, { id: "test", name: "Test" }),
+        };
     }
     class Plugin2 extends Plugin {
-        static resources = () => ({
-            powerboxCategory: { id: "test", name: "Test", sequence: 10 },
-        });
+        resources = {
+            powerboxCategory: withSequence(10, { id: "test", name: "Test" }),
+        };
     }
     await expect(
         setupEditor("<p>ab[]cd</p>", {

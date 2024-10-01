@@ -827,8 +827,7 @@ class AccountPayment(models.Model):
                 and payment.outstanding_account_id
             ):
                 raise ValidationError(_("A payment with an outstanding account cannot be confirmed without having a journal entry."))
-            if payment.state == 'draft' and payment.move_id:
-                raise ValidationError(_("A payment cannot have a journal entry if it is not confirmed."))
+
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
@@ -877,9 +876,16 @@ class AccountPayment(models.Model):
         if vals.get('state') == 'in_process' and not vals.get('move_id'):
             self.filtered(lambda p: not p.move_id)._generate_journal_entry()
             self.move_id.action_post()
-        return super().write(vals)
+
+        res = super().write(vals)
+        if self.move_id:
+            self._synchronize_to_moves(set(vals.keys()))
+        return res
 
     def unlink(self):
+        self.move_id.filtered(lambda m: m.state != 'draft').button_draft()
+        self.move_id.unlink()
+
         linked_invoices = self.invoice_ids
         res = super().unlink()
         self.env.add_to_compute(linked_invoices._fields['payment_state'], linked_invoices)
@@ -890,16 +896,69 @@ class AccountPayment(models.Model):
         for payment in self:
             payment.display_name = payment.name or _('Draft Payment')
 
-    def copy(self, default=None):
-        return super().copy(default={
-            'journal_id': self.journal_id.id,
-            'payment_method_line_id': self.payment_method_line_id.id,
-            **(default or {}),
-        })
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default)
+        for payment, vals in zip(self, vals_list):
+            vals.update({
+                'journal_id': payment.journal_id.id,
+                'payment_method_line_id': payment.payment_method_line_id.id,
+                **(vals or {}),
+            })
+        return vals_list
 
     # -------------------------------------------------------------------------
-    # SYNCHRONIZATION account.payment <-> account.move
+    # SYNCHRONIZATION account.payment -> account.move
     # -------------------------------------------------------------------------
+
+    def _synchronize_to_moves(self, changed_fields):
+        '''
+            Update the account.move regarding the modified account.payment.
+            :param changed_fields: A list containing all modified fields on account.payment.
+        '''
+        if not any(field_name in changed_fields for field_name in self._get_trigger_fields_to_synchronize()):
+            return
+
+        for pay in self:
+            liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
+            # Make sure to preserve the write-off amount.
+            # This allows to create a new payment with custom 'line_ids'.
+            write_off_line_vals = []
+            if liquidity_lines and counterpart_lines and writeoff_lines:
+                write_off_line_vals.append({
+                    'name': writeoff_lines[0].name,
+                    'account_id': writeoff_lines[0].account_id.id,
+                    'partner_id': writeoff_lines[0].partner_id.id,
+                    'currency_id': writeoff_lines[0].currency_id.id,
+                    'amount_currency': sum(writeoff_lines.mapped('amount_currency')),
+                    'balance': sum(writeoff_lines.mapped('balance')),
+                })
+            line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
+            line_ids_commands = [
+                Command.update(liquidity_lines.id, line_vals_list[0]) if liquidity_lines else Command.create(line_vals_list[0]),
+                Command.update(counterpart_lines.id, line_vals_list[1]) if counterpart_lines else Command.create(line_vals_list[1])
+            ]
+            for line in writeoff_lines:
+                line_ids_commands.append((2, line.id))
+            for extra_line_vals in line_vals_list[2:]:
+                line_ids_commands.append((0, 0, extra_line_vals))
+            # Update the existing journal items.
+            # If dealing with multiple write-off lines, they are dropped and a new one is generated.
+            pay.move_id \
+                .with_context(skip_invoice_sync=True) \
+                .write({
+                'partner_id': pay.partner_id.id,
+                'currency_id': pay.currency_id.id,
+                'partner_bank_id': pay.partner_bank_id.id,
+                'line_ids': line_ids_commands,
+            })
+
+    @api.model
+    def _get_trigger_fields_to_synchronize(self):
+        return (
+            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference',
+            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id', 'journal_id'
+        )
 
     def _generate_journal_entry(self, write_off_line_vals=None, force_balance=None, line_ids=None):
         need_move = self.filtered(lambda p: not p.move_id and p.outstanding_account_id)
@@ -983,6 +1042,7 @@ class AccountPayment(models.Model):
 
     def action_draft(self):
         self.state = 'draft'
+        self.move_id.button_draft()
 
     def button_open_invoices(self):
         ''' Redirect the user to the invoice(s) paid by this payment.

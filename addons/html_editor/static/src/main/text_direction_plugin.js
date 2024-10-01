@@ -7,8 +7,7 @@ import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 export class TextDirectionPlugin extends Plugin {
     static name = "text_direction";
     static dependencies = ["selection", "split", "format"];
-    /** @type { (p: TextDirectionPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         powerboxItems: [
             {
                 name: _t("Switch direction"),
@@ -20,7 +19,7 @@ export class TextDirectionPlugin extends Plugin {
                 },
             },
         ],
-    });
+    };
 
     setup() {
         if (this.config.direction) {

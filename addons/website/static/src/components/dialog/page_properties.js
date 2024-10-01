@@ -251,7 +251,7 @@ export class PagePropertiesDialog extends FormViewDialog {
 
     clonePage() {
         this.dialog.add(DuplicatePageDialog, {
-            pageIds: [this.resId],
+            pageIds: [this.targetId],
             onDuplicate: (duplicates) => {
                 this.props.close();
                 this.props.onClose();
@@ -261,7 +261,7 @@ export class PagePropertiesDialog extends FormViewDialog {
     }
 
     async deletePage() {
-        const pageIds = [this.resId];
+        const pageIds = [this.targetId];
         const newPageTemplateFields = await this.orm.read("website.page", pageIds, ["is_new_page_template"]);
         this.dialog.add(DeletePageDialog, {
             resIds: pageIds,

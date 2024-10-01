@@ -688,9 +688,9 @@ describe("post process external steps", () => {
         };
         class ConfigPlugin extends Plugin {
             static name = "collab-test-config";
-            static resources = () => ({
+            resources = {
                 post_process_external_steps: postProcessExternalSteps,
-            });
+            };
         }
         await testMultiEditor({
             Plugins: [ConfigPlugin],

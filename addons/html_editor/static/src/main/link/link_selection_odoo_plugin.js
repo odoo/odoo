@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 
 export class OdooLinkSelectionPlugin extends Plugin {
-    static resources = () => ({
+    resources = {
         excludeLinkZwnbsp: [
             (link) =>
                 [link, ...link.querySelectorAll("*")].some(
@@ -11,5 +11,5 @@ export class OdooLinkSelectionPlugin extends Plugin {
             (link) => link.matches("nav a, a.nav-link"),
         ],
         excludeLinkVisualIndication: (link) => link.matches(".btn"),
-    });
+    };
 }

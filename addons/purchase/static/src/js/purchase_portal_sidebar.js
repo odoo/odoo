@@ -6,10 +6,6 @@ import { uniqueId } from "@web/core/utils/functions";
 
 publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
     selector: ".o_portal_purchase_sidebar",
-    events: {
-        'click .o_portal_decline': '_onDecline',
-        'click .o_portal_accept': '_onAccept',
-    },
 
     /**
      * @constructor
@@ -138,13 +134,5 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
             }
         });
         return rawText.join(" ");
-    },
-    _onDecline: function (ev) {
-        const orderId = parseInt(ev.currentTarget.dataset.orderId);
-        this.orm.call("purchase.order", "decline_reception_mail", [orderId]);
-    },
-    _onAccept: function (ev) {
-        const orderId = parseInt(ev.currentTarget.dataset.orderId);
-        this.orm.call("purchase.order", "confirm_reception_mail", [orderId]);
     },
 });

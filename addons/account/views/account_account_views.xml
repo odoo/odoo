@@ -74,7 +74,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="mapping" string="Mapping" groups="base.group_multi_company">
+                            <page name="mapping" string="Mapping" groups="base.group_multi_company" invisible="not display_mapping_tab">
                                 <field name="code_mapping_ids" nolabel="1">
                                     <list editable="bottom">
                                         <field name="company_id"/>
@@ -107,7 +107,7 @@
                     <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                    <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="company_ids" widget="many2many_tags" readonly="True" groups="base.group_multi_company"/>
                 </list>
             </field>
         </record>
@@ -194,8 +194,8 @@
             <field name="binding_view_types">form,list</field>
             <field name="state">code</field>
             <field name="code">
-if record:
-    action = record.action_unmerge()
+if records:
+    action = records.action_unmerge()
             </field>
         </record>
     </data>

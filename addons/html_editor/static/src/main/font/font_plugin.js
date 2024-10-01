@@ -16,6 +16,7 @@ import {
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
 import { FontSelector } from "./font_selector";
+import { withSequence } from "@html_editor/utils/resource";
 
 export const fontItems = [
     {
@@ -24,21 +25,21 @@ export const fontItems = [
         extraClass: "display-1",
     },
     // TODO @phoenix use them if showExtendedTextStylesOptions is true
-    {
-        name: _t("Header 1 Display 2"),
-        tagName: "h1",
-        extraClass: "display-2",
-    },
-    {
-        name: _t("Header 1 Display 3"),
-        tagName: "h1",
-        extraClass: "display-3",
-    },
-    {
-        name: _t("Header 1 Display 4"),
-        tagName: "h1",
-        extraClass: "display-4",
-    },
+    // {
+    //     name: _t("Header 1 Display 2"),
+    //     tagName: "h1",
+    //     extraClass: "display-2",
+    // },
+    // {
+    //     name: _t("Header 1 Display 3"),
+    //     tagName: "h1",
+    //     extraClass: "display-3",
+    // },
+    // {
+    //     name: _t("Header 1 Display 4"),
+    //     tagName: "h1",
+    //     extraClass: "display-4",
+    // },
     // ----
 
     { name: _t("Header 1"), tagName: "h1" },
@@ -51,16 +52,16 @@ export const fontItems = [
     { name: _t("Normal"), tagName: "p" },
 
     // TODO @phoenix use them if showExtendedTextStylesOptions is true
-    {
-        name: _t("Light"),
-        tagName: "p",
-        extraClass: "lead",
-    },
-    {
-        name: _t("Small"),
-        tagName: "p",
-        extraClass: "small",
-    },
+    // {
+    //     name: _t("Light"),
+    //     tagName: "p",
+    //     extraClass: "lead",
+    // },
+    // {
+    //     name: _t("Small"),
+    //     tagName: "p",
+    //     extraClass: "small",
+    // },
     // ----
 
     { name: _t("Code"), tagName: "pre" },
@@ -97,21 +98,21 @@ const handledElemSelector = [...headingTags, "PRE", "BLOCKQUOTE"].join(", ");
 export class FontPlugin extends Plugin {
     static name = "font";
     static dependencies = ["split", "selection"];
-    /** @type { (p: FontPlugin) => Record<string, any> } */
-    static resources = (p) => ({
+    resources = {
         split_element_block: [
-            { callback: p.handleSplitBlockPRE.bind(p) },
-            { callback: p.handleSplitBlockHeading.bind(p) },
+            this.handleSplitBlockPRE.bind(this),
+            this.handleSplitBlockHeading.bind(this),
         ],
-        onInput: { handler: p.onInput.bind(p) },
-        handle_delete_backward: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
-        handle_delete_backward_word: { callback: p.handleDeleteBackward.bind(p), sequence: 20 },
+        onInput: this.onInput.bind(this),
+        handle_delete_backward: withSequence(20, this.handleDeleteBackward.bind(this)),
+        handle_delete_backward_word: this.handleDeleteBackward.bind(this),
         toolbarCategory: [
-            {
+            withSequence(10, {
                 id: "font",
-                sequence: 10,
-            },
-            { id: "font-size", sequence: 29 },
+            }),
+            withSequence(29, {
+                id: "font-size",
+            }),
         ],
         toolbarItems: [
             {
@@ -130,14 +131,14 @@ export class FontPlugin extends Plugin {
                 title: _t("Font size"),
                 Component: FontSelector,
                 props: {
-                    getItems: () => p.fontSizeItems,
+                    getItems: () => this.fontSizeItems,
                     isFontSize: true,
                     command: "FORMAT_FONT_SIZE_CLASSNAME",
-                    document: p.document,
+                    document: this.document,
                 },
             },
         ],
-        powerboxCategory: { id: "format", name: _t("Format"), sequence: 30 },
+        powerboxCategory: withSequence(30, { id: "format", name: _t("Format") }),
         powerboxItems: [
             {
                 name: _t("Heading 1"),
@@ -204,7 +205,7 @@ export class FontPlugin extends Plugin {
             { selector: "PRE", text: _t("Code") },
             { selector: "BLOCKQUOTE", text: _t("Quote") },
         ],
-    });
+    };
 
     get fontSizeItems() {
         const style = getHtmlStyle(this.document);
@@ -299,7 +300,9 @@ export class FontPlugin extends Plugin {
             return;
         }
         // Check if unremovable.
-        if (this.resources.isUnremovable.some((predicate) => predicate(closestHandledElement))) {
+        if (
+            this.getResource("isUnremovable").some((predicate) => predicate(closestHandledElement))
+        ) {
             return;
         }
         const p = this.document.createElement("p");
