@@ -359,7 +359,7 @@ registerWebsitePreviewTour(
         ...openCreatePageDialog,
         {
             content: "Use blank template",
-            trigger: ".o_page_template button",
+            trigger: ".o_page_template .o_button_area",
             run: "click",
         },
         {

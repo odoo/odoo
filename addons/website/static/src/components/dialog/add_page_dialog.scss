@@ -22,6 +22,8 @@
         $-preview-width-xl: 220; // Empirically obtained
         $-preview-width-lg: 408; // Empirically obtained
         width: #{$-preview-width}px;
+        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.16);
+
         @include media-breakpoint-down(xl) {
             width: #{$-preview-width-xl}px;
         }
@@ -60,10 +62,8 @@
 
         .o_button_area {
             opacity: 0;
-            .o_page_name {
-                position: absolute;
-                bottom: 10px;
-            }
+            outline: $border-width * 2 solid $o-we-handles-accent-color;
+            outline-offset: $border-width * -1;
         }
 
         &:empty {
@@ -85,11 +85,7 @@
             }
 
             &:hover {
-                transform: translateY(-0.15rem);
-
-                iframe {
-                    opacity: .1;
-                }
+                box-shadow: 0 .5rem 2rem rgba(0, 0, 0, 0.2);
 
                 .o_button_area {
                     opacity: 1;
