@@ -3,6 +3,15 @@ declare module "models" {
 
     export interface ScheduledMessage extends ScheduledMessageClass{}
 
-    export interface Models {
-        "ScheduledMessage": ScheduledMessage,
+    export interface Store {
+        "mail.scheduled.message": typeof ScheduledMessageClass,
     }
+
+    export interface Thread {
+        scheduledMessages: ScheduledMessage[],
+    }
+
+    export interface Models {
+        "mail.scheduled.message": ScheduledMessage,
+    }
+}

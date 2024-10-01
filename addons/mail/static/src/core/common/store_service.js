@@ -22,7 +22,6 @@ export const pyToJsModels = {
     "discuss.channel": "Thread",
     "mail.guest": "Persona",
     "mail.message": "Message",
-    "mail.scheduled.message": "ScheduledMessage",
     "mail.thread": "Thread",
     "res.partner": "Persona",
 };
@@ -69,8 +68,6 @@ export class Store extends BaseStore {
     MessageReactions;
     /** @type {typeof import("@mail/core/common/persona_model").Persona} */
     Persona;
-    /** @type {typeof import "@mail/chatter/web/scheduled_message_model).ScheduledMessage"} */
-    ScheduledMessage;
     /** @type {typeof import("@mail/core/common/settings_model").Settings} */
     Settings;
     /** @type {typeof import("@mail/core/common/thread_model").Thread} */
