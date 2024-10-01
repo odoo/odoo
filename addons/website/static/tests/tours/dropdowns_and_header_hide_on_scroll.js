@@ -13,10 +13,12 @@ const checkIfUserMenuNotMasked = function () {
     return [
         {
             content: "Click on the user dropdown",
-            trigger: ":iframe #wrapwrap header .o_header_hide_on_scroll li.dropdown > a",
+            trigger: ":iframe #wrapwrap header li.dropdown > a:contains(mitchell admin)",
             run: "click",
         },
-        checkIfVisibleOnScreen(":iframe #wrapwrap header .o_header_hide_on_scroll li.dropdown .dropdown-menu.show a[href='/my/home']"),
+        checkIfVisibleOnScreen(
+            ":iframe #wrapwrap header li.dropdown .dropdown-menu.show a[href='/my/home']"
+        ),
     ];
 };
 
@@ -35,13 +37,23 @@ registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     test: true,
     url: "/",
     edition: true,
+    checkDelay: 100,
 }, () => [
     ...insertSnippet({id: "s_media_list", name: "Media List", groupName: "Content"}),
     selectHeader(),
     changeOption("undefined", 'we-select[data-variable="header-scroll-effect"]'),
     changeOption("undefined", 'we-button[data-name="header_effect_fixed_opt"]'),
+    {
+        trigger: ":iframe #wrapwrap header.o_header_fixed",
+    },
+    selectHeader(),
     changeOption("WebsiteLevelColor", 'we-select[data-variable="header-template"] we-toggler'),
     changeOption("WebsiteLevelColor", 'we-button[data-name="header_sales_two_opt"]'),
+    {
+        content: "check that header_sales_two_opt is well selected before save",
+        trigger: ":iframe #wrapwrap header.o_header_fixed div[aria-label=Middle] div[role=search]",
+        timeout: 30000,
+    },
     ...clickOnSave(undefined, 30000),
     ...checkIfUserMenuNotMasked(),
     // We scroll the page a little because when clicking on the dropdown, the

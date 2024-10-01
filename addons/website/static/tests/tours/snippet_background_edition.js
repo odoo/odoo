@@ -104,6 +104,7 @@ registerWebsitePreviewTour('snippet_background_edition', {
     url: '/',
     edition: true,
     test: true,
+    checkDelay: 100,
 },
 () => [
 ...insertSnippet(snippets[0]),

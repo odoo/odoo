@@ -123,8 +123,9 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 {
     trigger: ".o_field_widget[name='user_ids'] input",
     content: "Assign a responsible to your task",
-    run: "click",
-}, {
+    run: "fill test",
+},
+{
     isActive: ["auto"],
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     run: "click",

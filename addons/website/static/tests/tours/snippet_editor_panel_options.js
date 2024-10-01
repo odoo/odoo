@@ -13,6 +13,7 @@ registerWebsitePreviewTour('snippet_editor_panel_options', {
     test: true,
     url: '/',
     edition: true,
+    checkDelay: 100,
 }, () => [
 ...insertSnippet({
     id: 's_text_image',
@@ -148,7 +149,6 @@ goBackToBlocks(),
 }, {
     content: "The snippet should have the correct number of columns.",
     trigger: ':iframe .s_text_block .container:not(:has(.row))',
-    run: "click",
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',

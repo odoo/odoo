@@ -27,10 +27,6 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "edit Test",
         },
         {
-            trigger: '.modal div[name="event_id"] input',
-            run: "click",
-        },
-        {
             trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
             run: "click",
         },
@@ -74,10 +70,6 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
             run: "edit Test",
         },
         {
-            trigger: '.modal div[name="event_id"] input',
-            run: "click",
-        },
-        {
             trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
             run: "click",
         },
@@ -114,10 +106,6 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         {
             trigger: ".modal .o_input_dropdown input",
             run: "edit Test",
-        },
-        {
-            trigger: '.modal div[name="event_id"] input',
-            run: "click",
         },
         {
             trigger: '.modal ul.ui-autocomplete a:contains("TestEvent")',
