@@ -181,7 +181,7 @@
                                 <ul class="nav flex-column">
                                     <t t-foreach="task_link_section" t-as="task_link">
                                         <li class="nav-item">
-                                            <a class="nav-link p-0" t-att-href="task_link['access_url']">
+                                            <a class="nav-link p-0" t-att-href="task_link['access_url']" t-att-target="task_link.get('target', '_self')">
                                                 <t t-out="task_link['title']"/>
                                             </a>
                                         </li>
