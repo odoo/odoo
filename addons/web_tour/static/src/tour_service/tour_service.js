@@ -111,6 +111,10 @@ export const tourService = {
                 throw new Error(`Tour '${tourName}' is not found in the database.`);
             }
 
+            if (!tour.steps.length && tourRegistry.contains(tour.name)) {
+                tour.steps = tourRegistry.get(tour.name).steps();
+            }
+
             return tour;
         }
 
@@ -201,9 +205,9 @@ export const tourService = {
                 new TourInteractive(tour).start(pointer, async () => {
                     pointer.stop();
                     endTour(tour);
-
-                    if (tourConfig.rainbowManMessage) {
-                        const message = window.DOMPurify.sanitize(tourConfig.rainbowManMessage);
+                    let message = tourConfig.rainbowManMessage || tour.rainbowManMessage;
+                    if (message) {
+                        message = window.DOMPurify.sanitize(tourConfig.rainbowManMessage);
                         effect.add({
                             type: "rainbow_man",
                             message: markup(message),
