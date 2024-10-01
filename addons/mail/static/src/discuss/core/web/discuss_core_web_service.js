@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 export class DiscussCoreWeb {
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
         this.env = env;
@@ -60,7 +60,7 @@ export const discussCoreWeb = {
     dependencies: ["bus_service", "mail.store", "notification", "ui", "multi_tab"],
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
         const discussCoreWeb = reactive(new DiscussCoreWeb(env, services));

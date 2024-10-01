@@ -1,7 +1,8 @@
-import { ChannelMember } from "@mail/core/common/channel_member_model";
+import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { patch } from "@web/core/utils/patch";
 
-patch(ChannelMember.prototype, {
+/** @type {import("models").ChannelMember} */
+const channelMemberPatch = {
     get name() {
         if (this.thread.channel_type === "livechat" && this.persona.user_livechat_username) {
             return this.persona.user_livechat_username;
@@ -11,4 +12,5 @@ patch(ChannelMember.prototype, {
         }
         return super.name;
     },
-});
+};
+patch(ChannelMember.prototype, channelMemberPatch);

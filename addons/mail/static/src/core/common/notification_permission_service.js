@@ -21,7 +21,7 @@ export const notificationPermissionService = {
 
     /**
      * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
+     * @param {import("services").ServiceFactories} services
      */
     async start(env, services) {
         const notification = services.notification;

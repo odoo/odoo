@@ -90,32 +90,6 @@ export class Thread extends Record {
     get canUnpin() {
         return this.channel_type === "chat" && this.importantCounter === 0;
     }
-    channelMembers = Record.many("ChannelMember", {
-        inverse: "thread",
-        onDelete: (r) => r.delete(),
-        sort: (m1, m2) => m1.id - m2.id,
-    });
-    /**
-     * To be overridden.
-     * The purpose is to exclude technical channelMembers like bots and avoid
-     * "wrong" seen message indicator
-     */
-    get membersThatCanSeen() {
-        return this.channelMembers;
-    }
-    typingMembers = Record.many("ChannelMember", { inverse: "threadAsTyping" });
-    otherTypingMembers = Record.many("ChannelMember", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
-        },
-    });
-    hasOtherMembersTyping = Record.attr(false, {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.otherTypingMembers.length > 0;
-        },
-    });
     toggleBusSubscription = Record.attr(false, {
         compute() {
             return (
@@ -127,16 +101,10 @@ export class Thread extends Record {
             this.store.updateBusSubscription();
         },
     });
-    invitedMembers = Record.many("ChannelMember");
     composer = Record.one("Composer", {
         compute: () => ({}),
         inverse: "thread",
         onDelete: (r) => r.delete(),
-    });
-    correspondent = Record.one("ChannelMember", {
-        compute() {
-            return this.computeCorrespondent();
-        },
     });
     correspondentCountry = Record.one("Country", {
         /** @this {import("models").Thread} */
@@ -260,9 +228,6 @@ export class Thread extends Record {
     });
     /** @type {string} */
     name;
-    selfMember = Record.one("ChannelMember", {
-        inverse: "threadAsSelf",
-    });
     /** @type {'open' | 'folded' | 'closed'} */
     state;
     status = "new";
@@ -415,22 +380,6 @@ export class Thread extends Record {
         return this.channelMembers.filter(({ persona }) => persona.notEq(this.store.self));
     }
 
-    computeCorrespondent() {
-        if (this.channel_type === "channel") {
-            return undefined;
-        }
-        const correspondents = this.correspondents;
-        if (correspondents.length === 1) {
-            // 2 members chat.
-            return correspondents[0];
-        }
-        if (correspondents.length === 0 && this.channelMembers.length === 1) {
-            // Self-chat.
-            return this.channelMembers[0];
-        }
-        return undefined;
-    }
-
     computeIsDisplayed() {
         return this.store.ChatWindow.get({ thread: this })?.isOpen;
     }
@@ -524,10 +473,6 @@ export class Thread extends Record {
     }
 
     onPinStateUpdated() {}
-
-    get hasSelfAsMember() {
-        return Boolean(this.selfMember);
-    }
 
     hasSeenFeature = Record.attr(false, {
         /** @this {import("models").Thread} */
