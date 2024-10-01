@@ -110,44 +110,53 @@ def get_field_variation_char(field: Field, postfix: str | SQL | None = None) -> 
         """, field=SQL.identifier(field.name), postfix=postfix)
 
 
-@contextmanager
-def ignore_indexes(model: Model):
-    """
-    Temporarily drop indexes on table to speed up insertion.
-    PKey and Unique indexes are kept for constraints
-    """
-    indexes = model.env.execute_query_dict(SQL("""
-        SELECT indexname AS name, indexdef AS definition
-          FROM pg_indexes
-         WHERE tablename = %s
-           AND indexname NOT LIKE %s
-           AND indexdef NOT LIKE %s
-    """, model._table, '%pkey', '%UNIQUE%'))
-    if indexes:
-        _logger.info('Dropping indexes on table %s...', model._table)
-        for index in indexes:
-            model.env.cr.execute(SQL('DROP INDEX %s CASCADE', SQL.identifier(index['name'])))
-        yield
-        _logger.info('Adding indexes back on table %s...', model._table)
-        for index in indexes:
-            model.env.cr.execute(index['definition'])
-    else:
-        yield
+class PopulateContext:
+    def __init__(self):
+        self.has_session_replication_role = True
 
+    @contextmanager
+    def ignore_indexes(self, model: Model):
+        """
+        Temporarily drop indexes on table to speed up insertion.
+        PKey and Unique indexes are kept for constraints
+        """
+        indexes = model.env.execute_query_dict(SQL("""
+            SELECT indexname AS name, indexdef AS definition
+              FROM pg_indexes
+             WHERE tablename = %s
+               AND indexname NOT LIKE %s
+               AND indexdef NOT LIKE %s
+        """, model._table, '%pkey', '%UNIQUE%'))
+        if indexes:
+            _logger.info('Dropping indexes on table %s...', model._table)
+            for index in indexes:
+                model.env.cr.execute(SQL('DROP INDEX %s CASCADE', SQL.identifier(index['name'])))
+            yield
+            _logger.info('Adding indexes back on table %s...', model._table)
+            for index in indexes:
+                model.env.cr.execute(index['definition'])
+        else:
+            yield
 
-@contextmanager
-def ignore_fkey_constraints(model: Model):
-    """
-    Disable Fkey constraints checks by setting the session to replica.
-    """
-    try:
-        model.env.cr.execute('SET session_replication_role TO replica')
-        yield
-        model.env.cr.execute('RESET session_replication_role')
-    except InsufficientPrivilege:
-        _logger.warning("Cannot ignore Fkey constraints during insertion due to insufficient privileges for current pg_role."
-                        "The bulk insertion will be vastly slower than anticipated.")
-        yield
+    @contextmanager
+    def ignore_fkey_constraints(self, model: Model):
+        """
+        Disable Fkey constraints checks by setting the session to replica.
+        """
+        if self.has_session_replication_role:
+            try:
+                model.env.cr.execute('SET session_replication_role TO replica')
+                yield
+                model.env.cr.execute('RESET session_replication_role')
+            except InsufficientPrivilege:
+                _logger.warning("Cannot ignore Fkey constraints during insertion due to insufficient privileges for current pg_role. "
+                                "Resetting transaction and retrying to populate without dropping the check on Fkey constraints. "
+                                "The bulk insertion will be vastly slower than anticipated.")
+                model.env.cr.rollback()
+                self.has_session_replication_role = False
+                yield
+        else:
+            yield
 
 
 def field_needs_variation(model: Model, field: Field) -> bool:
@@ -388,6 +397,7 @@ def populate_models(model_factors: dict[Model, int], separator_code: int) -> Non
         return model_.env.execute_query(query)[0][0]
 
     populated: dict[Model, int] = defaultdict(int)
+    ctx: PopulateContext = PopulateContext()
 
     def process(model_):
         if model_ in populated:
@@ -400,7 +410,7 @@ def populate_models(model_factors: dict[Model, int], separator_code: int) -> Non
         for model_name in model_._inherits:
             process(model_.env[model_name])
 
-        with ignore_fkey_constraints(model_), ignore_indexes(model_):
+        with ctx.ignore_fkey_constraints(model_), ctx.ignore_indexes(model_):
             populate_model(model_, populated, model_factors, separator_code)
 
         # models on the other end of X2many relation should also be populated (ex: to avoid SO with no SOL)
