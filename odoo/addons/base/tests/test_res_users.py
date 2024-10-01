@@ -3,6 +3,7 @@
 
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups
 from odoo.tests.common import TransactionCase, Form, tagged
+from odoo.exceptions import ValidationError
 
 
 class TestUsers(TransactionCase):
@@ -115,6 +116,25 @@ class TestUsers(TransactionCase):
             "On user company change, if its partner_id has already a company_id,"
             "the company_id of the partner_id shall be updated"
         )
+
+    def test_user_incorrect_home_action(self):
+        """ Check that user can not select an home action that can not be rendered
+        because of its limited context.
+        """
+        valid_home_action, invalid_home_action = self.env['ir.actions.act_window'].create([{
+            'name': 'valid home action',
+            'res_model': 'res.partner',
+            'context': "{'key': tz}"
+        }, {
+            'name': 'invalid home action',
+            'res_model': 'res.partner',
+            'context': "{'active_id': active_id}"
+        }])
+
+        self.env.user.action_id = self.env['ir.actions.actions'].browse(valid_home_action.id)
+        with self.assertRaises(ValidationError):
+            self.env.user.action_id = self.env['ir.actions.actions'].browse(invalid_home_action.id)
+
 
 @tagged('post_install', '-at_install')
 class TestUsers2(TransactionCase):
