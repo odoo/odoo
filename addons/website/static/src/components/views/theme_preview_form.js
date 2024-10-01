@@ -6,7 +6,7 @@ import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { useSubEnv, useEnv } from "@odoo/owl";
+import { useSubEnv, onMounted, useEnv } from "@odoo/owl";
 
 /*
 * Common code for theme installation/update handler.
@@ -59,6 +59,13 @@ class ThemePreviewFormController extends FormController {
     setup() {
         super.setup();
         useLoaderOnClick();
+
+        // TODO adapt theme previews then remove this
+        onMounted(() => {
+            setTimeout(() => {
+                document.querySelector('button[name="button_choose_theme"]')?.click();
+            }, 0);
+        });
     }
     /**
      * @override
