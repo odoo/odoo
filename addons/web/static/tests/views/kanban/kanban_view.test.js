@@ -2177,6 +2177,7 @@ test.tags("desktop")("quick_create_view without quick_create option", async () =
 
     // click "+" icon in first column -> should open the quick create
     await contains(".o_kanban_quick_add").click();
+    await animationFrame();
     expect(".o_kanban_group:first .o_kanban_quick_create").toHaveCount(1);
     expect.verifySteps([]);
 });
@@ -4073,13 +4074,11 @@ test("quick create record in grouped by boolean field (within quick_create_view)
     });
     expect(".o_kanban_group:last-child .o_kanban_record").toHaveCount(3);
 
-    quickCreateKanbanRecord(1);
-    await animationFrame();
-
+    await quickCreateKanbanRecord(1);
     expect(".o_kanban_quick_create .o_field_boolean input").toBeChecked();
 
     await contains(".o_kanban_quick_create .o_kanban_add").click();
-
+    await animationFrame();
     expect(".o_kanban_group:last-child .o_kanban_record").toHaveCount(4);
 });
 
@@ -4114,13 +4113,13 @@ test("quick create record in grouped by selection field (within quick_create_vie
         message: "first column (abc) should contain 1 record",
     });
 
-    quickCreateKanbanRecord();
-    await animationFrame();
+    await quickCreateKanbanRecord();
     expect(".o_kanban_quick_create select:first").toHaveValue('"abc"', {
         message: "should have set the correct state value by default",
     });
-    await contains(".o_kanban_quick_create .o_kanban_add").click();
 
+    await contains(".o_kanban_quick_create .o_kanban_add").click();
+    await animationFrame();
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2, {
         message: "first column (abc) should now contain 2 records",
     });
@@ -4257,20 +4256,17 @@ test("quick create record: open on a column while another column has already one
     });
 
     // Click on quick create in first column
-    quickCreateKanbanRecord();
-    await animationFrame();
+    await quickCreateKanbanRecord();
     expect(".o_kanban_quick_create").toHaveCount(1);
     expect(queryAll(".o_kanban_quick_create", { root: getKanbanColumn(0) })).toHaveCount(1);
 
     // Click on quick create in second column
-    quickCreateKanbanRecord(1);
-    await animationFrame();
+    await quickCreateKanbanRecord(1);
     expect(".o_kanban_quick_create").toHaveCount(1);
     expect(queryAll(".o_kanban_quick_create", { root: getKanbanColumn(2) })).toHaveCount(1);
 
     // Click on quick create in first column once again
-    quickCreateKanbanRecord();
-    await animationFrame();
+    await quickCreateKanbanRecord();
     expect(".o_kanban_quick_create").toHaveCount(1);
     expect(queryAll(".o_kanban_quick_create", { root: getKanbanColumn(0) })).toHaveCount(1);
 });
@@ -12400,8 +12396,7 @@ test.tags("desktop")("keep focus in cp when pressing arrowdown and no kanban car
     expect(".o_kanban_record").toHaveCount(0);
 
     // Check that the focus is on the searchview input
-    quickCreateKanbanRecord();
-    await animationFrame();
+    await quickCreateKanbanRecord();
     expect(".o_kanban_group.o_kanban_no_records").toHaveCount(1);
     expect(".o_kanban_quick_create").toHaveCount(1);
     expect(".o_kanban_record").toHaveCount(0);
