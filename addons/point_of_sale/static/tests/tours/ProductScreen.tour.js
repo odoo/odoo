@@ -14,6 +14,7 @@ import {
     inLeftSide,
     scan_barcode,
     selectButton,
+    refresh,
 } from "@point_of_sale/../tests/tours/helpers/utils";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
@@ -290,5 +291,22 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
             ProductScreenPartnerList.searchCustomerValueAndClear("0987654321"),
             ProductScreen.clickPartnerButton(),
             PartnerList.searchCustomerValue("john@doe.com"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ParkOrderTour", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+
+            ProductScreen.clickShowProductsMobile(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.clickReview(),
+            ProductScreen.controlButtonMore(),
+            ProductScreen.controlButton("Park Order"),
+            refresh(),
+            ProductScreen.orderIsEmpty(),
         ].flat(),
 });
