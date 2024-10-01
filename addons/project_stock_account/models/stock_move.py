@@ -19,6 +19,7 @@ class StockMove(models.Model):
         res = super()._prepare_analytic_line_values(account_field_values, amount, unit_amount)
         if self.picking_id:
             res['name'] = self.picking_id.name
+            res['category'] = 'picking_entry'
         return res
 
     def _get_valid_moves_domain(self):
