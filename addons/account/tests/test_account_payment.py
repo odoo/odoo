@@ -512,3 +512,70 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         self.assertEqual(duplicate_payment_1.amount, payment_1.amount)
         self.assertEqual(duplicate_payment_2.amount, payment_2.amount)
+
+    def test_payments_invoice_payment_state_without_outstanding_accounts(self):
+        """ Ensures that, without an outstanding accounts set on the bank journal payment method,
+            the invoice payment state is correctly computed, as well as the amount residual """
+        def register_payment(move, amount):
+            return self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+                'amount': amount,
+            })._create_payments()
+
+        def create_statement_line_and_reconcile(move_to_reconcile_with, amount):
+            statement_line = self.env['account.bank.statement.line'].create([{
+                'payment_ref': 'test',
+                'journal_id': self.company_data['default_journal_bank'].id,
+                'partner_id': self.partner_a.id,
+                'amount': amount,
+            }])
+
+            _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line \
+                .with_context(skip_account_move_synchronization=True) \
+                ._seek_for_lines()
+            receivable_line = move_to_reconcile_with.line_ids.filtered(lambda line: line.account_type == 'asset_receivable')
+            st_suspense_lines.account_id = receivable_line.account_id
+            (st_suspense_lines + receivable_line).reconcile()
+
+        # Remove the outstanding account on the payment method line to avoid generating a journal entry on the payment
+        self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = self.env['account.account']
+
+        invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2024-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'test',
+                'quantity': 1,
+                'price_unit': 100.0,
+            })],
+        }])
+        invoice.action_post()
+
+        payment_1 = register_payment(invoice, 30.0)
+        payment_1_has_journal_entry = bool(payment_1.move_id)  # True in Community, False in Enterprise
+
+        expected_payment_state = 'partial' if payment_1_has_journal_entry else 'in_payment'
+        expected_amount_residual = 70.0 if payment_1_has_journal_entry else 100.0
+        self.assertEqual(invoice.payment_state, expected_payment_state)
+        self.assertEqual(invoice.amount_residual, expected_amount_residual)
+
+        if not payment_1_has_journal_entry:
+            create_statement_line_and_reconcile(invoice, 30.0)
+            payment_1.action_validate()
+            self.assertTrue(invoice.payment_state == 'partial')
+            self.assertEqual(invoice.amount_residual, 70.0)
+
+        payment_2 = register_payment(invoice, 70.0)
+        payment_2_has_journal_entry = bool(payment_2.move_id)  # True in Community, False in Enterprise
+        self.assertTrue(invoice.payment_state == invoice._get_invoice_in_payment_state())  # 'paid' in Community, 'in_payment' in Enterprise
+
+        expected_payment_state = 'paid' if payment_2_has_journal_entry else 'in_payment'
+        expected_amount_residual = 0.0 if payment_2_has_journal_entry else 70.0
+        self.assertEqual(invoice.payment_state, expected_payment_state)
+        self.assertEqual(invoice.amount_residual, expected_amount_residual)
+
+        if not payment_1_has_journal_entry:
+            create_statement_line_and_reconcile(invoice, 70.0)
+            payment_2.action_validate()
+            self.assertTrue(invoice.payment_state == 'paid')
+            self.assertEqual(invoice.amount_residual, 0.0)
