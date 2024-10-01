@@ -795,6 +795,40 @@ class TestSubqueries(TransactionCase):
         """]):
             model.search([('foo_bar_name', '=', 'a')])
 
+    def test_hierarchy(self):
+        Head = self.env['test_new_api.hierarchy.head']
+        Node = self.env['test_new_api.hierarchy.node']
+
+        parent_node = Node.create({})
+        nodes = Node.create([{'parent_id': parent_node.id} for _ in range(3)])
+        Head.create({'node_id': parent_node.id})
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_hierarchy_node"."id"
+            FROM "test_new_api_hierarchy_node"
+            WHERE ("test_new_api_hierarchy_node"."parent_id" IN %s)
+            ORDER BY "test_new_api_hierarchy_node"."id"
+        """, """
+            SELECT "test_new_api_hierarchy_node"."id"
+            FROM "test_new_api_hierarchy_node"
+            WHERE ("test_new_api_hierarchy_node"."parent_id" IN %s)
+            ORDER BY "test_new_api_hierarchy_node"."id"
+        """, """
+            SELECT "test_new_api_hierarchy_head"."id"
+            FROM "test_new_api_hierarchy_head"
+            WHERE ("test_new_api_hierarchy_head"."node_id" IN %s)
+            ORDER BY "test_new_api_hierarchy_head"."id"
+        """]):
+            Head.search([('node_id', 'child_of', parent_node.ids)])
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_hierarchy_head"."id"
+            FROM "test_new_api_hierarchy_head"
+            WHERE ("test_new_api_hierarchy_head"."node_id" IN %s)
+            ORDER BY "test_new_api_hierarchy_head"."id"
+        """]):
+            Head.search([('node_id', 'parent_of', nodes.ids)])
+
 
 class TestFlushSearch(TransactionCase):
 

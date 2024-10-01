@@ -879,6 +879,8 @@ class expression(object):
                     [('parent_path', '=like', rec.parent_path + '%')]
                     for rec in left_model_sudo.browse(ids)
                 ])
+                if prefix:
+                    domain = [(left, 'in', left_model_sudo._search(domain))]
             else:
                 # recursively retrieve all children nodes with sudo(); the
                 # filtering of forbidden records is done by the rest of the
@@ -891,9 +893,10 @@ class expression(object):
                 while records:
                     child_ids.update(records._ids)
                     records = records.search([(parent_name, 'in', records.ids)], order='id') - records.browse(child_ids)
-                domain = [('id', 'in', list(child_ids))]
-            if prefix:
-                return [(left, 'in', left_model_sudo._search(domain))]
+                child_ids = list(child_ids)
+                domain = [('id', 'in', child_ids)]
+                if prefix:
+                    domain = [(left, 'in', child_ids)]
             return domain
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix=''):
@@ -921,9 +924,10 @@ class expression(object):
                 while records:
                     parent_ids.update(records._ids)
                     records = records[parent_name] - records.browse(parent_ids)
-                domain = [('id', 'in', list(parent_ids))]
+                parent_ids = list(parent_ids)
+                domain = [('id', 'in', parent_ids)]
             if prefix:
-                return [(left, 'in', left_model_sudo._search(domain))]
+                return [(left, 'in', parent_ids)]
             return domain
 
         HIERARCHY_FUNCS = {'child_of': child_of_domain,

@@ -2090,6 +2090,22 @@ class AnyTag(models.Model):
     child_ids = fields.Many2many('test_new_api.any.child')
 
 
+class HierarchyHead(models.Model):
+    _name = 'test_new_api.hierarchy.head'
+    _description = 'Hierarchy Head'
+
+    node_id = fields.Many2one('test_new_api.hierarchy.node')
+
+
+class HierarchyNode(models.Model):
+    _name = 'test_new_api.hierarchy.node'
+    _description = 'Hierarchy Node'
+
+    name = fields.Char()
+    parent_id = fields.Many2one('test_new_api.hierarchy.node')
+    child_ids = fields.One2many('test_new_api.hierarchy.node', inverse_name='parent_id')
+
+
 class CustomView(models.Model):
     _name = _description = "test_new_api.custom.view"
     _auto = False
