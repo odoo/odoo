@@ -1523,6 +1523,31 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosPopupPriceAndQuantity', login="pos_admin")
 
+    def test_product_categories_order(self):
+        """ Verify that the order of categories doesnt change in the frontend """
+        self.env['pos.category'].create({
+            'name': 'AAA',
+            'parent_id': False,
+        })
+        self.env['pos.category'].create({
+            'name': 'AAC',
+            'parent_id': False,
+        })
+        parentA = self.env['pos.category'].create({
+            'name': 'AAB',
+            'parent_id': False,
+        })
+        parentB = self.env['pos.category'].create({
+            'name': 'AAX',
+            'parent_id': parentA.id,
+        })
+        self.env['pos.category'].create({
+            'name': 'AAY',
+            'parent_id': parentB.id,
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosCategoriesOrder', login="pos_admin")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
