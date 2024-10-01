@@ -1,5 +1,6 @@
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 import { BarcodeDialog } from '@web/core/barcode/barcode_dialog';
+import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 export class KioskBarcodeScanner extends BarcodeScanner {
     static props = {
@@ -10,6 +11,7 @@ export class KioskBarcodeScanner extends BarcodeScanner {
     static template = "hr_attendance.BarcodeScanner";
     setup() {
         super.setup();
+        this.isDisplayStandalone = isDisplayStandalone();
         this.scanBarcode = () => scanBarcode(this.env, this.facingMode, this.props.token);
     }
 
@@ -18,6 +20,11 @@ export class KioskBarcodeScanner extends BarcodeScanner {
             return "user";
         }
         return super.facingMode;
+    }
+
+    get installURL() {
+        const url = `hr_attendance/${this.props.token}`;
+        return `/scoped_app?app_id=hr_attendance&path=${encodeURIComponent(url)}`;
     }
 }
 
