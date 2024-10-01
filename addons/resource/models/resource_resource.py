@@ -91,7 +91,10 @@ class ResourceResource(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id(self):
         if self.company_id:
-            self.calendar_id = self.company_id.resource_calendar_id.id
+            if self.resource_type == 'material':
+                self.calendar_id = False
+            else:
+                self.calendar_id = self.company_id.resource_calendar_id.id
 
     @api.onchange('user_id')
     def _onchange_user_id(self):
