@@ -9,7 +9,7 @@ import wSnippetOptions from "@website/js/editor/snippets.options";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { switchTextHighlight } from "@website/js/text_processing";
+import { applyTextHighlight, switchTextHighlight } from "@website/js/text_processing";
 import { registry } from "@web/core/registry";
 
 const snippetsEditorRegistry = registry.category("snippets_editor");
@@ -558,6 +558,16 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         $dropzone.attr('data-editor-message', $hookParent.attr('data-editor-message'));
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;
+    }
+    /**
+     * @override
+     */
+    _updateDroppedSnippet($target) {
+        // Build the highlighted text content for the snippets.
+        for (const textEl of $target[0]?.querySelectorAll(".o_text_highlight") || []) {
+            applyTextHighlight(textEl);
+        }
+        return super._updateDroppedSnippet(...arguments);
     }
 
     //--------------------------------------------------------------------------
