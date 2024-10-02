@@ -19,7 +19,7 @@
                     <field name="check_number" invisible="not show_check_number"/>
                 </xpath>
                 <xpath expr="//field[@name='name']" position='before'>
-                    <widget name="web_ribbon" title="Sent" invisible="not is_sent"/>
+                    <widget name="web_ribbon" title="Sent" invisible="not is_sent or state in ('rejected', 'canceled')"/>
                 </xpath>
             </field>
         </record>

@@ -10,7 +10,7 @@ from urllib.parse import urlencode
 import psycopg2.errors
 from dateutil.relativedelta import relativedelta
 from lxml import etree
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo import http
 from odoo.exceptions import AccessError
@@ -29,6 +29,7 @@ class WebJsonController(http.Controller):
     # for /json, the route should work in a browser, therefore type=http
     @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
     def web_json(self, subpath, **kwargs):
+        self._check_json_route_active()
         return request.redirect(
             f'/json/1/{subpath}?{urlencode(kwargs)}',
             HTTPStatus.TEMPORARY_REDIRECT
@@ -63,6 +64,7 @@ class WebJsonController(http.Controller):
         :param start_date: When applicable, minimum date (inclusive bound)
         :param end_date: When applicable, maximum date (exclusive bound)
         """
+        self._check_json_route_active()
         if not request.env.user.has_group('base.group_allow_export'):
             raise AccessError(request.env._("You need export permissions to use the /json route"))
 
@@ -188,6 +190,12 @@ class WebJsonController(http.Controller):
             )
         return request.make_json_response(res)
 
+    def _check_json_route_active(self):
+        # experimental route, only enabled in demo mode or when explicitly set
+        if not (request.env.ref('base.module_base').demo
+                or request.env['ir.config_parameter'].sudo().get_param('web.json.enabled')):
+            raise NotFound()
+
     def _get_action(self, subpath):
         def get_action_triples_():
             try:
@@ -253,7 +261,8 @@ def get_view_id_and_type(action, view_type: str | None) -> tuple[int | None, str
 def get_default_domain(model, action, context, eval_context):
     for ir_filter in model.env['ir.filters'].get_filters(model._name, action._origin.id):
         if ir_filter['is_default']:
-            default_domain = safe_eval(ir_filter['domain'], eval_context)
+            # user filters, static parsing only
+            default_domain = ast.literal_eval(ir_filter['domain'])
             break
     else:
         def filters_from_context():

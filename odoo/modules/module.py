@@ -6,9 +6,9 @@ import collections.abc
 import copy
 import functools
 import importlib
+import importlib.metadata
 import logging
 import os
-import pkg_resources
 import re
 import sys
 import traceback
@@ -19,6 +19,21 @@ import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo.tools.misc import file_path
+
+try:
+    from packaging.requirements import InvalidRequirement, Requirement
+except ImportError:
+    class InvalidRequirement(Exception):
+        ...
+
+    class Requirement:
+        def __init__(self, pydep):
+            if not re.fullmatch(r'\w+', pydep):  # check that we have no versions or marker in pydep
+                msg = f"Package `packaging` is required to parse `{pydep}` external dependency and is not installed"
+                raise Exception(msg)
+            self.marker = None
+            self.specifier = None
+            self.name = pydep
 
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
@@ -456,21 +471,31 @@ current_test = False
 
 def check_python_external_dependency(pydep):
     try:
-        pkg_resources.get_distribution(pydep)
-    except pkg_resources.DistributionNotFound as e:
+        requirement = Requirement(pydep)
+    except InvalidRequirement as e:
+        msg = f"{pydep} is an invalid external dependency specification: {e}"
+        raise Exception(msg) from e
+    if requirement.marker and not requirement.marker.evaluate():
+        _logger.debug(
+            "Ignored external dependency %s because environment markers do not match",
+            pydep
+        )
+        return
+    try:
+        version = importlib.metadata.version(requirement.name)
+    except importlib.metadata.PackageNotFoundError as e:
         try:
+            # keep compatibility with module name but log a warning instead of info
             importlib.import_module(pydep)
-            _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+            _logger.warning("python external dependency on '%s' does not appear o be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+            return
         except ImportError:
-            # backward compatibility attempt failed
-            _logger.warning("DistributionNotFound: %s", e)
-            raise Exception('Python library not installed: %s' % (pydep,))
-    except pkg_resources.VersionConflict as e:
-        _logger.warning("VersionConflict: %s", e)
-        raise Exception('Python library version conflict: %s' % (pydep,))
-    except Exception as e:
-        _logger.warning("get_distribution(%s) failed: %s", pydep, e)
-        raise Exception('Error finding python library %s' % (pydep,))
+            pass
+        msg = f"External dependency {pydep} not installed: {e}"
+        raise Exception(msg) from e
+    if requirement.specifier and not requirement.specifier.contains(version):
+        msg = f"External dependency version mismatch: {pydep} (installed: {version})"
+        raise Exception(msg)
 
 
 def check_manifest_dependencies(manifest):
