@@ -3,17 +3,19 @@ import { registry } from "@web/core/registry";
 
 function _mockHierarchyRead({ model, args, kwargs }) {
     kwargs = makeKwArgs(kwargs);
-    const [domain, fields, parentFieldName, childFieldName, order] = args;
+    const [domain, specification, parentFieldName, childFieldName, order] = args;
     kwargs.order = order;
-    if (!(parentFieldName in fields)) {
-        fields.push(parentFieldName);
+    if (!(parentFieldName in specification)) {
+        specification[parentFieldName] = { fields: { display_name: {} } };
     }
-    const records = this.env[model].search_read(domain, kwargs);
+    const result = this.env[model].web_search_read(domain, specification, kwargs);
     let focusedRecordId = false;
     let fetchChildIdsForAllRecords = false;
-    if (!records.length) {
+    if (!result.length) {
         return [];
-    } else if (records.length === 1) {
+    }
+    const records = result.records;
+    if (result.length === 1) {
         const record = records[0];
         let domain = [
             [parentFieldName, "=", record.id],
@@ -21,7 +23,7 @@ function _mockHierarchyRead({ model, args, kwargs }) {
         ];
         if (record[parentFieldName]) {
             focusedRecordId = record.id;
-            const parentResId = record[parentFieldName][0];
+            const parentResId = record[parentFieldName].id;
             domain = [
                 ["id", "!=", record.id],
                 "|",
@@ -29,7 +31,9 @@ function _mockHierarchyRead({ model, args, kwargs }) {
                 [parentFieldName, "in", [parentResId, record.id]],
             ];
         }
-        records.push(...this.env[model].search_read(domain, kwargs));
+        records.push(
+            ...(this.env[model].web_search_read(domain, specification, kwargs)?.records || [])
+        );
     } else {
         fetchChildIdsForAllRecords = true;
     }
@@ -38,7 +42,7 @@ function _mockHierarchyRead({ model, args, kwargs }) {
         const parentResIds = [];
         for (const rec of records) {
             if (rec[parentFieldName]) {
-                parentResIds.push(rec[parentFieldName][0]);
+                parentResIds.push(rec[parentFieldName].id);
             }
         }
         const recordIds = records.map((rec) => rec.id);
