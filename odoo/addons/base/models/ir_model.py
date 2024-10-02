@@ -1814,7 +1814,6 @@ class IrModelConstraint(models.Model):
 
     def _reflect_constraint(self, model, conname, type, definition, module, message=None):
         """ Reflect the given constraint, and return its corresponding record
-            if a record is created or modified; returns ``None`` otherwise.
             The reflection makes it possible to remove a constraint when its
             corresponding module is uninstalled. ``type`` is either 'f' or 'u'
             depending on the constraint being a foreign key or not.
@@ -1851,7 +1850,7 @@ class IrModelConstraint(models.Model):
                             write_uid=%s, type=%s, definition=%s, message=%s
                         WHERE id=%s"""
             cr.execute(query, (self.env.uid, type, definition, Json({'en_US': message}), cons_id))
-            return self.browse(cons_id)
+        return self.browse(cons_id)
 
     def _reflect_constraints(self, model_names):
         """ Reflect the SQL constraints of the given models. """
