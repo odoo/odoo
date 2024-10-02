@@ -9,7 +9,7 @@
                 <search string="Employees">
                     <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
                     <field name="department_id"/>
-                    <searchpanel>
+                    <searchpanel view_types="kanban,list,graph,pivot,hierarchy">
                         <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
@@ -388,7 +388,7 @@
             <field name="name">Employees</field>
             <field name="path">employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+            <field name="domain">[]</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>

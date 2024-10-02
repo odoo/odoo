@@ -70,17 +70,21 @@ export class HierarchyRenderer extends Component {
     }
 
     onPatched() {
-        if (this.scrollTarget === "none") {
-            return;
+        let row;
+        switch (this.scrollTarget) {
+            case "none":
+                return;
+            case "bottom":
+                row = this.rendererRef.el.querySelector(":scope .o_hierarchy_row:last-child");
+                break;
+            case "up":
+                row = this.rendererRef.el.querySelector(":scope .o_hierarchy_row:first-child");
+                break;
+            default:
+                row = this.rendererRef.el
+                    .querySelector(`:scope .o_hierarchy_node[data-node-id="${this.scrollTarget}"]`)
+                    ?.closest(".o_hierarchy_row");
         }
-        const row =
-            this.scrollTarget === "bottom"
-                ? this.rendererRef.el.querySelector(":scope .o_hierarchy_row:last-child")
-                : this.rendererRef.el
-                      .querySelector(
-                          `:scope .o_hierarchy_node[data-node-id="${this.scrollTarget}"]`
-                      )
-                      ?.closest(".o_hierarchy_row");
         this.scrollTarget = "none";
         if (!row) {
             return;
@@ -97,11 +101,11 @@ export class HierarchyRenderer extends Component {
     }
 
     get rows() {
-        const rootNodes = this.props.model.root.rootNodes.filter((n) => !n.hidden);
+        const rootNodes = this.props.model.root.rootNodes;
         const rows = [{ nodes: rootNodes }];
         const processNode = (node) => {
-            if (!node.isLeaf) {
-                const subNodes = node.nodes.filter((n) => !n.hidden);
+            const subNodes = node.nodes;
+            if (subNodes.length) {
                 rows.push({ parentNode: node, nodes: subNodes });
                 for (const subNode of subNodes) {
                     processNode(subNode);
@@ -109,7 +113,7 @@ export class HierarchyRenderer extends Component {
             }
         };
 
-        for (const node of this.props.model.root.rootNodes) {
+        for (const node of rootNodes) {
             processNode(node);
         }
 
