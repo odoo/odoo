@@ -26,7 +26,7 @@ QUnit.test("Barcode scanner crop overlay", async (assert) => {
     registry.category("services").add("overlay", overlayService);
 
     const { env } = await createWebClient({});
-    const firstBarcodeValue = "Odoo";
+    const firstBarcodeValue = "Linen Master";
     const secondBarcodeValue = "O-CMD-TEST";
 
     let barcodeToGenerate = firstBarcodeValue;

@@ -36,7 +36,7 @@ class ProductPricelist(models.Model):
             if vals.get('company_id') and not vals.get('website_id'):
                 # l10n modules install will change the company currency, creating a
                 # pricelist for that currency. Do not use user's company in that
-                # case as module install are done with OdooBot (company 1)
+                # case as module install are done with Bot (company 1)
                 # YTI FIXME: The fix is not at the correct place
                 # It be set when we actually create the pricelist
                 self = self.with_context(default_company_id=vals['company_id'])

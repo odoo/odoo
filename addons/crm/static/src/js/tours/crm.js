@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     position: "bottom"
 }, {
     trigger: ".breadcrumb-item:not(.active):first",
-    content: _t("Click on the breadcrumb to go back to your Pipeline. Odoo will save all modifications as you navigate."),
+    content: _t("Click on the breadcrumb to go back to your Pipeline. Application will save all modifications as you navigate."),
     position: "bottom",
     run: function (actions) {
         actions.auto(".breadcrumb-item:not(.active):last");

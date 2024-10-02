@@ -24,7 +24,7 @@
                     </group>
                     <div class="oe_edit_only alert alert-info" role="alert">
                         Be aware that editing the architecture of a standard view is not advised, since the changes will be overwritten during future module updates.<br/>
-                        We recommend applying modifications to standard views through inherited views or customization with Odoo Studio.
+                        We recommend applying modifications to standard views through inherited views or customization with application Studio.
                     </div>
                     <notebook>
                         <page string="Architecture" name="architecture">
@@ -99,7 +99,7 @@
             <field name="res_model">ir.ui.view</field>
             <field name="view_id" ref="view_view_tree"/>
             <field name="context">{'search_default_active': 1}</field>
-            <field name="help">Views allows you to personalize each view of Odoo. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
+            <field name="help">Views allows you to personalize each view of application. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
         </record>
 
         <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2" sequence="2"/>

@@ -156,7 +156,7 @@ const ODOO_FIN_ARGS = () => [
 functionRegistry.add("ODOO.CREDIT", {
     description: _t("Get the total credit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
-    category: "Odoo",
+    category: "Application",
     returns: ["NUMBER"],
     computeValueAndFormat: function (
         accountCodes,
@@ -187,7 +187,7 @@ functionRegistry.add("ODOO.CREDIT", {
 functionRegistry.add("ODOO.DEBIT", {
     description: _t("Get the total debit for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
-    category: "Odoo",
+    category: "Application",
     returns: ["NUMBER"],
     computeValueAndFormat: function (
         accountCodes,
@@ -218,7 +218,7 @@ functionRegistry.add("ODOO.DEBIT", {
 functionRegistry.add("ODOO.BALANCE", {
     description: _t("Get the total balance for the specified account(s) and period."),
     args: ODOO_FIN_ARGS(),
-    category: "Odoo",
+    category: "Application",
     returns: ["NUMBER"],
     computeValueAndFormat: function (
         accountCodes,
@@ -260,7 +260,7 @@ functionRegistry.add("ODOO.FISCALYEAR.START", {
         arg("day (date)", _t("The day from which to extract the fiscal year start.")),
         arg("company_id (number, optional)", _t("The company.")),
     ],
-    category: "Odoo",
+    category: "Application",
     returns: ["NUMBER"],
     computeFormat: function () {
         return this.locale.dateFormat;
@@ -280,7 +280,7 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
         arg("day (date)", _t("The day from which to extract the fiscal year end.")),
         arg("company_id (number, optional)", _t("The company.")),
     ],
-    category: "Odoo",
+    category: "Application",
     returns: ["NUMBER"],
     computeFormat: function () {
         return this.locale.dateFormat;
@@ -297,7 +297,7 @@ functionRegistry.add("ODOO.FISCALYEAR.END", {
 functionRegistry.add("ODOO.ACCOUNT.GROUP", {
     description: _t("Returns the account ids of a given group."),
     args: [arg("type (string)", _t("The account type (income, expense, asset_current,...)."))],
-    category: "Odoo",
+    category: "Application",
     returns: ["NUMBER"],
     compute: function (accountType) {
         const accountTypes = this.getters.getAccountGroupCodes(toString(accountType));

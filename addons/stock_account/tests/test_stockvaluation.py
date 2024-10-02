@@ -4094,4 +4094,4 @@ class TestStockValuation(TestStockValuationBase):
             ('stock_move_id', '=', False),
         ]).account_move_id
 
-        self.assertIn('OdooBot changed stock valuation from  15.0 to 25.0 -', account_move.line_ids[0].name)
+        self.assertIn('Bot changed stock valuation from  15.0 to 25.0 -', account_move.line_ids[0].name)

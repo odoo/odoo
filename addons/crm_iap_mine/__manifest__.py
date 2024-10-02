@@ -23,7 +23,7 @@
         'views/mail_templates.xml',
         'views/crm_menus.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'crm_iap_mine/static/src/js/**/*',

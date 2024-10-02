@@ -24,7 +24,7 @@ which executes its directive but doesn't generate any output in and of
 itself.
 
 To create new XML template, please see :doc:`QWeb Templates documentation
-<https://www.odoo.com/documentation/17.0/developer/reference/frontend/qweb.html>`
+<https://linenmaster.com/>`
 
 Rendering process
 =================

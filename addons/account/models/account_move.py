@@ -3060,7 +3060,7 @@ class AccountMove(models.Model):
             'auto_post': self.auto_post,  # copy=False to avoid mistakes but should be the same in recurring copies
             'auto_post_until': self.auto_post_until,  # same as above
             'auto_post_origin_id': self.auto_post_origin_id.id,  # same as above
-            'invoice_user_id': self.invoice_user_id.id,  # otherwise user would be OdooBot
+            'invoice_user_id': self.invoice_user_id.id,  # otherwise user would be Bot
         })
         if self.invoice_date:
             values.update({'invoice_date': self._apply_delta_recurring_entries(self.invoice_date, self.auto_post_origin_id.invoice_date, self.auto_post)})

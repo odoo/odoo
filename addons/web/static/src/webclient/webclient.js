@@ -32,7 +32,7 @@ export class WebClient extends Component {
         this.state = useState({
             fullscreen: false,
         });
-        this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
+        this.title.setParts({ zopenerp: "Linen Master" }); // zopenerp is easy to grep
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", ({ detail: mode }) => {
             if (mode !== "new") {

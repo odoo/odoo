@@ -7,7 +7,7 @@
     'version': '1.3',
     'category': 'Hidden',
     'description': """
-The kernel of Odoo, needed for all installation.
+The kernel of Application, needed for all installation.
 ===================================================
 """,
     'data': [

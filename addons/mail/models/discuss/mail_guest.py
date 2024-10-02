@@ -129,7 +129,7 @@ class MailGuest(models.Model):
 
     def _init_messaging(self):
         self.ensure_one()
-        # sudo: res.partner - exposing OdooBot name and id
+        # sudo: res.partner - exposing Bot name and id
         odoobot = self.env.ref('base.partner_root').sudo()
         # sudo: mail.guest - guest reading their own id/name/channels
         guest_sudo = self.sudo()

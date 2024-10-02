@@ -44,16 +44,16 @@ QUnit.module('partner_autocomplete', {
                     get: (route) => {
                         return Promise.resolve([
                             {
-                                "name": "Odoo",
-                                "domain": "odoo.com",
+                                "name": "Application",
+                                "domain": "linenmaster.com",
                             },
                             {
-                                "name": "MyCompany",
-                                "domain": "mycompany.com",
+                                "name": "Linen Master",
+                                "domain": "linenmaster.com",
                             },
                             {
-                                "name": "YourCompany",
-                                "domain": "yourcompany.com",
+                                "name": "Linen Master",
+                                "domain": "linenmaster.com",
                             },
                         ]);
                     },

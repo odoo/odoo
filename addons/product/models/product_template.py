@@ -659,7 +659,7 @@ class ProductTemplate(models.Model):
                     %s
                 </p>
                 <p>
-                    <a class="oe_link" href="https://www.odoo.com/documentation/17.0/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip">
+                    <a class="oe_link" href="https://linenmaster.com/">
                     %s
                     </a>
                 </p>

@@ -6,7 +6,7 @@
             <field name="partner_id" ref="base.partner_root"/>
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[Command.link(ref('main_company'))]"/>
-            <field name="email">odoobot@example.com</field>
+            <field name="email">bot@example.com</field>
             <field name="signature"><![CDATA[<span>-- <br/>
 System</span>]]></field>
         </record>
@@ -22,6 +22,25 @@ System</span>]]></field>
             <field name="signature"><![CDATA[<span>-- <br/>
 Administrator</span>]]></field>
         </record>
+        
+        <!-- Sales user 
+        <record id="user_sales1" model="res.users">
+            <field name="login">Sales</field>
+            <field name="password">sales</field>
+            <field name="partner_id" ref="base.partner_sales1"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="company_ids" eval="[Command.link(ref('base.main_company'))]"/>
+            <field name="groups_id" eval="[(4,ref('sales_team.group_sale_salesman'))]"/>
+        </record>
+        <record id="user_sales1" model="res.users">
+            <field name="login">Sales Manager</field>
+            <field name="password">manager</field>
+            <field name="partner_id" ref="base.partner_salesmanager1"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="company_ids" eval="[Command.link(ref('base.main_company'))]"/>
+            <field name="groups_id" eval="[(4,ref('sales_team.group_sale_manager'))]"/>
+        </record>-->
+
 
         <!-- Default user with full access rights for newly created users -->
         <record id="default_user" model="res.users">

@@ -307,7 +307,7 @@ class TestMailgateway(MailCommon):
         # partner_root -> never again
         odoobot = self.env.ref('base.partner_root')
         odoobot.active = True
-        odoobot.email = 'odoobot@example.com'
+        odoobot.email = 'bot@example.com'
         with self.mock_mail_gateway():
             record4 = self.format_and_process(
                 MAIL_TEMPLATE, odoobot.email_formatted, f'groups@{self.alias_domain}',

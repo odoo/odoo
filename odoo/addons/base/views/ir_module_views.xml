@@ -67,7 +67,7 @@
                             <field name="to_buy" invisible="1"/>
                             <field name="has_iap" invisible="1"/>
                             <button name="button_immediate_install" string="Activate" invisible="to_buy or state != 'uninstalled'" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-primary me-1"
+                            <a href="https://linenmaster.com/" target="_blank" class="btn btn-primary me-1"
                                invisible="not to_buy or state not in ('uninstalled', 'uninstallable')" role="button">Upgrade</a>
                             <button name="button_immediate_upgrade" invisible="state != 'installed'" string="Upgrade" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
                             <button name="button_uninstall_wizard" invisible="state != 'installed'" string="Uninstall" type="object"  class="btn btn-secondary me-1" groups="base.group_system"/>
@@ -190,7 +190,7 @@
                             <div t-if="installed" class="d-flex align-items-center text-muted float-start">Installed</div>
                             <a t-att-href="record.website.raw_value" target="_blank" invisible="website in (False, '')" class="btn btn-sm btn-secondary float-end o-hidden-ios" role="button">Learn More</a>
                             <a type="edit" class="btn btn-secondary btn-sm float-end" role="button" invisible="website != ''">Module Info</a>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-info btn-sm" invisible="state not in ('uninstalled', 'uninstallable')" t-if="record.to_buy.raw_value" role="button" groups="base.group_system">Upgrade</a>
+                            <a href="https://linenmaster.com/" target="_blank" class="btn btn-info btn-sm" invisible="state not in ('uninstalled', 'uninstallable')" t-if="record.to_buy.raw_value" role="button" groups="base.group_system">Upgrade</a>
                             <button invisible="state != 'to remove'" type="object" class="btn btn-sm btn-primary" name="button_uninstall_cancel" groups="base.group_system">Cancel Uninstall</button>
                             <button invisible="state != 'to install'" type="object" class="btn btn-sm btn-primary" name="button_install_cancel" groups="base.group_system">Cancel Install</button>
                           </div>
@@ -227,13 +227,13 @@
         <!--link to stores-->
         <record model='ir.actions.act_url' id='action_third_party'>
             <field name='name'>Third-Party Apps</field>
-            <field name='url'>https://apps.odoo.com/apps/modules</field>
+            <field name='url'>https://linenmaster.com/</field>
         </record>
         <menuitem id="menu_third_party" parent="menu_apps" name="Third-Party Apps" sequence="20" action="action_third_party"/>
 
         <record model='ir.actions.act_url' id='action_theme_store'>
             <field name='name'>Theme Store</field>
-            <field name='url'>https://apps.odoo.com/apps/themes</field>
+            <field name='url'>https://linenmaster.com/</field>
         </record>
         <menuitem id="menu_theme_store" parent="menu_apps" name="Theme Store" sequence="10" action="action_theme_store"/>
 

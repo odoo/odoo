@@ -288,7 +288,7 @@ QUnit.test("default currency format", async (assert) => {
                     data: {},
                     revisions: [],
                     default_currency: {
-                        code: "Odoo",
+                        code: "Application",
                         symbol: "θ",
                         position: "after",
                         decimalPlaces: 2,

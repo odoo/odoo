@@ -18,17 +18,17 @@ class Users(models.Model):
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
-        ('inbox', 'Handle in Odoo')],
+        ('inbox', 'Handle in Application')],
         'Notification', required=True, default='email',
         compute='_compute_notification_type', inverse='_inverse_notification_type', store=True,
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
-             "- Handle in Odoo: notifications appear in your Odoo Inbox")
+             "- Handle in Application: notifications appear in your Application Inbox")
 
     _sql_constraints = [(
         "notification_type",
         "CHECK (notification_type = 'email' OR NOT share)",
-        "Only internal user can receive notifications in Odoo",
+        "Only internal user can receive notifications in Application",
     )]
 
     @api.depends('share', 'groups_id')

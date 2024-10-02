@@ -74,7 +74,7 @@ class TestWebsiteForm(TransactionCase):
             WebsiteFormController.insert_record(
                 request,
                 self.env['ir.model'].search([('model', '=', 'mail.mail')]),
-                {'email_from': 'odoobot@example.com', 'subject': 'John <b>Smith</b>', 'email_to': 'company@company.company'},
+                {'email_from': 'bot@example.com', 'subject': 'John <b>Smith</b>', 'email_to': 'company@company.company'},
                 "John <b>Smith</b>",
             )
             mail = self.env['mail.mail'].search([], order='id desc', limit=1)

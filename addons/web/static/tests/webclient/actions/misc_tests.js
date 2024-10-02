@@ -207,7 +207,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("document's title is updated when an action is executed", async function (assert) {
-        const defaultTitle = { zopenerp: "Odoo" };
+        const defaultTitle = { zopenerp: "Linen Master" };
         const webClient = await createWebClient({ serverData });
         await nextTick();
         let currentTitle = webClient.env.services.title.getParts();

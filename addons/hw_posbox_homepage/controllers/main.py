@@ -157,7 +157,7 @@ class IoTboxHomepage(Home):
         drivers_list = helpers.list_file_by_os(file_path('hw_drivers/iot_handlers/drivers'))
         interfaces_list = helpers.list_file_by_os(file_path('hw_drivers/iot_handlers/interfaces'))
         return handler_list_template.render({
-            'title': "Odoo's IoT Box - Handlers list",
+            'title': "IoT Box - Handlers list",
             'breadcrumb': 'Handlers list',
             'drivers_list': drivers_list,
             'interfaces_list': interfaces_list,
@@ -180,7 +180,7 @@ class IoTboxHomepage(Home):
     @http.route('/list_credential', type='http', auth='none', website=True)
     def list_credential(self):
         return list_credential_template.render({
-            'title': "Odoo's IoT Box - List credential",
+            'title': "IoT Box - List credential",
             'breadcrumb': 'List credential',
             'db_uuid': helpers.read_file_first_line('odoo-db-uuid.conf'),
             'enterprise_code': helpers.read_file_first_line('odoo-enterprise-code.conf'),
@@ -363,7 +363,7 @@ class IoTboxHomepage(Home):
         if flashToVersion:
             flashToVersion = '%s.%s' % (flashToVersion.get('major', ''), flashToVersion.get('minor', ''))
         return upgrade_page_template.render({
-            'title': "Odoo's IoTBox - Software Upgrade",
+            'title': "IoTBox - Software Upgrade",
             'breadcrumb': 'IoT Box Software Upgrade',
             'loading_message': 'Updating IoT box',
             'commit': commit,
@@ -452,7 +452,7 @@ class IoTboxHomepage(Home):
 
     def _update_logger_level(self, logger_name, new_level, available_log_levels, handler_folder=False):
         """
-        Update (if necessary) Odoo's configuration and logger to the given logger_name to the given level.
+        Update (if necessary) configuration and logger to the given logger_name to the given level.
         The responsibility of saving the config file is not managed here.
         :param logger_name: name of the logging logger to change level
         :param new_level: new log level to set for this logger

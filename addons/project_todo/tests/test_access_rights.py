@@ -6,7 +6,7 @@ class TestAccessRightsTodo(TestAccessRights):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.private_task = cls.env['project.task'].create({'name': 'OdooBot Private Task'})
+        cls.private_task = cls.env['project.task'].create({'name': 'Bot Private Task'})
 
     @users('Internal user')
     def test_internal_cannot_rud_private_task(self):

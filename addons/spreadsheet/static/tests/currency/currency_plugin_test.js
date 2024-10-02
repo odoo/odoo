@@ -22,7 +22,7 @@ QUnit.test("get default currency format when it's not in the config", async (ass
         mockRPC: async function (route, args) {
             if (args.method === "get_company_currency_for_spreadsheet") {
                 return {
-                    code: "Odoo",
+                    code: "Application",
                     symbol: "θ",
                     position: "after",
                     decimalPlaces: 2,
@@ -44,7 +44,7 @@ QUnit.test("get specific currency format", async (assert) => {
         mockRPC: async function (route, args) {
             if (args.method === "get_company_currency_for_spreadsheet" && args.args[0] === 42) {
                 return {
-                    code: "Odoo",
+                    code: "Application",
                     symbol: "O",
                     position: "after",
                     decimalPlaces: 2,

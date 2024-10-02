@@ -102,7 +102,7 @@
         <t t-set="x_icon" t-value="website.image_url(website, 'favicon')"/>
     </xpath>
     <xpath expr="//head/meta[last()]" position="after">
-        <meta name="generator" content="Odoo"/>
+        <meta name="generator" content="Linen Master"/>
         <t t-set="website_meta" t-value="seo_object and seo_object.get_website_meta() or {}"/>
         <meta name="default_title" t-att-content="default_title" groups="website.group_website_designer"/>
         <meta t-if="(main_object and 'website_indexed' in main_object

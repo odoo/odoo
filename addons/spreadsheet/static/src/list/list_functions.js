@@ -24,7 +24,7 @@ const ODOO_LIST = {
         arg("index (string)", _t("Position of the record in the list.")),
         arg("field_name (string)", _t("Name of the field.")),
     ],
-    category: "Odoo",
+    category: "Application",
     compute: function (listId, index, fieldName) {
         const id = toString(listId);
         const position = toNumber(index, this.locale) - 1;
@@ -65,7 +65,7 @@ const ODOO_LIST_HEADER = {
         arg("list_id (string)", _t("ID of the list.")),
         arg("field_name (string)", _t("Name of the field.")),
     ],
-    category: "Odoo",
+    category: "Application",
     compute: function (listId, fieldName) {
         const id = toString(listId);
         const field = toString(fieldName);

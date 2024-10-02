@@ -13,7 +13,7 @@
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
-                <title><t t-esc="title or 'Odoo Report'"/></title>
+                <title><t t-esc="title or 'Application Report'"/></title>
                 <t t-call-assets="web.report_assets_common"/>
                 <!-- Temporary code: only used to maintain CSS for legacy HTML reports (full width...) -->
                 <!-- Should be removed once the reports are fully converted. -->
@@ -47,7 +47,7 @@
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
-                <title><t t-esc="title or 'Odoo Report'"/></title>
+                <title><t t-esc="title or 'Application Report'"/></title>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
                 <style>
                     <t t-out="preview_css"/>

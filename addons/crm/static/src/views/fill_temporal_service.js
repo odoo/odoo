@@ -19,7 +19,7 @@ import {
  * 1 week          week    # there is no greater time period that takes an integer amount of weeks
  * 1 year          month
  * 1 year          quarter
- * 1 year          year    # we are not using a greater time period in Odoo (yet)
+ * 1 year          year    # we are not using a greater time period in Application (yet)
  * @param {int} cyclePos function to get the position (index) in the cycle from a DateTime.
  *                       {1} is the first index. {+1} is used for properties which have an index
  *                       starting from 0, to standardize between granularities.
@@ -200,7 +200,7 @@ export class FillTemporalPeriod {
             fillTemporal.fill_from = this._getFormattedServerDate(this.start);
         }
         if (forceFillingTo) {
-            // smallest time interval used in Odoo for the current date type
+            // smallest time interval used in Application for the current date type
             const minGranularity = this.field.type === "date" ? "days" : "seconds";
             fillTemporal.fill_to = this._getFormattedServerDate(this.end.minus({[minGranularity]: 1}));
         }
