@@ -44,15 +44,18 @@ class SaleOrderDiscount(models.TransientModel):
 
     def _prepare_discount_product_values(self):
         self.ensure_one()
-        return {
+        values = {
             'name': _('Discount'),
             'type': 'service',
             'invoice_policy': 'order',
             'list_price': 0.0,
-            'categ_id': self.env.ref('product.product_category_services').id,
             'company_id': self.company_id.id,
             'taxes_id': None,
         }
+        services_category = self.env.ref('product.product_category_services', raise_if_not_found=False)
+        if services_category:
+            values['categ_id'] = services_category.id
+        return values
 
     def _prepare_discount_line_values(self, product, amount, taxes, description=None):
         self.ensure_one()

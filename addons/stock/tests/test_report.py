@@ -21,6 +21,7 @@ class TestReportsCommon(TransactionCase):
         cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi"',
             'is_storable': True,
+            'categ_id': cls.env.ref('product.product_category_services').id,
             'tracking': 'lot',
             'default_code': 'C4181234""154654654654',
             'barcode': 'scan""me'
