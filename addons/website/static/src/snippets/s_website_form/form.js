@@ -737,9 +737,15 @@ export class Form extends Interaction {
                 return value.name === "";
         }
 
-        const format = value.includes(":")
-            ? localization.dateTimeFormat
-            : localization.dateFormat;
+        let format = "";
+        const currentDate = new Date();
+        const xYearAgo = new Date();
+        if (value.includes(":")) {
+            format = localization.dateTimeFormat;
+        } else {
+            format = localization.dateFormat;
+            xYearAgo.setHours(0, 0, 0, 0);
+        }
         // Date & Date Time comparison requires formatting the value
         const dateTime = DateTime.fromFormat(value, format);
         // If invalid, any value other than "NaN" would cause certain
@@ -765,6 +771,10 @@ export class Form extends Interaction {
                 return !(value >= comparable && value <= between);
             case "equal or after":
                 return value >= comparable;
+            case "lessyears":
+                xYearAgo.setFullYear(currentDate.getFullYear() - comparable);
+                value = new Date(value * 1000);
+                return value > xYearAgo;
         }
     }
 
