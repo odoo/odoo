@@ -1,9 +1,11 @@
 import { closestBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestPosition,
+    isIconElement,
     isMediaElement,
     isProtected,
     isProtecting,
+    isTextNode,
     isUnprotecting,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
@@ -813,7 +815,11 @@ export class SelectionPlugin extends Plugin {
             const shouldSkipCallbacks = this.getResource(
                 "intangible_char_for_keyboard_navigation_predicates"
             );
-            let adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+            let adjacentCharacter = getAdjacentCharacter(
+                this.getSelectionData().deepEditableSelection,
+                domDirection,
+                this.editable
+            );
             let shouldSkip = shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter));
 
             while (shouldSkip) {
@@ -824,11 +830,31 @@ export class SelectionPlugin extends Plugin {
                 const hasSelectionChanged =
                     nodeBefore !== selection.focusNode || offsetBefore !== selection.focusOffset;
                 const lastSkippedChar = adjacentCharacter;
-                adjacentCharacter = getAdjacentCharacter(selection, domDirection, this.editable);
+                adjacentCharacter = getAdjacentCharacter(
+                    this.getSelectionData().deepEditableSelection,
+                    domDirection,
+                    this.editable
+                );
 
                 shouldSkip =
                     hasSelectionChanged &&
                     shouldSkipCallbacks.some((cb) => cb(ev, adjacentCharacter, lastSkippedChar));
+            }
+            let { focusNode, focusOffset } = this.getSelectionData().deepEditableSelection;
+            if (domDirection === "next" && mode === "move") {
+                if (
+                    isTextNode(focusNode) &&
+                    focusNode.length === focusOffset &&
+                    isIconElement(focusNode.nextSibling)
+                ) {
+                    focusNode = focusNode.nextSibling;
+                    focusOffset = 0;
+                }
+
+                if (isIconElement(focusNode) && focusOffset === 0 && !focusNode.nextSibling) {
+                    ev.preventDefault();
+                    this.setSelection({ anchorNode: focusNode, anchorOffset: 1 });
+                }
             }
         }
 
