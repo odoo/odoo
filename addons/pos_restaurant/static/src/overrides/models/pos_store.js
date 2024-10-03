@@ -36,13 +36,16 @@ patch(PosStore.prototype, {
         return screen === "LoginScreen" ? "LoginScreen" : "FloorScreen";
     },
     async onDeleteOrder(order) {
-        if (
-            this.config.module_pos_restaurant &&
-            this.mainScreen.component.name !== "TicketScreen"
-        ) {
+        const isResaturant = this.config.module_pos_restaurant;
+        const isTicketScreen = this.mainScreen.component.name !== "TicketScreen";
+        if (isResaturant && typeof order.id !== "string" && isTicketScreen) {
             this.showScreen("FloorScreen");
         }
-        return super.onDeleteOrder(...arguments);
+        const orderIsDeleted = await super.onDeleteOrder(...arguments);
+        if (isResaturant && isTicketScreen) {
+            this.showScreen("FloorScreen");
+        }
+        return orderIsDeleted;
     },
     // using the same floorplan.
     async ws_syncTableCount(data) {

@@ -136,6 +136,25 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
                 }),
             ]),
             ProductScreen.isShown(),
+
+            // Test Cancel Order from Actions
+            ProductScreen.clickReview(),
+            Chrome.createFloatingOrder(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickReview(),
+            Order.hasLine({ productName: "Whiteboard Pen", quantity: "1" }),
+            ProductScreen.clickControlButton("Cancel Order"),
+            Dialog.confirm(),
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            // As the old order will be set on the screen
+            inLeftSide(
+                Order.hasLine({
+                    productName: "Desk Organizer",
+                    quantity: "1.0",
+                    customerNote: "Test customer note",
+                })
+            ),
         ].flat(),
 });
 
