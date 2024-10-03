@@ -53,7 +53,7 @@
                         <div class="oe_button_box" name="button_box"/>
                         <field name="avatar_128" invisible="1"/>
                         <field name="is_editable" invisible="1"/>
-                        <field name="image_128" widget="image" class="oe_avatar" options="{'size': [90, 90], 'preview_image':'avatar_128'}" readonly="is_editable != 'True'"/>
+                        <field name="image_128" widget="image" class="oe_avatar" options="{'size': [90, 90], 'preview_image':'avatar_128'}" readonly="not is_editable"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
                             <label for="name" string="Group Name"/>
