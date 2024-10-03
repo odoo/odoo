@@ -2264,6 +2264,7 @@ export class Wysiwyg extends Component {
             '#colorInputButtonGroup',
             '#media-insert', // "Insert media" should be replaced with "Replace media".
             '#chatgpt', // Chatgpt should be removed when media is in selection.
+            '#translate' // Translate button should be removed when media is in selection.
         ].join(','))){
             el.classList.toggle('d-none', isInMedia);
         }
