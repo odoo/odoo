@@ -1381,10 +1381,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 && ['between', '!between'].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_datetime':
                 return dependencyEl?.closest(".s_website_form_datetime")
-                && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
+                && !['set', '!set', "lessyears"].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_date':
                 return dependencyEl && dependencyEl?.closest(".s_website_form_date")
-                && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
+                && !['set', '!set', "lessyears"].includes(this.$target[0].dataset.visibilityComparator);
             case 'hidden_condition_additional_text':
                 if (!this.$target[0].classList.contains('s_website_form_field_hidden_if') ||
                 (dependencyEl && (['checkbox', 'radio'].includes(dependencyEl.type) || dependencyEl.nodeName === 'SELECT'))) {
@@ -1393,11 +1393,33 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 if (!dependencyEl) {
                     return true;
                 }
-                if (dependencyEl?.classList.contains("datetimepicker-input")) {
-                    return false;
-                }
-                return (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
-                    || dependencyEl.nodeName === 'TEXTAREA') && !['set', '!set'].includes(this.$target[0].dataset.visibilityComparator);
+                return (
+                    ([
+                        "text",
+                        "email",
+                        "tel",
+                        "url",
+                        "search",
+                        "password",
+                        "number",
+                        "date",
+                        "datetime",
+                    ].includes(dependencyEl.type) ||
+                        dependencyEl.nodeName === "TEXTAREA") &&
+                    ![
+                        "set",
+                        "!set",
+                        "dateEqual",
+                        "date!equal",
+                        "after",
+                        "before",
+                        "equal or after",
+                        "equal or before",
+                        "between",
+                        "!between",
+                        "none",
+                    ].includes(this.$target[0].dataset.visibilityComparator)
+                );
             case 'hidden_condition_no_text_opt':
                 return dependencyEl && (dependencyEl.type === 'checkbox' || dependencyEl.type === 'radio' || dependencyEl.nodeName === 'SELECT');
             case 'hidden_condition_num_opt':
@@ -1722,7 +1744,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
      _setVisibilityDependency(value) {
         delete this.$target[0].dataset.visibilityCondition;
-        delete this.$target[0].dataset.visibilityComparator;
+        this.$target[0].dataset.visibilityComparator = "none";
         this.rerender = true;
         this.$target[0].dataset.visibilityDependency = value;
     },
