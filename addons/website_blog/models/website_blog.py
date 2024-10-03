@@ -23,6 +23,7 @@ class Blog(models.Model):
     ]
     _order = 'name'
 
+    sequence = fields.Integer("Sequence", default=1)
     name = fields.Char('Blog Name', required=True, translate=True)
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)

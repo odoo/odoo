@@ -181,7 +181,7 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=True)
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
-        blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="create_date asc, id asc"))
+        blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="sequence"))
 
         if not blog and len(blogs) == 1:
             url = QueryURL('/blog/%s' % request.env['ir.http']._slug(blogs[0]), search=search, **opt)()
