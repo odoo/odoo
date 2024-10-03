@@ -61,6 +61,7 @@ export class ProductScreen extends Component {
             if (this.pos.config.iface_start_categ_id) {
                 this.pos.setSelectedCategory(this.pos.config.iface_start_categ_id.id);
             }
+            this.pos.addPendingOrder([this.pos.get_order().id]);
 
             // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
             // We don't do this in the `mounted` lifecycle method because it is called before
