@@ -245,7 +245,6 @@ class TestDropship(common.TransactionCase):
         self.dropship_product = self.env['product.product'].create({
             'name': "Pen drive",
             'is_storable': "True",
-            'categ_id': self.env.ref('product.product_category_1').id,
             'lst_price': 100.0,
             'standard_price': 0.0,
             'uom_id': self.env.ref('uom.product_uom_unit').id,

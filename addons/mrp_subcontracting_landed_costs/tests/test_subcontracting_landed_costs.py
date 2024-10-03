@@ -12,7 +12,7 @@ class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon):
             This test verifies that landed costs can be applied to subcontracting receipts
             rather than being added directly to the manufacturing order.
         """
-        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all = self.env.ref('product.product_category_services')
         product_category_all.property_cost_method = 'fifo'
         product_category_all.property_valuation = 'real_time'
         po = self.env['purchase.order'].create({
