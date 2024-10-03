@@ -222,6 +222,9 @@ class PurchaseOrder(models.Model):
     @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals(self):
         for order in self:
+            if not order.company_id:
+                order.tax_totals = False
+                continue
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
