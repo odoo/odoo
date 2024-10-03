@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo.exceptions import UserError
 from odoo.fields import Datetime
 from odoo.tests.common import Form, TransactionCase
+from odoo import Command
 
 
 def _create_accounting_data(env):
@@ -4300,3 +4301,40 @@ class TestStockValuation(TransactionCase):
         ]).account_move_id
 
         self.assertIn('OdooBot changed stock valuation from  15.0 to 25.0 -', account_move.line_ids[0].name)
+
+    def test_diff_uom_quantity_update_after_done(self):
+        """Test that when the UoM of the stock.move.line is different from the stock.move,
+        the quantity update after done (unlocked) use the correct UoM"""
+        unit_uom = self.env.ref('uom.product_uom_unit')
+        dozen_uom = self.env.ref('uom.product_uom_dozen')
+        move = self.env['stock.move'].create({
+            'name': '12 Units of Product1',
+            'product_id': self.product1.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'product_uom': unit_uom.id,
+            'product_uom_qty': 12,
+            'price_unit': 1,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move._action_confirm()
+        move._action_assign()
+
+        # Change from 12 Units to 1 Dozen (aka: same quantity)
+        move.move_line_ids = [
+            Command.update(
+                move.move_line_ids[0].id,
+                {'qty_done': 1, 'product_uom_id': dozen_uom.id}
+            )
+        ]
+        move._action_done()
+
+        self.assertEqual(move.quantity_done, 12)
+        self.assertEqual(move.stock_valuation_layer_ids.quantity, 12)
+
+        move.picking_id.action_toggle_is_locked()
+        # Change from 1 Dozen to 2 Dozens (12 -> 24)
+        move.move_line_ids = [Command.update(move.move_line_ids[0].id, {'qty_done': 2})]
+
+        self.assertEqual(move.quantity_done, 24)
+        self.assertRecordValues(move.stock_valuation_layer_ids, [{'quantity': 12}, {'quantity': 12}])
