@@ -574,6 +574,10 @@ class AccountMoveSend(models.TransientModel):
                                                  and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
                 invoice_data['error_but_continue'] = allow_fallback_pdf and invoice_data.get('error_but_continue')
 
+            if invoice.invoice_pdf_report_id.id and (not invoice_data.get('error') or allow_fallback_pdf):
+                content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._render('account.account_invoices', invoice.ids)
+                invoice.invoice_pdf_report_id.write({'raw': content})
+
         invoices_data_web_service = {
             invoice: invoice_data
             for invoice, invoice_data in invoices_data.items()
