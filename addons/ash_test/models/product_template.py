@@ -19,3 +19,8 @@ class ProductTemplate(models.Model):
     product_width = fields.Char('Product Width')
     product_height = fields.Char('Product Height')
     image_url = fields.Char('Image URL')
+    automation_manual_product = fields.Selection([
+        ('automation', 'Automation'),
+        ('manual', 'Manual'),
+        ('none', 'None'),
+    ], string='Automation Manual Product', default='none')
