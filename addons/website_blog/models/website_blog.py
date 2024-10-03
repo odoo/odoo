@@ -23,6 +23,10 @@ class BlogBlog(models.Model):
     ]
     _order = 'name'
 
+    def _default_sequence(self):
+        return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
+
+    sequence = fields.Integer("Sequence", default=_default_sequence)
     name = fields.Char('Blog Name', required=True, translate=True)
     subtitle = fields.Char('Blog Subtitle', translate=True)
     active = fields.Boolean('Active', default=True)
