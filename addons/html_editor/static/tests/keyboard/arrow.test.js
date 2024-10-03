@@ -390,6 +390,221 @@ describe("Around icons", () => {
             contentAfter: `<p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span></p>`,
         });
     });
+    test("should not skip icons (ArrowUp)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span></p>
+                <p>[]<br></p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span></p>
+                <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+            `),
+            stepFunction: async () => await press("ArrowUp"),
+            contentAfterEdit: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]</p>
+                <p placeholder='Type "/" for commands' class="o-we-hint"><br></p>
+            `),
+            contentAfter: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p>
+                <p><br></p>
+            `),
+        });
+        await testEditor({
+            contentBefore: unformat(`
+                <p>abcd<br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>[]
+                </p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p>abcd<br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]
+                </p>
+            `),
+            stepFunction: async () => await press("ArrowUp"),
+            contentAfterEdit: unformat(`
+                <p>[]abcd<br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+            `),
+            contentAfter: unformat(`
+                <p>[]abcd<br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>
+                </p>
+            `),
+        });
+        await testEditor({
+            contentBefore: unformat(`
+                <p><br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>[]
+                </p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p><br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]
+                </p>
+            `),
+            stepFunction: async () => await press("ArrowUp"),
+            contentAfterEdit: unformat(`
+                <p>[]<br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+            `),
+            contentAfter: unformat(`
+                <p>[]<br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>
+                </p>
+            `),
+        });
+        await testEditor({
+            contentBefore: unformat(`
+                <p><br>
+                <span class="fa fa-music"></span>[]<span class="fa fa-music"></span>
+                </p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p><br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span>[]<span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+            `),
+            stepFunction: async () => await press("ArrowUp"),
+            contentAfterEdit: unformat(`
+                <p>[]<br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+            `),
+            contentAfter: unformat(`
+                <p>[]<br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>
+                </p>
+            `),
+        });
+        await testEditor({
+            contentBefore: unformat(`
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span><br>
+                <span class="fa fa-music"></span>[]<span class="fa fa-music"></span>
+                </p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span><br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span>[]<span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+            `),
+            stepFunction: async () => await press("ArrowUp"),
+            contentAfterEdit: unformat(`
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]<br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+            `),
+            contentAfter: unformat(`
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]<br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>
+                </p>
+            `),
+        });
+    });
+    test("should not skip icons (ArrowDown)", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p>[]<br></p>
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span></p>
+                <p><br></p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span></p>
+                <p><br></p>
+            `),
+            stepFunction: async () => await press("ArrowDown"),
+            contentAfterEdit: unformat(`
+                <p placeholder='Type "/" for commands' class="o-we-hint"><br></p>
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]</p>
+                <p><br></p>
+            `),
+            contentAfter: unformat(`
+                <p><br></p>
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p>
+                <p><br></p>
+            `),
+        });
+        await testEditor({
+            contentBefore: unformat(`
+                <p>[]<br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>
+                </p>
+                <p><br></p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p>[]<br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+                <p><br></p>
+            `),
+            stepFunction: async () => await press("ArrowDown"),
+            contentAfterEdit: unformat(`
+                <p><br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]
+                </p>
+                <p><br></p>
+            `),
+            contentAfter: unformat(`
+                <p><br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>[]
+                </p>
+                <p><br></p>
+            `),
+        });
+        await testEditor({
+            contentBefore: unformat(`
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]<br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>
+                </p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]<br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+            `),
+            stepFunction: async () => await press("ArrowDown"),
+            contentAfterEdit: unformat(`
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span><br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]
+                </p>
+            `),
+            contentAfter: unformat(`
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span><br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>[]
+                </p>
+            `),
+        });
+        await testEditor({
+            contentBefore: unformat(`
+                <p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span><br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>
+                </p>
+            `),
+            contentBeforeEdit: unformat(`
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span>[]<span class="fa fa-music" contenteditable="false">\u200b</span><br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>
+                </p>
+            `),
+            stepFunction: async () => await press("ArrowDown"),
+            contentAfterEdit: unformat(`
+                <p><span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span><br>
+                <span class="fa fa-music" contenteditable="false">\u200b</span><span class="fa fa-music" contenteditable="false">\u200b</span>[]
+                </p>
+            `),
+            contentAfter: unformat(`
+                <p><span class="fa fa-music"></span><span class="fa fa-music"></span><br>
+                <span class="fa fa-music"></span><span class="fa fa-music"></span>[]
+                </p>
+            `),
+        });
+    });
 });
 
 describe("Selection correction when it lands at the editable root", () => {
