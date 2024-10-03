@@ -175,7 +175,7 @@ patch(PosStore.prototype, {
             buttons: enhancedButtons(),
             formatDisplayedValue: (x) => (isPercentage ? `% ${x}` : x),
             feedback: (buffer) =>
-                isPercentage
+                isPercentage && buffer
                     ? `(${this.env.utils.formatCurrency(
                           (sale_order.amount_unpaid * parseFloat(buffer)) / 100
                       )})`
