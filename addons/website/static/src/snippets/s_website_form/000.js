@@ -731,6 +731,11 @@ import wUtils from '@website/js/utils';
                     return !(value >= comparable && value <= between);
                 case 'equal or after':
                     return value >= comparable;
+                case "lessyears":
+                    // currentDate becomes date from comparable years ago(which is x years ago)
+                    currentDate.setFullYear(currentDate.getFullYear() - comparable);
+                    value = new Date(value * 1000);
+                    return value > currentDate;
             }
         },
         /**
