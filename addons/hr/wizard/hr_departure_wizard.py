@@ -8,27 +8,33 @@ class HrDepartureWizard(models.TransientModel):
     _name = 'hr.departure.wizard'
     _description = 'Departure Wizard'
 
-    def _get_employee_departure_date(self):
-        return self.env['hr.employee'].browse(self.env.context['active_id']).departure_date
+    def _get_employee_departure_date(self, employee):
+        return employee.departure_date
 
     def _get_default_departure_date(self):
-        departure_date = False
-        if self.env.context.get('active_id'):
-            departure_date = self._get_employee_departure_date()
+        if len(active_ids := self.env.context.get('active_ids', [])) == 1:
+            employee = self.env['hr.employee'].browse(active_ids[0])
+            departure_date = self._get_employee_departure_date(employee)
+        else:
+            departure_date = False
+
         return departure_date or fields.Date.today()
 
     departure_reason_id = fields.Many2one("hr.departure.reason", default=lambda self: self.env['hr.departure.reason'].search([], limit=1), required=True)
     departure_description = fields.Html(string="Additional Information")
     departure_date = fields.Date(string="Departure Date", required=True, default=_get_default_departure_date)
-    employee_id = fields.Many2one(
-        'hr.employee', string='Employee', required=True,
-        default=lambda self: self.env.context.get('active_id', None),
+    employee_ids = fields.Many2many(
+        'hr.employee', string='Employees', required=True,
+        default=lambda self: self.env.context.get('active_ids', []),
     )
 
     def action_register_departure(self):
-        employee = self.employee_id
-        if self.env.context.get('toggle_active', False) and employee.active:
-            employee.with_context(no_wizard=True).toggle_active()
-        employee.departure_reason_id = self.departure_reason_id
-        employee.departure_description = self.departure_description
-        employee.departure_date = self.departure_date
+        employees = self.employee_ids
+        for employee in employees:
+            if self.env.context.get('toggle_active') and employee.active:
+                employee.with_context(no_wizard=True).toggle_active()
+        employees.write({
+            'departure_reason_id': self.departure_reason_id,
+            'departure_description': self.departure_description,
+            'departure_date': self.departure_date,
+        })
