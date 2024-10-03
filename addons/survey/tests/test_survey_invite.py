@@ -202,7 +202,7 @@ class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
         action['context']['default_send_email'] = True
         invite_form = Form.from_action(self.env, action)
         invite_form.partner_ids.add(self.survey_user.partner_id)
-        invite_form.template_id.write({'email_from':'{{ object.partner_id.email_formatted }}'})
+        invite_form.template_id.sudo().write({'email_from': '{{ object.partner_id.email_formatted }}'})
         invite = invite_form.save()
         with self.mock_mail_gateway():
             invite.action_invite()
