@@ -9,5 +9,14 @@
         <field name="user_id" ref="base.user_root"/>
         <field name="interval_number">1</field>
         <field name="interval_type">hours</field>
+<<<<<<< saas-17.4
+||||||| 6182579b8b98c70d25458e990d63e27293eb0ec8
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+=======
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')" />
+>>>>>>> 9e36579e53df3541f8b4c4d38b7b6b2e3c7ef1ce
     </record>
 </data></odoo>
