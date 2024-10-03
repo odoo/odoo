@@ -113,6 +113,8 @@ const IS_KEYBOARD_EVENT_UNDERLINE = ev => ev.key === 'u' && (ev.ctrlKey || ev.me
 const IS_KEYBOARD_EVENT_STRIKETHROUGH = ev => ev.key === '5' && (ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_LEFT_ARROW = ev => ev.key === 'ArrowLeft' && !(ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_RIGHT_ARROW = ev => ev.key === 'ArrowRight' && !(ev.ctrlKey || ev.metaKey);
+const IS_KEYBOARD_EVENT_UP_ARROW = ev => ev.key === 'ArrowUp' && !(ev.ctrlKey || ev.metaKey);
+const IS_KEYBOARD_EVENT_DOWN_ARROW = ev => ev.key === 'ArrowDown' && !(ev.ctrlKey || ev.metaKey);
 
 const CLIPBOARD_BLACKLISTS = {
     unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
@@ -4125,7 +4127,25 @@ export class OdooEditor extends EventTarget {
             this.execCommand('strikeThrough');
         } else if (IS_KEYBOARD_EVENT_LEFT_ARROW(ev) || IS_KEYBOARD_EVENT_RIGHT_ARROW(ev)) {
             const side = ev.key === 'ArrowLeft' ? 'previous' : 'next';
-            const { anchorNode, anchorOffset } = this.document.getSelection() || {};
+            const selection = this.document.getSelection();
+            const { anchorNode, anchorOffset, focusNode, focusOffset } = selection || {};
+            if (ev.shiftKey) {
+                const currentBlock = closestBlock(focusNode);
+                const isSelectionAtStart = firstLeaf(currentBlock) === focusNode && focusOffset === 0;
+                const isSelectionAtEnd = lastLeaf(currentBlock) === focusNode && focusOffset === nodeSize(focusNode);
+                const adjacentBlock = side === 'previous' ? currentBlock.previousElementSibling : currentBlock.nextElementSibling;
+                const targetBlock = side === 'previous' ? adjacentBlock?.previousElementSibling : adjacentBlock?.nextElementSibling;
+                if (targetBlock && !adjacentBlock.isContentEditable) {
+                    const lastNode = lastLeaf(targetBlock);
+                    if (side === 'previous' && isSelectionAtStart) {
+                        selection.extend(lastNode, nodeSize(lastNode));
+                        ev.preventDefault();
+                    } else if (side === 'next' && isSelectionAtEnd) {
+                        selection.extend(lastNode, 0);
+                        ev.preventDefault();
+                    }
+                }
+            }
             // If the selection is at the edge of a code element at the edge of
             // its parent, make sure there's a zws next to it, where the
             // selection can then be set.
@@ -4173,6 +4193,22 @@ export class OdooEditor extends EventTarget {
                     ev.preventDefault();
                     ev.stopPropagation();
                 }
+            }
+        } else if ((IS_KEYBOARD_EVENT_UP_ARROW(ev) || IS_KEYBOARD_EVENT_DOWN_ARROW(ev)) && ev.shiftKey) {
+            const selection = this.document.getSelection();
+            const isFocusContentEditable = selection.focusNode.isContentEditable;
+            getDeepRange(this.editable, { selection, select: !isFocusContentEditable, correctTripleClick: !isFocusContentEditable });
+            const currentBlock = closestBlock(selection.focusNode);
+            const isAtBoundary = ev.key === 'ArrowUp'
+                ? firstLeaf(currentBlock) === selection.focusNode && selection.focusOffset === 0
+                : lastLeaf(currentBlock) === selection.focusNode && selection.focusOffset === nodeSize(selection.focusNode);
+            const adjacentBlock = ev.key === 'ArrowUp' ? currentBlock.previousElementSibling : currentBlock.nextSibling;
+            const targetBlock = ev.key === 'ArrowUp' ? adjacentBlock?.previousElementSibling : adjacentBlock?.nextElementSibling;
+            if (targetBlock && !adjacentBlock.isContentEditable && isAtBoundary) {
+                const leafNode = lastLeaf(targetBlock);
+                const offset = ev.key === 'ArrowUp' ? nodeSize(leafNode) : 0;
+                selection.extend(leafNode, offset);
+                ev.preventDefault();
             }
         }
     }
