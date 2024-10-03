@@ -651,100 +651,91 @@ class ResourceCalendar(models.Model):
 
         return self._get_attendance_intervals_days_data(intervals)
 
+    def _iter_intervals(self, start_dt, direction, compute_leaves=False, domain=None, resource=None):
+        delta = timedelta(days=14)
+        n = 0
+        found_intervals = False
+        while True:
+            if direction > 0:
+                dt_start = start_dt + delta * n
+                dt_end = dt_start + delta
+            else:
+                dt_end = start_dt - delta * n
+                dt_start = dt_end - delta
+            if compute_leaves:
+                get_intervals = partial(self._work_intervals_batch, domain=domain, resources=resource)
+                resource_id = resource.id if resource else False
+            else:
+                get_intervals = self._attendance_intervals_batch
+                resource_id = False
+            intervals_dict = get_intervals(dt_start, dt_end)
+            intervals = intervals_dict.get(resource_id, [])
+            if not intervals:
+                if found_intervals:
+                    break
+                else:
+                    n += 1
+                    continue
+            found_intervals = True
+            if direction < 0:
+                intervals = reversed(intervals)
+            yield from intervals
+            n += 1
+
     def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
-        """
-        `compute_leaves` controls whether or not this method is taking into
-        account the global leaves.
-
-        `domain` controls the way leaves are recognized.
-        None means default value ('time_type', '=', 'leave')
-
-        Return datetime after having planned hours
-        """
         day_dt, revert = make_aware(day_dt)
-
         if resource is None:
             resource = self.env['resource.resource']
-
-        # which method to use for retrieving intervals
-        if compute_leaves:
-            get_intervals = partial(self._work_intervals_batch, domain=domain, resources=resource)
-            resource_id = resource.id
-        else:
-            get_intervals = self._attendance_intervals_batch
-            resource_id = False
-
-        if hours >= 0:
-            delta = timedelta(days=14)
-            for n in range(100):
-                dt = day_dt + delta * n
-                for start, stop, meta in get_intervals(dt, dt + delta)[resource_id]:
-                    interval_hours = (stop - start).total_seconds() / 3600
-                    if hours <= interval_hours:
-                        return revert(start + timedelta(hours=hours))
-                    hours -= interval_hours
-            return False
-        else:
-            hours = abs(hours)
-            delta = timedelta(days=14)
-            for n in range(100):
-                dt = day_dt - delta * n
-                for start, stop, meta in reversed(get_intervals(dt - delta, dt)[resource_id]):
-                    interval_hours = (stop - start).total_seconds() / 3600
-                    if hours <= interval_hours:
-                        return revert(stop - timedelta(hours=hours))
-                    hours -= interval_hours
-            return False
+        direction = 1 if hours >= 0 else -1
+        remaining_hours = abs(hours)
+        for start, stop, meta in self._iter_intervals(day_dt, direction, compute_leaves, domain, resource):
+            interval_hours = (stop - start).total_seconds() / 3600
+            if remaining_hours <= interval_hours:
+                if direction > 0:
+                    return revert(start + timedelta(hours=remaining_hours))
+                else:
+                    return revert(stop - timedelta(hours=remaining_hours))
+            remaining_hours -= interval_hours
+        return False
 
     def plan_days(self, days, day_dt, compute_leaves=False, domain=None):
-        """
-        `compute_leaves` controls whether or not this method is taking into
-        account the global leaves.
-
-        `domain` controls the way leaves are recognized.
-        None means default value ('time_type', '=', 'leave')
-
-        Returns the datetime of a days scheduling.
-        """
         day_dt, revert = make_aware(day_dt)
-
-        # which method to use for retrieving intervals
-        if compute_leaves:
-            get_intervals = partial(self._work_intervals_batch, domain=domain)
-        else:
-            get_intervals = self._attendance_intervals_batch
-
-        if days > 0:
-            found = set()
-            delta = timedelta(days=14)
-            for n in range(100):
-                dt = day_dt + delta * n
-                for start, stop, meta in get_intervals(dt, dt + delta)[False]:
-                    found.add(start.date())
-                    if len(found) == days:
-                        return revert(stop)
-            return False
-
-        elif days < 0:
-            days = abs(days)
-            found = set()
-            delta = timedelta(days=14)
-            for n in range(100):
-                dt = day_dt - delta * n
-                for start, stop, meta in reversed(get_intervals(dt - delta, dt)[False]):
-                    found.add(start.date())
-                    if len(found) == days:
-                        return revert(start)
-            return False
-
-        else:
+        if days == 0:
             return revert(day_dt)
+        direction = 1 if days > 0 else -1
+        remaining_days = abs(days)
+        current_date = None
+        total_working_hours = None
+        for start, stop, meta in self._iter_intervals(day_dt, direction, compute_leaves, domain):
+            date = start.date()
+            if date != current_date:
+                current_date = date
+                total_working_hours = self._get_max_number_of_hours(date, date)
+                if total_working_hours == 0:
+                    continue
+            interval_hours = (stop - start).total_seconds() / 3600
+            if total_working_hours == 0:
+                continue
+            day_fraction = interval_hours / total_working_hours
+            remaining_days -= day_fraction
+            if remaining_days < 1:
+                if direction > 0:
+                    return revert(start + timedelta(hours=interval_hours * (1 + remaining_days)))
+                else:
+                    return revert(stop - timedelta(hours=interval_hours * (1 + remaining_days)))
+        return False
 
     def _get_max_number_of_hours(self, start, end):
         self.ensure_one()
         if not self.attendance_ids:
             return 0
         mapped_data = defaultdict(lambda: 0)
-        for attendance in self.attendance_ids.filtered(lambda a: a.day_period != 'lunch' and ((not a.date_from or not a.date_to) or (a.date_from <= end.date() and a.date_to >= start.date()))):
+        for attendance in self.attendance_ids.filtered(
+            lambda a:
+            a.day_period != 'lunch' and (
+                (not a.date_from or not a.date_to) or
+                (a.date_from <= end.date() and a.date_to >= start.date())
+            )
+        ):
             mapped_data[(attendance.week_type, attendance.dayofweek)] += attendance.hour_to - attendance.hour_from
         return max(mapped_data.values())
