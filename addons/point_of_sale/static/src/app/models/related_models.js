@@ -314,6 +314,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         update: new Set(),
     }));
     const baseData = {};
+    const missingFields = {};
 
     // object: model -> key -> keyval -> record
     const indexedRecords = mapObj(processedModelDefs, (model) => {
@@ -932,6 +933,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             for (const rawRec of rawRecords) {
                 const recorded = records[model].get(rawRec.id);
 
+                // Check if there are any missing fields for this record
+                const key = `${model}_${rawRec.id}`;
+                if (missingFields[key]) {
+                    for (const [record, field] of missingFields[key]) {
+                        // Connect the `recorded` to the missing `field` in `record`
+                        connect(field, record, recorded);
+                    }
+                    delete missingFields[key];
+                }
+
                 for (const name in fields) {
                     const field = fields[name];
                     alreadyLinkedSet.add(field);
@@ -943,6 +954,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                                     const toConnect = records[field.relation].get(id);
                                     if (toConnect) {
                                         connect(field, recorded, toConnect);
+                                    } else {
+                                        const key = `${field.relation}_${id}`;
+                                        if (!missingFields[key]) {
+                                            missingFields[key] = [[recorded, field]];
+                                        } else {
+                                            missingFields[key].push([recorded, field]);
+                                        }
                                     }
                                 }
                             }
@@ -953,6 +971,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             const toConnect = records[field.relation].get(id);
                             if (toConnect) {
                                 connect(field, recorded, toConnect);
+                            } else {
+                                const key = `${field.relation}_${id}`;
+                                if (!missingFields[key]) {
+                                    missingFields[key] = [[recorded, field]];
+                                } else {
+                                    missingFields[key].push([recorded, field]);
+                                }
                             }
                         }
                     }
