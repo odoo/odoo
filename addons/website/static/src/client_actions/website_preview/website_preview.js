@@ -95,7 +95,7 @@ export class WebsitePreview extends Component {
                     showSecondaryButton: false,
                 }, {
                     onClose: () => {
-                        redirect(`${encodeURI(this.websiteDomain)}/odoo/action-website.website_preview?path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`);
+                        window.location.href = `${encodeURI(this.websiteDomain)}/odoo/action-website.website_preview?path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`;
                     }
                 });
             } else {
