@@ -55,8 +55,25 @@ export class ProductScreen extends Component {
             currentOffset: 0,
         });
         onMounted(() => {
+<<<<<<< 18.0
             this.pos.openOpeningControl();
             this.pos.addPendingOrder([this.currentOrder.id]);
+||||||| 97de468e6943b1a13998503deb436eaa38cdaafe
+            this.pos.openCashControl();
+
+            if (this.pos.config.iface_start_categ_id) {
+                this.pos.setSelectedCategory(this.pos.config.iface_start_categ_id.id);
+            }
+
+=======
+            this.pos.openCashControl();
+
+            if (this.pos.config.iface_start_categ_id) {
+                this.pos.setSelectedCategory(this.pos.config.iface_start_categ_id.id);
+            }
+            this.pos.addPendingOrder([this.pos.get_order().id]);
+
+>>>>>>> 1d2cc3b72ee534fe915dd10888becba3cd8a6fd0
             // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
             // We don't do this in the `mounted` lifecycle method because it is called before
             // the callbacks in `onMounted` hook.
