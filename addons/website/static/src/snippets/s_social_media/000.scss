@@ -1,5 +1,6 @@
 
 .s_social_media {
+    $-size: map-get($spacers, 5);
     > * {
         display: inline-block;
         vertical-align: middle;
@@ -12,8 +13,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            &:not(.fa-2x, .fa-3x, .fa-4x, .fa-5x) {
+                &.rounded-circle,
+                &.rounded {
+                    width: $-size - .5rem;
+                    height: $-size - .5rem;
+                }
+            }
         }
-        margin: .2rem;
+        &:has(i:not(.fa-stack)) {
+            margin: .2rem;
+        }
     }
     &:not(.no_icon_color) {
         .s_social_media_facebook {
