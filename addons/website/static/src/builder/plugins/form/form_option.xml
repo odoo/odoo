@@ -288,6 +288,7 @@
                 <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'between'">Is between (included)</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'!between'">Is not between (excluded)</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'lessyears'">Is within the last X years</BuilderSelectItem>
             </BuilderSelect>
             <BuilderSelect t-if="domStateDependency.type === 'file'"
                 id="'hidden_condition_file_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
@@ -325,10 +326,10 @@
             <BuilderTextInput t-if="isTextConditionValueVisible"
                 id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
             />
-            <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set', 'lessyears'].includes(domState.elDataset.visibilityComparator)"
                 id="'hidden_condition_additional_datetime'" dataAttributeAction="'visibilityCondition'" type="'datetime'"
             />
-            <BuilderDateTimePicker t-if="domStateDependency.isFormDate and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDate and !['set', '!set', 'lessyears'].includes(domState.elDataset.visibilityComparator)"
                 id="'hidden_condition_additional_date'" dataAttributeAction="'visibilityCondition'" type="'date'"
             />
             <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"

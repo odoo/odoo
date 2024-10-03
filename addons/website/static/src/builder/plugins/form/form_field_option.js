@@ -100,7 +100,7 @@ export class FormFieldOption extends BaseOptionComponent {
             return true;
         }
         if (dependencyEl?.classList.contains("datetimepicker-input")) {
-            return false;
+            return el.dataset.visibilityComparator === "lessyears";
         }
         return (
             (["text", "email", "tel", "url", "search", "password", "number"].includes(
