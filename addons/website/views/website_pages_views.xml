@@ -74,6 +74,14 @@
                 </div>
             </div>
         </xpath>
+        <xpath expr="//group/field[@name='is_homepage']" position="after">
+            <label for="has_parent_page" invisible="is_homepage"/>
+            <div class="d-flex" invisible="is_homepage">
+                <field name="has_parent_page" class="w-25" widget="boolean_toggle" options="{'autosave': False}"/>
+                <label for="parent_page_id" string="/" invisible="not has_parent_page"/>
+                <field name="parent_page_id" widget="many2one" invisible="not has_parent_page" required="has_parent_page" domain="[('website_id','=',website_id),('id','!=',target_model_id)]"/>
+            </div>
+        </xpath>
         <xpath expr="//group/field[@name='is_published']" position="after">
             <field name="date_publish" widget="datetime"/>
         </xpath>
@@ -107,6 +115,7 @@
             <field name="is_in_menu" string="Is In Main Menu"/>
             <field name="is_seo_optimized"/>
             <field name="is_published"/>
+            <field name="parent_page_id" widget="many2one" optional="show"/>
 
             <field name="create_uid" column_invisible="True"/>
             <field name="write_uid" widget="many2one_avatar" optional="hide"/>

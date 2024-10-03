@@ -241,10 +241,30 @@
         </t>
     </xpath>
 
+    <!-- Breadcrumb -->
+    <xpath expr="//main/*[1]" position="before">
+        <t t-if="'has_parent_page' in main_object and main_object['has_parent_page']">
+            <div class="page_breadcrumb" data-name="Breadcrumb">
+                <t t-set="parent_page" t-value="main_object.parent_page_id"/>
+                <section>
+                    <div class="container o_not_editable py-2">
+                        <t t-if="parent_page.parent_page_id">
+                            <a t-att-href="parent_page.parent_page_id.url" t-out="parent_page.parent_page_id.name"/>
+                            <span> / </span>
+                        </t>
+                        <a t-att-href="parent_page.url" t-out="parent_page.name"/>
+                        <span> / </span>
+                        <span t-out="main_object.name"/>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </xpath>
+
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
         <t groups="website.group_website_restricted_editor">
-            <t t-foreach="['header_overlay', 'header_color', 'header_text_color', 'header_visible', 'footer_visible']" t-as="optionName">
+            <t t-foreach="['header_overlay', 'header_color', 'header_text_color', 'header_visible', 'footer_visible', 'breadcrumb_overlay', 'breadcrumb_color', 'breadcrumb_text_color', 'breadcrumb_visible']" t-as="optionName">
                 <!-- Firefox autocomplete is too aggressive and works on hidden inputs,
                 so we need to disable it (https://bugzilla.mozilla.org/show_bug.cgi?id=520561) -->
                 <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" autocomplete="off" t-att-name="optionName" t-att-value="main_object[optionName]"/>
@@ -260,6 +280,16 @@
         <t t-set="header_text_color_is_class" t-value="'text-' in header_text_color"/>
         <t t-set="header_text_color_class" t-value="header_text_color_is_class and header_text_color or ''"/>
         <t t-set="header_text_color_style" t-value="(not header_text_color_is_class) and header_text_color or ''"/>
+
+        <t t-set="breadcrumb_bg_color" t-value="'breadcrumb_color' in main_object and main_object.breadcrumb_color or ''"/>
+        <t t-set="breadcrumb_bg_color_is_class" t-value="'bg-' in breadcrumb_bg_color"/>
+        <t t-set="breadcrumb_bg_color_class" t-value="breadcrumb_bg_color_is_class and breadcrumb_bg_color or ''"/>
+        <t t-set="breadcrumb_bg_color_style" t-value="(not breadcrumb_bg_color_is_class) and breadcrumb_bg_color or ''"/>
+
+        <t t-set="breadcrumb_text_color" t-value="'breadcrumb_text_color' in main_object and main_object.breadcrumb_text_color or ''"/>
+        <t t-set="breadcrumb_text_color_is_class" t-value="'text-' in breadcrumb_text_color"/>
+        <t t-set="breadcrumb_text_color_class" t-value="breadcrumb_text_color_is_class and breadcrumb_text_color or ''"/>
+        <t t-set="breadcrumb_text_color_style" t-value="(not breadcrumb_text_color_is_class) and breadcrumb_text_color or ''"/>
 
         <div groups="base.group_user" class="o_frontend_to_backend_nav position-fixed d-none">
             <svg class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
@@ -295,6 +325,17 @@
     <xpath expr="//footer[@id='bottom']" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.footer_visible else ''}" separator=" "/>
         <attribute name="t-att-data-invisible">'1' if 'footer_visible' in main_object and not main_object.footer_visible else None</attribute>
+    </xpath>
+    <xpath expr="//main" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_breadcrumb_overlay' if 'breadcrumb_overlay' in main_object and main_object.breadcrumb_overlay else ''}" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('page_breadcrumb')]" position="attributes">
+        <attribute name="t-attf-class" add="page_breadcrumb #{breadcrumb_bg_color_class} #{breadcrumb_text_color_class}"/>
+        <attribute name="t-attf-style" add="#{breadcrumb_bg_color_style and ('background-color: %s;' % breadcrumb_bg_color_style)} #{breadcrumb_text_color_style and ('color: %s;' % breadcrumb_text_color_style)}"/>
+    </xpath>
+    <xpath expr="//div[hasclass('page_breadcrumb')]" position="attributes">
+        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'breadcrumb_visible' in main_object and not main_object.breadcrumb_visible else ''}" separator=" "/>
+        <attribute name="t-att-data-invisible">'1' if 'breadcrumb_visible' in main_object and not main_object.breadcrumb_visible else None</attribute>
     </xpath>
 </template>
 

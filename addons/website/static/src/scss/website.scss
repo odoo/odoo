@@ -195,6 +195,33 @@ $-seen-urls: ();
         @include body-image-bg-style();
     }
 
+    > main {
+        > .page_breadcrumb {
+            a {
+                color: inherit !important;
+            }
+            > section {
+                @include o-apply-colors('breadcrumb');
+                @include o-apply-colors('breadcrumb-custom');
+                @include o-add-gradient('breadcrumb-gradient');
+            }
+        }
+    }
+
+    > main.o_breadcrumb_overlay {
+        > .page_breadcrumb {
+            @include o-position-absolute(auto, 0, auto, 0);
+            z-index: 99 !important;
+            > section {
+                @include o-apply-colors(1);
+                background-color: transparent !important;
+                background-image: none !important;
+                border-color: transparent;
+                color: inherit;
+            }
+        }
+    }
+
     @if o-website-value('layout') != 'full' {
         > main {
             // The color behind the boxed layout is forced by Odoo. The box
