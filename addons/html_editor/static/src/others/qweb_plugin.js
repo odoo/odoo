@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
 import { isElement } from "@html_editor/utils/dom_info";
@@ -89,7 +89,7 @@ export class QWebPlugin extends Plugin {
     normalize(root) {
         this.normalizeInline(root);
 
-        for (const element of root.querySelectorAll("[t-esc], [t-raw], [t-out], [t-field]")) {
+        for (const element of selectElements(root, "[t-esc], [t-raw], [t-out], [t-field]")) {
             element.setAttribute("contenteditable", "false");
         }
         this.applyGroupQwebBranching(root);
@@ -109,7 +109,7 @@ export class QWebPlugin extends Plugin {
     }
 
     normalizeInline(root) {
-        for (const el of root.querySelectorAll("t")) {
+        for (const el of selectElements(root, "t")) {
             if (this.checkAllInline(el)) {
                 el.setAttribute("data-oe-t-inline", "true");
             }
@@ -164,7 +164,7 @@ export class QWebPlugin extends Plugin {
     }
 
     applyGroupQwebBranching(root) {
-        const tNodes = root.querySelectorAll("[t-if], [t-elif], [t-else]");
+        const tNodes = selectElements(root, "[t-if], [t-elif], [t-else]");
         const groupsEncounter = new Set();
         for (const node of tNodes) {
             const prevNode = node.previousElementSibling;
@@ -189,10 +189,11 @@ export class QWebPlugin extends Plugin {
             // If there is no element in groupId activated, activate the first
             // one.
             if (!isOneElementActive) {
-                root.querySelector(`[data-oe-t-group='${groupId}']`).setAttribute(
-                    "data-oe-t-group-active",
-                    "true"
-                );
+                const firstElementToActivate = selectElements(
+                    root,
+                    `[data-oe-t-group='${groupId}']`
+                ).next().value;
+                firstElementToActivate.setAttribute("data-oe-t-group-active", "true");
             }
         }
     }
