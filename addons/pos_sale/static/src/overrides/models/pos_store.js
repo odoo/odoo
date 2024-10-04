@@ -176,7 +176,7 @@ patch(PosStore.prototype, {
             feedback: (buffer) =>
                 isPercentage
                     ? `(${this.env.utils.formatCurrency(
-                          (sale_order.amount_total * parseFloat(buffer)) / 100
+                          (sale_order.amount_unpaid * parseFloat(buffer)) / 100
                       )})`
                     : "",
         });
@@ -191,7 +191,7 @@ patch(PosStore.prototype, {
             );
             const percentageBase =
                 !down_payment_tax || down_payment_tax.price_include
-                    ? sale_order.amount_total
+                    ? sale_order.amount_unpaid
                     : sale_order.amount_untaxed;
             proposed_down_payment = (percentageBase * userValue) / 100;
         }
