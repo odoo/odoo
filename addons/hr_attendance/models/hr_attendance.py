@@ -676,6 +676,7 @@ class HrAttendance(models.Model):
     def _cron_auto_check_out(self):
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
+             ('check_in', '<', (fields.Datetime.now() - relativedelta(days=1))),
              ('employee_id.company_id.auto_check_out', '=', True)]
         )
 
