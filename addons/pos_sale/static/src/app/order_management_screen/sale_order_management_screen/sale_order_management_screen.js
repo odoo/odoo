@@ -284,19 +284,9 @@ export class SaleOrderManagementScreen extends Component {
                     down_payment_product = this.pos.config.down_payment_product_id;
                 }
 
-                const down_payment_tax =
-                    this.pos.models["account.tax"].get(down_payment_product.taxes_id) || false;
                 let down_payment;
-                if (down_payment_tax) {
-                    down_payment = down_payment_tax.price_include
-                        ? sale_order.amount_total
-                        : sale_order.amount_untaxed;
-                } else {
-                    down_payment = sale_order.amount_total;
-                }
-
                 let popupInputSuffix = "";
-                const popupTotalDue = sale_order.amount_total;
+                const popupTotalDue = sale_order.amount_unpaid;
                 let feedback = () => false;
                 const popupSubtitle = _t("Due balance: %s");
                 if (selectedOption == "dpAmount") {
@@ -319,10 +309,7 @@ export class SaleOrderManagementScreen extends Component {
                 }
                 const payload = await makeAwaitable(this.dialog, NumberPopup, {
                     title: _t("Down Payment"),
-                    subtitle: sprintf(
-                        popupSubtitle,
-                        this.env.utils.formatCurrency(sale_order.amount_unpaid)
-                    ),
+                    subtitle: sprintf(popupSubtitle, this.env.utils.formatCurrency(popupTotalDue)),
                     buttons: enhancedButtons(this.env),
                     formatDisplayedValue: (x) => `${popupInputSuffix} ${x}`,
                     feedback,
@@ -334,7 +321,7 @@ export class SaleOrderManagementScreen extends Component {
                 if (selectedOption == "dpAmount") {
                     down_payment = parseFloat(payload);
                 } else {
-                    down_payment = (down_payment * parseFloat(payload)) / 100;
+                    down_payment = (popupTotalDue * parseFloat(payload)) / 100;
                 }
 
                 if (down_payment > sale_order.amount_unpaid) {
