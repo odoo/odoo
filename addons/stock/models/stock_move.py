@@ -2288,24 +2288,26 @@ Please change the quantity done or the rounding precision of your unit of measur
             to_visit.fetch(['move_orig_ids'])
             move_orig_ids = set(to_visit.move_orig_ids.ids)
 
-    def _rollup_move_dests(self, seen=False):
-        if not seen:
-            seen = OrderedSet()
-        unseen = OrderedSet(self.ids) - seen
-        if not unseen:
-            return seen
-        seen.update(unseen)
-        self.filtered(lambda m: m.id in unseen).move_dest_ids._rollup_move_dests(seen)
-        return seen
+    def _rollup_move_dests(self, seen=False) -> OrderedSet[int]:
+        return self._rollup_moves(origin=False, seen=seen)
 
-    def _rollup_move_origs(self, seen=False):
+    def _rollup_move_origs(self, seen=False) -> OrderedSet[int]:
+        return self._rollup_moves(seen=seen)
+
+    def _rollup_moves(self, origin=True, seen=False) -> OrderedSet[int]:
+        """
+            Find all moves in chain depending the direction (origin)
+
+            origin: if set (default), returns the origin moves, else return the destinations
+        """
+        target_field = "move_orig_ids" if origin else "move_dest_ids"
         if not seen:
             seen = OrderedSet()
         unseen = OrderedSet(self.ids) - seen
         if not unseen:
             return seen
         seen.update(unseen)
-        self.filtered(lambda m: m.id in unseen).move_orig_ids._rollup_move_origs(seen)
+        self.filtered(lambda m: m.id in unseen)[target_field]._rollup_moves(origin, seen)
         return seen
 
     def _get_forecast_availability_outgoing(self, warehouse, location_id=False):
