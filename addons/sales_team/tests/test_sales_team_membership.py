@@ -294,6 +294,41 @@ class TestMembership(TestSalesCommon):
         ])
         self.assertFalse(partner_exists, msg="Partner should return empty as current user is removed from team")
 
+        user_admin = self.env.ref("base.user_admin")
+
+        company_1 = self.env['res.company'].create({'name': "Company 1"})
+        company_2 = self.env['res.company'].create({'name': "Company 2"})
+        
+        main_company = self.env.ref("base.main_company")
+        user_admin.write({'active': False, 'company_id': main_company.id})
+        user_admin.partner_id.write({'company_id': main_company.id})
+        test_sales_team_1 = self.env['crm.team'].create({
+            'name': 'Test Sales Team',
+            'sequence': 5,
+            'company_id': False,
+
+        })
+        user_test = self.env['res.users'].create(
+            {
+                'name': 'Test User',
+                'login': 'test_user',
+                'email': 'test_user@test.odoo.com',
+                'groups_id': [(6, 0, [self.ref('base.group_system'), self.ref('sales_team.group_sale_manager')])],
+                'company_id': company_1.id,
+                'company_ids': [(4, main_company.id), (4, company_1.id), (4, company_2.id)],
+            }
+        )
+        self.env = self.env(user=user_test.id)
+        admin_user_team = self.env['crm.team.member'].create({
+            'user_id': user_admin.id,
+            'crm_team_id': test_sales_team_1.id,
+            'active': True,
+
+        })
+        team_members_exists = test_sales_team_1.crm_team_member_ids.user_id.sudo().filtered('active')
+        self.assertFalse(team_members_exists, msg="Team Mmebers should return empty as current user is archived from team")
+
+
     def test_users_sale_team_id(self):
         self.assertTrue(self.sales_team_1.sequence < self.new_team.sequence)
 
