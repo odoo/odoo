@@ -263,6 +263,15 @@ class Survey(http.Controller):
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
             'format_date': lambda date: format_date(request.env, date)
         }
+
+        user_input_lines, search_filters = self._extract_filters_data(survey_sudo, post)
+        stats_array = survey_sudo.question_and_page_ids._prepare_statistics(user_input_lines)
+        import pdb;
+        pdb.set_trace()
+        data.update({'answers_count': {
+            str(r['question'].id): {str(s['suggested_answer'].id): s['count'] for s in r['table_data']} for r in
+            stats_array}})
+
         if survey_sudo.questions_layout != 'page_per_question':
             triggering_answers_by_question, triggered_questions_by_answer, selected_answers = answer_sudo._get_conditional_values()
             data.update({
@@ -397,8 +406,10 @@ class Survey(http.Controller):
         if answer_sudo.state != 'done' and answer_sudo.survey_time_limit_reached:
             answer_sudo._mark_done()
 
-        return request.render('survey.survey_page_fill',
-            self._prepare_survey_data(access_data['survey_sudo'], answer_sudo, **post))
+        survey_data = self._prepare_survey_data(access_data['survey_sudo'], answer_sudo, **post)
+
+
+        return request.render('survey.survey_page_fill', survey_data)
 
     # --------------------------------------------------------------------------
     # ROUTES to handle question images + survey background transitions + Tool

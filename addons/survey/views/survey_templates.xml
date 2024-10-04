@@ -513,6 +513,8 @@
             <t t-foreach='question.suggested_answer_ids' t-as='label'>
                 <t t-set="item_idx" t-value="label_index"/>
                 <t t-set="answer_selected" t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
+<!--                <t t-set="count" t-value="answers_count[question_index][label_index]"/>-->
+
 
                 <!--Used for print mode with corrections -->
                 <t t-set="answer_class" t-value="'' if not has_correct_answer else 'bg-success' if label.is_correct else 'bg-danger'"/>
@@ -538,6 +540,7 @@
                             t-att-checked="'checked' if answer_selected else None"
                             t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ms-2 text-break" t-field='label.value'/>
+                        <t t-if="answers_count" t-out="answers_count[str(question.id)][str(label.id)]"/>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
                 </div>
@@ -603,6 +606,7 @@
                             t-att-checked="'checked' if answer_line else None"
                             t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ms-2 text-break" t-field='label.value'/>
+                        <t t-if="answers_count" t-out="answers_count[str(question.id)][str(label.id)]"/>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
                 </div>
