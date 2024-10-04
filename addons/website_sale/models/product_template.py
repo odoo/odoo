@@ -4,7 +4,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, is_html_empty
+from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.translate import html_translate
 
 from odoo.addons.http_routing.models.ir_http import slug, unslug
@@ -281,23 +281,22 @@ class ProductTemplate(models.Model):
             base_price = None
             template_price_vals = {
                 'price_reduce': self._apply_taxes_to_price(
-                    pricelist_price, currency, product_taxes, taxes, self, website=website,
+                    pricelist_price, currency, product_taxes, taxes, template, website=website,
                 ),
             }
-            if pricelist_rule_id:  # If a rule was applied, there might be a discount
-                # For ecommerce flows, the base price is always the product sales price
-                # which can be computed by calling `_compute_base_price` without a pricelist rule
-                pricelist_base_price = template.env['product.pricelist.item']._compute_base_price(
+            pricelist_item = template.env['product.pricelist.item'].browse(pricelist_rule_id)
+            if pricelist_item._show_discount_on_shop():
+                pricelist_base_price = pricelist_item._compute_price_before_discount(
                     product=template,
                     quantity=1.0,
                     date=date,
                     uom=template.uom_id,
                     currency=currency,
                 )
-                if float_compare(pricelist_base_price, pricelist_price, precision_rounding=currency.rounding) > 0:
+                if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
                     base_price = pricelist_base_price
                     template_price_vals['base_price'] = self._apply_taxes_to_price(
-                        base_price, currency, product_taxes, taxes, self, website=website,
+                        base_price, currency, product_taxes, taxes, template, website=website,
                     )
 
             if not base_price and comparison_prices_enabled and template.compare_list_price:
@@ -468,10 +467,9 @@ class ProductTemplate(models.Model):
         )
 
         price_before_discount = pricelist_price
-        if pricelist_rule_id:  # If a rule was applied, there might be a discount
-            # For ecommerce flows, the base price is always the product sales price
-            # which can be computed by calling `_compute_base_price` without a pricelist rule
-            price_before_discount = self.env['product.pricelist.item']._compute_base_price(
+        pricelist_item = self.env['product.pricelist.item'].browse(pricelist_rule_id)
+        if pricelist_item._show_discount_on_shop():
+            price_before_discount = pricelist_item._compute_price_before_discount(
                 product=product_or_template,
                 quantity=quantity or 1.0,
                 date=date,
