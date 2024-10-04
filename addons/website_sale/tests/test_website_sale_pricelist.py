@@ -360,8 +360,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         })
         self.pricelist.write({
             'item_ids': [Command.create({
-                'price_discount': 20,
-                'compute_price': 'formula',
+                'percent_price': 20,
+                'compute_price': 'percentage',
                 'product_tmpl_id': product_tmpl.id,
             })],
         })
