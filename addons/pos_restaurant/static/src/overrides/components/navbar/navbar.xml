@@ -3,7 +3,7 @@
     <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
         <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="before">
             <t t-if="pos.mainScreen.component.name == 'FloorScreen'">
-                <DropdownItem t-if="showEditPlanButton" onSelected="() => this.pos.toggleEditMode()">
+                <DropdownItem t-if="showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.pos.toggleEditMode()">
                     Edit Plan
                 </DropdownItem>
             </t>
