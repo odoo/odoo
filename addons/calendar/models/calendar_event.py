@@ -366,7 +366,10 @@ class Meeting(models.Model):
         for event in self:
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
-            event.stop = event.start and event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
+            try:
+                event.stop = event.start and event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
+            except OverflowError:
+                raise UserError(_("The given duration creates a date too far into the future."))
             if event.allday:
                 event.stop -= timedelta(seconds=1)
 
