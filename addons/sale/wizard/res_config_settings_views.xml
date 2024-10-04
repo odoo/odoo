@@ -143,6 +143,10 @@
                                  documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                             <field name="module_delivery_starshipit" widget="upgrade_boolean"/>
                         </setting>
+                        <setting id="shipping_costs_envia" help="Compute shipping costs and ship with Envia"
+                                 documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
+                            <field name="module_delivery_envia" widget="upgrade_boolean"/>
+                        </setting>
                     </block>
                     <block title="Invoicing" name="invoicing_setting_container">
                         <setting id="sales_settings_invoicing_policy" title="This default value is applied to any new product created. This can be changed in the product detail form." documentation="/applications/sales/sales/invoicing/invoicing_policy.html" help="Quantities to invoice from sales orders">
