@@ -275,20 +275,11 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             this.pos.config.down_payment_product_id[0]
                         );
                     }
-                    const down_payment_tax =
-                        this.pos.taxes_by_id[down_payment_product.taxes_id] || false;
-                    let down_payment;
-                    if (down_payment_tax) {
-                        down_payment = down_payment_tax.price_include
-                            ? sale_order.amount_total
-                            : sale_order.amount_untaxed;
-                    } else {
-                        down_payment = sale_order.amount_total;
-                    }
 
+                    let down_payment;
                     let popupTitle = "";
                     let popupInputSuffix = "";
-                    const popupTotalDue = sale_order.amount_total;
+                    const popupTotalDue = sale_order.amount_unpaid;
                     let getInputBufferReminder = () => false;
                     const popupSubtitle = _t("Due balance: %s");
                     if (selectedOption == "dpAmount") {
@@ -315,7 +306,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         title: popupTitle,
                         subtitle: sprintf(
                             popupSubtitle,
-                            this.env.utils.formatCurrency(sale_order.amount_unpaid)
+                            this.env.utils.formatCurrency(popupTotalDue)
                         ),
                         inputSuffix: popupInputSuffix,
                         startingValue: 0,
@@ -328,7 +319,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     if (selectedOption == "dpAmount") {
                         down_payment = parseFloat(payload);
                     } else {
-                        down_payment = (down_payment * parseFloat(payload)) / 100;
+                        down_payment = (popupTotalDue * parseFloat(payload)) / 100;
                     }
 
                     if (down_payment > sale_order.amount_unpaid) {
