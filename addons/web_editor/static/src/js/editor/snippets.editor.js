@@ -733,7 +733,7 @@ var SnippetEditor = Widget.extend({
         var $element = this.$target.parent();
         while ($element.length) {
             var parentEditor = $element.data('snippet-editor');
-            if (parentEditor) {
+            if (parentEditor && parentEditor._customize$Elements) {
                 this._customize$Elements = this._customize$Elements
                     .concat(parentEditor._customize$Elements);
                 break;
@@ -2733,7 +2733,7 @@ class SnippetsMenu extends Component {
                 return false;
             });
             // Insert an invisible snippet in its "parentEl" element.
-            const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant) => {
+            const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant, parents) => {
                 const editor = await this._createSnippetEditor($(invisibleSnippetEl), true);
                 return {
                     editor,
@@ -2744,6 +2744,7 @@ class SnippetsMenu extends Component {
                     invisibleSnippetEl,
                     isVisible: editor.isTargetVisible(),
                     children: [],
+                    parents: (isDescendant && parents) ? parents : null,
                 };
             };
             // Insert all the invisible snippets contained in "snippetEls" as
@@ -2755,15 +2756,15 @@ class SnippetsMenu extends Component {
             //     └ descendantInvisibleSnippet
             //          └ descendantOfDescendantInvisibleSnippet
             //               └ etc...
-            const createInvisibleElements = (snippetEls, isDescendant) => {
+            const createInvisibleElements = (snippetEls, isDescendant, parents) => {
                 return Promise.all((snippetEls).map(async (snippetEl) => {
                     const descendantSnippetEls = descendantPerSnippet.get(snippetEl);
                     // An element is considered as "RootParent" if it has one or
                     // more invisible descendants but is not a descendant.
                     const invisibleElement = await createInvisibleElement(snippetEl,
-                        !isDescendant && !!descendantSnippetEls, isDescendant);
+                        !isDescendant && !!descendantSnippetEls, isDescendant, parents);
                     if (descendantSnippetEls) {
-                        invisibleElement.children = await createInvisibleElements(descendantSnippetEls, true);
+                        invisibleElement.children = await createInvisibleElements(descendantSnippetEls, true, invisibleElement);
                     }
                     return invisibleElement;
                 }));
@@ -4211,16 +4212,33 @@ class SnippetsMenu extends Component {
      * @private
      * @param {Event} ev
      */
-    async onInvisibleEntryClick(invisibleEntry) {
-        const $snippet = $(invisibleEntry.snippetEl);
-        const isVisible = await this._execWithLoadingEffect(async () => {
-            const editor = await this._createSnippetEditor($snippet, true);
-            const show = editor.toggleTargetVisibility();
-            this._disableUndroppableSnippets();
-            return show;
-        }, true);
-        invisibleEntry.isVisible = isVisible;
-        return this._activateSnippet(isVisible ? $snippet : false);
+    async _onInvisibleEntryClick(invisibleEntry) {
+        const toggleVisibility = async (snippetEl) => {
+            const isVisible = await this._execWithLoadingEffect(async () => {
+                const editor = await this._createSnippetEditor($(snippetEl));
+                const show = editor.toggleTargetVisibility();
+                this._disableUndroppableSnippets();
+                return show;
+            }, true);
+            invisibleEntry.isVisible = isVisible;
+            this._activateSnippet(isVisible ? $(snippetEl) : false);
+        };
+
+        // To Toggle all its descendents to invisible(Hide)
+        if (invisibleEntry.isVisible) {
+            invisibleEntry.children.forEach((child) => {
+                if (child.isVisible) {
+                    this._onInvisibleEntryClick(child);
+                }
+            });
+        } else {
+            // To Toggle all its parentNodes to visible(show)
+            if (invisibleEntry.parents && !invisibleEntry.parents.isVisible) {
+                this._onInvisibleEntryClick(invisibleEntry.parents);
+            }
+        }
+
+        await toggleVisibility(invisibleEntry.snippetEl);
     }
     /**
      * @private
