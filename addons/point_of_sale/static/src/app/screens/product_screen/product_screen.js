@@ -288,6 +288,7 @@ export class ProductScreen extends Component {
 
     switchPane() {
         this.pos.scanning = false;
+        this.currentOrder.deselect_orderline();
         this.pos.switchPane();
     }
 
