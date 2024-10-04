@@ -6,18 +6,20 @@
     </t>
 
     <t t-name="html_editor.ImageDescriptionDialog">
-        <Dialog size="'lg'" title.translate="Change media description and tooltip">
+        <Dialog size="'md'" title.translate="Image description">
             <div class="mb-3 row">
-                <label class="col-md-3 col-form-label" for="alt" title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
-                    Description <small>(ALT Tag)</small>
+                <label class="col-md-3 col-form-label" for="alt">
+                    Description
+                    <sup class="text-info" title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">?</sup>
                 </label>
                 <div class="col-md-8">
                     <input t-model="this.state.description" name="description" class="form-control" required="required" type="text"/>
                 </div>
             </div>
             <div class="mb-3 row">
-                <label class="col-md-3 col-form-label" for="title" title="'Title tag' is shown as a tooltip when you hover the picture."> 
-                    Tooltip <small>(TITLE Tag)</small>
+                <label class="col-md-3 col-form-label" for="title">
+                    Tooltip
+                    <sup class="text-info" title="'Title tag' is shown as a tooltip when you hover the picture.">?</sup>
                 </label>
                 <div class="col-md-8">
                     <input t-model="this.state.tooltip" name="tooltip" class="form-control" required="required" type="text"/>
