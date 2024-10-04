@@ -26,8 +26,8 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
             'currency_id': self.other_currency.id,
             'company_id': self.env.company.id,
             'item_ids': [Command.create({
-                'price_discount': 10,
-                'compute_price': 'formula',
+                'percent_price': 10,
+                'compute_price': 'percentage',
             })],
         })
 
