@@ -386,6 +386,21 @@ class CustomerPortal(Controller):
             error["email"] = 'error'
             error_message.append(_('Invalid Email! Please enter a valid email address.'))
 
+        # state_id and country_id validation
+        country_id = request.env['res.country'].browse(int(data.get("country_id")))
+        if not country_id:
+            error["country_id"] = 'error'
+            error_message.append(_('Invalid Country! Please select a valid country.'))
+
+        try:
+            state_id = int(data.get("state_id"))
+            if state_id not in country_id.state_ids.ids:
+                error["state_id"] = 'error'
+                error_message.append(_('Invalid State / Province. Please select a valid State or Province.'))
+        except ValueError as e:
+            error["state_id"] = 'error'
+            error_message.append(e.args[0])
+
         # vat validation
         partner = request.env.user.partner_id
         if data.get("vat") and partner and partner.vat != data.get("vat"):
