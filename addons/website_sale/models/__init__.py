@@ -10,6 +10,7 @@ from . import product_attribute
 from . import product_document
 from . import product_image
 from . import product_pricelist
+from . import product_pricelist_item
 from . import product_product
 from . import product_public_category
 from . import product_ribbon
