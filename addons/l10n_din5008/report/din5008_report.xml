@@ -221,9 +221,9 @@
 
                 <t t-set="din5008_address_block">
                     <t t-if="o and o._name=='account.move'">
-                        <t t-set="commercial_partner_id" t-value=""/>
-                        <t t-set="fact_partner_id" t-value="o.partner_id"/>
-                        <t t-set="delivery_partner_id" t-value="o.partner_shipping_id"/>
+                        <t t-set="commercial_partner" t-value="o.commercial_partner_id"/>
+                        <t t-set="invoice_partner" t-value="o.partner_id"/>
+                        <t t-set="delivery_partner" t-value="o.partner_shipping_id"/>
 
                         <t t-set="different_partner_count" t-value="len({partner.id for partner in [o.partner_id.commercial_partner_id, o.partner_id, o.partner_shipping_id] if partner})"/>
                         <tr t-if="different_partner_count > 1">
