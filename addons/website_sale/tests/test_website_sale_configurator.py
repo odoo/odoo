@@ -279,7 +279,8 @@ class TestWebsiteSaleProductConfigurator(TestProductConfiguratorCommon, HttpCase
             'item_ids': [
                 Command.create({
                     'applied_on': "1_product",
-                    'fixed_price': 50,
+                    'percent_price': 50,
+                    'compute_price': 'percentage',
                     'product_tmpl_id': main_product.id,
                 }),
             ],
