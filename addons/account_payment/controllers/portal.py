@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import fields
 from odoo.http import request
 
 from odoo.addons.account.controllers import portal
@@ -52,9 +52,22 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 providers_sudo
             ),
         }
+
+        today = fields.Date.context_today(invoice)
+        amount, mode = invoice._get_total_amount_using_same_currency(today)
+        early_payment_context = {}
+        early_payment = mode == 'early_payment'
+
+        if early_payment:
+            amount_without_discount, _ = invoice._get_total_amount_using_same_currency(today, early_payment_discount=False)
+            early_payment_context = {
+                'amount_without_discount': amount_without_discount,
+            }
+
         payment_context = {
-            'amount': invoice.amount_residual,
+            'amount': amount,
             'currency': invoice.currency_id,
+            'early_payment': early_payment,
             'partner_id': partner_sudo.id,
             'providers_sudo': providers_sudo,
             'payment_methods_sudo': payment_methods_sudo,
@@ -67,6 +80,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             **portal_page_values,
             **payment_form_values,
             **payment_context,
+            **early_payment_context,
             **self._get_extra_payment_form_values(**kwargs),
         )
         return values
