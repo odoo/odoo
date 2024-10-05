@@ -3,14 +3,14 @@
 # 	* base_setup
 # 
 # Translators:
-# rahim agh <rahim.aghareb@gmail.com>, 2023
 # Ali Reza Feizi Derakhshi, 2023
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2023
 # Hamid Darabi, 2023
+# Hanna Kheradroosta, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
-# Hanna Kheradroosta, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Hanna Kheradroosta, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
-msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"تعداد کاربران فعال\"/>"
+msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -41,6 +41,12 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
+"کاربر فعال\n"
+"</span>\n"
+"<span class=\"o_form_label\" invisible=\"active_user_count &lt;= 1\">\n"
+"کاربران فعال\n"
+"</span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -53,6 +59,13 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"شرکت\n"
+"</span>\n"
+"<span class=\"o_form_label\" invisible=\"company_count &lt;= 1\">\n"
+"شرکت‌ها\n"
+"</span>\n"
+"<br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -64,6 +77,12 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
+"زبان\n"
+"</span>\n"
+"<span class=\"o_form_label\" invisible=\"language_count &lt;= 1\">\n"
+"زبان‌‌ها\n"
+"</span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -71,8 +90,8 @@ msgid ""
 "<strong>Save</strong> this page and come back here to choose your Geo "
 "Provider."
 msgstr ""
-"<strong>ذخیره</strong> این صفحه و برگشتن به اینجا برای انتخاب فراهم کننده "
-"اطلاعات جغرافیایی."
+"<strong>ذخیره</strong>این صفحه و به اینجا بازگردید تا ارائه‌دهنده جغرافیایی "
+"خود را انتخاب کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -80,26 +99,28 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Cloudflare "
 "turnstile."
 msgstr ""
+"<strong>ذخیره</strong> این صغحه و به اینجا بازگردید تا تنظیمات Cloudflare "
+"Turnstile را انجام دهید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
-"این <strong>صفحه</strong> را ذخیره کنید و بعدا برای تنظیم ریکپچا به همین "
-"صفحه بازگردید."
+"<strong>ذخیره</strong> این صفحه و به اینجا بازگردید تا reCaptcha را تنظیم "
+"کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
-"<strong>ذخیره</strong> کنید این صفحه و بعدا برای نصب خصوصیات اینجا برگردید."
+"<strong>ذخیره</strong> این صفحه و به اینجا بازگردید تا ویژگی را تنظیم کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "API Keys"
-msgstr ""
+msgstr "کلیدهای API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -107,6 +128,8 @@ msgid ""
 "API Keys allow your users to access Odoo with external tools when multi-"
 "factor authentication is enabled."
 msgstr ""
+"کلیدهای API به کاربران شما این امکان را می‌دهند که با ابزارهای خارجی به Odoo"
+" دسترسی پیدا کنند، زمانی که احراز هویت چندمرحله‌ای فعال باشد."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -118,7 +141,7 @@ msgstr "درباره"
 #: code:addons/base_setup/controllers/main.py:0
 #, python-format
 msgid "Access Denied"
-msgstr "امکان دسترسی وجود ندارد"
+msgstr "دسترسی ممنوع است."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -128,33 +151,36 @@ msgstr "افزودن زبان‌ها"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add fun feedback and motivate your employees"
-msgstr "بازخورد سرگرم کننده اضافه کنید و به کارکنان خود انگیزه دهید"
+msgstr "بازخوردهای سرگرم‌کننده اضافه کنید و کارکنان خود را تشویق کنید."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
 msgid "Allow integration with the mail plugins"
-msgstr "اجازه ادغام با افزونه های ایمیل را بدهید"
+msgstr "اجازه ادغام با افزونه‌های ایمیل را بدهید"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "به کاربران اجازه بده تقویم خود با تقویم گوگل هماهنگ سازی کنند."
+msgstr ""
+"به کاربران این امکان را بدهید که تقویم خود را با تقویم گوگل همگام‌سازی کنند."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
 msgid "Allow the users to synchronize their calendar with Outlook Calendar"
-msgstr "به کاربران اجازه دهید تقویم خود را با تقویم Outlook همگام کنند"
+msgstr ""
+"به کاربران این امکان را بدهید که تقویم خود را با تقویم Outlook همگام‌سازی "
+"کنند."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "به کاربران اجازه ورود داده از فایلهای  CSV/XLS/XLSX/ODS بده"
+msgstr "اجازه دهید کاربران داده‌ها را از فایل‌های CSV/XLS/XLSX/ODS وارد کنند."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr "اجازه کار در محیط چند ارزه بده"
+msgstr "اجازه می‌دهد در یک محیط چند ارزی کار کنید."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
@@ -164,7 +190,7 @@ msgstr "ستاره (VoIP)"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automatically enrich your contact base with company data"
-msgstr "به صورت خودکار لیست مخاطبان خود را غنی کنید با داده شرکت"
+msgstr "به‌طور خودکار پایگاه تماس‌های خود را با داده‌های شرکتی غنی‌سازی کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -172,15 +198,15 @@ msgid ""
 "Automatically generate counterpart documents for orders/invoices between "
 "companies"
 msgstr ""
-"به طور خودکار اسناد مشابه برای سفارشات/فاکتورها بین شرکت ها تولید کنید"
+"به‌طور خودکار اسناد معادل برای سفارش‌ها/فاکتورها بین شرکت‌ها تولید کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "By default, new users get highest access rights for all installed apps."
 msgstr ""
-"به صورت پیش فرض کاربران جدید بالاترین حق دسترسی برای همه‌ی برنامه‌های نصب "
-"شده می گیرند."
+"به‌طور پیش‌فرض، کاربران جدید بالاترین دسترسی را برای تمام برنامه‌های نصب‌شده"
+" دریافت می‌کنند."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -190,7 +216,7 @@ msgstr "طرح اسناد خود را انتخاب کنید"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -205,7 +231,7 @@ msgstr "شرکت"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "کد کشور شرکت"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -225,7 +251,7 @@ msgstr "تنظیمات پیکربندی"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr "پیکربندی طرح بندی اسناد"
+msgstr "پیکربندی طرح اسناد"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -233,8 +259,8 @@ msgid ""
 "Configure company rules to automatically create SO/PO when one of your "
 "company sells/buys to another of your company."
 msgstr ""
-"قوانین شرکت را پیکربندی کنید تا زمانی که یکی از شرکت‌های شما به شرکت دیگری "
-"از شرکت شما می‌فروشد/خرید می‌کند، به طور خودکار SO/PO ایجاد شود."
+"شرایط شرکت را تنظیم کنید تا به‌طور خودکار هنگام فروش یا خرید یکی از شرکت‌های"
+" شما از دیگری، سفارش فروش (SO) یا سفارش خرید (PO) ایجاد شود."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -244,25 +270,25 @@ msgstr "مخاطبان"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
 msgid "Custom Report Footer"
-msgstr "پا ورقی گزارش سفارشی"
+msgstr "پاورقی گزارش سفارشی"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr "حق دسترسی های پیش فرض"
+msgstr "حق دسترسی‌های پیش‌فرض"
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 #, python-format
 msgid "Default User Template not found."
-msgstr "قالب کاربر پیش فرض یافت نشد."
+msgstr "قالب پیش‌فرض کاربر یافت نشد."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "طرح‌ سند"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -277,7 +303,7 @@ msgstr "مستندات"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
-msgstr "ویرایش طرح بندی"
+msgstr "ویرایش طرح"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -285,18 +311,18 @@ msgid ""
 "Enable the profiling tool. Profiling may impact performance while being "
 "active."
 msgstr ""
-"ابزار پروفایل را فعال کنید. نمایه سازی ممکن است در حین فعال بودن بر کارایی "
-"تاثیر بگذارد."
+"ابزار پروفایل را فعال کنید. فعال بودن پروفایل ممکن است بر عملکرد تأثیر "
+"بگذارد."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Find free high-resolution images from Unsplash"
-msgstr "تصاویر با وضوح بالا را از Unsplash پیدا کنید"
+msgstr "تصاویر رایگان با وضوح بالا را از Unsplash پیدا کنید."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr "متن پاورقی نمایش داده شده در همه گزارشها."
+msgstr "متن پاورقی که در پایین تمام گزارش‌ها نمایش داده می‌شود."
 
 #. module: base_setup
 #: model:ir.ui.menu,name:base_setup.menu_config
@@ -307,17 +333,17 @@ msgstr "تنظیمات عمومی"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geo Localization"
-msgstr "محلی سازی جغرافیایی"
+msgstr "بومی‌سازی جغرافیایی"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
 msgid "GeoLocalize"
-msgstr "محلی سازی جغرافیایی"
+msgstr "بومی‌سازی جغرافیایی"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "GeoLocalize your partners"
-msgstr "شرکای خود را محلی سازی جغرافیایی کنید"
+msgstr "شرکای خود را بومی‌سازی جغرافیایی کنید"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
@@ -332,27 +358,27 @@ msgstr "مسیریابی HTTP"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
-msgstr "ورود و خروج فایل"
+msgstr "ورود & خروج"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrate with mail client plugins"
-msgstr ""
+msgstr "با پلاگین‌های ایمیل مشتری ادغام کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrations"
-msgstr "ادغامها"
+msgstr "ادغام‌ها"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter-Company Transactions"
-msgstr "معاملات بین شرکتی"
+msgstr "معاملات بین‌شرکتی"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
 msgid "Is Root Company"
-msgstr ""
+msgstr "شرکت مادر است"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -378,22 +404,22 @@ msgstr "افزونه ایمیل"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr "مدیریت کلید‌های رابط‌ برنامه‌نویسی (API)"
+msgstr "مدیریت کلید‌های API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr "مدیریت شرکت ها"
+msgstr "مدیریت شرکت‌ها"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "مدیریت بین شرکتی"
+msgstr "مدیریت بین‌شرکتی"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr "مدیریت زبان ها"
+msgstr "مدیریت زبان‌ها"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -413,12 +439,12 @@ msgstr "تعداد کاربران فعال"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
 msgid "Number of Companies"
-msgstr "تعداد شرکتها"
+msgstr "تعداد شرکت‌ها"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__language_count
 msgid "Number of Languages"
-msgstr "تعداد زبان ها"
+msgstr "تعداد زبان‌ها"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -433,22 +459,22 @@ msgstr "اودو"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Apple Store"
-msgstr "روی فروشگاه اپل"
+msgstr "در Apple Store"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Google Play"
-msgstr "روی گوگل پلی"
+msgstr "در Google Play"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "پر کردن خودکار همکار"
+msgstr "تکمیل خودکار شریک"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Performance"
-msgstr "کارایی"
+msgstr "عملکرد"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -458,7 +484,7 @@ msgstr "مجوزها"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
-msgstr "پیش نمایش سند"
+msgstr "پیش‌نمایش سند"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
@@ -468,17 +494,17 @@ msgstr "پروفایل سازی فعال شد تا"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Progressive Web App"
-msgstr ""
+msgstr "برنامه وب پیشرفته"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
-msgstr "از فرم های خود در برابر هرزنامه و سوء استفاده محافظت کنید."
+msgstr "فرم‌های خود را از هرزنامه و سوءاستفاده محافظت کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "فرم‌های خود را با CF Turnstile محافظت کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -511,8 +537,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"کد کشور ISO در دو کاراکتر.\n"
-"می توانید از این قسمت برای جستجوی سریع استفاده کنید."
+"کد کشور ISO در دو حرف.\n"
+"شما می‌توانید از این فیلد برای جستجوی سریع استفاده کنید."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -520,6 +546,8 @@ msgid ""
 "This name will be used for the application when Odoo is installed through "
 "the browser."
 msgstr ""
+"این نام برای برنامه زمانی که Odoo از طریق مرورگر نصب می‌شود، استفاده خواهد "
+"شد."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -529,7 +557,7 @@ msgstr "کتابخانه تصویر Unsplash"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr "بروزرسانی اطلاعات"
+msgstr "به‌روزرسانی اطلاعات"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -539,7 +567,8 @@ msgstr "برای ورود به سیستم از اعتبارنامه LDAP است�
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
-msgstr "استفاده از حسابهای خارجی برای ورود (گوگل، فیسبوک، غیره ...)"
+msgstr ""
+"از حساب‌های خارجی برای ورود به سیستم استفاده کنید (Google، Facebook و غیره)."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
@@ -570,11 +599,10 @@ msgid ""
 "companies. When selecting one item, the company data and logo are auto-"
 "filled."
 msgstr ""
-"هنگامی که دفترچه آدرس خود را پر می کنید، Odoo لیستی از شرکت های منطبق را "
-"ارائه می دهد. هنگام انتخاب یک مورد، داده های شرکت و لوگو به طور خودکار پر می"
-" شوند."
+"هنگام پر کردن دفترچه آدرس خود، Odoo فهرستی از شرکت‌های مطابقت‌دهنده را ارائه"
+" می‌دهد. با انتخاب یک مورد، داده‌ها و لوگوی شرکت به‌صورت خودکار پر می‌شوند."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"

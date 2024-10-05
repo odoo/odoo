@@ -34,6 +34,9 @@ msgid ""
 "You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
 "If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
 msgstr ""
+"\n"
+"شاید برای نصب ماژول داده‌ها به نسخه Enterprise نیاز داشته باشید. لطفاً برای اطلاعات بیشتر به https://www.odoo.com/pricing-plan مراجعه کنید. \n"
+"اگر به تم‌های وب‌سایت نیاز دارید، می‌توانید آن را از https://github.com/odoo/design-themes دانلود کنید.\n"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
@@ -64,21 +67,21 @@ msgstr "بستن"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
-msgstr ""
+msgstr "اتصال به %s ناموفق بود. لیست ماژول‌های صنعتی قابل بازیابی نیست."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Connection to %s failed, the module %s cannot be downloaded."
-msgstr ""
+msgstr "اتصال به %s ناموفق بود، ماژول %s قابل دانلود نیست."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "نمی‌توان پایگاه داده را انتخاب کرد. '%s'"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
@@ -96,6 +99,8 @@ msgid ""
 "Demo data should only be used on test databases. Once they are loaded, they "
 "cannot be entirely removed!"
 msgstr ""
+"داده‌های نمایشی باید تنها در پایگاه‌های داده آزمایشی استفاده شوند. هنگامی که"
+" آن‌ها بارگذاری شدند، نمی‌توانند به‌طور کامل حذف شوند!"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
@@ -112,6 +117,10 @@ msgid ""
 " %(error_message)s \n"
 "\n"
 msgstr ""
+"خطا در حین وارد کردن ماژول '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -119,18 +128,20 @@ msgstr ""
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
-msgstr ""
+msgstr "فایل '%s' از حداکثر اندازه فایل مجاز بیشتر است."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__force
 msgid "Force init"
-msgstr ""
+msgstr "Force init"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
+"حالت force init حتی اگر نصب شده باشد. (سوابق `noupdate='1'` به‌روزرسانی "
+"خواهد شد)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
@@ -140,7 +151,7 @@ msgstr "شناسه"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
 msgid "Import Message"
-msgstr ""
+msgstr "وارد کردن پیام"
 
 #. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
@@ -152,12 +163,12 @@ msgstr "درون‌ریزی ماژول"
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import demo data"
-msgstr ""
+msgstr "وارد کردن داده‌های نمایشی"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
 msgid "Import demo data of module"
-msgstr ""
+msgstr "وارد کردن داده‌های نمایشی ماژول"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
@@ -179,12 +190,12 @@ msgstr "نصب"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Install an Industry"
-msgstr ""
+msgstr "نصب یک صنعت"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Install the application"
-msgstr ""
+msgstr "نصب برنامه"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -209,7 +220,7 @@ msgstr "پرونده ZIP. پیمانه"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
 msgid "Module Type"
-msgstr ""
+msgstr "نوع ماژول"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -219,45 +230,47 @@ msgstr "فایل ماژول (.zip)"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
 msgid "Modules Dependencies"
-msgstr ""
+msgstr "وابستگی های ماژول"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "No file sent."
-msgstr ""
+msgstr "هیچ فایلی ارسال نشد"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Note: you can only import data modules (.xml files and static assets)"
 msgstr ""
+"توجه: شما فقط می‌توانید ماژول‌های داده‌ای (.xml و دارایی‌های ایستا) را وارد "
+"کنید."
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
 msgid "Official Apps"
-msgstr ""
+msgstr "برنامه‌های رسمی"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only administrators can install data modules."
-msgstr ""
+msgstr "فقط مدیران می‌توانند ماژول‌های داده را نصب کنند."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
-msgstr ""
+msgstr "فقط مدیران می‌توانند یک ماژول را بارگذاری کنند."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Only zip files are supported."
-msgstr ""
+msgstr "فقط فایل‌های زیپ پشتیبانی می‌شوند."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
@@ -269,21 +282,21 @@ msgstr "وضعیت"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require Studio"
-msgstr ""
+msgstr "سفارشی‌سازی‌های استودیو به استودیو نیاز دارند."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Studio customizations require the Odoo Studio app."
-msgstr ""
+msgstr "سفارشی‌سازی‌های استودیو به برنامه Odoo Studio نیاز دارند."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The following modules will also be installed:\n"
-msgstr ""
+msgstr "ماژول‌های زیر نیز نصب خواهند شد:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -293,6 +306,8 @@ msgid ""
 "The installation of the data module would fail as the following dependencies"
 " can't be found in the addons-path:\n"
 msgstr ""
+"نصب ماژول داده به دلیل عدم یافتن وابستگی‌های زیر در مسیر افزونه‌ها ناموفق "
+"خواهد بود:\n"
 
 #. module: base_import_module
 #. odoo-python
@@ -301,13 +316,14 @@ msgstr ""
 msgid ""
 "The list of industry applications cannot be fetched. Please try again later"
 msgstr ""
+"لیست برنامه‌های صنعتی قابل بارگیری نیست. لطفاً بعداً دوباره تلاش کنید."
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "The module %s cannot be downloaded"
-msgstr ""
+msgstr "ماژول %s قابل دانلود نیست."
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
