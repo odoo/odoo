@@ -118,7 +118,7 @@ msgstr "<strong> کد HS</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description:</strong>"
-msgstr ""
+msgstr "<strong>توضیحات حمل و نقل:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -269,7 +269,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "توضیحات پیک"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_name
@@ -419,7 +419,7 @@ msgstr "ست تحویل"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "پیشوند کد پستی تحویل"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -611,7 +611,7 @@ msgstr "نصب ارائه‌دهندگان بیشتر"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
 msgid "Insurance Percentage"
-msgstr ""
+msgstr "درصد بیمه"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -669,7 +669,7 @@ msgstr "آخرین بروز رسانی در"
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
 #: model:product.template,name:delivery.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "تحویل محلی"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -679,7 +679,7 @@ msgstr "درخواست‌های ثبت برای سادگی در عیب یابی"
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "مدیریت پیشوندهای کد پستی تحویل"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -711,7 +711,7 @@ msgstr "نام"
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "New Providers"
-msgstr ""
+msgstr "ارائه‌دهندگان جدید"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
@@ -785,7 +785,7 @@ msgstr "پیشوند"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "پیشوند از قبل وجود دارد!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -795,6 +795,11 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"پیشوندهای کد پستی که این پیک به آنها اعمال می‌شود. توجه داشته باشید که "
+"می‌توان از عبارات منظم برای پشتیبانی از کشورهایی با طول‌های متغیر کد پستی "
+"استفاده کرد، به عنوان مثال، '$' می‌تواند در انتهای پیشوند اضافه شود تا فقط "
+"با کد پستی دقیق مطابقت داشته باشد (به عنوان مثال '100$' فقط با '100' و نه "
+"'1000' مطابقت خواهد داشت)."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -981,6 +986,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"بیمه حمل و نقل، خدماتی است که ممکن است به فرستندگان بابت بسته‌های گمشده، "
+"سرقت شده و یا آسیب دیده در حین حمل و نقل، خسارت پرداخت کند."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -988,6 +995,8 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"جزئیات روش حمل و نقل که باید در پایین سفارش‌های فروش و ایمیل‌های تأیید آن‌ها"
+" درج شود. به عنوان مثال، دستورالعمل‌هایی که مشتریان باید دنبال کنند."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -1017,7 +1026,7 @@ msgstr "نوع بسته بندی موجودی"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr ""
+msgstr "حمایت از بیمه حمل و نقل"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_rounding
@@ -1069,7 +1078,7 @@ msgstr "برچسب بازگشت، به صورت اتوماتیک در هنگام
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "بیمه حمل‌ونقل باید درصدی بین 0 تا 100 باشد."
 
 #. module: delivery
 #. odoo-python
@@ -1269,6 +1278,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"شما نمی‌توانید دسته محصول‌های تحویل را حذف کنید، زیرا در محصولات پیک تحویل "
+"استفاده می‌شود."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -1304,7 +1315,7 @@ msgstr "پیشوند کدپستی"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "پیشوندهای کدپستی"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.label_package_template_view_delivery

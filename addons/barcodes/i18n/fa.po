@@ -40,6 +40,10 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
+"<i>نامگذاری بارکدها</i> نحوه شناسایی و دسته بندی بارکدها را مشخص می کند.\n"
+"هنگامی که یک بارکد اسکن می شود  به <i>اولین</i> قاعده‌ای که الگوی مطابقت دارد، مرتبط می‌شود.\n"
+"سینتکس الگو همانند عبارات باقاعده است و یک بارکد مطابقت دارد\n"
+"اگر عبارت باقاعده با پیشوند بارکد تطابق داشته باشد."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -244,7 +248,7 @@ msgstr "الگوی تطبیق بارکد"
 #, python-format
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
-msgstr ""
+msgstr "الگوی بارکد %(pattern)s منجر به یک عبارت باقاعده معتبر نمی‌شود."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -264,6 +268,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
+"یک خطای نحوی در الگوی بارکد وجود دارد: %(pattern)s یک قاعده تنها می‌تواند "
+"شامل یک جفت آکولاد باشد."
 
 #. module: barcodes
 #. odoo-python
@@ -273,6 +279,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
+"یک خطای نحوی در الگوی بارکد وجود دارد: %(pattern)s آکولادها فقط می‌توانند "
+"شامل N ها و پس از آن D ها باشند."
 
 #. module: barcodes
 #. odoo-python
@@ -281,6 +289,7 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
+"یک خطای نحوی در الگوی بارکد وجود دارد:%(pattern)s آکولادها خالی هستند."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding

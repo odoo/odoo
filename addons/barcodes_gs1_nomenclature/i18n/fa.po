@@ -188,13 +188,17 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"نوع محتوای GS1 تعیین می‌کند که قاعده بارکد را به چه نوع داده‌ای پردازش خواهد کرد:تاریخ: بارکد به یک تاریخ و زمان در Odoo تبدیل خواهد شد؛\n"
+"اندازه: مقدار بارکد مربوط به یک واحد اندازه‌گیری خاص است؛\n"
+"شناسه عددی: بارکد با طول ثابت که از یک کدگذاری خاص پیروی می‌کند؛\n"
+"نام الفا-عدد: بارکد با طول متغیر."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 #, python-format
 msgid "The rule pattern \"%s\" is not a valid Regex: "
-msgstr ""
+msgstr "الگوی قاعده \"%s\" یک عبارت باقاعده معتبر نیست:"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -205,6 +209,10 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
+"الگوی قاعده \"%s\" نامعتبر است و به دو گروه نیاز دارد:\n"
+"\n"
+"\tگروه اول برای شناسه برنامه (معمولاً 2 تا 4 رقم)؛\n"
+"\tگروه دوم برای دریافت مقدار."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -215,6 +223,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
+"مشکلی در الگوی قانون بارکد \"%s\" وجود دارد.\n"
+"اگر این قانون از اعداد اعشاری استفاده می‌کند، بررسی کنید که نمی‌تواند غیر از یک رقم به عنوان آخرین کاراکتر برای شناسه برنامه دریافت کند.\n"
+"همچنین بررسی کنید که مقادیر مطابقت یافته تنها می‌توانند ارقام باشند، در غیر این صورت مقدار نمی‌تواند به عنوان یک اندازه تبدیل شود."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
