@@ -25,6 +25,13 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     init: function (parent) {
         this._super.apply(this, arguments);
         this.wishlistProductIDs = JSON.parse(sessionStorage.getItem('website_sale_wishlist_product_ids') || '[]');
+        if (!this.wishlistProductIDs.length) {
+            // Set a placeholder that will be recomputed on willStart method because
+            // the length of this.wishlistProductIDs will be the same that showed on
+            // screen.
+            const wishCount = parseInt($('.my_wish_quantity').text(), 10);
+            this.wishlistProductIDs = new Array(wishCount).fill(null);
+        }
     },
     /**
      * Gets the current wishlist items.
