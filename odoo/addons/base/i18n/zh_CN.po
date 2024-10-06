@@ -5,9 +5,9 @@
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
 # 何彬 <vnsoft.he@gmail.com>, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-06 13:23+0000\n"
 "PO-Revision-Date: 2024-07-16 09:15+0000\n"
-"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4269,12 +4269,8 @@ msgid ""
 "=========================================================================================\n"
 "\n"
 "German accounting chart and localization.\n"
+"By default, the audit trail is enabled for GoBD compliance.\n"
 msgstr ""
-"\n"
-"Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03 oder SKR04.\n"
-"=========================================================================================\n"
-"\n"
-"German accounting chart and localization.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -12258,6 +12254,7 @@ msgid ""
 "- “%(record)s” belongs to company “%(company)s” and “%(field)s” (%(fname)s: "
 "%(values)s) belongs to another company."
 msgstr ""
+"- %(record)s 属于公司 %(company)s；而 %(field)s（%(fname)s：%(values)s）属于另一家公司。"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
@@ -12679,7 +12676,7 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "<i class=\"fa fa-gear\"/> Detect Max Limit"
-msgstr ""
+msgstr "<i class=\"fa fa-gear\"/> 探测最大限制"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -19632,14 +19629,14 @@ msgstr "此限制是确保有定义 XML 操作或 python_method，但不能同�
 msgid ""
 "Constraint to ensure that if a python_method is defined, then the name must "
 "also be defined."
-msgstr ""
+msgstr "此限制是确保如果有定义 python_method，则也必需定义名称。"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_check_res_id_only_when_embedded_action
 msgid ""
 "Constraint to ensure that the embedded_parent_res_id is only defined when a "
 "top_action_id is defined."
-msgstr ""
+msgstr "此限制是确保只会在定义 top_action_id 时，才会定义 embedded_parent_res_id。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
@@ -19804,7 +19801,7 @@ msgstr "从/向线索转换工单"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Convert attachments to links for emails over"
-msgstr ""
+msgstr "将附件转换为超链接，当大小超过"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_mail_plugin
@@ -19915,7 +19912,7 @@ msgstr "国家/地区名称"
 #. module: base
 #: model:ir.model,name:base.model_format_vat_label_mixin
 msgid "Country Specific VAT Label"
-msgstr ""
+msgstr "特定国家/地区增值税标签"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -20382,6 +20379,7 @@ msgid ""
 "Cron job %(name)s (%(id)s) has been deactivated after failing %(count)s "
 "times. More information can be found in the server logs around %(time)s."
 msgstr ""
+"Cron 作业 %(name)s (%(id)s) 在经历 %(count)s 次失败后已停用。服务器日志內有更多信息，时间约为 %(time)s。"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__cuba
@@ -20421,7 +20419,7 @@ msgstr "货币代码(ISO 4217)"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__iso_numeric
 msgid "Currency Numeric Code (ISO 4217)."
-msgstr ""
+msgstr "货币数字代码（ISO 4217）。"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
@@ -20471,7 +20469,7 @@ msgstr "货币字段应具有 res.currency 关系"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__iso_numeric
 msgid "Currency numeric code."
-msgstr ""
+msgstr "货币的数字代码。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__symbol
@@ -20488,7 +20486,7 @@ msgstr "当前 Arch"
 #: model:ir.model.fields,field_description:base.field_res_device__is_current
 #: model:ir.model.fields,field_description:base.field_res_device_log__is_current
 msgid "Current Device"
-msgstr ""
+msgstr "当前设备"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__current_line_id
@@ -20957,7 +20955,7 @@ msgstr "默认视图"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_embedded_actions__default_view_mode
 msgid "Default view (if none, default view of the action is taken)"
-msgstr ""
+msgstr "默认视图（若不指定，会使用action动作中的预设模式）"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
@@ -21077,7 +21075,7 @@ msgstr "刚果民主共和国"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cd
 msgid "Democratic Republic of the Congo - Accounting"
-msgstr ""
+msgstr "刚果民主共和国 - 會計"
 
 #. module: base
 #: model:res.country,name:base.dk
@@ -25516,7 +25514,7 @@ msgstr "标识"
 msgid ""
 "If True, the session file corresponding to this device\n"
 "                                    no longer exists on the filesystem."
-msgstr ""
+msgstr "如果为 True，则文件系统上不再存在与此设备对应的会话文件"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -25881,7 +25879,7 @@ msgstr "使用 UBL/CII 导入/导出电子发票"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_edi_ubl_bis3
 msgid "Import/Export electronic orders with UBL"
-msgstr ""
+msgstr "使用 UBL 导入/导出电子订单"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_base_import
@@ -26486,6 +26484,9 @@ msgid ""
 "\n"
 " %(error)s"
 msgstr ""
+"无效的上下文：「%(expr)s」不是有效的 Python 表达式\n"
+"\n"
+" %(error)s"
 
 #. module: base
 #. odoo-python
@@ -26505,7 +26506,7 @@ msgstr "无效的日期/时间格式。请参照允许的指示列表，在您�
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Invalid default period %(default_period)s for date filter"
-msgstr ""
+msgstr "日期筛选器的默认期间 %(default_period)s 无效"
 
 #. module: base
 #. odoo-python
@@ -26517,7 +26518,7 @@ msgstr "无效域名：%s"
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid field %(model)s.%(field)s"
-msgstr ""
+msgstr "无效的字段%(model)s.%(field)s "
 
 #. module: base
 #. odoo-python
@@ -26525,7 +26526,7 @@ msgstr ""
 msgid ""
 "Invalid inherit mode. Module \"%(module)s\" and template name "
 "\"%(template_name)s\""
-msgstr ""
+msgstr "无效的继承模式。模块「%(module)s」模板名「%(template_name)s」"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_ui_view_inheritance_mode
@@ -26555,7 +26556,7 @@ msgstr "模式属性无效："
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Invalid model name “%s” in action definition."
-msgstr ""
+msgstr "动作定义中使用了无效的模型名称「%s」。"
 
 #. module: base
 #. odoo-python
@@ -26567,7 +26568,7 @@ msgstr "无效的位置属性：'%s'"
 #. odoo-python
 #: code:addons/base/models/ir_sequence.py:0
 msgid "Invalid prefix or suffix for sequence “%s”"
-msgstr ""
+msgstr "序列 %s 的字首或字尾无效"
 
 #. module: base
 #. odoo-python
@@ -26581,7 +26582,7 @@ msgstr "搜索标准无效"
 msgid ""
 "Invalid separator %(separator)s for python expression %(expression)s; valid "
 "values are 'and' and 'or'"
-msgstr ""
+msgstr "以下 python 表达式的分隔符号 %(separator)s 无效：%(expression)s。有效值为：and（与）、 or（或）"
 
 #. module: base
 #. odoo-python
@@ -26596,7 +26597,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_check_sort_json
 msgid "Invalid sort definition"
-msgstr ""
+msgstr "无效的排序定义"
 
 #. module: base
 #. odoo-python
@@ -26608,7 +26609,7 @@ msgstr "按钮中的特殊\"%(value)s\"无效"
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid specification for moved nodes: “%s”"
-msgstr ""
+msgstr "已移动节点的规格无效：%s"
 
 #. module: base
 #. odoo-python
@@ -26626,7 +26627,7 @@ msgstr "无效类型"
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid value for %(model)s.%(field)s: %(value)s"
-msgstr ""
+msgstr "%(model)s.%(field)s的值无效：%(value)s"
 
 #. module: base
 #. odoo-python
@@ -26635,6 +26636,8 @@ msgid ""
 "Invalid value for %(model)s.%(field)s: %(value)s is out of bounds (integers "
 "should be between -2,147,483,648 and 2,147,483,647)"
 msgstr ""
+"%(model)s.%(field)s 数值无效：%(value)s 超出范围（整数应介于 -2,147,483,648 与 2,147,483,647"
+" 之间）"
 
 #. module: base
 #. odoo-python
@@ -26690,12 +26693,12 @@ msgstr "来自文档的结算单"
 #. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Invoices, Payments, Follow-ups & Bank Synchronization"
-msgstr ""
+msgstr "发票、付款、关注及银行同步"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Invoices, Payments, Follow-ups & Bank synchronization (Enterprise)"
-msgstr ""
+msgstr "发票、付款、关注及银行同步（企业版）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -26782,7 +26785,7 @@ msgstr "是当前的公司货币"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__is_deletable
 msgid "Is Deletable"
-msgstr ""
+msgstr "可刪除"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__is_public
@@ -26871,7 +26874,7 @@ msgstr "Italy - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_doi
 msgid "Italy - Declaration of Intent"
-msgstr ""
+msgstr "意大利 - 意向声明"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi
@@ -26896,7 +26899,7 @@ msgstr "意大利电子商务电子发票"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ci
 msgid "Ivory Coast - Accounting"
-msgstr ""
+msgstr "科特迪瓦 - 会计"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -27033,12 +27036,12 @@ msgstr "Kenya - Payroll with Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_mrp
 msgid "Kenya ETIMS EDI Manufacturing Integration"
-msgstr ""
+msgstr "肯尼亚 ETIMS EDI 制造整合"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_stock
 msgid "Kenya ETIMS EDI Stock Integration"
-msgstr ""
+msgstr "肯尼亚 ETIMS EDI 库存整合"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_tremol
@@ -29008,7 +29011,7 @@ msgstr "SMTP 服务器丢失"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Missing required value for the field '%(name)s' (%(technical_name)s)"
-msgstr ""
+msgstr "字段「%(name)s」(%(technical_name)s)缺少必填的值"
 
 #. module: base
 #. odoo-python
@@ -29016,7 +29019,7 @@ msgstr ""
 msgid ""
 "Missing required value for the field '%(name)s' on a linked model "
 "[%(linked_model)s]"
-msgstr ""
+msgstr "在已关联模型[%(linked_model)s]上，字段 %(name)s 缺少必填的值。"
 
 #. module: base
 #. odoo-python
@@ -29180,7 +29183,7 @@ msgstr "模型导出"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Model “%s” contains module data and cannot be removed."
-msgstr ""
+msgstr "模型「%s」包含模块数据，不可移除。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -29910,7 +29913,7 @@ msgstr "有非关系字段 %(field)s 在依赖项 %(dependency)s 中"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Non-relational field “%(field)s” in path “%(field_path)s” in %(use)s)"
-msgstr ""
+msgstr "无效的关联字段 %(field)s 在 %(field_path)s 內（由 %(use)s 使用）"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_testing_utilities
@@ -29988,7 +29991,7 @@ msgstr "未安装"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Not enough access rights on the external ID \"%(module)s.%(xml_id)s\""
-msgstr ""
+msgstr "没有权限存取外部ID：%(module)s.%(xml_id)s"
 
 #. module: base
 #. odoo-python
@@ -32150,7 +32153,7 @@ msgstr "每个用途只能定义一个值！"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Only super user has access"
-msgstr ""
+msgstr "只有超级用户有权限存取"
 
 #. module: base
 #. odoo-python
@@ -34138,7 +34141,7 @@ msgstr "产品供应通知"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_barcodelookup
 msgid "Product Barcode Lookup"
-msgstr ""
+msgstr "产品条形码查找"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
@@ -34245,7 +34248,7 @@ msgstr "性能分析结果"
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_progress
 msgid "Progress of Scheduled Actions"
-msgstr ""
+msgstr "预定操作进度"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_project
@@ -34595,7 +34598,7 @@ msgstr "前景"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_shiprocket
 msgid "Provide cash on delivery for website users"
-msgstr ""
+msgstr "向网站使用者提供货到付款选项"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_mobile
@@ -40600,6 +40603,9 @@ msgid ""
 "\n"
 "Sorry, %(user)s doesn't have '%(operation)s' access to:"
 msgstr ""
+"哦豁！你似乎偶然发现了一些绝密记录⋯⋯\n"
+"\n"
+"不好意思，%(user)s 对下列操作没有「%(operation)s」权限："
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -40636,7 +40642,7 @@ msgstr "无法导入字段类型\"%s"
 msgid ""
 "Unable to install module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
-msgstr ""
+msgstr "不能安装模块「%(module)s」，因为没有找到外部依赖项：%(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40652,7 +40658,7 @@ msgstr "无法按 %s 排序：用于排序的字段必须存在于模型中并�
 msgid ""
 "Unable to process module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
-msgstr ""
+msgstr "不能处理模块「%(module)s」，因为没有找到外部依赖项：%(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40660,7 +40666,7 @@ msgstr ""
 msgid ""
 "Unable to upgrade module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
-msgstr ""
+msgstr "不能升级模块「%(module)s」，因为没有找到外部依赖项：%(dependency)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -40815,26 +40821,26 @@ msgstr "%(use)s中的未知字段\"%(model)s.%(field)s\")"
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Unknown field name \"%(field_name)s\" in related field \"%(related_field)s\""
-msgstr ""
+msgstr "未知字段名称「%(field_name)s」在关联字段「%(related_field)s」內"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Unknown field specified “%s” in currency_field"
-msgstr ""
+msgstr "currency_field 指定了未知字段：%s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid ""
 "Unknown field “%(field)s” in \"group_by\" value in %(attribute)s=“%(value)s”"
-msgstr ""
+msgstr " group_by 值内有未知字段「%(field)s」：%(attribute)s=\"%(value)s\""
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Unknown field “%(field)s” in dependency “%(dependency)s”"
-msgstr ""
+msgstr "有未知字段 %(field)s 在依赖项 %(dependency)s 中"
 
 #. module: base
 #. odoo-python
@@ -40865,7 +40871,7 @@ msgstr "扩展名无法识别：必须是 .csv、.po 或 .tgz 之一（收到 .%
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Unsearchable field “%(field)s” in path “%(field_path)s” in %(use)s)"
-msgstr ""
+msgstr "有不可搜索的字段 %(field)s 在路径 %(field_path)s 內（由 %(use)s 使用）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_unsplash
@@ -42358,7 +42364,7 @@ msgstr "不允许修改\"%(document_kind)s\"（%(document_model)s）记录。"
 msgid ""
 "You are trying to install incompatible modules in category "
 "\"%(category)s\":%(module_list)s"
-msgstr ""
+msgstr "你正尝试在类別 %(category)s 中，安装不兼容的模块：%(module_list)s"
 
 #. module: base
 #. odoo-python
@@ -42470,6 +42476,8 @@ msgid ""
 "You cannot archive these Outgoing Mail Servers (%(server_usage)s) because they are still used in the following case(s):\n"
 "%(usage_details)s"
 msgstr ""
+"你不能归档这些外寄邮件服务器（%(server_usage)s），因为它在以下情况中被使用：\n"
+"%(usage_details)s"
 
 #. module: base
 #. odoo-python
@@ -42478,6 +42486,8 @@ msgid ""
 "You cannot archive this Outgoing Mail Server (%(server_usage)s) because it is still used in the following case(s):\n"
 "%(usage_details)s"
 msgstr ""
+"你不能归档这个外寄邮件服务器（%(server_usage)s），因为它在以下情况中被使用：\n"
+"%(usage_details)s"
 
 #. module: base
 #. odoo-python
