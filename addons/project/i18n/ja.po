@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +99,60 @@ msgid ""
 "                noContentHelper: markup(\n"
 "                    "
 msgstr ""
+"\n"
+");\n"
+"\n"
+"export class ProjectTaskFormController extends FormControllerWithHTMLExpander {\n"
+"    setup() {\n"
+"        super.setup();\n"
+"        this.notifications = useService(\"notification\");\n"
+"    }\n"
+"\n"
+"    /**\n"
+"     * @override\n"
+"     */\n"
+"    getStaticActionMenuItems() {\n"
+"        return {\n"
+"            ...super.getStaticActionMenuItems(),\n"
+"            openHistoryDialog: {\n"
+"                sequence: 50,\n"
+"                icon: \"fa fa-history\",\n"
+"                description: _t(\"Version History\"),\n"
+"                callback: () => this.openHistoryDialog(),\n"
+"            },\n"
+"        };\n"
+"    }\n"
+"\n"
+"    get deleteConfirmationDialogProps() {\n"
+"        const deleteConfirmationDialogProps = super.deleteConfirmationDialogProps;\n"
+"        if (!this.model.root.data.subtask_count) {\n"
+"            return deleteConfirmationDialogProps;\n"
+"        }\n"
+"        return {\n"
+"            ...deleteConfirmationDialogProps,\n"
+"            body: subTaskDeleteConfirmationMessage,\n"
+"        }\n"
+"    }\n"
+"\n"
+"    async openHistoryDialog() {\n"
+"        const record = this.model.root;\n"
+"        const versionedFieldName = 'description';\n"
+"        const historyMetadata = record.data[\"html_field_history_metadata\"]?.[versionedFieldName];\n"
+"        if (!historyMetadata) {\n"
+"            this.notifications.add(\n"
+"                escape(_t(\n"
+"                    \"The task description lacks any past content that could be restored at the moment.\"\n"
+"                ))\n"
+"            );\n"
+"            return;\n"
+"        }\n"
+"\n"
+"        this.dialogService.add(\n"
+"            HistoryDialog,\n"
+"            {\n"
+"                title: _t(\"Task Description History\"),\n"
+"                noContentHelper: markup(\n"
+"                    "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -154,7 +209,7 @@ msgstr "%(count1)s/%(count2)s"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s Dashboard"
-msgstr ""
+msgstr "%(name)s ダッシュボード"
 
 #. module: project
 #. odoo-python
@@ -199,7 +254,7 @@ msgstr "%s (コピー)"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "%s closed tasks"
-msgstr ""
+msgstr "%s クローズ済タスク"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -477,7 +532,7 @@ msgstr "<span class=\"fw-normal\"> タスク</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ブロック済タスク</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -731,7 +786,7 @@ msgstr "メールに表示するコンテンツを追加する"
 msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
-msgstr ""
+msgstr "タスクにプロジェクト固有のプロパティフィールドを追加して、プロジェクト管理プロセスをカスタマイズして下さい。"
 
 #. module: project
 #. odoo-javascript
@@ -857,7 +912,7 @@ msgstr "プロジェクトの進捗状況や従業員のパフォーマンスを
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read mode."
-msgstr ""
+msgstr "このリンクがあれば、誰でもプロジェクトを閲覧モードで閲覧できます。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -1130,7 +1185,7 @@ msgstr "ブロック者"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked Tasks"
-msgstr ""
+msgstr "ブロック済タスク"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action_blocking_tasks
@@ -1220,7 +1275,7 @@ msgstr "サブタスクリストを閉じる"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_depend_on_count
 msgid "Closed Depending on Tasks"
-msgstr ""
+msgstr "タスクによりクローズ済"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2190,7 +2245,7 @@ msgstr "こんにちは"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Hide closed tasks"
-msgstr ""
+msgstr "クローズ済タスクを隠す"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3755,7 +3810,7 @@ msgstr "読む"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read: collaborators can view tasks but cannot edit them."
-msgstr ""
+msgstr "読取り:共同作業者はタスクの閲覧は可能ですが、編集はできません。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3764,6 +3819,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"読取り: 共同作業者はタスクの閲覧は可能ですが、編集はできません。\n"
+"限定アクセスでの編集:共同作業者は、かんばんビューでフォローしているタスクを閲覧および編集できます。\n"
+"編集:共同作業者は、かんばんビューで全てのタスクを閲覧および編集できます。さらに、フォローするタスクを選択することもできます。"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4139,7 +4197,7 @@ msgstr "次のアクションの日付が今日より前のすべてのレコー
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Show closed tasks"
-msgstr ""
+msgstr "クローズ済タスクを表示"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4277,7 +4335,7 @@ msgstr "都道府県・州"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
 msgid "State readonly"
-msgstr ""
+msgstr "ステータス 読取専用"
 
 #. module: project
 #. odoo-javascript
@@ -4294,7 +4352,7 @@ msgstr "状態"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Status Update - %(date)s"
-msgstr ""
+msgstr "ステータス更新 - %(date)s"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4488,7 +4546,7 @@ msgstr "タスク名..."
 #: code:addons/project/models/project_task.py:0
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
-msgstr ""
+msgstr "プロジェクト %(source_project)s から %(destination_project)sへ移行済のタスク"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4751,6 +4809,7 @@ msgid ""
 "on your website. This includes leads/opportunities, quotations/sales orders,"
 " purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"共有プロジェクトのタスクを編集したり、ウェブサイト上で特定のドキュメントを閲覧モードで表示したりすることができます。これには、案件/案件情報、見積書/販売オーダ、購買オーダ、顧客請求書および仕入先請求書、タイムシート、およびチケットが含まれます。"
 
 #. module: project
 #. odoo-python
@@ -4886,7 +4945,7 @@ msgstr "ヒント:受信メールからタスクを作成"
 #: model:digest.tip,name:project.digest_tip_project_3
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
-msgstr ""
+msgstr "ヒント: プロジェクト特有フィールド"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -4898,7 +4957,7 @@ msgstr "ヒント:タスクステートを使ってタスクの進捗を管理"
 #: model:digest.tip,name:project.digest_tip_project_2
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_2
 msgid "Tip: Your Own Personal Kanban"
-msgstr ""
+msgstr "ヒント: あなた個人のかんばん"
 
 #. module: project
 #. odoo-python
@@ -4977,7 +5036,7 @@ msgstr "合計"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "Total Costs"
-msgstr ""
+msgstr "原価合計"
 
 #. module: project
 #. odoo-javascript

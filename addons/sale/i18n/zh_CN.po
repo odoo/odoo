@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Chloe Wang, 2024
+# ChunYi Fu, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: ChunYi Fu, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -706,6 +707,8 @@ msgid ""
 "<span><b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>恭喜您</b>，您的首份报价单已发送！<br>请查看电子邮件，以验证报价。\n"
+"        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -750,7 +753,7 @@ msgstr "<span>提醒：此报价包含存档产品</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>警告：此账单可能与以下项目重复：</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -761,7 +764,7 @@ msgstr "<strong class=\"mr16\">小计</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>到期：</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -771,7 +774,7 @@ msgstr "<strong>财政状况备注：</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
-msgstr ""
+msgstr "<strong>销售员</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -801,7 +804,7 @@ msgstr "<strong>该报价已被取消。</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>您的参考：</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -812,7 +815,7 @@ msgstr "已确认销售订单需要确认日期。"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "A line on these orders missing a product, you cannot confirm it."
-msgstr ""
+msgstr "这些订单上的一行缺少一个产品，您无法确认。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -825,13 +828,13 @@ msgstr "备注，其内容通常适用于上述部分或产品。"
 msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
-msgstr ""
+msgstr "销售订单行的组合项目必须是其链接行的可用组合项目。"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
-msgstr ""
+msgstr "销售订单行的产品必须与其组合项目的产品一致。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1035,6 +1038,13 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
 msgstr ""
+"允许您在销售中与客户共享文档。\n"
+"如果不想与销售客户共享此文档，请将其留空。\n"
+"报价时：文件将发送给客户，客户可随时访问。\n"
+"例如，此选项可用于共享产品描述文件。\n"
+"订单确认时：文件将发送给客户，客户可随时访问。\n"
+"例如，此选项可用于共享用户手册或在电子商务中购买的数字内容。\n"
+"内部引用：文件将包含在报价单和销售订单的 PDF 文件中，位于标题页和报价表之间。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1134,7 +1144,7 @@ msgstr "是否确定删除"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "您确定要取消所选项目吗？"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1406,7 +1416,7 @@ msgstr "组合选择"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
 msgid "Combo Item"
-msgstr ""
+msgstr "组合项目"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -2085,7 +2095,7 @@ msgstr "从销售订单创建发票时进行预付款。 复制销售订单时�
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_downpayment_categ_id
 msgid "Downpayment Account"
-msgstr ""
+msgstr "首期付款账户"
 
 #. module: sale
 #. odoo-python
@@ -2102,7 +2112,7 @@ msgstr "重复的文件"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "重复订单"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2141,7 +2151,7 @@ msgstr "输入自定义值"
 #: code:addons/sale/models/sale_order.py:0
 msgid ""
 "Error importing attachment '%(file_name)s' as order (decoder=%(decoder)s)"
-msgstr ""
+msgstr "附件 %(file_name)s 导入为订单时，发生错误（解码器：%(decoder)s）"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2285,7 +2295,7 @@ msgstr "线上付款确认后自动生成发票"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "生成的订单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2309,6 +2319,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"货物是您提供的有形材料和商品。\n"
+"服务是您提供的非物质产品。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2427,7 +2439,7 @@ msgstr "如果更改价目表，则只会影响新添加的行。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "立即"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2569,7 +2581,7 @@ msgstr "已开具发票的数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_posted
 msgid "Invoiced Quantity (posted)"
-msgstr ""
+msgstr "已开具发票的数量（已过账）"
 
 #. module: sale
 #. odoo-python
@@ -2616,7 +2628,7 @@ msgstr "开票地址"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Invoicing Journal"
-msgstr "发票日志"
+msgstr "发票日记账"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -2685,7 +2697,7 @@ msgstr "如果该销售订单源自费用或供应商账单则为正确"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "发布日期"
 
 #. module: sale
 #. odoo-python
@@ -2773,7 +2785,7 @@ msgstr "已关联的订单行"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "链接虚拟"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2816,7 +2828,7 @@ msgstr "管理促销优惠、优惠券、会员卡、礼品卡和电子钱包"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "管理销售和团队目标及佣金"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -3743,7 +3755,7 @@ msgstr "需设定报价单有效期，且须大于或等于0。"
 #: model:mail.message.subtype,name:sale.mt_order_viewed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "已查看报价"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3808,7 +3820,7 @@ msgstr "点评"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Costs"
-msgstr ""
+msgstr "重新开票成本"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
@@ -4050,7 +4062,7 @@ msgstr "客户销售分析"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis By Products"
-msgstr ""
+msgstr "按产品分类的销售分析"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
@@ -4266,7 +4278,7 @@ msgstr "选择产品，或者直接快速创建产品。"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr ""
+msgstr "已选定的组合项目"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -4458,12 +4470,14 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"一些已确认的订单被选中。其相关文件可能会\n"
+"                        会受到取消的影响。"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
-msgstr ""
+msgstr "有些订单不需要确认。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4605,7 +4619,7 @@ msgstr "税项"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_discount__tax_ids
 msgid "Taxes to add on the discount line."
-msgstr ""
+msgstr "在折扣行中添加税金。"
 
 #. module: sale
 #. odoo-python
@@ -4618,7 +4632,7 @@ msgstr "%(team_name)s团队有%(sale_order_count)s张生效的销售订单。请
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "技术价格单位"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4668,7 +4682,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register"
 " an expense on a cancelled Sales Order."
-msgstr ""
+msgstr "要重新开具发票的销售订单%(order)s已取消。您不能在已取消的销售订单上登记费用。"
 
 #. module: sale
 #. odoo-python
@@ -4676,7 +4690,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
-msgstr ""
+msgstr "要重新开票的销售订单%(order)s当前已锁定。您不能在锁定的销售订单上登记费用。"
 
 #. module: sale
 #. odoo-python
@@ -4684,7 +4698,7 @@ msgstr ""
 msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
-msgstr ""
+msgstr "在登记费用之前，必须确认要重新开具发票的销售订单%(order)s。"
 
 #. module: sale
 #. odoo-python
@@ -4759,7 +4773,7 @@ msgstr "新发票将扣除关联至该销售订单的发票草稿。"
 msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
-msgstr ""
+msgstr "所选组合项的数量必须与可用组合选项的数量一致。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4846,12 +4860,12 @@ msgid ""
 "There does not seem to be any discount product configured for this company "
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
-msgstr ""
+msgstr "该公司似乎尚未配置任何折扣产品。您可以使用按线路折扣，或者请管理员首次给予折扣。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "该账户将用于首付款发票。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5082,7 +5096,7 @@ msgstr "UTM营销"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 msgid "Un-invoiced Balance"
-msgstr ""
+msgstr "未开票余额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5150,7 +5164,7 @@ msgstr "免税总额"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 msgid "Untaxed discount"
-msgstr ""
+msgstr "未税折扣"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5202,7 +5216,7 @@ msgstr "验证订单"
 msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
-msgstr ""
+msgstr "经过验证的费用、供应商账单或库存拣选（设置为追踪成本）可按成本或销售价格向客户开具发票。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -5236,7 +5250,7 @@ msgstr "查看报价单"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_id
 msgid "Virtual"
-msgstr ""
+msgstr "虚拟"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5481,6 +5495,8 @@ msgid ""
 "selected\n"
 "                    items?"
 msgstr ""
+"已选取\n"
+"                    项目？"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document

@@ -6,8 +6,9 @@
 # Martin Trigaux, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 宇洛 李, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
+# ChunYi Fu, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1088,7 +1089,7 @@ msgstr "<span class=\"text-warning\">中风险</span>：Iban"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
-msgstr ""
+msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1128,7 +1129,7 @@ msgstr "草稿"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "<span invisible=\"user_id\">everyone</span>"
-msgstr ""
+msgstr "<span invisible=\"user_id\">所有人</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1333,12 +1334,12 @@ msgstr "<strong class=\"mr16\">小计</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date</strong>"
-msgstr ""
+msgstr "<strong>贷记单日期</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code</strong>"
-msgstr ""
+msgstr "<strong>客户代码</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1484,12 +1485,15 @@ msgid ""
 "                occurring over a given period of time on a credit account. You\n"
 "                should receive this periodically from your bank."
 msgstr ""
+"银行贷记单总结银行账户在特定期限内\n"
+"                发生的所有金融交易。银行\n"
+"                定期向您发送贷记单。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr "该地区已经存在具有外国增值税的财政状况。"
+msgstr "该地区已经存在具有外国增值税的应税设定。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1525,7 +1529,7 @@ msgstr "该分录的其中一行用于已弃用的科目，无法过账。"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "A new Hard Lock Date must be posterior (or equal) to the previous one."
-msgstr ""
+msgstr "新的硬锁定日期必须晚于（或等于）前一个日期。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1536,7 +1540,7 @@ msgstr "备注，其内容通常适用于上述部分或产品。"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "A payment cannot have a journal entry if it is not confirmed."
-msgstr ""
+msgstr "如果付款未经确认，则不能有日记账分录。"
 
 #. module: account
 #. odoo-python
@@ -1559,7 +1563,7 @@ msgstr "以金额表示的付款容差应始终大于0"
 msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
-msgstr ""
+msgstr "如果没有日记账分录，则无法确认未清帐户的付款。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
@@ -1587,7 +1591,7 @@ msgstr "分节标题"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "A single exception must change exactly one lock date field."
-msgstr ""
+msgstr "单个例外情况必须准确更改一个锁定日期字段。"
 
 #. module: account
 #. odoo-python
@@ -1604,7 +1608,7 @@ msgstr "这个国家已经有了一个名称和适用性相同的标签。"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr "同一税项只能定义一条税项财政状况。"
+msgstr "同一税项只能定义一条税项的应税设定。"
 
 #. module: account
 #. odoo-python
@@ -1682,9 +1686,19 @@ msgstr "账户"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
+"Account %(account)s will be split in %(num_accounts)s, one for each "
+"company:\n"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The"
 " unmerge operation only splits an account based on its companies."
 msgstr ""
+"帐户%s无法取消合并，因为它已经属于一家公司。\n"
+"取消合并操作仅根据其公司拆分帐户。"
 
 #. module: account
 #. odoo-python
@@ -1746,7 +1760,7 @@ msgstr "具有相同单位的账户组不能重叠"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
 msgid "Account Has Hashed Entries"
-msgstr ""
+msgstr "账户有哈希记项"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -1778,7 +1792,7 @@ msgstr "会计日记账组"
 #: model:ir.model,name:account.model_account_lock_exception
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Account Lock Exception"
-msgstr ""
+msgstr "账户锁定异常"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_map
@@ -1804,12 +1818,12 @@ msgstr "科目分录发送"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
 msgid "Account Move Send Batch Wizard"
-msgstr ""
+msgstr "账户移动发送批次向导"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
 msgid "Account Move Send Wizard"
-msgstr ""
+msgstr "账户移动发送向导"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -1928,7 +1942,7 @@ msgstr "科目代码前2位数"
 msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate"
 " codes: %s"
-msgstr ""
+msgstr "帐户代码必须是唯一的。您无法使用这些重复代码创建帐户：%s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -1964,12 +1978,12 @@ msgstr "账户持有人名称，如果与该账户持有人名称不同"
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
 msgid "Account merge wizard"
-msgstr ""
+msgstr "账户合并向导"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
 msgid "Account merge wizard line"
-msgstr ""
+msgstr "账户合并向导行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -2134,7 +2148,7 @@ msgstr "科目"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "财政状况的科目映射"
+msgstr "应税设定的科目映射"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -2516,7 +2530,7 @@ msgstr "行中的所有科目须为相同类型。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__move_to_hash_ids
 msgid "All moves that will be hashed"
-msgstr ""
+msgstr "将进行哈希处理的所有分录"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -2534,12 +2548,12 @@ msgstr "所有已选取的撤销分录，必须属于同一公司。"
 msgid ""
 "All unhashable moves before the selected date that are not protected by the "
 "Hard Lock Date"
-msgstr ""
+msgstr "在所选日期之前，不受硬锁定日期保护的所有不可哈希分录"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank statement lines before the selected date."
-msgstr ""
+msgstr "所选日期之前，所有未对账的银行结单数据行。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2594,7 +2608,7 @@ msgstr "允许使用分析会计。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Already Paid:"
-msgstr ""
+msgstr "已支付："
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -2754,7 +2768,7 @@ msgstr "资产负债表外科目无法加税"
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_account_account_src_dest_uniq
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
-msgstr "同一科目一次只能定义一个科目财政状况。"
+msgstr "同一科目一次只能定义一个科目的应税设定。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2793,7 +2807,7 @@ msgstr "计算不变性时发生错误。序列中检测到缺口。"
 msgid ""
 "An error occurred when computing the inalterability. All entries have to be "
 "reconciled."
-msgstr ""
+msgstr "计算不变性时出错。所有条目都必须进行核对。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2970,19 +2984,18 @@ msgstr "已存档"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"Are you sure? This will split the account into one account per company:"
+msgid "Are you sure? This will perform the following operations:\n"
 msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
 msgid "Ask after 3 validations without edits"
-msgstr ""
+msgstr "若有 3 次未有任何编辑的验证，便询问"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Ask me later"
-msgstr ""
+msgstr "稍后提醒我"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__asset
@@ -3090,7 +3103,7 @@ msgstr "自动验证"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__autocheck_on_post
 msgid "Auto-Check on Post"
-msgstr ""
+msgstr "过账时自动检查"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3118,7 +3131,7 @@ msgstr "自动过账"
 #: model:ir.model.fields,field_description:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_users__autopost_bills
 msgid "Auto-post bills"
-msgstr ""
+msgstr "自动过账账单"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_until
@@ -3136,7 +3149,7 @@ msgstr "自动验证"
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
 #: model:ir.model.fields,field_description:account.field_res_config_settings__autopost_bills
 msgid "Auto-validate bills"
-msgstr ""
+msgstr "自动验证账单"
 
 #. module: account
 #. odoo-python
@@ -3164,7 +3177,7 @@ msgstr "自动序列"
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,help:account.field_res_users__autopost_bills
 msgid "Automatically post bills for this trusted partner"
-msgstr ""
+msgstr "为次信任的合作伙伴，自动过账账单"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -3176,12 +3189,12 @@ msgstr "自动化"
 #: code:addons/account/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Autopost Bills"
-msgstr ""
+msgstr "自动过账账单"
 
 #. module: account
 #: model:ir.model,name:account.model_account_autopost_bills_wizard
 msgid "Autopost Bills Wizard"
-msgstr ""
+msgstr "自动过账账单向导"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -3291,6 +3304,12 @@ msgid "Bank & Cash"
 msgstr "银行和现金"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank & Cash accounts cannot be shared between companies."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
@@ -3380,7 +3399,7 @@ msgstr "银行对账分录预置"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bank Setup"
-msgstr ""
+msgstr "银行设置"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -3391,7 +3410,7 @@ msgstr "银行对账单"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_extract
 msgid "Bank Statement Digitization"
-msgstr ""
+msgstr "银行结单数字化"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -3545,12 +3564,12 @@ msgstr "基础的"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Batch Payment Number Sequence"
-msgstr ""
+msgstr "大批付款序列号"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
-msgstr ""
+msgstr "大批付款序列"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3566,13 +3585,13 @@ msgstr "在之前"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
 msgid "Before Next Payment Date"
-msgstr ""
+msgstr "下一次付款日期前"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Belongs to the same company as %s."
-msgstr ""
+msgstr "属于同一公司%s。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -3721,7 +3740,7 @@ msgstr "在默认情况下，总是展开可以展开的行。如果勾选该项
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "不勾选该启用的字段，可以隐藏而非删除财政状况。"
+msgstr "不勾选该启用的字段，可以隐藏而非删除应税设定。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
@@ -4094,7 +4113,7 @@ msgstr "更改对方标签将导致支付差额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date
 msgid "Changed Lock Date"
-msgstr ""
+msgstr "已更改锁定日期"
 
 #. module: account
 #. odoo-python
@@ -4277,7 +4296,7 @@ msgstr "代码"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_mapping_ids
 msgid "Code Mapping"
-msgstr ""
+msgstr "代码映射"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -4297,7 +4316,7 @@ msgstr "代码前缀开始"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_store
 msgid "Code Store"
-msgstr ""
+msgstr "代码商店"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4456,7 +4475,7 @@ msgstr "公司负数会计"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_vat_placeholder
 msgid "Company Vat Placeholder"
-msgstr ""
+msgstr "公司增值税占位符"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -4566,13 +4585,13 @@ msgstr "连接银行。自动匹配发票。"
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Consider paying in %(btn_start)sinstallments%(btn_end)s instead."
-msgstr ""
+msgstr "考虑分期付款%(btn_start)s%(btn_end)s。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Consider paying the %(btn_start)sfull amount%(btn_end)s."
-msgstr ""
+msgstr "考虑全额付款%(btn_start)s%(btn_end)s。"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -4591,13 +4610,13 @@ msgstr "包含"
 msgid ""
 "Contains either the section name or error message, depending on the line "
 "type."
-msgstr ""
+msgstr "包含部分名称或错误消息，具体取决于行类型。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Contains hashed entries, but %s also has hashed entries."
-msgstr ""
+msgstr "包含经过哈希处理的条目，但%s也有经过哈希处理的条目。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_body
@@ -4666,12 +4685,12 @@ msgstr "无法上传单据"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Items"
-msgstr ""
+msgstr "对应项目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__counterpart_type
 msgid "Counterpart Type"
-msgstr ""
+msgstr "对应类型"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -4755,7 +4774,7 @@ msgstr "创建账单"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create Entries upon Emails"
-msgstr ""
+msgstr "根据电邮创建分录"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -4826,7 +4845,7 @@ msgstr "在您的通讯录中创建新联系人"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 msgid "Create a new fiscal position"
-msgstr "创建新的财政状况"
+msgstr "创建新的应税设定"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -4891,6 +4910,8 @@ msgid ""
 "Create as many ledger groups as needed to maintain separate ledgers for local GAAP, IFRS, or fiscal\n"
 "                    adjustments, ensuring compliance with diverse regulations."
 msgstr ""
+"根据需要创建任意数量的分类账组，以便为本地 GAAP、IFRS 或财政管理部门维护单独的分类账\n"
+"调整，确保遵守各种法规。"
 
 #. module: account
 #. odoo-javascript
@@ -5066,13 +5087,13 @@ msgstr "信用卡"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Credit Card Setup"
-msgstr ""
+msgstr "信用卡设置"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Credit Card: Balance"
-msgstr ""
+msgstr "信用卡：余额"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit_limit
@@ -7129,13 +7150,13 @@ msgstr "会计期间"
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_tree
 msgid "Fiscal Position"
-msgstr "财政状况"
+msgstr "应税设定"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "财政状况"
+msgstr "应税设定"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -7145,7 +7166,7 @@ msgstr "会计年度结束日期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "Fiscal position"
-msgstr "财政状况"
+msgstr "应税设定"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__fiscal_position_id
@@ -7154,7 +7175,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr "财政状况用于调整特定客户的税项和科目或销售订单/发票。 默认值来自客户。"
+msgstr "应税设定用于调整特定客户的税项和科目或销售订单/发票。 默认值来自客户。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -7634,7 +7655,7 @@ msgstr "有记项"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
 #: model:ir.model.fields,field_description:account.field_account_move__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr "有已变更财政状况"
+msgstr "有已变更应税设定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
@@ -8139,7 +8160,7 @@ msgstr "付款中"
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__in_process
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "In Process"
-msgstr ""
+msgstr "处理中"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -8159,7 +8180,7 @@ msgstr "要验证该发票，须"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In payment"
-msgstr ""
+msgstr "付款中"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -8294,12 +8315,12 @@ msgstr "在此处插入您的条款和条件......"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_amount
 msgid "Installments Switch Amount"
-msgstr ""
+msgstr "分期付款切换金额"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_html
 msgid "Installments Switch Html"
-msgstr ""
+msgstr "分期付款切换 Html"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
@@ -8522,7 +8543,7 @@ msgstr "发票日期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
 msgid "Invoice Digitization"
-msgstr ""
+msgstr "发票数字化"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -8532,13 +8553,13 @@ msgstr "发票到期日"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__invoice_edi_format
 msgid "Invoice Edi Format"
-msgstr ""
+msgstr "发票 EDI 格式"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format_store
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format_store
 msgid "Invoice Edi Format Store"
-msgstr ""
+msgstr "发票 EDI 格式商店"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -8599,7 +8620,7 @@ msgstr "发票状态"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_template_pdf_report_id
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_template_pdf_report_id
 msgid "Invoice Template Pdf Report"
-msgstr ""
+msgstr "发票模板 PDF 报告"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals
@@ -8663,7 +8684,7 @@ msgstr "发票报告"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_sending_method
 msgid "Invoice sending"
-msgstr ""
+msgstr "传送发票"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__pdf_report_id
@@ -9023,7 +9044,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Journal Account"
-msgstr ""
+msgstr "日记账账户"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__currency_id
@@ -9169,7 +9190,7 @@ msgstr "未设置匹配编号的日记账项目"
 msgid ""
 "Journal items where the account allows reconciliation no matter the residual"
 " amount"
-msgstr ""
+msgstr "账户允许对账的日记账项目，无论剩余金额是多少"
 
 #. module: account
 #. odoo-python
@@ -9467,22 +9488,22 @@ msgstr "留空以建立新一项"
 #: model:ir.model.fields,field_description:account.field_account_move__journal_group_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__journal_group_id
 msgid "Ledger"
-msgstr ""
+msgstr "分类账"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__journal_group_ids
 msgid "Ledger Group"
-msgstr ""
+msgstr "分类账组别"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
 msgid "Ledger group"
-msgstr ""
+msgstr "分类账组别"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
 msgid "Ledger group allows managing multiple accounting standards."
-msgstr ""
+msgstr "分类账组允许管理多个会计标准。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__horizontal_split_side__left
@@ -9492,7 +9513,7 @@ msgstr "左"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Left to Pay:"
-msgstr ""
+msgstr "剩余付款："
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_legal_notes
@@ -9557,7 +9578,7 @@ msgstr "负债"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__hard_lock_date
 msgid "Like the \"Global Lock Date\", but no exceptions are possible."
-msgstr ""
+msgstr "与 “全局锁定日期” 类似，但不可能有例外。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
@@ -9620,12 +9641,12 @@ msgstr "锁定"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "Lock Date Exception %s"
-msgstr ""
+msgstr "锁定日期例外%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__lock_date_field
 msgid "Lock Date Field"
-msgstr ""
+msgstr "锁定日期字段"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__lock_date_message
@@ -9676,7 +9697,7 @@ msgstr "杂项"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__made_sequence_gap
 #: model:ir.model.fields,field_description:account.field_account_move__made_sequence_gap
 msgid "Made Sequence Gap"
-msgstr ""
+msgstr "已建立序列间隙"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_attachments_widget
@@ -9686,7 +9707,7 @@ msgstr "邮件附件工具"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_lang
 msgid "Mail Lang"
-msgstr ""
+msgstr "邮件语言"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_tracking_value
@@ -9794,12 +9815,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
-msgstr ""
+msgstr "配对"
 
 #. module: account
 #: model:ir.model,name:account.model_account_code_mapping
 msgid "Mapping of account codes per company"
-msgstr ""
+msgstr "每个公司的账户代码映射"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -9874,7 +9895,7 @@ msgstr "匹配的日记账项目"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__matched_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__matched_payment_ids
 msgid "Matched Payments"
-msgstr ""
+msgstr "已配对付款"
 
 #. module: account
 #. odoo-python
@@ -9931,7 +9952,7 @@ msgstr "匹配的行的最大日期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__max_hash_date
 msgid "Max Hash Date"
-msgstr ""
+msgstr "最大哈希日期"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -9966,7 +9987,7 @@ msgstr "合并"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Merge Accounts"
-msgstr ""
+msgstr "合并账户"
 
 #. module: account
 #: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
@@ -9976,7 +9997,7 @@ msgstr "合并合作伙伴向导"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
 msgid "Merge accounts"
-msgstr ""
+msgstr "合并账户"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -10065,6 +10086,8 @@ msgid ""
 "Missing a document for a banking statement? Use the Documents apps to "
 "request it and let the owner upload it at the right place."
 msgstr ""
+"缺少银行对账单文件？\n"
+"使用文档应用程序，请求它并让所有者将其上传到正确的位置。"
 
 #. module: account
 #. odoo-python
@@ -10143,7 +10166,7 @@ msgstr "分录行"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__move_to_hash_ids
 msgid "Move To Hash"
-msgstr ""
+msgstr "待哈希分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_type
@@ -10164,13 +10187,13 @@ msgstr "多公司"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
 msgid "Multi-Ledger"
-msgstr ""
+msgstr "多个分类账"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Multi-ledger"
-msgstr ""
+msgstr "多个分类账"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__direction_sign
@@ -10355,7 +10378,7 @@ msgstr "下一活动类型"
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__next
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Next Installment"
-msgstr ""
+msgstr "下期供款"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__next_payment_date
@@ -10421,7 +10444,7 @@ msgstr "找不到任何选定采购文件的原始采购文件。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
-msgstr ""
+msgstr "无付款日记账分录"
 
 #. module: account
 #. odoo-python
@@ -10508,7 +10531,7 @@ msgstr "未到期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
 msgid "Not Hashable Unlocked Move"
-msgstr ""
+msgstr "不可哈希的解锁移动"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
@@ -10522,7 +10545,7 @@ msgstr "未支付"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Not Secured"
-msgstr ""
+msgstr "不安全"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_sent_values__not_sent
@@ -10534,7 +10557,7 @@ msgstr "未发送"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Not hashed"
-msgstr ""
+msgstr "未哈希"
 
 #. module: account
 #. odoo-javascript
@@ -10618,7 +10641,7 @@ msgstr "操作数量"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__nb_unmodified_bills
 msgid "Number of bills previously unmodified from this partner"
-msgstr ""
+msgstr "此合作伙伴之前未修改的账单数量"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
@@ -10984,7 +11007,7 @@ msgstr "原始账单"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__company_lock_date
 msgid "Original Lock Date"
-msgstr ""
+msgstr "原始锁定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -11101,13 +11124,13 @@ msgstr "逾期"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__overdue
 msgid "Overdue Amount"
-msgstr ""
+msgstr "逾期金额"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Overdue invoices"
-msgstr ""
+msgstr "逾期发票"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11124,7 +11147,7 @@ msgstr "逾期付款，到期日已过"
 msgid ""
 "Overrides the Company's default on whether the price you use on the product "
 "and invoices includes this tax."
-msgstr ""
+msgstr "覆盖公司关于您在产品和发票上使用的价格是否包含此税的默认设置。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -11894,7 +11917,7 @@ msgstr ""
 msgid ""
 "Preferred payment method when buying from this vendor. This will be set by "
 "default on all outgoing payments created for this vendor"
-msgstr ""
+msgstr "从该供应商处购买时的首选付款方式。对此供应商创建的所有付款均默认设置此设置"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_inbound_payment_method_line_id
@@ -11902,7 +11925,7 @@ msgstr ""
 msgid ""
 "Preferred payment method when selling to this customer. This will be set by "
 "default on all incoming payments created for this customer"
-msgstr ""
+msgstr "向该客户销售时的首选付款方式。对此客户创建的所有收款均默认设置此设置"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
@@ -11912,7 +11935,7 @@ msgstr "字首组别门槛"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__prefix_placeholder
 msgid "Prefix Placeholder"
-msgstr ""
+msgstr "前缀占位符"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__account_codes
@@ -11963,14 +11986,14 @@ msgstr "预设在发票和付款匹配期间创建日记账分录"
 msgid ""
 "Prevents creation and modification of entries in purchase journals up to the"
 " defined date inclusive."
-msgstr ""
+msgstr "防止在定义日期（含）之前在采购日记帐中创建和修改分录。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
 msgid ""
 "Prevents creation and modification of entries in sales journals up to the "
 "defined date inclusive."
-msgstr ""
+msgstr "阻止在定义日期（含）之前在销售日记帐中创建和修改分录。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12011,7 +12034,7 @@ msgstr "价格"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
 msgid "Price Include"
-msgstr ""
+msgstr "价格包含"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12032,7 +12055,7 @@ msgstr "打印"
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 #: model_terms:ir.ui.view,arch_db:account.view_out_invoice_tree
 msgid "Print & Send"
-msgstr ""
+msgstr "打印并发送"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__print_on_new_page
@@ -12880,7 +12903,7 @@ msgstr "未结余额"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_iso20022
 msgid "SEPA Credit Transfer / ISO20022"
-msgstr ""
+msgstr "SEPA 信用转移 / ISO20022"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12958,7 +12981,7 @@ msgstr "销售费用"
 #: model:ir.model.fields,field_description:account.field_res_company__sale_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__sale_lock_date
 msgid "Sales Lock Date"
-msgstr ""
+msgstr "销售锁定日期"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -13073,7 +13096,7 @@ msgstr "搜索栏"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr "搜索财政状况"
+msgstr "搜索应税设定"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_group_view_search
@@ -13104,7 +13127,7 @@ msgstr "搜索分录"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Search Statements"
-msgstr ""
+msgstr "搜索对账单"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_search
@@ -13623,7 +13646,7 @@ msgstr "显示合作伙伴的银行账户"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_payment_difference
 msgid "Show Payment Difference"
-msgstr ""
+msgstr "显示付款差异"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
@@ -13693,7 +13716,7 @@ msgid ""
 "Some invoice(s) already have a generated pdf. The existing pdf will be used "
 "for sending. If you want to regenerate them, please delete the attachment "
 "from the invoice."
-msgstr ""
+msgstr "一些发票已经生成了 pdf。现有的 pdf 将用于发送。如果您想重新生成它们，请从发票中删除附件。"
 
 #. module: account
 #. odoo-python
@@ -13856,7 +13879,7 @@ msgstr "状态"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__status_in_payment
 #: model:ir.model.fields,field_description:account.field_account_move__status_in_payment
 msgid "Status In Payment"
-msgstr ""
+msgstr "付款状态"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_state
@@ -13880,7 +13903,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_statusbar_secured/account_move_statusbar_secured.js:0
 msgid "Status with secured indicator for Journal Entries"
-msgstr ""
+msgstr "日记账分录的安全指示器的状态"
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_sales_tax
@@ -13968,7 +13991,7 @@ msgstr "合适的日记账"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_batch_wizard__summary_data
 msgid "Summary Data"
-msgstr ""
+msgstr "汇总数据"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
@@ -14178,7 +14201,7 @@ msgstr "税项映射"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "财政状况的税项映射"
+msgstr "应税设定的税项映射"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -14362,7 +14385,7 @@ msgstr "税款以公司货币表示"
 msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
-msgstr "您所在国家/地区的税项、财政状况、会计科目表和法定报表"
+msgstr "您所在国家/地区的税项、应税设定、会计科目表和法定报表"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -14377,17 +14400,17 @@ msgstr "包含该公司使用税务相关功能的国家/地区的技术字段�
 msgid ""
 "Technical field giving the date the company lock date at the time the "
 "exception was created."
-msgstr ""
+msgstr "提供创建例外时公司锁定日期的技术字段。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date
 msgid "Technical field giving the date the lock date was changed to."
-msgstr ""
+msgstr "给出锁定日期更改日期的技术字段。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date_field
 msgid "Technical field identifying the changed lock date"
-msgstr ""
+msgstr "识别更改的锁定日期的技术字段"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -14524,7 +14547,7 @@ msgstr "提前付款折扣须为正数。"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "The Hard Lock Date cannot be removed."
-msgstr ""
+msgstr "硬锁定日期无法删除。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
@@ -14720,7 +14743,7 @@ msgstr "客户明确放弃其标准条款和条件，即使该等标准条款和
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "The code must be set for every company to which this account belongs."
-msgstr ""
+msgstr "必须为此帐户所属的每个公司设置该代码。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
@@ -14764,7 +14787,7 @@ msgstr "该税项适用的国家/地区。"
 msgid ""
 "The country set on the foreign VAT fiscal position must match the one set on"
 " the report."
-msgstr "在外国增值税财政状况中设置的国家/地区须与报表中设置的国家/地区相匹配。"
+msgstr "在外国增值税应税设定中设置的国家/地区须与报表中设置的国家/地区相匹配。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -14799,41 +14822,41 @@ msgstr ""
 msgid ""
 "The date is being set prior to: %(lock_date_info)s. The Journal Entry will "
 "be accounted on %(invoice_date)s upon posting."
-msgstr ""
+msgstr "日期设置早于：%(lock_date_info)s。日记账分录将在过账后的%(invoice_date)s进行会计处理。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "The date selected is protected by: %(lock_date_info)s."
-msgstr ""
+msgstr "所选日期受%(lock_date_info)s保护。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__fiscalyear_lock_date
 msgid ""
 "The date the Global Lock Date is set to by this exception. If the lock date "
 "is not changed it is set to the maximal date."
-msgstr ""
+msgstr "此例外设定的全域锁定日期。如果未有更改锁定日期，会设为最大日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__purchase_lock_date
 msgid ""
 "The date the Purchase Lock Date is set to by this exception. If the lock "
 "date is not changed it is set to the maximal date."
-msgstr ""
+msgstr "此例外设定的采购锁定日期。如果未有更改锁定日期，会设为最大日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__sale_lock_date
 msgid ""
 "The date the Sale Lock Date is set to by this exception. If the lock date is"
 " not changed it is set to the maximal date."
-msgstr ""
+msgstr "此例外设定的销售锁定日期。如果未有更改锁定日期，会设为最大日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__tax_lock_date
 msgid ""
 "The date the Tax Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
-msgstr ""
+msgstr "此例外设定的税务锁定日期。如果未有更改锁定日期，会设为最大日期。"
 
 #. module: account
 #. odoo-python
@@ -14852,7 +14875,7 @@ msgstr "添加的天数必须在 0 到 31 天之间。"
 #: model:ir.model.fields,help:account.field_account_move__partner_shipping_id
 msgid ""
 "The delivery address will be used in the computation of the fiscal position."
-msgstr "交货地址将用于财政状况计算。"
+msgstr "交货地址将用于应税设定计算。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_origin
@@ -14870,7 +14893,7 @@ msgstr "记项%(name)s（识别码%(id)s）必须为草稿。"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
-msgstr ""
+msgstr "记项使用不可更改的哈希值进行保护。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -14913,7 +14936,7 @@ msgstr "需要“供应商”字段，请填写，以验证客户账单。"
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr "财政状况决定该联系人的税项/科目。"
+msgstr "应税设定决定该联系人的税项/科目。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14924,7 +14947,7 @@ msgstr "将生成以下日记账分录"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "The following accounts must be assigned to at least one company:"
-msgstr ""
+msgstr "以下账户必须分配给至少一家公司："
 
 #. module: account
 #. odoo-python
@@ -14958,7 +14981,7 @@ msgstr "在日记账“%(journal)s”和科目“%(account)s”中设置的外�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
 msgid "The foreign fiscal position for which this external value is made."
-msgstr "为其生成该外部值的外国财政状况。"
+msgstr "为其生成该外部值的外国应税设定。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -15072,6 +15095,8 @@ msgid ""
 " Please change the journal entry date or the following lock dates to "
 "proceed: %(lock_date_info)s."
 msgstr ""
+"该操作被拒绝，因为它会影响已经发布的税务报表。\n"
+"请更改日记账分录日期或以下锁定日期以继续：%(lock_date_info)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -15281,7 +15306,7 @@ msgstr "报表上定义的分节，不可再包含分节。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
 msgid "The selected Date"
-msgstr ""
+msgstr "所选日期"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -15357,6 +15382,11 @@ msgid ""
 "The month detected here is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"该序列将在每个月初从 1 重新开始。\n"
+"此处检测到的财务起始年份是“%(year)s”。\n"
+"此处检测到的财务结束年份是“%(year_end)s”。\n"
+"这里检测到的月份是“%(month)s”。\n"
+"本例中递增的数字是“%(formatted_seq)s”。"
 
 #. module: account
 #. odoo-python
@@ -15430,7 +15460,7 @@ msgstr "剩余总额建议之和与该金额/百分比下的对账单行金额�
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr "该财政状况映射的区域内贵公司的税务ID。"
+msgstr "该应税设定映射的区域内贵公司的税务ID。"
 
 #. module: account
 #. odoo-python
@@ -15469,7 +15499,7 @@ msgstr "您的科目当前没有发票和付款。"
 msgid ""
 "There are entries that cannot be hashed. They can be protected by the Hard "
 "Lock Date."
-msgstr ""
+msgstr "有些条目无法进行哈希处理。它们可以受到硬锁定日期的保护。"
 
 #. module: account
 #. odoo-python
@@ -15481,13 +15511,13 @@ msgstr "草稿状态中没有要过账的日记账项目。"
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "There are payments in progress. Make sure you don't pay twice."
-msgstr ""
+msgstr "有付款正在进行中。确保您不会支付两次费用。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "There are still draft entries before the selected date."
-msgstr ""
+msgstr "在所选日期之前仍有草稿分录。"
 
 #. module: account
 #. odoo-python
@@ -15495,7 +15525,7 @@ msgstr ""
 msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
-msgstr ""
+msgstr "您想要硬锁定的时间段内仍有草稿条目。您应该发布或删除它们。"
 
 #. module: account
 #. odoo-python
@@ -15504,7 +15534,7 @@ msgid ""
 "There are still unreconciled bank statement lines before the selected date. "
 "The entries from journal prefixes containing them will not be secured: "
 "%(prefix_info)s"
-msgstr ""
+msgstr "在选定日期之前仍有未调节的银行对账单行。包含它们的日记账前缀条目将不受保护：%(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -15598,7 +15628,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
-msgstr ""
+msgstr "该账户已从%(account_name)s（%(company_name)s）中分离出来。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -15655,7 +15685,7 @@ msgstr "该分析分配适用于具有相同指定前缀的所有财务账户。
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "This can only be used on accounts."
-msgstr ""
+msgstr "该项只能用于账户。"
 
 #. module: account
 #. odoo-python
@@ -15696,7 +15726,7 @@ msgstr "该分录包含一个或多个与您会计所在国家/地区不兼容�
 msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
-msgstr "该分录包含与您财政状况不兼容的税项。在财政状况和税项配置中查看设置的国家/地区。"
+msgstr "该分录包含与您财政状况不兼容的税项。在应税设定和税项配置中查看设置的国家/地区。"
 
 #. module: account
 #. odoo-python
@@ -15755,25 +15785,25 @@ msgstr "默认信用额度，将用于没有特定限额的合作伙伴。"
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the full amount."
-msgstr ""
+msgstr "这是全额金额。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the next unreconciled installment."
-msgstr ""
+msgstr "这是下一个未对账的分期付款。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the overdue amount."
-msgstr ""
+msgstr "这是逾期的金额。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr ""
+msgstr "此日记账分录已得到保护。"
 
 #. module: account
 #. odoo-python
@@ -15801,7 +15831,7 @@ msgstr "用户不确定对方的所有信息时，使用该匹配规则。"
 msgid ""
 "This move could not be locked either because some move with the same "
 "sequence prefix has a higher number. You may need to resequence it."
-msgstr ""
+msgstr "该分录无法锁定，因为某些具有相同序列前缀的分录数字更高。您可能需要重新排序。"
 
 #. module: account
 #. odoo-python
@@ -15874,14 +15904,14 @@ msgstr "该经常性分录将在该日期（含）前过账。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting cannot be changed after an invoice is created."
-msgstr ""
+msgstr "创建发票后，无法更改此设置。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "This will update all taxes and accounts based on the currently selected "
 "fiscal position."
-msgstr "此操作将根据当前选定的财务规则，更新所有税费。"
+msgstr "此操作将根据当前选定的应税设定，更新所有税费。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -15903,7 +15933,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_merge_wizard__is_group_by_name
 msgid ""
 "Tick this checkbox if you want accounts to be grouped by name for merging."
-msgstr ""
+msgstr "如果您希望按名称对账户进行分组以进行合并，请勾选此复选框。"
 
 #. module: account
 #: model:digest.tip,name:account.digest_tip_account_0
@@ -15915,7 +15945,7 @@ msgstr "提示：无需打印、装入信封、过账发票"
 #: model:digest.tip,name:account.digest_tip_account_1
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_1
 msgid "Tip: Stop chasing the Documents you need"
-msgstr ""
+msgstr "提示：停止追逐您需要的文档"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -16174,7 +16204,7 @@ msgstr "按项目、部门等追踪成本和收入"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Trade %s"
-msgstr ""
+msgstr "贸易%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_details
@@ -17088,7 +17118,7 @@ msgstr "向导行"
 #. module: account
 #: model:account.account,name:account.1_wip
 msgid "Work in Progress"
-msgstr ""
+msgstr "正在进行的工作"
 
 #. module: account
 #. odoo-javascript
@@ -17121,7 +17151,7 @@ msgstr "每年"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "You are about to send"
-msgstr ""
+msgstr "您即将发送"
 
 #. module: account
 #. odoo-python
@@ -17173,7 +17203,7 @@ msgstr "日记账由散列锁定时，不能按日期重新排序。"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can only Print & Send sales documents."
-msgstr ""
+msgstr "您只能打印和发送销售文件。"
 
 #. module: account
 #. odoo-python
@@ -17205,7 +17235,7 @@ msgstr "只能登记已过账日记账分录的付款。"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can only register payments for (partially) unpaid documents."
-msgstr ""
+msgstr "您只能登记（部分）未付款文件的付款。"
 
 #. module: account
 #. odoo-python
@@ -17238,13 +17268,13 @@ msgstr "可以在此处设置显示在客户发票上的通信，以便在验证
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "You can't Print & Send invoices that are not posted."
-msgstr ""
+msgstr "您无法打印和发送未过账的发票。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
-msgstr ""
+msgstr "您无法冻结已付款的发票。"
 
 #. module: account
 #. odoo-python
@@ -17363,14 +17393,14 @@ msgstr "您不能将这些日记账记项重设为草稿。您需要申请取消
 msgid ""
 "You can't unlink this company from this account since there are some journal"
 " items linked to it."
-msgstr ""
+msgstr "您无法取消该公司与该帐户的链接，因为有一些日记账项目与其链接。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
-msgstr ""
+msgstr "您不能在以下各项之前添加/修改分录：%(lock_date_info)s。"
 
 #. module: account
 #. odoo-python
@@ -17394,7 +17424,7 @@ msgstr "不能将日记账中设置为银行账户的科目类型更改为应收
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr "您不能在所选国家/地区组别之外的国家/地区，创建财务规则。"
+msgstr "您不能在所选国家/地区组别之外的国家/地区，创建应税设定。"
 
 #. module: account
 #. odoo-python
@@ -17402,7 +17432,7 @@ msgstr "您不能在所选国家/地区组别之外的国家/地区，创建财�
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
-msgstr "不能在未分配州的会计所在国家/地区创建具有外国增值税的财政状况。"
+msgstr "不能在未分配州的会计所在国家/地区创建具有外国增值税的应税设定。"
 
 #. module: account
 #. odoo-python
@@ -17410,7 +17440,7 @@ msgstr "不能在未分配州的会计所在国家/地区创建具有外国增�
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country."
-msgstr "您不能在您的会计国家内创建带有外国增值税的财政状况。"
+msgstr "您不能在您的会计国家内创建带有外国增值税的应税设定。"
 
 #. module: account
 #. odoo-python
@@ -17418,7 +17448,7 @@ msgstr "您不能在您的会计国家内创建带有外国增值税的财政状
 msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
-msgstr "不能在会计所在国家/地区创建与您公司设置的主要增值税编号相同的增值税编号的财政状况。"
+msgstr "不能在会计所在国家/地区创建与您公司设置的主要增值税编号相同的增值税编号的应税设定。"
 
 #. module: account
 #. odoo-python
@@ -17450,6 +17480,12 @@ msgstr "不能删除税项行，因为会影响税务报告"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "You cannot delete journal items belonging to a locked journal entry."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -17470,7 +17506,7 @@ msgstr "您不能删除此分录，因为它已经消耗了一个序列号并且
 msgid ""
 "You cannot delete this mail template, it is used in the invoice sending "
 "flow."
-msgstr ""
+msgstr "您无法删除该邮件模板，它用于发票发送流程。"
 
 #. module: account
 #. odoo-python
@@ -17502,7 +17538,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "You cannot duplicate a Lock Date Exception."
-msgstr ""
+msgstr "无法复制锁定日期例外。"
 
 #. module: account
 #. odoo-python
@@ -17620,7 +17656,7 @@ msgstr "不能减少已用于进行会计分录的币种的小数位数."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot register payments for miscellaneous entries."
-msgstr ""
+msgstr "无法登记杂项分录的付款。"
 
 #. module: account
 #. odoo-python
@@ -17643,13 +17679,13 @@ msgstr "不能删除/停用在税项重新分配行中设置的科目“%s”。
 msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
-msgstr "不能删除/停用在财务状况的科目映射中设置的科目“%s”。"
+msgstr "不能删除/停用在应税设定的科目映射中设置的科目“%s”。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr ""
+msgstr "无法重置以起草锁定的日记账分录。"
 
 #. module: account
 #. odoo-python
@@ -17668,7 +17704,7 @@ msgstr "不能重置为汇兑差额日记账分录草稿。"
 #: code:addons/account/models/account_lock_exception.py:0
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
-msgstr ""
+msgstr "您无法撤销锁定日期例外。询问具有“顾问”角色的人。"
 
 #. module: account
 #. odoo-python
@@ -17758,7 +17794,7 @@ msgstr "不能验证总金额为负的发票。应创建贷项凭单。使用操
 msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
-msgstr ""
+msgstr "您无权执行此操作，因为您无权访问以下公司：%s。"
 
 #. module: account
 #. odoo-python
@@ -17794,15 +17830,9 @@ msgstr "须在公司设置中配置“汇兑损益日记账”，以自动管理
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid "You must select a single account to un-merge."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr ""
+msgstr "您必须至少选择 2 个帐户。"
 
 #. module: account
 #. odoo-python
@@ -17992,7 +18022,7 @@ msgstr "例如：GEBABEBB"
 #. odoo-python
 #: code:addons/account/models/account_analytic_distribution_model.py:0
 msgid "e.g. %(prefix)s"
-msgstr ""
+msgstr "例如：%(prefix)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -18049,7 +18079,7 @@ msgstr "e.g. mycompany.com"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format
 msgid "eInvoice format"
-msgstr ""
+msgstr "电子发票格式"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -18060,7 +18090,7 @@ msgstr "条目"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "everyone"
-msgstr ""
+msgstr "所有人"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -18098,7 +18128,7 @@ msgstr "百分比"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "invoice(s)"
-msgstr ""
+msgstr "发票"
 
 #. module: account
 #. odoo-python
@@ -18293,7 +18323,7 @@ msgstr "如果延迟付款，将授权暂停提供任何服务，无需事先通
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "without making any corrections."
-msgstr ""
+msgstr "不做任何更正。"
 
 #. module: account
 #. odoo-python

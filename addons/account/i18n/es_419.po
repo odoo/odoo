@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Fernanda Alvarez, 2024
 # Wil Odoo, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1564,6 +1564,8 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 msgid "A new Hard Lock Date must be posterior (or equal) to the previous one."
 msgstr ""
+"La nueva fecha de bloqueo permanente debe ser posterior (o igual) a la "
+"anterior."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1729,6 +1731,14 @@ msgstr "Advertencia de acceso"
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Account"
 msgstr "Cuenta"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
+"Account %(account)s will be split in %(num_accounts)s, one for each "
+"company:\n"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -2624,6 +2634,8 @@ msgid ""
 "All unhashable moves before the selected date that are not protected by the "
 "Hard Lock Date"
 msgstr ""
+"Todos los movimientos a los que no se les asignó un hash antes de la fecha "
+"seleccionada que no están protegidos por la fecha de bloqueo permanente"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
@@ -3079,10 +3091,8 @@ msgstr "Archivado"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"Are you sure? This will split the account into one account per company:"
+msgid "Are you sure? This will perform the following operations:\n"
 msgstr ""
-"¿Está seguro? Esta acción separará la cuenta en una cuenta por empresa:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3401,6 +3411,12 @@ msgid "Bank & Cash"
 msgstr "Banco y efectivo"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank & Cash accounts cannot be shared between companies."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
@@ -3684,7 +3700,7 @@ msgstr "Antes"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
 msgid "Before Next Payment Date"
-msgstr ""
+msgstr "Antes de la próxima fecha de pago"
 
 #. module: account
 #. odoo-python
@@ -4448,7 +4464,7 @@ msgstr "Inicio de prefijo de código"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_store
 msgid "Code Store"
-msgstr ""
+msgstr "Código de tienda"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7871,7 +7887,7 @@ msgstr "Mitad arriba (alejado de 0)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__hard_lock_date
 msgid "Hard Lock Date"
-msgstr ""
+msgstr "Fecha de bloqueo permanente"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7995,6 +8011,9 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
+"Fecha más alta para que todos los asientos contables registrados antes de "
+"(incluyendo) la fecha estén asegurados. Solo se toman en cuenta los asientos"
+" contables posteriores a la fecha de bloqueo permanente."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -8279,6 +8298,10 @@ msgid ""
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
+"Si está seleccionada, al registrar un asiento se genera un hash retroactivo "
+"en todos los movimientos de la secuencia desde el primer hasta el último "
+"asiento con hash. También es posible generar un hash con el asistente para "
+"asegurar asientos."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8849,7 +8872,7 @@ msgstr "Formato EDI de factura"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format_store
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format_store
 msgid "Invoice Edi Format Store"
-msgstr ""
+msgstr "Almacenamiento de formato EDI de factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -10017,7 +10040,7 @@ msgstr "VARIOS"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__made_sequence_gap
 #: model:ir.model.fields,field_description:account.field_account_move__made_sequence_gap
 msgid "Made Sequence Gap"
-msgstr ""
+msgstr "Causó un espacio en la secuencia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__mail_attachments_widget
@@ -10488,7 +10511,7 @@ msgstr "Línea de movimiento"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__move_to_hash_ids
 msgid "Move To Hash"
-msgstr ""
+msgstr "Mover a hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_type
@@ -10977,7 +11000,7 @@ msgstr "Número de acciones"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__nb_unmodified_bills
 msgid "Number of bills previously unmodified from this partner"
-msgstr ""
+msgstr "Número de facturas sin modificar con anterioridad de este contacto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
@@ -12533,13 +12556,13 @@ msgstr "Cuenta de ganancias"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr ""
+msgstr "Línea de método de pago de entrada de la propiedad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "Línea de método de pago de salida de la propiedad"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -13777,12 +13800,12 @@ msgstr "Enviando datos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__sending_method_checkboxes
 msgid "Sending Method Checkboxes"
-msgstr ""
+msgstr "Casillas del método de envío"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__sending_methods
 msgid "Sending Methods"
-msgstr ""
+msgstr "Métodos de envío"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__allow_out_payment
@@ -15024,7 +15047,7 @@ msgstr "El descuento por pago anticipado debe ser estrictamente positivo."
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "The Hard Lock Date cannot be removed."
-msgstr ""
+msgstr "No puede quitar la fecha de bloqueo permanente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
@@ -16113,6 +16136,8 @@ msgid ""
 "There are entries that cannot be hashed. They can be protected by the Hard "
 "Lock Date."
 msgstr ""
+"Hay asientos que no se pueden hashear, pero puede protegerlos con la fecha "
+"de bloqueo permanente. "
 
 #. module: account
 #. odoo-python
@@ -16139,6 +16164,8 @@ msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
 msgstr ""
+"Todavía hay asientos en borrador en el periodo que desea bloquear de forma "
+"permanente. Debe registrarlos o eliminarlos."
 
 #. module: account
 #. odoo-python
@@ -16252,7 +16279,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
-msgstr ""
+msgstr "Esta cuenta se dividió de %(account_name)s (%(company_name)s)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -16441,19 +16468,19 @@ msgstr "Este es el importe completo. "
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the next unreconciled installment."
-msgstr ""
+msgstr "Esta es la siguiente cuota sin conciliar."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "This is the overdue amount."
-msgstr ""
+msgstr "Este es el importe vencido."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr ""
+msgstr "Este asiento contable ha sido asegurado."
 
 #. module: account
 #. odoo-python
@@ -16485,6 +16512,9 @@ msgid ""
 "This move could not be locked either because some move with the same "
 "sequence prefix has a higher number. You may need to resequence it."
 msgstr ""
+"Este movimiento no se pudo bloquear porque algún movimiento con el mismo "
+"prefijo de secuencia tiene un número más alto. Es posible que deba volver a "
+"secuenciarlo."
 
 #. module: account
 #. odoo-python
@@ -16860,7 +16890,7 @@ msgstr "Importe total a pagar a este proveedor."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Total for the installments before %(date)s."
-msgstr ""
+msgstr "Total de las cuotas antes del %(date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -16893,7 +16923,7 @@ msgstr "Detalles de la transacción"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Transaction Feeds"
-msgstr ""
+msgstr "Feeds de transacciones"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
@@ -17184,7 +17214,7 @@ msgstr "Importe sin impuestos firmado"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_in_currency_signed
 msgid "Untaxed Amount Signed Currency"
-msgstr ""
+msgstr "Importe sin impuestos en la moneda firmada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal_currency
@@ -17333,7 +17363,7 @@ msgstr "Usar en el cierre fiscal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
 msgid "Use the most recent rate at the date of the report"
-msgstr ""
+msgstr "Utilice la tasa más reciente a la fecha del reporte"
 
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
@@ -17420,7 +17450,7 @@ msgstr "Agrupar usuario por "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_hard_lock_date
 msgid "User Hard Lock Date"
-msgstr ""
+msgstr "Fecha de bloqueo permanente del usuario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
@@ -17962,7 +17992,7 @@ msgstr "Solo puede registrar el pago de los asientos validados."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can only register payments for (partially) unpaid documents."
-msgstr ""
+msgstr "Solo puede registrar pagos de documentos (parcialmente) sin pagar."
 
 #. module: account
 #. odoo-python
@@ -18256,6 +18286,12 @@ msgid "You cannot delete a tax line as it would impact the tax report"
 msgstr ""
 "No puede eliminar una línea de impuestos porque impactaría el reporte de "
 "impuestos"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "You cannot delete journal items belonging to a locked journal entry."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18667,12 +18703,6 @@ msgstr ""
 "Debe configurar el 'estado de resultados de cambio' en los ajustes de su "
 "empresa para gestionar de forma automática la reserva de los asientos "
 "contables relacionados con las diferencias entre tipos de cambio."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid "You must select a single account to un-merge."
-msgstr "Solo debe seleccionar una cuenta para separarla."
 
 #. module: account
 #. odoo-python

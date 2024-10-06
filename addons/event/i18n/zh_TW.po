@@ -171,12 +171,12 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr ""
+msgstr "96×134 毫米（識別證打印機）"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr ""
+msgstr "96×82 毫米（識別證打印機）"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2671,6 +2671,12 @@ msgid "Event Registration Answer"
 msgstr "活動問券回應"
 
 #. module: event
+#. odoo-python
+#: code:addons/event/controllers/main.py:0
+msgid "Event Registrations"
+msgstr "活動報名"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
 msgstr "活動負責人"
@@ -3355,7 +3361,7 @@ msgstr "最近30天"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "上次出席"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4133,6 +4139,12 @@ msgid "Scan a badge"
 msgstr "掃瞄證件"
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_barcode.xml:0
+msgid "Scan or Tap"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
 msgstr "計劃與追蹤"
@@ -4758,6 +4770,12 @@ msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
 msgstr "在此技術選單下，您將找到與您的活動相關的所有預定交流溝通。"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Undo"
+msgstr "復原"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2

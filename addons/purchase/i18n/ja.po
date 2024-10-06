@@ -3,7 +3,6 @@
 # 	* purchase
 # 
 # Translators:
-# Tim Siu Lai <tl@roomsfor.hk>, 2024
 # Wil Odoo, 2024
 # Junko Augias, 2024
 # 
@@ -242,6 +241,34 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> 様\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br><br>\n"
+"        見積依頼書 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            参照: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>を \n"
+"        </t>\n"
+"         <t t-out=\"object.company_id.name or ''\">YourCompany</t>より、添付にてお送りします。\n"
+"        <br><br>\n"
+"       何かご質問がございましたら、お気軽にご連絡下さい。\n"
+"        <br><br>\n"
+"            <a t-att-href=\"object.get_confirm_url(confirm_type='reception')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                承認</a>\n"
+"\n"
+"            <a t-att-href=\"object.get_confirm_url(confirm_type='decline')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                却下</a>\n"
+"        <br><br>\n"
+"        宜しくお願い致します。\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -299,7 +326,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<i class=\"fa fa-print me-1\"/>Download / Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/>ダウンロード / 印刷"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -340,12 +367,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Bill Matching</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">仕入先請求書照合</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">購買照合</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -427,7 +454,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Expected Arrival:</strong>"
-msgstr ""
+msgstr "<strong>着荷予定日:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -448,28 +475,18 @@ msgstr "<strong>オーダ期日</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Payment Terms: </strong>"
-msgstr ""
+msgstr "<strong>支払条件: </strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Purchase Representative</strong>"
-msgstr ""
+msgstr "<strong>購買担当者</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
 msgstr "<strong>数量</strong>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been Declined</strong><br/>"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been acknowledged</strong><br/>"
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -489,7 +506,7 @@ msgstr "<strong>納入場所:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Shipping address</strong>"
-msgstr ""
+msgstr "<strong>配送先</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -512,6 +529,16 @@ msgid "<strong>This purchase has been cancelled.</strong>"
 msgstr "<strong>この購買は取消されました</strong>"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been accepted.</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been declined.</strong>"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
 msgstr "<strong>単価</strong>"
@@ -519,7 +546,7 @@ msgstr "<strong>単価</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference</strong>"
-msgstr ""
+msgstr "<strong>オーダ参照</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -609,7 +636,7 @@ msgstr "活動種別アイコン"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "Add Down Payment"
-msgstr ""
+msgstr "前受金を追加"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -646,13 +673,13 @@ msgstr "見積もりにいくつかのプロダクトまたはサービスを追
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Add to PO"
-msgstr ""
+msgstr "購買オーダに追加"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Add to Purchase Order"
-msgstr ""
+msgstr "購買オーダに追加"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -702,7 +729,7 @@ msgstr "購買オーダの編集を許可"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
 msgid "Aml"
-msgstr ""
+msgstr "Aml"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
@@ -751,7 +778,7 @@ msgstr "オーダ承認"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Are you sure you want to cancel the selected RFQs/Orders?"
-msgstr ""
+msgstr "選択した見積依頼/オーダを本当に取消しますか?"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -841,7 +868,7 @@ msgstr "ビルライン"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Bill Matching"
-msgstr ""
+msgstr "仕入先請求書照合"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
@@ -857,7 +884,7 @@ msgstr "請求済"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
-msgstr ""
+msgstr "請求書金額税抜"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1008,7 +1035,7 @@ msgstr "オーダ確認"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_confirm_rfqs
 msgid "Confirm RFQ"
-msgstr ""
+msgstr "見積依頼を確認"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1290,7 +1317,7 @@ msgstr "検証量が2倍"
 #. odoo-python
 #: code:addons/purchase/wizard/bill_to_po_wizard.py:0
 msgid "Down Payment (ref: %(ref)s)"
-msgstr ""
+msgstr "前受金 (参照: %(ref)s)"
 
 #. module: purchase
 #. odoo-python
@@ -1313,7 +1340,7 @@ msgstr "ドラフト見積依頼書"
 msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
-msgstr ""
+msgstr "見積依頼のPDFファイルをOdooの見積一覧にドラッグ&ドロップします。自動処理をご活用下さい!"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
@@ -1412,6 +1439,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"物品とは、貴社が提供する有形の商材や商品です。\n"
+"サービスとは、貴社が提供する無形のプロダクトのことです。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
@@ -1505,6 +1534,8 @@ msgid ""
 "In selected purchase order to merge these details must be same\n"
 "Vendor, currency, destination, dropship address and agreement"
 msgstr ""
+"これらの詳細を統合する選択された購買オーダでは\n"
+"仕入先、通貨、配送先、直送先住所、契約が同一である必要があります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
@@ -1559,7 +1590,7 @@ msgstr "購買オーダ内"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
 #: model:ir.model.fields,field_description:purchase.field_account_move__is_purchase_matched
 msgid "Is Purchase Matched"
-msgstr ""
+msgstr "購買照合済"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1635,17 +1666,17 @@ msgstr "承認レベル *"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_amount_untaxed
 msgid "Line Amount Untaxed"
-msgstr ""
+msgstr "明細金額 未課税"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
 msgid "Line Qty"
-msgstr ""
+msgstr "明細数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_uom_id
 msgid "Line Uom"
-msgstr ""
+msgstr "明細単位"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2081,7 +2112,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
 msgid "Pol"
-msgstr ""
+msgstr "Pol"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -2165,12 +2196,12 @@ msgstr "プロダクトタイプ"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_price
 msgid "Product Uom Price"
-msgstr ""
+msgstr "プロダクト単位価格"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
-msgstr ""
+msgstr "プロダクト単位数量"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2221,7 +2252,7 @@ msgstr "購買契約"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
 msgid "Purchase Amount Untaxed"
-msgstr ""
+msgstr "購買金額 未課税"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2234,7 +2265,7 @@ msgstr "購買分析"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Purchase Bill Lines"
-msgstr ""
+msgstr "購買請求書明細"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2267,13 +2298,13 @@ msgstr "購買リードタイム"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
-msgstr ""
+msgstr "購買明細と仕入先請求書明細の照合ビュー"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
-msgstr ""
+msgstr "購買照合"
 
 #. module: purchase
 #. odoo-python
@@ -2365,7 +2396,7 @@ msgstr "購買オーダ修正: 購買オーダを確認後、編集可能にし�
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_order_name
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_order_name
 msgid "Purchase Order Name"
-msgstr ""
+msgstr "購買オーダ名"
 
 #. module: purchase
 #. odoo-python
@@ -2523,16 +2554,6 @@ msgstr "数量"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Quantity:"
 msgstr "数量:"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Accepted"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Declined"
-msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
@@ -3246,12 +3267,12 @@ msgstr "合計"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Billed"
-msgstr ""
+msgstr "仕入先請求合計"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Total Purchased"
-msgstr "合計購入"
+msgstr "購買合計"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
@@ -3295,7 +3316,7 @@ msgstr "POの受信がベンダーによって確認された場合はTrue。"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_declined
 msgid "True if PO reception is declined by the vendor."
-msgstr ""
+msgstr "POの受信が仕入先によって却下された場合はTrue。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed
@@ -3319,7 +3340,7 @@ msgstr "記録上の例外活動の種類。"
 msgid ""
 "Unable to cancel purchase order(s): %s. You must first cancel their related "
 "vendor bills."
-msgstr ""
+msgstr "この購買オーダを取消できません: %s。最初に、関連する仕入先請求をキャンセルする必要があります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree

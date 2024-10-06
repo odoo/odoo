@@ -6,8 +6,8 @@
 # Jolien De Paepe, 2024
 # Martin Trigaux, 2024
 # Manon Rondou, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1737,6 +1737,14 @@ msgstr "Rekening"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
+"Account %(account)s will be split in %(num_accounts)s, one for each "
+"company:\n"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The"
 " unmerge operation only splits an account based on its companies."
 msgstr ""
@@ -1864,7 +1872,7 @@ msgstr "Boeking verzenden"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
 msgid "Account Move Send Batch Wizard"
-msgstr "Account verplaatsen Verzend wizard"
+msgstr "Account verplaatsen verzend wizard"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
@@ -3075,11 +3083,8 @@ msgstr "Gearchiveerd"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"Are you sure? This will split the account into one account per company:"
+msgid "Are you sure? This will perform the following operations:\n"
 msgstr ""
-"Weet je het zeker? Dan wordt de rekening gesplitst in één rekening per "
-"bedrijf:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3398,6 +3403,12 @@ msgid "Bank & Cash"
 msgstr "Bank en Kas"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank & Cash accounts cannot be shared between companies."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
@@ -3679,7 +3690,7 @@ msgstr "Eerder"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
 msgid "Before Next Payment Date"
-msgstr ""
+msgstr "Vóór de volgende betaaldatum"
 
 #. module: account
 #. odoo-python
@@ -13473,7 +13484,7 @@ msgstr "Scan met je bank app."
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 msgid "Scan this QR Code with<br/>your banking application"
-msgstr "Scan deze QR-code om<br/>met uw bankapplicatie"
+msgstr "Scan deze QR-code om<br/>met ke bankapplicatie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -15064,8 +15075,8 @@ msgid ""
 "should directly select the chart template related to your country."
 msgstr ""
 "Het Syscohada-rekeningschemesjabloon mag niet rechtstreeks worden "
-"geselecteerd. In plaats daarvan moet u rechtstreeks de grafieksjabloon voor "
-"uw land selecteren."
+"geselecteerd. In plaats daarvan moet je rechtstreeks de grafieksjabloon voor"
+" je land selecteren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_base_document_layout__vat
@@ -16857,7 +16868,7 @@ msgstr "Totale bedrag dat je deze leverancier verschuldigd bent."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Total for the installments before %(date)s."
-msgstr ""
+msgstr "Totaal voor de termijnen vóór %(date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -18260,6 +18271,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "You cannot delete journal items belonging to a locked journal entry."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -18669,12 +18686,6 @@ msgstr ""
 "Je dienst de 'wisselkoers winst- of verliesrekening' instellen in de "
 "bedrijfsinstellingen, om automatisch de boekingen in verband met "
 "wisselkoersverschillen te kunnen maken."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid "You must select a single account to un-merge."
-msgstr "Je moet één account selecteren om de samenvoeging ongedaan te maken."
 
 #. module: account
 #. odoo-python

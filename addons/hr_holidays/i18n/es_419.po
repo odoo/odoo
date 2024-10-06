@@ -201,7 +201,7 @@ msgstr "(válido hasta"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "- Valid for"
-msgstr ""
+msgstr "- Válido para"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -278,6 +278,9 @@ msgid ""
 "                            Back On\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            Vuelve\n"
+"                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
@@ -477,17 +480,17 @@ msgstr "Tiempo personal acumulado: actualiza la cantidad de tiempo personal"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity
 msgid "Accrual Validity"
-msgstr ""
+msgstr "Validez de la acumulación"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid "Accrual Validity Count"
-msgstr ""
+msgstr "Número de validez de la acumulación"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "Accrual Validity Type"
-msgstr ""
+msgstr "Tipo de validez de la acumulación"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
@@ -983,7 +986,7 @@ msgstr "Disponible"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__remaining_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__remaining_leaves
 msgid "Available Time Off Days"
-msgstr ""
+msgstr "Dias de tiempo personal disponibles"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1002,13 +1005,13 @@ msgstr "Ausente"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Back On"
-msgstr ""
+msgstr "Vuelve el"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/persona_model_patch.js:0
 msgid "Back on %s"
-msgstr ""
+msgstr "Vuelve el %s"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_balance
@@ -1159,12 +1162,12 @@ msgstr "Límite:"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
 msgid "Carried over days expiration date"
-msgstr ""
+msgstr "Fecha de vencimiento de los días traspasados"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry Over Validity"
-msgstr ""
+msgstr "Validez del traspaso"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -2381,7 +2384,7 @@ msgstr "Transición del objetivo"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
 msgid "Milestone cap"
-msgstr ""
+msgstr "Límite de objetivos"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
@@ -3423,6 +3426,8 @@ msgid ""
 "The allocation requirement of a time off type cannot be changed once leaves "
 "of that type have been taken. You should create a new time off type instead."
 msgstr ""
+"No es posible modificar los requisitos de asignación de un tipo de tiempo "
+"personal luego de tomarlo. Cree un nuevo tipo de tiempo personal."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3494,6 +3499,8 @@ msgid ""
 "The number of carried over days that will expire on "
 "carried_over_days_expiration_date"
 msgstr ""
+"El número de días a traspasar que vencerán en "
+"carried_over_days_expiration_date"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3625,6 +3632,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
 msgstr ""
+"Este campo define la unidad de tiempo después de la cual termina la "
+"acumulación."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -3921,6 +3930,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"Cancelled\" in order to be "
 "reset to \"Confirmed\"."
 msgstr ""
+"El estado de la solicitud de tiempo personal debe ser \"Rechazado\" o "
+"\"Cancelado\" para restablecerlo a \"Confirmado\"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -4248,6 +4259,8 @@ msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
 msgstr ""
+"Si el campo está seleccionado, el balance de la asignación que utiliza este "
+"plan de asignación nunca sobrepasará la cantidad especificada."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
@@ -4255,6 +4268,8 @@ msgid ""
 "When the field is checked the total amount accrued each year will be capped "
 "at the specified amount"
 msgstr ""
+"Cuando el campo está seleccionado, la cantidad total acumulada cada año "
+"estará limitada a la cantidad especificada."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -4289,7 +4304,7 @@ msgstr "Mes anual"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__maximum_leave_yearly
 msgid "Yearly limit to"
-msgstr ""
+msgstr "Limitar cada año a"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
@@ -4324,6 +4339,7 @@ msgid ""
 "You can define a period of time where the days carried over will be "
 "available"
 msgstr ""
+"Puede definir el periodo en el que estarán disponibles los días traspasados "
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4390,6 +4406,8 @@ msgid ""
 "You cannot have a cap on yearly accrued time without setting a maximum "
 "amount."
 msgstr ""
+"No puede tener un límite en el tiempo anual acumulado sin establecer una "
+"cantidad máxima."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4521,7 +4539,7 @@ msgstr "después de la fecha de inicio de la asignación"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "all - Valid for"
-msgstr ""
+msgstr "todo - Válido para"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4598,7 +4616,7 @@ msgstr "días)"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "e.g. Extra recuperation, Company unavailability, ..."
-msgstr ""
+msgstr "Por ejemplo, recuperación extra, indisponibilidad de la empresa..."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form

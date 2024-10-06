@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2024
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# 226408 台北 <226408@so8d.com>, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-27 08:16+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,6 +146,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- 立即：屬性及屬性值加入至產品後，立即建立所有可能的款式變體。\n"
+"        - 動態：只在屬性及屬性值加入至銷售訂單時，才建立相應的每個款式變體。\n"
+"        - 從不：永遠不會為該屬性建立款式變體。\n"
+"        請留意：屬性一旦在任何產品上使用，此設定便不可更改。"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -490,7 +495,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "加入至現有產品"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -875,7 +880,7 @@ msgstr "組合選擇"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr ""
+msgstr "組合項目"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
@@ -1161,7 +1166,7 @@ msgstr "預設額外價格"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "預設額外價格已更改"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1598,7 +1603,7 @@ msgstr "金級會員價格表"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Goods"
-msgstr "商品"
+msgstr "實物"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -1715,7 +1720,7 @@ msgstr "如果未設定, 則供應商價格將應用於此產品的所有變體.
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "若不勾選，可隱藏該屬性而無需刪除。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
@@ -3135,7 +3140,7 @@ msgstr "大小"
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "特定屬性產品價目表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3679,7 +3684,7 @@ msgstr "變體計數"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "建立款式變體"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -4138,7 +4143,7 @@ msgstr "您需要設定一個正數."
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "csv"
-msgstr ""
+msgstr "csv"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -4255,4 +4260,4 @@ msgstr "到"
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
-msgstr ""
+msgstr "xlsx"

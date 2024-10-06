@@ -6,6 +6,7 @@
 # Tiffany Chang, 2024
 # Martin Trigaux, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -61,7 +62,7 @@ msgstr "%(event_name)s - Inschrijving voor %(attendee_name)s"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "%(start_date)s tot %(end_date)s"
 
 #. module: event
 #. odoo-python
@@ -174,12 +175,12 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr ""
+msgstr "96x134mm (badgeprinter)"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
 msgid "96x82mm (Badge Printer)"
-msgstr ""
+msgstr "96x82mm (Badgeprinter)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -349,7 +350,7 @@ msgstr "<i class=\"fa fa-ticket\" title=\"Soort ticket\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2063,7 +2064,7 @@ msgstr "Deelnemers"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Auto-Print"
-msgstr ""
+msgstr "Automatisch afdrukken"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -2079,12 +2080,12 @@ msgstr "Badge"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x134
 msgid "Badge (96x134mm)"
-msgstr ""
+msgstr "Badge (96x134mm)"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge_96x82
 msgid "Badge (96x82mm)"
-msgstr ""
+msgstr "Badge (96x82mm)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -2366,7 +2367,7 @@ msgstr "Knop aanwezigheid bevestigen"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "Aanwezigheid bevestigen?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2724,6 +2725,12 @@ msgstr "Evenementinschrijving"
 #: model:ir.model,name:event.model_event_registration_answer
 msgid "Event Registration Answer"
 msgstr "Antwoord registratie evenement"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/controllers/main.py:0
+msgid "Event Registrations"
+msgstr "Evenementinschrijvingen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
@@ -3438,7 +3445,7 @@ msgstr "Laatste 30 dagen"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "Laatste deelnemer"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3842,6 +3849,7 @@ msgstr "Online indien niet ingesteld"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"Open datumbereikkiezer.<br/>Kies een begin- en einddatum voor je evenement."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3965,7 +3973,7 @@ msgstr "Afdrukken"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.js:0
 msgid "Printing badge on %s..."
-msgstr ""
+msgstr "Badge afdrukken op %s..."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4234,6 +4242,12 @@ msgid "Scan a badge"
 msgstr "Scan een badge"
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_barcode.xml:0
+msgid "Scan or Tap"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
 msgstr "Planning & Tracks"
@@ -4283,7 +4297,7 @@ msgstr "Selecteer deelnemer"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Select printer..."
-msgstr ""
+msgstr "Selecteer printer..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -4900,6 +4914,12 @@ msgid ""
 msgstr ""
 "Onder dit technische menu vindt je alle geplande communicatie met betrekking"
 " tot je evenementen."
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Undo"
+msgstr "Ongedaan maken"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2

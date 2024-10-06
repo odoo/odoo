@@ -5,6 +5,7 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__accepted_applications_count
 msgid "# Accepted Offers"
-msgstr ""
+msgstr "# 수락된 채용 제안"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__applications_count
@@ -33,7 +34,7 @@ msgstr "# 제안"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__refused_applications_count
 msgid "# Refused Offers"
-msgstr ""
+msgstr "# 거절된 채용 제안"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -91,6 +92,8 @@ msgid ""
 "<span class=\"mx-2\" style=\"padding-top: 1px; padding-bottom: "
 "1px;\">to</span>"
 msgstr ""
+"<span class=\"mx-2\" style=\"padding-top: 1px; padding-bottom: "
+"1px;\">까지</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -802,7 +805,7 @@ msgstr "지원자 고용함"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_notes
 msgid "Applicant Notes"
-msgstr ""
+msgstr "지원자 노트"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_properties_definition
@@ -844,6 +847,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"지원자와 첨부된 이력서는 이메일을 보낼 때 자동으로 생성됩니다.\n"
+"                문서 관리 모듈을 설치하면 모든 이력서가 자동으로 인덱싱되어 \n"
+"                내용을 쉽게 검색할 수 있습니다."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -869,7 +875,7 @@ msgstr "지원 이메일"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "Application in Progress"
-msgstr ""
+msgstr "지원 진행 중"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -921,7 +927,7 @@ msgstr "보관됨"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_form_controller.js:0
 msgid "Are you sure that you want to archive this job position?"
-msgstr ""
+msgstr "이 채용 공고를 보관하시겠습니까?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
@@ -1051,22 +1057,22 @@ msgstr "취소"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee__candidate_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Candidate"
-msgstr ""
+msgstr "후보자"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__user_id
 msgid "Candidate Manager"
-msgstr ""
+msgstr "지원자 관리자"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__candidate_properties_definition
 msgid "Candidate Properties"
-msgstr ""
+msgstr "지원자 속성"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "Candidate's Name"
-msgstr ""
+msgstr "지원자 이름"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_candidate
@@ -1081,13 +1087,13 @@ msgstr "응시자"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__similar_candidates_count
 msgid "Candidates with the same email or phone or mobile"
-msgstr ""
+msgstr "동일한 이메일, 전화 또는 모바일을 사용하는 지원자입니다."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__partner_name
 msgid "Candidates's Name"
-msgstr ""
+msgstr "지원자 이름"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -1381,12 +1387,12 @@ msgstr "요약"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your résumé to extract name and email automatically."
-msgstr ""
+msgstr "이력서를 디지털화하여 자동으로 이름과 이메일 정보를 추출할 수 있습니다."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Directly"
-msgstr ""
+msgstr "직접"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1422,7 +1428,7 @@ msgstr "표시명"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Display résumé on application form"
-msgstr ""
+msgstr "지원 양식에 이력서를 표시합니다."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1453,7 +1459,7 @@ msgstr "문서"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
 msgid "Does not fit the job requirements"
-msgstr ""
+msgstr "채용 요건에 맞지 않음"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1568,7 +1574,7 @@ msgstr "직원 생성됨:"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__employee_id
 msgid "Employee linked to the candidate."
-msgstr ""
+msgstr "직원이 지원자와 연결되었습니다."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_employees
@@ -1697,7 +1703,7 @@ msgstr "졸업"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Great job! You hired a new colleague!"
-msgstr ""
+msgstr "수고하셨습니다! 새 동료를 채용하셨습니다!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__kanban_state__done
@@ -1898,6 +1904,8 @@ msgid ""
 "Incoming emails create applications automatically. Use it for direct "
 "applications or when posting job offers on LinkedIn, Monster, etc."
 msgstr ""
+"수신 이메일이 자동으로 지원서를 생성합니다. 직접 지원하거나 LinkedIn, Monster 등과 같은 플랫폼에 채용 공고를 게시할 때 "
+"유용합니다."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__mobile_blacklisted
@@ -1976,7 +1984,7 @@ msgstr "경고 표시 여부"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__date_from
 msgid ""
 "Is set, update candidates availability once hired for that specific mission."
-msgstr ""
+msgstr "설정하면 특정 직무에 채용될 때 지원자의 채용 가능 여부를 업데이트합니다."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__duration_tracking
@@ -2052,7 +2060,7 @@ msgstr "구인 공고"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__job_properties_definition
 msgid "Job Properties"
-msgstr ""
+msgstr "직무 속성"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
@@ -2062,7 +2070,7 @@ msgstr "특정 업무"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_5
 msgid "Job already fulfilled"
-msgstr ""
+msgstr "이미 채용이 완료된 직무"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2294,7 +2302,7 @@ msgstr "메시지"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Mission Dates"
-msgstr ""
+msgstr "업무 날짜"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
@@ -2310,7 +2318,7 @@ msgstr "내 신청서"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_search
 msgid "My Candidates"
-msgstr ""
+msgstr "내 지원자"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
@@ -2427,7 +2435,7 @@ msgstr "아직 신청서 없음"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_candidate
 msgid "No candidates yet"
-msgstr ""
+msgstr "아직 지원자 없음"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -2580,12 +2588,12 @@ msgstr "또는 이 지원자에 대해 동료들과 비공개적으로 이야기
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Other Applications"
-msgstr ""
+msgstr "기타 지원서"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__other_applications_count
 msgid "Other Applications Count"
-msgstr ""
+msgstr "다른 지원서 수"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2595,7 +2603,7 @@ msgstr "다른 지원자"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other benefits"
-msgstr ""
+msgstr "기타 혜택"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -2637,7 +2645,7 @@ msgstr "전화번호/휴대전화"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "Please provide an candidate name."
-msgstr ""
+msgstr "지원자의 이름을 입력하세요."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -2672,7 +2680,7 @@ msgstr "속성"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Proposed"
-msgstr ""
+msgstr "제안됨"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed_extra
@@ -2682,12 +2690,12 @@ msgstr "제안된 추가 급여"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Provide an email"
-msgstr ""
+msgstr "이메일 제공"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish job offers on your website"
-msgstr ""
+msgstr "현재 채용 중인 직무를 웹 사이트에 게시합니다."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
@@ -2806,7 +2814,7 @@ msgstr "반려"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_date
 msgid "Refuse Date"
-msgstr ""
+msgstr "거부 날짜"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2858,12 +2866,12 @@ msgstr "이 지원서가 %(link)s와 중복되는 것으로 인식되었으므�
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "Refused by applicant: job fit"
-msgstr ""
+msgstr "지원자 거부: 연봉"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
 msgid "Refused by applicant: salary"
-msgstr ""
+msgstr "지원자 거부: 연봉"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__regex
@@ -2922,12 +2930,12 @@ msgstr "진행 중인 지원자"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Digitization (OCR)"
-msgstr ""
+msgstr "이력서 디지털 변환 (OCR)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Display"
-msgstr ""
+msgstr "이력서 표시"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2948,7 +2956,7 @@ msgstr "지원자가 기대하는 급여, 추가 혜택"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Salary Package"
-msgstr ""
+msgstr "급여 패키지"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
@@ -3052,7 +3060,7 @@ msgstr "지원자에게 메일 전송"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_candidate_send_mail
 msgid "Send mails to candidates"
-msgstr ""
+msgstr "지원자에게 메일 전송"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -3095,17 +3103,17 @@ msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_candidate_view_form
 msgid "Similar Candidates"
-msgstr ""
+msgstr "유사한 지원자"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_candidate__similar_candidates_count
 msgid "Similar Candidates Count"
-msgstr ""
+msgstr "유사한 후보자 수"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__single_applicant_email
 msgid "Single Applicant Email"
-msgstr ""
+msgstr "단독 지원자 이메일"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3137,7 +3145,7 @@ msgstr "지원자 출처"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Sourcing"
-msgstr ""
+msgstr "소싱"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_7
@@ -3147,7 +3155,7 @@ msgstr "스팸"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Specific jobs that use this stage. Other jobs will not use this stage."
-msgstr ""
+msgstr "이 단계를 사용하는 특정 작업입니다. 다른 작업은 이 단계를 사용하지 않습니다."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -3263,6 +3271,7 @@ msgid ""
 "             position. The Recruiter is automatically added to all meetings "
 "with the Applicant."
 msgstr ""
+"채용 담당자는 해당 직무의 모든 지원자 채용에 대한 기본값으로 설정됩니다. 채용 담당자는 지원자와의 모든 미팅에 자동으로 추가됩니다."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3278,7 +3287,7 @@ msgstr "UTM 캠페인'%s'은 채용 과정에서 사용되므로 삭제할 수 �
 msgid ""
 "The candidate is linked to an employee, to avoid losing information, archive"
 " it instead."
-msgstr ""
+msgstr "지원자가 이미 직원과 연결되어 있으므로 데이터 손실을 방지하려면 정보를 보관하세요."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -3292,7 +3301,7 @@ msgstr "지원자가 근무를 시작할 수 있는 날짜"
 msgid ""
 "The email will not be sent to the following applicant(s) as they don't have "
 "an email address:"
-msgstr ""
+msgstr "다음 지원자는 이메일 주소가 없기 때문에 이메일이 전송되지 않습니다:"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3304,7 +3313,7 @@ msgstr "다음 지원자의 이메일 주소가 누락되었습니다: %s."
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/candidate_send_mail.py:0
 msgid "The following candidates are missing an email address: %s."
-msgstr ""
+msgstr "다음 지원자의 이메일 주소가 누락되었습니다: %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -3342,14 +3351,14 @@ msgstr "정규식을 사용하면 수신된 이메일의 제목 또는 본문에
 msgid ""
 "These job positions and all related applicants will be archived. Are you "
 "sure?"
-msgstr ""
+msgstr "이 채용 공고와 관련된 모든 지원자는 보관됩니다. 정말 보관하시겠습니까?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
 msgid ""
 "This displays how the applicant has reached out, e.g. via Email, LinkedIn, "
 "Website, etc."
-msgstr ""
+msgstr "이메일, LinkedIn, 웹사이트 등 지원자가 연락한 경로를 보여줍니다."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -3380,7 +3389,7 @@ msgstr "지원 경로 (예: 검색엔진, 다른 도메인 또는 이메일 목�
 #: code:addons/hr_recruitment/static/src/views/recruitment_list_controller.js:0
 msgid ""
 "This job position and all related applicants will be archived. Are you sure?"
-msgstr ""
+msgstr "이 채용 공고와 모든 관련 지원자가 보관됩니다. 정말 보관하시겠습니까?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -3420,7 +3429,7 @@ msgstr "추적기"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Try creating an application by sending an email to"
-msgstr ""
+msgstr "다음 주소로 이메일을 보내 새 지원서를 작성합니다"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3430,7 +3439,7 @@ msgstr "이메일 보내기 시도"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Try the Website app to publish job offers online."
-msgstr ""
+msgstr "웹사이트 앱을 사용하여 온라인으로 채용 공고를 게시하세요."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -3483,7 +3492,7 @@ msgstr "읽지 않은 메세지"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the Résumr or the file itself"
-msgstr ""
+msgstr "OCR을 사용하면 이력서 사진 또는 파일에서 데이터를 채울 수 있습니다."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -3553,7 +3562,7 @@ msgstr "지원자를 거부할 경우 다음 템플릿을 선택할 수 있습�
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Who can access candidates"
-msgstr ""
+msgstr "지원자에 액세스할 수 있는 사람"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
@@ -3586,7 +3595,7 @@ msgstr ""
 msgid ""
 "You can define the requirements here. They will be displayed when you hover "
 "over the stage title."
-msgstr ""
+msgstr "여기에서 요구 사항을 정의할 수 있으며, 스테이지 제목 위에 마우스를 가져가면 해당 요구 사항이 표시됩니다."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3602,13 +3611,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for %s"
-msgstr ""
+msgstr "%s에 대한 면접관으로 지정되었습니다."
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for the Applicant %s"
-msgstr ""
+msgstr "지원자 %s에 대한 면접관으로 배정되었습니다."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3620,7 +3629,7 @@ msgstr "이 지원자의 연락처 이름을 정의해야 합니다."
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "You must define a Contact Name for this candidate."
-msgstr ""
+msgstr "이 지원자의 연락처 이름을 제공해야 합니다."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -3648,7 +3657,7 @@ msgstr "예. 링크드인"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Masters"
-msgstr ""
+msgstr "예: 석사"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3668,12 +3677,12 @@ msgstr "예: domain.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. https://www.linkedin.com/in/..."
-msgstr ""
+msgstr "예: https://www.linkedin.com/in/..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. jobs"
-msgstr ""
+msgstr "예: 직무"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
@@ -3683,7 +3692,7 @@ msgstr "예: jobs-listings@linkedin.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. john.doe@example.com"
-msgstr ""
+msgstr "예: john.doe@example.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

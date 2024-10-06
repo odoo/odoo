@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +99,60 @@ msgid ""
 "                noContentHelper: markup(\n"
 "                    "
 msgstr ""
+"\n"
+");\n"
+"\n"
+"export class ProjectTaskFormController extends FormControllerWithHTMLExpander {\n"
+"    setup() {\n"
+"        super.setup();\n"
+"        this.notifications = useService(\"notificatie\");\n"
+"    }\n"
+"\n"
+"    /**\n"
+"     * @override\n"
+"     */\n"
+"    getStaticActionMenuItems() {\n"
+"        return {\n"
+"            ...super.getStaticActionMenuItems(),\n"
+"            openHistoryDialog: {\n"
+"                volgorde: 50,\n"
+"                pictogram: \"fa-geschiedenis\",\n"
+"                beschrijving: _t(\"Versiegeschiedenis\"),\n"
+"                callback: () => this.openHistoryDialog(),\n"
+"            },\n"
+"        };\n"
+"    }\n"
+"\n"
+"    get deleteConfirmationDialogProps() {\n"
+"        const deleteConfirmationDialogProps = super.deleteConfirmationDialogProps;\n"
+"        if (!this.model.root.data.subtask_count) {\n"
+"            return deleteConfirmationDialogProps;\n"
+"        }\n"
+"        return {\n"
+"            ...deleteConfirmationDialogProps,\n"
+"            body: subTaskDeleteConfirmationMessage,\n"
+"        }\n"
+"    }\n"
+"\n"
+"    async openHistoryDialog() {\n"
+"        const record = this.model.root;\n"
+"        const versionedFieldName = 'beschrijving';\n"
+"        const historyMetadata = record.data[\"html_field_history_metadata\"]?.[versionedFieldName];\n"
+"        als (!historyMetadata) {\n"
+"            this.notifications.add(\n"
+"                escape(_t(\n"
+"                    \"De taakbeschrijving mist inhoud uit het verleden die op dit moment hersteld zou kunnen worden.\"\n"
+"                ))\n"
+"            );\n"
+"            return;\n"
+"        }\n"
+"\n"
+"        this.dialogService.add(\n"
+"            GeschiedenisDialoog,\n"
+"            {\n"
+"                titel: _t(\"Taakbeschrijving Geschiedenis\"),\n"
+"                noContentHelper: markup(\n"
+"                    "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -154,7 +209,7 @@ msgstr "%(count1)s/%(count2)s"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s Dashboard"
-msgstr ""
+msgstr "%(name)s Dashboard"
 
 #. module: project
 #. odoo-python
@@ -199,7 +254,7 @@ msgstr "%s (kopie)"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "%s closed tasks"
-msgstr ""
+msgstr "%s gesloten taken"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -332,6 +387,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"           <t t-if=\"partner.name\">\n"
+"                Hallo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"                Hallo,<br><br>\n"
+"           </t>\n"
+"            Neem even de tijd om onze diensten met betrekking tot de taak <strong t-out=\"object.name or ''\">Planning en begroting</strong> te beoordelen\n"
+"           <t t-if=\"object._rating_get_operator().name\">\n"
+"                toegewezen aan <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"                .<br>\n"
+"           </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>Vertel ons wat je van onze diensten vindt</strong><br>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klik op een van deze smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            We waarderen je feedback. Het helpt ons voortdurend te verbeteren.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Deze tevredenheidsenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b> </span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Dit tevredenheidsonderzoek wordt <b t-out=\"object.project_id.rating_status_period or ''\">wekelijks</b> verstuurd zolang de taak in de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b> is.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br>Met vriendelijke groet,</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">UwBedrijf</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@y</a>ourcompany.com\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http:/</a>/www.example.com\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -482,7 +612,7 @@ msgstr "<span class=\"fw-normal\"> Taken</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<span class=\"o_stat_text\">Blocked Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Geblokkeerde taken</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -749,6 +879,8 @@ msgid ""
 "Add project-specific property fields on tasks to customize your project "
 "management process."
 msgstr ""
+"Voeg projectspecifieke eigenschapsvelden toe aan taken om je "
+"projectbeheerproces aan te passen."
 
 #. module: project
 #. odoo-javascript
@@ -877,7 +1009,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read mode."
-msgstr ""
+msgstr "Iedereen met deze link heeft toegang tot het project in leesmodus."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -1073,7 +1205,7 @@ msgid ""
 msgstr ""
 "Stuur automatisch een e-mail naar klanten wanneer een taak zich in een "
 "bepaalde fase van een project bevindt door deze sjabloon op de betreffende "
-"fase in te stellen."
+"fase in te stellen"
 
 #. module: project
 #. odoo-javascript
@@ -1154,7 +1286,7 @@ msgstr "Geblokkeerd door"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked Tasks"
-msgstr ""
+msgstr "Geblokkeerde taken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action_blocking_tasks
@@ -1246,7 +1378,7 @@ msgstr "Sluit de lijst met subtaken"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_depend_on_count
 msgid "Closed Depending on Tasks"
-msgstr ""
+msgstr "Gesloten Afhankelijk van Taken"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2255,7 +2387,7 @@ msgstr "Hallo"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Hide closed tasks"
-msgstr ""
+msgstr "Verberg afgesloten taken"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3865,7 +3997,7 @@ msgstr "Lezen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read: collaborators can view tasks but cannot edit them."
-msgstr ""
+msgstr "Lees: medewerkers kunnen taken bekijken maar niet bewerken."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3874,6 +4006,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Lezen: medewerkers kunnen taken bekijken, maar niet bewerken.\n"
+"Bewerken met beperkte toegang: medewerkers kunnen taken die ze volgen in de Kanban-weergave bekijken en bewerken.\n"
+"Bewerken: medewerkers kunnen alle taken in de Kanban-weergave bekijken en bewerken. Bovendien kunnen ze kiezen welke taken ze willen volgen."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4255,7 +4390,7 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #. odoo-javascript
 #: code:addons/project/static/src/components/notebook_task_one2many_field/notebook_task_list_renderer.js:0
 msgid "Show closed tasks"
-msgstr ""
+msgstr "Afgesloten taken weergeven"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4396,7 +4531,7 @@ msgstr "Status"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_stage_state_selection/project_task_stage_with_state_selection.js:0
 msgid "State readonly"
-msgstr ""
+msgstr "Staat alleen-lezen"
 
 #. module: project
 #. odoo-javascript
@@ -4413,7 +4548,7 @@ msgstr "Status"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Status Update - %(date)s"
-msgstr ""
+msgstr "Statusupdate - %(date)s"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4611,6 +4746,8 @@ msgstr "Titel taak..."
 msgid ""
 "Task Transferred from Project %(source_project)s to %(destination_project)s"
 msgstr ""
+"Taak overgebracht van Project %(source_project)s naar "
+"%(destination_project)s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4771,7 +4908,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "De naam van de e-mailalias, bijvoorbeeld: 'vacature' als je alle e-mails van"
-" vacature@uwbedrijf.nl wilt afvangen."
+" vacature@bedrijf.nl wilt afvangen"
 
 #. module: project
 #. odoo-python
@@ -4887,6 +5024,10 @@ msgid ""
 "on your website. This includes leads/opportunities, quotations/sales orders,"
 " purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"Ze kunnen gedeelde projecttaken bewerken en specifieke documenten in "
+"leesmodus bekijken op je website. Hieronder vallen leads/mogelijkheden, "
+"offertes/verkooporders, inkooporders, facturen en rekeningen, timesheets en "
+"tickets."
 
 #. module: project
 #. odoo-python
@@ -4984,7 +5125,7 @@ msgstr ""
 "Dit project is niet geassocieerd aan een bedrijf, terwijl de fase tot %s "
 "behoort. Er zijn een paar opties om te overwegen: wijzig het bedrijf op het "
 "project zodat het overeenkomst het het bedrijf van de fase of verwijder het "
-"bedrijf van de fase."
+"bedrijf van de fase"
 
 #. module: project
 #. odoo-python
@@ -5038,7 +5179,7 @@ msgstr "Tip: Maak taken van inkomende e-mails"
 #: model:digest.tip,name:project.digest_tip_project_3
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_3
 msgid "Tip: Project-Specific Fields"
-msgstr ""
+msgstr "Tip: Projectspecifieke velden"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -5050,7 +5191,7 @@ msgstr "Tip: Gebruik taakstatussen om de voortgang van je taken bij te houden"
 #: model:digest.tip,name:project.digest_tip_project_2
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_2
 msgid "Tip: Your Own Personal Kanban"
-msgstr ""
+msgstr "Tip: Je eigen persoonlijke Kanban"
 
 #. module: project
 #. odoo-python
@@ -5131,7 +5272,7 @@ msgstr "Totaal"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 msgid "Total Costs"
-msgstr ""
+msgstr "Totale kosten"
 
 #. module: project
 #. odoo-javascript
@@ -5167,8 +5308,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
-"Volg de kosten, inkomsten en marge van het project door de analytische "
-"rekening die bij het project hoort in te stellen op relevante documenten."
+"Volg de kosten, omzet en marge van het project door de analytische rekening "
+"die bij het project hoort in te stellen op relevante documenten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5307,6 +5448,8 @@ msgstr "Gebruik dit voor mijn project"
 msgid ""
 "Use personal stages to organize your tasks and create your own workflow."
 msgstr ""
+"Gebruik persoonlijke fasen om je taken te organiseren en je eigen workflow "
+"te creëren."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action

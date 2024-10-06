@@ -369,12 +369,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Bill Matching</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Conciliación de factura</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Conciliación de compra</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -457,7 +457,7 @@ msgstr "<strong>Desc.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Expected Arrival:</strong>"
-msgstr ""
+msgstr "<strong>Llegada esperada:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -490,16 +490,6 @@ msgstr "<strong>Representante de compra</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
 msgstr "<strong>Cant.</strong>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been Declined</strong><br/>"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been acknowledged</strong><br/>"
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -540,6 +530,16 @@ msgstr "<strong>Se actualizó la cantidad recibida.</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This purchase has been cancelled.</strong>"
 msgstr "<strong>Esta compra se canceló.</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been accepted.</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been declined.</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -738,7 +738,7 @@ msgstr "Permite editar las órdenes de compra"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
 msgid "Aml"
-msgstr ""
+msgstr "AML"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
@@ -791,6 +791,8 @@ msgstr "Aprobar orden"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Are you sure you want to cancel the selected RFQs/Orders?"
 msgstr ""
+"¿Está seguro de que desea cancelar las órdenes/solicitudes de cotización "
+"seleccionadas?"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -885,7 +887,7 @@ msgstr "Líneas de factura"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Bill Matching"
-msgstr ""
+msgstr "Conciliación de factura"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
@@ -901,7 +903,7 @@ msgstr "Facturado"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
-msgstr ""
+msgstr "Subtotal facturado"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1374,6 +1376,8 @@ msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
+"Arrastre y suelte el archivo PDF de solicitud de cotización en su lista de "
+"cotizaciones en Odoo y disfrute de la automatización."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
@@ -1472,6 +1476,8 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Los bienes son productos materiales tangibles que usted proporciona.\n"
+"Los servicios son productos inmateriales que usted proporciona."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
@@ -1571,6 +1577,8 @@ msgid ""
 "In selected purchase order to merge these details must be same\n"
 "Vendor, currency, destination, dropship address and agreement"
 msgstr ""
+"Estos detalles deben ser iguales en la orden de compra seleccionada para fusionarla\n"
+"Proveedor, moneda, destino, dirección de envío directo y contrato"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
@@ -1627,7 +1635,7 @@ msgstr "Está en la orden de compra"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
 #: model:ir.model.fields,field_description:purchase.field_account_move__is_purchase_matched
 msgid "Is Purchase Matched"
-msgstr ""
+msgstr "La compra está conciliada"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1705,7 +1713,7 @@ msgstr "Niveles de aprobación *"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_amount_untaxed
 msgid "Line Amount Untaxed"
-msgstr ""
+msgstr "Línea de subtotal"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
@@ -2159,11 +2167,13 @@ msgid ""
 "Please select at least two purchase orders with state RFQ and RFQ sent to "
 "merge."
 msgstr ""
+"Seleccione por lo menos dos órdenes de compra con estado \"Solicitud de "
+"cotización\" y \"Solicitud de cotización enviada\" para fusionarlas."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
 msgid "Pol"
-msgstr ""
+msgstr "POL"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -2248,12 +2258,12 @@ msgstr "Tipo de producto"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_price
 msgid "Product Uom Price"
-msgstr ""
+msgstr "Precio de la UdM del producto"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
-msgstr ""
+msgstr "Cantidad de UdM del producto"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2304,7 +2314,7 @@ msgstr "Contratos de compra"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
 msgid "Purchase Amount Untaxed"
-msgstr ""
+msgstr "Subtotal de compra"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2317,7 +2327,7 @@ msgstr "Análisis de compra"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Purchase Bill Lines"
-msgstr ""
+msgstr "Líneas de la factura de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2351,12 +2361,14 @@ msgstr "Plazo de entrega de compra"
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
 msgstr ""
+"Vista de conciliación entre líneas de compra y líneas de factura del "
+"proveedor"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
-msgstr ""
+msgstr "Conciliación de compra"
 
 #. module: purchase
 #. odoo-python
@@ -2613,16 +2625,6 @@ msgid "Quantity:"
 msgstr "Cantidad:"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Accepted"
-msgstr "Cotización aceptada"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Declined"
-msgstr "Cotización rechazada"
-
-#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
 msgid "RFQ"
 msgstr "Solicitud de cotización"
@@ -2654,12 +2656,14 @@ msgstr "Solicitud de cotización enviada"
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
 msgstr ""
+"Solicitud de cotización fusionada con %(oldest_rfq_name)s y "
+"%(cancelled_rfq)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "RFQ merged with %s"
-msgstr ""
+msgstr "Solicitud de cotización fusionada con %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -2749,7 +2753,7 @@ msgstr "Entrega confirmada"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reception_declined
 msgid "Reception Declined"
-msgstr ""
+msgstr "Recepción rechazada"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -2914,6 +2918,7 @@ msgstr "Token de seguridad"
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Select Vendor Bill lines to add to a Purchase Order"
 msgstr ""
+"Seleccione las líneas de la factura para agregarlas a una orden de compra"
 
 #. module: purchase
 #. odoo-javascript
@@ -3185,7 +3190,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The RFQ has been acknowledged by %s."
-msgstr ""
+msgstr "%s confirmó la solicitud de cotización."
 
 #. module: purchase
 #. odoo-python
@@ -3203,7 +3208,7 @@ msgstr "%s acreditó la recepción de la orden."
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "The order receipt has been declined by %s."
-msgstr ""
+msgstr "%s rechazó la recepción de la orden. "
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3223,6 +3228,8 @@ msgid ""
 "The vendor asked to decline this confirmed RfQ, if you agree on that, cancel"
 " this PO"
 msgstr ""
+"El vendedor pidió que rechazara esta solicitud de cotización confirmada. Si "
+"está de acuerdo con eso, cancele esta orden de compra."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3240,6 +3247,7 @@ msgstr "Actualmente no hay solicitudes de cotización para su cuenta."
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
 msgstr ""
+"No hay productos que agregar a la orden de compra, ¿se trata de anticipos?"
 
 #. module: purchase
 #. odoo-python
@@ -3414,7 +3422,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_declined
 msgid "True if PO reception is declined by the vendor."
-msgstr ""
+msgstr "Verdadero si el proveedor rechaza la recepción de la orden de compra."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed
@@ -3440,6 +3448,8 @@ msgid ""
 "Unable to cancel purchase order(s): %s. You must first cancel their related "
 "vendor bills."
 msgstr ""
+"No es posible cancelar la orden de compra: %s. Primero debe cancelar las "
+"facturas de proveedor relacionadas."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
@@ -3571,6 +3581,8 @@ msgstr "Factura de proveedor"
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Vendor Bill lines can only be added to one Purchase Order."
 msgstr ""
+"Solo puede agregar las líneas de factura del proveedor a una orden de "
+"compra."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -3749,6 +3761,8 @@ msgstr ""
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "You can't select lines from multiple Vendor Bill to do the matching."
 msgstr ""
+"No puede seleccionar líneas de varias facturas de proveedor para realizar la"
+" conciliación."
 
 #. module: purchase
 #. odoo-python
@@ -3789,6 +3803,8 @@ msgstr ""
 msgid ""
 "You must select at least one Purchase Order line to match or create bill."
 msgstr ""
+"Debe seleccionar al menos una línea de la orden de compra para conciliarla o"
+" para elaborar la factura."
 
 #. module: purchase
 #. odoo-python
@@ -3819,7 +3835,7 @@ msgstr "o cree un nuevo"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "purchase orders merged"
-msgstr ""
+msgstr "órdenes de compra fusionadas"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document

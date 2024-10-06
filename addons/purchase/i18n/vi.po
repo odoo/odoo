@@ -244,6 +244,34 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Kính gửi <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Tệp đính kèm là yêu cầu báo giá <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            với mã số: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        từ <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br><br>\n"
+"        Nếu bạn có bất kỳ thắc mắc nào, xin đừng ngần ngại liên hệ với chúng tôi.\n"
+"        <br><br>\n"
+"            <a t-att-href=\"object.get_confirm_url(confirm_type='reception')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Chấp nhận</a>\n"
+"\n"
+"            <a t-att-href=\"object.get_confirm_url(confirm_type='decline')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Từ chối</a>\n"
+"        <br><br>\n"
+"        Trân trọng,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -466,16 +494,6 @@ msgid "<strong>Qty</strong>"
 msgstr "<strong>SL</strong>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been Declined</strong><br/>"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been acknowledged</strong><br/>"
-msgstr ""
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Receipt Date:</strong>"
 msgstr "<strong>Ngày biên nhận:</strong>"
@@ -514,6 +532,16 @@ msgstr "<strong>Số lượng đã nhận đã được cập nhật.</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This purchase has been cancelled.</strong>"
 msgstr "<strong>Mua hàng này đã bị huỷ.</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been accepted.</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been declined.</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1204,7 +1232,7 @@ msgstr "Từ chối"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__company_price_include
 msgid "Default Sales Price Include"
-msgstr ""
+msgstr "Bao gồm giá bán mặc định"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__company_price_include
@@ -1212,6 +1240,8 @@ msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
+"Mặc định giá bán được sử dụng trên sản phẩm và hóa đơn với Công ty này đã "
+"bao gồm thuế hay chưa."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__product_uom_id
@@ -1290,7 +1320,7 @@ msgstr "Loại hiển thị"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Tài khoản phân tích phân phối"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -2567,16 +2597,6 @@ msgstr "Số lượng"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Quantity:"
 msgstr "Số lượng:"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Accepted"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Declined"
-msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft

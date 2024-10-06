@@ -6,8 +6,8 @@
 # Alessandro Forte <a.forte1010@gmail.com>, 2024
 # Sergio Zanchetta <primes2h@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Marianna Ciofani, 2024
 # Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1711,6 +1711,14 @@ msgstr "Conto"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
+"Account %(account)s will be split in %(num_accounts)s, one for each "
+"company:\n"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The"
 " unmerge operation only splits an account based on its companies."
 msgstr ""
@@ -3045,8 +3053,7 @@ msgstr "In archivio"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"Are you sure? This will split the account into one account per company:"
+msgid "Are you sure? This will perform the following operations:\n"
 msgstr ""
 
 #. module: account
@@ -3364,6 +3371,12 @@ msgstr "Banca"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank & Cash"
 msgstr "Banca e cassa"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank & Cash accounts cannot be shared between companies."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -18159,6 +18172,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "You cannot delete journal items belonging to a locked journal entry."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -18184,6 +18203,8 @@ msgid ""
 "You cannot delete this mail template, it is used in the invoice sending "
 "flow."
 msgstr ""
+"Non è possibile eliminare questo modello e-mail perché utilizzato nel flusso"
+" di invio della fattura.  "
 
 #. module: account
 #. odoo-python
@@ -18564,12 +18585,6 @@ msgstr ""
 "È necessario configurare il \"Registro utili/perdite sui cambi\" nelle "
 "impostazioni dell'azienda per gestire automaticamente la contabilizzazione "
 "delle registrazioni legate alle differenze tra tassi di cambio."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid "You must select a single account to un-merge."
-msgstr ""
 
 #. module: account
 #. odoo-python
