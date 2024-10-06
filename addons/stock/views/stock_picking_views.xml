@@ -362,9 +362,9 @@
                     <filter name="internal" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
                     <separator/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
-                    <filter invisible="1" name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
-                    <filter invisible="1" name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
-                    <filter invisible="1" name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
+                    <filter name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
+                    <filter name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
+                    <filter name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
                     <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
                     <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
