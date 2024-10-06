@@ -201,6 +201,9 @@ class AccountChartTemplate(models.AbstractModel):
                     self.env[model].sudo().with_context(active_test=False).search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
+        if not data.get('template_data'):
+            return
+
         template_data = data.pop('template_data')
         if company.parent_id:
             data = {
