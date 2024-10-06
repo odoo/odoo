@@ -5,8 +5,8 @@
 # Translators:
 # Tiffany Chang, 2024
 # 稀饭~~ <wangwhai@qq.com>, 2024
-# Chloe Wang, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,12 +34,12 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span class=\"pe-2\">Templates:</span>"
-msgstr ""
+msgstr "<span class=\"pe-2\">模板：</span>"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span>Document type:</span>"
-msgstr ""
+msgstr "<span>文件类型：</span>"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -47,7 +47,7 @@ msgstr ""
 msgid ""
 "A form field set as used in product documents can't be linked to a quotation"
 " document."
-msgstr ""
+msgstr "产品文档中使用的表单字段集不能链接到报价文档。"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -55,7 +55,7 @@ msgstr ""
 msgid ""
 "A form field set as used in quotation documents can't be linked to a product"
 " document."
-msgstr ""
+msgstr "报价单文档中使用的表单字段集不能链接到产品文档。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -89,6 +89,13 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
 msgstr ""
+"允许您在销售中与客户共享文档。\n"
+"如果不想与销售客户共享此文档，请将其留空。\n"
+"报价时：文件将发送给客户，客户可随时访问。\n"
+"例如，此选项可用于共享产品描述文件。\n"
+"订单确认时：文件将发送给客户，客户可随时访问。\n"
+"例如，此选项可用于共享用户手册或在电子商务中购买的数字内容。\n"
+"内部引用：文件将包含在报价单和销售订单的 PDF 文件中，位于标题页和报价表之间。"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -110,7 +117,7 @@ msgstr "附件网址"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__available_product_document_ids
 msgid "Available Product Documents"
-msgstr ""
+msgstr "现有产品文件"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__checksum
@@ -121,7 +128,7 @@ msgstr "校验和/SHA1"
 #. odoo-javascript
 #: code:addons/sale_pdf_quote_builder/static/src/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card.js:0
 msgid "Click to write content for the PDF quote..."
-msgstr ""
+msgstr "点击为 PDF 报价撰写内容..."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__company_id
@@ -159,12 +166,12 @@ msgstr "创建日期"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
 msgid "Customizable"
-msgstr ""
+msgstr "可定制"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__customizable_pdf_form_fields
 msgid "Customizable PDF Form Fields"
-msgstr ""
+msgstr "可定制的 PDF 表格字段"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__db_datas
@@ -196,7 +203,7 @@ msgstr "文档类型"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Document type"
-msgstr ""
+msgstr "文档类型"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -238,30 +245,30 @@ msgstr "页脚"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "Form Field Name"
-msgstr ""
+msgstr "表单字段名称"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Form Fields"
-msgstr ""
+msgstr "表单字段"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__form_field_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__form_field_ids
 msgid "Form Fields Included"
-msgstr ""
+msgstr "包括表单字段"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
 msgid "Form field name must be unique for a given document type."
-msgstr ""
+msgstr "对于给定的文档类型，表单字段名称必须是唯一的。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
 msgid "Form fields of inside quotation documents."
-msgstr ""
+msgstr "报价文件内部的表单字段。"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
@@ -283,7 +290,7 @@ msgstr "页眉/页脚"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__quotation_document_ids
 msgid "Headers and footers"
-msgstr ""
+msgstr "页眉和页脚"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.act_window,name:sale_pdf_quote_builder.quotation_document_action
@@ -291,7 +298,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sale_pdf_quote_builder.sale_menu_quotation_document_action
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid "Headers/Footers"
-msgstr ""
+msgstr "页眉/页脚"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
@@ -309,7 +316,7 @@ msgstr "ID"
 msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
-msgstr ""
+msgstr "如果未选中，则可以隐藏页眉或页脚，而无需将其删除。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
@@ -398,7 +405,7 @@ msgstr "上次更新日期"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Mark fields as safe to fill in the quote."
-msgstr ""
+msgstr "将字段标记为安全字段，以便填写报价。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__mimetype
@@ -426,7 +433,7 @@ msgstr "报价中只能附加 PDF 文档。"
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Only PDF documents can be used as header or footer."
-msgstr ""
+msgstr "只有 PDF 文档可以用作页眉或页脚。"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
@@ -445,12 +452,15 @@ msgid ""
 "                <br>\n"
 "                to boost your sales."
 msgstr ""
+"用醒目的页眉和页脚个性化定制您的报价\n"
+"                <br>\n"
+"                提高您的销售额。"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "Please use only relational fields until the last value of your path."
-msgstr ""
+msgstr "在路径的最后一个值之前，请只使用关系字段。"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -468,7 +478,7 @@ msgstr "帮助文档"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__product_document_ids
 msgid "Product Documents"
-msgstr ""
+msgstr "产品文件"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form

@@ -913,7 +913,7 @@ msgstr "此位置上已存在本产品的补货规则。"
 #: model:ir.model.fields,help:stock.field_product_template__is_storable
 #: model:ir.model.fields,help:stock.field_stock_move__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "可储存产品是您管理库存的产品。"
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -9000,7 +9000,7 @@ msgstr "要生成的序列号的数量必须大于零。"
 msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the final location."
-msgstr ""
+msgstr "该操作将产品带到中间位置。但是，此操作是针对最终位置的操作链的一部分。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -9393,7 +9393,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid "Time Horizon"
-msgstr ""
+msgstr "时间范围"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -9926,7 +9926,7 @@ msgstr "取消保留"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
 msgid "Unreturned"
-msgstr ""
+msgstr "未交还"
 
 #. module: stock
 #. odoo-python
@@ -10420,6 +10420,8 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need."
 msgstr ""
+"当 <b>%(destination)s</b> 需要产品时，<br>会自动创建<b>%(operation)s</b> 操作，由 "
+"<b>%(source_location)s</b> 调配产品，以满足需求。"
 
 #. module: stock
 #. odoo-python
@@ -10428,6 +10430,7 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br> "
 "<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
+"产品到达<b>%(source_location)s</b>时，<br>会自动建立<b>%(operation)s</b>操作，将产品运往<b>%(destination)s</b>。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -10782,7 +10785,7 @@ msgstr "您不能通过此视图，将不同转移的数量直接打包到同一
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "You cannot duplicate stock quants."
-msgstr ""
+msgstr "您不可复制库存数量。"
 
 #. module: stock
 #. odoo-python
@@ -10944,6 +10947,8 @@ msgid ""
 "You need to supply a Lot/Serial Number for product:\n"
 "%(products)s"
 msgstr ""
+"您需要提供产品的批次/序列号：\n"
+"%(products)s"
 
 #. module: stock
 #. odoo-python
@@ -11224,7 +11229,7 @@ msgstr "应补足"
 #. module: stock
 #: model:ir.actions.server,name:stock.click_dashboard_graph
 msgid "stock.click_dashboard_graph"
-msgstr ""
+msgstr "stock.click_dashboard_graph"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_incoming

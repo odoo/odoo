@@ -5,9 +5,9 @@
 # Translators:
 # Jolien De Paepe, 2024
 # Martin Trigaux, 2024
-# Manon Rondou, 2024
 # D4E <a@d4e.cool>, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1746,6 +1746,14 @@ msgstr "Compte"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
+"Account %(account)s will be split in %(num_accounts)s, one for each "
+"company:\n"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The"
 " unmerge operation only splits an account based on its companies."
 msgstr ""
@@ -2052,7 +2060,7 @@ msgstr "Assistant de fusion de comptes"
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
 msgid "Account merge wizard line"
-msgstr ""
+msgstr "Ligne d'assistant de fusion de comptes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -2321,7 +2329,7 @@ msgstr "Activer la piste d'audit"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Activate auto-validation"
-msgstr ""
+msgstr "Activer la validation automatique"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2556,6 +2564,10 @@ msgid ""
 "suggest automatically validating future bills. You can toggle this feature "
 "at any time in the vendor's profile."
 msgstr ""
+"Après avoir importé trois factures pour un fournisseur sans apporter de "
+"modifications, Odoo proposera de valider automatiquement les factures "
+"suivantes. Vous pouvez désactiver cette fonctionnalité à tout moment dans le"
+" profil du fournisseur."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -2613,7 +2625,7 @@ msgstr "Tous les comptes sur chaque ligne doivent être de même type."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__move_to_hash_ids
 msgid "All moves that will be hashed"
-msgstr ""
+msgstr "Toutes les écritures qui seront hachées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -2634,11 +2646,15 @@ msgid ""
 "All unhashable moves before the selected date that are not protected by the "
 "Hard Lock Date"
 msgstr ""
+"Tous les mouvements non hachables avant la date sélectionnée, qui ne sont "
+"pas protégés par la date de verrouillage ferme."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "All unreconciled bank statement lines before the selected date."
 msgstr ""
+"Toutes les lignes de relevé bancaire non rapprochées avant la date "
+"sélectionnée."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3087,8 +3103,7 @@ msgstr "Archivé"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"Are you sure? This will split the account into one account per company:"
+msgid "Are you sure? This will perform the following operations:\n"
 msgstr ""
 
 #. module: account
@@ -3406,6 +3421,12 @@ msgstr "Banque"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank & Cash"
 msgstr "Banque et liquidités"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank & Cash accounts cannot be shared between companies."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -18218,6 +18239,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "You cannot delete journal items belonging to a locked journal entry."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -18627,12 +18654,6 @@ msgstr ""
 "Vous devez configurer le 'Journal de gain ou de perte de change' dans les "
 "paramètres de votre société, pour automatiser les écritures comptables liées"
 " aux différents de change."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid "You must select a single account to un-merge."
-msgstr ""
 
 #. module: account
 #. odoo-python

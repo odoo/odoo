@@ -5,6 +5,7 @@
 # Translators:
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2024
 # Wil Odoo, 2024
+# Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jiří Podhorecký <jirka.p@volny.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -407,16 +408,6 @@ msgid "<strong>Qty</strong>"
 msgstr "<strong>Množství</strong>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been Declined</strong><br/>"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been acknowledged</strong><br/>"
-msgstr ""
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Receipt Date:</strong>"
 msgstr "<strong>Datum přijetí:</strong>"
@@ -454,6 +445,16 @@ msgstr "<strong>Tobdržené množství bylo aktualizováno.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This purchase has been cancelled.</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been accepted.</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been declined.</strong>"
 msgstr ""
 
 #. module: purchase
@@ -1151,6 +1152,8 @@ msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
+"Výchozí informace o tom, zda prodejní cena použitá na výrobku a fakturách "
+"této společnosti zahrnuje její daně."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__product_uom_id
@@ -2505,16 +2508,6 @@ msgstr "Množství"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Quantity:"
 msgstr "Množství:"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Accepted"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Declined"
-msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft

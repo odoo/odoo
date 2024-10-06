@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,6 +144,8 @@ msgid ""
 "A project must be defined on the quotation or on the form of products creating a task on order.\n"
 "The following products need a project in which to put their task: %(product_names)s"
 msgstr ""
+"Een project moet worden gedefinieerd op de offerte of op het formulier van producten die een taak op bestelling maken.\n"
+"De volgende producten hebben een project nodig om hun taak in te plaatsen: %(product_names)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -151,6 +154,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"Er wordt een taak aangemaakt voor het project na bevestiging van de "
+"verkooporder. De analytische distributie van dit project zal ook dienen als "
+"referentie voor nieuw aangemaakte verkooporderitems."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -294,7 +300,7 @@ msgstr "Klantfacturen"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "Gedefinieerd op offerte"
 
 #. module: sale_project
 #. odoo-javascript
@@ -327,7 +333,7 @@ msgstr "Aanbetalingen"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "Leeg project"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
@@ -497,6 +503,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are"
 " set up for it."
 msgstr ""
+"Producten die zijn toegevoegd aan voorraadpickings en waarvan het "
+"bewerkingstype is ingesteld om analytische kosten te genereren, worden "
+"opnieuw gefactureerd in deze verkooporder als ze daarvoor zijn ingesteld."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project

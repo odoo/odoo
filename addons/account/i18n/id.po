@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Ryanto The <ry.the77@gmail.com>, 2024
-# Abe Manyo, 2024
 # Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1735,6 +1735,14 @@ msgstr "Akun"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
+"Account %(account)s will be split in %(num_accounts)s, one for each "
+"company:\n"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The"
 " unmerge operation only splits an account based on its companies."
 msgstr ""
@@ -3073,11 +3081,8 @@ msgstr "Diarsipkan"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"Are you sure? This will split the account into one account per company:"
+msgid "Are you sure? This will perform the following operations:\n"
 msgstr ""
-"Apakah Anda yakin? Ini akan memisahkan akun menjadi satu akun per "
-"perusahaan:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3396,6 +3401,12 @@ msgid "Bank & Cash"
 msgstr "Bank & Cash"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank & Cash accounts cannot be shared between companies."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
@@ -3677,7 +3688,7 @@ msgstr "Sebelum"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
 msgid "Before Next Payment Date"
-msgstr ""
+msgstr "Sebelum Tanggal Pembayaran Berikutnya"
 
 #. module: account
 #. odoo-python
@@ -16795,7 +16806,7 @@ msgstr "Jumlah total yang harus Anda bayar pada pemasok ini."
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Total for the installments before %(date)s."
-msgstr ""
+msgstr "Total untuk cicilan sebelum %(date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_total
@@ -18194,6 +18205,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "You cannot delete journal items belonging to a locked journal entry."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -18603,12 +18620,6 @@ msgstr ""
 "Anda harus mengonfigurasi 'Jurnal Forex Gain or Loss' di pengaturan "
 "perusahaan Anda, untuk mengelola secara otomatis booking dari entri "
 "akuntansi yang terkait perbedaan di antara nilai tukar mata uang."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid "You must select a single account to un-merge."
-msgstr "Anda harus memilih satu akun untuk membatalkan penggabungan."
 
 #. module: account
 #. odoo-python

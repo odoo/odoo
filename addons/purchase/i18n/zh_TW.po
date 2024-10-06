@@ -420,7 +420,7 @@ msgstr "<strong>描述</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Disc.</strong>"
-msgstr ""
+msgstr "<strong>折扣</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -458,16 +458,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
 msgstr "<strong>數量</strong>"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been Declined</strong><br/>"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "<strong>Quotation has been acknowledged</strong><br/>"
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -508,6 +498,16 @@ msgstr "<strong>收貨數量已更新</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This purchase has been cancelled.</strong>"
 msgstr "<strong>此項購買已被取消。</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been accepted.</strong>"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+msgid "<strong>This quotation has been declined.</strong>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -854,7 +854,7 @@ msgstr "已取得帳單"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
 msgid "Billed Amount Untaxed"
-msgstr ""
+msgstr "賬單未連稅金額"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1556,7 +1556,7 @@ msgstr "是在採購訂單內"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
 #: model:ir.model.fields,field_description:purchase.field_account_move__is_purchase_matched
 msgid "Is Purchase Matched"
-msgstr ""
+msgstr "採購是否已配對"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1632,17 +1632,17 @@ msgstr "審批層級 *"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_amount_untaxed
 msgid "Line Amount Untaxed"
-msgstr ""
+msgstr "資料行未連稅金額"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
 msgid "Line Qty"
-msgstr ""
+msgstr "資料行數量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_uom_id
 msgid "Line Uom"
-msgstr ""
+msgstr "資料行計量單位"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2077,7 +2077,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
 msgid "Pol"
-msgstr ""
+msgstr "採購訂單資料行"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -2161,12 +2161,12 @@ msgstr "產品類型"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_price
 msgid "Product Uom Price"
-msgstr ""
+msgstr "產品計量單位價格"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
-msgstr ""
+msgstr "產品計量單位數量"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -2217,7 +2217,7 @@ msgstr "採購協議"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
 msgid "Purchase Amount Untaxed"
-msgstr ""
+msgstr "採購未連稅金額"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2361,7 +2361,7 @@ msgstr "採購訂單修改在訂單確認後您想要採購訂單時可以修改
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_order_name
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_order_name
 msgid "Purchase Order Name"
-msgstr ""
+msgstr "採購訂單名稱"
 
 #. module: purchase
 #. odoo-python
@@ -2521,16 +2521,6 @@ msgid "Quantity:"
 msgstr "數量："
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Accepted"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
-msgid "Quotation Declined"
-msgstr ""
-
-#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
 msgid "RFQ"
 msgstr "詢價單"
@@ -2656,7 +2646,7 @@ msgstr "接收確認"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reception_declined
 msgid "Reception Declined"
-msgstr ""
+msgstr "收貨被拒絕"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -3290,7 +3280,7 @@ msgstr "若供應商已承諾供貨日期為 真."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_declined
 msgid "True if PO reception is declined by the vendor."
-msgstr ""
+msgstr "若採購訂單收貨被供應商拒絕，則為 True（真）。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed

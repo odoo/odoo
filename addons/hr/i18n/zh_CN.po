@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,12 +136,12 @@ msgstr "<small><b>读</b></small>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">IP Addresses</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">IP 地址</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"flex-shrink-0 ml8 me-2\">Sent Emails</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0 ml8 me-2\">已发送电子邮件</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -285,7 +286,7 @@ msgstr "所需操作"
 #: model_terms:digest.tip,tip_description:hr.digest_tip_hr_0
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
-msgstr ""
+msgstr "激活远程工作，让员工指定他们的工作地点。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -452,7 +453,7 @@ msgstr "应用"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_apprenticeship
 msgid "Apprenticeship"
-msgstr ""
+msgstr "学徒"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -680,7 +681,7 @@ msgstr "取消"
 msgid ""
 "Categorize your Employees by type. This field also has an impact on "
 "contracts. Only Employees, Students and Trainee will have contract history."
-msgstr ""
+msgstr "按类型对员工进行分类。该字段对合同也有影响。只有员工、学生和实习生才有合同历史记录。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -1002,12 +1003,12 @@ msgstr "无法删除默认的出发原因。"
 msgid ""
 "Define the allowed IP to be displayed as Present. In case of multiple "
 "addresses, separate them by a coma."
-msgstr ""
+msgstr "定义允许的 IP 显示为“存在”。如果有多个地址，请用逗号分隔它们。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Define the minimum number of sent emails to be displayed as Present."
-msgstr ""
+msgstr "定义要显示为“当前”的已发送电子邮件的最小数量。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -1015,7 +1016,7 @@ msgstr ""
 msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
-msgstr ""
+msgstr "定义资源的工作计划。如果未设置，资源将具有完全灵活的工作时间。"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_ceo
@@ -1194,6 +1195,11 @@ msgid ""
 "                            Several activities are often organized all over the year, such as weekly\n"
 "                            sports sessions, team building events, monthly drink, and much more."
 msgstr ""
+"每个员工都有机会看到工作的影响。\n"
+"                        您可以为公司的成功做出真正的贡献。\n"
+"                        <br>\n"
+"                        一年通常组织几次活动，例如每周\n"
+"                        运动会， 团队建设活动， 每月饮料， 等等"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1589,7 +1595,7 @@ msgstr "HR 设置"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__has_department_manager_access
 msgid "Has Department Manager Access"
-msgstr ""
+msgstr "拥有部门经理访问权限"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
@@ -1646,7 +1652,7 @@ msgstr "人力资源显示的图标"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_manager_department_report
 msgid "Hr Manager Department Report"
-msgstr ""
+msgstr "人力资源经理部门报告"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_presence_state
@@ -1788,7 +1794,7 @@ msgstr "实习"
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_part_time
 msgid "Intern"
-msgstr ""
+msgstr "实习"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
@@ -2201,7 +2207,7 @@ msgstr "优先考虑"
 #: code:addons/hr/static/src/views/hr_graph_controller.xml:0
 #: code:addons/hr/static/src/views/hr_pivot_controller.xml:0
 msgid "No Data"
-msgstr ""
+msgstr "无数据"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
@@ -2317,6 +2323,8 @@ msgid ""
 "that loop is linked to a user.                        Please double-check "
 "that everyone reports to the correct manager."
 msgstr ""
+"哎呀！您的团队结构似乎有问题。 我们发现了一个循环报告循环，该循环中没有人与用户相关联。                        "
+"请仔细检查每个人都向正确的经理报告。"
 
 #. module: hr
 #. odoo-javascript
@@ -2355,7 +2363,7 @@ msgstr "我们的产品"
 #. odoo-javascript
 #: code:addons/hr/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "非工作时间"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
@@ -2365,7 +2373,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
 msgid "Out of Working hours"
-msgstr ""
+msgstr "非工作时间"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -3150,7 +3158,7 @@ msgstr "PIN码必须是一串数字。"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
-msgstr ""
+msgstr "默认工作时间在配置中设置。"
 
 #. module: hr
 #. odoo-python
@@ -3688,12 +3696,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. johndoe@example.com"
-msgstr ""
+msgstr "例如：johndoe@example.com"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. myprivateemail@example.com"
-msgstr ""
+msgstr "例如：myprivateemail@example.com"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__distance_home_work_unit__kilometers

@@ -1714,6 +1714,14 @@ msgstr "الحساب "
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
+"Account %(account)s will be split in %(num_accounts)s, one for each "
+"company:\n"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The"
 " unmerge operation only splits an account based on its companies."
 msgstr ""
@@ -3042,9 +3050,8 @@ msgstr "مؤرشف"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"Are you sure? This will split the account into one account per company:"
-msgstr "هل أنت متأكد؟ سيؤدي ذلك إلى تقسيم الحساب إلى حساب واحد لكل شركة: "
+msgid "Are you sure? This will perform the following operations:\n"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3361,6 +3368,12 @@ msgstr "البنك"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank & Cash"
 msgstr "البنك والنقد "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank & Cash accounts cannot be shared between companies."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -17945,6 +17958,12 @@ msgstr "لا يمكنك حذف بند ضريبي، حيث إنه سيؤثر عل
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "You cannot delete journal items belonging to a locked journal entry."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -18329,12 +18348,6 @@ msgid ""
 msgstr ""
 "عليك تهيئة 'يومية أرباح أو خسائر الصرف' في إعدادات شركتك حتى تتمكن من إدارة "
 "تدوين القيود المحاسبية ذات الصلة بالاختلافات بين أسعار الصرف تلقائياً. "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid "You must select a single account to un-merge."
-msgstr "عليك تحديد حساب واحد لإلغاء الدمج. "
 
 #. module: account
 #. odoo-python

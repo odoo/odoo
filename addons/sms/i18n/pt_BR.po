@@ -1270,6 +1270,11 @@ msgid "Send Now"
 msgstr "Enviar agora"
 
 #. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_button/sms_button.js:0
+#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_multi
+#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_single
+#: model:ir.actions.act_window,name:sms.sms_composer_action_form
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send SMS"
@@ -1288,20 +1293,6 @@ msgid "Send SMS As"
 msgstr "Enviar SMS como"
 
 #. module: sms
-#. odoo-javascript
-#: code:addons/sms/static/src/components/sms_button/sms_button.js:0
-#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_multi
-#: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_single
-#: model:ir.actions.act_window,name:sms.sms_composer_action_form
-msgid "Send SMS Text Message"
-msgstr "Enviar mensagem de texto por SMS"
-
-#. module: sms
-#: model:iap.service,description:sms.iap_service_sms
-msgid "Send SMS Text Messages to your contacts directly from your database."
-msgstr ""
-
-#. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
 msgstr "Assistente de envio de SMS"
@@ -1310,6 +1301,11 @@ msgstr "Assistente de envio de SMS"
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
 msgid "Send SMS in batch"
 msgstr "Enviar SMS em lote"
+
+#. module: sms
+#: model:iap.service,description:sms.iap_service_sms
+msgid "Send SMS to your contacts directly from your database."
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

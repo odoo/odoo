@@ -577,7 +577,7 @@ msgstr "No se debe crear un chat con más de 2 personas. Mejor cree un grupo."
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "A message can only be scheduled in monocomment mode"
-msgstr ""
+msgstr "Solo puede programar un mensaje en modo monocomentario"
 
 #. module: mail
 #. odoo-python
@@ -585,6 +585,8 @@ msgstr ""
 msgid ""
 "A message cannot be scheduled on a model that does not have a mail thread."
 msgstr ""
+"No es posible programar un mensaje en un modelo que no tiene un hilo de "
+"correo."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
@@ -1837,7 +1839,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_bus_listener_mixin
 msgid "Can send messages via bus.bus"
-msgstr ""
+msgstr "Puede enviar mensajes mediante bus.bus"
 
 #. module: mail
 #. odoo-javascript
@@ -1937,6 +1939,8 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
+"No se puede cambiar el mensaje inicial ni el canal principal de: "
+"%(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -1950,6 +1954,8 @@ msgstr "No se puede cambiar el tipo de canal de: %(channel_names)s"
 msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel."
 msgstr ""
+"No se puede crear %(channels)s: el mensaje inicial debe pertenecer al canal "
+"principal."
 
 #. module: mail
 #. odoo-python
@@ -1958,6 +1964,8 @@ msgid ""
 "Cannot create %(channels)s: parent should not be a sub-channel and should be"
 " of type 'channel'."
 msgstr ""
+"No se puede crear %(channels)s: el canal principal no debe ser un subcanal y"
+" debe ser del tipo \"canal\"."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2162,7 +2170,7 @@ msgstr "Seleccione la asignación para actividades con asignación a petición."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.xml:0
 msgid "Clear quick search"
-msgstr ""
+msgstr "Limpiar búsqueda rápida"
 
 #. module: mail
 #. odoo-javascript
@@ -2190,7 +2198,7 @@ msgstr "Cerrar"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_bubble.xml:0
 msgid "Close Chat Bubble"
-msgstr ""
+msgstr "Cerrar burbuja de chat"
 
 #. module: mail
 #. odoo-javascript
@@ -2523,7 +2531,7 @@ msgstr "Conversación plegada"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Copy Message Link"
-msgstr ""
+msgstr "Copiar enlace del mensaje"
 
 #. module: mail
 #. odoo-python
@@ -4181,7 +4189,7 @@ msgstr "Desde"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__from_message_id
 msgid "From Message"
-msgstr ""
+msgstr "Mensaje de"
 
 #. module: mail
 #. odoo-javascript
@@ -4303,6 +4311,8 @@ msgid ""
 "Group public id should not be set on sub-channels as access is based on "
 "parent channel"
 msgstr ""
+"No debe establecer el ID público del grupo en los subcanales, el acceso está"
+" basado en el canal principal"
 
 #. module: mail
 #. odoo-javascript
@@ -4742,7 +4752,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_scheduled_message__is_note
 msgid "If the message will be posted as a Note."
-msgstr ""
+msgstr "Si el mensaje se registrará como una nota."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__reply_to_force_new
@@ -5344,7 +5354,7 @@ msgstr "Idioma"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Large windows"
-msgstr ""
+msgstr "Ventanas grandes"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__date
@@ -5534,7 +5544,7 @@ msgstr "Enlace copiado"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 msgid "List Activity"
-msgstr ""
+msgstr "Lista de actividades"
 
 #. module: mail
 #. odoo-javascript
@@ -5828,7 +5838,7 @@ msgstr "Correo: servicio de Fetchmail"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_post_scheduled_message_ir_actions_server
 msgid "Mail: Post scheduled messages"
-msgstr ""
+msgstr "Correo: Publicar los mensajes programados"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_web_push_notification_ir_actions_server
@@ -5872,13 +5882,13 @@ msgstr "Archivo adjunto principal"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Make chats bigger"
-msgstr ""
+msgstr "Hacer chats más grandes"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Make chats smaller"
-msgstr ""
+msgstr "Hacer chats más pequeños"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
@@ -6031,13 +6041,13 @@ msgstr "Mensaje"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message \"%(subChannelName)s\""
-msgstr ""
+msgstr "Mensaje para \"%(subChannelName)s\""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message #%(threadName)s…"
-msgstr ""
+msgstr "Mensaje #%(threadName)s…"
 
 #. module: mail
 #. odoo-javascript
@@ -6066,13 +6076,15 @@ msgstr "ID del mensaje"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copied!"
-msgstr ""
+msgstr "Enlace del mensaje copiado"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "Message Link Copy Failed (Permission denied?)!"
 msgstr ""
+"Ocurrió un error al copiar el enlace del mensaje (es probable que no cuente "
+"con los permisos adecuados)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -6219,7 +6231,7 @@ msgstr "Buscar mensajes"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
 msgid "Messages can only be linked to one sub-channel"
-msgstr ""
+msgstr "Los mensajes solo pueden vincularse a un subcanal"
 
 #. module: mail
 #. odoo-javascript
@@ -6708,7 +6720,7 @@ msgstr "Sin probar"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_invite
 msgid "Not interested by this?"
-msgstr ""
+msgstr "¿No le interesa?"
 
 #. module: mail
 #. odoo-javascript
@@ -6813,7 +6825,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 msgid "Notification: Notify scheduled messages"
-msgstr ""
+msgstr "Notificación: notificar acerca de los mensajes programados"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_notification_action
@@ -6840,7 +6852,7 @@ msgstr "Notificaciones bloqueadas"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__notify
 msgid "Notify Recipients"
-msgstr ""
+msgstr "Notificar a los destinatarios"
 
 #. module: mail
 #. odoo-javascript
@@ -6949,7 +6961,7 @@ msgstr "Desconectado"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 msgid "Offline - %(offline_count)s"
-msgstr ""
+msgstr "Desconectado - %(offline_count)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -6999,7 +7011,7 @@ msgstr "En línea"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.js:0
 msgid "Online - %(online_count)s"
-msgstr ""
+msgstr "Conectado - %(online_count)s"
 
 #. module: mail
 #. odoo-python
@@ -7031,6 +7043,8 @@ msgid ""
 "Only members of %(group_name)s group are allowed to edit templates "
 "containing sensible placeholders"
 msgstr ""
+"Solo los miembros del grupo %(group_name)s pueden editar plantillas que "
+"contienen marcadores de posición "
 
 #. module: mail
 #. odoo-python
@@ -7066,7 +7080,7 @@ msgstr "Abrir el menú de acciones"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_window.xml:0
 msgid "Open Channel"
-msgstr ""
+msgstr "Abrir canal"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
@@ -7284,7 +7298,7 @@ msgstr "Anular correo electrónico del autor"
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.js:0
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Overwrite Template"
-msgstr ""
+msgstr "Sobrescribir plantilla"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -7454,7 +7468,7 @@ msgstr "Llamada"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
 msgid "Pick a specific time"
-msgstr ""
+msgstr "Elija una hora específica"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -8157,7 +8171,7 @@ msgstr "Información de campo eliminada"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
 msgid "Rename Thread"
-msgstr ""
+msgstr "Renombrar hilo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__render_model
@@ -8577,7 +8591,7 @@ msgstr "Buscar sesión de comunicación en tiempo real"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search Sub Channels"
-msgstr ""
+msgstr "Buscar subcanales"
 
 #. module: mail
 #. odoo-javascript
@@ -8761,7 +8775,7 @@ msgstr "Enviar correo electrónico como"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/mail_composer_send_dropdown.xml:0
 msgid "Send Later"
-msgstr ""
+msgstr "Enviar después"
 
 #. module: mail
 #. odoo-python
@@ -8896,7 +8910,7 @@ msgstr "Error de servidor"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Server is muted"
-msgstr ""
+msgstr "El servidor está silenciado"
 
 #. module: mail
 #. odoo-python
@@ -8954,7 +8968,7 @@ msgstr "Respuestas predefinidas compartidas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Shared with all users."
-msgstr ""
+msgstr "Compartido con todos los usuarios. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__source
@@ -9227,7 +9241,7 @@ msgstr "Cadena recibida de la solicitud de traducción."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__sub_channel_ids
 msgid "Sub Channels"
-msgstr ""
+msgstr "Subcanales"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subject
@@ -9592,7 +9606,7 @@ msgstr "El tipo de canal no puede estar vacío"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "The conversation is empty."
-msgstr ""
+msgstr "La conversación está vacía. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
@@ -9615,6 +9629,8 @@ msgstr "El correo electrónico que se envió a"
 #: code:addons/mail/wizard/mail_template_reset.py:0
 msgid "The email template(s) have been restored to their original settings."
 msgstr ""
+"Las plantillas de correo electrónico fueron restauradas a sus ajustes "
+"originales."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_push_device_endpoint_unique
@@ -9672,7 +9688,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
 msgid "The message the channel was created from."
-msgstr ""
+msgstr "El mensaje desde el que se creó el canal."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
@@ -9732,6 +9748,11 @@ msgid ""
 "\n"
 "Records: %(records)s, User: %(user)s"
 msgstr ""
+"No se pudo completar la operación por restricciones de seguridad. Contacte al administrador del sistema.\n"
+"\n"
+"(Tipo de documento: %(type)s, Operación: %(operation)s)\n"
+"\n"
+"Registros: %(records)s, Usuario: %(user)s"
 
 #. module: mail
 #. odoo-python
@@ -9802,7 +9823,7 @@ msgstr "Este canal no tiene ningún mensaje fijado."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "This channel has no thread yet."
-msgstr ""
+msgstr "Este canal aún no cuenta con hilos. "
 
 #. module: mail
 #. odoo-javascript
@@ -9856,7 +9877,7 @@ msgstr "Parece que este diseño ya no existe."
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message_model.js:0
 msgid "This message has already been sent."
-msgstr ""
+msgstr "Este mensaje ya fue enviado. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__auto_delete
@@ -9927,7 +9948,7 @@ msgstr "Imagen del hilo"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.xml:0
 msgid "Thread has unread messages"
-msgstr ""
+msgstr "El hilo tiene mensajes sin leer"
 
 #. module: mail
 #. odoo-javascript
@@ -10086,13 +10107,13 @@ msgstr "Mañana"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
 msgid "Tomorrow Afternoon"
-msgstr ""
+msgstr "Mañana por la tarde"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/mail_composer_schedule_dialog.xml:0
 msgid "Tomorrow Morning"
-msgstr ""
+msgstr "Mañana por la mañana"
 
 #. module: mail
 #. odoo-javascript
@@ -10409,7 +10430,7 @@ msgstr "Archivos adjuntos sin restricción"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Unselect person"
-msgstr ""
+msgstr "Desmarcar persona"
 
 #. module: mail
 #. odoo-javascript
@@ -10450,7 +10471,7 @@ msgstr "Actualizar diseño del correo"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.js:0
 msgid "Update Template"
-msgstr ""
+msgstr "Actualizar plantilla"
 
 #. module: mail
 #. odoo-javascript
@@ -10852,7 +10873,7 @@ msgstr "Grabación de voz detenida"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Voice settings"
-msgstr ""
+msgstr "Ajustes de voz"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__volume
@@ -11070,12 +11091,13 @@ msgstr "Ya no está siguiendo \"%(thread_name)s\"."
 msgid ""
 "You are not allowed to change the target record of a scheduled message."
 msgstr ""
+"No tiene permiso para cambiar el registro objetivo de un mensaje programado."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "You are not allowed to send this scheduled message"
-msgstr ""
+msgstr "No tiene permitido enviar este mensaje programado"
 
 #. module: mail
 #. odoo-python

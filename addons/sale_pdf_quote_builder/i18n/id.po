@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Tiffany Chang, 2024
-# Abe Manyo, 2024
 # Wil Odoo, 2024
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +33,12 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span class=\"pe-2\">Templates:</span>"
-msgstr ""
+msgstr "<span class=\"pe-2\">Templat:</span>"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span>Document type:</span>"
-msgstr ""
+msgstr "<span>Tipe dokumen:</span>"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -47,6 +47,8 @@ msgid ""
 "A form field set as used in product documents can't be linked to a quotation"
 " document."
 msgstr ""
+"Field formulir yang ditetapkan sebagai digunakan di dokumen produk tidak "
+"dapat dihubungkan ke dokumen quotation."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -55,6 +57,8 @@ msgid ""
 "A form field set as used in quotation documents can't be linked to a product"
 " document."
 msgstr ""
+"Field formulir yang ditetapkan sebagai dokumen quotation tidak dapat "
+"dihubungkan ke dokumen produk."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
@@ -88,6 +92,13 @@ msgid ""
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
 "Inside quote: The document will be included in the pdf of the quotation and sale order between the header pages and the quote table. "
 msgstr ""
+"Memungkinkan Anda untuk membagikan dokumen dengan pelanggan Anda dalam sale.\n"
+"Biarkan kosong bila Anda tidak ingin membagikan dokumen ini dengan pelanggan sales.\n"
+"Pada quote: dokumen akan dikirim ke dan dapat diakses oleh pelanggan kapanpun juga.\n"
+"Pada konfirmasi pesanan: dokumen akan dikirim ke dan dapat diakses oleh pelanggan.\n"
+"contoh opsi ini dapat berguna untuk membagikan User Manual atau konten digital yang dibeli pada ecommerce.\n"
+"Di dalam quote: Dokumen akan dimasukkan dalam pdf quotation \n"
+"dan sales order di antara halaman header dan table quotation."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -109,7 +120,7 @@ msgstr "URL Lampiran"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__available_product_document_ids
 msgid "Available Product Documents"
-msgstr ""
+msgstr "Dokumen Produk Tersedia"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__checksum
@@ -120,7 +131,7 @@ msgstr "Checksum/SHA1"
 #. odoo-javascript
 #: code:addons/sale_pdf_quote_builder/static/src/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card.js:0
 msgid "Click to write content for the PDF quote..."
-msgstr ""
+msgstr "Klik untuk menulis konten untuk PDF quotation..."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__company_id
@@ -158,12 +169,12 @@ msgstr "Pembuatan"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
 msgid "Customizable"
-msgstr ""
+msgstr "Dapat Dikustomisasi"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__customizable_pdf_form_fields
 msgid "Customizable PDF Form Fields"
-msgstr ""
+msgstr "Kustomisasikan Field Formulir PDF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__db_datas
@@ -195,7 +206,7 @@ msgstr "Tipe Dokumen"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Document type"
-msgstr ""
+msgstr "Tipe dokumen"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
@@ -237,30 +248,30 @@ msgstr "Catatan Kaki"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "Form Field Name"
-msgstr ""
+msgstr "Nama Field Formulir"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Form Fields"
-msgstr ""
+msgstr "Field-Field Formulir"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__form_field_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__form_field_ids
 msgid "Form Fields Included"
-msgstr ""
+msgstr "Termasuk Field-FIeld Formulir"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
 msgid "Form field name must be unique for a given document type."
-msgstr ""
+msgstr "Nama field formulir harus unik untuk tipe dokumen tersebut."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
 msgid "Form fields of inside quotation documents."
-msgstr ""
+msgstr "Form fields of inside quotation documents."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
@@ -282,7 +293,7 @@ msgstr "Header/Footer"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__quotation_document_ids
 msgid "Headers and footers"
-msgstr ""
+msgstr "Header dan footer"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.act_window,name:sale_pdf_quote_builder.quotation_document_action
@@ -290,7 +301,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sale_pdf_quote_builder.sale_menu_quotation_document_action
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid "Headers/Footers"
-msgstr ""
+msgstr "Header/Footer"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
@@ -309,6 +320,8 @@ msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
 msgstr ""
+"Bila tidak dicentang, ini akan menungkan Anda untuk menyembunyikan header "
+"atau footer tanpa menghapusnya."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
@@ -368,7 +381,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
 msgid "Is Pdf Quote Builder Available"
-msgstr ""
+msgstr "Apakah PDF Quote Builder Tersedia"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__public
@@ -405,7 +418,7 @@ msgstr "Terakhir Diperbarui pada"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Mark fields as safe to fill in the quote."
-msgstr ""
+msgstr "Tandai field sebagai aman untuk mengisi quotation."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__mimetype
@@ -433,7 +446,7 @@ msgstr "Hanya dokumen PDF yang dapat dilampirkan di dalam quote."
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Only PDF documents can be used as header or footer."
-msgstr ""
+msgstr "Hanya PDF dokumen yang dapat digunakan sebagai header atau footer."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
@@ -452,12 +465,15 @@ msgid ""
 "                <br>\n"
 "                to boost your sales."
 msgstr ""
+"Personalisasikan quotation Anda dengan header dan footer halaman yang menarik\n"
+"                <br>\n"
+"                untuk mendorong sales Anda."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "Please use only relational fields until the last value of your path."
-msgstr ""
+msgstr "Hanya gunakan relational field sampai value terakhir path Anda."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -475,7 +491,7 @@ msgstr "Dokumen Produk"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__product_document_ids
 msgid "Product Documents"
-msgstr ""
+msgstr "Dokumen-Dokumen Produk"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -486,6 +502,11 @@ msgid ""
 "                        details of the quote and then the footer pages. <br/>\n"
 "                        If empty, it will use those define in the company settings. <br/>"
 msgstr ""
+" Sediakan halaman header dan footer untuk membuat quotation yang menarik\n"
+"                        dengan lebih banyak informasi mengenai perusahaan, produk dan layanan Anda. <br/>\n"
+"                        PDF quotation Anda akan dibuat dengan menggabungkan header halaman, keterangan produk\n"
+"                        detail quotation dan footer halaman. <br/>\n"
+"                        Bila kosong, akan menggunakan yang di pengaturan perusahaan. <br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -495,12 +516,12 @@ msgstr "Penawaran / Order"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Quotation Document"
-msgstr ""
+msgstr "Dokumen Quotation"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__quotation_document_ids
 msgid "Quotation Documents"
-msgstr ""
+msgstr "Dokumen-Dokumen Quotation"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
@@ -516,13 +537,13 @@ msgstr "Kutipan template"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_quotation_document
 msgid "Quotation's Headers & Footers"
-msgstr ""
+msgstr "Header & Footer Quotation"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Quote Builder"
-msgstr ""
+msgstr "Quote Builder"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
@@ -563,6 +584,7 @@ msgstr "Sale : Tampak pada"
 #: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
 msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
 msgstr ""
+"PDF Quote Builder Sales: berikan field formulir ke upgrade post dokumen"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -593,7 +615,7 @@ msgstr "Field %(field_name)s tidak tersedia pada model %(model_name)s"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "The form field name as written in the PDF."
-msgstr ""
+msgstr "Nama field formulir sesuai yang ditulis di PDF."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__path
@@ -601,6 +623,8 @@ msgid ""
 "The path to follow to dynamically fill the form field. \n"
 "Leave empty to be able to customized it in the quotation form."
 msgstr ""
+"Path untuk diikuti untuk secara dinamis mengisi field formulir.\n"
+"Biarkan kosong untuk dapat mengustomisasinya di formulir quotation."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
@@ -608,6 +632,8 @@ msgid ""
 "The product documents for this order line that will be merged in the PDF "
 "quote."
 msgstr ""
+"Dokumen-dokumen produk untuk baris pesanan ini yang akan digabungkan di PDF "
+"quote."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__theme_template_id
@@ -617,7 +643,7 @@ msgstr "Templat Tema"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
 msgid "This document"
-msgstr ""
+msgstr "Dokumen ini"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__type
@@ -627,7 +653,7 @@ msgstr "Tipe"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
 msgid "Upload quotation headers and footers"
-msgstr ""
+msgstr "Unggah header dan footer quotation"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2024
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:54+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,12 @@ msgid ""
 "        Select 'General' for miscellaneous operations journals.\n"
 "        "
 msgstr ""
+"\n"
+"        選擇「銷售」以使用客戶發票日記賬。\n"
+"        選擇「採購」以使用供應商賬單日記賬。\n"
+"        選擇「現金」、「銀行」或「信用卡」以使用客戶或供應商付款日記賬。\n"
+"        選擇「一般」以使用雜項操作日記賬。\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -1116,7 +1122,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "<span invisible=\"user_id\">everyone</span>"
-msgstr ""
+msgstr "<span invisible=\"user_id\">所有人</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1657,6 +1663,14 @@ msgstr "存取警告"
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Account"
 msgstr "帳戶"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+msgid ""
+"Account %(account)s will be split in %(num_accounts)s, one for each "
+"company:\n"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -2948,8 +2962,7 @@ msgstr "已封存"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"Are you sure? This will split the account into one account per company:"
+msgid "Are you sure? This will perform the following operations:\n"
 msgstr ""
 
 #. module: account
@@ -3269,6 +3282,12 @@ msgid "Bank & Cash"
 msgstr "銀行及現金"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Bank & Cash accounts cannot be shared between companies."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Bank Account"
@@ -3544,7 +3563,7 @@ msgstr "在之前"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
 msgid "Before Next Payment Date"
-msgstr ""
+msgstr "下次付款日期之前"
 
 #. module: account
 #. odoo-python
@@ -4275,7 +4294,7 @@ msgstr "代號起首最小值"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_store
 msgid "Code Store"
-msgstr ""
+msgstr "商店代碼"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5406,13 +5425,13 @@ msgstr "截止"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label}"
-msgstr ""
+msgstr "截數 {label}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label} {percent}%"
-msgstr ""
+msgstr "截數 {label} {percent}%"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -9771,7 +9790,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
-msgstr ""
+msgstr "配對"
 
 #. module: account
 #: model:ir.model,name:account.model_account_code_mapping
@@ -10141,13 +10160,13 @@ msgstr "多公司"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
 msgid "Multi-Ledger"
-msgstr ""
+msgstr "多個分類賬"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Multi-ledger"
-msgstr ""
+msgstr "多個分類賬"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__direction_sign
@@ -10411,7 +10430,7 @@ msgstr "未找到所選明細的可能操作."
 msgid ""
 "No users can edit accounts prior to and inclusive of this date. Use it for "
 "fiscal year locking for example."
-msgstr ""
+msgstr "沒有使用者可編輯此日期之前（包括當天）的賬戶記錄。舉例，可用於財政年度鎖定。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__tax_lock_date
@@ -10485,7 +10504,7 @@ msgstr "未到期"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
 msgid "Not Hashable Unlocked Move"
-msgstr ""
+msgstr "不可雜湊的未鎖定分錄"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
@@ -10593,7 +10612,7 @@ msgstr "動作數量"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_autopost_bills_wizard__nb_unmodified_bills
 msgid "Number of bills previously unmodified from this partner"
-msgstr ""
+msgstr "此合作夥伴之前未修改的賬單數目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
@@ -10957,7 +10976,7 @@ msgstr "原始帳單"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__company_lock_date
 msgid "Original Lock Date"
-msgstr ""
+msgstr "原本鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
@@ -11097,7 +11116,7 @@ msgstr "逾期付款，到期日已過"
 msgid ""
 "Overrides the Company's default on whether the price you use on the product "
 "and invoices includes this tax."
-msgstr ""
+msgstr "會凌駕公司產品及發票價格是否包含此稅的預設設定。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -11313,7 +11332,7 @@ msgstr "合作夥伴類型"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_vat_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_vat_placeholder
 msgid "Partner Vat Placeholder"
-msgstr ""
+msgstr "合作夥伴增值稅佔位符"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
@@ -11859,7 +11878,7 @@ msgstr "前項小計"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__preferred_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
-msgstr ""
+msgstr "首選付款方式資料行"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_outbound_payment_method_line_id
@@ -11867,7 +11886,7 @@ msgstr ""
 msgid ""
 "Preferred payment method when buying from this vendor. This will be set by "
 "default on all outgoing payments created for this vendor"
-msgstr ""
+msgstr "向此供應商採購時的首選付款方式。為此供應商建立的所有對外付款，預設會使用此方式。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_inbound_payment_method_line_id
@@ -11875,7 +11894,7 @@ msgstr ""
 msgid ""
 "Preferred payment method when selling to this customer. This will be set by "
 "default on all incoming payments created for this customer"
-msgstr ""
+msgstr "向此客戶銷售時的首選付款方式。為此客戶建立的所有收款，預設會使用此方式。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
@@ -11936,14 +11955,14 @@ msgstr "請在應收憑單和應付款匹配期間建立日記帳分錄"
 msgid ""
 "Prevents creation and modification of entries in purchase journals up to the"
 " defined date inclusive."
-msgstr ""
+msgstr "禁止在採購日記賬內，建立或修改在設定日期之前（包括當天）的記項。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__sale_lock_date
 msgid ""
 "Prevents creation and modification of entries in sales journals up to the "
 "defined date inclusive."
-msgstr ""
+msgstr "禁止在銷售日記賬內，建立或修改在設定日期之前（包括當天）的記項。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12100,13 +12119,13 @@ msgstr "利潤科目"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr ""
+msgstr "對內收款方式資料行屬性"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "對外付款方式資料行屬性"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -12118,12 +12137,12 @@ msgstr "採購"
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__purchase_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__purchase_lock_date
 msgid "Purchase Lock Date"
-msgstr ""
+msgstr "採購鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__purchase_lock_date
 msgid "Purchase Lock date"
-msgstr ""
+msgstr "採購鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_purchase_receipts
@@ -12329,7 +12348,7 @@ msgstr "根據此財務規則重新計算所有稅款及賬戶"
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Reconcilable"
-msgstr ""
+msgstr "可完成對賬"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
@@ -12853,7 +12872,7 @@ msgstr "未完成結餘"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_iso20022
 msgid "SEPA Credit Transfer / ISO20022"
-msgstr ""
+msgstr "SEPA 轉賬付款 / ISO 20022"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12931,7 +12950,7 @@ msgstr "銷售開支"
 #: model:ir.model.fields,field_description:account.field_res_company__sale_lock_date
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__lock_date_field__sale_lock_date
 msgid "Sales Lock Date"
-msgstr ""
+msgstr "銷售鎖定日期"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
@@ -13149,7 +13168,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 msgid "Secure Posted Entries with Hash"
-msgstr ""
+msgstr "雜湊保護已過賬記項"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secured
@@ -13313,7 +13332,7 @@ msgstr "正在傳送數據"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__sending_method_checkboxes
 msgid "Sending Method Checkboxes"
-msgstr ""
+msgstr "傳送方式勾選方格"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__sending_methods
@@ -13596,7 +13615,7 @@ msgstr "顯示合作夥伴銀行帳戶"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_payment_difference
 msgid "Show Payment Difference"
-msgstr ""
+msgstr "顯示付款差異"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
@@ -13829,7 +13848,7 @@ msgstr "狀態"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__status_in_payment
 #: model:ir.model.fields,field_description:account.field_account_move__status_in_payment
 msgid "Status In Payment"
-msgstr ""
+msgstr "付款狀態"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_state
@@ -14350,17 +14369,17 @@ msgstr "包含該公司使用稅金相關功能的國家/地區的技術欄位(�
 msgid ""
 "Technical field giving the date the company lock date at the time the "
 "exception was created."
-msgstr ""
+msgstr "技術欄位，表示建立例外時的公司鎖定日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date
 msgid "Technical field giving the date the lock date was changed to."
-msgstr ""
+msgstr "技術欄位，表示鎖定日期更改為的日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__lock_date_field
 msgid "Technical field identifying the changed lock date"
-msgstr ""
+msgstr "技術欄位，用作識別已更改的鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -14787,28 +14806,28 @@ msgstr ""
 msgid ""
 "The date the Global Lock Date is set to by this exception. If the lock date "
 "is not changed it is set to the maximal date."
-msgstr ""
+msgstr "此例外設定的全域鎖定日期。如果未有更改鎖定日期，會設為最大日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__purchase_lock_date
 msgid ""
 "The date the Purchase Lock Date is set to by this exception. If the lock "
 "date is not changed it is set to the maximal date."
-msgstr ""
+msgstr "此例外設定的採購鎖定日期。如果未有更改鎖定日期，會設為最大日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__sale_lock_date
 msgid ""
 "The date the Sale Lock Date is set to by this exception. If the lock date is"
 " not changed it is set to the maximal date."
-msgstr ""
+msgstr "此例外設定的銷售鎖定日期。如果未有更改鎖定日期，會設為最大日期。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__tax_lock_date
 msgid ""
 "The date the Tax Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
-msgstr ""
+msgstr "此例外設定的稅務鎖定日期。如果未有更改鎖定日期，會設為最大日期。"
 
 #. module: account
 #. odoo-python
@@ -14845,7 +14864,7 @@ msgstr "記項 %(name)s（識別碼 %(id)s）必須為草稿。"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
-msgstr ""
+msgstr "記項會以無法更改的雜湊值進行保護。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -15258,7 +15277,7 @@ msgstr "報表上定義的分節，不可再包含分節。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
 msgid "The selected Date"
-msgstr ""
+msgstr "所選日期"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -15882,7 +15901,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_merge_wizard__is_group_by_name
 msgid ""
 "Tick this checkbox if you want accounts to be grouped by name for merging."
-msgstr ""
+msgstr "若想將賬戶按名稱分組以進行合併，請勾選此方格。"
 
 #. module: account
 #: model:digest.tip,name:account.digest_tip_account_0
@@ -16365,7 +16384,7 @@ msgstr "取消標記為已發送"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Unmerge"
-msgstr ""
+msgstr "取消合併"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
@@ -16414,7 +16433,7 @@ msgstr "尚未核銷"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
 msgid "Unreconciled Bank Statement Line"
-msgstr ""
+msgstr "未對賬銀行結單資料行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
@@ -16448,7 +16467,7 @@ msgstr "未含稅金額簽署"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_in_currency_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_in_currency_signed
 msgid "Untaxed Amount Signed Currency"
-msgstr ""
+msgstr "未連稅金額，連貨幣符號"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal_currency
@@ -16595,7 +16614,7 @@ msgstr "用於稅務結算"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
 msgid "Use the most recent rate at the date of the report"
-msgstr ""
+msgstr "使用報表日期的最新匯率"
 
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
@@ -16661,7 +16680,7 @@ msgstr "使用者"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_fiscalyear_lock_date
 msgid "User Fiscalyear Lock Date"
-msgstr ""
+msgstr "使用者財政年度鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__user_groupby
@@ -16671,7 +16690,7 @@ msgstr "用戶分組依據"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_hard_lock_date
 msgid "User Hard Lock Date"
-msgstr ""
+msgstr "使用者硬性鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
@@ -16682,17 +16701,17 @@ msgstr "用戶有群組驗證銀行賬戶"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_purchase_lock_date
 msgid "User Purchase Lock Date"
-msgstr ""
+msgstr "使用者採購鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_sale_lock_date
 msgid "User Sale Lock Date"
-msgstr ""
+msgstr "使用者銷售鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_tax_lock_date
 msgid "User Tax Lock Date"
-msgstr ""
+msgstr "使用者稅務鎖定日期"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
@@ -17425,6 +17444,12 @@ msgstr "您不能刪除稅金明細，因為它會影響稅金務報表"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "You cannot delete journal items belonging to a locked journal entry."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account_tag.py:0
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
@@ -17771,12 +17796,6 @@ msgstr "你必須在公司設定中，設定「匯兌損益日記賬」，以自
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid "You must select a single account to un-merge."
-msgstr ""
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr ""
@@ -18037,7 +18056,7 @@ msgstr "記項"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "everyone"
-msgstr ""
+msgstr "所有人"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -18075,7 +18094,7 @@ msgstr "百分比"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "invoice(s)"
-msgstr ""
+msgstr "發票"
 
 #. module: account
 #. odoo-python

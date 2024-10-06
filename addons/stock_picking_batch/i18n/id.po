@@ -28,7 +28,7 @@ msgstr "2023-08-20"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "<span class=\"col-6\">Waves</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Waves</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -36,6 +36,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
 "style=\"white-space: nowrap;\">Wave Grouping</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\" "
+"style=\"white-space: nowrap;\">Pengelompokkan Wave</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -43,6 +45,8 @@ msgid ""
 "<span class=\"o_form_label fw-bold\" invisible=\"not auto_batch\">Batch "
 "Grouping</span>"
 msgstr ""
+"<span class=\"o_form_label fw-bold\" invisible=\"not "
+"auto_batch\">Pengelompokkan Batch</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -231,7 +235,7 @@ msgstr "Batch"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch & Wave Transfers"
-msgstr ""
+msgstr "Transfer Batch & Wave"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -241,7 +245,7 @@ msgstr "Nama Batch"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_properties_definition
 msgid "Batch Properties"
-msgstr ""
+msgstr "Properti-Properti Batch"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -285,7 +289,7 @@ msgstr "Batch terkait transfer ini"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Batch transfers"
-msgstr ""
+msgstr "Transfer-transfer batch"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -318,7 +322,7 @@ msgstr "Tidak dapat membuat transfer wave"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_category_ids
 msgid "Categories to consider when grouping waves."
-msgstr ""
+msgstr "Kategori untuk dipertimbangkan saat mengelompokkan wave."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -341,7 +345,7 @@ msgstr "Pilih Tipe Label Untuk Dicetak"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Cluster transfers"
-msgstr ""
+msgstr "Transfer cluster"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -454,12 +458,12 @@ msgstr "Dikelompokkan berdasarkan"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Group by Destination Location"
-msgstr ""
+msgstr "Kelompokkan berdasarkan Lokasi Tujuan"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Group by Source Location"
-msgstr ""
+msgstr "Kelompokkan berdasarkan Lokasi Sumber"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -560,6 +564,8 @@ msgid ""
 "Launch picking orders by aisle or area and regroup at packing zone. Ideal "
 "for large warehouses."
 msgstr ""
+"Jalankan pesanan picking berdasarkan aisle atau area dan kelompokkan ulang "
+"di zona packing. Ideal untuk gudang besar."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__line_ids
@@ -589,7 +595,7 @@ msgstr "Nama Lokasi Ke"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_location_ids
 msgid "Locations to consider when grouping waves."
-msgstr ""
+msgstr "Lokasi untuk dipertimbangkan saat mengelompokkan wave."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -599,12 +605,12 @@ msgstr "Nomor Lot"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid "Maximum lines"
-msgstr ""
+msgstr "Baris maksimum"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers"
-msgstr ""
+msgstr "Transfer maksimum"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -699,6 +705,9 @@ msgid ""
 "Pick multiple orders in one trip and prepare orders as you pick. This "
 "reduces packing time and is ideal for small products."
 msgstr ""
+"Pick lebih dari satu pesanan dalam satu perjalanan dan siapkan pesanan "
+"selagi Anda memilih. Ini mengurangi waktu packing dan ideal untuk produk "
+"kecil."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
@@ -722,7 +731,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Prepare Batch"
-msgstr ""
+msgstr "Siapkan Batch"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.action_prepare_wave
@@ -731,7 +740,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_kanban
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_wave_tree
 msgid "Prepare Wave"
-msgstr ""
+msgstr "Siapkan Wave"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -801,6 +810,8 @@ msgid ""
 "Regroup multiple orders into one picking and consolidate at the packing "
 "zone."
 msgstr ""
+"Kelompokkan ulang lebih dari satu pesanan menjadi satu picking dan "
+"konsolidasikan pada zona packing."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -852,12 +863,12 @@ msgstr "Cari Transfer Batch"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Select locations you want to group"
-msgstr ""
+msgstr "Pilih lokasi yang Anda ingin kelompokkan"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Select product categories you want to group"
-msgstr ""
+msgstr "Pilih kategori produk yang Anda ingin kelompokkan"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_sequence
@@ -895,6 +906,8 @@ msgid ""
 "Split transfers by defined locations, then group transfers with the same "
 "location."
 msgstr ""
+"Pisah transfer berdasarkan lokasi yang didefinisikan, lalu transfer kelompok"
+" dengan lokasi yang sama."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_category
@@ -902,12 +915,16 @@ msgid ""
 "Split transfers by product category, then group transfers that have the same"
 " product category."
 msgstr ""
+"Pisah transfer berdasarkan kategori produk, lalu kelompokkan transfer yang "
+"memiliki kategori produk yang sama."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__wave_group_by_product
 msgid ""
 "Split transfers by product then group transfers that have the same product."
 msgstr ""
+"Pisah transfer berdasarkan produk lalu transfer kelompok yang masih memiliki"
+" produk yang sama."
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -1082,12 +1099,12 @@ msgstr "Gudang"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_location_ids
 msgid "Wave Locations"
-msgstr ""
+msgstr "Lokasi-Lokasi Wave"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__wave_category_ids
 msgid "Wave Product Categories"
-msgstr ""
+msgstr "Kategori Produk Wave"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__wave_id
@@ -1109,7 +1126,7 @@ msgstr "Wave Transfer"
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Wave transfers"
-msgstr ""
+msgstr "Transfer wave"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids

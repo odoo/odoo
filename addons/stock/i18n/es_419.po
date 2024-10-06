@@ -111,43 +111,43 @@ msgstr "%(name)s (copia)(%(id)s)"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence cross dock"
-msgstr ""
+msgstr "Secuencia de almacenamiento intermedio %(name)s"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence in"
-msgstr ""
+msgstr "Secuencia de entrada %(name)s"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence internal"
-msgstr ""
+msgstr "Secuencia interna %(name)s"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence out"
-msgstr ""
+msgstr "Secuencia de salida %(name)s"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence packing"
-msgstr ""
+msgstr "Secuencia de embalaje %(name)s "
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence quality control"
-msgstr ""
+msgstr "Secuencia de control de calidad %(name)s"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "%(name)s Sequence storage"
-msgstr ""
+msgstr "Secuencia de almacenamiento %(name)s"
 
 #. module: stock
 #. odoo-python
@@ -163,7 +163,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_scrap.py:0
 msgid "%(product)s: Insufficient Quantity To Scrap"
-msgstr ""
+msgstr "%(product)s: cantidad insuficiente para desechar"
 
 #. module: stock
 #. odoo-python
@@ -181,7 +181,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "%(warehouse)s Sequence %(code)s"
-msgstr ""
+msgstr "%(warehouse)s - Secuencia %(code)s"
 
 #. module: stock
 #. odoo-python
@@ -939,6 +939,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move__is_storable
 msgid "A storable product is a product for which you manage stock."
 msgstr ""
+"Los productos almacenables son productos para los que gestiona el "
+"inventario."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1561,7 +1563,7 @@ msgstr "El código de barras tiene un EAN válido"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch, Wave & Cluster Transfers"
-msgstr ""
+msgstr "Traslados por lote, olas y por preparación de varias órdenes"
 
 #. module: stock
 #. odoo-python
@@ -2385,6 +2387,9 @@ msgid ""
 "Creation date of this move line until updated due to: quantity being "
 "increased, 'picked' status has updated, or move line is done."
 msgstr ""
+"La fecha de creación de esta línea de movimiento se actualizará si la "
+"cantidad aumenta, el estado cambia a \"recolectado\" o realiza la línea de "
+"movimiento."
 
 #. module: stock
 #. odoo-python
@@ -2888,7 +2893,7 @@ msgstr "Nombre de la demostración"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "Demo Lot/SN"
-msgstr ""
+msgstr "Número de serie/lote de demostración"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -3573,7 +3578,7 @@ msgstr "Fecha pronosticada"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Forecasted Date + Visibility Days"
-msgstr ""
+msgstr "Fecha pronosticada + Días de visibilidad"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
@@ -3747,7 +3752,7 @@ msgstr "Generar números de serie o lote"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
 msgid "Generate Shipping Labels"
-msgstr ""
+msgstr "Generar etiquetas de envío"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3896,7 +3901,7 @@ msgstr "Historial"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_orderpoint_search_panel.xml:0
 msgid "Horizon"
-msgstr ""
+msgstr "Horizontal"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
@@ -4670,7 +4675,7 @@ msgstr "Especifica si los artículos se entregan parcialmente o todos a la vez"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__move_type
 msgid "It specifies goods to be transferred partially or all at once"
-msgstr ""
+msgstr "Especifica si los bienes se trasladan parcialmente o todos a la vez."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
@@ -4798,7 +4803,7 @@ msgstr "Últimas entradas, primeras salidas (UEPS)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
 msgid "Last Inventory"
-msgstr ""
+msgstr "Último inventario"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__write_uid
@@ -5472,7 +5477,7 @@ msgstr "Número de líneas de movimiento"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_quantity
 msgid "Move Quantity"
-msgstr ""
+msgstr "Cantidad a mover"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
@@ -5615,7 +5620,7 @@ msgstr "Nunca"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__never_product_template_attribute_value_ids
 msgid "Never attribute Values"
-msgstr ""
+msgstr "Nunca valores de atributo"
 
 #. module: stock
 #. odoo-python
@@ -5670,7 +5675,7 @@ msgstr "Siguiente tipo de actividad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected"
-msgstr ""
+msgstr "Siguiente esperado"
 
 #. module: stock
 #. odoo-python
@@ -6078,6 +6083,7 @@ msgid ""
 "Optimize your transfers by grouping operations together and assigning jobs "
 "to workers"
 msgstr ""
+"Mejore sus traslados, agrupe operaciones y asígneselas a los empleados"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__partner_id
@@ -6576,12 +6582,12 @@ msgstr "Tipo de recolección"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Pick then Deliver (2 steps)"
-msgstr ""
+msgstr "Recoger y luego entregar (2 pasos)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pick, Pack, then Deliver (3 steps)"
-msgstr ""
+msgstr "Recoger, empacar y luego entregar (3 pasos)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
@@ -7122,7 +7128,7 @@ msgstr "Regla pull"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__push_domain
 msgid "Push Applicability"
-msgstr ""
+msgstr "Aplicabilidad push"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -7538,7 +7544,7 @@ msgstr "Recibir y luego almacenar (2 pasos)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr ""
+msgstr "Recibir, realizar control de calidad y luego almacenar (3 pasos)"
 
 #. module: stock
 #. odoo-python
@@ -8177,12 +8183,12 @@ msgstr "Desechar productos"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_reason_tag_ids
 msgid "Scrap Reason"
-msgstr ""
+msgstr "Motivo de descarte"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scrap_reason_tag
 msgid "Scrap Reason Tag"
-msgstr ""
+msgstr "Etiqueta del motivo de descarte"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
@@ -9033,6 +9039,8 @@ msgid ""
 "Store and retrieve information regarding every Lot/Serial Number (condition,"
 " product info, ...)."
 msgstr ""
+"Almacene y consulte la información relacionada con el número de serie o lote"
+" (condición, información del producto...)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -9203,6 +9211,9 @@ msgid ""
 "The following combinations contain duplicates:\n"
 "%(error_lines)s"
 msgstr ""
+"La combinación de número de serie o lote y producto debe ser única dentro de una empresa, incluso cuando no hay ninguna definida.\n"
+"Las siguientes combinaciones incluyen duplicados:\n"
+"%(error_lines)s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -9280,7 +9291,7 @@ msgstr ""
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid ""
 "The minimum quantity must be less than or equal to the maximum quantity."
-msgstr ""
+msgstr "La cantidad mínima debe ser menor o igual a la cantidad máxima."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -9299,6 +9310,8 @@ msgid ""
 "The operation brings the products to the intermediate location.But this "
 "operation is part of a chain of operations targeting the final location."
 msgstr ""
+"La operación trae los productos a una ubicación intermedia. Esta operación "
+"es parte de una cadena de operaciones cuyo objetivo es la ubicación final."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -9764,13 +9777,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid "Time Horizon"
-msgstr ""
+msgstr "Horizontal temporal"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_1
 msgid "Tip: Monitor Lot details"
-msgstr ""
+msgstr "Consejo: Monitoree los detalles de sus lotes"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -9849,7 +9862,7 @@ msgstr "Por ordenar manual"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "To Order with Visibility Days"
-msgstr ""
+msgstr "Para ordenar con días de visibilidad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10200,6 +10213,8 @@ msgid ""
 "Unavailable Serial numbers. Please correct the serial numbers encoded: "
 "%(serial_numbers_to_locations)s"
 msgstr ""
+"Números de serie no disponibles. Corrija los números de serie codificados: "
+"%(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -10292,6 +10307,8 @@ msgid ""
 "Unless previously specified by the source document, this will be the default"
 " picking policy for this operation type."
 msgstr ""
+"A menos que el documento de origen la especifique, esta será la política "
+"predeterminada de recolección para este tipo de operación."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
