@@ -40,6 +40,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     test: true,
     url: "/",
     edition: true,
+    checkDelay: 100,
 }, () => [
     ...insertSnippet(snippets[1]), // Media List
     ...insertSnippet(snippets[1]), // Media List
@@ -198,7 +199,14 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     {
         content: "Click on the 'undo' button",
         trigger: ".o_we_external_history_buttons button.fa-undo",
-        run: "click",
+        run() {
+            //TODO: use run: "click", but when use it, the undo button is disabled.
+            this.anchor.click();
+        }
+    },
+    {
+        content: "Check 'undo' button is not disabled",
+        trigger: ".o_we_external_history_buttons button.fa-undo:not(:disabled)",
     },
     {
         content: "Check that the Blur filter has been removed from the image",

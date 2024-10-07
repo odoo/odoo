@@ -81,6 +81,7 @@ export class TourInteractive {
         this.removeListeners();
         if (this.currentActionIndex === this.actions.length) {
             this.observer.disconnect();
+            console.log("tour succeeded");
             this.onTourEnd();
             return;
         }

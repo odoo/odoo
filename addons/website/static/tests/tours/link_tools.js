@@ -88,14 +88,9 @@ registerWebsitePreviewTour('link_tools', {
         run: 'edit odoo website_2',
     },
     {
-        content: "Click again on the link",
-        trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
-        run: "click",
-    },
-    {
         content: "Change content (editing the DOM) to odoo website",
         trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
-        run: 'editor odoo website',
+        run: "editor odoo website",
     },
     clickOnImgStep,
     {

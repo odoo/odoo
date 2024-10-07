@@ -1208,6 +1208,7 @@ class ChromeBrowser:
         if debug is not False:
             switches['--auto-open-devtools-for-tabs'] = ''
             switches['--start-maximized'] = ''
+            switches['--start-fullscreen'] = ''
 
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
@@ -1979,12 +1980,15 @@ class HttpCase(TransactionCase):
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, check=0, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
         - wait for ready object to be available
         - eval(code) inside the page
+        - watch: allow to launch browser in view mode
+        - debug: allow to launch in watch mode and with debugger
+        - check: allow to launch algorithm to try catch undeterministic errors
 
         To signal success test do: console.log() with the expected success signal ("test successful" by default)
         To signal test failure raise an exception or call console.error with a message.
@@ -2003,6 +2007,13 @@ class HttpCase(TransactionCase):
             timeout = 1e6
         if watch:
             self._logger.warning('watch mode is only suitable for local testing')
+
+        odoo_tour_delay = os.getenv("ODOO_TOUR_DELAY")
+        if odoo_tour_delay:
+            check = int(odoo_tour_delay)
+        if check > 0:
+            # Add a delay to timeout based arbitrary on max steps viewed in a tour
+            timeout = timeout + 1000 * check
 
         browser = ChromeBrowser(self, headless=not watch, success_signal=success_signal, debug=debug)
         try:
@@ -2059,8 +2070,11 @@ class HttpCase(TransactionCase):
             'stepDelay': step_delay or 0,
             'keepWatchBrowser': kwargs.get('watch', False),
             'debug': kwargs.get('debug', False),
+            'check': kwargs.get('check', os.getenv("ODOO_TOUR_DELAY") or 0),
             'startUrl': url_path,
         }
+        if int(options["check"]) > 0:
+            _logger.runbot("Tour %s is launched with mode: check for undeterminisms.", tour_name)
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")
         return self.browser_js(url_path=url_path, code=code, ready=ready, success_signal="tour succeeded", **kwargs)

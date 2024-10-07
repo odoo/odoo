@@ -79,18 +79,6 @@ export const tourService = {
             sequence: 30,
         }));
 
-        function endTour({ name }) {
-            // Used to signal the python test runner that the tour finished without error.
-            browser.console.log("tour succeeded");
-            // Used to see easily in the python console and to know which tour has been succeeded in suite tours case.
-            const succeeded = `║ TOUR ${name} SUCCEEDED ║`;
-            const msg = [succeeded];
-            msg.unshift("╔" + "═".repeat(succeeded.length - 2) + "╗");
-            msg.push("╚" + "═".repeat(succeeded.length - 2) + "╝");
-            browser.console.log(`\n\n${msg.join("\n")}\n`);
-            tourState.clear();
-        }
-
         function getTourFromRegistry(tourName) {
             const tour = tourRegistry.getEntries().findLast(([n, t]) => t.saveAs == tourName) || [
                 tourName,
@@ -141,6 +129,7 @@ export const tourService = {
                 keepWatchBrowser: false,
                 mode: "auto",
                 showPointerDuration: 0,
+                check: 0,
                 debug: false,
                 redirect: true,
             };
@@ -149,11 +138,6 @@ export const tourService = {
             tourState.setCurrentConfig(tourConfig);
             tourState.setCurrentTour(tour.name);
             tourState.setCurrentIndex(0);
-            if (tourConfig.debug !== false) {
-                // Starts the tour with a debugger to allow you to choose devtools configuration.
-                // eslint-disable-next-line no-debugger
-                debugger;
-            }
 
             const willUnload = callWithUnloadCheck(() => {
                 if (tour.url && tourConfig.startUrl != tour.url && tourConfig.redirect) {
@@ -195,12 +179,11 @@ export const tourService = {
             if (tourConfig.mode === "auto") {
                 new TourAutomatic(tour).start(pointer, () => {
                     pointer.stop();
-                    endTour(tour);
                 });
             } else {
                 new TourInteractive(tour).start(pointer, async () => {
                     pointer.stop();
-                    endTour(tour);
+                    tourState.clear();
 
                     if (tourConfig.rainbowManMessage) {
                         const message = window.DOMPurify.sanitize(tourConfig.rainbowManMessage);

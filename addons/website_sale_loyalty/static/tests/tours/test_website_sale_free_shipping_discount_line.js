@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
+import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 
-registry.category("web_tour.tours").add('check_shipping_discount', {
+registry.category("web_tour.tours").add("check_shipping_discount", {
     test: true,
-    url: '/shop?search=Plumbus',
+    url: "/shop?search=Plumbus",
     steps: () => [
         {
             content: "select Plumbus",
@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
             run: "click",
         },
-        wsTourUtils.goToCart({quantity: 3}),
+        wsTourUtils.goToCart({ quantity: 3 }),
         {
             content: "go to checkout",
             trigger: 'a[name="website_sale_main_button"]',
@@ -35,7 +35,8 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
         },
         {
             content: "check if delivery price is correct'",
-            trigger: "[name='o_delivery_method']:has(.o_delivery_carrier_label:contains('delivery with rule')) span.o_wsale_delivery_price_badge .oe_currency_value:contains(100.00)",
+            trigger:
+                "[name='o_delivery_method']:has(.o_delivery_carrier_label:contains('delivery with rule')) span.o_wsale_delivery_price_badge .oe_currency_value:contains(100.00)",
         },
         {
             content: "confirm shipping method",
@@ -43,16 +44,23 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
             run: "click",
         },
         {
-            trigger: ".accordion-button",
+            trigger: ".oe_cart:contains(confirm order)",
+        },
+        {
+            trigger: ".o_total_card:contains(order summary)",
+        },
+        {
+            trigger: ".o_total_card button.accordion-button",
             run: "click",
         },
         {
             content: "check if delivery price is correct'",
-            trigger: "#order_delivery .oe_currency_value:contains(100.00)",
+            trigger: ".o_total_card #order_delivery .oe_currency_value:contains(100.00)",
         },
         {
             content: "check if delivery price is correct'",
-            trigger: "[data-reward-type='shipping'] .oe_currency_value:contains('- 75.00')",
+            trigger:
+                ".o_total_card [data-reward-type='shipping'] .oe_currency_value:contains(/^- 75.00$/)",
         },
     ],
 });

@@ -47,12 +47,27 @@ registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
         trigger: ":iframe #wrapwrap header.o_header_fixed",
     },
     selectHeader(),
-    changeOption("WebsiteLevelColor", 'we-select[data-variable="header-template"] we-toggler'),
-    changeOption("WebsiteLevelColor", 'we-button[data-name="header_sales_two_opt"]'),
     {
-        content: "check that header_sales_two_opt is well selected before save",
-        trigger: ":iframe #wrapwrap header.o_header_fixed div[aria-label=Middle] div[role=search]",
+        content: "open select header",
+        trigger: `we-select[data-variable="header-template"] we-toggler`,
+        run: "click",
+    },
+    {
+        content: "select header sales 2",
+        trigger: "we-selection-items we-button[data-name=header_sales_two_opt]",
+        run: "click",
+    },
+    {
+        content: "wait header has been saved",
+        trigger: "body:has(.o_we_ui_loading)",
+    },
+    {
+        trigger: "body:not(:has(.o_we_ui_loading))",
         timeout: 30000,
+    },
+    {
+        content: "check that header_sales_two_opt is well selected",
+        trigger: ":iframe #wrapwrap header.o_header_fixed div[aria-label=Middle] div[role=search]",
     },
     ...clickOnSave(undefined, 30000),
     ...checkIfUserMenuNotMasked(),

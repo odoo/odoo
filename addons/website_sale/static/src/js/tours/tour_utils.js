@@ -184,13 +184,16 @@ export function payWithTransfer(redirect=false) {
 
 export function searchProduct(productName) {
     return [
-        clickOnElement('Shop', 'a:contains("Shop")'),
         {
             content: "Search for the product",
             trigger: 'form input[name="search"]',
             run: `edit ${productName}`,
         },
-        clickOnElement('Search', 'form:has(input[name="search"]) .oe_search_button'),
+        {
+            content: "Search",
+            trigger: "form:has(input[name=search]) .oe_search_button",
+            run: "click",
+        },
     ];
 }
 
