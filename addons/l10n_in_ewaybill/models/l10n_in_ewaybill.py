@@ -246,7 +246,7 @@ class Ewaybill(models.Model):
     def action_cancel_ewaybill(self):
         self.ensure_one()
         return self.env['l10n.in.ewaybill.cancel'].with_context(
-            default_l10n_in_ewaybill_id=self.id
+            default_l10n_in_ewaybill_ids=self.id
         )._get_records_action(name=_("Cancel Ewaybill"), target='new')
 
     def action_reset_to_pending(self):

@@ -7,7 +7,7 @@
             <div id="l10n_in_ewaybill_informations"
                  name="ewaybill_number"
                  class="col"
-                 t-if="o.l10n_in_ewaybill_id and o.country_code == 'IN'"
+                 t-if="o.l10n_in_ewaybill_ids and o.country_code == 'IN'"
             >
                 <strong>E-waybill:</strong>
                 <p t-if="o.l10n_in_ewaybill_name" class="m-0" t-out="o.l10n_in_ewaybill_name"/>

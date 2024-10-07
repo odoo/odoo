@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    l10n_in_ewaybill_id = fields.One2many('l10n.in.ewaybill', 'picking_id', string="Ewaybill")
+    l10n_in_ewaybill_ids = fields.One2many('l10n.in.ewaybill', 'picking_id', string="Ewaybill")
     l10n_in_ewaybill_name = fields.Char(
         "Indian Ewaybill Number",
         compute='_compute_l10n_in_ewaybill_details'
@@ -21,7 +21,7 @@ class StockPicking(models.Model):
         if product_with_no_hsn := self.move_ids.mapped('product_id').filtered(lambda p: not p.l10n_in_hsn_code):
             raise UserError(
                 _("Please set HSN code in below products: \n%s", '\n'.join(product_with_no_hsn.mapped('name'))))
-        if self.l10n_in_ewaybill_id:
+        if self.l10n_in_ewaybill_ids:
             raise UserError(_("Ewaybill already created for this picking."))
         action = self._get_l10n_in_ewaybill_form_action()
         ewaybill = self.env['l10n.in.ewaybill'].create({
@@ -34,16 +34,16 @@ class StockPicking(models.Model):
     def action_open_l10n_in_ewaybill(self):
         self.ensure_one()
         action = self._get_l10n_in_ewaybill_form_action()
-        action['res_id'] = self.l10n_in_ewaybill_id.id
+        action['res_id'] = self.l10n_in_ewaybill_ids.id
         return action
 
-    @api.depends('l10n_in_ewaybill_id.state')
+    @api.depends('l10n_in_ewaybill_ids.state')
     def _compute_l10n_in_ewaybill_details(self):
         for picking in self:
             if (
                 picking.country_code == 'IN'
-                and picking.l10n_in_ewaybill_id.state in ['challan', 'generated']
+                and picking.l10n_in_ewaybill_ids.state in ['challan', 'generated']
             ):
-                picking.l10n_in_ewaybill_name = picking.l10n_in_ewaybill_id.name
+                picking.l10n_in_ewaybill_name = picking.l10n_in_ewaybill_ids.name
             else:
                 picking.l10n_in_ewaybill_name = False

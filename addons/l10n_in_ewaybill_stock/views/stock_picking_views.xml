@@ -9,7 +9,7 @@
                 <button string="Create e-Waybill / Challan"
                         type="object"
                         name="action_l10n_in_ewaybill_create"
-                        invisible="country_code != 'IN' or l10n_in_ewaybill_id or state != 'done'"
+                        invisible="country_code != 'IN' or l10n_in_ewaybill_ids or state != 'done'"
                         data-hotkey="e"
                         groups="stock.group_stock_manager"
                 />
@@ -19,7 +19,7 @@
                         class="oe_stat_button"
                         icon="fa-truck"
                         type="object"
-                        invisible="not l10n_in_ewaybill_id"
+                        invisible="not l10n_in_ewaybill_ids"
                         groups="stock.group_stock_manager"
                 >
                         <div class="o_stat_info">

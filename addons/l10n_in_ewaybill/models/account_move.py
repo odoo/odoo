@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    l10n_in_ewaybill_id = fields.One2many(
+    l10n_in_ewaybill_ids = fields.One2many(
         'l10n.in.ewaybill',
         'account_move_id',
         string="E-Waybill",
@@ -38,7 +38,7 @@ class AccountMove(models.Model):
 
     def action_l10n_in_ewaybill_create(self):
         self.ensure_one()
-        if self.l10n_in_ewaybill_id:
+        if self.l10n_in_ewaybill_ids:
             raise UserError(_("Ewaybill already created for this move."))
         action = self._get_l10n_in_ewaybill_form_action()
         action['context'] = {'default_account_move_id': self.id}
@@ -47,15 +47,15 @@ class AccountMove(models.Model):
     def action_open_l10n_in_ewaybill(self):
         self.ensure_one()
         action = self._get_l10n_in_ewaybill_form_action()
-        action['res_id'] = self.l10n_in_ewaybill_id.id
+        action['res_id'] = self.l10n_in_ewaybill_ids.id
         return action
 
-    @api.depends('l10n_in_ewaybill_id.state')
+    @api.depends('l10n_in_ewaybill_ids.state')
     def _compute_l10n_in_ewaybill_details(self):
         for move in self:
-            if move.country_code == 'IN' and move.l10n_in_ewaybill_id.state == 'generated':
-                move.l10n_in_ewaybill_name = move.l10n_in_ewaybill_id.name
-                move.l10n_in_ewaybill_expiry_date = move.l10n_in_ewaybill_id.ewaybill_expiry_date
+            if move.country_code == 'IN' and move.l10n_in_ewaybill_ids.state == 'generated':
+                move.l10n_in_ewaybill_name = move.l10n_in_ewaybill_ids.name
+                move.l10n_in_ewaybill_expiry_date = move.l10n_in_ewaybill_ids.ewaybill_expiry_date
             else:
                 move.l10n_in_ewaybill_name = False
                 move.l10n_in_ewaybill_expiry_date = False
