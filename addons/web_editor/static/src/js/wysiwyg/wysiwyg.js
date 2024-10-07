@@ -1759,7 +1759,10 @@ export class Wysiwyg extends Component {
             // Refocus again to save updates when calling `_onWysiwygBlur`
             this.odooEditor.editable.focus();
         } else {
-            return this.odooEditor.execCommand('insert', element);
+            const result = this.odooEditor.execCommand('insert', element);
+            // Refocus again to save updates when calling `_onWysiwygBlur`
+            this.odooEditor.editable.focus();
+            return result;
         }
 
         if (this.snippetsMenu) {
