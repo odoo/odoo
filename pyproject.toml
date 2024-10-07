@@ -1,0 +1,51 @@
+[build-system]
+requires = ['setuptools']
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "odoo"
+version = "19.0.0a"
+requires-python = ">= 3.10"
+description = "odoo core"
+readme = "README.md"
+license = { file = "LICENSE" }
+dependencies = [
+    'babel',
+    'cryptography',
+    'decorator',
+    'docutils',
+    'geoip2',
+    'idna',
+    'jinja2',
+    'libsass',
+    'lxml',
+    'lxml_html_clean',
+    'MarkupSafe',
+    'num2words',
+    'passlib',
+    'pillow',
+    'polib',
+    'psutil',
+    'psycopg2',
+    'pyopenssl',
+    'PyPDF2',
+    'python-dateutil',
+    'python-stdnum',
+    'pytz',
+    'qrcode',
+    'reportlab',
+    'rjsmin',
+    'requests',
+    'urllib3',
+    'vobject',
+    'werkzeug',
+    'xlrd',
+    'xlsxwriter',
+    'zeep',
+]
+
+[tool.setuptools]
+packages = ["odoo"]
+
+[tool.setuptools.package-data]
+odoo = ["*"]
