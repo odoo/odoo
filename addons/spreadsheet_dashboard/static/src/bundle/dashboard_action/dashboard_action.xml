@@ -86,7 +86,7 @@
                         </div>
                         <t t-set="comp" t-value="dashboardButton"/>
                         <t t-if="comp">
-                            <t t-component="comp" t-props="{ onClick: () => this.editDashboard(dashboard.id) }"/>
+                            <t t-component="comp" t-props="{ dashboardId: dashboard.id, onClick: this.editDashboard.bind(this) }"/>
                         </t>
                     </li>
                 </ul>
