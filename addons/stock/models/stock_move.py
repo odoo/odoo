@@ -1721,6 +1721,9 @@ class StockMove(models.Model):
                 extra_move = extra_move._action_confirm()
         return extra_move | self
 
+    def _get_action_done_moves_to_cancel(self):
+        return self.env['stock.move'].browse(self._rollup_move_origs())
+
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
         moves = (self | moves).exists().filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -1771,6 +1774,10 @@ class StockMove(models.Model):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
+
+        # Cancel linked orig moves that are not completed
+        if moves_todo and not backorder_moves:
+            moves_todo._get_action_done_moves_to_cancel()._action_cancel()
 
         new_push_moves = moves_todo.filtered(lambda m: m.picking_id.immediate_transfer)._push_apply()
         if new_push_moves:
