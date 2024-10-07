@@ -8,7 +8,7 @@ export class ComboConfiguratorPopup extends Component {
     static template = "point_of_sale.ComboConfiguratorPopup";
     static components = { ProductCard, Dialog };
     static props = {
-        product: Object,
+        productTemplate: Object,
         getPayload: Function,
         close: Function,
     };
@@ -16,7 +16,9 @@ export class ComboConfiguratorPopup extends Component {
     setup() {
         this.pos = usePos();
         this.state = useState({
-            combo: Object.fromEntries(this.props.product.combo_ids.map((combo) => [combo.id, 0])),
+            combo: Object.fromEntries(
+                this.props.productTemplate.combo_ids.map((combo) => [combo.id, 0])
+            ),
             // configuration: id of combo_item -> ProductConfiguratorPopup payload
             configuration: {},
         });
@@ -37,7 +39,7 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     autoSelectSingleChoices() {
-        this.props.product.combo_ids.forEach((combo) => {
+        this.props.productTemplate.combo_ids.forEach((combo) => {
             if (
                 combo.combo_item_ids.length === 1 &&
                 !combo.combo_item_ids[0].product_id.isConfigurable()
@@ -48,7 +50,7 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     hasMultipleChoices() {
-        return this.props.product.combo_ids.some((combo) => this.shouldShowCombo(combo));
+        return this.props.productTemplate.combo_ids.some((combo) => this.shouldShowCombo(combo));
     }
 
     areAllCombosSelected() {
@@ -61,7 +63,12 @@ export class ComboConfiguratorPopup extends Component {
             return "";
         } else {
             const product = comboItem.product_id;
-            const price = this.pos.getProductPrice(product, extra_price);
+            const productTemplate = product.product_tmpl_id;
+            const price = this.pos.getProductPrice({
+                product,
+                productTemplate,
+                price: extra_price,
+            });
             return this.env.utils.formatCurrency(price);
         }
     }
@@ -79,8 +86,12 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     async onClickProduct({ product, combo_item }, ev) {
-        if (product.isConfigurable() && product.product_template_variant_value_ids.length === 0) {
-            const payload = await this.pos.openConfigurator(product);
+        const productTmpl = product.product_tmpl_id;
+        if (
+            productTmpl.isConfigurable() &&
+            product.product_template_variant_value_ids.length === 0
+        ) {
+            const payload = await this.pos.openConfigurator(product.product_tmpl_id);
             if (payload) {
                 this.state.configuration[combo_item.id] = payload;
             } else {

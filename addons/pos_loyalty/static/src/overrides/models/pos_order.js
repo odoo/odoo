@@ -1414,7 +1414,7 @@ patch(PosOrder.prototype, {
             {
                 product_id: reward.discount_line_product_id,
                 price_unit: -roundDecimals(
-                    product.get_price(this.pricelist_id, freeQuantity),
+                    product.get_price(this.pricelist_id, freeQuantity, 0, false, product),
                     this.currency.decimal_places
                 ),
                 tax_ids: product.taxes_id,

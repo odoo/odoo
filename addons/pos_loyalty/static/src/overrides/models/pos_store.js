@@ -348,10 +348,17 @@ patch(PosStore.prototype, {
         });
     },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
-        const product = vals.product_id;
+        if (!vals.product_tmpl_id && vals.product_id) {
+            vals.product_tmpl_id = vals.product_id.product_tmpl_id;
+        }
+
+        const productTmpl = vals.product_tmpl_id;
+        const productIds = productTmpl.product_variant_ids.map((v) => v.id);
         const order = this.get_order();
-        const linkedPrograms =
-            this.models["loyalty.program"].getBy("trigger_product_ids", product.id) || [];
+        const linkedPrograms = productIds.flatMap(
+            (id) => this.models["loyalty.program"].getBy("trigger_product_ids", id) || []
+        );
+
         let selectedProgram = null;
         if (linkedPrograms.length > 1) {
             selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
@@ -392,7 +399,7 @@ patch(PosStore.prototype, {
         const rewardsToApply = [];
         for (const reward of potentialRewards) {
             for (const reward_product_id of reward.reward.reward_product_ids) {
-                if (reward_product_id.id == product.id) {
+                if (productIds.includes(reward_product_id.id)) {
                     rewardsToApply.push(reward);
                 }
             }
@@ -409,7 +416,10 @@ patch(PosStore.prototype, {
         await this.updatePrograms();
         if (rewardsToApply.length == 1) {
             const reward = rewardsToApply[0];
-            order._applyReward(reward.reward, reward.coupon_id, { product });
+            for (const id of productIds) {
+                const product = this.models["product.product"].get(id);
+                order._applyReward(reward.reward, reward.coupon_id, { product });
+            }
         }
         this.updateRewards();
 

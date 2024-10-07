@@ -17,7 +17,13 @@ from . import pos_category
 from . import pos_config
 from . import pos_order
 from . import pos_session
-from . import product
+from . import product_pricelist
+from . import product_attribute
+from . import product_category
+from . import product_packaging
+from . import product_product
+from . import product_template
+from . import uom
 from . import product_combo
 from . import product_combo_item
 from . import res_partner

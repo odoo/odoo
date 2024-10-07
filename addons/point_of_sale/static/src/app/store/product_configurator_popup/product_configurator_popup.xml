@@ -121,12 +121,12 @@
 
     <t t-name="point_of_sale.ProductConfiguratorPopup">
         <Dialog title.translate="Attribute selection">
-            <ProductInfoBanner product="this.state.product" />
+            <ProductInfoBanner productTemplate="this.state.productTemplate" product="this.state.product" />
             <div t-ref="input-area">
                 <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
                     <span>This option or combination of options is not available</span>
                 </div>
-                <div t-foreach="this.props.product.attribute_line_ids" t-as="attributeLine" t-key="attributeLine.id" class="attribute mb-3">
+                <div t-foreach="this.props.productTemplate.attribute_line_ids" t-as="attributeLine" t-key="attributeLine.id" class="attribute mb-3">
                     <div class="attribute_name mb-2 fw-bolder" t-esc="attributeLine.attribute_id.name"/>
                     <RadioProductAttribute t-if="attributeLine.attribute_id.display_type === 'radio'" attributeLine="attributeLine"/>
                     <PillsProductAttribute t-elif="attributeLine.attribute_id.display_type === 'pills'" attributeLine="attributeLine"/>

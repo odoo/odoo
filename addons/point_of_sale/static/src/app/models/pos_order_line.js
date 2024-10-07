@@ -246,11 +246,14 @@ export class PosOrderline extends Base {
 
         // just like in sale.order changing the qty will recompute the unit price
         if (!keep_price && this.price_type === "original") {
+            const productTemplate = this.product_id.product_tmpl_id;
             this.set_unit_price(
-                this.product_id.get_price(
+                productTemplate.get_price(
                     this.order_id.pricelist_id,
                     this.get_quantity(),
-                    this.get_price_extra()
+                    this.get_price_extra(),
+                    false,
+                    this.product_id
                 )
             );
         }
@@ -302,9 +305,14 @@ export class PosOrderline extends Base {
         const price = window.parseFloat(
             roundDecimals(this.price_unit || 0, productPriceUnit).toFixed(productPriceUnit)
         );
-        let order_line_price = orderline
-            .get_product()
-            .get_price(orderline.order_id.pricelist_id, this.get_quantity());
+        const product = orderline.get_product();
+        let order_line_price = product.get_price(
+            orderline.order_id.pricelist_id,
+            this.get_quantity(),
+            0,
+            false,
+            product
+        );
         order_line_price = roundDecimals(order_line_price, this.currency.decimal_places);
 
         const isSameCustomerNote =
@@ -540,7 +548,13 @@ export class PosOrderline extends Base {
     }
 
     get_lst_price() {
-        return this.product_id.get_price(this.config.pricelist_id, 1, this.price_extra);
+        return this.product_id.get_price(
+            this.config.pricelist_id,
+            1,
+            this.price_extra,
+            false,
+            this.product_id
+        );
     }
 
     is_last_line() {

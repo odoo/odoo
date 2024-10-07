@@ -15,10 +15,10 @@
                 <ProductListPage />
             </t>
             <t t-set-slot="product" route="`/pos-self/${selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
-                <ProductPage product="selfOrder.models['product.product'].get(url.id)" />
+                <ProductPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
             </t>
             <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
-                <ComboPage product="selfOrder.models['product.product'].get(url.id)" />
+                <ComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
             </t>
             <t t-set-slot="cart" route="`/pos-self/${selfOrder.config.id}/cart`">
                 <CartPage />

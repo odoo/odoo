@@ -5,16 +5,16 @@ import { floatIsZero } from "@web/core/utils/numbers";
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
-    static props = ["product"];
+    static props = ["productTemplate"];
 
     setup() {
         this.selfOrder = useSelfOrder();
-        this.numberOfAttributes = this.props.product.attribute_line_ids.length;
+        this.numberOfAttributes = this.props.productTemplate.attribute_line_ids.length;
         this.currentAttribute = 0;
 
         this.gridsRef = {};
         this.valuesRef = {};
-        for (const attr of this.props.product.attribute_line_ids) {
+        for (const attr of this.props.productTemplate.attribute_line_ids) {
             this.gridsRef[attr.id] = useRef(`attribute_grid_${attr.id}`);
             this.valuesRef[attr.id] = {};
             for (const value of attr.product_template_value_ids) {
@@ -89,7 +89,7 @@ export class AttributeSelection extends Component {
     }
 
     availableAttributes() {
-        return this.props.product.attribute_line_ids.filter(
+        return this.props.productTemplate.attribute_line_ids.filter(
             (a) => a.attribute_id.create_variant !== "always"
         );
     }

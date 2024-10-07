@@ -5,7 +5,7 @@ import { ProductInfoPopup } from "@pos_self_order/app/components/product_info_po
 
 export class ProductCard extends Component {
     static template = "pos_self_order.ProductCard";
-    static props = ["product", "currentProductCard?"];
+    static props = ["productTemplate", "currentProductCard?"];
 
     selfRef = useRef("selfProductCard");
     currentProductCardRef = useRef("currentProductCard");
@@ -62,11 +62,11 @@ export class ProductCard extends Component {
     }
 
     get isAvailable() {
-        if (this.props.product.pos_categ_ids.length === 0) {
+        if (this.props.productTemplate.pos_categ_ids.length === 0) {
             return true;
         }
 
-        return this.props.product.pos_categ_ids.some((categ) =>
+        return this.props.productTemplate.pos_categ_ids.some((categ) =>
             this.selfOrder.isCategoryAvailable(categ.id)
         );
     }
@@ -86,7 +86,7 @@ export class ProductCard extends Component {
     }
 
     async selectProduct(qty = 1) {
-        const product = this.props.product;
+        const product = this.props.productTemplate;
 
         if (!product.self_order_available || !this.isAvailable) {
             return;
@@ -117,8 +117,8 @@ export class ProductCard extends Component {
 
     showProductInfo() {
         this.dialog.add(ProductInfoPopup, {
-            product: this.props.product,
-            title: this.props.product.display_name,
+            productTemplate: this.props.productTemplate,
+            title: this.props.productTemplate.name,
             addToCart: (qty) => {
                 this.selectProduct(qty);
             },
@@ -127,7 +127,7 @@ export class ProductCard extends Component {
 
     get isHtmlEmpty() {
         const div = Object.assign(document.createElement("div"), {
-            innerHTML: this.props.product.public_description,
+            innerHTML: this.props.productTemplate.public_description,
         });
         return div.innerText.trim() === "";
     }

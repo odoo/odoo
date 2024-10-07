@@ -34,7 +34,7 @@ class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
         self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
-                'product_id': self.desk_organizer.id,
+                'product_id': self.desk_organizer.product_variant_id.id,
                 'product_uom_qty': 1,
                 'price_unit': 100,
             })]

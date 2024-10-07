@@ -23,7 +23,6 @@ import {
     ask,
     makeActionAwaitable,
 } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { deserializeDate } from "@web/core/l10n/dates";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
@@ -34,8 +33,6 @@ import { ActionScreen } from "@point_of_sale/app/screens/action_screen";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "../navbar/closing_popup/closing_popup";
-
-const { DateTime } = luxon;
 
 export class PosStore extends Reactive {
     loadingSkipButtonIsShown = false;
@@ -252,15 +249,16 @@ export class PosStore extends Reactive {
             "create",
             this.computeProductPricelistCache.bind(this)
         );
-        this.models["product.pricelist.item"].addEventListener(
-            "create",
-            this.computeProductPricelistCache.bind(this)
-        );
+        this.models["product.pricelist.item"].addEventListener("create", () => {
+            const order = this.get_order();
+            const currentPricelistId = order.pricelist_id?.id;
+            order.set_pricelist(this.models["product.pricelist"].get(currentPricelistId));
+        });
+
         if (this.data.loadedIndexedDBProducts && this.data.loadedIndexedDBProducts.length > 0) {
             await this._loadMissingPricelistItems(this.data.loadedIndexedDBProducts);
             delete this.data.loadedIndexedDBProducts;
         }
-        this.computeProductPricelistCache();
         await this.processProductAttributes();
     }
     cashMove() {
@@ -381,101 +379,16 @@ export class PosStore extends Reactive {
         return true;
     }
     computeProductPricelistCache(data) {
-        if (data) {
-            data = this.models[data.model].readMany(data.ids);
-        }
-        // This function is called via the addEventListener callback initiated in the
-        // processServerData function when new products or pricelists are loaded into the PoS.
-        // It caches the heavy pricelist calculation when there are many products and pricelists.
-        const date = DateTime.now();
-        let pricelistItems = this.models["product.pricelist.item"].getAll();
-        let products = this.models["product.product"].getAll();
-
-        if (data && data.length > 0) {
-            if (data[0].model.modelName === "product.product") {
-                products = data;
-            }
-
-            if (data[0].model.modelName === "product.pricelist.item") {
-                pricelistItems = data;
-                // it needs only to compute for the products that are affected by the pricelist items
-                const productTmplIds = new Set(data.map((item) => item.raw.product_tmpl_id));
-                const productIds = new Set(data.map((item) => item.raw.product_id));
-                products = products.filter(
-                    (product) =>
-                        productTmplIds.has(product.raw.product_tmpl_id) ||
-                        productIds.has(product.id)
-                );
-            }
+        if (!data) {
+            return;
         }
 
-        const pushItem = (targetArray, key, item) => {
-            if (!targetArray[key]) {
-                targetArray[key] = [];
-            }
-            targetArray[key].push(item);
-        };
-
-        const pricelistRules = {};
-
-        for (const item of pricelistItems) {
-            if (
-                (item.date_start && deserializeDate(item.date_start, { zone: "utc" }) > date) ||
-                (item.date_end && deserializeDate(item.date_end, { zone: "utc" }) < date)
-            ) {
-                continue;
-            }
-            const pricelistId = item.pricelist_id.id;
-
-            if (!pricelistRules[pricelistId]) {
-                pricelistRules[pricelistId] = {
-                    productItems: {},
-                    productTmlpItems: {},
-                    categoryItems: {},
-                    globalItems: [],
-                };
-            }
-
-            const productId = item.raw.product_id;
-            if (productId) {
-                pushItem(pricelistRules[pricelistId].productItems, productId, item);
-                continue;
-            }
-            const productTmplId = item.raw.product_tmpl_id;
-            if (productTmplId) {
-                pushItem(pricelistRules[pricelistId].productTmlpItems, productTmplId, item);
-                continue;
-            }
-            const categId = item.raw.categ_id;
-            if (categId) {
-                pushItem(pricelistRules[pricelistId].categoryItems, categId, item);
-            } else {
-                pricelistRules[pricelistId].globalItems.push(item);
-            }
+        let products = this.models[data.model].readMany(data.ids);
+        if (data.model === "product.template") {
+            products = products.flatMap((p) => p.product_variant_ids);
         }
 
-        for (const product of products) {
-            const applicableRules = product.getApplicablePricelistRules(pricelistRules);
-            for (const pricelistId in applicableRules) {
-                if (product.cachedPricelistRules[pricelistId]) {
-                    const existingRuleIds = product.cachedPricelistRules[pricelistId].map(
-                        (rule) => rule.id
-                    );
-                    const newRules = applicableRules[pricelistId].filter(
-                        (rule) => !existingRuleIds.includes(rule.id)
-                    );
-                    product.cachedPricelistRules[pricelistId] = [
-                        ...newRules,
-                        ...product.cachedPricelistRules[pricelistId],
-                    ];
-                } else {
-                    product.cachedPricelistRules[pricelistId] = applicableRules[pricelistId];
-                }
-            }
-        }
-        if (data && data.length > 0 && data[0].model.modelName === "product.product") {
-            this._loadMissingPricelistItems(products);
-        }
+        this._loadMissingPricelistItems(products);
     }
 
     async _loadMissingPricelistItems(products) {
@@ -483,8 +396,12 @@ export class PosStore extends Reactive {
             return;
         }
 
-        const product_tmpl_ids = products.map((product) => product.raw.product_tmpl_id);
-        const product_ids = products.map((product) => product.id);
+        const product_tmpl_ids = products
+            .filter((p) => typeof p.id === "number")
+            .map((product) => product.product_tmpl_id.id);
+        const product_ids = products
+            .filter((p) => typeof p.id === "number")
+            .map((product) => product.id);
         await this.data.callRelated("pos.session", "get_pos_ui_product_pricelist_item_by_product", [
             odoo.pos_session_id,
             product_tmpl_ids,
@@ -531,24 +448,26 @@ export class PosStore extends Reactive {
             return "flex-row-reverse justify-content-between m-1";
         }
     }
-    getProductPriceFormatted(product) {
-        const formattedUnitPrice = this.env.utils.formatCurrency(this.getProductPrice(product));
+    getProductPriceFormatted(productTemplate) {
+        const formattedUnitPrice = this.env.utils.formatCurrency(
+            this.getProductPrice({ productTemplate })
+        );
 
-        if (product.to_weight) {
-            return `${formattedUnitPrice}/${product.uom_id.name}`;
+        if (productTemplate.to_weight) {
+            return `${formattedUnitPrice}/${productTemplate.uom_id.name}`;
         } else {
             return formattedUnitPrice;
         }
     }
-    async openConfigurator(product) {
+    async openConfigurator(pTemplate) {
         const attrById = this.models["product.attribute"].getAllBy("id");
-        const attributeLines = product.attribute_line_ids.filter(
+        const attributeLines = pTemplate.attribute_line_ids.filter(
             (attr) => attr.attribute_id?.id in attrById
         );
         const attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
-                product: product,
+                productTemplate: pTemplate,
             });
         }
         return {
@@ -583,7 +502,11 @@ export class PosStore extends Reactive {
             line.set_unit_price(tip);
         } else {
             line = await this.addLineToCurrentOrder(
-                { product_id: tipProduct, price_unit: tip },
+                {
+                    product_id: tipProduct,
+                    price_unit: tip,
+                    product_tmpl_id: tipProduct.product_tmpl_id,
+                },
                 {}
             );
         }
@@ -602,7 +525,6 @@ export class PosStore extends Reactive {
     // the information without having to be calculated. For example, importing a SO.
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
         let merge = true;
-
         let order = this.get_order();
         order.assert_editable();
 
@@ -618,15 +540,15 @@ export class PosStore extends Reactive {
             merge = false;
         }
 
-        const product = vals.product_id;
-
+        const productTemplate = vals.product_tmpl_id;
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
             price_extra: 0,
             price_unit: 0,
             order_id: this.get_order(),
             qty: 1,
-            tax_ids: product.taxes_id.map((tax) => ["link", tax]),
+            tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
+            product_id: productTemplate.product_variant_ids[0],
             ...vals,
         };
 
@@ -647,33 +569,36 @@ export class PosStore extends Reactive {
         // We assign the payload to the current values object.
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_id.isConfigurable() && configure) {
-            const payload = await this.openConfigurator(values.product_id);
+        if (productTemplate.isConfigurable() && configure) {
+            const payload = await this.openConfigurator(productTemplate);
 
             if (payload) {
-                const productFound = this.models["product.product"]
-                    .filter((p) => p.raw?.product_template_variant_value_ids?.length > 0)
-                    .find((p) =>
-                        p.raw.product_template_variant_value_ids.every((v) =>
-                            payload.attribute_value_ids.includes(v)
-                        )
+                // Find candidate based on instantly created variants.
+                const instantlySelectedIds = this.models["product.template.attribute.value"]
+                    .readMany(payload.attribute_value_ids)
+                    .filter((value) => value.attribute_id.create_variant === "always")
+                    .map((value) => value.id);
+
+                const candidate = productTemplate.product_variant_ids.find((variant) => {
+                    const attributeIds = variant.product_template_variant_value_ids.map(
+                        (value) => value.id
                     );
+                    return instantlySelectedIds.every((id) => attributeIds.includes(id));
+                });
 
                 Object.assign(values, {
                     attribute_value_ids: payload.attribute_value_ids
                         .filter((a) => {
-                            if (productFound) {
-                                const attr =
-                                    this.data.models["product.template.attribute.value"].get(a);
-                                return (
-                                    attr.is_custom || attr.attribute_id.create_variant !== "always"
-                                );
+                            if (candidate) {
+                                const attr = this.models["product.template.attribute.value"].get(a);
+                                const attribute = attr.attribute_id;
+                                return attr.is_custom || attribute.create_variant !== "always";
                             }
                             return true;
                         })
                         .map((id) => [
                             "link",
-                            this.data.models["product.template.attribute.value"].get(id),
+                            this.models["product.template.attribute.value"].get(id),
                         ]),
                     custom_attribute_value_ids: Object.entries(payload.attribute_custom_values).map(
                         ([id, cus]) => {
@@ -681,9 +606,7 @@ export class PosStore extends Reactive {
                                 "create",
                                 {
                                     custom_product_template_attribute_value_id:
-                                        this.data.models["product.template.attribute.value"].get(
-                                            id
-                                        ),
+                                        this.models["product.template.attribute.value"].get(id),
                                     custom_value: cus,
                                 },
                             ];
@@ -691,16 +614,17 @@ export class PosStore extends Reactive {
                     ),
                     price_extra: values.price_extra + payload.price_extra,
                     qty: payload.qty || values.qty,
-                    product_id: productFound || values.product_id,
+                    product_id: candidate || productTemplate.product_variant_ids[0],
                 });
             } else {
                 return;
             }
-        } else if (values.product_id.product_template_variant_value_ids.length > 0) {
+        } else if (values.product_tmpl_id.attribute_line_ids.length > 0) {
             // Verify price extra of variant products
             const priceExtra = values.product_id.product_template_variant_value_ids
                 .filter((attr) => attr.attribute_id.create_variant !== "always")
                 .reduce((acc, attr) => acc + attr.price_extra, 0);
+
             values.price_extra += priceExtra;
         }
 
@@ -708,17 +632,18 @@ export class PosStore extends Reactive {
         // It will return the combo prices and the selected products
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_id.isCombo() && configure) {
+        if (values.product_tmpl_id.isCombo() && configure) {
             const payload = await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
-                product: values.product_id,
+                productTemplate: values.product_tmpl_id,
             });
 
             if (!payload) {
                 return;
             }
 
+            // Product template of combo should not have more than 1 variant.
             const comboPrices = computeComboItems(
-                values.product_id,
+                values.product_tmpl_id.product_variant_ids[0],
                 payload,
                 order.pricelist_id,
                 this.data.models["decimal.precision"].getAll(),
@@ -735,6 +660,7 @@ export class PosStore extends Reactive {
                     ]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
+                    price_type: "manual",
                     order_id: order,
                     qty: 1,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
@@ -761,11 +687,11 @@ export class PosStore extends Reactive {
         // It will return an instance of pos.pack.operation.lot
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_id.isTracked() && configure) {
+        if (values.product_tmpl_id.isTracked() && configure) {
             const code = opts.code;
             let pack_lot_ids = {};
             const packLotLinesToEdit =
-                (!values.product_id.isAllowOnlyOneLot() &&
+                (!values.product_tmpl_id.isAllowOnlyOneLot() &&
                     this.get_order()
                         .get_orderlines()
                         .filter((line) => !line.get_discount())
@@ -782,7 +708,7 @@ export class PosStore extends Reactive {
                 const newPackLotLines = [{ lot_name: code.code }];
                 pack_lot_ids = { modifiedPackLotLines, newPackLotLines };
             } else {
-                pack_lot_ids = await this.editLots(values.product_id, packLotLinesToEdit);
+                pack_lot_ids = await this.editLots(values.product_tmpl_id, packLotLinesToEdit);
             }
 
             if (!pack_lot_ids) {
@@ -797,14 +723,16 @@ export class PosStore extends Reactive {
         // It will return the weight of the product as quantity
         // ---
         // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_id.to_weight && this.config.iface_electronic_scale && configure) {
-            if (values.product_id.isScaleAvailable) {
+        if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && configure) {
+            if (values.product_tmpl_id.isScaleAvailable) {
                 this.isScaleScreenVisible = true;
                 this.scaleData = {
-                    productName: values.product_id?.display_name,
-                    uomName: values.product_id.uom_id?.name,
-                    uomRounding: values.product_id.uom_id?.rounding,
-                    productPrice: this.getProductPrice(values.product_id),
+                    productName: values?.product_id?.display_name,
+                    uomName: values.product_tmpl_id.uom_id?.name,
+                    uomRounding: values.product_tmpl_id.uom_id?.rounding,
+                    productPrice: this.getProductPrice({
+                        productTemplate: values.product_tmpl_id,
+                    }),
                 };
                 const weight = await makeAwaitable(
                     this.env.services.dialog,
@@ -820,17 +748,23 @@ export class PosStore extends Reactive {
                 this.scaleTare = 0;
                 this.totalPriceOnScale = 0;
             } else {
-                await values.product_id._onScaleNotAvailable();
+                await values.product_tmpl_id._onScaleNotAvailable();
             }
         }
 
         // Handle price unit
-        if (!values.product_id.isCombo() && vals.price_unit === undefined) {
-            values.price_unit = values.product_id.get_price(order.pricelist_id, values.qty);
+        if (!values.product_tmpl_id.isCombo() && vals.price_unit === undefined) {
+            values.price_unit = values.product_id.get_price(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                values.product_id
+            );
         }
         const isScannedProduct = opts.code && opts.code.type === "product";
         if (values.price_extra && !isScannedProduct) {
-            const price = values.product_id.get_price(
+            const price = values.product_tmpl_id.get_price(
                 order.pricelist_id,
                 values.qty,
                 values.price_extra
@@ -1199,13 +1133,13 @@ export class PosStore extends Reactive {
             });
             if (confirmed) {
                 this.mobile_pane = "right";
-                this.env.services.pos.showScreen("PaymentScreen", {
+                this.showScreen("PaymentScreen", {
                     orderUuid: this.selectedOrderUuid,
                 });
             }
         } else {
             this.mobile_pane = "right";
-            this.env.services.pos.showScreen("PaymentScreen", {
+            this.showScreen("PaymentScreen", {
                 orderUuid: this.selectedOrderUuid,
             });
         }
@@ -1226,24 +1160,24 @@ export class PosStore extends Reactive {
         }
         return orders;
     }
-    async getProductInfo(product, quantity, priceExtra = 0) {
+    async getProductInfo(productTemplate, product, quantity, priceExtra = 0) {
         const order = this.get_order();
         // check back-end method `get_product_info_pos` to see what it returns
         // We do this so it's easier to override the value returned and use it in the component template later
         const productInfo = await this.data.call("product.product", "get_product_info_pos", [
             [product.id],
-            product.get_price(order.pricelist_id, quantity, priceExtra),
+            productTemplate.get_price(order.pricelist_id, quantity, priceExtra, false, product),
             quantity,
             this.config.id,
         ]);
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
-        const margin = priceWithoutTax - product.standard_price;
+        const margin = priceWithoutTax - productTemplate.standard_price;
         const orderPriceWithoutTax = order.get_total_without_tax();
         const orderCost = order.get_total_cost();
         const orderMargin = orderPriceWithoutTax - orderCost;
 
-        const costCurrency = this.env.utils.formatCurrency(product.standard_price);
+        const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
         const marginCurrency = this.env.utils.formatCurrency(margin);
         const marginPercent = priceWithoutTax
             ? Math.round((margin / priceWithoutTax) * 10000) / 100
@@ -1325,11 +1259,12 @@ export class PosStore extends Reactive {
         }
     }
 
-    getProducePriceDetails(product, p = false) {
+    getProducePriceDetails({ productTemplate, product, price }) {
         const pricelist = this.getDefaultPricelist();
-        const price = p === false ? product.get_price(pricelist, 1) : p;
+        const basePrice = product?.lst_price || productTemplate.get_price(pricelist, 1);
+        const selectedPrice = price === undefined ? basePrice : price;
 
-        let taxes = product.taxes_id;
+        let taxes = productTemplate.taxes_id;
 
         // Fiscal position.
         const order = this.get_order();
@@ -1340,9 +1275,9 @@ export class PosStore extends Reactive {
         // Taxes computation.
         const taxesData = getTaxesValues(
             taxes,
-            price,
+            selectedPrice,
             1,
-            product,
+            productTemplate,
             this.config._product_default_values,
             this.company,
             this.currency
@@ -1350,8 +1285,8 @@ export class PosStore extends Reactive {
         return taxesData;
     }
 
-    getProductPrice(product, p = false) {
-        const taxesData = this.getProducePriceDetails(product, p);
+    getProductPrice({ product, productTemplate, price = false }) {
+        const taxesData = this.getProducePriceDetails({ product, productTemplate, price });
         if (this.config.iface_tax_included === "total") {
             return taxesData.total_included;
         } else {

@@ -12,7 +12,7 @@
               <t t-set-slot="product-name">
                 <!-- FIXME: pos_sale does not always correctly import orders -->
                 <!-- that makes is such that we might have a line w\o product; that's why we need the  conditional chaining here-->
-                  <i t-if="line.get_product()?.isTracked()"
+                  <i t-if="line.get_product()?.product_tmpl_id?.isTracked()"
                       t-on-click.stop="() => this.editPackLotLines(line)" role="img"
                       t-attf-class="{{ line.has_valid_product_lot() ? 'text-success' : 'text-danger'}} fa fa-list line-lot-icon ms-1"
                       t-attf-title="{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product lot'}}" />

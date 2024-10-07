@@ -3,8 +3,8 @@
 from odoo import api, models
 
 
-class ProductProduct(models.Model):
-    _inherit = ["product.product"]
+class ProductTemplate(models.Model):
+    _inherit = "product.template"
 
     @api.model
     def _load_pos_data_fields(self, config_id):

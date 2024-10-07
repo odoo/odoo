@@ -5,12 +5,12 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ComboPage extends Component {
     static template = "pos_self_order.ComboPage";
-    static props = ["product"];
+    static props = ["productTemplate"];
     static components = { ComboSelection };
 
     setup() {
         this.selfOrder = useSelfOrder();
-        this.selfOrder.lastEditedProductId = this.props.product.id;
+        this.selfOrder.lastEditedProductId = this.props.productTemplate.id;
         this.router = useService("router");
         useSubEnv({
             selectedValues: {},
@@ -21,7 +21,7 @@ export class ComboPage extends Component {
             },
         });
 
-        if (!this.props.product) {
+        if (!this.props.productTemplate) {
             this.router.navigate("product_list");
             return;
         }
@@ -123,7 +123,14 @@ export class ComboPage extends Component {
             this.selfOrder.editedLine.delete();
         }
 
-        this.selfOrder.addToCart(this.props.product, 1, "", {}, {}, this.state.selectedCombos);
+        this.selfOrder.addToCart(
+            this.props.productTemplate,
+            1,
+            "",
+            {},
+            {},
+            this.state.selectedCombos
+        );
         this.router.back();
     }
 
@@ -135,11 +142,11 @@ export class ComboPage extends Component {
     }
 
     get showQtyButtons() {
-        return this.state.showQtyButtons && this.props.product.self_order_available;
+        return this.state.showQtyButtons && this.props.productTemplate.self_order_available;
     }
 
     get comboIds() {
-        const combo = this.props.product.combo_ids;
+        const combo = this.props.productTemplate.combo_ids;
         return combo.filter(
             (c) =>
                 c.combo_item_ids.length > 1 ||

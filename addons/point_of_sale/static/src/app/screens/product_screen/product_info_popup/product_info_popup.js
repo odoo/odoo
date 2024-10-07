@@ -6,7 +6,7 @@ import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_ba
 export class ProductInfoPopup extends Component {
     static template = "point_of_sale.ProductInfoPopup";
     static components = { Dialog, ProductInfoBanner };
-    static props = ["info", "product", "close"];
+    static props = ["info", "productTemplate", "close"];
 
     setup() {
         this.pos = usePos();
@@ -24,13 +24,6 @@ export class ProductInfoPopup extends Component {
     editProduct() {
         this.pos.editProduct(this.props.product);
         this.props.close();
-    }
-    get isVariant() {
-        return (
-            this.pos.models["product.product"].filter(
-                (p) => p.raw.product_tmpl_id === this.props.product.raw.product_tmpl_id
-            ).length > 1
-        );
     }
     get allowProductEdition() {
         return true; // Overrided in pos_hr

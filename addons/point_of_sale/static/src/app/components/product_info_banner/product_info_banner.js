@@ -10,13 +10,14 @@ export class ProductInfoBanner extends Component {
         AccordionItem,
     };
     static props = {
-        product: Object,
+        productTemplate: Object,
+        product: { type: Object | null, optional: true },
         info: { type: Object, optional: true },
     };
 
     setup() {
         this.pos = usePos();
-        this.fetchStock = useTrackedAsync((p) => this.pos.getProductInfo(p, 1));
+        this.fetchStock = useTrackedAsync((pt, p) => this.pos.getProductInfo(pt, p, 1));
         this.ui = useState(useService("ui"));
         this.state = useState({
             other_warehouses: [],
@@ -29,10 +30,19 @@ export class ProductInfoBanner extends Component {
 
         useEffect(
             () => {
+                if (!this.props.productTemplate) {
+                    return;
+                }
+
+                let product = this.props.product;
+                if (!product) {
+                    product = this.props.productTemplate.product_variant_ids[0];
+                }
+
                 const fetchStocks = async () => {
                     let result = {};
                     if (!this.props.info) {
-                        await this.fetchStock.call(this.props.product);
+                        await this.fetchStock.call(this.props.productTemplate, product);
                         if (this.fetchStock.status === "error") {
                             throw this.fetchStock.result;
                         }
@@ -60,7 +70,7 @@ export class ProductInfoBanner extends Component {
     }
 
     get bannerBackground() {
-        if (!this.props.product.is_storable || this.state.available_quantity > 10) {
+        if (!this.props.productTemplate.is_storable || this.state.available_quantity > 10) {
             return "bg-info";
         }
 

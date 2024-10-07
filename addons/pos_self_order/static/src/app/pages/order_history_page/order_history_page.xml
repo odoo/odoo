@@ -58,7 +58,7 @@
                                             <t t-set="comboParent" t-value="line.combo_parent_id" />
                                             <div t-if="comboParent" class="info ms-2 combo-parent-name">
                                                 <i class="fa fa-th-large me-2" role="img" aria-label="Combo" title="Combo"/>
-                                                <t t-esc="line.combo_parent_id.product_id.display_name" />
+                                                <t t-esc="line.combo_parent_id.product_id.name" />
                                             </div>
                                             <div t-if="line.customer_note" class="d-inline-block m-0 text-muted small break-line">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true" />

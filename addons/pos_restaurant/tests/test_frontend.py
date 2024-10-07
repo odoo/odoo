@@ -278,7 +278,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
 
     def test_09_combo_split_bill(self):
         setup_product_combo_items(self)
-        self.office_combo.write({'lst_price': 40})
+        self.office_combo.product_variant_id.write({'lst_price': 40})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour4ProductCombo')
 

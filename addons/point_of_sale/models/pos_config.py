@@ -679,32 +679,6 @@ class PosConfig(models.Model):
                 'type': 'ir.actions.act_window',
             }
 
-    def _get_available_categories(self):
-        return (
-            self.env["pos.category"]
-            .search(
-                [
-                    *(
-                        self.limit_categories
-                        and self.iface_available_categ_ids
-                        and [("id", "in", self.iface_available_categ_ids._get_descendants().ids)]
-                        or []
-                    ),
-                ],
-                order="sequence",
-            )
-        )
-
-    def _get_available_product_domain(self):
-        domain = [
-            *self.env['product.product']._check_company_domain(self.company_id),
-            ('available_in_pos', '=', True),
-            ('sale_ok', '=', True),
-        ]
-        if self.limit_categories and self.iface_available_categ_ids:
-            domain.append(('pos_categ_ids', 'in', self._get_available_categories().ids))
-        return domain
-
     def _link_same_non_cash_payment_methods(self, source_config):
         pms = source_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)
         if pms:
@@ -738,40 +712,6 @@ class PosConfig(models.Model):
             'journal_id': journal_id,
             'company_id': company_id,
         }).id
-
-    def get_limited_products_loading(self, fields):
-        query = self.env['product.product']._where_calc(
-            self._get_available_product_domain()
-        )
-        sql = SQL(
-            """
-            WITH pm AS (
-                  SELECT product_id,
-                         MAX(write_date) date
-                    FROM stock_move_line
-                GROUP BY product_id
-            )
-               SELECT product_product.id
-                 FROM %s
-            LEFT JOIN pm ON product_product.id=pm.product_id
-                WHERE %s
-             ORDER BY product_product__product_tmpl_id.is_favorite DESC,
-                      CASE WHEN product_product__product_tmpl_id.type = 'service' THEN 1 ELSE 0 END DESC,
-                      pm.date DESC NULLS LAST,
-                      product_product.write_date DESC
-                LIMIT %s
-            """,
-            query.from_clause,
-            query.where_clause or SQL("TRUE"),
-            self.get_limited_product_count(),
-        )
-        product_ids = [r[0] for r in self.env.execute_query(sql)]
-        product_ids.extend(self._get_special_products().ids)
-        products = self.env['product.product'].browse(product_ids)
-        product_combo = products.filtered(lambda p: p['type'] == 'combo')
-        product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
-        products_available = products | product_in_combo
-        return products_available.read(fields, load=False)
 
     def get_limited_product_count(self):
         default_limit = 20000
