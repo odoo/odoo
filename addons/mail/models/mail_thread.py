@@ -3654,25 +3654,33 @@ class MailThread(models.AbstractModel):
         """
         msg_vals = dict(msg_vals or {})
         partner_ids = self._extract_partner_ids_for_notifications(message, msg_vals, recipients_data)
-        if not partner_ids:
-            return
-
-        partner_devices_sudo = self.env['mail.push.device'].sudo()
-        devices = partner_devices_sudo.search([
-            ('partner_id', 'in', partner_ids)
-        ])
+        devices, private_key, public_key = self._get_web_push_parameters(partner_ids)
         if not devices:
             return
+        payload = self._truncate_payload(self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals))
+        self._push_web_notification(devices, private_key, public_key, payload=payload)
 
-        ir_parameter_sudo = self.env['ir.config_parameter'].sudo()
-        vapid_private_key = ir_parameter_sudo.get_param('mail.web_push_vapid_private_key')
-        vapid_public_key = ir_parameter_sudo.get_param('mail.web_push_vapid_public_key')
+    def _get_web_push_parameters(self, partner_ids):
+        """
+        :param partner_ids: IDs of the res.partners
+        :returns: the `mail.push.device` records, the vapid private key and the vapid public key
+        """
+        if not partner_ids:
+            return self.env["mail.push.device"].sudo(), None, None
+        ir_parameter_sudo = self.env["ir.config_parameter"].sudo()
+        vapid_private_key = ir_parameter_sudo.get_param("mail.web_push_vapid_private_key")
+        vapid_public_key = ir_parameter_sudo.get_param("mail.web_push_vapid_public_key")
         if not vapid_private_key or not vapid_public_key:
-            _logger.warning("Missing web push vapid keys !")
-            return
+            return self.env["mail.push.device"].sudo(), None, None
+        partner_devices_sudo = self.env["mail.push.device"].sudo()
+        devices = partner_devices_sudo.search([("partner_id", "in", partner_ids)])
+        return devices, vapid_private_key, vapid_public_key
 
-        payload = self._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
-        payload = self._truncate_payload(payload)
+    def _push_web_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None):
+        """
+        :param payload: JSON serializable dict following the notification api specs https://notifications.spec.whatwg.org/#api
+        :param payload_by_lang a dict mapping payload by lang, either this or payload must be provided
+        """
         if len(devices) < MAX_DIRECT_PUSH:
             session = Session()
             devices_to_unlink = set()
@@ -3685,9 +3693,9 @@ class MailThread(models.AbstractModel):
                             'endpoint': device.endpoint,
                             'keys': device.keys
                         },
-                        payload=json.dumps(payload),
-                        vapid_private_key=vapid_private_key,
-                        vapid_public_key=vapid_public_key,
+                        payload=json.dumps(payload_by_lang and payload_by_lang[device.partner_id.lang] or payload),
+                        vapid_private_key=private_key,
+                        vapid_public_key=public_key,
                         session=session,
                     )
                 except DeviceUnreachableError:
@@ -3704,7 +3712,7 @@ class MailThread(models.AbstractModel):
         else:
             self.env['mail.push'].sudo().create([{
                 'mail_push_device_id': device.id,
-                'payload': json.dumps(payload),
+                'payload': json.dumps(payload_by_lang and payload_by_lang[device.partner_id.lang] or payload),
             } for device in devices])
             self.env.ref('mail.ir_cron_web_push_notification')._trigger()
 

@@ -8,6 +8,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_ACTION, PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from ...tools import jwt, discuss
@@ -460,6 +461,47 @@ class DiscussChannelMember(models.Model):
                     ),
                 },
             )
+            devices, private_key, public_key = self.channel_id._get_web_push_parameters(members.partner_id.ids)
+            if devices:
+                if self.channel_id.channel_type != 'chat':
+                    icon = f"/web/image/discuss.channel/{self.channel_id.id}/avatar_128"
+                elif guest := self.env["mail.guest"]._get_guest_from_context():
+                    icon = f"/web/image/mail.guest/{guest.id}/avatar_128"
+                elif partner := self.env.user.partner_id:
+                    icon = f"/web/image/res.partner/{partner.id}/avatar_128"
+                languages = [partner.lang for partner in devices.partner_id]
+                payload_by_lang = {}
+                for lang in languages:
+                    env_lang = self.with_context(lang=lang).env
+                    payload_by_lang[lang] = {
+                        "title": env_lang._("Incoming call"),
+                        "options": {
+                            "body": env_lang._("Conference: %s", self.channel_id.display_name),
+                            "icon": icon,
+                            "vibrate": [100, 50, 100],
+                            "requireInteraction": True,
+                            "tag": self.channel_id._get_call_notification_tag(),
+                            "data": {
+                                "type": PUSH_NOTIFICATION_TYPE.CALL,
+                                "model": "discuss.channel",
+                                "action": "mail.action_discuss",
+                                "res_id": self.channel_id.id,
+                            },
+                            "actions": [
+                                {
+                                    "action": PUSH_NOTIFICATION_ACTION.DECLINE,
+                                    "type": "button",
+                                    "title": env_lang._("Decline"),
+                                },
+                                {
+                                    "action": PUSH_NOTIFICATION_ACTION.ACCEPT,
+                                    "type": "button",
+                                    "title": env_lang._("Accept"),
+                                },
+                            ]
+                        }
+                    }
+                self.channel_id._push_web_notification(devices, private_key, public_key, payload_by_lang=payload_by_lang)
         return members
 
     def _mark_as_read(self, last_message_id, sync=False):
