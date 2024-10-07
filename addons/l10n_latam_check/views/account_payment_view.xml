@@ -18,7 +18,7 @@
                                     <field name="issuer_vat" column_invisible="parent.payment_method_code == 'own_checks'"/>
                                     <field name="payment_date"/>
                                     <field name="amount" />
-                                    <button type="object" name="get_formview_action" icon="fa-pencil-square-o" title="open" help="Open" column_invisible="parent.state != 'posted'"/>
+                                    <button type="object" name="get_formview_action" icon="fa-pencil-square-o" title="open" help="Open" column_invisible="parent.state == 'draft'"/>
                                 </list>
                             </field>
                             <field name="l10n_latam_move_check_ids" invisible="payment_method_code not in ['in_third_party_checks', 'out_third_party_checks']"
