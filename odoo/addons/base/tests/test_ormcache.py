@@ -23,7 +23,7 @@ class TestOrmCache(TransactionCase):
         # disabling autoretry to avoid hidding "real" errrors
         cls._retry = False
 
-    def test_orm_cache(self):
+    def test_ormcache(self):
         """ Test the effectiveness of the ormcache() decorator. """
         IMD = self.env['ir.model.data']
         XMLID = 'base.group_no_one'
@@ -120,7 +120,7 @@ class TestOrmCache(TransactionCase):
         self.registry.cache_invalidated.clear()
         registry = self.registry
         old_sequences = dict(registry.cache_sequences)
-        with self.assertLogs('odoo.modules.registry') as logs:
+        with self.assertLogs('odoo.registry') as logs:
             registry.cache_invalidated.add('assets')
             self.assertEqual(registry.cache_invalidated, {'assets'})
             registry.signal_changes()
@@ -128,7 +128,7 @@ class TestOrmCache(TransactionCase):
 
         self.assertEqual(
             logs.output,
-            ["INFO:odoo.modules.registry:Caches invalidated, signaling through the database: ['assets']"],
+            ["INFO:odoo.registry:Caches invalidated, signaling through the database: ['assets']"],
         )
 
         for key, value in old_sequences.items():
@@ -148,7 +148,7 @@ class TestOrmCache(TransactionCase):
             registry.check_signaling()
         self.assertEqual(
             logs.output,
-            ["INFO:odoo.modules.registry:Invalidating caches after database signaling: ['assets', 'templates.cached_values']"],
+            ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'templates.cached_values']"],
         )
 
     def test_signaling_01_multiple(self):
@@ -156,7 +156,7 @@ class TestOrmCache(TransactionCase):
         self.registry.cache_invalidated.clear()
         registry = self.registry
         old_sequences = dict(registry.cache_sequences)
-        with self.assertLogs('odoo.modules.registry') as logs:
+        with self.assertLogs('odoo.registry') as logs:
             registry.cache_invalidated.add('assets')
             registry.cache_invalidated.add('default')
             self.assertEqual(registry.cache_invalidated, {'assets', 'default'})
@@ -166,7 +166,7 @@ class TestOrmCache(TransactionCase):
         self.assertEqual(
             logs.output,
             [
-                "INFO:odoo.modules.registry:Caches invalidated, signaling through the database: ['assets', 'default']",
+                "INFO:odoo.registry:Caches invalidated, signaling through the database: ['assets', 'default']",
             ],
         )
 
@@ -187,5 +187,5 @@ class TestOrmCache(TransactionCase):
             registry.check_signaling()
         self.assertEqual(
             logs.output,
-            ["INFO:odoo.modules.registry:Invalidating caches after database signaling: ['assets', 'default', 'templates.cached_values']"],
+            ["INFO:odoo.registry:Invalidating caches after database signaling: ['assets', 'default', 'templates.cached_values']"],
         )
