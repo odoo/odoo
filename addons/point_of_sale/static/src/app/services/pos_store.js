@@ -1428,7 +1428,11 @@ export class PosStore extends Reactive {
         const baseUrl = this.session._base_url;
         return order.export_for_printing(baseUrl, headerData);
     }
-    async printReceipt({ basic = false, order = this.get_order() } = {}) {
+    async printReceipt({
+        basic = false,
+        order = this.get_order(),
+        printBillActionTriggered = false,
+    } = {}) {
         await this.printer.print(
             OrderReceipt,
             {
@@ -1438,8 +1442,10 @@ export class PosStore extends Reactive {
             },
             { webPrintFallback: true }
         );
-        const nbrPrint = order.nb_print;
-        await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+        if (!printBillActionTriggered) {
+            const nbrPrint = order.nb_print;
+            await this.data.write("pos.order", [order.id], { nb_print: nbrPrint + 1 });
+        }
         return true;
     }
     getOrderChanges(skipped = false, order = this.get_order()) {
