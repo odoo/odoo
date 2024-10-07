@@ -53,7 +53,7 @@ from lxml import etree, html
 from requests import PreparedRequest, Session
 from urllib3.util import Url, parse_url
 
-import odoo
+import odoo.orm.registry
 from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
@@ -842,7 +842,7 @@ class TransactionCase(BaseCase):
     registry: Registry = None
     env: api.Environment = None
     cr: Cursor = None
-    muted_registry_logger = mute_logger(odoo.modules.registry._logger.name)
+    muted_registry_logger = mute_logger(odoo.orm.registry._logger.name)
     freeze_time = None
 
     @classmethod

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
@@ -44,40 +43,41 @@ from operator import attrgetter, itemgetter
 
 import babel
 import babel.dates
-import dateutil.relativedelta
 import psycopg2
 import psycopg2.extensions
 from psycopg2.extras import Json
 
 import odoo
-from . import SUPERUSER_ID
-from . import api
-from . import tools
-from .api import NewId
-from .exceptions import AccessError, MissingError, ValidationError, UserError
-from .tools import (
+from odoo import SUPERUSER_ID, tools
+from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
+from odoo.tools import (
     clean_context, config, date_utils, discardattr,
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
     frozendict, get_lang, lazy_classproperty, OrderedSet,
     ormcache, partition, Query, split_every, unique,
     SQL, sql,
 )
-from .tools.lru import LRU
-from .tools.misc import LastOrderedSet, ReversedIterable, unquote
-from .tools.translate import _, LazyTranslate
+from odoo.tools.lru import LRU
+from odoo.tools.misc import LastOrderedSet, ReversedIterable, unquote
+from odoo.tools.translate import _, LazyTranslate
+
+from . import api, fields
+from .api import NewId
+from .fields import Field, Datetime, Command
+from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
+from odoo.osv import expression
 
 import typing
 if typing.TYPE_CHECKING:
     from collections.abc import Reversible
-    from .modules.registry import Registry
-    from odoo.api import Self, ValuesType, IdType
+    from .registry import Registry
+    from .api import Self, ValuesType, IdType
 
 
 _lt = LazyTranslate('base')
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
 
-regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_order = re.compile(r'''
     ^
     (\s*
@@ -90,8 +90,6 @@ regex_order = re.compile(r'''
     (?<!,)
     $
 ''', re.IGNORECASE | re.VERBOSE)
-regex_object_name = re.compile(r'^[a-z0-9_.]+$')
-regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_group
 regex_read_group_spec = re.compile(r'(\w+)(\.(\w+))?(?::(\w+))?$')  # For _read_group
 regex_camel_case = re.compile(r'(?<=[^_])([A-Z])')
@@ -107,6 +105,7 @@ SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 def class_name_to_model_name(classname: str) -> str:
     return regex_camel_case.sub(r'.\1', classname).lower()
 
+
 def parse_read_group_spec(spec: str) -> tuple:
     """ Return a triplet corresponding to the given groupby/path/aggregate specification. """
     res_match = regex_read_group_spec.match(spec)
@@ -120,52 +119,11 @@ def parse_read_group_spec(spec: str) -> tuple:
     groups = res_match.groups()
     return groups[0], groups[2], groups[3]
 
-def check_object_name(name):
-    """ Check if the given name is a valid model name.
-
-        The _name attribute in osv and osv_memory object is subject to
-        some restrictions. This function returns True or False whether
-        the given name is allowed or not.
-
-        TODO: this is an approximation. The goal in this approximation
-        is to disallow uppercase characters (in some places, we quote
-        table/column names and in other not, which leads to this kind
-        of errors:
-
-            psycopg2.ProgrammingError: relation "xxx" does not exist).
-
-        The same restriction should apply to both osv and osv_memory
-        objects for consistency.
-
-    """
-    if regex_object_name.match(name) is None:
-        return False
-    return True
 
 def raise_on_invalid_object_name(name):
     if not check_object_name(name):
         msg = "The _name attribute %s is not valid." % name
         raise ValueError(msg)
-
-def check_pg_name(name):
-    """ Check whether the given name is a valid PostgreSQL identifier name. """
-    if not regex_pg_name.match(name):
-        raise ValidationError("Invalid characters in table name %r" % name)
-    if len(name) > 63:
-        raise ValidationError("Table name %r is too long" % name)
-
-# match private methods, to prevent their remote invocation
-regex_private = re.compile(r'^(_.*|init)$')
-
-def check_method_name(name):
-    """ Raise an ``AccessError`` if ``name`` is a private method name. """
-    if regex_private.match(name):
-        raise AccessError(_lt('Private methods (such as %s) cannot be called remotely.', name))
-
-
-def check_property_field_value_name(property_name):
-    if not regex_alphanumeric.match(property_name) or len(property_name) > 512:
-        raise ValueError(f"Wrong property field value name {property_name!r}.")
 
 
 def fix_import_export_id_paths(fieldname):
@@ -300,73 +258,9 @@ class MetaModel(api.Meta):
                     string='Last Updated on', automatic=True, readonly=True))
 
 
-def origin_ids(ids):
-    """ Return an iterator over the origin ids corresponding to ``ids``.
-        Actual ids are returned as is, and ids without origin are not returned.
-    """
-    return ((id_ or id_.origin) for id_ in ids if (id_ or getattr(id_, "origin", None)))
-
-
-class OriginIds:
-    """ A reversible iterable returning the origin ids of a collection of ``ids``. """
-    __slots__ = ['ids']
-
-    def __init__(self, ids):
-        self.ids = ids
-
-    def __iter__(self):
-        return origin_ids(self.ids)
-
-    def __reversed__(self):
-        return origin_ids(reversed(self.ids))
-
-
-def expand_ids(id0, ids):
-    """ Return an iterator of unique ids from the concatenation of ``[id0]`` and
-        ``ids``, and of the same kind (all real or all new).
-    """
-    yield id0
-    seen = {id0}
-    kind = bool(id0)
-    for id_ in ids:
-        if id_ not in seen and bool(id_) == kind:
-            yield id_
-            seen.add(id_)
-
-
-# maximum number of prefetched records
-PREFETCH_MAX = 1000
-
 # special columns automatically created by the ORM
 LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
-
-# read_group stuff
-READ_GROUP_TIME_GRANULARITY = {
-    'hour': dateutil.relativedelta.relativedelta(hours=1),
-    'day': dateutil.relativedelta.relativedelta(days=1),
-    'week': datetime.timedelta(days=7),
-    'month': dateutil.relativedelta.relativedelta(months=1),
-    'quarter': dateutil.relativedelta.relativedelta(months=3),
-    'year': dateutil.relativedelta.relativedelta(years=1)
-}
-
-READ_GROUP_NUMBER_GRANULARITY = {
-    'year_number': 'year',
-    'quarter_number': 'quarter',
-    'month_number': 'month',
-    'iso_week_number': 'week',  # ISO week number because anything else than ISO is nonsense
-    'day_of_year': 'doy',
-    'day_of_month': 'day',
-    'day_of_week': 'dow',
-    'hour_number': 'hour',
-    'minute_number': 'minute',
-    'second_number': 'second',
-}
-
-READ_GROUP_ALL_TIME_GRANULARITY = READ_GROUP_TIME_GRANULARITY | READ_GROUP_NUMBER_GRANULARITY
-
-
 
 # valid SQL aggregation functions
 READ_GROUP_AGGREGATE = {
@@ -7355,6 +7249,7 @@ class RecordCache(MutableMapping):
 
 
 AbstractModel = BaseModel
+fields._Fields_BaseModel = BaseModel
 
 
 class Model(AbstractModel):
@@ -7532,9 +7427,3 @@ PGERROR_TO_OE = defaultdict(
         '23514': convert_pgerror_constraint,
     },
 )
-
-# keep those imports here to avoid dependency cycle errors
-# pylint: disable=wrong-import-position
-from . import fields
-from .osv import expression
-from .fields import Field, Datetime, Command

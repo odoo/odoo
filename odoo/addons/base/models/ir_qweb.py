@@ -389,7 +389,7 @@ from dateutil.relativedelta import relativedelta
 from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, models, tools
-from odoo.modules import registry
+from odoo.orm import registry
 from odoo.tools import config, safe_eval, pycompat
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST

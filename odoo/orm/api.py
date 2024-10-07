@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """The Odoo API module defines Odoo Environments and method decorators.
@@ -9,10 +8,18 @@ from __future__ import annotations
 
 __all__ = [
     'Environment',
-    'Meta',
-    'model',
-    'constrains', 'depends', 'onchange', 'returns',
+    'NewId',
+    'autovacuum',
     'call_kw',
+    'constrains',
+    'depends',
+    'depends_context',
+    'model',
+    'model_create_multi',
+    'onchange',
+    'ondelete',
+    'readonly',
+    'returns',
 ]
 
 import logging
@@ -30,14 +37,18 @@ try:
 except ImportError:
     from decorator import decorator
 
-from .exceptions import AccessError, UserError, CacheMiss
-from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL
-from .tools.translate import get_translation, get_translated_module, LazyGettext
+from odoo import SUPERUSER_ID
+from odoo.exceptions import AccessError, UserError, CacheMiss
+from odoo.sql_db import BaseCursor
+from odoo.tools import clean_context, frozendict, lazy_property, OrderedSet, Query, SQL
+from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap
+
+from .registry import Registry
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
-    from odoo.models import BaseModel
+    from .models import BaseModel
     try:
         from typing_extensions import Self  # noqa: F401
     except ImportError:
@@ -1537,9 +1548,3 @@ class Starred:
 
     def __repr__(self):
         return f"{self.value!r}*"
-
-
-# keep those imports here in order to handle cyclic dependencies correctly
-from odoo import SUPERUSER_ID
-from odoo.modules.registry import Registry
-from .sql_db import BaseCursor

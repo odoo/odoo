@@ -22,6 +22,7 @@ import psycopg2
 
 import odoo
 from odoo import SUPERUSER_ID
+from odoo.modules.db import FunctionStatus
 from odoo.sql_db import TestCursor
 from odoo.tools import (
     SQL,
@@ -35,8 +36,6 @@ from odoo.tools import (
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
-
-from .db import FunctionStatus
 
 if typing.TYPE_CHECKING:
     from odoo.models import BaseModel
@@ -131,7 +130,7 @@ class Registry(Mapping):
         try:
             registry.setup_signaling()
             # This should be a method on Registry
-            from .loading import load_modules, reset_modules_state  # noqa: PLC0415
+            from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             try:
                 load_modules(registry, force_demo, status, update_module)
             except Exception:
@@ -289,7 +288,7 @@ class Registry(Mapping):
         and registers them in the registry.
 
         """
-        from .. import models
+        from . import models  # noqa: PLC0415
 
         # clear cache to ensure consistency, but do not signal it
         for cache in self.__caches.values():
