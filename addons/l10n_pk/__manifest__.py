@@ -17,6 +17,7 @@
         'data/account_tax_wh_report.xml',
     ],
     'demo': [
+        'demo/res_partner_demo.xml',
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
