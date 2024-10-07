@@ -4142,10 +4142,11 @@ var SnippetsMenu = Widget.extend({
         $textInput.focus();
         $textInput.select();
         $snippet.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging'); // prevent drag
-        $input.find('.o_we_confirm_btn').click(async () => {
-            const name = $textInput.val();
-            if (name !== snippetName) {
-                this._execWithLoadingEffect(async () => {
+
+        const confirmButtonClickHandler = async (delay = 500) => {
+            const name = $textInput[0].value.trim();
+            if (name && name !== snippetName) {
+                await this._execWithLoadingEffect(async () => {
                     await this._rpc({
                         model: 'ir.ui.view',
                         method: 'rename_snippet',
@@ -4157,9 +4158,28 @@ var SnippetsMenu = Widget.extend({
                     });
                 }, true);
             }
-            await this._loadSnippetsTemplates(name !== snippetName);
-        });
-        $input.find('.o_we_cancel_btn').click(async () => {
+            setTimeout(async () => {
+                await this._loadSnippetsTemplates(name && name !== snippetName);
+            }, delay);
+        };
+
+        const handleFocusOut = async () => {
+            await confirmButtonClickHandler();
+        };
+
+        const handleKeyDown = async (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                await confirmButtonClickHandler(0);
+                $textInput[0].removeEventListener("focusout", handleFocusOut);
+            }
+        };
+
+        $textInput[0].addEventListener("focusout", handleFocusOut);
+        $textInput[0].addEventListener("keydown", handleKeyDown);
+
+        $input[0].querySelector(".o_we_cancel_btn").addEventListener("mousedown", async () => {
+            $textInput[0].removeEventListener("focusout", handleFocusOut);
             await this._loadSnippetsTemplates(false);
         });
     },
