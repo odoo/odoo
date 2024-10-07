@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models
 from odoo.osv import expression
 
@@ -21,7 +19,7 @@ class CrmLead(models.Model):
             company_currency = lead.company_currency or self.env.company.currency_id
             sale_orders = lead.order_ids.filtered_domain(self._get_lead_sale_order_domain())
             lead.sale_amount_total = sum(
-                order.currency_id._convert(
+                order.currency_id.sudo()._convert(
                     order.amount_untaxed, company_currency, order.company_id, order.date_order or fields.Date.today()
                 )
                 for order in sale_orders
