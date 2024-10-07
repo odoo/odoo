@@ -86,38 +86,28 @@
     display: contents;
 }
 
-// Mobile preview
-%o-mobile-phone {
-    @include media-breakpoint-up(md) {
-        height: 735px !important;
-        width: 362px;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+@mixin o-mobile-phone {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 368px;
+    height: 763px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
+                16px 12px 32px rgba(0, 0, 0, 0.15),
+                64px 0 64px rgba(0, 0, 0, 0.15);
+    border-radius: 2rem;
 
-        // Below the following height, the preview size decreases to ensure it
-        // will always be fully visible.
-        @media(max-height: calc(800px + #{$o-navbar-height})) {
-            height: 602px !important;
-            width: 310px;
+    @media (max-height: 600px) {
+        transform: translate(-50%, -50%) scale(0.6);
+    }
 
-            div.o_mobile_preview_layout, img.img_mobile {
-                height: 659px;
-                width: 342px;
-                top: -30px;
-                left: -17px;
-            }
-        }
+    @media (min-height: 601px) and (max-height: 768px) {
+        transform: translate(-50%, -50%) scale(0.75);
+    }
 
-        .o_mobile_preview_layout, .img_mobile {
-            position: absolute;
-            pointer-events: none;
-            // The mobile phone image placed on top of the iframe must be moved
-            // to align the outlines of the iframe with the outlines of the
-            // mobile screen.
-            top: -36px;
-            left: -20px;
-        }
+    @media (min-height: 769px) and (max-height: 900px) {
+        transform: translate(-50%, -50%) scale(0.85);
     }
 }
 
@@ -133,9 +123,20 @@
         height: 100%;
 
         div.is_mobile {
-            @extend %o-mobile-phone;
+            width: 100%;
+            height: 100%;
+
             @include media-breakpoint-up(md) {
-                position: relative;
+                @include o-mobile-phone;
+
+                iframe {
+                    $mobile-frame-top-offset: 60px;
+                    $mobile-frame-total-offset: 96px;
+
+                    position: absolute;
+                    height: calc(100% - #{$mobile-frame-total-offset});
+                    top: $mobile-frame-top-offset;
+                }
             }
         }
     }
