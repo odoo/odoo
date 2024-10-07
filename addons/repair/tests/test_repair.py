@@ -299,7 +299,7 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(lineD.state, 'assigned')
         num_of_lines = len(repair.move_ids)
         self.assertFalse(repair.move_id)
-        self.assertTrue(repair.has_uncomplete_moves)
+        self.assertFalse(repair.has_uncomplete_moves)
         repair.action_repair_end()
         self.assertFalse((repair.move_id | repair.move_ids).picking_id, "No picking for repair moves")
         self.assertEqual(repair.state, "done")
@@ -728,3 +728,38 @@ class TestRepair(common.TransactionCase):
         sale_order = repair_order.sale_order_id
         sale_order.action_confirm()
         self.assertEqual(sale_order.order_line.qty_delivered, 1.0)
+
+    def test_repair_order_uncomplete_moves(self):
+        """
+        This test checks that the `has_uncomplete_moves` field is correctly set on a repair order.
+        """
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_storable_order_repair.id,
+            'product_uom': self.product_storable_order_repair.uom_id.id,
+            'partner_id': self.res_partner_1.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_product_5.id,
+                    'product_uom_qty': 3.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                }),
+                Command.create({
+                    'product_id': self.product_product_6.id,
+                    'product_uom_qty': 4.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                }),
+            ],
+        })
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        self.assertFalse(repair_order.has_uncomplete_moves)
+        repair_order.move_ids[0].quantity = 1.0
+        self.assertTrue(repair_order.has_uncomplete_moves)
+        repair_order.move_ids[1].quantity = 2
+        self.assertTrue(repair_order.has_uncomplete_moves)
+        repair_order.move_ids[0].quantity = 3.0
+        repair_order.move_ids[1].quantity = 4.0
+        self.assertFalse(repair_order.has_uncomplete_moves)
+        repair_order.action_repair_end()
