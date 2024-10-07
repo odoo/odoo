@@ -176,8 +176,8 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'name': 'Blanket test',
             'quantity_copy': 'none',
         })
-        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41})
-        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42})
+        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41, 'product_description_variants': 'BO-1 Custom Description'})
+        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42, 'product_description_variants': 'BO-2 Custom Description'})
         requisition_1 = self.env['purchase.requisition'].create({
             'line_ids': [line1],
             'type_id': requisition_type.id,
@@ -218,10 +218,12 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         move1._action_confirm()
         move2._action_confirm()
         # Verifications
-        POL1 = self.env['purchase.order.line'].search([('product_id', '=', product_1.id)]).order_id
-        POL2 = self.env['purchase.order.line'].search([('product_id', '=', product_2.id)]).order_id
-        self.assertFalse(POL1 == POL2, 'The two blanket orders should generate two purchase different purchase orders')
-        POL1.write({'order_line': [
+        po1 = self.env['purchase.order.line'].search([('product_id', '=', product_1.id)]).order_id
+        po2 = self.env['purchase.order.line'].search([('product_id', '=', product_2.id)]).order_id
+        self.assertFalse(po1 == po2, 'The two blanket orders should generate two purchase different purchase orders')
+        self.assertTrue('BO-1 Custom Description' in po1.order_line.name, 'The description of the line in the blanket order should be included in the purchase order line description')
+        self.assertTrue('BO-2 Custom Description' in po2.order_line.name, 'The description of the line in the blanket order should be included in the purchase order line description')
+        po1.write({'order_line': [
             (0, 0, {
                 'name': product_2.name,
                 'product_id': product_2.id,

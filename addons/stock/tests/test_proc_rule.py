@@ -5,7 +5,7 @@ from datetime import date, datetime, timedelta
 
 from odoo.tests.common import Form, TransactionCase
 from odoo.tools import mute_logger
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class TestProcRule(TransactionCase):
@@ -23,6 +23,7 @@ class TestProcRule(TransactionCase):
     def test_qty_to_order_remainder_decimal(self):
         """Test case for when remainder is decimal"""
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        self.product.type = 'product'
         orderpoint_form.product_id = self.product
         orderpoint_form.location_id = self.env.ref('stock.stock_location_stock')
         orderpoint_form.product_min_qty = 4.0
@@ -158,9 +159,21 @@ class TestProcRule(TransactionCase):
         self.assertEqual(move_orig.date_deadline, new_deadline, msg='deadline date should be unchanged')
         self.assertEqual(move_dest.date_deadline, new_deadline, msg='deadline date should be unchanged')
 
+    def test_consumable_product_reordering_rule(self):
+        """Test that a reordering rule cannot be created for a consumable product"""
+        self.assertEqual(self.product.type, 'consu')
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product
+        orderpoint_form.location_id = self.env.ref('stock.stock_location_stock')
+        orderpoint_form.product_min_qty = 4.0
+        orderpoint_form.product_max_qty = 5.0
+        with self.assertRaises(ValidationError, msg='You cannot create a replenishment rule for a non-storable product.'):
+            orderpoint_form.save()
+
     def test_reordering_rule_1(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        self.product.type = 'product'
         orderpoint_form.product_id = self.product
         orderpoint_form.location_id = warehouse.lot_stock_id
         orderpoint_form.product_min_qty = 0.0
