@@ -933,8 +933,7 @@ class BaseModel(metaclass=MetaModel):
         if not _is_toplevel_call:
             splittor = lambda rs: rs
 
-        # memory stable but ends up prefetching 275 fields (???)
-        for record in splittor(self):
+        for record in splittor(self.with_context(prefetch_fields=False)):
             # main line of record, initially empty
             current = [''] * len(fields)
             lines.append(current)
