@@ -123,7 +123,7 @@ describe('Copy', () => {
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>');
                 },
             });
-        })
+        });
         it('should copy the selection as a list with multiple list items', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<ul><li>[First</li><li>Second]</li>',
@@ -133,6 +133,18 @@ describe('Copy', () => {
                     window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('First\nSecond');
                     window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<ul><li>First</li><li>Second</li></ul>');
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<ul><li>First</li><li>Second</li></ul>');
+                },
+            });
+        });
+        it('should remove uFEFF characters from selection', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[content\ufeff]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('content');
+                    window.chai.expect(clipboardData.getData('text/html')).to.be.equal('<p>content</p>');
+                    window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('<p>content</p>');
                 },
             });
         });
