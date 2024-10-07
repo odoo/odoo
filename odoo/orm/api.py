@@ -48,22 +48,14 @@ from .registry import Registry
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
-    from .models import BaseModel
-    try:
-        from typing_extensions import Self  # noqa: F401
-    except ImportError:
-        from typing import Self  # noqa: F401
+    from .types import BaseModel, ValuesType
 
     # not sure Self can work outside of a class?
     S = typing.TypeVar("S", bound=BaseModel)
-    CreateCaller = Callable[[S, 'ValuesType' | list['ValuesType']], S]
-    CreateCallee = Callable[[S, list['ValuesType']], S]
-    CreateLegacyCallee = Callable[[S, 'ValuesType'], S]
-
-DomainType = list[str | tuple[str, str, typing.Any]]
-ContextType = Mapping[str, typing.Any]
-ValuesType = dict[str, typing.Any]
-T = typing.TypeVar('T')
+    CreateCaller = Callable[[S, ValuesType | list[ValuesType]], S]
+    CreateCallee = Callable[[S, list[ValuesType]], S]
+    CreateLegacyCallee = Callable[[S, ValuesType], S]
+    T = typing.TypeVar('T')
 
 _logger = logging.getLogger(__name__)
 
@@ -459,10 +451,10 @@ _create_logger = logging.getLogger(__name__ + '.create')
 
 
 @decorator
-def _model_create_single(create: CreateLegacyCallee[S], self: S, arg: ValuesType | list[ValuesType]) -> CreateCaller[S]:
+def _model_create_single(create: CreateLegacyCallee[S], self: S, arg: ValuesType | list[ValuesType]) -> S:
     # 'create' expects a dict and returns a record
     if isinstance(arg, Mapping):
-        return create(self, typing.cast(ValuesType, arg))
+        return create(self, arg)
     if len(arg) > 1:
         _create_logger.debug("%s.create() called with %d dicts", self, len(arg))
     return self.browse().concat(*(create(self, vals) for vals in arg))
@@ -485,10 +477,10 @@ def model_create_single(method: CreateLegacyCallee[S]) -> CreateCaller[S]:
 
 
 @decorator
-def _model_create_multi(create: CreateCallee[S], self: S, arg: ValuesType | list[ValuesType]) -> CreateCaller[S]:
+def _model_create_multi(create: CreateCallee[S], self: S, arg: ValuesType | list[ValuesType]) -> S:
     # 'create' expects a list of dicts and returns a recordset
     if isinstance(arg, Mapping):
-        return create(self, [typing.cast(ValuesType, arg)])
+        return create(self, [arg])
     return create(self, arg)
 
 
