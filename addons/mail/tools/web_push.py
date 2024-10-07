@@ -19,6 +19,17 @@ from . import jwt
 
 MAX_PAYLOAD_SIZE = 4096
 
+
+class PUSH_NOTIFICATION_TYPE:
+    CALL = "CALL"
+    CANCEL = "CANCEL"
+
+
+class PUSH_NOTIFICATION_ACTION:
+    ACCEPT = "ACCEPT"
+    DECLINE = "DECLINE"
+
+
 _logger = logger.getLogger(__name__)
 
 
