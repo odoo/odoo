@@ -130,6 +130,11 @@ class TestOSSUSA(OssTemplateTestCase):
         self.assertFalse(len(tax_oss), "OSS tax shouldn't be instanced on a US company")
 
     def test_oss_tax_on_eu_branch(self):
+        """Ensure a company outside EU can have an EU branch with an EU VAT and that the OSS feature could be used on those"""
+        # This test can only be run if l10n_be is installed
+        if not self.env['ir.module.module'].search_count([('name', '=', 'l10n_be'), ('state', '=', 'installed')], limit=1):
+            self.skipTest(reason="The belgian CoA is required for this test to be performed but the corresponding localization module isn't installed")
+
         self.root_company = self.company_data['company']
         self.root_company.child_ids = [Command.create({'name': 'Branch A'})]
         self.cr.precommit.run()  # load the CoA
@@ -161,6 +166,7 @@ class TestOSSUSA(OssTemplateTestCase):
 
         self.assertTrue(tax_oss)
         self.assertEqual(tax_oss.company_id, self.sub_child_company)
+        self.assertEqual(tax_oss.country_id, self.foreign_vat_fpos.country_id)
 
 
 @tagged('post_install', 'post_install_l10n', '-at_install')
