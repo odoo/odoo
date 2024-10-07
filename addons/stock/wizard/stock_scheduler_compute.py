@@ -36,7 +36,6 @@ class StockSchedulerCompute(models.TransientModel):
                 self.env['procurement.group'].with_context(allowed_company_ids=cids).run_scheduler(
                     use_new_cursor=self._cr.dbname,
                     company_id=company.id)
-            self._cr.rollback()
         return {}
 
     def procure_calculation(self):
