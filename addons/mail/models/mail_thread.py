@@ -1409,9 +1409,9 @@ class MailThread(models.AbstractModel):
                     alternative = True
                 if part.get_content_type() == 'multipart/mixed':
                     mixed = True
-                if part.get_content_type() == 'bin/plain' and 'attachment' in part.get('Content-Disposition'):
-                    _logger.warning("Message containing an unexpected Content-Type, assuming 'attachment'")
-                    part.replace_header('Content-Type', 'application/pdf;' + part.get('Content-Type', '').split(';')[1])
+                if part.get_content_type() == 'bin/plain' and '.pdf' in part.get_filename():
+                    _logger.warning("Message containing an unexpected Content-Type, assuming 'pdf'")
+                    part.replace_header('Content-Type', part.get('ContentType', '').replace('bin/plain', 'application/pdf'))
                 if part.get_content_maintype() == 'multipart':
                     continue  # skip container
 
