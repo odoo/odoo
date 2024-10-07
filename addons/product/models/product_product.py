@@ -801,5 +801,6 @@ class ProductProduct(models.Model):
             fields.Datetime.now(),
         )
         if lst_price:
-            return (lst_price - self._get_contextual_price()) / lst_price
+            discounted_price = pricelist.currency_id.round(self._get_contextual_price())
+            return (lst_price - discounted_price) / lst_price
         return 0.0
