@@ -164,7 +164,7 @@ function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, $target) {
  * @returns {Array|null}
  */
 function _getNumericAndUnit(value) {
-    const m = value.trim().match(/^(-?[0-9.]+(?:e[+|-]?[0-9]+)?)\s*([A-Za-z%-]*)$/);
+    const m = value.trim().match(/^(-?[0-9.]+(?:e[+|-]?[0-9]+)?)\s*([^\s]*)$/);
     if (!m) {
         return null;
     }
