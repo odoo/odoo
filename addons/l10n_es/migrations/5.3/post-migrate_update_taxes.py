@@ -4,7 +4,7 @@ from odoo import api, SUPERUSER_ID
 
 def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
-    for company in env['res.company'].search([('chart_template', 'like', 'es_%')]):
+    for company in env['res.company'].search([('chart_template', 'like', 'es_%')], order="parent_path"):
         taxes_to_disable = (
             f'{company.id}_account_tax_template_p_iva5_ic_bc',
             f'{company.id}_account_tax_template_p_iva5_ic_sc',
