@@ -352,7 +352,14 @@ body {
 // bootstrap if possible.
 #wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled {
     .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge {
-        color: o-website-value('header-text-color') !important;
+        $header-text-color: o-website-value('header-text-color');
+        // Check if the value is wrapped in quotes (initially it wasn't, and it
+        // didn't work) because we don't want the text color of the navbar to
+        // change once the fix is applied for users who tried the option when it
+        // wasn't working.
+        color: if(str-index(inspect($header-text-color), '"') == 1 or str-index(inspect($header-text-color), "'") == 1,
+            o-color($header-text-color),
+            $header-text-color) !important;
     }
 }
 
