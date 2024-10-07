@@ -159,6 +159,14 @@ class TestPhonenumbersPatch(BaseCase):
         )
         self._assert_parsing_phonenumbers(parse_test_lines_KE)
 
+    def test_region_OM_monkey_patch(self):
+        """Makes sure that patch for Oman phone numbers work"""
+        parse_test_lines_OM = (
+            self.PhoneInputOutputLine("76 123 456", "OM"),
+            self.PhoneInputOutputLine("+968 76 321 852"),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_OM)
+
     def test_region_PA_monkey_patch(self):
         """Makes sure that patch for Panama's phone numbers work"""
         parse_test_lines_PA = (
