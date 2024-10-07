@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.iframeWidget">
-    <div t-if="props.record.data[props.name]" class="h-100" t-att-class="{ 'is_mobile': this.state.isMobile }">
+    <div t-if="props.record.data[props.name]" t-attf-class="{{ this.state.isMobile ? 'is_mobile' : 'h-100' }}">
         <iframe
             frameBorder="0"
             class="d-block"
@@ -12,8 +12,8 @@
             t-att-src="props.record.data[props.name]"/>
         <img t-if="this.state.isMobile"
              alt="phone"
-             class="img_mobile"
-             src="/website/static/src/img/phone.png"/>
+             class="img_mobile h-100"
+             src="/website/static/src/img/phone.svg"/>
     </div>
     <div t-else="">No Url</div>
 </t>
