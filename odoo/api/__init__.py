@@ -16,3 +16,5 @@ from odoo.orm.api import (
     readonly,
     returns,
 )
+
+from odoo.orm.types import ContextType, DomainType, IdType, Self, ValuesType
