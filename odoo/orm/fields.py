@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ High-level objects for fields. """
@@ -28,10 +27,9 @@ import pytz
 from markupsafe import Markup, escape as markup_escape
 from psycopg2.extras import Json as PsycopgJson
 
-from .api import ContextType, DomainType, IdType, NewId, ValuesType
-from .models import BaseModel, check_property_field_value_name
-from .netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
-from .tools import (
+from odoo.exceptions import AccessError, CacheMiss, MissingError, UserError
+from odoo.netsvc import ColoredFormatter, GREEN, RED, DEFAULT, COLOR_PATTERN
+from odoo.tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
     OrderedSet, sql, SQL, date_utils, unique, lazy_property,
     image_process, merge_sequences, is_list_of,
@@ -39,16 +37,25 @@ from .tools import (
     DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT,
     DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT,
 )
-from .tools.sql import pg_varchar
-from .tools.mimetypes import guess_mimetype
-from .tools.misc import unquote, has_list_types, Sentinel, SENTINEL
-from .tools.translate import html_translate
+from odoo.tools.sql import pg_varchar
+from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.misc import unquote, has_list_types, Sentinel, SENTINEL
+from odoo.tools.translate import html_translate
 
-from odoo.exceptions import CacheMiss
 from odoo.osv import expression
+from .api import ContextType, DomainType, IdType, NewId, ValuesType
+from .utils import expand_ids, check_pg_name, check_property_field_value_name, PREFETCH_MAX
+# we may not import models here to avoid cyclic dependencies
 
 T = typing.TypeVar("T")
-M = typing.TypeVar("M", bound=BaseModel)
+# BaseModel will be injected into this module by loading odoo.orm.models
+if typing.TYPE_CHECKING:
+    from .models import BaseModel
+    _Fields_BaseModel = BaseModel
+    M = typing.TypeVar("M", bound=BaseModel)
+else:
+    M = typing.TypeVar("M")
+    _Fields_BaseModel: type
 
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
@@ -103,7 +110,7 @@ def determine(needle, records, *args):
     :raise TypeError: if ``records`` is not a recordset, or ``needle`` is not
                       a callable or valid method name
     """
-    if not isinstance(records, BaseModel):
+    if not isinstance(records, _Fields_BaseModel):
         raise TypeError("Determination requires a subject recordset")
     if isinstance(needle, str):
         needle = getattr(records, needle)
@@ -388,10 +395,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         :param owner: the owner class of the field (the model's definition or registry class)
         :param name: the name of the field
         """
-        assert issubclass(owner, BaseModel)
+        assert issubclass(owner, _Fields_BaseModel)
         self.model_name = owner._name
         self.name = name
-        if is_definition_class(owner):
+        if getattr(owner, 'pool', None) is None:  # models.is_definition_class(owner)
             # only for fields on definition classes, not registry classes
             self._module = owner._module
             owner._field_definitions.append(self)
@@ -2961,7 +2968,7 @@ class Reference(Selection):
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: str ("model,id") or None
-        if isinstance(value, BaseModel):
+        if isinstance(value, _Fields_BaseModel):
             if not validate or (value._name in self.get_values(record.env) and len(value) <= 1):
                 return "%s,%s" % (value._name, value.id) if value else None
         elif isinstance(value, str):
@@ -3187,7 +3194,7 @@ class Many2one(_Relational[M]):
         # cache format: id or None
         if type(value) is int or type(value) is NewId:
             id_ = value
-        elif isinstance(value, BaseModel):
+        elif isinstance(value, _Fields_BaseModel):
             if validate and (value._name != self.comodel_name or len(value) > 1):
                 raise ValueError("Wrong value for %s: %r" % (self, value))
             id_ = value._ids[0] if value._ids else None
@@ -3239,7 +3246,7 @@ class Many2one(_Relational[M]):
             return value
         if not value:
             return False
-        if isinstance(value, BaseModel) and value._name == self.comodel_name:
+        if isinstance(value, _Fields_BaseModel) and value._name == self.comodel_name:
             return value.id
         if isinstance(value, tuple):
             # value is either a pair (id, name), or a tuple of ids
@@ -3334,7 +3341,7 @@ class Many2oneReference(Integer):
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None
-        if isinstance(value, BaseModel):
+        if isinstance(value, _Fields_BaseModel):
             value = value._ids[0] if value._ids else None
         return super().convert_to_cache(value, record, validate)
 
@@ -3691,7 +3698,7 @@ class Properties(Field):
             return {}
 
         container_id = values[self.definition_record]
-        if not isinstance(container_id, (int, BaseModel)):
+        if not isinstance(container_id, (int, _Fields_BaseModel)):
             raise ValueError(f"Wrong container value {container_id!r}")
 
         if isinstance(container_id, int):
@@ -4296,7 +4303,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
-        if isinstance(value, BaseModel):
+        if isinstance(value, _Fields_BaseModel):
             if validate and value._name != self.comodel_name:
                 raise ValueError("Wrong value for %s: %s" % (self, value))
             ids = value._ids
@@ -4381,9 +4388,9 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
             # a tuple of ids, this is the cache format
             value = record.env[self.comodel_name].browse(value)
 
-        if isinstance(value, BaseModel) and value._name == self.comodel_name:
+        if isinstance(value, _Fields_BaseModel) and value._name == self.comodel_name:
             def get_origin(val):
-                return val._origin if isinstance(val, BaseModel) else val
+                return val._origin if isinstance(val, _Fields_BaseModel) else val
 
             # make result with new and existing records
             inv_names = {field.name for field in record.pool.field_inverses[self]}
@@ -4454,7 +4461,7 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         for idx, (recs, value) in enumerate(records_commands_list):
             if isinstance(value, tuple):
                 value = [Command.set(value)]
-            elif isinstance(value, BaseModel) and value._name == self.comodel_name:
+            elif isinstance(value, _Fields_BaseModel) and value._name == self.comodel_name:
                 value = [Command.set(value._ids)]
             elif value is False or value is None:
                 value = [Command.clear()]
@@ -5319,12 +5326,3 @@ def apply_required(model, field_name):
     field = model._fields[field_name]
     if field.store and field.required:
         sql.set_not_null(model.env.cr, model._table, field_name)
-
-
-# imported here to avoid dependency cycle issues
-# pylint: disable=wrong-import-position
-from .exceptions import AccessError, MissingError, UserError
-from .models import (
-    check_pg_name, expand_ids, is_definition_class,
-    BaseModel, PREFETCH_MAX,
-)
