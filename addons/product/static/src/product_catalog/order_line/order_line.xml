@@ -3,7 +3,7 @@
     <t t-name="product.ProductCatalogOrderLine">
         <!-- Replace the element found using the css selector by the content of the portalled
              template.  -->
-        <t t-portal="`#product-${props.productId}-price`">
+        <t t-portal="`#product-${props.productId}-price`" t-if="showPrice">
             <span class="o_product_catalog_price">Unit price: <t t-out="price"/></span>
         </t>
         <div 
