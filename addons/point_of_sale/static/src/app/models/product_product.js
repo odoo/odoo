@@ -190,6 +190,14 @@ export class ProductProduct extends Base {
         );
     }
 
+    getTemplateImageUrl() {
+        return (
+            (this.image_128 &&
+                `/web/image?model=product.template&field=image_128&id=${this.raw.product_tmpl_id}&unique=${this.write_date}`) ||
+            ""
+        );
+    }
+
     get searchString() {
         const fields = ["display_name", "description_sale", "description"];
         return fields
