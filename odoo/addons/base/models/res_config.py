@@ -552,9 +552,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             value = self[name]
             current_value = IrConfigParameter.get_param(icp)
 
-            if field.type == 'char':
+            if field.type == 'char' and field.trim:
                 # storing developer keys as ir.config_parameter may lead to nasty
-                # bugs when users leave spaces around them
+                # bugs when users leave spaces around them, but trim=False should still work
                 value = (value or "").strip() or False
             elif field.type in ('integer', 'float'):
                 value = repr(value) if value else False
