@@ -13,7 +13,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'chart21000100',
             'property_account_expense_categ_id': 'chart70010100',
             'property_account_income_categ_id': 'chart73000100',
-            'code_digits': '8',
+            'code_digits': '10',
             'use_storno_accounting': True,
         }
 
@@ -22,9 +22,9 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.pl',
-                'bank_account_code_prefix': '11.000.00',
-                'cash_account_code_prefix': '12.000.00',
-                'transfer_account_code_prefix': '11.090.00',
+                'bank_account_code_prefix': '11.000.',
+                'cash_account_code_prefix': '12.000.',
+                'transfer_account_code_prefix': '11.090.',
                 'account_default_pos_receivable_account_id': 'chart20000200',
                 'income_currency_exchange_account_id': 'chart75000600',
                 'expense_currency_exchange_account_id': 'chart75010400',
