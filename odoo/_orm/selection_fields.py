@@ -8,7 +8,7 @@ from odoo.tools.sql import pg_varchar
 
 from .fields import Field, determine, resolve_mro
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('odoo.orm.fields')
 
 
 class Selection(Field[str | typing.Literal[False]]):

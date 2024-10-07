@@ -20,7 +20,7 @@ from odoo.tools.translate import html_translate
 
 from .fields import Field
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('odoo.orm.fields')
 
 
 class _String(Field[str | typing.Literal[False]]):

@@ -40,7 +40,7 @@ if typing.TYPE_CHECKING:
     CreateLegacyCallee = Callable[[S, ValuesType], S]
     T = typing.TypeVar('T')
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('odoo.orm')
 
 
 class Params(object):

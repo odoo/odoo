@@ -21,8 +21,8 @@ M = typing.TypeVar('M', bound=BaseModel)
 if typing.TYPE_CHECKING:
     from .types import ContextType, DomainType
 
-_logger = logging.getLogger(__name__)
-_schema = logging.getLogger(__name__[:-7] + '.schema')
+_logger = logging.getLogger('odoo.orm.fields')
+_schema = logging.getLogger('odoo.orm.schema')
 
 
 class _Relational(Field[M], typing.Generic[M]):

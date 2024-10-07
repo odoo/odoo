@@ -17,7 +17,7 @@ from .models import BaseModel
 from .utils import check_property_field_value_name
 
 NoneType = type(None)
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('odoo.orm.fields')
 
 
 class Properties(Field):

@@ -13,7 +13,7 @@ from .fields import Field
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('odoo.orm.fields')
 
 
 class Date(Field[date | typing.Literal[False]]):

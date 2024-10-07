@@ -41,8 +41,8 @@ if typing.TYPE_CHECKING:
     from odoo.models import BaseModel
 
 
-_logger = logging.getLogger(__name__)
-_schema = logging.getLogger('odoo.schema')
+_logger = logging.getLogger('odoo.orm.registry')
+_schema = logging.getLogger('odoo.orm.schema')
 
 
 _REGISTRY_CACHES = {

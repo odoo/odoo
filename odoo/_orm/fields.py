@@ -38,7 +38,7 @@ COMPANY_DEPENDENT_FIELDS = (
     'char', 'float', 'boolean', 'integer', 'text', 'many2one', 'date', 'datetime', 'selection', 'html'
 )
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('odoo.orm.fields')
 
 
 def first(records):
