@@ -1354,7 +1354,13 @@ const Wysiwyg = Widget.extend({
                 if (wysiwygUtils.isImg(element)) {
                     image_processing.loadImageInfo(element, this._rpc.bind(this));
                 }
-                $node.replaceWith(element);
+                const parentEl = $node[0].parentElement;
+                // Replace video element with parent if it's anchor.
+                if (parentEl.tagName === "A" && element.classList.contains("media_iframe_video")) {
+                    parentEl.replaceWith(element);
+                } else {
+                    $node[0].replaceWith(element);
+                }
                 this.odooEditor.unbreakableStepUnactive();
                 this.odooEditor.historyStep();
             } else if (element) {
