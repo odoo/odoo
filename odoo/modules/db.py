@@ -33,6 +33,8 @@ def initialize(cr):
 
     with odoo.tools.misc.file_open(f) as base_sql_file:
         cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
+        # commiting as some table must be writeable during the rest of the initialization (e.g.: ir_logging)
+        cr.commit()
 
     for i in odoo.modules.get_modules():
         mod_path = odoo.modules.get_module_path(i)
