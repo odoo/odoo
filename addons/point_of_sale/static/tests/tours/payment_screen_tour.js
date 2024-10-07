@@ -92,8 +92,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
             PaymentScreen.totalIs("2.00"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            Chrome.createFloatingOrder(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test", "-1"),
             ProductScreen.clickPayButton(),
@@ -115,8 +114,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
             PaymentScreen.totalIs("1.95"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            Chrome.createFloatingOrder(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test", "-1"),
             ProductScreen.clickPayButton(),
@@ -138,8 +136,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             PaymentScreen.totalIs("1.00"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            Chrome.createFloatingOrder(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test 1.25", "1"),
             ProductScreen.clickPayButton(),
@@ -147,8 +144,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             PaymentScreen.totalIs("1.5"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            Chrome.createFloatingOrder(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test 1.4", "1"),
             ProductScreen.clickPayButton(),
@@ -156,8 +152,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             PaymentScreen.totalIs("1.5"),
             PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0" }),
 
-            Chrome.clickMenuOption("Orders"),
-            Chrome.createFloatingOrder(),
+            Chrome.newFloatingOrder(),
 
             ProductScreen.addOrderline("Product Test 1.2", "1"),
             ProductScreen.clickPayButton(),

@@ -18,6 +18,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { deduceUrl } from "@point_of_sale/utils";
 import { user } from "@web/core/user";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
+import { BackButton } from "../screens/product_screen/action_pad/back_button/back_button";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -31,6 +32,7 @@ export class Navbar extends Component {
         DropdownItem,
         SyncPopup,
         OrderTabs,
+        BackButton,
     };
     static props = {};
     setup() {

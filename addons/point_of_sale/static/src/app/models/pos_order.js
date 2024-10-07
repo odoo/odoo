@@ -134,6 +134,9 @@ export class PosOrder extends Base {
     canPay() {
         return this.lines.length;
     }
+    setBooked(booked) {
+        this.uiState.booked = booked;
+    }
     recomputeOrderData() {
         this.amount_paid = this.get_total_paid();
         this.amount_tax = this.get_total_tax();

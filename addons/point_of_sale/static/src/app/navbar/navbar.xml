@@ -4,6 +4,7 @@
     <t t-name="point_of_sale.Navbar">
         <div class="pos-topheader navbar-height d-flex align-items-center justify-content-between px-2 py-1 m-0 bg-white border-bottom">
             <div class="pos-leftheader d-flex align-items-center overflow-hidden">
+                <BackButton t-if="pos.mainScreen.component.name==='TicketScreen'" onClick="() => pos.onClickBackButton()"/>
                 <OrderTabs orders="getOrderTabs()"/>
             </div>
             <div t-if="!ui.isSmall"  class="pos-centerheader d-flex justify-content-center overflow-hidden">
@@ -45,7 +46,7 @@
                                 <DropdownItem t-if="!isDisplayStandalone" onSelected="() => window.open(this.appUrl)">
                                     Install App
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => this.pos.onTicketButtonClick()">
+                                <DropdownItem onSelected="() => this.pos.showScreen('TicketScreen')">
                                     Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2 float-end" t-esc="orderCount"/>
                                 </DropdownItem>
                                 <DropdownItem t-if="showCashMoveButton" onSelected="() => this.pos.cashMove()">

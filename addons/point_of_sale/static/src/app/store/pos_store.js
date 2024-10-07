@@ -1815,35 +1815,6 @@ export class PosStore extends Reactive {
         );
     }
 
-    async onTicketButtonClick() {
-        if (this.isTicketScreenShown) {
-            this.closeScreen();
-        } else {
-            if (this._shouldLoadOrders()) {
-                try {
-                    this.setLoadingOrderState(true);
-                    const orders = await this.getServerOrders();
-                    if (orders && orders.length > 0) {
-                        const message = _t(
-                            "%s orders have been loaded from the server. ",
-                            orders.length
-                        );
-                        this.notification.add(message);
-                    }
-                } finally {
-                    this.setLoadingOrderState(false);
-                    this.showScreen("TicketScreen");
-                }
-            } else {
-                this.showScreen("TicketScreen");
-            }
-        }
-    }
-
-    get isTicketScreenShown() {
-        return this.mainScreen.component === TicketScreen;
-    }
-
     _shouldLoadOrders() {
         return this.config.raw.trusted_config_ids.length > 0;
     }

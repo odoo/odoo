@@ -57,17 +57,11 @@ export class PartnerList extends Component {
 
     goToOrders(partner) {
         this.props.close();
-        const partnerHasActiveOrders = this.pos
-            .get_open_orders()
-            .some((order) => order.partner?.id === partner.id);
-        const stateOverride = {
-            search: {
-                fieldName: "PARTNER",
-                searchTerm: partner.name,
+        this.pos.showScreen("TicketScreen", {
+            context: {
+                search_default_partner_id: partner.id,
             },
-            filter: partnerHasActiveOrders ? "" : "SYNCED",
-        };
-        this.pos.showScreen("TicketScreen", { stateOverride });
+        });
     }
 
     confirm() {

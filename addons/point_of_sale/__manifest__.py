@@ -134,28 +134,20 @@
 
             ('include', 'point_of_sale.base_app'),
 
-            'web/static/src/core/colorlist/colorlist.scss',
-            'web/static/src/webclient/webclient_layout.scss',
-
-            'web/static/src/webclient/icons.scss',
-
             # scss variables and utilities
             'point_of_sale/static/src/scss/pos_variables_extra.scss',
             'web/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/fonts/fonts.scss',
 
+            ("include", "web.assets_backend"),
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
             ('remove', '/web/static/src/core/dialog/dialog.scss'),
-            'web/static/src/core/currency.js',
             # barcode scanner
             'barcodes/static/src/barcode_service.js',
             'barcodes/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_parser.js',
             'barcodes_gs1_nomenclature/static/src/js/barcode_service.js',
-            'web/static/src/views/fields/parsers.js',
-            # report download utils
-            'web/static/src/webclient/actions/reports/utils.js',
             # PoS files
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
@@ -168,17 +160,7 @@
             # account
             'account/static/src/helpers/*.js',
             'account/static/src/services/account_move_service.js',
-
             'mail/static/src/core/common/sound_effects_service.js',
-            "web/static/src/core/browser/router.js",
-            "web/static/src/core/debug/**/*",
-            'web/static/src/model/**/*',
-            'web/static/src/views/**/*',
-            'web/static/src/search/**/*',
-            'web/static/src/webclient/actions/**/*',
-            ('remove', 'web/static/src/webclient/actions/reports/layout_assets/**/*'),
-            ('remove', 'web/static/src/webclient/actions/**/*css'),
-            'web/static/src/webclient/company_service.js',
         ],
         'point_of_sale.base_tests': [
             "web/static/lib/hoot-dom/**/*",

@@ -13,4 +13,24 @@
         </field>
     </record>
 
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="name">pos.order.tree.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='tracking_number']" position="after">
+                <field name="table_id" />
+            </xpath>
+        </field>
+    </record>
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.list.select.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="table_id"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

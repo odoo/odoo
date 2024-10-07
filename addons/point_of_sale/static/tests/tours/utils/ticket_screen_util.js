@@ -1,6 +1,6 @@
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
-import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import { isSyncStatusConnected } from "@point_of_sale/../tests/tours/utils/chrome_util";
+import { Kanban, List } from "./generic_components/web_view_utils";
 
 export function clickDiscard() {
     return {
@@ -12,30 +12,17 @@ export function clickDiscard() {
 export function selectOrder(orderName) {
     return [
         {
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}")`,
-            run: "click",
+            isActive: ["desktop"],
+            ...List.clickRow(orderName),
         },
-    ];
-}
-export function selectOrderByPrice(price) {
-    return [
         {
-            trigger: `.ticket-screen .order-row > .col:contains("${price}")`,
-            run: "click",
-        },
-    ];
-}
-export function doubleClickOrder(orderName) {
-    return [
-        {
-            trigger: `.ticket-screen .order-row > .col:nth-child(2):contains("${orderName}")`,
-            run: "dblclick",
+            isActive: ["mobile"],
+            ...Kanban.click(orderName),
         },
     ];
 }
 export function loadSelectedOrder() {
     return [
-        ProductScreen.clickReview(),
         {
             trigger: ".ticket-screen .pads .button.validation.load-order-button",
             run: "click",
@@ -99,7 +86,6 @@ export function settleTips() {
 }
 export function clickControlButton(name) {
     return [
-        ProductScreen.clickReview(),
         {
             trigger: `.ticket-screen ${ProductScreen.controlButtonTrigger(name)}`,
             run: "click",
@@ -108,7 +94,6 @@ export function clickControlButton(name) {
 }
 export function confirmRefund() {
     return [
-        ProductScreen.clickReview(),
         {
             trigger: ".ticket-screen .btn-primary.pay-order-button",
             run: "click",
@@ -119,11 +104,11 @@ export function checkStatus(orderName, status) {
     return [
         {
             isActive: ["desktop"],
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(7):contains(${status})`,
+            trigger: List.rowTrigger(orderName) + `:contains("${status}")`,
         },
         {
             isActive: ["mobile"],
-            trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(2):contains(${status})`,
+            trigger: Kanban.trigger(orderName) + `:contains("${status}")`,
         },
     ];
 }
@@ -147,13 +132,6 @@ export function contains(string) {
         },
     ];
 }
-export function noNewTicketButton() {
-    return [
-        {
-            trigger: ".ticket-screen .controls .buttons:nth-child(1):has(.discard)",
-        },
-    ];
-}
 export function filterIs(name) {
     return [
         {
@@ -169,21 +147,14 @@ export function invoicePrinted() {
     ];
 }
 export function toRefundTextContains(text) {
-    return inLeftSide({
+    return {
         trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
-    });
+    };
 }
 export function refundedNoteContains(text) {
-    return inLeftSide({
+    return {
         trigger: `.ticket-screen .refund-note:contains("${text}")`,
-    });
-}
-export function tipContains(amount) {
-    return [
-        {
-            trigger: `.ticket-screen .tip-cell:contains("${amount}")`,
-        },
-    ];
+    };
 }
 export function receiptTotalIs(amount) {
     return [

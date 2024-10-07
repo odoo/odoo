@@ -51,6 +51,27 @@ export function startPoS() {
         {
             content: "Start PoS",
             trigger: ".screen-login .btn.open-register-btn",
+        },
+    ];
+}
+
+export function clickFloatingOrder(orderName) {
+    return [
+        {
+            isActive: ["mobile"],
+            trigger: ".pos-leftheader button.fa-caret-down",
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            content: "click on the floating order " + orderName,
+            trigger: `.modal-dialog button:contains("${orderName}")`,
+            run: "click",
+        },
+        {
+            isActive: ["desktop"],
+            content: "click on the floating order " + orderName,
+            trigger: `.pos-leftheader button:contains("${orderName}")`,
             run: "click",
         },
     ];
@@ -69,6 +90,34 @@ export function fillTextArea(target, value) {
         run: `edit ${value}`,
     };
 }
-export function createFloatingOrder() {
-    return { trigger: ".pos-leftheader .list-plus-btn", run: "click" };
+export function newFloatingOrder() {
+    return {
+        content: "click on the new floating order button",
+        trigger: ".pos-leftheader button i.fa-plus-circle",
+        run: "click",
+    };
+}
+
+export function floatingOrderDoesNotExist(orderName) {
+    return [
+        {
+            isActive: ["mobile"],
+            trigger: ".pos-leftheader button.fa-caret-down",
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            content: "click on the floating order " + orderName,
+            trigger: negate(`.modal-body button:contains("${orderName}")`),
+        },
+        {
+            isActive: ["desktop"],
+            content: "click on the floating order " + orderName,
+            trigger: negate(`button:contains("${orderName}")`, ".pos-leftheader"),
+        },
+        {
+            ...Dialog.cancel(),
+            isActive: ["mobile"],
+        },
+    ];
 }
