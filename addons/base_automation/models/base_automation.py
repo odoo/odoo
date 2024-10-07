@@ -724,8 +724,9 @@ class BaseAutomation(models.Model):
                 # call original method
                 records = create.origin(self.with_env(automations.env), vals_list, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
+                pre = {a: a._filter_pre(records) for a in automations}
                 for automation in automations.with_context(old_values=None):
-                    automation._process(automation._filter_post(records, feedback=True))
+                    automation._process(automation._filter_post(pre[automation], feedback=True))
                 return records.with_env(self.env)
 
             return create

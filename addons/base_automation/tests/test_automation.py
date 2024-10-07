@@ -156,6 +156,28 @@ class TestAutomation(TransactionCaseWithUserDemo):
         server_action.with_context(context).run()
         self.assertEqual(partner.name, 'Reset Name', 'The automatic action must not be performed')
 
+    def test_05_on_create_pre_filter_domain(self):
+        """ Checks that the domain is respected when processing automation  """
+        model = self.env.ref("base.model_res_partner")
+        automation = self.env["base.automation"].create({
+            "name": "Test automated action",
+            "trigger": "on_create_or_write",
+            "filter_pre_domain": "[('name', '=', 'test')]",
+            "model_id": model.id,
+        })
+        action = self.env["ir.actions.server"].create({
+            "name": "Modify name",
+            "base_automation_id": automation.id,
+            "model_id": model.id,
+            "state": "code",
+            "code": "record.write({'name': 'Modified Name'})"
+        })
+        action.flush_recordset()
+        automation.write({"action_server_ids": [Command.link(action.id)]})
+
+        bilbo = self.env["res.partner"].create({"name": "Bilbo Baggins"})
+        self.assertEqual(bilbo.name, 'Bilbo Baggins', 'The name should be unchanged')
+
     def test_create_automation_rule_for_valid_model(self):
         """
         Automation rules cannot be created for models that have no fields.
