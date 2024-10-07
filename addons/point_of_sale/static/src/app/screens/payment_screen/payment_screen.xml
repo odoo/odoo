@@ -16,7 +16,8 @@
                         sendPaymentCancel.bind="sendPaymentCancel"
                         sendPaymentRequest.bind="sendPaymentRequest"
                         selectLine.bind="selectPaymentLine"
-                        updateSelectedPaymentline.bind="updateSelectedPaymentline" />
+                        updateSelectedPaymentline.bind="updateSelectedPaymentline"
+                        isRefundOrder="isRefundOrder" />
                 </div>
                 <t t-call="point_of_sale.PaymentScreenButtons" />
                 <div t-attf-class="d-flex switchpane gap-2 mt-2">
@@ -49,7 +50,8 @@
                                 sendPaymentCancel.bind="sendPaymentCancel"
                                 sendPaymentRequest.bind="sendPaymentRequest"
                                 selectLine.bind="selectPaymentLine"
-                                updateSelectedPaymentline.bind="updateSelectedPaymentline" />
+                                updateSelectedPaymentline.bind="updateSelectedPaymentline"
+                                isRefundOrder="isRefundOrder" />
                         </div>
                     </div>
                 </div>
@@ -69,14 +71,14 @@
     <t t-name="point_of_sale.PaymentScreenValidate">
         <t t-if="ui.isSmall">
             <button class="btn-switchpane validation-button btn btn-primary btn-lg flex-fill py-3 lh-lg"
-                t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"
+                t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) and !currentOrder.isRefundInProcess() }"
                 t-on-click="() => this.validateOrder()">
                 <span>Validate</span>
             </button>
         </t>
         <t t-else="">
             <button class="button next validation btn btn-primary btn-lg w-50 py-3 lh-lg"
-                t-attf-class="{{currentOrder.is_paid() and currentOrder._isValidEmptyOrder() ? 'highlight' : 'disabled'}}"
+                t-attf-class="{{currentOrder.is_paid() and currentOrder._isValidEmptyOrder() and !currentOrder.isRefundInProcess() ? 'highlight' : 'disabled'}}"
                 t-on-click="() => this.validateOrder()">
                 <span class="next_text">Validate</span>
             </button>
