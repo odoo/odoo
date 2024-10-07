@@ -797,7 +797,7 @@ class Picking(models.Model):
     def _onchange_picking_type(self):
         if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
-            (self.move_ids | self.move_ids_without_package).update({
+            (self.move_ids | self.move_ids_without_package).filtered(lambda m: m._origin).update({
                 "picking_type_id": self.picking_type_id,  # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
                 "company_id": self.company_id,
             })
