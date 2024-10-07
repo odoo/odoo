@@ -4,6 +4,7 @@ import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_p
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Notification from "@point_of_sale/../tests/tours/utils/generic_components/notification_util";
 import { registry } from "@web/core/registry";
+import { scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("PosLoyaltyTour1", {
     test: true,
@@ -516,7 +517,7 @@ registry.category("web_tour.tours").add("PosRewardProductScan", {
         [
             Dialog.confirm("Open session"),
 
-            ProductScreen.scan_barcode("95412427100283"),
+            scan_barcode("95412427100283"),
             ProductScreen.selectedOrderlineHas("product_a", "1.00", "1,150.00"),
             PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
             PosLoyalty.orderTotalIs("575.00"),
@@ -528,7 +529,7 @@ registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
     test: true,
     steps: () =>
         [
-            ProductScreen.scan_barcode("0195412427100283"),
+            scan_barcode("0195412427100283"),
             ProductScreen.selectedOrderlineHas("product_a", "1.00", "1,150.00"),
             PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
             PosLoyalty.orderTotalIs("575.00"),
