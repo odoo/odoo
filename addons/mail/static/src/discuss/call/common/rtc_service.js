@@ -978,7 +978,7 @@ export class Rtc extends Record {
             }
         }
         const updatedTrack = type === "camera" ? this.state.cameraTrack : this.state.screenTrack;
-        await this.network.updateUpload(type, updatedTrack);
+        await this.network?.updateUpload(type, updatedTrack);
         if (!this.selfSession) {
             return;
         }
