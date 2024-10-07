@@ -404,7 +404,7 @@ class PaymentTransaction(models.Model):
         # Update the payment method.
         payment_method_type = entity_data.get('method', '')
         if payment_method_type == 'card':
-            payment_method_type = entity_data.get('card', {}).get('network').lower()
+            payment_method_type = entity_data.get('card', {}).get('network', '').lower()
         payment_method = self.env['payment.method']._get_from_code(
             payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
         )
