@@ -9,12 +9,15 @@ export class BillScreen extends Component {
     static components = { OrderReceipt, Dialog };
     static props = {
         close: Function,
+        printBillActionTriggered: { type: Boolean, optional: true },
     };
     setup() {
         this.pos = usePos();
         this.printer = useState(useService("printer"));
     }
     async print() {
-        await this.pos.printReceipt();
+        await this.pos.printReceipt({
+            printBillActionTriggered: this.props.printBillActionTriggered,
+        });
     }
 }
