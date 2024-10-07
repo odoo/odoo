@@ -121,7 +121,7 @@ import warnings
 from datetime import date, datetime, time
 
 import odoo.modules
-from odoo.models import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY
+from odoo.orm.utils import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY
 from odoo.tools import Query, SQL, get_lang
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
 

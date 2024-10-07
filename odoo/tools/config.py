@@ -211,7 +211,7 @@ class configmanager:
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
         group.add_option("--syslog", action="store_true", dest="syslog", my_default=False, help="Send the log to the syslog server")
-        group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+        group.add_option('--log-handler', action="append", default=[], my_default=DEFAULT_LOG_HANDLER, metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.api:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
         group.add_option('--log-web', action="append_const", dest="log_handler", const="odoo.http:DEBUG", help='shortcut for --log-handler=odoo.http:DEBUG')
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="odoo.sql_db:DEBUG", help='shortcut for --log-handler=odoo.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
