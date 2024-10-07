@@ -1,19 +1,54 @@
 /* eslint-env serviceworker */
 /* eslint-disable no-restricted-globals */
-self.addEventListener("notificationclick", (event) => {
+self.addEventListener("notificationclick", async (event) => {
     event.notification.close();
     if (event.notification.data) {
-        const { action, model, res_id } = event.notification.data;
+        const { action, model, res_id, type } = event.notification.data;
         if (model === "discuss.channel") {
-            clients.openWindow(`/odoo/${res_id}/action-${action}`);
+            let route = `/odoo/${res_id}/action-${action}`;
+            if (type === "call") {
+                switch (event.action) {
+                    case "accept":
+                        route += "?call=accept";
+                        break;
+                    case "decline":
+                        await fetch("/mail/rtc/channel/leave_call", {
+                            headers: {
+                                "Content-type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                id: 1,
+                                jsonrpc: "2.0",
+                                method: "call",
+                                params: {
+                                    channel_id: res_id,
+                                },
+                            }),
+                            method: "POST",
+                            mode: "cors",
+                            credentials: "include",
+                        });
+                        return;
+                }
+            }
+            clients.openWindow(route);
         } else {
             const modelPath = model.includes(".") ? model : `m-${model}`;
             clients.openWindow(`/odoo/${modelPath}/${res_id}`);
         }
     }
 });
-self.addEventListener("push", (event) => {
+self.addEventListener("push", async (event) => {
     const notification = event.data.json();
+    if (notification.options?.type === "cancel") {
+        const notifications = await self.registration.getNotifications({
+            tag: notification.options?.tag,
+        });
+        for (const notification of notifications) {
+            notification.close();
+        }
+        return;
+    }
     self.registration.showNotification(notification.title, notification.options || {});
 });
 self.addEventListener("pushsubscriptionchange", async (event) => {

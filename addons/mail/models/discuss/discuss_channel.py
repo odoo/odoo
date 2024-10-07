@@ -499,6 +499,14 @@ class Channel(models.Model):
                     ),
                 },
             )
+            if push_parameters := self._get_web_push_parameters(members.partner_id.ids):
+                self._push_web_notification({
+                    "title": "call aborted",
+                    "options": {
+                        "type": "cancel",
+                        "tag": f"call_{self.id}",
+                    }
+                }, push_parameters)
 
     # ------------------------------------------------------------
     # MAILING
