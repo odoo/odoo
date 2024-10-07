@@ -53,6 +53,7 @@ patch(ControlButtons.prototype, {
                 this.pos.addLineToCurrentOrder(
                     {
                         product_id: selectedProgram.trigger_product_ids[0],
+                        product_tmpl_id: selectedProgram.trigger_product_ids[0].product_tmpl_id,
                         _e_wallet_program_id: selectedProgram,
                         price_unit: -orderTotal,
                     },
@@ -164,9 +165,11 @@ patch(ControlButtons.prototype, {
             (reward.reward_type == "product" && reward.program_id.applies_on !== "both") ||
             (reward.program_id.applies_on == "both" && potentialQty)
         ) {
+            const product = args["product"] || reward.reward_product_ids[0];
             await this.pos.addLineToCurrentOrder(
                 {
-                    product_id: args["product"] || reward.reward_product_ids[0],
+                    product_id: product,
+                    product_tmpl_id: product.product_tmpl_id,
                     qty: potentialQty || 1,
                 },
                 {}

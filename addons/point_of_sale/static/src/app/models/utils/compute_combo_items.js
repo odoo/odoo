@@ -8,7 +8,7 @@ export const computeComboItems = (
     productTemplateAttributeValueById
 ) => {
     const comboItems = [];
-    const parentLstPrice = parentProduct.get_price(pricelist, 1);
+    const parentLstPrice = parentProduct.get_price(pricelist, 1, 0, false, parentProduct);
     const originalTotal = childLineConf.reduce((acc, conf) => {
         const originalPrice = conf.combo_item_id.combo_id.base_price;
         return acc + originalPrice;

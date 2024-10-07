@@ -11,7 +11,7 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
 
     def test_pos_loyalty_history(self):
         partner_aaa = self.env['res.partner'].create({'name': 'AAA Test Partner'})
-        self.whiteboard_pen.write({'lst_price': 10})
+        self.whiteboard_pen.product_variant_ids.write({'lst_price': 10})
         self.main_pos_config.write({
             'tax_regime_selection': False,
             'use_pricelist': False,

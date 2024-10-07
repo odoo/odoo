@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ProductPage extends Component {
     static template = "pos_self_order.ProductPage";
-    static props = ["product", "back?", "onValidate?"];
+    static props = ["productTemplate", "back?", "onValidate?"];
     static components = { AttributeSelection };
 
     setup() {
@@ -13,16 +13,16 @@ export class ProductPage extends Component {
         this.router = useService("router");
         useSubEnv({ selectedValues: {}, customValues: {}, editable: this.editableProductLine });
 
-        if (!this.props.product) {
+        if (!this.props.productTemplate) {
             this.router.navigate("product_list");
             return;
         }
 
-        this.selfOrder.lastEditedProductId = this.props.product.id;
+        this.selfOrder.lastEditedProductId = this.props.productTemplate.id;
         this.state = useState({
             qty: 1,
             customer_note: "",
-            product: this.props.product,
+            product: this.props.productTemplate,
             selectedValues: this.env.selectedValues,
         });
 
@@ -33,8 +33,8 @@ export class ProductPage extends Component {
         });
     }
 
-    get product() {
-        return this.props.product;
+    get productTemplate() {
+        return this.props.productTemplate;
     }
 
     get attributes() {
@@ -72,11 +72,11 @@ export class ProductPage extends Component {
     }
 
     get showQtyButtons() {
-        return this.props.product.self_order_available;
+        return this.props.productTemplate.self_order_available;
     }
     addToCart() {
         this.selfOrder.addToCart(
-            this.props.product,
+            this.props.productTemplate,
             this.state.qty,
             this.state.customer_note,
             this.env.selectedValues,

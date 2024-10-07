@@ -224,7 +224,7 @@ export class ProductScreen extends Component {
         }
 
         await this.pos.addLineToCurrentOrder(
-            { product_id: product },
+            { product_id: product, product_tmpl_id: product.product_tmpl_id },
             { code },
             product.needToConfigure()
         );
@@ -271,7 +271,10 @@ export class ProductScreen extends Component {
             return;
         }
 
-        await this.pos.addLineToCurrentOrder({ product_id: product }, { code: lotBarcode });
+        await this.pos.addLineToCurrentOrder(
+            { product_id: product, product_tmpl_id: product.product_tmpl_id },
+            { code: lotBarcode }
+        );
         this.numberBuffer.reset();
     }
     displayAllControlPopup() {
@@ -314,7 +317,7 @@ export class ProductScreen extends Component {
     }
 
     getProductImage(product) {
-        return product.getTemplateImageUrl();
+        return product.getImageUrl();
     }
 
     get searchWord() {
@@ -322,7 +325,7 @@ export class ProductScreen extends Component {
     }
 
     get products() {
-        return this.pos.models["product.product"].getAll();
+        return this.pos.models["product.template"].getAll();
     }
 
     get productsToDisplay() {
@@ -446,12 +449,13 @@ export class ProductScreen extends Component {
     }
 
     async addProductToOrder(product) {
-        await reactive(this.pos).addLineToCurrentOrder({ product_id: product }, {});
+        await reactive(this.pos).addLineToCurrentOrder({ product_tmpl_id: product }, {});
     }
 
-    async onProductInfoClick(product) {
-        const info = await reactive(this.pos).getProductInfo(product, 1);
-        this.dialog.add(ProductInfoPopup, { info: info, product: product });
+    async onProductInfoClick(productTemplate) {
+        const product = productTemplate.product_variant_ids[0];
+        const info = await reactive(this.pos).getProductInfo(productTemplate, product, 1);
+        this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
     }
 }
 

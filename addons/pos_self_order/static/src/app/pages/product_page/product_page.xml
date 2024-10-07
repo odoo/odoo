@@ -6,7 +6,7 @@
                 <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => router.back()">
                     <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
                 </button>
-                <h1 class="mb-0 text-nowrap"><strong t-esc="product.display_name"/> options</h1>
+                <h1 class="mb-0 text-nowrap"><strong t-esc="productTemplate.name"/> options</h1>
                 <span class="d-none d-md-inline px-5"/> <!-- Spacer -->
             </div>
 
@@ -18,23 +18,23 @@
                         </div>
                         <img
                             class="o_self_order_item_card_image w-100 rounded"
-                            t-attf-src="/web/image/product.product/{{ props.product.id }}/image_512"
+                            t-attf-src="/web/image/product.template/{{ productTemplate.id }}/image_512"
                             alt="Product image"
                             loading="lazy"
                             onerror="this.remove()"/>
                     </div>
                     <div class="o-so-product-details-description">
-                        <h2 t-esc="product.display_name"/>
-                        <small t-if="product.public_description"
+                        <h2 t-esc="productTemplate.name"/>
+                        <small t-if="productTemplate.public_description"
                             class="o_self_order_main_desc d-block mb-3 text-muted"
-                            t-out="product.public_description"
+                            t-out="productTemplate.public_description"
                         />
-                        <span class="fs-3" t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(product))"/>
+                        <span class="fs-3" t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(productTemplate))"/>
                     </div>
                 </div>
                 <AttributeSelection
-                    t-if="this.product.attribute_line_ids.length"
-                    product="product"/>
+                    t-if="productTemplate.attribute_line_ids.length"
+                    productTemplate="productTemplate"/>
             </div>
 
             <div t-if="showQtyButtons and selfOrder.ordering" class="p-3 text-end">

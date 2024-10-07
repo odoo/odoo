@@ -25,6 +25,7 @@ class PosSession extends models.ServerModel {
                 data: [],
             },
             "product.product": { relations: {}, fields: {}, data: [] },
+            "product.template": { relations: {}, fields: {}, data: [] },
             "product.pricelist": { relations: {}, fields: {}, data: [] },
             "pos.session": {
                 relations: {},

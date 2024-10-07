@@ -1,8 +1,8 @@
 from odoo import models
 
 
-class ProductProduct(models.Model):
-    _inherit = ['product.product']
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
 
     def _load_pos_data(self, data):
         res = super()._load_pos_data(data)

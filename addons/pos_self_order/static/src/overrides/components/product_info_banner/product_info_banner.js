@@ -4,11 +4,13 @@ import { patch } from "@web/core/utils/patch";
 patch(ProductInfoBanner.prototype, {
     get bannerClass() {
         const result = super.bannerClass;
-        return `${result} ${this.props.product.self_order_available ? "bg-success" : "bg-danger"}`;
+        return `${result} ${
+            this.props.productTemplate.self_order_available ? "bg-success" : "bg-danger"
+        }`;
     },
     async switchSelfAvailability() {
-        await this.pos.data.write("product.product", [this.props.product.id], {
-            self_order_available: !this.props.product.self_order_available,
+        await this.pos.data.write("product.template", [this.props.productTemplate.id], {
+            self_order_available: !this.props.productTemplate.self_order_available,
         });
     },
 });
