@@ -249,7 +249,7 @@ blockquote {
     padding-left: $container-padding-x;
 }
 
-// Removes borders within a table-borderless as its new definition in Boostrap 5 still has its borders visible in PDFs 
+// Removes borders within a table-borderless as its new definition in Boostrap 5 still has its borders visible in PDFs
 .table-borderless {
     tbody, thead, tfoot, tr, td, th {
         border: 0 none;
@@ -309,4 +309,30 @@ li.oe-nested {
 
 .h6-fs {
     font-size: 1rem;
+}
+// Alert
+.alert {
+    padding: #{$alert-padding-y} #{$alert-padding-x};
+    margin-bottom: #{$alert-margin-bottom};
+    color: inherit;
+    background-color: transparent;
+    border: #{$alert-border-width} solid transparent;
+    @include border-radius(#{$border-radius});
+}
+
+.alert-heading {
+    color: inherit;
+}
+
+.alert-link {
+    font-weight: $alert-link-font-weight;
+    color: inherit;
+}
+
+@each $state in map-keys($theme-colors) {
+    .alert-#{$state} {
+        color: map-get($theme-colors-text, $state);
+        background-color: map-get($theme-colors-bg-subtle, $state);
+        border-color: map-get($theme-colors-border-subtle, $state);
+    }
 }
