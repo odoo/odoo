@@ -81,19 +81,20 @@ will update the cost of every lot/serial number in stock."),
             # When a change of category implies a change of cost method, we empty out and replenish
             # the stock.
             new_product_category = self.env['product.category'].browse(vals.get('categ_id'))
+            if new_product_category:
+                new_cost_method = new_product_category.property_cost_method
+                new_valuation = new_product_category.property_valuation
+            else:
+                ProductCategory = self.env['product.category']
+                new_cost_method = ProductCategory._fields['property_cost_method'].get_company_dependent_fallback(ProductCategory)
+                has_group_stock_accounting_automatic = self.env.user.has_group('stock_account.group_stock_accounting_automatic')
+                if has_group_stock_accounting_automatic:
+                    new_valuation = 'manual_periodic'
+                else:
+                    new_valuation = 'real_time'
 
             for product_template in self:
                 product_template = product_template.with_company(product_template.company_id)
-                if new_product_category:
-                    new_cost_method = new_product_category.property_cost_method
-                    new_valuation = new_product_category.property_valuation
-                else:
-                    new_cost_method = self.categ_id._fields['property_cost_method'].get_company_dependent_fallback(self.categ_id)
-                    has_group_stock_accounting_automatic = self.env.user.has_group('stock_account.group_stock_accounting_automatic')
-                    if has_group_stock_accounting_automatic:
-                        new_valuation = 'manual_periodic'
-                    else:
-                        new_valuation = 'real_time'
                 valuation_impacted = False
                 if product_template.cost_method != new_cost_method:
                     if product_template.lot_valuated and not 'lot_valuated' in vals\
