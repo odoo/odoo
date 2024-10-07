@@ -15,16 +15,6 @@ import time
 
 class TestTimesheetHolidaysCreate(common.TransactionCase):
 
-    def test_status_create(self):
-        """Ensure that when a status is created, it fullfills the project and task constrains"""
-        status = self.env['hr.leave.type'].create({
-            'name': 'A nice Time Off Type',
-            'requires_allocation': 'no'
-        })
-
-        self.assertEqual(status.timesheet_project_id, status.company_id.internal_project_id, 'The default project linked to the status should be the same as the company')
-        self.assertEqual(status.timesheet_task_id, status.company_id.leave_timesheet_task_id, 'The default task linked to the status should be the same as the company')
-
     def test_company_create(self):
         main_company = self.env.ref('base.main_company')
         user = new_test_user(self.env, login='fru',
@@ -56,16 +46,6 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.hr_leave_type_with_ts = self.env['hr.leave.type'].create({
             'name': 'Time Off Type with timesheet generation',
             'requires_allocation': 'no',
-            'timesheet_generate': True,
-            'timesheet_project_id': self.internal_project.id,
-            'timesheet_task_id': self.internal_task_leaves.id,
-        })
-        self.hr_leave_type_no_ts = self.env['hr.leave.type'].create({
-            'name': 'Time Off Type without timesheet generation',
-            'requires_allocation': 'no',
-            'timesheet_generate': False,
-            'timesheet_project_id': False,
-            'timesheet_task_id': False,
         })
 
         # HR Officer allocates some leaves to the employee 1
@@ -75,15 +55,6 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'name': 'Days for limited category with timesheet',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_with_ts.id,
-            'number_of_days': 10,
-            'state': 'confirm',
-            'date_from': time.strftime('%Y-01-01'),
-            'date_to': time.strftime('%Y-12-31'),
-        })
-        self.hr_leave_allocation_no_ts = self.Allocations.sudo().create({
-            'name': 'Days for limited category without timesheet',
-            'employee_id': self.empl_employee.id,
-            'holiday_status_id': self.hr_leave_type_no_ts.id,
             'number_of_days': 10,
             'state': 'confirm',
             'date_from': time.strftime('%Y-01-01'),
@@ -102,8 +73,8 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         holiday.with_user(SUPERUSER_ID).action_validate()
 
         # The leave type and timesheet are linked to the same project and task of hr_leave_type_with_ts as the company is set
-        self.assertEqual(holiday.timesheet_ids.project_id.id, self.hr_leave_type_with_ts.timesheet_project_id.id)
-        self.assertEqual(holiday.timesheet_ids.task_id.id, self.hr_leave_type_with_ts.timesheet_task_id.id)
+        self.assertEqual(holiday.timesheet_ids.project_id.id, self.internal_project.id)
+        self.assertEqual(holiday.timesheet_ids.task_id.id, self.internal_task_leaves.id)
 
         self.assertEqual(len(holiday.timesheet_ids), holiday.number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
 
@@ -120,7 +91,6 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         hr_leave_type_with_ts_without_company.write({
             'company_id': False,
         })
-        self.assertTrue(hr_leave_type_with_ts_without_company.timesheet_generate)
 
         holiday = self.Requests.create({
             'name': 'Time Off 2',
@@ -134,18 +104,6 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         # The leave type and timesheet are linked to the same project and task of the employee company as the company is not set
         self.assertEqual(holiday.timesheet_ids.project_id.id, company.internal_project_id.id)
         self.assertEqual(holiday.timesheet_ids.task_id.id, company.leave_timesheet_task_id.id)
-
-    def test_validate_without_timesheet(self):
-        # employee creates a leave request
-        holiday = self.Requests.with_user(self.user_employee).create({
-            'name': 'Time Off 1',
-            'employee_id': self.empl_employee.id,
-            'holiday_status_id': self.hr_leave_type_no_ts.id,
-            'request_date_from': self.leave_start_datetime,
-            'request_date_to': self.leave_end_datetime,
-        })
-        holiday.with_user(SUPERUSER_ID).action_validate()
-        self.assertEqual(len(holiday.timesheet_ids), 0, 'Number of generated timesheets should be zero since the leave type does not generate timesheet')
 
     @freeze_time('2018-02-05')  # useful to be able to cancel the validated time off
     def test_cancel_validate_holidays(self):
@@ -264,3 +222,24 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         # timesheet should be unlinked to the timeoff, and be able to delete it
         timesheets.with_user(SUPERUSER_ID).unlink()
         self.assertFalse(timesheets.exists(), 'Timesheet should be deleted')
+
+    def test_timeoff_task_creation_with_holiday_leave(self):
+        """ Test the search method on is_timeoff_task"""
+        company = self.env['res.company'].create({"name": "new company"})
+        self.empl_employee.write({
+            "company_id": company.id,
+        })
+        task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
+        timesheet_count = self.env['account.analytic.line'].search_count([('holiday_id', '!=', False)])
+        leave = self.Requests.with_user(SUPERUSER_ID).create({
+            'name': 'Test Leave',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'request_date_from': datetime(2024, 6, 24),
+            'request_date_to': datetime(2024, 6, 24),
+        })
+        leave.with_user(SUPERUSER_ID).action_validate()
+        new_task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
+        self.assertEqual(task_count + 1, new_task_count)
+        new_timesheet_count = self.env['account.analytic.line'].search_count([('holiday_id', '!=', False)])
+        self.assertEqual(timesheet_count + 1, new_timesheet_count)

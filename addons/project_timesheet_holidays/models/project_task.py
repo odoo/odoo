@@ -10,14 +10,14 @@ class Task(models.Model):
     is_timeoff_task = fields.Boolean("Is Time off Task", compute="_compute_is_timeoff_task", search="_search_is_timeoff_task", export_string_translation=False)
 
     def _compute_leave_types_count(self):
-        time_off_type_read_group = self.env['hr.leave.type']._read_group(
-            [('timesheet_task_id', 'in', self.ids)],
-            ['timesheet_task_id'],
+        timesheet_read_group = self.env['account.analytic.line']._read_group(
+            [('task_id', 'in', self.ids), '|', ('holiday_id', '!=', False), ('global_leave_id', '!=', False)],
+            ['task_id'],
             ['__count'],
         )
-        time_off_type_count_per_task = {timesheet_task.id: count for timesheet_task, count in time_off_type_read_group}
+        timesheet_count_per_task = {timesheet_task.id: count for timesheet_task, count in timesheet_read_group}
         for task in self:
-            task.leave_types_count = time_off_type_count_per_task.get(task.id, 0)
+            task.leave_types_count = timesheet_count_per_task.get(task.id, 0)
 
     def _compute_is_timeoff_task(self):
         timeoff_tasks = self.filtered(lambda task: task.leave_types_count or task.company_id.leave_timesheet_task_id == task)
@@ -27,12 +27,12 @@ class Task(models.Model):
     def _search_is_timeoff_task(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise NotImplementedError(_('Operation not supported'))
-        leave_type_read_group = self.env['hr.leave.type']._read_group(
-            [('timesheet_task_id', '!=', False)],
+        timesheet_read_group = self.env['account.analytic.line']._read_group(
+            [('task_id', '!=', False), '|', ('holiday_id', '!=', False), ('global_leave_id', '!=', False)],
             [],
-            ['timesheet_task_id:recordset'],
+            ['task_id:recordset'],
         )
-        [timeoff_tasks] = leave_type_read_group[0]
+        [timeoff_tasks] = timesheet_read_group[0]
         if self.env.company.leave_timesheet_task_id:
             timeoff_tasks |= self.env.company.leave_timesheet_task_id
         if operator == '!=':

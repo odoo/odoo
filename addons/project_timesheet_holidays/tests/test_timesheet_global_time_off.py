@@ -215,14 +215,20 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # So we need to check that the timesheets don't have more than 8 hours per day.
         self.assertEqual(leave_task.effective_hours, 80)
 
-    def test_search_is_timeoff_task(self):
-        """ Test the search method on is_timeoff_task
-        with and without any hr.leave.type with timesheet_task_id defined"""
-        leaves_types_with_task_id = self.env['hr.leave.type'].search([('timesheet_task_id', '!=', False)])
-        self.env['project.task'].search([('is_timeoff_task', '!=', False)])
+    def test_timeoff_task_creation_with_global_leave(self):
+        """ Test the search method on is_timeoff_task"""
+        task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
 
-        leaves_types_with_task_id.write({'timesheet_task_id': False})
-        self.env['project.task'].search([('is_timeoff_task', '!=', False)])
+        # Create a leave and validate it
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Test',
+            'calendar_id': self.test_company.resource_calendar_id.id,
+            'date_from': datetime(2021, 1, 4, 7, 0, 0, 0),
+            'date_to': datetime(2021, 1, 8, 18, 0, 0, 0),
+        })
+
+        new_task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
+        self.assertEqual(task_count + 1, new_task_count)
 
     def test_timesheet_creation_for_global_time_off_wo_calendar(self):
         leave_start_datetime = datetime(2021, 1, 4, 7, 0)  # This is a monday
@@ -427,9 +433,6 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         hr_leave_type_with_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type with timesheet generation',
             'requires_allocation': 'no',
-            'timesheet_generate': True,
-            'timesheet_project_id': internal_project.id,
-            'timesheet_task_id': internal_task_leaves.id,
         })
 
         # create and validate a leave for full time employee
