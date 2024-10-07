@@ -278,7 +278,7 @@ export class ProductScreen extends Component {
     }
 
     getProductImage(product) {
-        return product.getImageUrl();
+        return product.getTemplateImageUrl();
     }
 
     get searchWord() {
