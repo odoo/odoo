@@ -46,6 +46,7 @@ export class OrderlineNoteButton extends Component {
         if (saved_quantity > 0 && quantity_with_note > 0) {
             await this.pos.addLineToCurrentOrder({
                 product_id: selectedOrderline.product_id,
+                product_tmpl_id: selectedOrderline.product_id.product_tmpl_id,
                 qty: quantity_with_note,
                 note: payload,
             });

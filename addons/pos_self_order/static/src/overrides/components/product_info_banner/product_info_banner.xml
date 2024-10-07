@@ -6,10 +6,10 @@
                 <h3 class="section-title">Self-ordering:</h3>
                 <div class="section-self-order-availability-body d-flex ms-auto">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" t-att-checked="props.product.self_order_available" t-on-click="() => this.switchSelfAvailability()" />
+                        <input class="form-check-input" type="checkbox" t-att-checked="props.productTemplate.self_order_available" t-on-click="() => this.switchSelfAvailability()" />
                     </div>
                     <span>
-                        <t t-if="props.product.self_order_available">Available</t>
+                        <t t-if="props.productTemplate.self_order_available">Available</t>
                         <t t-else="">Not available</t>
                     </span>
                 </div>

@@ -8,7 +8,7 @@ class ProductCombo(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('id', 'in', list(set().union(*[product.get('combo_ids') for product in data['product.product']['data']])))]
+        return [('id', 'in', list(set().union(*[product.get('combo_ids') for product in data['product.template']['data']])))]
 
     @api.model
     def _load_pos_data_fields(self, config_id):

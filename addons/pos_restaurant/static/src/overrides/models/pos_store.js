@@ -62,7 +62,8 @@ patch(PosStore.prototype, {
 
         const categories = Object.values(linesChanges).reduce((acc, curr) => {
             const categories =
-                this.models["product.product"].get(curr.product_id)?.pos_categ_ids || [];
+                this.models["product.product"].get(curr.product_id)?.product_tmpl_id
+                    ?.pos_categ_ids || [];
 
             for (const category of categories.slice(0, 1)) {
                 if (!acc[category.id]) {

@@ -35,7 +35,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount': 50,
                 'discount_mode': 'percent',
                 'discount_applicability': 'specific',
-                'discount_product_ids': cls.whiteboard_pen | cls.magnetic_board | cls.desk_organizer,
+                'discount_product_ids': cls.whiteboard_pen.product_variant_id | cls.magnetic_board.product_variant_id | cls.desk_organizer.product_variant_id,
             })],
         })
         cls.promo_programs |= cls.code_promo_program
@@ -83,13 +83,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'trigger': 'with_code',
             'applies_on': 'current',
             'rule_ids': [(0, 0, {
-                'product_ids': cls.desk_organizer,
+                'product_ids': cls.desk_organizer.product_variant_ids.ids,
                 'reward_point_mode': 'unit',
                 'minimum_qty': 3,
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'product',
-                'reward_product_id': cls.desk_organizer.id,
+                'reward_product_id': cls.desk_organizer.product_variant_id.id,
                 'reward_product_qty': 1,
                 'required_points': 1.5,
             })],
@@ -222,13 +222,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'trigger': 'auto',
             'applies_on': 'current',
             'rule_ids': [(0, 0, {
-                'product_ids': self.desk_organizer,
+                'product_ids': self.desk_organizer.product_variant_id.ids,
                 'reward_point_mode': 'unit',
                 'minimum_qty': 0,
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'product',
-                'reward_product_id': self.desk_organizer.id,
+                'reward_product_id': self.desk_organizer.product_variant_id.id,
                 'reward_product_qty': 1,
                 'required_points': 2,
             })],
@@ -239,13 +239,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'trigger': 'auto',
             'applies_on': 'current',
             'rule_ids': [(0, 0, {
-                'product_ids': self.magnetic_board,
+                'product_ids': self.magnetic_board.product_variant_ids.ids,
                 'reward_point_mode': 'unit',
                 'minimum_qty': 0,
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'product',
-                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_id': self.whiteboard_pen.product_variant_id.id,
                 'reward_product_qty': 1,
                 'required_points': 3,
             })],
@@ -256,7 +256,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'trigger': 'auto',
             'applies_on': 'current',
             'rule_ids': [(0, 0, {
-                'product_ids': (self.wall_shelf | self.small_shelf).ids,
+                'product_ids': (self.wall_shelf.product_variant_id | self.small_shelf.product_variant_id).ids,
                 'reward_point_mode': 'unit',
                 'minimum_qty': 0,
             })],
@@ -264,7 +264,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'reward_type': 'product',
                 'reward_product_tag_id': self.env['product.tag'].create({
                     'name': 'reward_product_tag',
-                    'product_product_ids': (self.desk_pad | self.monitor_stand).ids,
+                    'product_product_ids': (self.desk_pad.product_variant_id | self.monitor_stand.product_variant_id).ids,
                 }).id,
                 'reward_product_qty': 1,
                 'required_points': 2,
@@ -309,13 +309,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'trigger': 'auto',
             'applies_on': 'both',
             'rule_ids': [(0, 0, {
-                'product_ids': self.whiteboard_pen.ids,
+                'product_ids': self.whiteboard_pen.product_variant_id.ids,
                 'reward_point_mode': 'unit',
                 'minimum_qty': 1,
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'product',
-                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_id': self.whiteboard_pen.product_variant_id.id,
                 'reward_product_qty': 1,
                 'required_points': 4,
             })],
@@ -373,7 +373,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('stock.group_stock_user').id),
             ]
         })
-        self.whiteboard_pen.write({'lst_price': 1})
+        self.whiteboard_pen.product_variant_id.write({'lst_price': 1})
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -387,7 +387,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
             'reward_ids': [(0, 0, {
                 'reward_type': 'product',
-                'reward_product_id': self.whiteboard_pen.id,
+                'reward_product_id': self.whiteboard_pen.product_variant_id.id,
                 'reward_product_qty': 1,
                 'required_points': 5,
             })],
@@ -496,7 +496,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         gift_card_program.coupon_ids.code = '044123456'
         # Run the tour to use the gift card
         self.start_pos_tour("GiftCardProgramTour2")
-        # Check that gift cards are used
+        # Check that gift cards are used (Whiteboard Pen price is 1.20)
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
 
     def test_ewallet_program(self):
@@ -1929,7 +1929,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['loyalty.program'].search([]).write({'active': False})
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
         # Create gift card program
-        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
 
         self.product_a.write({
             'list_price': 100,
@@ -2081,7 +2081,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'trigger': 'auto',
             'applies_on': 'current',
             'rule_ids': [(0, 0, {
-                'product_ids': self.desk_organizer,
+                'product_ids': self.desk_organizer.product_variant_ids,
                 'reward_point_mode': 'unit',
                 'minimum_qty': 2,
             })],

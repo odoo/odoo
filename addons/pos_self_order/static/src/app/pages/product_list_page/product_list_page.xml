@@ -57,7 +57,7 @@
                         </div>
                         <div class="o-so-products-row">
                             <t t-foreach="availableProducts" t-as="product" t-key="product.id">
-                                <ProductCard product="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard" />
+                                <ProductCard productTemplate="product" currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard" />
                             </t>
                         </div>
                     </t>

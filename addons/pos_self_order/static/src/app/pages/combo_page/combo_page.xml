@@ -5,7 +5,7 @@
             <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => this.router.back()">
                 <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
             </button>
-            <h1 class="mb-0 fw-bolder text-nowrap" t-esc="props.product.display_name"/>
+            <h1 class="mb-0 fw-bolder text-nowrap" t-esc="props.productTemplate.name"/>
             <span class="d-none d-md-inline px-5"/> <!-- Spacer -->
         </div>
 
@@ -22,7 +22,7 @@
                         </t>
                         <span t-if="!combo_id_first"
                             class="position-absolute end-0 top-50 border-top border-2"
-                            t-attf-style="width: calc(100vw / {{props.product.combo_ids.length}})"/>
+                            t-attf-style="width: calc(100vw / {{props.productTemplate.combo_ids.length}})"/>
                         <div class="pos_self_order_breadcrumb_pill d-flex align-items-center justify-content-center ratio ratio-1x1 mx-md-auto">
                             <span
                                 class="rounded-pill d-flex justify-content-center align-items-center border border-2 z-1"
@@ -58,7 +58,7 @@
                             class="o_self_order_main_desc d-block mb-3 text-muted"
                             t-out="state.selectedProduct.public_description"
                         />
-                        <span class="fs-3" t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(state.selectedProduct))"/>
+                        <span class="fs-3" t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(state.selectedProduct.product_tmpl_id, state.selectedProduct))"/>
                     </div>
                 </div>
             </t>
@@ -84,7 +84,7 @@
                                     onerror="this.remove()"/>
                             </div>
                             <div>
-                                <span class="fs-4" t-esc="combo.combo_item_id.product_id.display_name"/>
+                                <span class="fs-4" t-esc="combo.combo_item_id.product_id.name"/>
                                 <ul t-if="combo.configuration.attribute_value_ids.length > 0">
                                     <li t-foreach="this.getSelectedValues(combo.configuration.attribute_value_ids)" t-as="attrVal" t-key="attrVal.attribute_id.id">
                                         <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />

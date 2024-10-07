@@ -10,12 +10,15 @@ patch(ProductScreen.prototype, {
         const products = super.products;
         return [...products].filter((p) => p.service_tracking !== "event");
     },
-    getProductPrice(product) {
-        if (!product.event_id) {
-            return super.getProductPrice(product);
+    getProductPrice(productTemplate) {
+        if (!productTemplate.event_id) {
+            return super.getProductPrice(productTemplate);
         }
 
-        return _t("From %s", this.env.utils.formatCurrency(this.pos.getProductPrice(product)));
+        return _t(
+            "From %s",
+            this.env.utils.formatCurrency(this.pos.getProductPrice({ productTemplate }))
+        );
     },
     getProductImage(product) {
         if (!product.event_id) {
@@ -79,6 +82,7 @@ patch(ProductScreen.prototype, {
             const ticket = this.pos.models["event.event.ticket"].get(parseInt(ticketId));
             const line = await this.pos.addLineToCurrentOrder({
                 product_id: ticket.product_id,
+                product_tmpl_id: ticket.product_id.product_tmpl_id,
                 price_unit: ticket.price,
                 qty: data.length,
                 event_ticket_id: ticket,

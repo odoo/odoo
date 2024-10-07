@@ -16,7 +16,7 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
             'self_ordering_service_mode': 'counter',
         })
 
-        product = self.env['product.product'].search([('name', '=', 'Desk Organizer')])[0]
+        product = self.env['product.template'].search([('name', '=', 'Desk Organizer')])[0]
         product.attribute_line_ids[0].product_template_value_ids[0].price_extra = 0.0
         product.attribute_line_ids[0].product_template_value_ids[1].price_extra = 1.0
         product.attribute_line_ids[0].product_template_value_ids[2].price_extra = 2.0

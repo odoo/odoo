@@ -121,7 +121,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
 
         # test an extra price on an attribute
-        cls.whiteboard_pen = env['product.product'].create({
+        cls.whiteboard_pen = env['product.template'].create({
             'name': 'Whiteboard Pen',
             'available_in_pos': True,
             'list_price': 1.20,
@@ -130,55 +130,55 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'to_weight': True,
             'pos_categ_ids': [(4, pos_desk_misc_test.id)],
         })
-        cls.wall_shelf = env['product.product'].create({
+        cls.wall_shelf = env['product.template'].create({
             'name': 'Wall Shelf Unit',
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
             'barcode': '2100005000000',
         })
-        cls.small_shelf = env['product.product'].create({
+        cls.small_shelf = env['product.template'].create({
             'name': 'Small Shelf',
             'available_in_pos': True,
             'list_price': 2.83,
             'taxes_id': False,
         })
-        cls.magnetic_board = env['product.product'].create({
+        cls.magnetic_board = env['product.template'].create({
             'name': 'Magnetic Board',
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
             'barcode': '2305000000004',
         })
-        cls.monitor_stand = env['product.product'].create({
+        cls.monitor_stand = env['product.template'].create({
             'name': 'Monitor Stand',
             'available_in_pos': True,
             'list_price': 3.19,
             'taxes_id': False,
             'barcode': '0123456789',  # No pattern in barcode nomenclature
         })
-        cls.desk_pad = env['product.product'].create({
+        cls.desk_pad = env['product.template'].create({
             'name': 'Desk Pad',
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
             'pos_categ_ids': [(4, pos_cat_desk_test.id)],
         })
-        cls.letter_tray = env['product.product'].create({
+        cls.letter_tray = env['product.template'].create({
             'name': 'Letter Tray',
             'available_in_pos': True,
             'list_price': 4.80,
             'taxes_id': False,
             'pos_categ_ids': [(4, pos_cat_chair_test.id)],
         })
-        cls.desk_organizer = env['product.product'].create({
+        cls.desk_organizer = env['product.template'].create({
             'name': 'Desk Organizer',
             'available_in_pos': True,
             'list_price': 5.10,
             'taxes_id': False,
             'barcode': '2300002000007',
         })
-        cls.configurable_chair = env['product.product'].create({
+        cls.configurable_chair = env['product.template'].create({
             'name': 'Configurable Chair',
             'available_in_pos': True,
             'list_price': 10,
@@ -193,7 +193,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'attribute_id': attribute.id,
         })
         line = env['product.template.attribute.line'].create({
-            'product_tmpl_id': cls.whiteboard_pen.product_tmpl_id.id,
+            'product_tmpl_id': cls.whiteboard_pen.id,
             'attribute_id': attribute.id,
             'value_ids': [(6, 0, attribute_value.ids)]
         })
@@ -215,7 +215,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'html_color': '#0000ff',
         })
         chair_color_line = env['product.template.attribute.line'].create({
-            'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
+            'product_tmpl_id': cls.configurable_chair.id,
             'attribute_id': chair_color_attribute.id,
             'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
         })
@@ -235,7 +235,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'attribute_id': chair_legs_attribute.id,
         })
         env['product.template.attribute.line'].create({
-            'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
+            'product_tmpl_id': cls.configurable_chair.id,
             'attribute_id': chair_legs_attribute.id,
             'value_ids': [(6, 0, [chair_legs_metal.id, chair_legs_wood.id])]
         })
@@ -259,7 +259,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'is_custom': True,
         })
         env['product.template.attribute.line'].create({
-            'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
+            'product_tmpl_id': cls.configurable_chair.id,
             'attribute_id': chair_fabrics_attribute.id,
             'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_wool.id, chair_fabrics_other.id])]
         })
@@ -274,12 +274,12 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
-                'product_id': cls.wall_shelf.id,
+                'product_id': cls.wall_shelf.product_variant_id.id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
                 'applied_on': '0_product_variant',
-                'product_id': cls.small_shelf.id,
+                'product_id': cls.small_shelf.product_variant_id.id,
             })],
         })
 
@@ -289,17 +289,17 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'compute_price': 'percentage',
                 'percent_price': 100,
                 'applied_on': '0_product_variant',
-                'product_id': cls.wall_shelf.id,
+                'product_id': cls.wall_shelf.product_variant_id.id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 99,
                 'applied_on': '0_product_variant',
-                'product_id': cls.small_shelf.id,
+                'product_id': cls.small_shelf.product_variant_id.id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 0,
                 'applied_on': '0_product_variant',
-                'product_id': cls.magnetic_board.id,
+                'product_id': cls.magnetic_board.product_variant_id.id,
             })],
         })
 
@@ -310,33 +310,33 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'price_discount': 6,
                 'price_surcharge': 5,
                 'applied_on': '0_product_variant',
-                'product_id': cls.wall_shelf.id,
+                'product_id': cls.wall_shelf.product_variant_id.id,
             }), (0, 0, {
                 # .99 prices
                 'compute_price': 'formula',
                 'price_surcharge': -0.01,
                 'price_round': 1,
                 'applied_on': '0_product_variant',
-                'product_id': cls.small_shelf.id,
+                'product_id': cls.small_shelf.product_variant_id.id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
                 'applied_on': '0_product_variant',
-                'product_id': cls.magnetic_board.id,
+                'product_id': cls.magnetic_board.product_variant_id.id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
                 'applied_on': '0_product_variant',
-                'product_id': cls.monitor_stand.id,
+                'product_id': cls.monitor_stand.product_variant_id.id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_discount': -100,
                 'price_min_margin': 5,
                 'price_max_margin': 20,
                 'applied_on': '0_product_variant',
-                'product_id': cls.desk_pad.id,
+                'product_id': cls.desk_pad.product_variant_id.id,
             })],
         })
 
@@ -347,13 +347,13 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'fixed_price': 1,
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
-                'product_id': cls.wall_shelf.id,
+                'product_id': cls.wall_shelf.product_variant_id.id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
-                'product_id': cls.wall_shelf.id,
+                'product_id': cls.wall_shelf.product_variant_id.id,
             })],
         })
 
@@ -363,7 +363,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '1_product',
-                'product_tmpl_id': cls.wall_shelf.product_tmpl_id.id,
+                'product_tmpl_id': cls.wall_shelf.id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -967,7 +967,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_06_pos_discount_display_with_multiple_pricelist(self):
         """ Test the discount display on the POS screen when multiple pricelists are used."""
-        test_product = self.env['product.product'].create({
+        test_product = self.env['product.template'].create({
             'name': 'Test Product',
             'available_in_pos': True,
             'list_price': 10,
@@ -980,7 +980,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.env['product.pricelist.item'].create({
             'pricelist_id': base_pricelist.id,
-            'product_tmpl_id': test_product.product_tmpl_id.id,
+            'product_tmpl_id': test_product.id,
             'compute_price': 'percentage',
             'applied_on': '1_product',
             'percent_price': 30,
@@ -1190,11 +1190,15 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_limited_product_pricelist_loading(self):
         self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
 
+        limited_category = self.env['pos.category'].create({
+            'name': 'Limited Category',
+        })
         product_1 = self.env['product.product'].create({
             'name': 'Test Product 1',
             'list_price': 100,
             'barcode': '0100100',
             'taxes_id': False,
+            'pos_categ_ids': [(4, limited_category.id)],
             'available_in_pos': True,
         })
 
@@ -1216,6 +1220,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'list_price': 200,
             'taxes_id': False,
             'available_in_pos': True,
+            'pos_categ_ids': [(4, limited_category.id)],
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': color_attribute.id,
                 'value_ids': [(6, 0, color_attribute.value_ids.ids)]
@@ -1232,6 +1237,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'list_price': 300,
             'barcode': '0100300',
             'taxes_id': False,
+            'pos_categ_ids': [(4, limited_category.id)],
             'available_in_pos': True,
         })
 
@@ -1251,6 +1257,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             'product_id': product_2_template.product_variant_ids[1].id,
             'fixed_price': 120,
         }])
+        self.main_pos_config.write({
+            'iface_available_categ_ids': [],
+            'limit_categories': True,
+        })
         self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
@@ -1374,9 +1384,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_product_combo_price(self):
         """ Check that the combo has the expected price """
-        self.desk_organizer.write({"lst_price": 7})
-        self.desk_pad.write({"lst_price": 2.5})
-        self.whiteboard_pen.write({"lst_price": 1.5})
+        self.desk_organizer.product_variant_id.write({"lst_price": 7})
+        self.desk_pad.product_variant_id.write({"lst_price": 2.5})
+        self.whiteboard_pen.product_variant_id.write({"lst_price": 1.5})
 
         combos = self.env["product.combo"].create([
             {
@@ -1387,7 +1397,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                     })
                 ]
             }
-            for product in (self.desk_organizer, self.desk_pad, self.whiteboard_pen)
+            for product in (self.desk_organizer.product_variant_id, self.desk_pad.product_variant_id, self.whiteboard_pen.product_variant_id)
         ])
 
         self.env["product.product"].create(

@@ -25,7 +25,7 @@
                                     onerror="this.remove()"/>
                             </div>
                             <div class="product-infos d-flex flex-column justify-content-between text-start flex-grow-1 w-100 lh-1">
-                                <span t-esc="product.display_name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
+                                <span t-esc="product.name" class="fs-4 fw-bold mb-1 mb-sm-2"/>
                                 <div class="d-flex justify-content-between gap-3">
                                     <span t-if="line.extra_price" class="badge rounded-pill fs-4" t-att-class="isOutOfStock ? 'text-bg-secondary' : 'text-bg-primary'">
                                         + <t t-out="selfOrder.formatMonetary(line.extra_price)"/>
@@ -41,7 +41,7 @@
             </div>
         </div>
         <t t-else="">
-            <AttributeSelection product="props.comboState.selectedProduct" />
+            <AttributeSelection productTemplate="props.comboState.selectedProduct.product_tmpl_id" />
         </t>
     </t>
 </templates>

@@ -59,7 +59,12 @@ patch(ControlButtons.prototype, {
             const discount = (-pc / 100.0) * baseToDiscount;
             if (discount < 0) {
                 await this.pos.addLineToCurrentOrder(
-                    { product_id: product, price_unit: discount, tax_ids: [["link", ...taxes]] },
+                    {
+                        product_id: product,
+                        price_unit: discount,
+                        tax_ids: [["link", ...taxes]],
+                        product_tmpl_id: product.product_tmpl_id,
+                    },
                     { merge: false }
                 );
             }

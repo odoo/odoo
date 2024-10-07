@@ -1092,10 +1092,15 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.env['product.template'].search([('available_in_pos', '=', True), ('type', '=', 'service')]).write({'active': False})
 
         session = self.open_new_session(0)
+        self.product1.write({'company_id': False})
+        self.product2.write({'company_id': False})
+        self.product3.write({'company_id': False})
 
         def get_top_product_ids(count):
             data = session.load_data([])
-            return [p['id'] for p in data['product.product']['data'][:count]]
+            special_product = session.config_id._get_special_products().ids
+            available_top_product = [product for product in data['product.template']['data'] if product['product_variant_ids'][0] not in special_product]
+            return [p['product_variant_ids'][0] for p in available_top_product[:count]]
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=1))
         self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product1, 1)])])
@@ -1103,11 +1108,11 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=2))
         self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product2, 1)])])
-        self.assertEqual(get_top_product_ids(2), [self.product2.id, self.product1.id])
+        self.assertEqual(get_top_product_ids(2), [self.product1.id, self.product2.id])
 
         self.patch(self.env.cr, 'now', lambda: datetime.now() + timedelta(days=3))
         self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
-        self.assertEqual(get_top_product_ids(3), [self.product3.id, self.product2.id, self.product1.id])
+        self.assertEqual(get_top_product_ids(3), [self.product1.id, self.product2.id, self.product3.id])
 
     def test_closing_entry_by_product(self):
         # set the Group by Product at Closing Entry
