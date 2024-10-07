@@ -69,6 +69,9 @@ export class LinkSelectionPlugin extends Plugin {
             case "CLEAN_FOR_SAVE":
                 this.cleanForSave(payload);
                 break;
+            case "CLEAN":
+                this.removeFEFFs(payload.root, { preserveSelection: true });
+                break;
         }
     }
 

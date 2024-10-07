@@ -128,4 +128,17 @@ describe("range not collapsed", () => {
             "<ul><li>First</li><li>Second</li></ul>"
         );
     });
+
+    test("should remove ufeff characters from link selection", async () => {
+        await setupEditor('<p>[<a href="http://test.com/">label</a>]</p>');
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+        expect(clipboardData.getData("text/plain")).toBe("label");
+        expect(clipboardData.getData("text/html")).toBe(
+            '<p><a href="http://test.com/">label</a></p>'
+        );
+        expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+            '<p><a href="http://test.com/">label</a></p>'
+        );
+    });
 });
