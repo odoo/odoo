@@ -10,12 +10,15 @@ patch(ProductScreen.prototype, {
         const products = super.products;
         return [...products].filter((p) => p.service_tracking !== "event");
     },
-    getProductPrice(product) {
-        if (!product.event_id) {
-            return super.getProductPrice(product);
+    getProductPrice(productTemplate) {
+        if (!productTemplate.event_id) {
+            return super.getProductPrice(productTemplate);
         }
 
-        return _t("From %s", this.env.utils.formatCurrency(this.pos.getProductPrice(product)));
+        return _t(
+            "From %s",
+            this.env.utils.formatCurrency(this.pos.getProductPrice({ productTemplate }))
+        );
     },
     getProductImage(product) {
         if (!product.event_id) {

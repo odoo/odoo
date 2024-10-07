@@ -203,17 +203,18 @@ export class SelfOrder extends Reactive {
     }
 
     async addToCart(
-        product,
+        productTemplate,
         qty,
         customer_note,
         selectedValues = {},
         customValues = {},
         comboValues = {}
     ) {
+        const product = productTemplate.product_variant_ids[0];
         const values = {
             order_id: this.currentOrder,
             product_id: product,
-            tax_ids: product.taxes_id.map((tax) => ["link", tax]),
+            tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
             qty: qty,
             note: customer_note || "",
             price_unit: product.lst_price,
@@ -418,8 +419,8 @@ export class SelfOrder extends Reactive {
 
     initData() {
         this.productCategories = this.models["pos.category"].getAll();
-        this.productByCategIds = this.models["product.product"].getAllBy("pos_categ_ids");
-        const productWoCat = this.models["product.product"].filter(
+        this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
+        const productWoCat = this.models["product.template"].filter(
             (p) => p.pos_categ_ids.length === 0
         );
 
@@ -788,11 +789,15 @@ export class SelfOrder extends Reactive {
         return result;
     }
 
-    getProductDisplayPrice(product) {
+    getProductDisplayPrice(productTemplate, product) {
         const pricelist = this.config.pricelist_id;
-        const price = product.get_price(pricelist, 1);
+        const price = productTemplate.get_price(pricelist, 1, 0, false, product);
 
-        let taxes = product.taxes_id;
+        let taxes = productTemplate.taxes_id;
+
+        if (!product) {
+            product = productTemplate;
+        }
 
         // Fiscal position.
         const order = this.currentOrder;

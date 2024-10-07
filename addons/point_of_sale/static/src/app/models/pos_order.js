@@ -397,7 +397,9 @@ export class PosOrder extends Base {
             const newPrice = line.product_id.get_price(
                 pricelist,
                 line.get_quantity(),
-                line.get_price_extra()
+                line.get_price_extra(),
+                false,
+                line.product_id
             );
             line.set_unit_price(newPrice);
         }

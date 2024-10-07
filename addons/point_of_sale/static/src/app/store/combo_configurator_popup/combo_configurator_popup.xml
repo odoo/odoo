@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ComboConfiguratorPopup">
-        <Dialog title="props.product.display_name" contentClass="'combo-configurator-popup'">
-            <div t-foreach="props.product.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column m-3 mb-4">
+        <Dialog title="props.productTemplate.display_name" contentClass="'combo-configurator-popup'">
+            <div t-foreach="props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column m-3 mb-4">
                 <t t-if="shouldShowCombo(combo)">
                     <h3 class="me-auto mb-3" t-esc="combo.name"/>
                     <div class="product-list d-grid gap-1">
