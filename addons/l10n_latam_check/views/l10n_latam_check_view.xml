@@ -211,7 +211,7 @@
         <field name="view_mode">list,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_third_party_check_tree"/>
         <field name="search_view_id" ref="l10n_latam_check.view_account_payment_third_party_checks_search"/>
-        <field name="domain">[('payment_method_code', '=', 'new_third_party_checks'), ('payment_id.state', '=', 'posted')]</field>
+        <field name="domain">[('payment_method_code', '=', 'new_third_party_checks'), ('payment_id.state', '!=', 'draft')]</field>
         <field name="context">{'search_default_checks_on_hand': 1}</field>
     </record>
 

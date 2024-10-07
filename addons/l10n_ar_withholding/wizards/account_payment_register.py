@@ -2,6 +2,7 @@
 import logging
 
 from odoo import models, fields, api, Command, _
+from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 from datetime import datetime
 
@@ -28,7 +29,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard_register -= wizard
         wizard_register.l10n_ar_adjustment_warning = False
 
-    @api.depends('amount')
+    @api.depends('amount', 'l10n_ar_withholding_ids.amount')
     def _compute_l10n_ar_net_amount(self):
         for rec in self:
             rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
@@ -108,4 +109,6 @@ class AccountPaymentRegister(models.TransientModel):
         self.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id}) for x in partner_taxes]
 
     def action_create_payments(self):
+        if self.l10n_ar_withholding_ids and not self.payment_method_line_id.payment_account_id:
+            raise ValidationError(_("A payment cannot have withholding if the payment method has no outstanding accounts"))
         return super().action_create_payments()
