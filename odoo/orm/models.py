@@ -82,8 +82,8 @@ if typing.TYPE_CHECKING:
 
 
 _lt = LazyTranslate('base')
-_logger = logging.getLogger(__name__)
-_unlink = logging.getLogger(__name__ + '.unlink')
+_logger = logging.getLogger('odoo.models')
+_unlink = logging.getLogger('odoo.models.unlink')
 
 regex_order = re.compile(r'''
     ^

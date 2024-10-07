@@ -29,7 +29,7 @@ from .registry import Registry
 if typing.TYPE_CHECKING:
     from .types import BaseModel
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('odoo.api')
 
 
 class Environment(Mapping):
