@@ -226,7 +226,7 @@ class HrLeaveType(models.Model):
 
     @api.constrains('requires_allocation')
     def check_allocation_requirement_edit_validity(self):
-        if self.env['hr.leave'].search_count([('holiday_status_id', 'in', self.ids)], limit=1):
+        if not self.env.context.get('install_mode') and self.env['hr.leave'].search_count([('holiday_status_id', 'in', self.ids)], limit=1):
             raise UserError(_("The allocation requirement of a time off type cannot be changed once leaves of that type have been taken. You should create a new time off type instead."))
 
     @api.depends('company_id')

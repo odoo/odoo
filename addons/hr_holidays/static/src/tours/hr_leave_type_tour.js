@@ -16,7 +16,6 @@ const secondLeaveDateTo = "01/18/2022";
 
 registry.category("web_tour.tours").add("hr_leave_type_tour", {
     url: "/web",
-    test: true,
     steps: () => [
         stepUtils.showAppsMenuItem(),
         {
