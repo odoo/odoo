@@ -1111,26 +1111,26 @@ class PurchaseOrder(models.Model):
                     self.date_order or fields.Date.today()))
             or self.env.user.has_group('purchase.group_purchase_manager'))
 
-    def confirm_reception_mail(self):
+    def _confirm_reception_mail(self):
         for order in self:
             if order.state in ['purchase', 'done'] and not order.mail_reception_confirmed:
                 order.mail_reception_confirmed = True
-                order.sudo().message_post(body=_("The order receipt has been acknowledged by %s.", order.partner_id.name))
+                order.message_post(body=_("The order receipt has been acknowledged by %s.", order.partner_id.name))
             elif order.state == 'sent' and not order.mail_reception_confirmed:
                 order.mail_reception_confirmed = True
-                order.sudo().message_post(body=_("The RFQ has been acknowledged by %s.", order.partner_id.name))
+                order.message_post(body=_("The RFQ has been acknowledged by %s.", order.partner_id.name))
 
-    def decline_reception_mail(self):
+    def _decline_reception_mail(self):
         for order in self:
             if order.state in ['purchase', 'done'] and not order.mail_reception_declined:
                 order.mail_reception_declined = True
-                order.sudo().activity_schedule(
+                order.activity_schedule(
                     'mail.mail_activity_data_todo',
                     note=_('The vendor asked to decline this confirmed RfQ, if you agree on that, cancel this PO'))
-                order.sudo().message_post(body=_("The order receipt has been declined by %s.", order.partner_id.name))
+                order.message_post(body=_("The order receipt has been declined by %s.", order.partner_id.name))
             elif order.state  == 'sent' and not order.mail_reception_declined:
                 order.mail_reception_declined = True
-                order.sudo().message_post(body=_("The RFQ has been declined by %s.", order.partner_id.name))
+                order.message_post(body=_("The RFQ has been declined by %s.", order.partner_id.name))
 
     def get_localized_date_planned(self, date_planned=False):
         """Returns the localized date planned in the timezone of the order's user or the
