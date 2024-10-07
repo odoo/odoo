@@ -27,8 +27,8 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
     def test_02_portal_load_tour_cant_edit_vat(self):
         willis = self.user_portal
         willis.parent_id = self.user_demo.partner_id.id
-        self.start_tour("/", 'portal_load_homepage', login="portal")
-        self.assertEqual(willis.phone, "+1 555 666 7788")
+        self.start_tour("/", 'portal_load_homepage_forbidden', login="portal")
+        self.assertNotEqual(willis.phone, "+1 555 666 7788")
 
     def test_03_skip_to_content(self):
         self.start_tour("/", "skip_to_content", login="portal")

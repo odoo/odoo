@@ -91,7 +91,7 @@
     },
     {
         content: "Add a billing address",
-        trigger: '.all_billing a[href^="/shop/address"]:contains("Add address")',
+        trigger: '.all_billing a[href^="/portal/address"]:contains("Add address")',
         run: "click",
     },
     {
@@ -342,7 +342,7 @@
     },
     {
         content: "Add new delivery address",
-        trigger: '.all_delivery a[href^="/shop/address"]:contains("Add address")',
+        trigger: '.all_delivery a[href^="/portal/address"]:contains("Add address")',
         run: "click",
     },
     {

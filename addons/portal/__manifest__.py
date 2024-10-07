@@ -38,6 +38,8 @@ a dependency towards website editing and customization capabilities.""",
         'web.assets_frontend': [
             'portal/static/src/scss/portal.scss',
             'portal/static/src/js/portal.js',
+            'portal/static/src/js/portal_address.js',
+            'portal/static/src/js/portal_default_address.js',
             'portal/static/src/xml/portal_chatter.xml',
             'portal/static/src/js/portal_composer.js',
             'portal/static/src/js/portal_security.js',

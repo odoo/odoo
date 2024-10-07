@@ -400,7 +400,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async updateAddress(addressType, partnerId) {
-        await rpc('/shop/update_address', {address_type: addressType, partner_id: partnerId})
+        await rpc('/portal/update_address', {address_type: addressType, partner_id: partnerId})
     },
 
     // #=== DELIVERY FLOW ===#

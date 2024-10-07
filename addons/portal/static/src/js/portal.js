@@ -4,7 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({
-    selector: '.o_portal_details',
+    selector: '.o_portal_address_fill',
     events: {
         'change select[name="country_id"]': '_onCountryChange',
     },
@@ -35,6 +35,10 @@ publicWidget.registry.portalDetails = publicWidget.Widget.extend({
         this.$stateOptions.detach();
         var $displayedState = this.$stateOptions.filter('[data-country_id=' + countryID + ']');
         var nb = $displayedState.appendTo(this.$state).show().length;
+        // Clear the state field if the selected country has no states
+        if (nb === 0) {
+            this.$('select[name="state_id"]').val('').change();  // Clear the state selection
+        }
         this.$state.parent().toggle(nb >= 1);
     },
 

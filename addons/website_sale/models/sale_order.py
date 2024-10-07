@@ -681,7 +681,6 @@ class SaleOrder(models.Model):
         :return: Whether the cart is anonymous.
         :rtype: bool
         """
-        self.ensure_one()
         return self.partner_id.id == request.website.user_id.sudo().partner_id.id
 
     def _get_lang(self):

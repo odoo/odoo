@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import websiteSaleAddress from "@website_sale/js/address";
+import websiteSaleAddress from "@portal/js/portal_address"
 import { rpc } from "@web/core/network/rpc";
 
 websiteSaleAddress.include({

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import websiteSaleAddress from '@website_sale/js/address';
+import websiteSaleAddress from "@portal/js/portal_address"
 
 websiteSaleAddress.include({
     events: Object.assign(

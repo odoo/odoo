@@ -1552,7 +1552,7 @@ which leads to stray network requests and inconsistencies."""
 
         for f in self.screencast_frames:
             with open(f['file_path'], 'rb') as b64_file:
-                frame = base64.decodebytes(b64_file.read())
+                frame = base64.decodebytes(b64_file.read() + b'==')
             os.unlink(f['file_path'])
             f['file_path'] = f['file_path'].replace('.b64', '.png')
             with open(f['file_path'], 'wb') as png_file:
@@ -1566,7 +1566,7 @@ which leads to stray network requests and inconsistencies."""
             ffmpeg_path = find_in_path('ffmpeg')
         except IOError:
             ffmpeg_path = None
-
+        ffmpeg_path = None
         if ffmpeg_path:
             nb_frames = len(self.screencast_frames)
             concat_script_path = os.path.join(self.screencasts_dir, fname.replace('.mp4', '.txt'))
