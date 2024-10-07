@@ -734,3 +734,103 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'credit': 10.0,
             'debit': 0,
         }])
+
+    def test_tax_line_amount_currency_modification_auto_balancing(self):
+        date = '2017-01-01'
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': date,
+            'partner_id': self.partner_a.id,
+            'invoice_date': date,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_id': self.product_a.uom_id.id,
+                    'quantity': 1.0,
+                    'price_unit': 1000,
+                    'tax_ids': self.product_a.taxes_id.ids,
+                }),
+                (0, None, {
+                    'name': self.product_b.name,
+                    'product_id': self.product_b.id,
+                    'product_uom_id': self.product_b.uom_id.id,
+                    'quantity': 1.0,
+                    'price_unit': 200,
+                    'tax_ids': self.product_b.taxes_id.ids,
+                }),
+            ]
+        })
+
+        # Modify the tax lines
+        tax_lines = move.line_ids.filtered(lambda line: line.display_type == 'tax').sorted('amount_currency')
+        self.assertRecordValues(tax_lines, [
+            {'amount_currency': -180.00},
+            {'amount_currency': -30.00},
+        ])
+        tax_lines[0].amount_currency = -180.03
+        # The following line should not lead to a UserError in _check_balanced due to the move being unbalanced
+        tax_lines[1].amount_currency = -29.99
+        #
+        # The problem is that the balance of the receivable line is after changing the amount_currency
+        # (the sum of all balances of the lines is not 0).
+        #
+        # Drill down of the issue:
+        # Can be done with a breakpoint at account_move_line.py line 1421 (`line.balance = balance`) in function _sync_invoice
+        # with condition `balance == 705.01` (for this test)
+        #   * In _sync_dynamic_line with existing_key_fname=='term_key' we correctly compute the needed_terms for the move
+        #     (To set the values on the receivable line; which auto-balances the move)
+        #     needed_after:
+        #     {
+        #         {'move_id': 22, 'date_maturity': datetime.date(2017, 1, 1), 'discount_date': None, 'discount_percentage': 0.0}: {
+        #             'balance': 705.02,
+        #             'amount_currency': 1410.02,
+        #             'discount_amount_currency': 0.0,
+        #             'discount_balance': 0.0,
+        #             'discount_date': None,
+        #             'discount_percentage': 0.0
+        #         }
+        #     }
+        #   * In comparison to before we only have to update the 'amount_currency':
+        #     needed_before:
+        #     {
+        #         {'move_id': 22, 'date_maturity': datetime.date(2017, 1, 1), 'discount_date': None, 'discount_percentage': 0.0}: {
+        #             'balance': 705.02,
+        #             'amount_currency': 1410.03,
+        #             'discount_amount_currency': 0.0,
+        #             'discount_balance': 0.0,
+        #             'discount_date': None,
+        #             'discount_percentage': 0.0
+        #         }
+        #     }
+        #   * If we look at the execution of account.move.line/write
+        #     {
+        #         'move_id': 22,
+        #         'date_maturity': datetime.date(2017, 1, 1),
+        #         'discount_date': None,
+        #         'discount_percentage': 0.0,
+        #         'balance': 705.02,
+        #         'amount_currency': 1410.02,
+        #         'discount_amount_currency': 0.0,
+        #         'discount_balance': 0.0,
+        #         'display_type': 'payment_term'
+        #     }
+        #     So we write these values correctly on the line.
+        # The problem:
+        #   * account.move.line/write uses account.move.line/_sync_invoice (context manager)
+        #   * There (when leaving the context manager some time after the actual correct write of the values on the line)
+        #     we only detect the change to 'amount_currency' but no change to 'balance'
+        #     (since it is supposed to stay the same; but we only compare whether the values actually change).
+        #   * Thus we update the balance to make it "fit" the 'amount_currency'
+        #     (to 705.01 since amount_currency is now 1410.02 and the rate is 2).
+        #     This does not work well here though (due to rounding all the other lines sum to -705.02).
+        #     Now the balance of all the lines does not sum to 0 anymore (1 ct off)
+        # Some (theoretical) idea for the fix:
+        #   * Instead of checking whether the balance value changed (by comparing before and after in the context manager)
+        #     we also consider the values we are writing.
+        #     So that in this case we can "protect" the balance from being changed since 'balance' is in 'vals' in 'write'.
+        #   * Maybe it would be possible to just pass the 'vals' from 'write' to the container in '_sync_invoice'.
+        #     Or pass them as "protected" or sth in the context.
+        #   * In case we write both balance and amount_currency maybe we could just "skip" the context manager completely
