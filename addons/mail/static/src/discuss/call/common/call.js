@@ -8,7 +8,6 @@ import {
     onMounted,
     onPatched,
     onWillUnmount,
-    useEffect,
     useExternalListener,
     useRef,
     useState,
@@ -58,8 +57,8 @@ export class Call extends Component {
         });
         useSubEnv({
             discussCall: {
-                collapsed: false,
-                toggleCallSpace: this.toggleCallSpace.bind(this),
+                collapsed: this.state.collapsed,
+                resizeCallSpace: this.resizeCallSpace.bind(this),
             },
         });
         this.store = useState(useService("mail.store"));
@@ -73,12 +72,6 @@ export class Call extends Component {
             this.resizeObserver.disconnect();
             browser.clearTimeout(this.overlayTimeout);
         });
-        useEffect(
-            () => {
-                this.env.discussCall.collapsed = this.state.collapsed;
-            },
-            () => [this.state.collapsed]
-        );
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
     }
 
@@ -312,7 +305,7 @@ export class Call extends Component {
         this.state.isFullscreen = false;
     }
 
-    toggleCallSpace(collapsed) {
+    resizeCallSpace(collapsed) {
         if (collapsed === undefined) {
             if (!this.state.collapsed && this.isActiveCall) {
                 this.rtc.state.channel.activeRtcSession = undefined;
@@ -321,6 +314,7 @@ export class Call extends Component {
         } else {
             this.state.collapsed = collapsed;
         }
+        this.env.discussCall.collapsed = this.state.collapsed;
     }
 
     /**

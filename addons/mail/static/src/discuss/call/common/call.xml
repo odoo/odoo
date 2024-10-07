@@ -48,8 +48,8 @@
                     <span class="text-bg-800 shadow-lg rounded-1 m-1" t-att-class="{ 'p-4 fs-4': state.isFullscreen, 'p-2': !state.isFullscreen }" t-foreach="rtc.notifications.values()" t-as="notification" t-key="notification.id" t-esc="notification.text"/>
                 </div>
             </div>
-            <div t-if="!state.isFullscreen" class="o-discuss-Call-collapsibleBtn justify-content-center align-items-start">
-                <button t-on-click="() => this.toggleCallSpace()" t-att-class="{ 'ms-3': !env.inChatWindow, 'ms-0': env.inChatWindow }" class="btn p-3 btn-link">
+            <div t-if="!state.isFullscreen" class="bg-black bg-opacity-50 justify-content-center align-items-start">
+                <button t-on-click="() => this.resizeCallSpace()" t-att-class="{ 'ms-3': !env.inChatWindow, 'ms-0': env.inChatWindow }" class="btn p-3 btn-link">
                     <i class="fa-lg text-danger" t-att-class="{'oi oi-chevron-up': !state.collapsed, 'oi oi-chevron-down': state.collapsed}"/>
                 </button>
             </div>
