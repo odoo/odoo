@@ -10,6 +10,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, get_lang, html_escape
@@ -479,6 +480,10 @@ class DiscussChannel(models.Model):
     # RTC
     # ------------------------------------------------------------
 
+    def _get_call_notification_tag(self):
+        self.ensure_one()
+        return f"call_{self.id}"
+
     def _rtc_cancel_invitations(self, member_ids=None):
         """ Cancels the invitations of the RTC call from all invited members,
             if member_ids is provided, only the invitations of the specified members are canceled.
@@ -506,6 +511,17 @@ class DiscussChannel(models.Model):
                     ),
                 },
             )
+            devices, private_key, public_key = self._get_web_push_parameters(members.partner_id.ids)
+            if devices:
+                self._push_web_notification(devices, private_key, public_key, payload={
+                    "title": "",
+                    "options": {
+                        "data": {
+                            "type": PUSH_NOTIFICATION_TYPE.CANCEL
+                        },
+                        "tag": self._get_call_notification_tag(),
+                    }
+                })
 
     # ------------------------------------------------------------
     # MAILING
