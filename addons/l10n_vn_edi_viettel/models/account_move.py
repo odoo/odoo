@@ -295,10 +295,14 @@ class AccountMove(models.Model):
     def action_l10n_vn_edi_update_payment_status(self):
         """ Send a request to update the payment status of the invoice. """
 
-        # == Lock ==
-        self.env['res.company']._with_locked_records(self)
+        invoices = self.filtered(lambda i: i.l10n_vn_edi_invoice_state == 'payment_state_to_update')
+        if not invoices:
+            return
 
-        for invoice in self.filtered(lambda i: i.l10n_vn_edi_invoice_state == 'payment_state_to_update'):
+        # == Lock ==
+        self.env['res.company']._with_locked_records(invoices)
+
+        for invoice in invoices:
             sinvoice_status = 'unpaid'
 
             # SInvoice will return a NOT_FOUND_DATA error if the status in Odoo matches the one on their side.
