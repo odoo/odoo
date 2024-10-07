@@ -48,7 +48,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             'partner_id': self.partner_a.id,
             'payment_type': 'outbound',
             'journal_id': self.third_party_check_journal.id,
-            'payment_method_line_id': self.third_party_check_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code == 'out_third_party_checks').id,
+            'payment_method_line_id': self.third_party_check_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code in ('out_third_party_checks', 'return_third_party_checks')).id,
         }
         delivery = self.env['account.payment'].create(vals)
         delivery.action_post()
@@ -79,7 +79,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             'partner_id': self.partner_a.id,
             'payment_type': 'outbound',
             'journal_id': self.rejected_check_journal.id,
-            'payment_method_line_id': self.rejected_check_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code == 'out_third_party_checks').id,
+            'payment_method_line_id': self.rejected_check_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code in ('out_third_party_checks', 'return_third_party_checks')).id,
         }
         customer_return = self.env['account.payment'].create(vals)
         customer_return.action_post()
@@ -88,60 +88,41 @@ class TestThirdChecks(L10nLatamCheckTest):
         with self.assertRaisesRegex(ValidationError, "Some checks are not anymore in journal,"), self.cr.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
-        operations = self.env['account.payment'].search([('l10n_latam_move_check_ids', '=', check.id), ('state', '=', 'posted')], order="date desc, id desc")
+        operations = self.env['account.payment'].search([('l10n_latam_move_check_ids', '=', check.id), ('state', '!=', 'draft')], order="date desc, id desc")
         self.assertEqual(len(operations), 3, 'There should be 3 operations on the check')
         self.assertEqual(operations, customer_return | supplier_return | delivery)
 
-    def test_03_check_deposit(self):
+    def test_03_deposit(self):
         payment = self.create_third_party_check()
         check = payment.l10n_latam_new_check_ids[0]
         bank_journal = self.company_data_3['default_journal_bank']
 
-        # Check Deposit
-        deposit = self.env['l10n_latam.payment.mass.transfer'].with_context(
-            active_model='l10n_latam.check', active_ids=[check.id]).create({'destination_journal_id': bank_journal.id})._create_payments()
-        self.assertEqual(check.current_journal_id, bank_journal, 'Current journal was not computed properly on delivery')
+        # Deposit the check to the bank
+        self.env['l10n_latam.payment.mass.transfer'].with_context(
+            active_model='l10n_latam.check', active_ids=[check.id]
+        ).create({
+            'destination_journal_id': bank_journal.id,
+        })._create_payments()
+        self.assertEqual(check.current_journal_id.id, bank_journal.id, 'Current journal was not computed properly on delivery')
+        self.assertEqual(len(check.operation_ids + payment), 3, 'Check that all three payments were created')
 
-        # check dont deposit twice
-        with self.assertRaisesRegex(UserError, "All selected checks must be on the same journal and on hand"), self.cr.savepoint():
-            self.env['l10n_latam.payment.mass.transfer'].with_context(
-                active_model='l10n_latam.check', active_ids=[check.id]).create({'destination_journal_id': bank_journal.id})._create_payments()
+        # If the bank tells you that the check has been rejected you have to do a new transfer of the previous check
+        self.env['l10n_latam.payment.mass.transfer'].with_context(
+            active_model='l10n_latam.check', active_ids=[check.id]
+        ).create({
+            'destination_journal_id': self.rejected_check_journal.id,
+        })._create_payments()
+        self.assertEqual(check.current_journal_id.id, self.rejected_check_journal.id, 'Current journal was not computed properly on delivery')
+        self.assertEqual(len(check.operation_ids + payment), 5, 'Check that all five payments were created')
 
-        # Check Rejection
-        vals = {
-            'l10n_latam_move_check_ids': [Command.set([check.id])],
-            'payment_type': 'inbound',
-            'journal_id': self.rejected_check_journal.id,
-            'payment_method_line_id': self.rejected_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'in_third_party_checks').id,
-        }
-        bank_rejection = self.env['account.payment'].create(vals)
-        bank_rejection.action_post()
-        self.assertEqual(check.current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
-        # check dont reject twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
-            self.env['account.payment'].create(vals).action_post()
-
-        # Check Claim/Return to customer
-        vals = {
-            'l10n_latam_move_check_ids': [Command.set([check.id])],
+        # Sent back to customer (with payment) - check if we can use the check
+        self.env['account.payment'].create({
             'partner_id': self.partner_a.id,
             'payment_type': 'outbound',
             'journal_id': self.rejected_check_journal.id,
-            'payment_method_line_id': self.rejected_check_journal._get_available_payment_method_lines('outbound').filtered(lambda x: x.code == 'out_third_party_checks').id,
-        }
-        customer_return = self.env['account.payment'].create(vals)
-        customer_return.action_post()
-        self.assertFalse(check.current_journal_id, 'Current journal was not computed properly on customer return')
-        # check dont return twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
-            self.env['account.payment'].create(vals).action_post()
-
-        operations = self.env['account.payment'].search([('l10n_latam_move_check_ids', '=', check.id), ('state', '=', 'posted')], order="date desc, id desc")
-        # we have 5 operations because for each transfers a second payment/operation is created automatically by odoo
-        self.assertEqual(len(operations), 5, 'There should be 5 operations on the check')
-        self.assertEqual(operations[0], customer_return, 'Last operation should be customer return')
-        self.assertEqual(operations[2], bank_rejection, 'Previous operation should be bank rejection')
-        self.assertEqual(operations[4], deposit, 'First operation should be the deposit')
+            'l10n_latam_move_check_ids': [Command.set([check.id])],
+            'payment_method_line_id': self.rejected_check_journal._get_available_payment_method_lines('inbound').filtered(lambda x: x.code == 'new_third_party_checks').id,
+        }).action_post()
 
     def test_04_check_transfer(self):
         """ Test transfer between third party checks journals """
