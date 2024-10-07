@@ -205,3 +205,19 @@ class PortalAccount(CustomerPortal):
                 error[field.name] = 'error'
                 error_message.append(_('The field %s must be filled.', field.field_description.lower()))
         return error, error_message
+
+    def _get_optional_fields(self):
+        # EXTENDS 'portal
+        optional_fields = super()._get_optional_fields()
+        optional_fields.extend(('invoice_sending_method', 'invoice_edi_format'))
+        return optional_fields
+
+    def _prepare_portal_layout_values(self):
+        # EXTENDS 'portal'
+        portal_layout_values = super()._prepare_portal_layout_values()
+        partner = request.env.user.partner_id
+        portal_layout_values.update({
+            'invoice_sending_methods': {'email': _('by Email')},
+            'invoice_edi_formats': dict(partner._fields['invoice_edi_format'].selection),
+        })
+        return portal_layout_values
