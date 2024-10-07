@@ -742,6 +742,8 @@ class ResCompany(models.Model):
 
         :param records: The records to lock.
         """
+        if not records.ids:
+            return
         self._cr.execute(f'SELECT * FROM {records._table} WHERE id IN %s FOR UPDATE SKIP LOCKED', [tuple(records.ids)])
         available_ids = {r[0] for r in self._cr.fetchall()}
         if available_ids != set(records.ids):
