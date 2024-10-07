@@ -44,6 +44,7 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
     ],
     'demo': [
         'demo/demo_company.xml',
+        'demo/demo_company_asbe.xml',
     ],
     'license': 'LGPL-3',
 }
