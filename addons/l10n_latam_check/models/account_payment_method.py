@@ -10,5 +10,6 @@ class AccountPaymentMethod(models.Model):
         res['new_third_party_checks'] = {'mode': 'multi', 'type': ('cash',)}
         res['in_third_party_checks'] = {'mode': 'multi', 'type': ('cash',)}
         res['out_third_party_checks'] = {'mode': 'multi', 'type': ('cash',)}
+        res['return_third_party_checks'] = {'mode': 'multi', 'type': ('bank',)}
         res['own_checks'] = {'mode': 'multi', 'type': ('bank',)}
         return res
