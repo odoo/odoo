@@ -1319,7 +1319,7 @@ export class Wysiwyg extends Component {
                             .filter('[data-oe-field="name"]'));
                     }
 
-                    this._pauseOdooFieldObservers();
+                    this._pauseOdooFieldObservers(field);
                     // Tag the date fields to only replace the value
                     // with the original date value once (see mouseDown event)
                     if ($node.hasClass('o_editable_date_field_format_changed')) {
@@ -1357,11 +1357,20 @@ export class Wysiwyg extends Component {
         }
     }
     /**
-     * Stop the field changes mutation observers.
+     * Stops the "field changes" mutation observers for all fields except the
+     * `oe-translation-source-sha`s inside the currently edited one.
      */
-    _pauseOdooFieldObservers() {
-        for (let observerData of this.odooFieldObservers) {
-            observerData.observer.disconnect();
+    _pauseOdooFieldObservers(currentlyEditedField) {
+        for (const fieldObserverData of this.odooFieldObservers) {
+            // Exclude inner translation fields observers. They
+            // still handle translation synchronization inside the
+            // targeted field.
+            if (
+                !fieldObserverData.field.dataset.oeTranslationSourceSha ||
+                !currentlyEditedField.contains(fieldObserverData.field)
+            ) {
+                fieldObserverData.observer.disconnect();
+            }
         }
     }
     /**
