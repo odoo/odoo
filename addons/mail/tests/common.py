@@ -1049,6 +1049,7 @@ class MailCase(common.TransactionCase, MockEmail):
             groups='base.group_portal',
             name='Chell Gladys',
             notification_type='email',
+            tz='Europe/Brussels',
         )
         cls.partner_portal = cls.user_portal.partner_id
         return cls.user_portal
