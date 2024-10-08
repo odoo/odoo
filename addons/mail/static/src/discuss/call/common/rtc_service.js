@@ -271,6 +271,15 @@ export class Rtc extends Record {
                 session.playAudio();
             }
         });
+        window.electronAPI?.isTalking();
+        browser.addEventListener("message", (message) => {
+            if (message.data === "push-to-talk" && this.selfSession) {
+                this.onPushToTalk();
+                if (this.selfSession.isTalking) {
+                    this.setPttReleaseTimeout(500);
+                }
+            }
+        });
         browser.addEventListener(
             "keydown",
             (ev) => {
