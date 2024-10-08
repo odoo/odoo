@@ -473,6 +473,10 @@ class PosSession(models.Model):
                     Markup("<br/><ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % order._get_html_link() for order in edited_orders)
                 )
                 self.message_post(body=body)
+
+        # Make sure to trigger reordering rules
+        self.picking_ids.move_ids.sudo()._trigger_scheduler()
+
         self.write({'state': 'closed'})
         return True
 
