@@ -292,7 +292,14 @@ export class ProductScreen extends Component {
     }
 
     getProductPrice(product) {
+<<<<<<< 18.0
         return this.pos.getProductPriceFormatted(product);
+||||||| 37bae34d49f9d806be63723e9fe6f6e46dbbae77
+        return this.pos.getProductPriceFormatted(product, product.list_price);
+=======
+        const price = product.list_price === product.lst_price ? false : product.list_price;
+        return this.pos.getProductPriceFormatted(product, price);
+>>>>>>> 491c540197dcb57870938f96314a04724c2f0231
     }
 
     getProductImage(product) {
