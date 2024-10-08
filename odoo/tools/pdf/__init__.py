@@ -1,41 +1,21 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import importlib
 import io
 import re
-
+import sys
 from datetime import datetime
 from hashlib import md5
 from logging import getLogger
-from zlib import compress, decompress
+from zlib import compress, decompress, decompressobj
+
 from PIL import Image, PdfImagePlugin
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+
 from odoo.tools.parse_version import parse_version
-
-try:
-    # class were renamed in PyPDF2 > 2.0
-    # https://pypdf2.readthedocs.io/en/latest/user/migration-1-to-2.html#classes
-    from PyPDF2 import PdfReader
-    import PyPDF2
-    # monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
-    # https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
-    class PdfFileReader(PdfReader):
-        def __init__(self, *args, **kwargs):
-            if "strict" not in kwargs and len(args) < 2:
-                kwargs["strict"] = True  # maintain the default
-            kwargs = {k:v for k, v in kwargs.items() if k in ('strict', 'stream')}
-            super().__init__(*args, **kwargs)
-
-    PyPDF2.PdfFileReader = PdfFileReader
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-    PdfFileReader.getFields = PdfFileReader.get_fields
-    PdfFileWriter._addObject = PdfFileWriter._add_object
-except ImportError:
-    from PyPDF2 import PdfFileWriter, PdfFileReader
-
-from PyPDF2.generic import ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject, createStringObject
+from odoo.tools.misc import file_open
 
 try:
     import fontTools
@@ -43,7 +23,54 @@ try:
 except ImportError:
     TTFont = None
 
-from odoo.tools.misc import file_open
+
+# might be a good case for exception groups
+error = None
+# keep pypdf2 2.x first so noble uses that rather than pypdf 4.0
+for submod in ['._pypdf2_2', '._pypdf', '._pypdf2_1']:
+    try:
+        pypdf = importlib.import_module(submod, __spec__.name)
+        break
+    except ImportError as e:
+        if error is None:
+            error = e
+else:
+    raise ImportError("pypdf implementation not found") from error
+del error
+
+PdfReader, PdfWriter, filters, generic, errors, create_string_object =\
+    pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object
+# because they got re-exported
+ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject =\
+    generic.ArrayObject, generic.BooleanObject, generic.ByteStringObject, generic.DecodedStreamObject, generic.DictionaryObject, generic.IndirectObject, generic.NameObject, generic.NumberObject
+
+# compatibility aliases
+PdfReadError = errors.PdfReadError  # moved in 2.0
+PdfStreamError = errors.PdfStreamError  # moved in 2.0
+createStringObject = create_string_object  # deprecated in 2.0, removed in 5.0
+
+# ----------------------------------------------------------
+# PyPDF2 hack
+# ensure that zlib does not throw error -5 when decompressing
+# because some pdf won't fit into allocated memory
+# https://docs.python.org/3/library/zlib.html#zlib.decompressobj
+# ----------------------------------------------------------
+pypdf.filters.decompress = lambda data: decompressobj().decompress(data)
+
+
+# monkey patch to discard unused arguments as the old arguments were not discarded in the transitional class
+# https://pypdf2.readthedocs.io/en/2.0.0/_modules/PyPDF2/_reader.html#PdfReader
+class PdfFileReader(PdfReader):
+    def __init__(self, *args, **kwargs):
+        if "strict" not in kwargs and len(args) < 2:
+            kwargs["strict"] = True  # maintain the default
+        kwargs = {k: v for k, v in kwargs.items() if k in ('strict', 'stream')}
+        super().__init__(*args, **kwargs)
+
+
+if 'PyPDF2' in sys.modules:
+    pypdf.PdfFileReader = PdfFileReader
+    pypdf.PdfFileWriter = PdfWriter
 
 _logger = getLogger(__name__)
 DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
@@ -53,6 +80,7 @@ REGEX_SUBTYPE_FORMATED = re.compile(r'^/\w+#2F[\w-]+$')
 
 # Disable linter warning: this import is needed to make sure a PDF stream can be saved in Image.
 PdfImagePlugin.__name__
+
 
 # make sure values are unwrapped by calling the specialized __getitem__
 def _unwrapping_get(self, key, default=None):
@@ -92,6 +120,7 @@ def merge_pdf(pdf_data):
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
         return _buffer.getvalue()
+
 
 def fill_form_fields_pdf(writer, form_fields):
     ''' Fill in the form fields of a PDF
@@ -140,6 +169,7 @@ def fill_form_fields_pdf(writer, form_fields):
                 # Mark filled fields as readonly to avoid the blue overlay:
                 if annot.get('/T') == field:
                     annot.update({NameObject("/Ff"): NumberObject(1)})
+
 
 def rotate_pdf(pdf):
     ''' Rotate clockwise PDF (90°) into a new PDF.
@@ -231,13 +261,6 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
 
     return output
 
-
-# by default PdfFileReader will overwrite warnings.showwarning which is what
-# logging.captureWarnings does, meaning it essentially reverts captureWarnings
-# every time it's called which is undesirable
-old_init = PdfFileReader.__init__
-PdfFileReader.__init__ = lambda self, stream, strict=True, warndest=None, overwriteWarnings=True: \
-    old_init(self, stream=stream, strict=strict, warndest=None, overwriteWarnings=False)
 
 class OdooPdfFileReader(PdfFileReader):
     # OVERRIDE of PdfFileReader to add the management of multiple embedded files.
