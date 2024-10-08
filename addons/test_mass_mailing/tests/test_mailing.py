@@ -107,13 +107,13 @@ class TestMassMailing(TestMassMailCommon):
         self.assertMailingStatistics(mailing, expected=5, delivered=5, sent=5)
 
         # simulate a click
-        self.gateway_mail_click(mailing, recipients[0], 'https://www.odoo.be')
+        self.gateway_mail_trace_click(mailing, recipients[0], 'https://www.odoo.be')
         mailing.invalidate_recordset()
         self.assertMailingStatistics(mailing, expected=5, delivered=5, sent=5, opened=1, clicked=1)
 
         # simulate a bounce
         self.assertEqual(recipients[1].message_bounce, 0)
-        self.gateway_mail_bounce(mailing, recipients[1])
+        self.gateway_mail_trace_bounce(mailing, recipients[1])
         mailing.invalidate_recordset()
         self.assertMailingStatistics(mailing, expected=5, delivered=4, sent=5, opened=1, clicked=1, bounced=1)
         self.assertEqual(recipients[1].message_bounce, 1)
