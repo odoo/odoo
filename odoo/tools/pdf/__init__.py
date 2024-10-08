@@ -278,10 +278,10 @@ class OdooPdfFileReader(PdfFileReader):
 
             if not file_path:
                 return []
-            for i in range(0, len(file_path), 2):
-                attachment = file_path[i+1].getObject()
+            for p in file_path[1::2]:
+                attachment = p.getObject()
                 yield (attachment["/F"], attachment["/EF"]["/F"].getObject().getData())
-        except Exception:
+        except Exception:  # noqa: BLE001
             # malformed pdf (i.e. invalid xref page)
             return []
 
