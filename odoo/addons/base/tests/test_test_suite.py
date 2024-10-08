@@ -326,6 +326,7 @@ AssertionError: Query count more than expected for user __system__: 1 > 0 in tes
 ''')
         if self._python_version < (3, 10, 0):
             message = message.replace("with self.assertQueryCount(system=0):", "self.env.cr.execute('SELECT 1')")
+        message = message.replace("          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 
         self.expected_logs = [
             (logging.INFO, '=' * 70),
