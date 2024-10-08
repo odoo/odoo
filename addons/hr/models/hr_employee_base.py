@@ -206,15 +206,16 @@ class HrEmployeeBase(models.AbstractModel):
     def _create_work_contacts(self):
         if any(employee.work_contact_id for employee in self):
             raise UserError(_('Some employee already have a work contact'))
-        work_contacts = self.env['res.partner'].create([{
-            'email': employee.work_email,
-            'mobile': employee.mobile_phone,
-            'name': employee.name,
-            'image_1920': employee.image_1920,
-            'company_id': employee.company_id.id
-        } for employee in self])
-        for employee, work_contact in zip(self, work_contacts):
-            employee.work_contact_id = work_contact
+        if self:
+            work_contacts = self.env['res.partner'].create([{
+                'email': employee.work_email,
+                'mobile': employee.mobile_phone,
+                'name': employee.name,
+                'image_1920': employee.image_1920,
+                'company_id': employee.company_id.id
+            } for employee in self])
+            for employee, work_contact in zip(self, work_contacts):
+                employee.work_contact_id = work_contact
 
     def _inverse_work_contact_details(self):
         employees_without_work_contact = self.env['hr.employee']
