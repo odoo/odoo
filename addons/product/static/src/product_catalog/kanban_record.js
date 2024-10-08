@@ -31,7 +31,8 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             increaseQuantity: this.increaseQuantity.bind(this),
             setQuantity: this.setQuantity.bind(this),
             decreaseQuantity: this.decreaseQuantity.bind(this),
-            childField: this.props.record.context?.child_field
+            childField: this.props.record.context?.child_field,
+            updatePackagingQuantity: this.updatePackagingQuantity.bind(this),
         });
     }
 
@@ -76,6 +77,12 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
         }
+    }
+
+    async updatePackagingQuantity(packaging) {
+        const productPackagingQty =
+            Math.floor(this.productCatalogData.quantity / packaging.qty) + 1;
+        this.updateQuantity(productPackagingQty * packaging.qty)
     }
 
     //--------------------------------------------------------------------------
