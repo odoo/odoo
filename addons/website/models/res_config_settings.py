@@ -66,7 +66,7 @@ class ResConfigSettings(models.TransientModel):
         related='website_id.google_analytics_key',
         readonly=False)
     google_search_console = fields.Char(
-        'Google Search Console',
+        'Google Search Console Key',
         related='website_id.google_search_console',
         readonly=False)
     plausible_shared_key = fields.Char(
@@ -109,7 +109,7 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_has_google_analytics',
         inverse='_inverse_has_google_analytics')
     has_google_search_console = fields.Boolean(
-        "Console Google Search",
+        "Google Search Console",
         compute='_compute_has_google_search_console',
         inverse='_inverse_has_google_search_console')
     has_default_share_image = fields.Boolean(
