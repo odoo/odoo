@@ -39,9 +39,14 @@ class EventTypeMail(models.Model):
         ('weeks', 'Weeks'), ('months', 'Months')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
+        # attendee based
         ('after_sub', 'After each registration'),
-        ('before_event', 'Before the event'),
-        ('after_event', 'After the event')],
+        # event based: start date
+        ('before_event', 'Before the event starts'),
+        ('after_event_start', 'After the event started'),
+        # event based: end date
+        ('after_event', 'After the event ended'),
+        ('before_event_end', 'Before the event ends')],
         string='Trigger', default="before_event", required=True)
     notification_type = fields.Selection([('mail', 'Mail')], string='Send', compute='_compute_notification_type')
     template_ref = fields.Reference(string='Template', ondelete={'mail.template': 'cascade'}, required=True, selection=[('mail.template', 'Mail')])
@@ -77,9 +82,14 @@ class EventMail(models.Model):
         ('weeks', 'Weeks'), ('months', 'Months')],
         string='Unit', default='hours', required=True)
     interval_type = fields.Selection([
+        # attendee based
         ('after_sub', 'After each registration'),
-        ('before_event', 'Before the event'),
-        ('after_event', 'After the event')],
+        # event based: start date
+        ('before_event', 'Before the event starts'),
+        ('after_event_start', 'After the event started'),
+        # event based: end date
+        ('after_event', 'After the event ended'),
+        ('before_event_end', 'Before the event ends')],
         string='Trigger ', default="before_event", required=True)
     scheduled_date = fields.Datetime('Schedule Date', compute='_compute_scheduled_date', store=True)
     # contact and status
@@ -100,10 +110,10 @@ class EventMail(models.Model):
         for scheduler in self:
             if scheduler.interval_type == 'after_sub':
                 date, sign = scheduler.event_id.create_date, 1
-            elif scheduler.interval_type == 'before_event':
-                date, sign = scheduler.event_id.date_begin, -1
+            elif scheduler.interval_type in ('before_event', 'after_event_start'):
+                date, sign = scheduler.event_id.date_begin, scheduler.interval_type == 'before_event' and -1 or 1
             else:
-                date, sign = scheduler.event_id.date_end, 1
+                date, sign = scheduler.event_id.date_end, scheduler.interval_type == 'after_event' and 1 or -1
 
             scheduler.scheduled_date = date.replace(microsecond=0) + _INTERVALS[scheduler.interval_unit](sign * scheduler.interval_nbr) if date else False
 
@@ -134,14 +144,15 @@ class EventMail(models.Model):
                 if scheduler.mail_done:
                     continue
                 # do not send emails if the mailing was scheduled before the event but the event is over
-                if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
+                if scheduler.scheduled_date <= now and (scheduler.interval_type not in ('before_event', 'after_event_start') or scheduler.event_id.date_end > now):
                     scheduler._execute_event_based()
         return True
 
     def _execute_event_based(self):
         """ Main scheduler method when running in event-based mode aka
-        'after_event' or 'before_event'. This is a global communication done
-        once i.e. we do not track each registration individually. """
+        'after_event' or 'before_event' (and their negative counterparts).
+        This is a global communication done once i.e. we do not track each
+        registration individually. """
         auto_commit = not getattr(threading.current_thread(), 'testing', False)
         batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
