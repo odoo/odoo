@@ -20,4 +20,13 @@ export class ProductCombo {
     get selectedComboItem() {
         return this.combo_items.find(item => item.is_selected);
     }
+
+    /**
+     * Return the preselected combo item, if any.
+     *
+     * @return {ProductComboItem|undefined} The preselected combo item, if any.
+     */
+    get preselectedComboItem() {
+        return this.combo_items.find(item => item.is_preselected);
+    }
 }
