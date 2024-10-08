@@ -6,6 +6,7 @@ import logging
 import optparse
 import glob
 import os
+import re
 import sys
 import tempfile
 import warnings
@@ -328,18 +329,18 @@ class configmanager(object):
             group.add_option("--workers", dest="workers", my_default=0,
                              help="Specify the number of workers, 0 disable prefork mode.",
                              type="int")
-            group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=2048 * 1024 * 1024,
+            group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default="2048MiB",
                              help="Maximum allowed virtual memory per worker (in bytes), when reached the worker be "
                              "reset after the current request (default 2048MiB).",
-                             type="int")
+                             action="callback", callback=self._parse_size_callback, nargs=1, type="string")
             group.add_option("--limit-memory-soft-gevent", dest="limit_memory_soft_gevent", my_default=False,
                              help="Maximum allowed virtual memory per gevent worker (in bytes), when reached the worker will be "
                              "reset after the current request. Defaults to `--limit-memory-soft`.",
                              type="int")
-            group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=2560 * 1024 * 1024,
+            group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default="2560MiB",
                              help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory "
                              "allocation will fail (default 2560MiB).",
-                             type="int")
+                             action="callback", callback=self._parse_size_callback, nargs=1, type="string")
             group.add_option("--limit-memory-hard-gevent", dest="limit_memory_hard_gevent", my_default=False,
                              help="Maximum allowed virtual memory per gevent worker (in bytes), when reached, any memory "
                              "allocation will fail. Defaults to `--limit-memory-hard`.",
@@ -519,8 +520,14 @@ class configmanager(object):
             if getattr(opt, arg) is not None:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
-            elif isinstance(self.options[arg], str) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
-                self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
+            elif isinstance(self.options[arg], str):
+                opt_str = '--' + arg.replace('_', '-')
+                option = self.parser.get_option(opt_str)
+                if option and option.callback:
+                    option.callback(option, opt, self.options[arg], self.parser)
+                    self.options[arg] = getattr(self.parser.values, arg)
+                elif self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+                    self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         ismultidb = ',' in (self.options.get('db_name') or '')
         die(ismultidb and (opt.init or opt.update), "Cannot use -i/--init or -u/--update with multiple databases in the -d/--database/db_name")
@@ -574,6 +581,28 @@ class configmanager(object):
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
         return opt
+
+    def _parse_size(self, text):
+        # https://en.wikipedia.org/wiki/Binary_prefix
+        pattern = r"""^\s*(?P<size>\d+) # integer
+                       \s*(?P<prefix>\w{2})?B? # IEC 80000-13 binary prefix
+                       \s*$"""
+        match = re.match(pattern, text, re.VERBOSE)
+        if not match:
+            raise ValueError('invalid size: {size}'.format(size=repr(text)))
+        size = int(match['size'])
+        try:
+            exponent = ('', 'ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi').index(match['prefix'] or '')
+        except ValueError:
+            raise ValueError('invalid IEC 80000-13 binary prefix: {prefix}'.format(prefix=repr(match['prefix'])))
+        return round(size * (1024 ** exponent))
+
+    def _parse_size_callback(self, option, opt, value, parser):
+        try:
+            size = self._parse_size(value)
+        except Exception as e:
+            raise optparse.OptionValueError("option %s: %s" % (option, str(e)))
+        setattr(parser.values, option.dest, size)
 
     def _warn_deprecated_options(self):
         for old_option_name, new_option_name in [
