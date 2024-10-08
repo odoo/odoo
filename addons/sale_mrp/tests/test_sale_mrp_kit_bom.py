@@ -599,3 +599,42 @@ class TestSaleMrpKitBom(TransactionCase):
         # Process all components and validate the return
         return_pick.button_validate()
         self.assertEqual(so.order_line.qty_delivered, 15 / 5 * 6)
+
+    def test_sale_kit_qty_change(self):
+
+        # Create record rule
+        mrp_bom_model = self.env['ir.model']._get('mrp.bom')
+        self.env['ir.rule'].create({
+            'name': "No one allowed to access BoMs",
+            'model_id': mrp_bom_model.id,
+            'domain_force': [(0, '=', 1)],
+        })
+
+        # Create BoM
+        kit_product = self._create_product('Kit Product', 'product', 1)
+        component_a = self._create_product('Component A', 'product', 1)
+        self.env['mrp.bom'].create({
+            'product_id': kit_product.id,
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': component_a.id, 'product_qty': 1})]
+        })
+
+        # Create sale order
+        partner = self.env['res.partner'].create({'name': 'Testing Man'})
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': "Order line",
+            'product_id': kit_product.id,
+            'order_id': so.id,
+        })
+        so.action_confirm()
+
+        user_admin = self.env['res.users'].search([('login', '=', 'admin')])
+        sol.with_user(user_admin).write({'product_uom_qty': 5})
+
+        self.assertEqual(sum(sol.move_ids.mapped('product_uom_qty')), 5)
