@@ -583,7 +583,12 @@ class MailMail(models.Model):
                     len(batch_ids), mail_server_id)
             finally:
                 if smtp_session:
-                    smtp_session.quit()
+                    try:
+                        smtp_session.quit()
+                    except smtplib.SMTPServerDisconnected:
+                        _logger.info(
+                            "Ignoring SMTPServerDisconnected while trying to quit non open session"
+                        )
 
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False):
         IrMailServer = self.env['ir.mail_server']
