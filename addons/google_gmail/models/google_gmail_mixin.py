@@ -144,10 +144,14 @@ class GoogleGmailMixin(models.AbstractModel):
         :return: The SASL argument for the OAuth2 mechanism.
         """
         self.ensure_one()
+        # token life is around 1 hour, add 5s threshold to gives
+        # time to contact google servers and avoid clock synchronization
+        # problems
+        threshold_seconds = 5
         now_timestamp = int(time.time())
         if not self.google_gmail_access_token \
            or not self.google_gmail_access_token_expiration \
-           or self.google_gmail_access_token_expiration < now_timestamp:
+           or self.google_gmail_access_token_expiration - threshold_seconds < now_timestamp:
 
             access_token, expiration = self._fetch_gmail_access_token(self.google_gmail_refresh_token)
 
