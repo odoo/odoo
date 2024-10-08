@@ -23,24 +23,29 @@ class TestPdf(TransactionCase):
         pdf_writer = pdf.PdfFileWriter()
         pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
         pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
+        out = io.BytesIO()
+        pdf_writer.write(out)
 
-        attachments = list(self.minimal_pdf_reader.getAttachments())
-        self.assertEqual(len(attachments), 1)
+        r = pdf.OdooPdfFileReader(io.BytesIO(out.getvalue()))
+        self.assertEqual(len(list(r.getAttachments())), 1)
 
     def test_odoo_pdf_file_writer(self):
         attachments = list(self.minimal_pdf_reader.getAttachments())
         self.assertEqual(len(attachments), 0)
+        r = self.minimal_pdf_reader
 
-        pdf_writer = pdf.OdooPdfFileWriter()
-        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        for count, (name, data) in enumerate([
+            ('test_attachment.txt', b'My awesome attachment'),
+            ('another_attachment.txt', b'My awesome OTHER attachment'),
+        ], start=1):
+            pdf_writer = pdf.OdooPdfFileWriter()
+            pdf_writer.cloneReaderDocumentRoot(r)
+            pdf_writer.addAttachment(name, data)
+            out = io.BytesIO()
+            pdf_writer.write(out)
 
-        pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
-        attachments = list(self.minimal_pdf_reader.getAttachments())
-        self.assertEqual(len(attachments), 1)
-
-        pdf_writer.addAttachment('another_attachment.txt', b'My awesome OTHER attachment')
-        attachments = list(self.minimal_pdf_reader.getAttachments())
-        self.assertEqual(len(attachments), 2)
+            r = pdf.OdooPdfFileReader(io.BytesIO(out.getvalue()))
+            self.assertEqual(len(list(r.getAttachments())), count)
 
     def test_odoo_pdf_file_reader_with_owner_encryption(self):
         pdf_writer = pdf.OdooPdfFileWriter()
