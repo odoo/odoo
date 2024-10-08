@@ -14,8 +14,4 @@ export class ProductCatalogPurchaseOrderLine extends ProductCatalogOrderLine {
     get highlightUoM() {
         return true;
     }
-
-    addPackagingQty() {
-        this.env.updatePackagingQuantity(this.props.packaging);
-    }
 }
