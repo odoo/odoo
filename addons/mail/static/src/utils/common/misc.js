@@ -166,3 +166,28 @@ export function parseVersion(v) {
         },
     };
 }
+
+/**
+ * Converts a given URL from platforms like YouTube, Google Drive, Instagram,
+ * etc., into their embed format. This function extracts the necessary video ID
+ * or content identifier from the input URL and returns the corresponding embed
+ * URL for that platform.
+ *
+ * @param {string} url
+ */
+export function convertToEmbedURL(url) {
+    const ytRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|live\/|watch\?v=|&v=)([^#&?]*).*/;
+    const ytMatch = url.match(ytRegex);
+    if (ytMatch?.length === 3) {
+        const youtubeURL = new URL(`/embed/${ytMatch[2]}`, "https://www.youtube.com");
+        youtubeURL.searchParams.set("autoplay", "1");
+        return { url: youtubeURL.toString(), provider: "youtube" };
+    }
+    const gdriveRegex = /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=))([^/?&]+)/;
+    const gdriveMatch = url.match(gdriveRegex);
+    if (gdriveMatch?.length === 2) {
+        const gdriveURL = new URL(`/file/d/${gdriveMatch[1]}/preview`, "https://drive.google.com");
+        return { url: gdriveURL.toString(), provider: "google-drive" };
+    }
+    return { url: null, provider: null };
+}

@@ -1,6 +1,6 @@
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
 
-import { Component } from "@odoo/owl";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -18,6 +18,16 @@ export class LinkPreview extends Component {
     setup() {
         super.setup();
         this.dialogService = useService("dialog");
+        this.state = useState({ startVideo: false, videoLoaded: false });
+        this.videoRef = useRef("video");
+        useEffect(
+            (el) => {
+                if (el) {
+                    el.onload = () => (this.state.videoLoaded = true);
+                }
+            },
+            () => [this.videoRef.el]
+        );
     }
 
     onClick() {
