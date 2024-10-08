@@ -284,11 +284,11 @@ class Website(models.Model):
             if available_pricelists and pricelist not in available_pricelists:
                 # If there is at least one pricelist in the available pricelists
                 # and the chosen pricelist is not within them
-                # it then choose the first available pricelist.
+                # it then choose the first available pricelist based on _order of the model.
                 # This can only happen when the pricelist is the public user pricelist and this pricelist is not in the available pricelist for this localization
                 # If the user is signed in, and has a special pricelist (different than the public user pricelist),
                 # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
-                pricelist = available_pricelists[0]
+                pricelist = available_pricelists.sorted()[0]
 
         return pricelist
 
