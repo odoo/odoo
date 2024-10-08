@@ -370,11 +370,28 @@ class OdooPdfFileWriter(PdfFileWriter):
             # Also check the second line. If it is PDF/A, it should be a line starting by % following by four bytes + \n
             second_line = stream.readlines(1)[0]
             if second_line.decode('latin-1')[0] == '%' and len(second_line) == 6:
-                self._header += second_line
                 self.is_pdfa = True
-        # Look if we have an ID in the incoming stream and use it.
-        pdf_id = reader.trailer.get('/ID', None)
-        if pdf_id:
+                # This is broken in pypdf 3+ and pypdf2 has been automatically
+                # writing a binary comment since 1.27
+                # py-pdf/pypdf@036789a4664e3f572292bc7dceec10f08b7dbf62 so we
+                # only need this if running on 1.x
+                #
+                # incidentally that means the heuristic above is completely broken
+                if submod == '._pypdf2_1':
+                    self._header += second_line
+        # clone_reader_document_root clones reader._ID since 3.2 (py-pdf/pypdf#1520)
+        if not hasattr(self, '_ID'):
+            # Look if we have an ID in the incoming stream and use it.
+            self._set_id(reader.trailer.get('/ID', None))
+
+    def _set_id(self, pdf_id):
+        if not pdf_id:
+            return
+
+        # property in pypdf
+        if hasattr(type(self), '_ID'):
+            self.trailers['/ID'] = pdf_id
+        else:
             self._ID = pdf_id
 
     def convert_to_pdfa(self):
@@ -388,14 +405,16 @@ class OdooPdfFileWriter(PdfFileWriter):
         # where 'n' is a single digit number between 0 (30h) and 7 (37h) "
         # " The aforementioned EOL marker shall be immediately followed by a % (25h) character followed by at least four
         # bytes, each of whose encoded byte values shall have a decimal value greater than 127 "
-        self._header = b"%PDF-1.7\n%\xFF\xFF\xFF\xFF"
+        self._header = b"%PDF-1.7\n"
+        if submod == '._pypdf2_1':
+            self._header += b"\xDE\xAD\xBE\xEF"
 
         # Add a document ID to the trailer. This is only needed when using encryption with regular PDF, but is required
         # when using PDF/A
         pdf_id = ByteStringObject(md5(self._reader.stream.getvalue()).digest())
         # The first string is based on the content at the time of creating the file, while the second is based on the
         # content of the file when it was last updated. When creating a PDF, both are set to the same value.
-        self._ID = ArrayObject((pdf_id, pdf_id))
+        self._set_id(ArrayObject((pdf_id, pdf_id)))
 
         with file_open('tools/data/files/sRGB2014.icc', mode='rb') as icc_profile:
             icc_profile_file_data = compress(icc_profile.read())
