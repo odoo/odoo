@@ -189,6 +189,9 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(...args) {
+        for (const cb of this.resources.formatSelection || []) {
+            cb(...args);
+        }
         if (this._formatSelection(...args)) {
             this.dispatch("ADD_STEP");
         }

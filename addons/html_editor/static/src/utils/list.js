@@ -23,14 +23,10 @@ export function switchListMode(list, newMode) {
     }
     const newTag = newMode === "CL" ? "UL" : newMode;
     const newList = setTagName(list, newTag);
-    // Clear list style (@todo @phoenix - why??)
     newList.style.removeProperty("list-style");
     for (const li of newList.children) {
         if (li.style.listStyle !== "none") {
             li.style.listStyle = null;
-            if (!li.style.all) {
-                li.removeAttribute("style");
-            }
         }
     }
     removeClass(newList, "o_checklist");

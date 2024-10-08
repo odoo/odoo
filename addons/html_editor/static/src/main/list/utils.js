@@ -1,3 +1,6 @@
+import { nextLeaf, previousLeaf } from "@html_editor/utils/dom_info";
+import { fontSizeItems } from "../font/font_plugin";
+
 export function createList(document, mode) {
     const node = document.createElement(mode === "OL" ? "OL" : "UL");
     if (mode === "CL") {
@@ -11,16 +14,34 @@ export function createList(document, mode) {
 export function insertListAfter(document, afterNode, mode, content = []) {
     const list = createList(document, mode);
     afterNode.after(list);
+    let fontSize;
     list.append(
         ...content.map((c) => {
             const li = document.createElement("LI");
-            if (c.length === 1 && c[0].tagName === "FONT" && c[0].style.color) {
-                li.style.setProperty("--marker-color", c[0].style.color);
-            }
             li.append(...[].concat(c));
+            const font = li.querySelector("font");
+            if (font && !previousLeaf(font, list) && !nextLeaf(font, list)) {
+                li.style.setProperty("--marker-color", font.style.color);
+            }
+            const span = li.querySelector("span");
+            if (span && !previousLeaf(span, list) && !nextLeaf(span, list)) {
+                const variableName = fontSizeItems.find((el) =>
+                    span.classList.contains(el.className)
+                ).variableName;
+                if (variableName) {
+                    const doc = document.documentElement;
+                    fontSize = getComputedStyle(doc).getPropertyValue(`--${variableName}`);
+                } else if (span.style.fontSize) {
+                    fontSize = span.style.fontSize;
+                }
+            }
             return li;
         })
     );
+    if (fontSize) {
+        list.style.setProperty("--marker-size", fontSize);
+        list.style.listStylePosition = "inside";
+    }
     return list;
 }
 

@@ -23,6 +23,7 @@ import { compareListTypes, createList, insertListAfter, isListItem } from "./uti
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { getListMode, switchListMode } from "@html_editor/utils/list";
 import { withSequence } from "@html_editor/utils/resource";
+import { fontSizeItems } from "../font/font_plugin";
 
 function isListActive(listMode) {
     return (selection) => {
@@ -41,6 +42,7 @@ export class ListPlugin extends Plugin {
         handle_shift_tab: this.handleShiftTab.bind(this),
         split_element_block: this.handleSplitBlock.bind(this),
         colorApply: this.applyListColor.bind(this),
+        formatSelection: this.applyListFormat.bind(this),
         toolbarCategory: withSequence(30, {
             id: "list",
         }),
@@ -270,6 +272,7 @@ export class ListPlugin extends Plugin {
                 this.mergeSimilarLists,
                 this.normalizeLI,
                 this.normalizeNestedList,
+                this.normalizeListStyle,
             ]) {
                 fn.call(this, element);
             }
@@ -419,6 +422,18 @@ export class ListPlugin extends Plugin {
             li.appendChild(element);
             li.classList.add("oe-nested");
             cursors.restore();
+        }
+    }
+
+    normalizeListStyle(element) {
+        element = closestElement(element, "ul, ol");
+        if (
+            element &&
+            element.style.listStylePosition === "inside" &&
+            ![...descendants(element)].filter((n) => n.nodeName !== "LI").every((n) => !isBlock(n))
+        ) {
+            element.style.listStylePosition = "";
+            element.style.setProperty("--marker-size", "");
         }
     }
 
@@ -788,6 +803,38 @@ export class ListPlugin extends Plugin {
         for (const list of selectedNodes) {
             if (this.shared.isNodeContentsFullySelected(list)) {
                 list.style.setProperty("--marker-color", color);
+            }
+        }
+    }
+
+    applyListFormat(formatName, { formatProps } = {}) {
+        const selectedNodes = new Set(
+            this.shared
+                .getSelectedNodes()
+                .map((n) => closestElement(n, "ul, ol"))
+                .filter(Boolean)
+        );
+        if (!selectedNodes.size) {
+            return;
+        }
+        for (const list of selectedNodes) {
+            if (
+                ![...descendants(list)].filter((n) => n.nodeName !== "LI").every((n) => !isBlock(n))
+            ) {
+                continue;
+            }
+            if (this.shared.isNodeContentsFullySelected(list)) {
+                const doc = this.editable.ownerDocument.documentElement;
+                if (formatName === "setFontSizeClassName") {
+                    const variableName = fontSizeItems.find(
+                        (el) => el.className === formatProps.className
+                    ).variableName;
+                    const fontSize = getComputedStyle(doc).getPropertyValue(`--${variableName}`);
+                    list.style.setProperty("--marker-size", fontSize);
+                } else if (formatName === "fontSize") {
+                    list.style.setProperty("--marker-size", formatProps.size);
+                }
+                list.style.listStylePosition = "inside";
             }
         }
     }
