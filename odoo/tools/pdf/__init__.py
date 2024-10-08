@@ -93,13 +93,24 @@ def _unwrapping_get(self, key, default=None):
 DictionaryObject.get = _unwrapping_get
 
 
-class BrandedFileWriter(PdfFileWriter):
-    def __init__(self):
-        super().__init__()
-        self.addMetadata({
-            '/Creator': "Odoo",
-            '/Producer': "Odoo",
-        })
+if hasattr(PdfWriter, 'write_stream'):
+    # >= 2.x has a utility `write` which can open a path, so `write_stream` could be called directly
+    class BrandedFileWriter(PdfWriter):
+        def write_stream(self, *args, **kwargs):
+            self.add_metadata({
+                '/Creator': "Odoo",
+                '/Producer': "Odoo",
+            })
+            super().write_stream(*args, **kwargs)
+else:
+    # 1.x has a monolithic write method
+    class BrandedFileWriter(PdfWriter):
+        def write(self, *args, **kwargs):
+            self.addMetadata({
+                '/Creator': "Odoo",
+                '/Producer': "Odoo",
+            })
+            super().write(*args, **kwargs)
 
 
 PdfFileWriter = BrandedFileWriter
