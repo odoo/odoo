@@ -34,7 +34,7 @@
                     </a>
                 </div>
             </div>
-            <t t-if="props.deletable" t-call="mail.LinkPreview.aside">
+            <t t-if="props.message and props.deletable" t-call="mail.LinkPreview.aside">
                 <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
             </t>
         </div>
