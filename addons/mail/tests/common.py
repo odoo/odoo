@@ -881,7 +881,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         return sent_mail
 
 
-class MailCase(MockEmail):
+class MailCase(common.TransactionCase, MockEmail):
     """ Tools, helpers and asserts for mail-related tests, including mail
     gateway mock and helpers (see ´´MockEmail´´).
 
@@ -1543,7 +1543,7 @@ class MailCase(MockEmail):
                 self.assertEqual(1, 0, f'Tracking: unsupported tracking test on {value_type}')
 
 
-class MailCommon(common.TransactionCase, MailCase):
+class MailCommon(MailCase):
     """ Almost-void class definition setting the savepoint case + mock of mail.
     Used mainly for class inheritance in other applications and test modules. """
 
