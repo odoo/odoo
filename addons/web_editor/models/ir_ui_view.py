@@ -124,7 +124,16 @@ class IrUiView(models.Model):
             return
 
         tree = html.fromstring(lang_value)
+        old_arch = self._context.get('old_arch')
+        if old_arch is not None:
+            old_tree_custom_snippets = list(old_arch.xpath('//*[hasclass("s_custom_snippet")]'))
         for custom_snippet_el in tree.xpath('//*[hasclass("s_custom_snippet")]'):
+            # Do not update translations if the custom snippet hasn't been
+            # modified. Indeed: a custom snippet's record saved before being
+            # translated will always have outdated translations compared to the
+            # view.
+            if old_arch is not None and any(etree.tostring(el, encoding='utf-8') == etree.tostring(custom_snippet_el, encoding='utf-8') for el in old_tree_custom_snippets):
+                continue
             custom_snippet_name = custom_snippet_el.get('data-name')
             custom_snippet_view = self.search([('name', '=', custom_snippet_name)], limit=1)
             if custom_snippet_view:
@@ -305,7 +314,7 @@ class IrUiView(models.Model):
         if not self._are_archs_equal(old_arch, new_arch):
             self._set_noupdate()
             self.write({'arch': self._pretty_arch(new_arch)})
-            self._copy_custom_snippet_translations(self, 'arch_db')
+            self.with_context(old_arch=old_arch)._copy_custom_snippet_translations(self, 'arch_db')
 
     @api.model
     def _view_get_inherited_children(self, view):
