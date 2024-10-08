@@ -22,11 +22,10 @@ registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
         {
             content: "Check that the call has started",
             trigger: ".o-discuss-Call",
-            run() {
-                if (!odoo.__WOWL_DEBUG__.root.env.services["discuss.rtc"]?.selfSession) {
-                    console.error("The call should have started.");
-                }
-            },
+        },
+        {
+            content: "Check that current user is in call ('disconnect' button visible)",
+            trigger: "button[title='Disconnect']",
         },
     ],
 });
