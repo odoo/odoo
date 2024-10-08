@@ -329,6 +329,12 @@ class IrMailServer(models.Model):
                  _("Please define at least one SMTP server, "
                    "or provide the SMTP parameters explicitly.")))
 
+        if ssl_context is None:
+            ssl_context = ssl.create_default_context()
+            # default behavior of python until 3.13, scary
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+
         if smtp_encryption == 'ssl':
             if 'SMTP_SSL' not in smtplib.__all__:
                 raise UserError(
