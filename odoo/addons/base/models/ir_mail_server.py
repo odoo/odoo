@@ -502,13 +502,6 @@ class IrMailServer(models.Model):
                 "or provide the SMTP parameters explicitly.",
             ))
 
-        if smtp_encryption in ('ssl', 'ssl_strict'):
-            if 'SMTP_SSL' not in smtplib.__all__:
-                raise UserError(
-                    _("Your Odoo Server does not support SMTP-over-SSL. "
-                      "You could use STARTTLS instead. "
-                       "If SSL is needed, an upgrade to Python 2.6 on the server-side "
-                       "should do the trick."))
         connection = SMTPConnection(smtp_server, smtp_port, smtp_encryption, context=ssl_context)
         connection.set_debuglevel(smtp_debug)
         if smtp_encryption in ('starttls', 'starttls_strict'):
