@@ -45,6 +45,7 @@ class DisplayDriver(Driver):
         if self.device_identifier != 'distant_display':
             # helpers.get_version returns a string formatted as: <L|W><version> (L: Linux, W: Windows)
             self.browser = 'chromium-browser' if float(helpers.get_version()[1:]) >= 24.08 else 'firefox'
+            self.browser_process_name = 'chromium' if self.browser == 'chromium-browser' else self.browser
             self._x_screen = device.get('x_screen', '0')
             self.load_url()
 
@@ -120,7 +121,7 @@ class DisplayDriver(Driver):
                 '--screen',
                 self._x_screen,
                 '--class',
-                self.browser,
+                self.browser_process_name,
                 'key',
                 keystroke,
             ], check=False)
