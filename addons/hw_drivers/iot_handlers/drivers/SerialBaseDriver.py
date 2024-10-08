@@ -9,7 +9,6 @@ from threading import Lock
 import time
 import traceback
 
-from odoo import _
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.driver import Driver
 
@@ -108,7 +107,7 @@ class SerialDriver(Driver):
                 self._actions[data['action']](data)
                 time.sleep(self._protocol.commandDelay)
         except Exception:
-            msg = _('An error occurred while performing action %s on %s', data, self.device_name)
+            msg = 'An error occurred while performing action %s on %s' % (data, self.device_name)
             _logger.exception(msg)
             self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
             self._push_status()
@@ -141,7 +140,7 @@ class SerialDriver(Driver):
                 self._status['status'] = self.STATUS_DISCONNECTED
                 self._push_status()
         except Exception:
-            msg = _('Error while reading %s', self.device_name)
+            msg = 'Error while reading %s' % self.device_name
             _logger.exception(msg)
             self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
             self._push_status()
