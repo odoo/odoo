@@ -125,10 +125,7 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
-        this.el.querySelectorAll(".modal").forEach((el) => {
-            const modal = Modal.getOrCreateInstance(el);
-            modal.hide();
-        });
+        Modal.getOrCreateInstance(this.el.querySelector(".modal")).hide();
         clearTimeout(this.timeout);
         if (this.modalShownOnClickEl) {
             window.removeEventListener('hashchange', this.__onHashChange);
@@ -171,10 +168,7 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
      * @private
      */
     _hidePopup: function () {
-        this.el.querySelectorAll(".modal").forEach((el) => {
-            const modal = Modal.getOrCreateInstance(el);
-            modal.hide();
-        });
+        Modal.getOrCreateInstance(this.el.querySelector(".modal")).hide();
     },
     /**
      * @private
@@ -183,10 +177,7 @@ const PopupWidget = publicWidget.Widget.extend(ObservingCookieWidgetMixin, {
         if (this._popupAlreadyShown || !this._canShowPopup()) {
             return;
         }
-        this.el.querySelectorAll(".modal").forEach((el) => {
-            const modal = Modal.getOrCreateInstance(el);
-            modal.show();
-        });
+        Modal.getOrCreateInstance(this.el.querySelector(".modal")).show();
     },
     /**
      * @private
