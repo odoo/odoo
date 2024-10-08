@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import * as tourUtils from '@website_sale/js/tours/tour_utils';
-import { clickOnExtraMenuItem } from "@website/js/tours/tour_utils";
 
 /**
  * The purpose of this tour is to check the whole certification flow:
@@ -11,7 +10,7 @@ import { clickOnExtraMenuItem } from "@website/js/tours/tour_utils";
  * -> clicks on "buy course"
  * -> is redirected to webshop on the product page
  * -> buys the course
- * -> fails 3 times, exhausting their attempts
+ * -> fails 2 times, exhausting their attempts
  * -> is removed to the members of the course
  * -> buys the course again
  * -> succeeds the certification
@@ -50,16 +49,22 @@ var buyCertificationSteps = [{
     run: "click",
 },
     tourUtils.goToCart(),
-    tourUtils.goToCheckout(),
-    ...tourUtils.payWithDemo(),
-    clickOnExtraMenuItem({}),
 {
-    content: 'eCommerce: go back to e-learning home page',
-    trigger: '.nav-item a:contains("Courses")',
-    run: "click",
+    content: 'Payment with Demo',
+    trigger: 'button:contains("Pay with Demo")',
+    run: 'click',
 }, {
-    content: 'eLearning: go into bought course',
-    trigger: 'a:contains("DIY Furniture")',
+    content: 'eCommerce: add card number',
+    trigger: 'input[name="customer_input"]',
+    run: "edit 4343434343434343",
+},
+    tourUtils.pay(),
+{
+    content: 'eCommerce: check that the payment is successful',
+    trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
+}, {
+    content: 'eCommerce: go into bought course',
+    trigger: 'a:contains("Start Learning")',
     run: "click",
 }, {
     content: 'eLearning: user should be enrolled',
@@ -145,18 +150,16 @@ var certificationCompletionSteps = [{
     content: 'Survey: back to course home page',
     trigger: 'a:contains("Go back to course")',
     run: "click",
-},
-    clickOnExtraMenuItem({}),
-{
-    content: 'eLearning: back to e-learning home page',
-    trigger: '.nav-item a:contains("Courses")',
-    run: "click",
 }, {
     content: 'eLearning: course should be completed',
-    trigger: '.o_wslides_course_card:contains("DIY Furniture") .badge:contains("Completed")',
+    trigger: '.o_wslides_channel_completion_completed',
 }];
 
 var profileSteps = [{
+    content: 'eLearning: back to e-learning home page',
+    trigger: 'a:contains("Courses")',
+    run: "click",
+}, {
     content: 'eLearning: access user profile',
     trigger: '.o_wslides_home_aside_loggedin a:contains("View")',
     run: "click",
@@ -171,8 +174,6 @@ registry.category("web_tour.tours").add('certification_member', {
     steps: () => [].concat(
         initTourSteps,
         buyCertificationSteps,
-        failCertificationSteps,
-        retrySteps,
         failCertificationSteps,
         retrySteps,
         failCertificationSteps,
