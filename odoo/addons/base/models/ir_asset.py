@@ -22,6 +22,7 @@ BEFORE_DIRECTIVE = 'before'
 REMOVE_DIRECTIVE = 'remove'
 REPLACE_DIRECTIVE = 'replace'
 INCLUDE_DIRECTIVE = 'include'
+INCLUDE_FILES_DIRECTIVE = 'include_files'
 # Those are the directives used with a 'target' argument/field.
 DIRECTIVES_WITH_TARGET = [AFTER_DIRECTIVE, BEFORE_DIRECTIVE, REPLACE_DIRECTIVE]
 
@@ -207,6 +208,19 @@ class IrAsset(models.Model):
         if directive == INCLUDE_DIRECTIVE:
             # recursively call this function for each INCLUDE_DIRECTIVE directive.
             self._fill_asset_paths(path_def, asset_paths, seen + [bundle], addons, installed, **assets_params)
+            return
+        if directive == INCLUDE_FILES_DIRECTIVE:
+            sub_bundle_paths = AssetPaths()
+            # recursively call this function for each INCLUDE_FILES_DIRECTIVE directive.
+            self._fill_asset_paths(path_def, sub_bundle_paths, seen + [bundle], addons, installed, **assets_params)
+            asset_paths.append(
+                [
+                    (path, full_path, last_modified)
+                    for (path, full_path, _, last_modified)
+                    in sub_bundle_paths.list
+                ],
+                bundle
+            )
             return
         if can_aggregate(path_def):
             paths = self._get_paths(path_def, installed)
