@@ -400,3 +400,47 @@ test("link preview request is only made when message contains URL", async () => 
     await click("button[aria-label='Send']:enabled");
     await assertSteps(["/mail/link_preview"]);
 });
+
+test("youtube and gdrive videos URL are embed", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const linkPreviewIds = pyEnv["mail.link.preview"].create([
+        {
+            og_title: "vokoscreenNG-2024-08-22_13-56-37.mkv",
+            og_type: "article",
+            source_url: "https://drive.google.com/file/d/195a8fSNxwmkfs9sDS7OCB2nX03iFr21P/view",
+        },
+        {
+            og_title: "Cinematic",
+            og_type: "video",
+            source_url: "https://www.youtube.com/watch?v=9bZkp7q19f0",
+        },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            body: "GDrive video preview",
+            link_preview_ids: [linkPreviewIds[0]],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: "YT video preview",
+            link_preview_ids: [linkPreviewIds[1]],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-LinkPreviewVideo[data-provider=google-drive] .fa-play");
+    await contains(
+        "iframe[data-src='https://drive.google.com/file/d/195a8fSNxwmkfs9sDS7OCB2nX03iFr21P/preview']",
+        { parent: [".o-mail-LinkPreviewVideo[data-provider=google-drive]"] }
+    );
+    await click(".o-mail-LinkPreviewVideo[data-provider=youtube] .fa-play");
+    await contains("iframe[data-src='https://www.youtube.com/embed/9bZkp7q19f0?autoplay=1']", {
+        parent: [".o-mail-LinkPreviewVideo[data-provider=youtube]"],
+    });
+});
