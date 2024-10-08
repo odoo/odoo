@@ -21,5 +21,7 @@ def check_session(session, env, request=None):
     if expected and odoo.tools.misc.consteq(expected, session.session_token):
         if request:
             env['res.device.log']._update_device(request)
+            if env['ir.config_parameter'].sudo().get_param('sessions.logout_useragent_change', 'true').lower() == 'true':
+                request.session.verify_user_agent(request)
         return True
     return False
