@@ -48,3 +48,16 @@ class AccountMove(models.Model):
                 allowed_codes = set(codes).intersection(set(matching_subtype_codes[0]))
                 domain += [("code", "in", tuple(allowed_codes))]
         return domain
+
+    def _compute_l10n_latam_document_type(self):
+        """
+        The following considerations apply for determining document types based on the partner's identification:
+        RUT/RUC (Uruguay): Automatically select e-factura.
+        CI (Cedula de Identidad): Automatically select e-ticket, with the following considerations:
+        """
+        super()._compute_l10n_latam_document_type()
+        for rec in self.filtered(lambda x: x.company_id.country_code == 'UY'):
+            if rec.partner_id.l10n_latam_identification_type_id == self.env.ref('l10n_uy.it_ci'):
+                rec.l10n_latam_document_type_id = self.env.ref('l10n_uy.dc_e_ticket').id
+            if rec.partner_id.l10n_latam_identification_type_id == self.env.ref('l10n_uy.it_rut'):
+                rec.l10n_latam_document_type_id = self.env.ref('l10n_uy.dc_e_inv').id

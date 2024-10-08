@@ -30,6 +30,14 @@ class TestDocTypes(AccountTestInvoicingCommon):
             })]
         })
         cls.invoice.action_post()
+        cls.partner_CI = cls.env["res.partner"].create({
+            "name": "Test partner CI",
+            "l10n_latam_identification_type_id": cls.env.ref('l10n_uy.it_ci').id
+        })
+        cls.partner_RUT = cls.env["res.partner"].create({
+            "name": "Test partner RUT",
+            "l10n_latam_identification_type_id": cls.env.ref('l10n_uy.it_rut').id
+        })
 
     def test_credit_note(self):
         self.assertEqual(self.invoice.l10n_latam_document_type_id.code, "121", "Not Export e-Invoice")
@@ -61,3 +69,13 @@ class TestDocTypes(AccountTestInvoicingCommon):
         self.assertEqual(debit_note.l10n_latam_document_type_id.code, "123", "Not Export e-Invoice Debit Note")
         expected_docs = ["123"] if self.env['ir.module.module']._get('l10n_uy_edi').state == 'installed' else ['123', '223']
         self.assertEqual(debit_note.l10n_latam_available_document_type_ids.mapped("code"), expected_docs, "Bad Domain")
+
+    def test_doc_type_byid(self):
+        dc_e_ticket = self.env.ref('l10n_uy.dc_e_ticket')
+        dc_e_inv = self.env.ref('l10n_uy.dc_e_inv')
+        move = self.env['account.move'].create({})
+        self.assertFalse(move.l10n_latam_document_type_id)
+        move.write({'partner_id': self.partner_CI})
+        self.assertEqual(move.l10n_latam_document_type_id, dc_e_ticket, "The document type is not being set correctly.")
+        move.write({'partner_id': self.partner_RUT})
+        self.assertEqual(move.l10n_latam_document_type_id, dc_e_inv, "The document type is not being set correctly.")
