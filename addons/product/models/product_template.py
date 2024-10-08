@@ -4,6 +4,7 @@ import itertools
 import logging
 
 from collections import defaultdict
+import copy
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
@@ -577,10 +578,118 @@ class ProductTemplate(models.Model):
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         # Only use the product.product heuristics if there is a search term and the domain
         # does not specify a match on `product.template` IDs.
+<<<<<<< 18.0
         self_obj = self
         if 'search_product_product' not in self.env.context and any(term[0] == 'id' for term in (args or [])):
             self_obj = self_obj.with_context(search_product_product=False)
         return super(ProductTemplate, self_obj).name_search(name, args, operator, limit)
+||||||| ffcff5a784f40522ef9e3051ca3605465b99c718
+        domain = domain or []
+        search_pp = self.env.context.get('search_product_product')
+        if not search_pp and (not name or any(term[0] == 'id' for term in domain)):
+            return super()._name_search(name, domain, operator, limit, order)
+
+        Product = self.env['product.product']
+        templates = self.browse()
+
+        product_domain = domain.copy()
+        if search_pp:
+            for term in product_domain:  # Replace id related leaf to product_tmpl_id
+                if term[0] == 'id':
+                    term[0] = 'product_tmpl_id'
+        while True:
+            extra = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
+            # Product._name_search has default value limit=100
+            # So, we either use that value or override it to None to fetch all products at once
+            products_ids = Product._name_search(name, product_domain + extra, operator, limit=None)
+            products = Product.browse(products_ids)
+            new_templates = products.product_tmpl_id
+            if new_templates & templates:
+                """Product._name_search can bypass the domain we passed (search on supplier info).
+                   If this happens, an infinite loop will occur."""
+                break
+            templates |= new_templates
+            if (not products) or (limit and (len(templates) > limit)):
+                break
+
+        searched_ids = set(templates.ids)
+        # some product.templates do not have product.products yet (dynamic variants configuration),
+        # we need to add the base _name_search to the results
+        tmpl_without_variant_ids = []
+        # Useless if variants is not set up as no tmpl_without_variant_ids could exist.
+        if self.env.user.has_group('product.group_product_variant') and (not limit or len(searched_ids) < limit):
+            # The ORM has to be bypassed because it would require a NOT IN which is inefficient.
+            self.env['product.product'].flush_model(['product_tmpl_id', 'active'])
+            tmpl_without_variant_ids = self.env['product.template']._search([], order='id')
+            tmpl_without_variant_ids.add_where("""
+                NOT EXISTS (
+                    SELECT product_tmpl_id
+                    FROM product_product
+                    WHERE product_product.active = true
+                        AND product_template.id = product_product.product_tmpl_id
+                )
+            """)
+        if tmpl_without_variant_ids:
+            domain2 = expression.AND([domain, [('id', 'in', tmpl_without_variant_ids)]])
+            searched_ids |= set(super()._name_search(name, domain2, operator, limit, order))
+
+        # re-apply product.template order + display_name
+        domain = [('id', 'in', list(searched_ids))]
+        return super()._name_search('', domain, 'ilike', limit, order)
+=======
+        domain = domain or []
+        search_pp = self.env.context.get('search_product_product')
+        if not search_pp and (not name or any(term[0] == 'id' for term in domain)):
+            return super()._name_search(name, domain, operator, limit, order)
+
+        Product = self.env['product.product']
+        templates = self.browse()
+
+        product_domain = copy.deepcopy(domain)
+        if search_pp:
+            for term in product_domain:  # Replace id related leaf to product_tmpl_id
+                if term[0] == 'id':
+                    term[0] = 'product_tmpl_id'
+        while True:
+            extra = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
+            # Product._name_search has default value limit=100
+            # So, we either use that value or override it to None to fetch all products at once
+            products_ids = Product._name_search(name, product_domain + extra, operator, limit=None)
+            products = Product.browse(products_ids)
+            new_templates = products.product_tmpl_id
+            if new_templates & templates:
+                """Product._name_search can bypass the domain we passed (search on supplier info).
+                   If this happens, an infinite loop will occur."""
+                break
+            templates |= new_templates
+            if (not products) or (limit and (len(templates) > limit)):
+                break
+
+        searched_ids = set(templates.ids)
+        # some product.templates do not have product.products yet (dynamic variants configuration),
+        # we need to add the base _name_search to the results
+        tmpl_without_variant_ids = []
+        # Useless if variants is not set up as no tmpl_without_variant_ids could exist.
+        if self.env.user.has_group('product.group_product_variant') and (not limit or len(searched_ids) < limit):
+            # The ORM has to be bypassed because it would require a NOT IN which is inefficient.
+            self.env['product.product'].flush_model(['product_tmpl_id', 'active'])
+            tmpl_without_variant_ids = self.env['product.template']._search([], order='id')
+            tmpl_without_variant_ids.add_where("""
+                NOT EXISTS (
+                    SELECT product_tmpl_id
+                    FROM product_product
+                    WHERE product_product.active = true
+                        AND product_template.id = product_product.product_tmpl_id
+                )
+            """)
+        if tmpl_without_variant_ids:
+            domain2 = expression.AND([domain, [('id', 'in', tmpl_without_variant_ids)]])
+            searched_ids |= set(super()._name_search(name, domain2, operator, limit, order))
+
+        # re-apply product.template order + display_name
+        domain = [('id', 'in', list(searched_ids))]
+        return super()._name_search('', domain, 'ilike', limit, order)
+>>>>>>> 7fa1b1417f156145016520b328a8fee0bd5276c2
 
     #=== ACTION METHODS ===#
 
