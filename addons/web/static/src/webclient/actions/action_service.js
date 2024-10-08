@@ -53,7 +53,7 @@ const actionRegistry = registry.category("actions");
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
-/** @typedef {"current" | "fullscreen" | "new" | "main" | "self" | "inline"} ActionMode */
+/** @typedef {"current" | "fullscreen" | "new" | "main" | "self"} ActionMode */
 /** @typedef {string} ActionTag */
 /** @typedef {string} ActionXMLId */
 /** @typedef {Object} Context */
@@ -387,10 +387,9 @@ export function makeActionManager(env, router = _router) {
         if (action.type === "ir.actions.act_window") {
             action.views = [...action.views.map((v) => [v[0], v[1]])]; // manipulate a copy to keep cached action unmodified
             action.controllers = {};
-            const target = action.target;
-            if (target !== "inline" && !(target === "new" && action.views[0][1] === "form")) {
-                // FIXME: search view arch is already sent with load_action, so either remove it
-                // from there or load all fieldviews alongside the action for the sake of consistency
+            if (action.views.every((v) => ["form", "search"].includes(v[1]))) {
+                action.views = action.views.filter((v) => v[1] === "form");
+            } else {
                 const searchViewId = action.search_view_id ? action.search_view_id[0] : false;
                 action.views.push([searchViewId, "search"]);
             }
@@ -643,7 +642,7 @@ export function makeActionManager(env, router = _router) {
             display: { mode: target === "new" ? "inDialog" : target },
             domain: action.domain || [],
             groupBy,
-            loadActionMenus: target !== "new" && target !== "inline",
+            loadActionMenus: target !== "new" && action.res_model !== "res.config.settings",
             loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
@@ -676,10 +675,6 @@ export function makeActionManager(env, router = _router) {
             if (action.flags && "mode" in action.flags) {
                 viewProps.mode = action.flags.mode;
             }
-        }
-
-        if (target === "inline") {
-            viewProps.searchMenuTypes = [];
         }
 
         const specialKeys = ["help", "useSampleModel", "limit", "count"];
