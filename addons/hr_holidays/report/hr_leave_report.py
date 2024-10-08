@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import api, fields, models, tools, _
-from odoo.osv import expression
+from odoo import fields, models, tools
 
 
 class LeaveReport(models.Model):
@@ -70,8 +68,8 @@ class LeaveReport(models.Model):
                     null as allocation_id,
                     request.employee_id as employee_id,
                     request.private_name as name,
-                    (request.number_of_days * -1) as number_of_days,
-                    (request.number_of_hours * -1) as number_of_hours,
+                    request.number_of_days as number_of_days,
+                    request.number_of_hours as number_of_hours,
                     request.department_id as department_id,
                     request.holiday_status_id as holiday_status_id,
                     request.state as state,
