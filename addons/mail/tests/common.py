@@ -1010,6 +1010,62 @@ class MailCase(MockEmail):
         cls.email_template = cls.env['mail.template'].create(create_values)
         return cls.email_template
 
+    @classmethod
+    def _create_records_for_batch(cls, model, count, additional_values=None, prefix=''):
+        additional_values = additional_values or {}
+        records = cls.env[model]
+        partners = cls.env['res.partner']
+        country_id = cls.env.ref('base.be').id
+
+        base_values = [
+            {'name': f'{prefix}Test_{idx}',
+             **additional_values,
+            } for idx in range(count)
+        ]
+
+        partner_fnames = cls.env[model]._mail_get_partner_fields(introspect_fields=True)
+        if partner_fname := partner_fnames[0] if partner_fnames else False:
+            partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
+                'name': f'Partner_{idx}',
+                'email': f'{prefix}test_partner_{idx}@example.com',
+                'country_id': country_id,
+                'mobile': '047500%02d%02d' % (idx, idx)
+            } for idx in range(count)])
+            for values, partner in zip(base_values, partners):
+                values[partner_fname] = partner.id
+
+        records = cls.env[model].with_context(**cls._test_context).create(base_values)
+
+        cls.records = cls._reset_mail_context(records)
+        cls.partners = partners
+        return cls.records, cls.partners
+
+    @classmethod
+    def _create_portal_user(cls):
+        cls.user_portal = mail_new_test_user(
+            cls.env,
+            company_id=cls.env.ref('base.user_admin').company_id.id,
+            login='portal_test',
+            groups='base.group_portal',
+            name='Chell Gladys',
+            notification_type='email',
+        )
+        cls.partner_portal = cls.user_portal.partner_id
+        return cls.user_portal
+
+    @staticmethod
+    def _generate_attachments_data(count, res_model, res_id, attach_values=None, prefix=None):
+        # attachment visibility depends on what they are attached to
+        attach_values = attach_values or {}
+        prefix = prefix or ''
+        return [{
+            'datas': base64.b64encode(b'AttContent_%02d' % x),
+            'name': f'{prefix}AttFileName_{x:02d}.txt',
+            'mimetype': 'text/plain',
+            'res_model': res_model,
+            'res_id': res_id,
+            **attach_values,
+        } for x in range(count)]
 
     def _generate_notify_recipients(self, partners, record=None):
         """ Tool method to generate recipients data according to structure used
@@ -1539,44 +1595,6 @@ class MailCommon(common.TransactionCase, MailCase):
         cls.guest = cls.env['mail.guest'].create({'name': 'Guest Mario'})
 
     @classmethod
-    def _create_portal_user(cls):
-        cls.user_portal = mail_new_test_user(
-            cls.env, login='portal_test', groups='base.group_portal', company_id=cls.company_admin.id,
-            name='Chell Gladys', notification_type='email')
-        cls.partner_portal = cls.user_portal.partner_id
-        return cls.user_portal
-
-    @classmethod
-    def _create_records_for_batch(cls, model, count, additional_values=None, prefix=''):
-        additional_values = additional_values or {}
-        records = cls.env[model]
-        partners = cls.env['res.partner']
-        country_id = cls.env.ref('base.be').id
-
-        base_values = [
-            {'name': f'{prefix}Test_{idx}',
-             **additional_values,
-            } for idx in range(count)
-        ]
-
-        partner_fnames = cls.env[model]._mail_get_partner_fields(introspect_fields=True)
-        if partner_fname := partner_fnames[0] if partner_fnames else False:
-            partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
-                'name': f'Partner_{idx}',
-                'email': f'{prefix}test_partner_{idx}@example.com',
-                'country_id': country_id,
-                'mobile': '047500%02d%02d' % (idx, idx)
-            } for idx in range(count)])
-            for values, partner in zip(base_values, partners):
-                values[partner_fname] = partner.id
-
-        records = cls.env[model].with_context(**cls._test_context).create(base_values)
-
-        cls.records = cls._reset_mail_context(records)
-        cls.partners = partners
-        return cls.records, cls.partners
-
-    @classmethod
     def _activate_multi_company(cls):
         """ Create another company, add it to admin and create an user that
         belongs to that new company. It allows to test flows with users from
@@ -1726,20 +1744,6 @@ class MailCommon(common.TransactionCase, MailCase):
                 'English Layout for': 'Spanish Layout para'
             }
         })
-
-    @staticmethod
-    def _generate_attachments_data(count, res_model, res_id, attach_values=None, prefix=None):
-        # attachment visibility depends on what they are attached to
-        attach_values = attach_values or {}
-        prefix = prefix or ''
-        return [{
-            'datas': base64.b64encode(b'AttContent_%02d' % x),
-            'name': f'{prefix}AttFileName_{x:02d}.txt',
-            'mimetype': 'text/plain',
-            'res_model': res_model,
-            'res_id': res_id,
-            **attach_values,
-        } for x in range(count)]
 
     def _filter_messages_fields(self, /, *messages_data):
         """ Remove store message data dependant on other modules if they are not not installed.
