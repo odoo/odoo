@@ -235,7 +235,7 @@ export const callbacksForCursorUpdate = {
 };
 
 /**
- * @param {Selection} selection
+ * @param {EditorSelection} selection
  * @param {"previous"|"next"} side
  * @param {HTMLElement} editable
  * @returns {string | undefined}
