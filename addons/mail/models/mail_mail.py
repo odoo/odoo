@@ -621,7 +621,12 @@ class MailMail(models.Model):
                         len(batch_ids), mail_server_id)
             finally:
                 if smtp_session:
-                    smtp_session.quit()
+                    try:
+                        smtp_session.quit()
+                    except smtplib.SMTPServerDisconnected:
+                        _logger.info(
+                            "Ignoring SMTPServerDisconnected while trying to quit non open session"
+                        )
 
     def action_send_and_close(self):
         """ An action sending the selected mail and redirecting to mail.mail list view. """
