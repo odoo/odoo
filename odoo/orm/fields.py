@@ -43,7 +43,7 @@ from odoo.tools.misc import unquote, has_list_types, Sentinel, SENTINEL
 from odoo.tools.translate import html_translate
 
 from odoo.osv import expression
-from .api import IdType, NewId
+from .identifiers import IdType, NewId
 from .utils import expand_ids, check_pg_name, check_property_field_value_name, PREFETCH_MAX
 # we may not import models here to avoid cyclic dependencies
 
