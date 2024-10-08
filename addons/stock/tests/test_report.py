@@ -30,6 +30,7 @@ class TestReportsCommon(TransactionCase):
         product_form = Form(cls.env['product.product'])
         product_form.is_storable = True
         product_form.name = 'Product'
+        product_form.categ_id = cls.env.ref('product.product_category_services')
         cls.product = product_form.save()
         cls.product_template = cls.product.product_tmpl_id
         cls.wh_2 = cls.env['stock.warehouse'].create({
