@@ -62,9 +62,13 @@ from odoo.tools.misc import LastOrderedSet, ReversedIterable, unquote
 from odoo.tools.translate import _, LazyTranslate
 
 from . import api, fields
-from .api import NewId
 from .fields import Field, Datetime, Command
+<<<<<<< HEAD
 from .utils import expand_ids, check_pg_name, check_object_name, check_property_field_value_name, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
+=======
+from .identifiers import NewId
+from .util import expand_ids, check_pg_name, check_object_name, check_property_field_value_name, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
+>>>>>>> c76c59a9d7d ([REF] core: separated odoo.orm.identifier)
 from odoo.osv import expression
 
 import typing
