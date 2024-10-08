@@ -771,6 +771,53 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("add a new record in a many2many non editable list", async function (assert) {
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="display_name"/></tree>',
+            "partner_type,false,form": '<form><field name="display_name"/></form>',
+            "partner_type,false,search": '<search><field name="display_name"/></search>',
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "web_save") {
+                    // should not read the record as we're closing the dialog
+                    assert.deepEqual(args.kwargs.specification, {});
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await click(target.querySelector(".o_dialog .o_create_button"));
+        await editInput(
+            target.querySelector(".o_dialog"),
+            ".o_field_widget[name=display_name] input",
+            "a name"
+        );
+        await click(target.querySelector(".o_dialog .o_form_button_save"));
+        assert.verifySteps([
+            "get_views",
+            "onchange",
+            "get_views",
+            "web_search_read",
+            "get_views",
+            "onchange",
+            "web_save",
+            "web_read",
+        ]);
+    });
+
     QUnit.test("add record in a many2many non editable list with context", async function (assert) {
         assert.expect(1);
 
