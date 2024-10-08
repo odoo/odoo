@@ -45,15 +45,57 @@
     }
 }
 
-.o-mail-LinkPreviewVideo-videoWrap {
-    border-right: 1px solid $card-border-color;
-}
-
 .o-mail-LinkPreviewVideo-play {
-    background: #000000;
+    background: #535353;
+
+    &:hover {
+        background: #777777;
+    }
 
     i {
-        color: #ffffff;
+        color: #cac6c6;
+    }
+}
+
+.o-mail-LinkPreviewVideo-container {
+    position: relative;
+    aspect-ratio: 16 / 9;
+
+    & iframe, .o-mail-LinkPreviewVideo-videoWrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+$o-mail-LinkPreviewVideo-providerBorderWidth: 4px;
+
+.o-mail-LinkPreviewVideo-embed {
+    max-width: 400px;
+    transition: max-width 0.6s cubic-bezier(.215, .610, .355, 1);
+    border: 0;
+
+    &.o-mail-LinkPreviewVideo-started {
+        max-width: 550px;
+    }
+
+    &[data-provider=youtube] {
+        border-left: $o-mail-LinkPreviewVideo-providerBorderWidth solid;
+        border-left-color: #FF0000;
+    }
+    &[data-provider=google-drive]::before {
+        // Using before pseudo element to make border radius work with
+        // border-image.
+        content: '';
+        position: absolute;
+        z-index: 1;
+        width: $o-mail-LinkPreviewVideo-providerBorderWidth;
+        height: 100%;
+        background: linear-gradient(to bottom, #FBBC05 33.33%, #34A853 33.33%, #34A853 66.66%, #4285F4 66.66%);
+    }
+
+    & .o-mail-LinkPreviewVideo-overlay {
+        border-bottom-left-radius: 0 !important;
     }
 }
 
