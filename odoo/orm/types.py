@@ -2,8 +2,9 @@
 import typing
 from collections.abc import Mapping
 
-from .api import Environment, IdType, NewId
+from .api import Environment
 from .fields import Field
+from .identifiers import IdType, NewId
 from .models import BaseModel
 from .registry import Registry
 try:

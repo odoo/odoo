@@ -62,8 +62,8 @@ from odoo.tools.misc import LastOrderedSet, ReversedIterable, unquote
 from odoo.tools.translate import _, LazyTranslate
 
 from . import api, fields
-from .api import NewId
 from .fields import Field, Datetime, Command
+from .identifiers import NewId
 from .utils import OriginIds, expand_ids, check_pg_name, check_object_name, check_property_field_value_name, origin_ids, PREFETCH_MAX, READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY
 from odoo.osv import expression
 
