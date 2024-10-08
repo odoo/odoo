@@ -112,6 +112,8 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 if (!productId) {
                     return;
                 }
+                // To display the hidden popover behind the model
+                self.el.classList.remove("o_bottom_fixed_element_hidden");
                 self._addNewProducts(productId).then(function () {
                     website_sale_utils.animateClone(
                         $('#comparelist .o_product_panel_header'),
