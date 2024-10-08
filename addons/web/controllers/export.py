@@ -338,7 +338,7 @@ class Export(http.Controller):
                         definition['type'] == 'separator' or
                         (
                             definition['type'] in ('many2one', 'many2many')
-                            and definition['comodel'] not in Model.env
+                            and definition.get('comodel') not in Model.env
                         )
                     ):
                         continue

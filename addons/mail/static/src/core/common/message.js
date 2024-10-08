@@ -10,6 +10,7 @@ import { MessageSeenIndicator } from "@mail/core/common/message_seen_indicator";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { renderToElement } from "@web/core/utils/render";
 
 import {
     Component,
@@ -141,9 +142,6 @@ export class Message extends Component {
             () => [this.props.messageEdition?.editingMessage]
         );
         onMounted(() => {
-            if (this.messageBody.el) {
-                this.prepareMessageBody(this.messageBody.el);
-            }
             if (this.shadowBody.el) {
                 this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
                 const color = cookie.get("color_scheme") === "dark" ? "white" : "black";
@@ -170,6 +168,9 @@ export class Message extends Component {
         });
         useEffect(
             () => {
+                if (this.messageBody.el) {
+                    this.prepareMessageBody(this.messageBody.el);
+                }
                 if (this.shadowBody.el) {
                     const bodyEl = document.createElement("span");
                     bodyEl.innerHTML = this.state.showTranslation
@@ -399,7 +400,21 @@ export class Message extends Component {
     }
 
     /** @param {HTMLElement} bodyEl */
-    prepareMessageBody(bodyEl) {}
+    prepareMessageBody(bodyEl) {
+        if (!bodyEl) {
+            return;
+        }
+        const linkEls = bodyEl.querySelectorAll(".o_channel_redirect");
+        for (const linkEl of linkEls) {
+            const text = linkEl.textContent.substring(1); // remove '#' prefix
+            const icon = linkEl.classList.contains("o_channel_redirect_asThread")
+                ? "fa fa-comments-o"
+                : "fa fa-hashtag";
+            const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
+            linkEl.replaceChildren(iconEl);
+            linkEl.insertAdjacentText("beforeend", ` ${text}`);
+        }
+    }
 
     getAuthorAttClass() {
         return { "opacity-50": this.message.isPending };

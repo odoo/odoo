@@ -3,7 +3,6 @@ import {
     check,
     dblclick,
     pointerDown,
-    pointerUp,
     queryAll,
     queryAllTexts,
     queryFirst,
@@ -32,7 +31,6 @@ const openExportDialog = async () => {
     if (getMockEnv().isSmall) {
         await pointerDown(".o_data_row:nth-child(1)");
         await runAllTimers();
-        await pointerUp(".o_data_row:nth-child(1)");
     } else {
         await contains(".o_list_record_selector input[type='checkbox']").click();
     }
