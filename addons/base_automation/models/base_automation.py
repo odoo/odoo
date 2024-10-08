@@ -255,7 +255,7 @@ class BaseAutomation(models.Model):
     def _get_cron_interval(self, actions=None):
         """ Return the expected time interval used by the cron, in minutes. """
         def get_delay(rec):
-            return rec.trg_date_range * DATE_RANGE_FACTOR[rec.trg_date_range_type]
+            return abs(rec.trg_date_range) * DATE_RANGE_FACTOR[rec.trg_date_range_type]
 
         if actions is None:
             actions = self.with_context(active_test=True).search([('trigger', '=', 'on_time')])
