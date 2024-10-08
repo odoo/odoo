@@ -3,7 +3,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.WebsiteSaleCheckout.include({
     events: Object.assign({}, publicWidget.registry.WebsiteSaleCheckout.prototype.events, {
-        'click .js_delete_product': '_onClickDeleteProduct',
+        'click .js_wsc_delete_product': '_onClickDeleteProduct',
     }),
 
     // #=== EVENT HANDLERS ===#

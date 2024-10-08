@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template
+        id="unavailable_products_warning"
+        inherit_id="website_sale_collect.unavailable_products_warning"
+    >
+        <div name="o_wsale_unavailable_line_button_container" position="inside">
+            <span class="d-none d-md-inline-block ms-1">
+                <a
+                    title="Add to Wishlist"
+                    href="#"
+                    class="o_add_wishlist js_wsc_delete_product small px-2 border-start"
+                    t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
+                    t-att-data-product-product-id="order_line.product_id.id"
+                    data-action="o_wishlist"
+                >
+                    <span t-att-data-product-id="order_line.product_id.id">Save for Later</span>
+                </a>
+            </span>
+            <button
+                title="Add to Wishlist"
+                class="o_add_wishlist js_wsc_delete_product small btn btn-light d-md-none"
+                t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
+                t-att-data-product-product-id="order_line.product_id.id"
+                data-action="o_wishlist"
+            >
+                <i class="fa fa-heart-o" t-att-data-product-id="order_line.product_id.id"/>
+            </button>
+        </div>
+    </template>
+</odoo>
