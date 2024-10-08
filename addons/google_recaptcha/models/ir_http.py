@@ -70,7 +70,9 @@ class Http(models.AbstractModel):
             :rtype: str
         """
         private_key = request.env['ir.config_parameter'].sudo().get_param('recaptcha_private_key')
-        if not private_key:
+        recaptcha_enabled = request.env['ir.config_parameter'].sudo().get_param('recaptcha_enabled')
+
+        if not (private_key and recaptcha_enabled):
             return 'no_secret'
         min_score = request.env['ir.config_parameter'].sudo().get_param('recaptcha_min_score')
         try:
