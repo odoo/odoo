@@ -580,6 +580,7 @@ class TestMailScheduleInternals(EventMailCommon):
             })
         self.assertEqual(event.create_date, self.reference_now)
         self.assertFalse(event.event_mail_ids)
+
         for i_type, i_unit, i_nbr, exp in [
             # attendee: create date
             ("after_sub", "now", 3, now),
@@ -593,12 +594,22 @@ class TestMailScheduleInternals(EventMailCommon):
             ("before_event", "days", 3, start - relativedelta(days=3)),
             ("before_event", "weeks", 3, start - relativedelta(weeks=3)),
             ("before_event", "months", 3, start - relativedelta(months=3)),
+            ("after_event_start", "now", 3, start),
+            ("after_event_start", "hours", 3, start + relativedelta(hours=3)),
+            ("after_event_start", "days", 3, start + relativedelta(days=3)),
+            ("after_event_start", "weeks", 3, start + relativedelta(weeks=3)),
+            ("after_event_start", "months", 3, start + relativedelta(months=3)),
             # event: end date
             ("after_event", "now", 3, end),
             ("after_event", "hours", 3, end + relativedelta(hours=3)),
             ("after_event", "days", 3, end + relativedelta(days=3)),
             ("after_event", "weeks", 3, end + relativedelta(weeks=3)),
             ("after_event", "days", 3, end + relativedelta(days=3)),
+            ("before_event_end", "now", 3, end),
+            ("before_event_end", "hours", 3, end - relativedelta(hours=3)),
+            ("before_event_end", "days", 3, end - relativedelta(days=3)),
+            ("before_event_end", "weeks", 3, end - relativedelta(weeks=3)),
+            ("before_event_end", "months", 3, end - relativedelta(months=3)),
         ]:
             with self.subTest(i_type=i_type, i_unit=i_unit, i_nbr=i_nbr):
                 event.write({
@@ -610,6 +621,50 @@ class TestMailScheduleInternals(EventMailCommon):
                     })],
                 })
                 self.assertEqual(event.event_mail_ids.scheduled_date, exp)
+
+    def test_scheduled_date_execution(self):
+        """ Check execution is effectively date-based, and for start-based check
+        closed event do not fire their schedulers. """
+        now = self.reference_now.replace(microsecond=0)
+        start, end = now + relativedelta(days=1), now + relativedelta(days=5)
+        with self.mock_datetime_and_now(self.reference_now):
+            event = self.env["event.event"].create({
+                "event_mail_ids": False,
+                "date_begin": start,
+                "date_end": end,
+                "name": "Test Scheduled Date",
+            })
+        self.assertEqual(event.create_date, self.reference_now)
+
+        EventMail = type(self.env['event.mail'])
+        exec_origin = EventMail._execute_event_based
+
+        for i_type, test_now, should_call in [
+            # start date based: launch if in [scheduled, end]
+            ('before_event', now + relativedelta(days=1, hours=-3), False),
+            ('before_event', now + relativedelta(days=1, hours=-2), True),
+            ('before_event', now + relativedelta(days=5), False),
+            ('after_event_start', now + relativedelta(days=1, hours=1), False),
+            ('after_event_start', now + relativedelta(days=1, hours=2), True),
+            ('after_event_start', now + relativedelta(days=5), False),
+        ]:
+            with self.subTest(i_type=i_type, test_now=test_now):
+                event.write({
+                    "event_mail_ids": [(5, 0), (0, 0, {
+                        "interval_nbr": '2',
+                        "interval_type": i_type,
+                        "interval_unit": 'hours',
+                        "template_ref": f"mail.template,{self.template_subscription.id}",
+                    })],
+                })
+                with patch.object(
+                    EventMail, '_execute_event_based', autospec=True, wraps=EventMail, side_effect=exec_origin,
+                ) as mock_exec, \
+                     self.mock_datetime_and_now(test_now), \
+                     self.mock_mail_gateway():
+                    event.event_mail_ids.execute()
+                self.assertEqual(mock_exec.called, should_call)
+
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_unique_event_mail_ids(self):
