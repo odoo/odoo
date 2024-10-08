@@ -3,6 +3,7 @@
 import itertools
 import logging
 from collections import defaultdict
+import copy
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -538,7 +539,7 @@ class ProductTemplate(models.Model):
         Product = self.env['product.product']
         templates = self.browse()
 
-        product_domain = domain.copy()
+        product_domain = copy.deepcopy(domain)
         if search_pp:
             for term in product_domain:  # Replace id related leaf to product_tmpl_id
                 if term[0] == 'id':
