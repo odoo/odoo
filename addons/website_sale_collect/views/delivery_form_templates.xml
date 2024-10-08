@@ -7,7 +7,7 @@
             <div
                 t-foreach="unavailable_order_lines"
                 t-as="order_line"
-                t-attf-class="d-flex m-2 position-relative"
+                t-attf-class="d-flex gap-3 m-2 position-relative"
             >
                 <div class="d-flex align-items-center gap-2">
                     <a t-att-href="order_line.product_id.website_url">
@@ -16,18 +16,31 @@
                             t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"
                         />
                     </a>
-                    <t t-out="order_line.product_id.name"/>
-                    <a
-                        href='#'
-                        class="js_delete_product small"
-                        aria-label="Remove from cart"
-                        title="Remove from cart"
-                    >
-                        <i t-att-data-product-id="order_line.product_id.id" class="fa fa-trash"/>
-                    </a>
-                     ( <t t-out="order_line.shop_warning"/> )
                 </div>
-             </div>
+                <div>
+                    <t t-out="order_line.product_id.name"/>
+                    ( <t t-out="order_line.shop_warning"/> )
+                    <div name="o_wsale_unavailable_line_button_container">
+                        <a
+                            title="Remove from cart"
+                            href='#'
+                            class="js_wsc_delete_product d-none d-md-inline-block small"
+                            aria-label="Remove from cart"
+                        >
+                            <span t-att-data-product-id="order_line.product_id.id">Remove</span>
+                        </a>
+                        <button
+                            title="Remove from cart"
+                            class="js_wsc_delete_product btn btn-light d-inline-block d-md-none"
+                        >
+                            <i
+                                class="fa fa-trash-o"
+                                t-att-data-product-id="order_line.product_id.id"
+                            />
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </template>
 
