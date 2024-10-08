@@ -1054,6 +1054,10 @@ class MailCase(MockEmail):
         if messages is not None:
             base_domain += [('mail_message_id', 'in', messages.ids)]
         notifications = self.env['mail.notification'].sudo().search(base_domain)
+        debug_info = '\n'.join(
+            f'Notif: pid {n.res_partner_id.id} ({n.res_partner_id.name}) / type {n.notification_type}'
+            for n in notifications
+        )
 
         done_msgs = self.env['mail.message'].sudo()
         done_notifs = self.env['mail.notification'].sudo()
@@ -1115,7 +1119,7 @@ class MailCase(MockEmail):
                     n.notification_type == ntype
                 )
                 self.assertEqual(len(partner_notif), 1,
-                                 f'Mail: not found notification for {partner} (type: {ntype}, message: {message.id})')
+                                 f'Mail: not found notification for {partner} (type: {ntype}, message: {message.id})\n{debug_info}')
                 self.assertEqual(partner_notif.author_id, partner_notif.mail_message_id.author_id)
                 self.assertEqual(partner_notif.is_read, nis_read)
                 if 'failure_reason' in recipient:

@@ -332,7 +332,7 @@ class EventRegistration(models.Model):
                     ).with_user(SUPERUSER_ID).execute()
                 except Exception as e:
                     _logger.exception("Failed to run scheduler %s", scheduler.id)
-                    self.env["event.mail"]._warn_template_error(scheduler, e)
+                    scheduler._warn_error(e)
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY
