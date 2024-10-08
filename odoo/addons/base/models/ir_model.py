@@ -2210,8 +2210,16 @@ class IrModelData(models.Model):
             model = self.pool.get(ir_field.model)
             if model is not None:
                 field = model._fields.get(ir_field.name)
-                if field is not None:
-                    field.prefetch = False
+                if field is not None and field.prefetch:
+                    if not field._toplevel:
+                        # avoid modifying non-_toplevel field objects since
+                        # they may be shared with other registries
+                        Field = type(field)
+                        field_ = Field(_base_fields=[field, Field(prefetch=False)])
+                        self.env[ir_field.model]._add_field(ir_field.name, field_)
+                        field_.setup(model)
+                    else:
+                        field.prefetch = False
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []
