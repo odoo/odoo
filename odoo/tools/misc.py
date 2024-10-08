@@ -200,7 +200,7 @@ def file_path(file_path: str, filter_ext: tuple[str, ...] = ('',), env: Environm
     :raise FileNotFoundError: if the file is not found under the known `addons_path` directories
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
-    root_path = os.path.abspath(config['root_path'])
+    root_path = os.path.abspath(config.root_path)
     temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else ()
     addons_paths = [*odoo.addons.__path__, root_path, *temporary_paths]
     is_abs = os.path.isabs(file_path)
