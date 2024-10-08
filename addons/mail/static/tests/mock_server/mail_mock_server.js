@@ -743,6 +743,83 @@ async function mail_message_update_content(request) {
     ).get_result();
 }
 
+registerRoute("/mail/message/get_followers", message_get_followers);
+/** @type {RouteCallback} */
+async function message_get_followers(request) {
+    const {
+        thread_id,
+        thread_model,
+        limit,
+        offset,
+        filter_recipients = false,
+    } = await parseRequestParams(request);
+    if (filter_recipients) {
+        // not implemented for the simplicity
+    }
+
+    /** @type {import("mock_models").MailFollowers} */
+    const MailFollowers = this.env["mail.followers"];
+    const followersCount = MailFollowers._filter([
+        ["res_id", "=", thread_id],
+        ["res_model", "=", thread_model],
+    ]).length;
+    const selfFollower = MailFollowers.search([
+        ["res_id", "=", thread_id],
+        ["res_model", "=", thread_model],
+        ["partner_id", "=", this.env.user.partner_id],
+    ]);
+    let followers = MailFollowers._filter([
+        ["res_id", "=", thread_id],
+        ["res_model", "=", thread_model],
+        ["partner_id", "!=", this.env.user.partner_id],
+    ]);
+
+    followers = followers.sort((a, b) => {
+        const nameA = a.name;
+        const nameB = b.name;
+        const getCharType = (charCode) => {
+            if (charCode >= 48 && charCode <= 57) {
+                return 0;
+            }
+            if (charCode >= 65 && charCode <= 90) {
+                return 1;
+            }
+            if (charCode >= 97 && charCode <= 122) {
+                return 2;
+            }
+            return 3;
+        };
+
+        for (let i = 0; i < Math.min(nameA.length, nameB.length); i++) {
+            const charCodeA = nameA.charCodeAt(i);
+            const charCodeB = nameB.charCodeAt(i);
+
+            const typeA = getCharType(charCodeA);
+            const typeB = getCharType(charCodeB);
+
+            if (typeA !== typeB) {
+                return typeA - typeB;
+            } else if (charCodeA !== charCodeB) {
+                return charCodeA - charCodeB;
+            }
+        }
+        return nameA.length - nameB.length;
+    });
+    followers = followers.slice(offset, offset + limit);
+    let store = new mailDataHelpers.Store();
+    store.add("mail.followers", followers);
+    const data = store.get_result();
+    store = new mailDataHelpers.Store();
+    store.add(selfFollower);
+    const selfFollowerData = store.get_result();
+    return {
+        data: data,
+        followers: Store.many_ids(followers),
+        selfFollower: selfFollowerData,
+        followersCount: followersCount,
+    };
+}
+
 registerRoute("/discuss/channel/:cid/partner/:pid/avatar_128", partnerAvatar128);
 /** @type {RouteCallback} */
 async function partnerAvatar128(request, { cid, pid }) {

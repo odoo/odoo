@@ -69,6 +69,8 @@ export class Store extends BaseStore {
     /** @type {typeof import("@mail/core/common/follower_model").Follower} */
     Follower;
     /** @type {typeof import("@mail/core/common/link_preview_model").LinkPreview} */
+    FollowerListView;
+    /** @type {typeof import("@mail/core/common/follower_list_view_model").FollowerListView} */
     LinkPreview;
     /** @type {typeof import("@mail/core/common/message_model").Message} */
     Message;

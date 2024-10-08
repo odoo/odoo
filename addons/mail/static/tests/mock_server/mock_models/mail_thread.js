@@ -15,15 +15,15 @@ export class MailThread extends models.ServerModel {
 
     /**
      * @param {number[]} ids
-     * @param {number} [after]
-     * @param {number} [limit=100]
+     * @param {number} [limit=20]
+     * @param {number} [offset=0]
      * @param {boolean} [filter_recipients]
      */
-    message_get_followers(ids, after, limit, filter_recipients) {
-        const kwargs = getKwArgs(arguments, "ids", "after", "limit", "filter_recipients");
+    message_get_followers(ids, limit, offset, filter_recipients) {
+        const kwargs = getKwArgs(arguments, "ids", "limit", "offset", "filter_recipients");
         ids = kwargs.ids;
-        after = kwargs.after || 0;
-        limit = kwargs.limit || 100;
+        limit = kwargs.limit || 20;
+        offset = kwargs.offset || 0;
         filter_recipients = kwargs.filter_recipients || false;
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
@@ -33,27 +33,27 @@ export class MailThread extends models.ServerModel {
             this,
             ids,
             store,
-            after,
             limit,
+            offset,
             filter_recipients
         );
         return store.get_result();
     }
 
-    _message_followers_to_store(ids, store, after, limit, filter_recipients, reset) {
+    _message_followers_to_store(ids, store, limit, offset, filter_recipients, reset) {
         const kwargs = getKwArgs(
             arguments,
             "ids",
             "store",
-            "after",
             "limit",
+            "offset",
             "filter_recipients",
             "reset"
         );
         ids = kwargs.ids;
         store = kwargs.store;
-        after = kwargs.after || 0;
-        limit = kwargs.limit || 100;
+        limit = kwargs.limit || 20;
+        offset = kwargs.offset || 0;
         filter_recipients = kwargs.filter_recipients || false;
         reset = kwargs.reset || false;
 
@@ -65,16 +65,45 @@ export class MailThread extends models.ServerModel {
             ["res_model", "=", this._name],
             ["partner_id", "!=", this.env.user.partner_id],
         ];
-        if (after) {
-            domain.push(["id", ">", after]);
-        }
         if (filter_recipients) {
             // not implemented for simplicity
         }
-        const followers = MailFollowers._filter(domain).sort(
-            (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
-        );
-        followers.length = Math.min(followers.length, limit);
+        let followers = MailFollowers._filter(domain);
+        followers = followers.sort((a, b) => {
+            const nameA = a.name;
+            const nameB = b.name;
+            const getCharType = (charCode) => {
+                if (charCode >= 48 && charCode <= 57) {
+                    return 0;
+                }
+                if (charCode >= 65 && charCode <= 90) {
+                    return 1;
+                }
+                if (charCode >= 97 && charCode <= 122) {
+                    return 2;
+                }
+                return 3;
+            };
+
+            for (let i = 0; i < Math.min(nameA.length, nameB.length); i++) {
+                const charCodeA = nameA.charCodeAt(i);
+                const charCodeB = nameB.charCodeAt(i);
+
+                const typeA = getCharType(charCodeA);
+                const typeB = getCharType(charCodeB);
+
+                if (typeA !== typeB) {
+                    return typeA - typeB;
+                } else {
+                    if (charCodeA !== charCodeB) {
+                        return charCodeA - charCodeB;
+                    }
+                }
+            }
+
+            return nameA.length - nameB.length;
+        });
+        followers = followers.slice(offset, offset + limit);
         store.add(
             this.browse(ids[0]),
             {

@@ -6,21 +6,21 @@
         <DropdownItem onSelected="() => this.onClickAddFollowers()" attrs="{ href: '#' }">
             Add Followers
         </DropdownItem>
-        <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
+        <div t-if="follower_list_view.followers.length > 0" role="separator" class="dropdown-divider"/>
     </t>
-    <t t-if="props.thread.selfFollower">
+    <t t-if="follower_list_view.selfFollower">
         <t t-call="mail.Follower">
-            <t t-set="follower" t-value="props.thread.selfFollower"/>
+            <t t-set="follower" t-value="follower_list_view.selfFollower"/>
         </t>
-        <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
+        <div t-if="follower_list_view.followers.length > 0" role="separator" class="dropdown-divider"/>
     </t>
-    <t t-if="props.thread.followers.length > 0">
-        <t t-foreach="props.thread.followers" t-as="follower" t-key="follower.id">
+    <t t-if="follower_list_view.followers.length > 0">
+        <t t-foreach="follower_list_view.followers" t-as="follower" t-key="follower.id">
             <t t-call="mail.Follower">
                 <t t-set="follower" t-value="follower"/>
             </t>
         </t>
-        <span t-if="!props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="props.thread.loadMoreFollowers" t-ref="load-more">Load more</span>
+        <span t-if="!follower_list_view.followersFullyLoaded" class="btn btn-link" t-on-click="follower_list_view.loadMoreFollowers" t-ref="load-more">Load more</span>
     </t>
     <div t-elif="!props.thread.hasWriteAccess" class="dropdown-item disabled">
         No Followers
