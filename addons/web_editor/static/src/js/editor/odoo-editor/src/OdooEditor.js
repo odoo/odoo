@@ -4040,6 +4040,10 @@ export class OdooEditor extends EventTarget {
         if (selection.anchorNode && isProtected(selection.anchorNode)) {
             return;
         }
+        if (this.document.querySelector(".transfo-container")){
+            ev.preventDefault();
+            return;
+        }
         this.keyboardType =
             ev.key === 'Unidentified' ? KEYBOARD_TYPES.VIRTUAL : KEYBOARD_TYPES.PHYSICAL;
         this._currentKeyPress = ev.key;
