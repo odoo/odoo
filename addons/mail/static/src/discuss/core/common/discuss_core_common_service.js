@@ -49,7 +49,7 @@ export class DiscussCoreCommon {
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
             const { body, thread } = payload;
             const lastMessageId = this.store.getLastMessageId();
-            const message = this.store.Message.insert(
+            const message = this.store["mail.message"].insert(
                 {
                     author: this.store.odoobot,
                     body,
@@ -143,11 +143,12 @@ export class DiscussCoreCommon {
         if (!channel) {
             return;
         }
-        const { Message: messages = [] } = this.store.insert(data, { html: true });
+        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
+        /** @type {import("models").Message} */
         const message = messages[0];
         if (message.notIn(channel.messages)) {
             if (!channel.loadNewer) {
-                channel.addOrReplaceMessage(message, this.store.Message.get(temporary_id));
+                channel.addOrReplaceMessage(message, this.store["mail.message"].get(temporary_id));
             } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }

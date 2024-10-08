@@ -12,9 +12,9 @@ test("store.insert can delete record", async () => {
     await start();
     const store = getService("mail.store");
     store.insert({ "mail.message": [{ id: 1 }] });
-    expect(store.Message.get({ id: 1 })?.id).toBe(1);
+    expect(store["mail.message"].get({ id: 1 })?.id).toBe(1);
     store.insert({ "mail.message": [{ id: 1, _DELETE: true }] });
-    expect(store.Message.get({ id: 1 })?.id).toBe(undefined);
+    expect(store["mail.message"].get({ id: 1 })?.id).toBe(undefined);
 });
 
 test("store.insert deletes record without creating it", async () => {
@@ -29,7 +29,7 @@ test("store.insert deletes record without creating it", async () => {
     const store = getService("mail.store");
     store.insert({ "mail.message": [{ id: 1, _DELETE: true }] });
     await assertSteps([]);
-    expect(store.Message.get({ id: 1 })?.id).toBe(undefined);
+    expect(store["mail.message"].get({ id: 1 })?.id).toBe(undefined);
     store.insert({ "mail.message": [{ id: 2 }] });
     await assertSteps(["new-2"]);
 });
@@ -50,7 +50,7 @@ test("store.insert deletes record after relation created it", async () => {
         "mail.link.preview": [{ id: 1, message: { id: 1 } }],
     });
     await assertSteps(["new-1"]);
-    expect(store.Message.get({ id: 1 })?.id).toBe(undefined);
+    expect(store["mail.message"].get({ id: 1 })?.id).toBe(undefined);
 });
 
 test("store.insert different PY model having same JS model", async () => {

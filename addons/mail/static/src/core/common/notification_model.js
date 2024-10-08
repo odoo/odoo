@@ -22,7 +22,7 @@ export class Notification extends Record {
 
     /** @type {number} */
     id;
-    message = Record.one("Message");
+    message = Record.one("mail.message");
     /** @type {string} */
     notification_status;
     /** @type {string} */

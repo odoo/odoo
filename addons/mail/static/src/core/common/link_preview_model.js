@@ -18,7 +18,7 @@ export class LinkPreview extends Record {
 
     /** @type {number} */
     id;
-    message = Record.one("Message", { inverse: "linkPreviews" });
+    message = Record.one("mail.message", { inverse: "linkPreviews" });
     /** @type {string} */
     image_mimetype;
     /** @type {string} */

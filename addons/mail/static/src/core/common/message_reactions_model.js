@@ -19,7 +19,7 @@ export class MessageReactions extends Record {
     /** @type {number} */
     sequence;
     personas = Record.many("Persona");
-    message = Record.one("Message");
+    message = Record.one("mail.message");
 
     async remove() {
         this.store.insert(
