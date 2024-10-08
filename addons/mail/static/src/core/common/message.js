@@ -389,7 +389,7 @@ export class Message extends Component {
         const { oeType, oeId } = ev.target.dataset;
         if (oeType === "highlight") {
             await this.env.messageHighlight?.highlightMessage(
-                this.store.Message.insert({
+                this.store["mail.message"].insert({
                     id: Number(oeId),
                     res_id: this.props.thread.id,
                     model: this.props.thread.model,

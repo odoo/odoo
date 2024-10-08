@@ -83,11 +83,12 @@ export class ChatBotService {
             channel_id: this.chatbot.thread.id,
             chatbot_script_id: this.chatbot.script.id,
         });
-        const { Message: messages = [] } = this.store.insert(data, { html: true });
+        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
         if (!this.livechatService.thread) {
             return;
         }
-        const [message] = messages;
+        /** @type {import("models").Message} */
+        const message = messages[0];
         this.livechatService.thread.messages.add(message);
         this.chatbot.restart();
         this._triggerNextStep();

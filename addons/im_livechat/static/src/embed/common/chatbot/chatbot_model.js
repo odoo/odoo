@@ -20,7 +20,7 @@ export class Chatbot extends Record {
             this.delete();
         },
     });
-    typingMessage = Record.one("Message", {
+    typingMessage = Record.one("mail.message", {
         compute() {
             if (this.isTyping && this.thread) {
                 return {
@@ -67,7 +67,7 @@ export class Chatbot extends Record {
         if (this.thread.isTransient) {
             // Thread is not persisted thus messages do not exist on the server,
             // create them now on the client side.
-            this.currentStep.message = this.store.Message.insert(
+            this.currentStep.message = this.store["mail.message"].insert(
                 {
                     id: this.store.getNextTemporaryId(),
                     author: this.script.partner,
@@ -178,8 +178,9 @@ export class Chatbot extends Record {
         const { success, data } = await rpc("/chatbot/step/validate_email", {
             channel_id: this.thread.id,
         });
-        const { Message: messages = [] } = this.store.insert(data, { html: true });
-        const [message] = messages;
+        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
+        /** @type {import("models").Message} */
+        const message = messages[0];
         if (message) {
             this.thread.messages.add(message);
         }
