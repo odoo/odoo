@@ -8,12 +8,12 @@ from unittest.mock import patch
 from odoo import exceptions
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
-from odoo.addons.mail.tests.common import MockEmail
+from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, users, warmup
 from odoo.tools import formataddr, mute_logger
 
 
-class EventMailCommon(EventCase, MockEmail, CronMixinCase):
+class EventMailCommon(EventCase, MailCase, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -88,21 +88,26 @@ class TestMailSchedule(EventMailCommon):
 
         # event data
         self.assertEqual(test_event.create_date, self.reference_now)
+        self.assertEqual(test_event.organizer_id, self.user_eventmanager.company_id.partner_id)
+        self.assertEqual(test_event.user_id, self.user_eventmanager)
 
         # check subscription scheduler
         after_sub_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_sub'), ('interval_unit', '=', 'now')])
         self.assertEqual(len(after_sub_scheduler), 1, 'event: wrong scheduler creation')
+        self.assertFalse(after_sub_scheduler.error_datetime)
         self.assertEqual(after_sub_scheduler.scheduled_date, test_event.create_date.replace(microsecond=0))
         self.assertEqual(after_sub_scheduler.mail_state, 'running')
         self.assertEqual(after_sub_scheduler.mail_count_done, 0)
         after_sub_scheduler_2 = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_sub'), ('interval_unit', '=', 'hours')])
         self.assertEqual(len(after_sub_scheduler_2), 1, 'event: wrong scheduler creation')
+        self.assertFalse(after_sub_scheduler_2.error_datetime)
         self.assertEqual(after_sub_scheduler_2.scheduled_date, test_event.create_date.replace(microsecond=0) + relativedelta(hours=1))
         self.assertEqual(after_sub_scheduler_2.mail_state, 'running')
         self.assertEqual(after_sub_scheduler_2.mail_count_done, 0)
         # check before event scheduler
         event_prev_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
         self.assertEqual(len(event_prev_scheduler), 1, 'event: wrong scheduler creation')
+        self.assertFalse(event_prev_scheduler.error_datetime)
         self.assertEqual(event_prev_scheduler.scheduled_date, self.event_date_begin + relativedelta(days=-1))
         self.assertFalse(event_prev_scheduler.mail_done)
         self.assertEqual(event_prev_scheduler.mail_state, 'scheduled')
@@ -110,6 +115,7 @@ class TestMailSchedule(EventMailCommon):
         # check after event scheduler
         event_next_scheduler = self.env['event.mail'].search([('event_id', '=', test_event.id), ('interval_type', '=', 'after_event')])
         self.assertEqual(len(event_next_scheduler), 1, 'event: wrong scheduler creation')
+        self.assertFalse(event_next_scheduler.error_datetime)
         self.assertEqual(event_next_scheduler.scheduled_date, self.event_date_end + relativedelta(hours=1))
         self.assertFalse(event_next_scheduler.mail_done)
         self.assertEqual(event_next_scheduler.mail_state, 'scheduled')
@@ -411,18 +417,115 @@ class TestMailSchedule(EventMailCommon):
         """ Simulate a fail during composer usage e.g. invalid field path, template
         / model change, ... to check defensive behavior """
         cron = self.env.ref("event.event_mail_scheduler").sudo()
+
+        # set template write_uid
+        user_admin = self.env.ref('base.user_admin')
+        self.template_reminder.with_user(user_admin).write({'name': 'Take Ownership'})
+
         before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
         self.assertTrue(before_scheduler)
         self._create_registrations(self.test_event, 2)
 
-        def _patched_send_mail(self, *args, **kwargs):
-            raise exceptions.ValidationError('Some error')
+        error_msg = "Some error"
 
+        def _patched_send_mail(self, *args, **kwargs):
+            raise exceptions.ValidationError(error_msg)
+
+        # sending fails
+        current_dt = self.reference_now + relativedelta(days=3)
         with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
-             self.mock_datetime_and_now(self.reference_now + relativedelta(days=3)), \
-             self.mock_mail_gateway():
+            self.mock_datetime_and_now(current_dt), \
+            self.mock_mail_gateway(), self.mock_mail_app():
             cron.method_direct_trigger()
         self.assertFalse(before_scheduler.mail_done)
+        self.assertMailNotifications(
+            self._new_msgs[0],
+            [{
+                'content': f'Communication for {self.test_event.name}',
+                'message_type': 'notification',
+                'notif': [
+                    {'partner': user_admin.partner_id, 'status': 'sent', 'type': 'inbox'},
+                    {'partner': self.user_eventmanager.partner_id, 'status': 'sent', 'type': 'inbox'},
+                    {'partner': self.user_eventmanager.company_id.partner_id, 'status': 'ready', 'type': 'email'},
+                ],
+                'subtype': 'mail.mt_note',
+                'mail_mail_values': {
+                    'body': f'<p>Communication for {self.test_event.name} scheduled on {before_scheduler.scheduled_date} failed. '
+                            f'This may be linked to template <a href="{before_scheduler.get_base_url()}/odoo/mail.template/{self.template_reminder.id}">'
+                            f'{self.template_reminder.name} ({self.template_reminder.id})</a>.<br><br>It failed with error Some error.</p>',
+                },
+            }]
+        )
+        self.assertEqual(before_scheduler.error_datetime, current_dt.replace(microsecond=0))
+
+        # resend within the same hour -> no more log
+        new_dt = self.reference_now + relativedelta(days=3, minutes=59)
+        with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
+            self.mock_datetime_and_now(new_dt), \
+            self.mock_mail_gateway(), self.mock_mail_app():
+            cron.method_direct_trigger()
+        self.assertFalse(before_scheduler.mail_done)
+        self.assertFalse(self._new_msgs)
+        self.assertEqual(before_scheduler.error_datetime, current_dt.replace(microsecond=0))
+
+        # resend in more than one hour -> log again
+        new_dt = self.reference_now + relativedelta(days=3, minutes=61)
+        with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
+            self.mock_datetime_and_now(new_dt), \
+            self.mock_mail_gateway(), self.mock_mail_app():
+            cron.method_direct_trigger()
+        self.assertFalse(before_scheduler.mail_done)
+        self.assertTrue(self._new_msgs)
+        self.assertEqual(before_scheduler.error_datetime, new_dt.replace(microsecond=0))
+
+        # send succeeds -> reset error
+        with self.mock_datetime_and_now(new_dt), \
+            self.mock_mail_gateway(), self.mock_mail_app():
+            cron.method_direct_trigger()
+        self.assertTrue(before_scheduler.mail_done)
+        self.assertFalse(before_scheduler.error_datetime)
+
+    @mute_logger('odoo.addons.event.models.event_mail', 'odoo.addons.mail.models.mail_render_mixin')
+    @users('user_eventmanager')
+    def test_event_mail_schedule_fail_global_composer_message(self):
+        """ Test message logged depending on issue when trying to send communications """
+        cron = self.env.ref("event.event_mail_scheduler").sudo()
+
+        # set template write_uid
+        user_admin = self.env.ref('base.user_admin')
+        self.template_reminder.with_user(user_admin).write({'name': 'Take Ownership', 'body_html': '<p>Failing <t t-out="object.evnetypo_id"/></p>'})
+
+        before_scheduler = self.test_event.event_mail_ids.filtered(lambda s: s.interval_type == "before_event")
+        self.assertTrue(before_scheduler)
+        self._create_registrations(self.test_event, 2)
+
+        # sending fails
+        current_dt = self.reference_now + relativedelta(days=3)
+        with self.mock_datetime_and_now(current_dt), \
+            self.mock_mail_gateway(), self.mock_mail_app():
+            cron.method_direct_trigger()
+        self.assertFalse(before_scheduler.mail_done)
+        self.assertMailNotifications(
+            self._new_msgs[0],
+            [{
+                'content': f'Communication for {self.test_event.name}',
+                'message_type': 'notification',
+                'notif': [
+                    {'partner': user_admin.partner_id, 'status': 'sent', 'type': 'inbox'},
+                    {'partner': self.user_eventmanager.partner_id, 'status': 'sent', 'type': 'inbox'},
+                    {'partner': self.user_eventmanager.company_id.partner_id, 'status': 'ready', 'type': 'email'},
+                ],
+                'subtype': 'mail.mt_note',
+                'mail_mail_values': {
+                    'body': f'<p>Communication for {self.test_event.name} scheduled on {before_scheduler.scheduled_date} failed. '
+                            f'This is due to an error in template <a href="{before_scheduler.get_base_url()}/odoo/mail.template/{self.template_reminder.id}">'
+                            f'{self.template_reminder.name} ({self.template_reminder.id})</a>.'
+                            f'<br><br>There is an issue with dynamic placeholder. Actual error received is: '
+                            '<br>\'event.registration\' object has no attribute \'evnetypo_id\'.</p>',
+                },
+            }]
+        )
+        self.assertEqual(before_scheduler.error_datetime, current_dt.replace(microsecond=0))
 
     @users('user_eventmanager')
     def test_event_mail_schedule_fail_global_no_registrations(self):
@@ -448,11 +551,17 @@ class TestMailSchedule(EventMailCommon):
         self.assertTrue(onsub_scheduler)
         self.assertEqual(onsub_scheduler.mail_count_done, 0)
 
+        # set template write_uid
+        user_admin = self.env.ref('base.user_admin')
+        onsub_scheduler.template_ref.with_user(user_admin).write({'name': 'Take Ownership'})
+
         def _patched_send_mail(self, *args, **kwargs):
             raise exceptions.ValidationError('Some error')
 
+        test_dt = self.reference_now.replace(microsecond=0) + relativedelta(days=3)
         with patch.object(type(self.env["mail.compose.message"]), "_action_send_mail_mass_mail", _patched_send_mail), \
-             self.mock_mail_gateway():
+             self.mock_datetime_and_now(self.reference_now + relativedelta(days=3)), \
+             self.mock_mail_gateway(), self.mock_mail_app():
             registration = self.env['event.registration'].with_user(self.user_eventmanager).create({
                 "email": "test@email.com",
                 "event_id": self.test_event.id,
@@ -461,6 +570,25 @@ class TestMailSchedule(EventMailCommon):
             })
         self.assertTrue(registration.exists(), "Registration record should exist after creation.")
         self.assertEqual(onsub_scheduler.mail_count_done, 0)
+        self.assertMailNotifications(
+            self._new_msgs,
+            [{
+                'content': f'Communication for {self.test_event.name}',
+                'message_type': 'notification',
+                'notif': [
+                    {'partner': user_admin.partner_id, 'status': 'sent', 'type': 'inbox'},
+                    {'partner': self.user_eventmanager.partner_id, 'status': 'sent', 'type': 'inbox'},
+                    {'partner': self.user_eventmanager.company_id.partner_id, 'status': 'ready', 'type': 'email'},
+                ],
+                'subtype': 'mail.mt_note',
+                'mail_mail_values': {
+                    'body': f'<p>Communication for {self.test_event.name} scheduled on {test_dt} failed. '
+                            f'This may be linked to template <a href="{onsub_scheduler.get_base_url()}/odoo/mail.template/{onsub_scheduler.template_ref.id}">'
+                            f'{onsub_scheduler.template_ref.name} ({onsub_scheduler.template_ref.id})</a>.<br><br>It failed with error Some error.</p>',
+                },
+            }]
+        )
+        self.assertEqual(onsub_scheduler.error_datetime, self.reference_now.replace(microsecond=0) + relativedelta(days=3))
 
     @mute_logger('odoo.addons.event.models.event_mail')
     @users('user_eventmanager')
@@ -511,7 +639,7 @@ class TestMailSchedule(EventMailCommon):
         ]})
         self.env.invalidate_all()
         # event 50
-        with self.assertQueryCount(67), \
+        with self.assertQueryCount(68), \
              self.mock_datetime_and_now(reference_now + relativedelta(minutes=10)), \
              self.mock_mail_gateway():
             _new = self.env['event.registration'].create([

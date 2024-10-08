@@ -2,15 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import random
 import threading
 
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models, tools
+from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
-from odoo.exceptions import MissingError
 
 
 _logger = logging.getLogger(__name__)
@@ -92,6 +92,7 @@ class EventMail(models.Model):
         ('before_event_end', 'Before the event ends')],
         string='Trigger ', default="before_event", required=True)
     scheduled_date = fields.Datetime('Schedule Date', compute='_compute_scheduled_date', store=True)
+    error_datetime = fields.Datetime('Last Error')
     # contact and status
     last_registration_id = fields.Many2one('event.registration', 'Last Attendee')
     mail_registration_ids = fields.One2many(
@@ -99,7 +100,7 @@ class EventMail(models.Model):
         help='Communication related to event registrations')
     mail_done = fields.Boolean("Sent", copy=False, readonly=True)
     mail_state = fields.Selection(
-        [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent')],
+        [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent'), ('error', 'Error')],
         string='Global communication Status', compute='_compute_mail_state')
     mail_count_done = fields.Integer('# Sent', copy=False, readonly=True)
     notification_type = fields.Selection([('mail', 'Mail')], string='Send', compute='_compute_notification_type')
@@ -117,11 +118,14 @@ class EventMail(models.Model):
 
             scheduler.scheduled_date = date.replace(microsecond=0) + _INTERVALS[scheduler.interval_unit](sign * scheduler.interval_nbr) if date else False
 
-    @api.depends('interval_type', 'mail_done')
+    @api.depends('error_datetime', 'interval_type', 'mail_done')
     def _compute_mail_state(self):
         for scheduler in self:
+            # issue detected
+            if scheduler.error_datetime:
+                scheduler.mail_state = 'error'
             # registrations based
-            if scheduler.interval_type == 'after_sub':
+            elif scheduler.interval_type == 'after_sub':
                 scheduler.mail_state = 'running'
             # global event based
             elif scheduler.mail_done:
@@ -146,6 +150,7 @@ class EventMail(models.Model):
                 # do not send emails if the mailing was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type not in ('before_event', 'after_event_start') or scheduler.event_id.date_end > now):
                     scheduler._execute_event_based()
+            scheduler.error_datetime = False
         return True
 
     def _execute_event_based(self):
@@ -382,43 +387,68 @@ class EventMail(models.Model):
             'template_ref': '%s,%i' % (self.template_ref._name, self.template_ref.id),
         }
 
-    @api.model
-    def _warn_template_error(self, scheduler, exception):
-        # We warn ~ once by hour ~ instead of every 10 min if the interval unit is more than 'hours'.
-        if random.random() < 0.1666 or scheduler.interval_unit in ('now', 'hours'):
-            ex_s = exception_to_unicode(exception)
-            try:
-                event, template = scheduler.event_id, scheduler.template_ref
-                emails = list(set([event.organizer_id.email, event.user_id.email, template.write_uid.email]))
-                subject = _("WARNING: Event Scheduler Error for event: %s", event.name)
-                body = _("""Event Scheduler for:
-  - Event: %(event_name)s (%(event_id)s)
-  - Scheduled: %(date)s
-  - Template: %(template_name)s (%(template_id)s)
+    def _warn_error(self, exception):
+        last_error_dt = self.error_datetime
+        now = self.env.cr.now().replace(microsecond=0)
+        if not last_error_dt or last_error_dt < now - relativedelta(hours=1):
+            # message base: event, date
+            event, template = self.event_id, self.template_ref
+            if self.interval_type == "after_sub":
+                scheduled_date = now
+            else:
+                scheduled_date = self.scheduled_date
+            body_content = _(
+                "Communication for %(event_name)s scheduled on %(scheduled_date)s failed.",
+                event_name=event.name,
+                scheduled_date=scheduled_date,
+            )
 
-Failed with error:
-  - %(error)s
-
-You receive this email because you are:
-  - the organizer of the event,
-  - or the responsible of the event,
-  - or the last writer of the template.
-""",
-                         event_name=event.name,
-                         event_id=event.id,
-                         date=scheduler.scheduled_date,
-                         template_name=template.name,
-                         template_id=template.id,
-                         error=ex_s)
-                email = self.env['ir.mail_server'].build_email(
-                    email_from=self.env.user.email,
-                    email_to=emails,
-                    subject=subject, body=body,
+            # add some information on cause
+            template_link = Markup('<a href="%s">%s (%s)</a>') % (
+                f"{self.get_base_url()}/odoo/{template._name}/{template.id}",
+                template.display_name,
+                template.id,
+            )
+            cause = exception.__cause__ or exception.__context__
+            exc_qweb = cause and isinstance(cause, QWebException)
+            if exc_qweb:
+                root_cause = cause.__cause__
+                exc_qweb_attr = root_cause and isinstance(root_cause, AttributeError)
+                source_content = _(
+                    "This is due to an error in template %(template_link)s.",
+                    template_link=template_link,
                 )
-                self.env['ir.mail_server'].send_email(email)
-            except Exception as e:
-                _logger.error("Exception while sending traceback by email: %s.\n Original Traceback:\n%s", e, exception)
-                pass
+                if exc_qweb_attr:
+                    error_message = _(
+                        "There is an issue with dynamic placeholder. Actual error received is: %(error)s.",
+                        error=Markup('<br/>%s') % exception_to_unicode(root_cause),
+                    )
+                else:
+                    error_message = _(
+                        "Rendering of template failed with error: %(error)s.",
+                        error=Markup('<br/>%s') % exception_to_unicode(cause),
+                    )
+            else:
+                source_content = _(
+                    "This may be linked to template %(template_link)s.",
+                    template_link=template_link,
+                )
+                error_message = _(
+                    "It failed with error %(error)s.",
+                    error=exception_to_unicode(exception),
+                )
+
+            body = Markup("<p>%s %s<br /><br />%s</p>") % (body_content, source_content, error_message)
+            recipients = (event.organizer_id | event.user_id.partner_id | template.write_uid.partner_id).filtered(
+                lambda p: p.active
+            )
+            self.event_id.message_post(
+                body=body,
+                force_send=False,  # use email queue, especially it could be cause of error
+                notify_author=True,  # in case of event responsible creating attendees
+                partner_ids=recipients.ids,
+            )
+            self.error_datetime = now
 
     @api.model
     def run(self, autocommit=False):
@@ -446,7 +476,7 @@ You receive this email because you are:
             except Exception as e:
                 _logger.exception(e)
                 self.env.invalidate_all()
-                self._warn_template_error(scheduler, e)
+                scheduler._warn_error(e)
             else:
                 if autocommit and not getattr(threading.current_thread(), 'testing', False):
                     self.env.cr.commit()
