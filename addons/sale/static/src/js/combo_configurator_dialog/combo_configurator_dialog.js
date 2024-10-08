@@ -44,8 +44,7 @@ export class ComboConfiguratorDialog extends Component {
             basePrice: this.props.price,
             isLoading: false,
         });
-        if (this.props.edit) this._initSelectedComboItems();
-        this._selectSingleComboItems();
+        this._initSelectedComboItems();
         this.getPriceUrl = '/sale/combo_configurator/get_price';
         useSubEnv({ currency: { id: this.props.currency_id } });
     }
@@ -129,17 +128,12 @@ export class ComboConfiguratorDialog extends Component {
     }
 
     /**
-     * Return the total price, formatted using the provided currency.
-     *
-     * The total price is the sum of:
-     * - The combo product's price,
-     * - The selected combo items' extra price,
-     * - The selected `no_variant` attributes' extra price.
+     * Return the total price for all units, formatted using the provided currency.
      *
      * @return {String} The formatted total price.
      */
     get formattedTotalPrice() {
-        return formatCurrency(this._totalPrice, this.props.currency_id);
+        return formatCurrency(this.state.quantity * this._comboPrice, this.props.currency_id);
     }
 
     /**
@@ -171,7 +165,7 @@ export class ComboConfiguratorDialog extends Component {
      */
     _initSelectedComboItems() {
         for (const combo of this.props.combos) {
-            const comboItem = combo.selectedComboItem;
+            const comboItem = combo.selectedComboItem ?? combo.preselectedComboItem;
             if (comboItem) {
                 this.state.selectedComboItems.set(combo.id, comboItem.deepCopy());
             }
@@ -179,24 +173,20 @@ export class ComboConfiguratorDialog extends Component {
     }
 
     /**
-     * Automatically select the single combo item in each combo that has a single, non-configurable
-     * combo item.
+     * Return the total price per unit.
+     *
+     * The total price is the sum of:
+     * - The combo product's price,
+     * - The selected combo items' extra price,
+     * - The selected `no_variant` attributes' extra price.
+     *
+     * @return {Number} The total price.
      */
-    _selectSingleComboItems() {
-        for (const combo of this.props.combos) {
-            const comboItem = combo.combo_items[0];
-            if (combo.combo_items.length === 1 && !comboItem.product.hasNoVariantPtals) {
-                this.state.selectedComboItems.set(combo.id, comboItem.deepCopy());
-            }
-        }
-    }
-
-    get _totalPrice() {
-        const extraPrice = Array.from(
-            this.state.selectedComboItems.values(),
-            comboItem => comboItem.extra_price + comboItem.product.selectedNoVariantPtavsPriceExtra,
-        ).reduce((price, comboItemExtraPrice) => price + comboItemExtraPrice, 0);
-        return this.state.quantity * (this.state.basePrice + extraPrice);
+    get _comboPrice() {
+        const extraPrice = Array.from(this.state.selectedComboItems.values()).reduce(
+            (price, item) => price + item.totalExtraPrice, 0
+        );
+        return this.state.basePrice + extraPrice;
     }
 
     /**
@@ -209,12 +199,17 @@ export class ComboConfiguratorDialog extends Component {
     }
 
     /**
-     * Return the selected combo items.
+     * Return the selected combo items, in the same order as the combos given as props.
      *
-     * @return {ProductComboItem[]} The selected combo items.
+     * @return {ProductComboItem[]} The sorted selected combo items.
      */
     get _selectedComboItems() {
-        return Array.from(this.state.selectedComboItems.values());
+        const sortedItems = new Map([...this.state.selectedComboItems.entries()].sort(
+            (entry1, entry2) =>
+                this.props.combos.findIndex(combo => combo.id === entry1[0])
+                - this.props.combos.findIndex(combo => combo.id === entry2[0])
+        ));
+        return Array.from(sortedItems.values());
     }
 
     /**
