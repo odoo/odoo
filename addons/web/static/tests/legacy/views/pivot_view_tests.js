@@ -5805,4 +5805,51 @@ QUnit.module("Views", (hooks) => {
         });
         assert.verifySteps([`[]`, `["date:month"]`]);
     });
+
+    QUnit.test("Close header dropdown when a simple groupby is selected", async function (assert) {
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `<pivot/>`,
+        });
+        assert.containsNone(target, ".o-overlay-container .dropdown-menu");
+        assert.deepEqual(pivot.model.getTable().headers[1].map((h) => h.title), ["Count"]);
+
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        assert.containsOnce(target, ".o-overlay-container .dropdown-menu");
+
+        await click(target.querySelector(".o-overlay-container .o-dropdown--menu .dropdown-item"));
+        assert.containsNone(target, ".o-overlay-container .dropdown-menu");
+        assert.deepEqual(
+            pivot.model.getTable().headers[1].map((h) => h.title),
+            ["Company", "individual"]
+        );
+    });
+
+    QUnit.test("Close header dropdown when a simple date groupby option is selected", async function (assert) {
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `<pivot/>`,
+        });
+        assert.containsNone(target, ".o-overlay-container .dropdown-menu");
+        assert.deepEqual(pivot.model.getTable().headers[1].map((h) => h.title), ["Count"]);
+
+        await click(target.querySelector("thead .o_pivot_header_cell_closed"));
+        assert.containsOnce(target, ".o-overlay-container .dropdown-menu");
+
+        // open the Date sub dropdown
+        await mouseEnter(target, ".o-dropdown--menu .dropdown-toggle.o_menu_item");
+        await nextTick();
+
+        const subDropdownMenu = getDropdownMenu(
+            target,
+            ".o-dropdown--menu .dropdown-toggle.o_menu_item"
+        );
+        await click(subDropdownMenu.querySelector(".dropdown-item"));
+        assert.containsNone(target, ".o-overlay-container .dropdown-menu");
+        assert.deepEqual(pivot.model.getTable().headers[1].map((h) => h.title), ["2016"]);
+    });
 });
