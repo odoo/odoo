@@ -42,6 +42,8 @@ from collections.abc import MutableMapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
+from typing import Iterator, Union
+from typing_extensions import Self
 
 import babel.dates
 import dateutil.relativedelta
@@ -461,12 +463,12 @@ class BaseModel(metaclass=MetaModel):
     .. seealso:: :class:`TransientModel`
     """
 
-    _name = None                #: the model name (in dot-notation, module namespace)
-    _description = None         #: the model's informal name
+    _name: Union[str, None] = None                #: the model name (in dot-notation, module namespace)
+    _description: Union[str, None] = None         #: the model's informal name
     _module = None              #: the model's module (in the Odoo sense)
     _custom = False             #: should be True for custom models only
 
-    _inherit = ()
+    _inherit: Union[str, list[str]] = ()
     """Python-inherited models:
 
     :type: str or list(str)
@@ -1507,7 +1509,7 @@ class BaseModel(metaclass=MetaModel):
     @api.returns('self',
         upgrade=lambda self, value, domain, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
         downgrade=lambda self, value, domain, offset=0, limit=None, order=None, count=False: value if count else value.ids)
-    def search(self, domain, offset=0, limit=None, order=None, count=False):
+    def search(self, domain, offset=0, limit=None, order=None, count=False) -> Self:
         """ search(domain[, offset=0][, limit=None][, order=None][, count=False])
 
         Searches for records based on the ``domain``
@@ -2679,8 +2681,7 @@ class BaseModel(metaclass=MetaModel):
                 # following specific properties:
                 #  - reading inherited fields should not bypass access rights
                 #  - copy inherited fields iff their original field is copied
-                Field = type(field)
-                self._add_field(name, Field(
+                self._add_field(name, field.new(
                     inherited=True,
                     inherited_field=field,
                     related=f"{parent_fname}.{name}",
@@ -2769,12 +2770,11 @@ class BaseModel(metaclass=MetaModel):
                 if not translate:
                     # patch the field definition by adding an override
                     _logger.debug("Patching %s.%s with translate=True", cls._name, name)
-                    fields_.append(type(fields_[0])(translate=True))
+                    fields_.append(fields_[0].new(translate=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:
-                Field = type(fields_[-1])
-                self._add_field(name, Field(_base_fields=fields_))
+                self._add_field(name, fields_[-1].new(_base_fields=fields_))
 
         # 2. add manual fields
         if self.pool._init_modules:
@@ -3886,7 +3886,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model_create_multi
     @api.returns('self', lambda value: value.id)
-    def create(self, vals_list):
+    def create(self, vals_list) -> Self:
         """ create(vals_list) -> records
 
         Creates new records for the model.
@@ -5119,7 +5119,7 @@ class BaseModel(metaclass=MetaModel):
     #  - the global cache is only an index to "resolve" a record 'id'.
     #
 
-    def __init__(self, env, ids, prefetch_ids):
+    def __init__(self, env, ids=(), prefetch_ids=()):
         """ Create a recordset instance.
 
         :param env: an environment
@@ -5130,7 +5130,7 @@ class BaseModel(metaclass=MetaModel):
         self._ids = ids
         self._prefetch_ids = prefetch_ids
 
-    def browse(self, ids=None):
+    def browse(self, ids=None) -> Self:
         """ browse([ids]) -> records
 
         Returns a recordset for the ids provided as parameter in the current
@@ -5784,7 +5784,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the size of ``self``. """
         return len(self._ids)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Self]:
         """ Return an iterator over ``self``. """
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
             for ids in self.env.cr.split_for_in_conditions(self._ids):
@@ -5794,7 +5794,7 @@ class BaseModel(metaclass=MetaModel):
             for id_ in self._ids:
                 yield self.__class__(self.env, (id_,), self._prefetch_ids)
 
-    def __reversed__(self):
+    def __reversed__(self) -> Iterator[Self]:
         """ Return an reversed iterator over ``self``. """
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
             for ids in self.env.cr.split_for_in_conditions(reversed(self._ids)):
