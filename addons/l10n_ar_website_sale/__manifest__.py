@@ -17,6 +17,11 @@
     'demo': [
         'demo/website_demo.xml',
     ],
+    'assets': {
+        'web.assets_tests': [
+            'l10n_ar_website_sale/static/tests/tours/**/*',
+        ],
+    },
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

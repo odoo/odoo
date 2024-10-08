@@ -54,12 +54,12 @@
                             <t t-else="">
                                 <div class="row">
                                     <div class="col-12">
-                                        <t t-out="partner.name"/>
-                                        <t t-if="partner.company_name">
-                                            , <t t-out="partner.company_name"/>
+                                        <t t-out="partner_sudo.name"/>
+                                        <t t-if="partner_sudo.company_name">
+                                            , <t t-out="partner_sudo.company_name"/>
                                         </t><br />
-                                        <t id="partner_vat" t-if="partner.vat">
-                                            <t t-out="partner.vat" /><br />
+                                        <t id="partner_vat" t-if="partner_sudo.vat">
+                                            <t t-out="partner_sudo.vat" /><br />
                                         </t>
                                         <t t-out="partner_address"/> <a role="button" t-att-href="address_url" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a>
                                     </div>
