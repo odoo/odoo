@@ -1191,7 +1191,7 @@ class MailCase(MockEmail):
             base_domain += [('mail_message_id', 'in', messages.ids)]
         notifications = self.env['mail.notification'].sudo().search(base_domain)
         debug_info = '\n-'.join(
-            f'Notif: partner {notif.res_partner_id.id}, type {notif.notification_type}'
+            f'Notif: partner {notif.res_partner_id.id} ({notif.res_partner_id.name}) / type {notif.notification_type}'
             for notif in notifications
         )
 
