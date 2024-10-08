@@ -297,7 +297,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         self._reader = None
         self.is_pdfa = False
 
-    def addAttachment(self, name, data, subtype=None):
+    def add_attachment(self, name, data, subtype=None):
         """
         Add an attachment to the pdf. Supports adding multiple attachment, while respecting PDF/A rules.
         :param name: The name of the attachement
@@ -350,6 +350,7 @@ class OdooPdfFileWriter(PdfFileWriter):
             self._root_object.update({
                 NameObject("/AF"): attachment_array
             })
+    addAttachment = add_attachment
 
     def embed_odoo_attachment(self, attachment, subtype=None):
         assert attachment, "embed_odoo_attachment cannot be called without attachment."
