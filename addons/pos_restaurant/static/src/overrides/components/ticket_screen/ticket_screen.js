@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -26,19 +25,6 @@ patch(TicketScreen.prototype, {
             return floorAndTable;
         }
     },
-    //@override
-    _getSearchFields() {
-        if (!this.pos.config.module_pos_restaurant) {
-            return super._getSearchFields(...arguments);
-        }
-        return Object.assign({}, super._getSearchFields(...arguments), {
-            TABLE: {
-                repr: (order) => order.table_id?.getName() || "",
-                displayName: _t("Table"),
-                modelField: "table_id.table_number",
-            },
-        });
-    },
     async _setOrder(order) {
         const shouldBeOverridden = this.pos.config.module_pos_restaurant && order.table_id;
         if (!shouldBeOverridden) {
@@ -51,7 +37,7 @@ patch(TicketScreen.prototype, {
     },
     async settleTips() {
         const promises = [];
-        for (const order of this.getFilteredOrderList()) {
+        for (const order of this.state.records) {
             const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
 
             if (typeof order.id === "string") {
@@ -95,15 +81,6 @@ patch(TicketScreen.prototype, {
         }
 
         await Promise.all(promises);
-    },
-    _getOrderStates() {
-        const result = super._getOrderStates(...arguments);
-        if (this.pos.config.set_tip_after_payment) {
-            result.delete("PAYMENT");
-            result.set("OPEN", { text: _t("Open"), indented: true });
-            result.set("TIPPING", { text: _t("Tipping"), indented: true });
-        }
-        return result;
     },
     async onDoRefund() {
         const order = this.getSelectedOrder();

@@ -23,6 +23,7 @@ export class PosData extends Reactive {
     }
 
     async setup(env, { orm }) {
+        this.env = env;
         this.orm = orm;
         this.relations = [];
         this.custom = {};
@@ -197,12 +198,14 @@ export class PosData extends Reactive {
     async initData() {
         const modelClasses = {};
         const relations = {};
+        const viewSearch = {};
         const fields = {};
         const data = {};
         const response = await this.loadInitialData();
         for (const [model, values] of Object.entries(response)) {
             relations[model] = values.relations;
             fields[model] = values.fields;
+            viewSearch[model] = values.view;
             data[model] = values.data;
         }
 
@@ -228,6 +231,7 @@ export class PosData extends Reactive {
         this.fields = fields;
         this.relations = relations;
         this.models = models;
+        this.viewSearch = viewSearch;
 
         const order = data["pos.order"] || [];
         const orderlines = data["pos.order.line"] || [];

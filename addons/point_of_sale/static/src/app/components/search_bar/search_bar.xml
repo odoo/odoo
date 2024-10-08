@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SearchBar">
+        <div class="pos-search-bar d-flex align-items-center flex-grow-1 rounded">
+            <div class="search position-relative h-100 d-flex flex-grow-1">
+                <div class="input-group">
+                    <input class="form-control form-control-lg bg-view ps-2 ps-lg-5" t-ref="autofocus"
+                    t-model="state.selectedSearchValue" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
+                    <div t-if="state.showSearchFields and state.selectedSearchValue" class="fields">
+                        <ul class="py-1 bg-view small">
+                            <t t-foreach="searchByOptions" t-as="fieldName" t-key="fieldName">
+                                <li class="ps-5 py-1 text-start"
+                                    t-att-class="{ highlight: fieldName === this.state.selectedSearch }"
+                                    t-on-click="() => this.onClickSearchField(fieldName)">
+                                    <span class="field">
+                                        <t t-esc="this.getFieldName(fieldName)"></t>
+                                    </span>
+                                    <span>: </span>
+                                    <span class="term text-primary fw-bolder">
+                                        <t t-esc="state.selectedSearchValue"></t>
+                                    </span>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                    <div t-if="this.filterByOptions.length"
+                        class="filter btn btn-secondary d-flex align-items-center dropdown-toggle px-4 position-relative z-3"
+                        t-on-click.stop="() => { state.showFilterOptions = !state.showFilterOptions }">
+                        <span>
+                            <t t-if="this.state.selectedFilterValue" t-esc="this.selectionNameByVal[this.state.selectedFilterValue]" />
+                            <t t-else="">Filter</t>
+                        </span>
+                        <ul t-if="state.showFilterOptions" class="options dropdown-menu dropdown-menu-end py-1">
+                            <li class="dropdown-item" t-on-click="() => this.onSelectFilter()">All</li>
+                            <t t-foreach="this.filterOptions" t-as="values" t-key="values.name">
+                                <li t-esc="values.name" class="dropdown-item disabled fw-bold"/>
+                                <li t-foreach="values.selection" t-as="selection" t-key="selection[0]"
+                                    t-esc="selection[1]"
+                                    class="dropdown-item indented"
+                                    t-on-click="() => this.onSelectFilter(values.field, selection[0])" />
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+                <span class="search-icon position-absolute start-0 top-50 translate-middle ms-4 z-3" t-if="!ui.isSmall"><i class="oi oi-search"></i></span>
+            </div>
+        </div>
+    </t>
+
+</templates>

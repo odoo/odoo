@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -10,9 +9,8 @@ import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_
 import { Orderline } from "@point_of_sale/app/generic_components/orderline/orderline";
 import { OrderWidget } from "@point_of_sale/app/generic_components/order_widget/order_widget";
 import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_icon/centered_icon";
-import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -20,11 +18,8 @@ import {
     DEFAULT_LAST_ROW,
 } from "@point_of_sale/app/generic_components/numpad/numpad";
 import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
-import { fuzzyLookup } from "@web/core/utils/search";
-import { parseUTCString } from "@point_of_sale/utils";
 import { useTrackedAsync } from "@point_of_sale/app/utils/hooks";
-
-const NBR_BY_PAGE = 30;
+import { CustomListView } from "@point_of_sale/app/components/custom_list_view/custom_list_view";
 
 export class TicketScreen extends Component {
     static storeOnOrder = false;
@@ -35,9 +30,9 @@ export class TicketScreen extends Component {
         Orderline,
         OrderWidget,
         CenteredIcon,
-        SearchBar,
         Numpad,
         BackButton,
+        CustomListView,
     };
     static props = {
         destinationOrder: { type: Object, optional: true },
@@ -67,6 +62,7 @@ export class TicketScreen extends Component {
         });
 
         this.state = useState({
+            records: this.pos.models["pos.order"].getAll(),
             page: 1,
             nbrPage: 1,
             filter: null,
@@ -75,21 +71,9 @@ export class TicketScreen extends Component {
             selectedOrderlineIds: {},
         });
         Object.assign(this.state, this.props.stateOverride || {});
-
-        onMounted(this.onMounted);
     }
-    onMounted() {
-        setTimeout(() => {
-            // Show updated list of synced orders when going back to the screen.
-            this.onFilterSelected(this.state.filter);
-        });
-    }
-    async onFilterSelected(selectedFilter) {
-        this.state.filter = selectedFilter;
-
-        if (this.state.filter == "SYNCED") {
-            await this._fetchSyncedOrders();
-        }
+    onRecordFiltered(records) {
+        this.state.records = records;
     }
     getNumpadButtons() {
         return getButtons(DEFAULT_LAST_ROW, [
@@ -112,18 +96,6 @@ export class TicketScreen extends Component {
             if (firstLine) {
                 this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
             }
-        }
-    }
-    async onNextPage() {
-        if (this.state.page < this.getNbrPages()) {
-            this.state.page += 1;
-            await this._fetchSyncedOrders();
-        }
-    }
-    async onPrevPage() {
-        if (this.state.page > 1) {
-            this.state.page -= 1;
-            await this._fetchSyncedOrders();
         }
     }
     async onInvoiceOrder(orderId) {
@@ -311,75 +283,6 @@ export class TicketScreen extends Component {
         const oScreen = o.get_screen_data();
         return (!o.finalized || screen.includes(oScreen.name)) && o.uiState.displayed;
     }
-    getFilteredOrderList() {
-        const orderModel = this.pos.models["pos.order"];
-        let orders =
-            this.state.filter === "SYNCED"
-                ? orderModel.filter((o) => o.finalized && o.uiState.displayed)
-                : orderModel.filter(this.activeOrderFilter);
-
-        if (this.state.filter && !["ACTIVE_ORDERS", "SYNCED"].includes(this.state.filter)) {
-            orders = orders.filter((order) => {
-                const screen = order.get_screen_data();
-                return this._getScreenToStatusMap()[screen.name] === this.state.filter;
-            });
-        }
-
-        if (this.state.search.searchTerm) {
-            const repr = this._getSearchFields()[this.state.search.fieldName].repr;
-            orders = fuzzyLookup(this.state.search.searchTerm, orders, repr);
-        }
-
-        const sortOrders = (orders, ascending = false) => {
-            return orders.sort((a, b) => {
-                const dateA = parseUTCString(a.date_order, "yyyy-MM-dd HH:mm:ss");
-                const dateB = parseUTCString(b.date_order, "yyyy-MM-dd HH:mm:ss");
-
-                if (a.date_order !== b.date_order) {
-                    return ascending ? dateA - dateB : dateB - dateA;
-                } else {
-                    const nameA = parseInt(a.name.replace(/\D/g, "")) || 0;
-                    const nameB = parseInt(b.name.replace(/\D/g, "")) || 0;
-                    return ascending ? nameA - nameB : nameB - nameA;
-                }
-            });
-        };
-
-        if (this.state.filter === "SYNCED") {
-            return sortOrders(orders).slice(
-                (this.state.page - 1) * NBR_BY_PAGE,
-                this.state.page * NBR_BY_PAGE
-            );
-        } else {
-            return sortOrders(orders, true);
-        }
-    }
-    getDate(order) {
-        return formatDateTime(parseUTCString(order.date_order));
-    }
-    getTotal(order) {
-        return this.env.utils.formatCurrency(order.get_total_with_tax());
-    }
-    getPartner(order) {
-        return order.get_partner_name();
-    }
-    getCardholderName(order) {
-        return order.get_cardholder_name();
-    }
-    getCashier(order) {
-        return order.employee_id ? order.employee_id.name : "";
-    }
-    getStatus(order) {
-        if (
-            order.uiState?.locked &&
-            (order.get_screen_data().name === "" || this.state.filter === "SYNCED")
-        ) {
-            return _t("Paid");
-        } else {
-            const screen = order.get_screen_data();
-            return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
-        }
-    }
     /**
      * If the order is the only order and is empty
      */
@@ -414,26 +317,6 @@ export class TicketScreen extends Component {
     }
     showCardholderName() {
         return this.pos.models["pos.payment.method"].some((method) => method.use_payment_terminal);
-    }
-    getSearchBarConfig() {
-        return {
-            searchFields: new Map(
-                Object.entries(this._getSearchFields()).map(([key, val]) => [key, val.displayName])
-            ),
-            filter: { show: true, options: this._getFilterOptions() },
-            defaultSearchDetails: this.state.search,
-            defaultFilter: this.state.filter,
-        };
-    }
-    getNbrPages() {
-        return Math.ceil(this.pos.ticketScreenState.totalCount / NBR_BY_PAGE);
-    }
-    getPageNumber() {
-        if (!this.pos.ticketScreenState.totalCount) {
-            return `1/1`;
-        } else {
-            return `${this.state.page}/${this.getNbrPages()}`;
-        }
     }
     getHasItemsToRefund() {
         const order = this.getSelectedOrder();
@@ -559,62 +442,6 @@ export class TicketScreen extends Component {
     _getOrderList() {
         return this.pos.models["pos.order"].getAll();
     }
-    _getFilterOptions() {
-        const orderStates = this._getOrderStates();
-        orderStates.set("SYNCED", { text: _t("Paid") });
-        return orderStates;
-    }
-    /**
-     * @returns {Record<string, { repr: (order: models.Order) => string, displayName: string, modelField: string }>}
-     */
-    _getSearchFields() {
-        const fields = {
-            TRACKING_NUMBER: {
-                repr: (order) => order.tracking_number,
-                displayName: _t("Order Number"),
-                modelField: "tracking_number",
-            },
-            RECEIPT_NUMBER: {
-                repr: (order) => order.pos_reference,
-                displayName: _t("Receipt Number"),
-                modelField: "pos_reference",
-            },
-            DATE: {
-                repr: (order) => this.getDate(order),
-                displayName: _t("Date"),
-                modelField: "date_order",
-                formatSearch: (searchTerm) => {
-                    const includesTime = searchTerm.includes(":");
-                    let parsedDateTime;
-                    try {
-                        parsedDateTime = parseDateTime(searchTerm);
-                    } catch {
-                        return searchTerm;
-                    }
-                    if (includesTime) {
-                        return parsedDateTime.toUTC().toFormat("yyyy-MM-dd HH:mm:ss");
-                    } else {
-                        return parsedDateTime.toFormat("yyyy-MM-dd");
-                    }
-                },
-            },
-            PARTNER: {
-                repr: (order) => order.get_partner_name(),
-                displayName: _t("Customer"),
-                modelField: "partner_id.complete_name",
-            },
-        };
-
-        if (this.showCardholderName()) {
-            fields.CARDHOLDER_NAME = {
-                repr: (order) => order.get_cardholder_name(),
-                displayName: _t("Cardholder Name"),
-                modelField: "payment_ids.cardholder_name",
-            };
-        }
-
-        return fields;
-    }
     /**
      * Maps the order screen params to order status.
      */
@@ -624,88 +451,6 @@ export class TicketScreen extends Component {
             PaymentScreen: "PAYMENT",
             ReceiptScreen: "RECEIPT",
         };
-    }
-    _getOrderStates() {
-        // We need the items to be ordered, therefore, Map is used instead of normal object.
-        const states = new Map();
-        states.set("ACTIVE_ORDERS", {
-            text: _t("All active orders"),
-        });
-        // The spaces are important to make sure the following states
-        // are under the category of `All active orders`.
-        states.set("ONGOING", {
-            text: _t("Ongoing"),
-            indented: true,
-        });
-        states.set("PAYMENT", {
-            text: _t("Payment"),
-            indented: true,
-        });
-        states.set("RECEIPT", {
-            text: _t("Receipt"),
-            indented: true,
-        });
-        return states;
-    }
-    //#region SEARCH SYNCED ORDERS
-    _computeSyncedOrdersDomain() {
-        let { fieldName, searchTerm } = this.state.search;
-        if (!searchTerm) {
-            return [];
-        }
-        const searchField = this._getSearchFields()[fieldName];
-        if (searchField && searchField.modelField && searchField.modelField !== null) {
-            if (searchField.formatSearch) {
-                searchTerm = searchField.formatSearch(searchTerm);
-            }
-            return [[searchField.modelField, "ilike", `%${searchTerm}%`]];
-        } else {
-            return [];
-        }
-    }
-    /**
-     * Fetches the done orders from the backend that needs to be shown.
-     * If the order is already in cache, the full information about that
-     * order is not fetched anymore, instead, we use info from cache.
-     */
-    async _fetchSyncedOrders() {
-        const screenState = this.pos.ticketScreenState;
-        const domain = this._computeSyncedOrdersDomain();
-        const offset = screenState.offsetByDomain[JSON.stringify(domain)] || 0;
-        const config_id = this.pos.config.id;
-        const { ordersInfo, totalCount } = await this.pos.data.call(
-            "pos.order",
-            "search_paid_order_ids",
-            [],
-            {
-                config_id,
-                domain,
-                limit: 30,
-                offset,
-            }
-        );
-
-        if (!screenState.offsetByDomain[JSON.stringify(domain)]) {
-            screenState.offsetByDomain[JSON.stringify(domain)] = 0;
-        }
-        screenState.offsetByDomain[JSON.stringify(domain)] += ordersInfo.length;
-        screenState.totalCount = totalCount;
-
-        const idsNotInCacheOrOutdated = ordersInfo
-            .filter((orderInfo) => {
-                const order = this.pos.models["pos.order"].get(orderInfo[0]);
-
-                if (order && parseUTCString(orderInfo[1]) > parseUTCString(order.date_order)) {
-                    return true;
-                }
-
-                return !order;
-            })
-            .map((info) => info[0]);
-
-        if (idsNotInCacheOrOutdated.length > 0) {
-            await this.pos.data.read("pos.order", Array.from(new Set(idsNotInCacheOrOutdated)));
-        }
     }
 }
 

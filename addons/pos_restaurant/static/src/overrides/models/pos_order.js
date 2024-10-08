@@ -53,4 +53,14 @@ patch(PosOrder.prototype, {
         }
         return super.getName(...arguments);
     },
+    get customListFields() {
+        const fields = super.customListFields;
+        fields.list.push("table_id");
+        return fields;
+    },
+    get customListSearches() {
+        return Object.assign(super.customListSearches, {
+            table_id: (obj) => obj.table_id?.table_number || "",
+        });
+    },
 });

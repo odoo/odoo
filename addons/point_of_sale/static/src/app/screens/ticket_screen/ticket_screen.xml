@@ -2,105 +2,25 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.TicketScreen">
-        <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
         <div class="ticket-screen screen h-100 bg-100">
             <div class="screen-full-width d-flex w-100 h-100">
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 bg-200 overflow-y-auto">
-                    <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 bg-300">
-                        <div class="buttons d-flex gap-2">
-                            <button class="discard btn btn-lg btn-light text-nowrap" t-on-click="() => this.closeTicketScreen()">
-                                <i class="oi oi-chevron-left"/>
-                                <span t-if="!ui.isSmall" class="ms-2">Back</span>
-                            </button>
-                        </div>
-                        <SearchBar
-                            config="getSearchBarConfig()"
-                            placeholder.translate="Search Orders..."
-                            onSearch.bind="onSearch"
-                            onFilterSelected.bind="onFilterSelected" />
-                        <div class="item d-flex align-items-center justify-content-end">
-                            <span class="page me-2"><t t-esc="getPageNumber()" /></span>
-                            <div class="page-controls d-flex align-items-center gap-1">
-                                <button class="previous btn btn-light btn-lg" t-on-click="() => this.onPrevPage()">
-                                    <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
-                                </button>
-                                <button class="next btn btn-light btn-lg" t-on-click="() => this.onNextPage()">
-                                    <i class="fa fa-fw fa-caret-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="orders overflow-y-auto flex-grow-1">
-                        <t t-if="_filteredOrderList.length !== 0">
-                            <div class="header-row d-flex text-bg-700 fw-bolder" t-att-class="{ 'd-none': ui.isSmall }">
-                                <div class="col wide p-2">Date</div>
-                                <div class="col wide p-2">Receipt Number</div>
-                                <div class="col wide p-2">Order number</div>
-                                <div class="col p-2">Customer</div>
-                                <div class="col wide p-2" t-if="showCardholderName()">Cardholder Name</div>
-                                <div class="col p-2">Cashier</div>
-                                <div class="col end p-2">Total</div>
-                                <div class="col narrow p-2">Status</div>
-                                <div class="col very-narrow p-2" name="delete"></div>
-                            </div>
-                            <t t-if="!ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
-                                <div class="order-row" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
-                                    <div class="col wide p-2 ">
-                                        <div><t t-esc="getDate(order)"></t></div>
-                                    </div>
-                                    <div class="col wide p-2">
-                                        <div><t t-esc="order.pos_reference"></t></div>
-                                    </div>
-                                    <div class="col wide p-2">
-                                        <div><t t-esc="order.tracking_number"></t></div>
-                                    </div>
-                                    <div class="col p-2">
-                                    <!-- <t t-debug="order" /> -->
-                                        <div><t t-esc="order.partner_id?.name"></t></div>
-                                    </div>
-                                    <div t-if="showCardholderName()" class="col p-2">
-                                        <div><t t-esc="getCardholderName(order)"></t></div>
-                                    </div>
-                                    <div class="col p-2">
-                                        <t t-esc="getCashier(order)"></t>
-                                    </div>
-                                    <div class="col end p-2">
-                                        <div><t t-esc="getTotal(order)"></t></div>
-                                    </div>
-                                    <div class="col narrow p-2">
-                                        <div><t t-esc="getStatus(order)"></t></div>
-                                    </div>
-                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
-                                        <i class="fa fa-trash" aria-hidden="true"/>
-                                    </div>
-                                    <div t-else="" class="col very-narrow p-2"></div>
+                    <div class="orders overflow-y-auto flex-grow-1 p-2 bg-white">
+                        <CustomListView model="'pos.order'" onClickLine.bind="onClickOrder" selectedRecord="this.state.selectedOrder" onFiltered.bind="onRecordFiltered">
+                            <t t-set-slot="header-btn">
+                                <div class="header-btn d-flex gap-2">
+                                    <button class="discard btn btn-primary text-nowrap" t-on-click="() => this.closeTicketScreen()">
+                                        <i class="oi oi-chevron-left"/>
+                                        <span t-if="!ui.isSmall" class="ms-2">Back</span>
+                                    </button>
                                 </div>
                             </t>
-                            <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
-                                <div class="mobileOrderList order-row rounded-3" t-att-class="{ 'highlight bg-primary text-white': isHighlighted(order) }"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.uiState.locked ? ()=>{} : this._setOrder(order)" >
-                                    <div class="col p-2 d-flex justify-content-between align-items-center">
-                                        <div><t t-esc="order.pos_reference"></t> / <t t-esc="order.tracking_number"></t></div>
-                                        <div><t t-esc="getTotal(order)"></t></div>
-                                    </div>
-                                    <div class="col p-2 d-flex justify-content-between align-items-center">
-                                        <div><t t-esc="getDate(order)"></t></div>
-                                        <div class="orderStatus"><t t-esc="getStatus(order)"></t></div>
-                                    </div>
-                                    <div class="col p-2">
-                                        <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button p-2 rounded-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(order)">
-                                            <i class="fa fa-trash" aria-hidden="true"/> Delete
-                                        </div>
-                                    </div>
+                            <t t-set-slot="action" t-slot-scope="scope">
+                                <div t-if="!shouldHideDeleteButton(scope.record)" class="col very-narrow delete-button rounded-2" name="delete" t-on-click.stop="() => this.pos.onDeleteOrder(scope.record)">
+                                    <i class="fa fa-trash" aria-hidden="true"/> Delete
                                 </div>
                             </t>
-                        </t>
-                        <CenteredIcon
-                            t-else=""
-                            icon="this.pos.data.network.loading ? 'fa-spinner fa-spin' : 'fa-shopping-cart fa-4x'"
-                            text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"
-                            class="'h-100'"/>
+                        </CustomListView>
                     </div>
                     <div class="switchpane d-flex w-100 gap-2 p-2 mt-2" t-if="ui.isSmall">
                         <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />

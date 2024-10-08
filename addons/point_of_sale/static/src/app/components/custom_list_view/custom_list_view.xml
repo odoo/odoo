@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CustomListView">
+        <div class="h-100 w-100 d-flex flex-column overflow-hidden">
+            <div class="pb-2 d-flex gap-2">
+                <t t-slot="header-btn" />
+                <SearchBar
+                    model="model"
+                    fields="fields"
+                    filters="filters"
+                    searches="searches"
+                    defaults="defaults"
+                    placeholder.translate="Search..."
+                    callback.bind="onFilterChange" />
+            </div>
+            <div t-if="!this.ui.isSmall" class="flex-grow-1 overflow-auto pe-2">
+                <table class="table custom-list-view table-striped">
+                    <thead>
+                        <tr>
+                            <th t-on-click="() => this.setFieldSort(field)" t-foreach="fields.list" t-as="field" t-key="field" scope="col">
+                                <span>
+                                    <t t-esc="getFieldName(field)" />
+                                    <i t-if="state.sortField === field and state.sortOrder === 'asc'" class="ms-2 fa fa-caret-up" aria-hidden="true" />
+                                    <i t-if="state.sortField === field and state.sortOrder === 'desc'" class="ms-2 fa fa-caret-down" aria-hidden="true" />
+                                </span>
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="state.records"
+                            t-as="record"
+                            t-key="record.id"
+                            t-on-click="() => this.props.onClickLine(record)"
+                            t-att-class="{'selected': props.selectedRecord?.id === record.id}">
+                            <td t-foreach="fields.list" t-as="field" t-key="field">
+                                <span t-esc="getFieldValue(field, record)" />
+                            </td>
+                            <td>
+                                <t t-slot="action" record="record" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div t-if="!state.records.length and !props.loadMore" class="text-center w-100">
+                    No records found
+                </div>
+                <div class="text-center w-100 d-flex justify-content-center mt-3">
+                    <button class="btn btn-secondary" t-on-click="this.loadMoreRecords">Load more</button>
+                </div>
+            </div>
+            <div t-else="" class="container overflow-auto">
+                <div t-foreach="state.records"
+                    t-as="record"
+                    t-key="record.id"
+                    t-on-click="() => this.props.onClickLine(record)"
+                    class="row border rounded p-2 mb-2"
+                    t-att-class="{'selected': props.selectedRecord?.id === record.id}">
+                    <div t-foreach="fields" t-as="field" t-key="field" class="col-6 d-flex flex-column mb-2" >
+                        <span t-esc="getFieldName(field)" class="fw-bolder" />
+                        <span t-esc="getFieldValue(field, record)" />
+                    </div>
+                    <div class="col-6 d-flex flex-column mb-2">
+                        <span class="fw-bolder">Action</span>
+                        <div>
+                            <t t-slot="action" record="record" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SaleOrderPopup">
+        <Dialog bodyClass="'partner-list overflow-y-auto'" contentClass="'h-100'">
+            <CustomListView model="'sale.order'" onClickLine.bind="clickSaleOrder" />
+            <t t-set-slot="footer">
+                <div class="d-flex justify-content-start flex-wrap gap-2 w-100">
+                    <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="() => this.props.close()">Discard</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

@@ -60,6 +60,50 @@ export class PosOrder extends Base {
         };
     }
 
+    get customListDefaults() {
+        return {
+            filter: {
+                name: "state",
+                value: "draft",
+            },
+        };
+    }
+
+    get customListFilters() {
+        return {
+            state: {
+                field: "state",
+                string: _t("State"),
+                values: [
+                    ["draft", _t("Ongoing")],
+                    ["payment", _t("Payment")],
+                    ["receipt", _t("Receipt")],
+                    ["paid", _t("Paid")],
+                ],
+                fn: (obj) => obj.getCurrentScreen(),
+            },
+        };
+    }
+
+    get customListFields() {
+        return {
+            list: ["name", "partner_id", "amount_total", "date_order", "state", "tracking_number"],
+            search: ["name", "partner_id", "amount_total", "state", "tracking_number"],
+        };
+    }
+
+    get customListSearches() {
+        return {
+            name: (obj) => obj.pos_reference || "",
+            partner_id: (obj) => obj.partner_id?.name || "",
+            amount_total: (obj) => obj.formattedTotalWithTax || "",
+            date_order: (obj) => formatDateTime(parseUTCString(obj.date_order)) || "",
+            state: (obj) => obj.getCurrentScreen(true) || "",
+            tracking_number: (obj) => obj.tracking_number || "",
+            pos_reference: (obj) => obj.pos_reference || "",
+        };
+    }
+
     get user() {
         return this.models["res.users"].getFirst();
     }
@@ -91,6 +135,28 @@ export class PosOrder extends Base {
     get isUnsyncedPaid() {
         return this.finalized && typeof this.id === "string";
     }
+
+    getCurrentScreen(string = false) {
+        const screenName = this.get_screen_data().name;
+
+        switch (screenName) {
+            case "ProductScreen":
+                return string ? _t("Ongoing") : "draft";
+            case "PaymentScreen":
+                return string ? _t("Payment") : "payment";
+            case "ReceiptScreen":
+                return string ? _t("Receipt") : "receipt";
+            case "TipScreen":
+                return string ? _t("Tipping") : "draft";
+        }
+
+        if (this.finalized) {
+            return string ? _t("Paid") : "paid";
+        }
+
+        return string ? _t("Draft") : "draft";
+    }
+
     getEmailItems() {
         return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
     }
@@ -597,6 +663,9 @@ export class PosOrder extends Base {
         }
     }
 
+    get formattedTotalWithTax() {
+        return formatCurrency(this.get_total_with_tax(), this.currency);
+    }
     /* ---- Payment Status --- */
     get_subtotal() {
         return roundPrecision(

@@ -414,6 +414,7 @@
                 <field name="session_id"/>
                 <field name="config_id"/>
                 <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
                 <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
                 <filter string="Posted" name="posted" domain="[('state', '=', 'done')]"/>
                 <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>

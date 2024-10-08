@@ -2,22 +2,13 @@
 
 import { patch } from "@web/core/utils/patch";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
-import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { makeAwaitable } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { SaleOrderPopup } from "@pos_sale/components/sale_order_popup/sale_order_popup";
 
 patch(ControlButtons.prototype, {
-    onClickQuotation() {
-        this.dialog.add(SelectCreateDialog, {
-            resModel: "sale.order",
-            noCreate: true,
-            multiSelect: false,
-            domain: [
-                ["state", "!=", "cancel"],
-                ["invoice_status", "!=", "invoiced"],
-                ["currency_id", "=", this.pos.currency.id],
-            ],
-            onSelected: async (resIds) => {
-                await this.pos.onClickSaleOrder(resIds[0]);
-            },
+    async onClickQuotation() {
+        await makeAwaitable(this.dialog, SaleOrderPopup, {
+            getPayload: (so) => this.pos.onClickSaleOrder(so),
         });
     },
 });

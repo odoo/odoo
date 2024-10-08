@@ -107,7 +107,9 @@ class PosSession(models.Model):
 
             if params.comodel_name:
                 response[model]['relations'][name] = {
+                    'selection': params.selection if params.type == 'selection' else False,
                     'name': name,
+                    'string': params.string,
                     'model': params.model_name,
                     'compute': bool(params.compute),
                     'related': bool(params.related),
@@ -120,7 +122,9 @@ class PosSession(models.Model):
                     response[model]['relations'][name]['relation_table'] = self.env[model]._fields[name].relation
             else:
                 response[model]['relations'][name] = {
+                    'selection': params.selection if params.type == 'selection' else False,
                     'name': name,
+                    'string': params.string,
                     'type': params.type,
                     'compute': bool(params.compute),
                     'related': bool(params.related),

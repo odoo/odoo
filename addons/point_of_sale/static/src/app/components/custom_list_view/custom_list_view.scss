@@ -1,26 +1,26 @@
-.partner-list {
+table.custom-list-view {
     tr {
         border: $border-width solid $border-color;
-        
+
         &:hover {
             cursor: pointer;
         }
-        
+
         &:active {
             background-color: $o-component-active-bg;
         }
     }
 }
 
-.partner-list table { 
-    border-collapse: separate; 
-    border-spacing: 0 8px; 
+
+table.custom-list-view {
+    border-collapse: separate;
+    border-spacing: 0 8px;
     margin-top: -8px;
 
     td {
         border: $border-width solid $border-color;
         border-style: solid none;
-        padding: map-get($spacers, 3);
     }
 
     tr.selected td {
@@ -38,20 +38,13 @@
         border-bottom-right-radius: $border-radius-lg;
         border-top-right-radius: $border-radius-lg;
     }
+
+    thead,
+    tbody tr {
+        table-layout: fixed;
+    }
 }
 
-@include media-breakpoint-down(lg) {
-    .partner-list {
-        table {
-            border: transparent;
-        }
-        .partner-list {
-            thead {
-                display: none;
-            }
-            td {
-                padding: 0;
-            }
-        }
-    }
+.container .selected {
+    border-color: $o-component-active-border !important;
 }

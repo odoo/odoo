@@ -1,16 +1,17 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { fuzzyLookup } from "@web/core/utils/search";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Input } from "@point_of_sale/app/generic_components/inputs/input/input";
 import { Component, useState } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { unaccent } from "@web/core/utils/strings";
+import { CustomListView } from "@point_of_sale/app/components/custom_list_view/custom_list_view";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class PartnerList extends Component {
-    static components = { PartnerLine, Dialog, Input };
+    static components = { PartnerLine, Dialog, Input, CustomListView, Dropdown, DropdownItem };
     static template = "point_of_sale.PartnerList";
     static props = {
         partner: {
@@ -41,9 +42,6 @@ export class PartnerList extends Component {
         }
     }
     async onEnter() {
-        if (!this.state.query) {
-            return;
-        }
         const result = await this.searchPartner();
         if (result.length > 0) {
             this.notification.add(
@@ -74,31 +72,14 @@ export class PartnerList extends Component {
         this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
         this.pos.closeTempScreen();
     }
-    getPartners() {
-        const searchWord = unaccent((this.state.query || "").trim(), false);
-        const partners = this.pos.models["res.partner"].getAll();
-        const exactMatches = partners.filter((product) => product.exactMatch(searchWord));
-
-        if (exactMatches.length > 0) {
-            return exactMatches;
-        }
-
-        const availablePartners = searchWord
-            ? fuzzyLookup(searchWord, partners, (partner) => unaccent(partner.searchString, false))
-            : partners
-                  .slice(0, 1000)
-                  .toSorted((a, b) =>
-                      this.props.partner?.id === a.id
-                          ? -1
-                          : (a.name || "").localeCompare(b.name || "")
-                  );
-
-        return availablePartners;
-    }
     get isBalanceDisplayed() {
         return false;
     }
     clickPartner(partner) {
+        if (partner && this.pos.get_order().partner_id?.id === partner.id) {
+            partner = null;
+        }
+
         this.props.getPayload(partner);
         this.props.close();
     }
@@ -115,29 +96,5 @@ export class PartnerList extends Component {
             this.state.currentOffset = partner.length;
         }
         return partner;
-    }
-    async getNewPartners() {
-        let domain = [];
-        const limit = 30;
-        if (this.state.query) {
-            const search_fields = [
-                "name",
-                "parent_name",
-                "phone_mobile_search",
-                "email",
-                "barcode",
-            ];
-            domain = [
-                ...Array(search_fields.length - 1).fill("|"),
-                ...search_fields.map((field) => [field, "ilike", this.state.query + "%"]),
-            ];
-        }
-
-        const result = await this.pos.data.searchRead("res.partner", domain, [], {
-            limit: limit,
-            offset: this.state.currentOffset,
-        });
-
-        return result;
     }
 }
