@@ -1406,7 +1406,7 @@ class SaleOrder(models.Model):
         return action
 
     def _get_invoice_grouping_keys(self):
-        return ['company_id', 'partner_id', 'currency_id']
+        return ['company_id', 'partner_id', 'partner_shipping_id', 'currency_id']
 
     def _nothing_to_invoice_error_message(self):
         return _(
@@ -1513,7 +1513,7 @@ class SaleOrder(models.Model):
         if not invoice_vals_list and self._context.get('raise_if_nothing_to_invoice', True):
             raise UserError(self._nothing_to_invoice_error_message())
 
-        # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
+        # 2) Manage 'grouped' parameter: group by (partner_id, partner_shipping_id, currency_id).
         if not grouped:
             new_invoice_vals_list = []
             invoice_grouping_keys = self._get_invoice_grouping_keys()
