@@ -299,6 +299,10 @@ export class GraphModel extends Model {
                     (_, index) => labelsToKeepIndexes[index]
                 );
             }
+        } else if (mode === "bar") {
+            for (const dataset of datasets) {
+                dataset.data = dataset.data.map((value, index) => ({ x: index, y: value }));
+            }
         }
 
         return { datasets, labels };
