@@ -6654,7 +6654,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         restoreCursor();
         this.trigger_up("enable_loading_effect");
         if (!widgetValue) {
-            this._onImageCropped();
+            await this._onImageCropped();
         }
         this.options.wysiwyg.odooEditor.historyUnpauseSteps();
     },
@@ -6817,7 +6817,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Re-rendering the options after selecting a "cropping" shape.
         if (this.isImageCropped && previewMode === "reset") {
             delete this.isImageCropped;
-            this._onImageCropped();
+            await this._onImageCropped();
         }
 
         const saveData = previewMode === false;
