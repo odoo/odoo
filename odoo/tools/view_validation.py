@@ -86,7 +86,7 @@ def get_dict_asts(expr):
 
     if not isinstance(expr, ast.Dict):
         raise ValueError("Non-dict expression")
-    if not all(isinstance(key, ast.Str) for key in expr.keys):
+    if not all(isinstance(key, ast.Constant) for key in expr.keys):
         raise ValueError("Non-string literal dict key")
     return {key.s: val for key, val in zip(expr.keys, expr.values)}
 
@@ -112,7 +112,7 @@ def get_domain_identifiers(expr):
 
     if isinstance(expr, ast.List):
         for elem in expr.elts:
-            if isinstance(elem, ast.Str):
+            if isinstance(elem, ast.Constant):
                 # note: this doesn't check the and/or structure
                 _check(elem.s in ('&', '|', '!'),
                        f"logical operators should be '&', '|', or '!', found {elem.s!r}")
@@ -124,9 +124,9 @@ def get_domain_identifiers(expr):
             _check(len(elem.elts) == 3,
                    f"segments should have 3 elements, found {len(elem.elts)}")
             lhs, operator, rhs = elem.elts
-            _check(isinstance(operator, ast.Str),
+            _check(isinstance(operator, ast.Constant),
                    f"operator should be a string, found {type(operator).__name__}")
-            if isinstance(lhs, ast.Str):
+            if isinstance(lhs, ast.Constant):
                 fnames.add(lhs.s)
 
     vnames.update(get_variable_names(expr))

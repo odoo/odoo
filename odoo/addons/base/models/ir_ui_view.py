@@ -1771,7 +1771,7 @@ actual arch.
             elif attr == 'context':
                 for key, val_ast in get_dict_asts(expr).items():
                     if key == 'group_by':  # only in context
-                        if not isinstance(val_ast, ast.Str):
+                        if not isinstance(val_ast, ast.Constant):
                             msg = _(
                                 '"group_by" value must be a string %(attribute)s=%(value)r',
                                 attribute=attr, value=expr,
