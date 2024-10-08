@@ -145,7 +145,7 @@ class MrpWorkorder(models.Model):
                                      domain="[('allow_workorder_dependencies', '=', True), ('id', '!=', id), ('production_id', '=', production_id)]",
                                      copy=False)
 
-    @api.depends('production_availability', 'blocked_by_workorder_ids.state')
+    @api.depends('production_availability', 'blocked_by_workorder_ids.state', 'move_raw_ids.state')
     def _compute_state(self):
         # Force to compute the production_availability right away.
         # It is a trick to force that the state of workorder is computed at the end of the
@@ -163,10 +163,17 @@ class MrpWorkorder(models.Model):
                 continue
             if workorder.production_availability not in ('waiting', 'confirmed', 'assigned'):
                 continue
-            if workorder.production_availability == 'assigned' and workorder.state == 'waiting':
-                workorder.state = 'ready'
-            elif workorder.production_availability != 'assigned' and workorder.state == 'ready':
-                workorder.state = 'waiting'
+            if workorder.operation_id and workorder.operation_id.bom_id.ready_to_produce == 'asap':
+                components_available = bool(not workorder.move_raw_ids or all(move.state == "assigned" for move in workorder.move_raw_ids))
+                if workorder.production_availability == 'assigned' and components_available and workorder.state == 'waiting':
+                    workorder.state = 'ready'
+                elif (workorder.production_availability != 'assigned' or not components_available) and workorder.state == 'ready':
+                    workorder.state = 'waiting'
+            else:
+                if workorder.production_availability == 'assigned' and workorder.state == 'waiting':
+                    workorder.state = 'ready'
+                elif workorder.production_availability != 'assigned' and workorder.state == 'ready':
+                    workorder.state = 'waiting'
 
     @api.depends('production_state', 'date_start', 'date_finished')
     def _compute_json_popover(self):
