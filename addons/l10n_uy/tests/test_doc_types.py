@@ -61,3 +61,17 @@ class TestDocTypes(AccountTestInvoicingCommon):
         self.assertEqual(debit_note.l10n_latam_document_type_id.code, "123", "Not Export e-Invoice Debit Note")
         expected_docs = ["123"] if self.env['ir.module.module']._get('l10n_uy_edi').state == 'installed' else ['123', '223']
         self.assertEqual(debit_note.l10n_latam_available_document_type_ids.mapped("code"), expected_docs, "Bad Domain")
+
+    def test_default_doc_type_by_id(self):
+
+        expected_doc = self.env.ref('l10n_uy.dc_e_ticket') if self.env['ir.module.module']._get('l10n_uy_edi').state == 'installed'\
+            else self.env.ref('l10n_uy.dc_inv')
+        dc_e_inv = self.env.ref('l10n_uy.dc_e_inv')
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+        })
+        self.assertFalse(move.l10n_latam_document_type_id)
+        move.write({'partner_id': self.env.ref('l10n_uy.partner_cfu').id})
+        self.assertEqual(move.l10n_latam_document_type_id, expected_doc, "The document type is not being set correctly.")
+        move.write({'partner_id': self.env.ref('l10n_uy.partner_dgi').id})
+        self.assertEqual(move.l10n_latam_document_type_id, dc_e_inv, "The expected document should be e-invoice")
