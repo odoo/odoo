@@ -31,7 +31,7 @@ for (const data of ESSENTIAL_FIELDS_VALID_DATA_FOR_DEFAULT_FORM) {
     essentialFieldsForDefaultFormFillInSteps.push({
         content: "Enter data in model-required field",
         trigger: `:iframe .s_website_form_model_required .s_website_form_input[name="${data.name}"]`,
-        run: `edit ${data.value}`,
+        run: `edit ${data.value} && press Tab`,
     });
 }
 
@@ -104,7 +104,7 @@ const addField = function (name, type, label, required, isCustom,
         ret.push({
             content: "Set the visibility condition",
             trigger: 'we-input[data-attribute-name="visibilityCondition"] input',
-            run: `edit ${display.condition}`,
+            run: `edit ${display.condition} && press Tab`,
         });
     }
     if (required) {
@@ -120,7 +120,7 @@ const addField = function (name, type, label, required, isCustom,
         ret.push({
             content: "Change the label text",
             trigger: 'we-input[data-set-label-text] input',
-            run: `edit ${label}`,
+            run: `edit ${label} && press Tab`,
         });
     }
     if (type !== 'checkbox' && type !== 'radio' && type !== 'select') {
@@ -145,6 +145,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     url: '/',
     edition: true,
     test: true,
+    checkDelay: 100,
 }, () => [
     // Drop a form builder snippet and configure it
     {
@@ -277,21 +278,15 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     {
         content: "Change Option 1 label",
         trigger: 'we-list table input:eq(0)',
-        run: "edit Iphone",
+        run: "edit Iphone && press Tab",
     }, {
         content: "Change Option 2 label",
         trigger: 'we-list table input:eq(1)',
-        run: "edit Galaxy S",
+        run: "edit Galaxy S && press Tab",
     },{
         content: "Change first Option 3 label",
         trigger: 'we-list table input:eq(2)',
-        run: "edit Xperia",
-    },
-    {
-        // TODO: Fix code to avoid this behavior
-        content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
-        trigger: "we-list we-title",
-        run: "click",
+        run: "edit Xperia && press Tab",
     },
     {
         content: "Click on Add new Checkbox",
@@ -301,7 +296,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     {
         content: "Change added Option label",
         trigger: 'we-list table input:eq(3)',
-        run: "edit Wiko Stairway",
+        run: "edit Wiko Stairway && press Tab",
     }, {
         content: "Check the resulting field",
         trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
