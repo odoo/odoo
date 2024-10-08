@@ -201,6 +201,9 @@ class ResPartner(models.Model):
             if not partner.vies_vat_to_check:
                 partner.vies_valid = False
                 continue
+            if partner.parent_id and partner.parent_id.vies_vat_to_check == partner.vies_vat_to_check:
+                partner.vies_valid = partner.parent_id.vies_valid
+                continue
             try:
                 vies_valid = check_vies(partner.vies_vat_to_check, timeout=10)
                 partner.vies_valid = vies_valid['valid']
