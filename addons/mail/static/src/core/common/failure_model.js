@@ -38,7 +38,7 @@ export class Failure extends Record {
             ...this.notifications.map((notif) => notif.message?.thread?.id).filter((id) => !!id),
         ]);
     }
-    lastMessage = Record.one("Message", {
+    lastMessage = Record.one("mail.message", {
         /** @this {import("models").Failure} */
         compute() {
             let lastMsg = this.notifications[0]?.message;

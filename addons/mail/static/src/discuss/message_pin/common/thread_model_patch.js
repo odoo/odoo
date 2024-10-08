@@ -10,7 +10,7 @@ patch(Thread.prototype, {
 
         /** @type {'loaded'|'loading'|'error'|undefined} */
         this.pinnedMessagesState = undefined;
-        this.pinnedMessages = Record.many("Message", {
+        this.pinnedMessages = Record.many("mail.message", {
             compute() {
                 return this.allMessages.filter((m) => m.pinned_at);
             },

@@ -7,14 +7,14 @@ import { SESSION_STATE } from "./livechat_service";
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.chatbotTypingMessage = Record.one("Message", {
+        this.chatbotTypingMessage = Record.one("mail.message", {
             compute() {
                 if (this.chatbot) {
                     return { id: -0.1 - this.id, thread: this, author: this.operator };
                 }
             },
         });
-        this.livechatWelcomeMessage = Record.one("Message", {
+        this.livechatWelcomeMessage = Record.one("mail.message", {
             compute() {
                 if (this.hasWelcomeMessage) {
                     const livechatService = this.store.env.services["im_livechat.livechat"];

@@ -17,14 +17,14 @@ export class MailCoreCommon {
         this.busService.subscribe("ir.attachment/delete", (payload) => {
             const { id: attachmentId, message: messageData } = payload;
             if (messageData) {
-                this.store.Message.insert(messageData);
+                this.store["mail.message"].insert(messageData);
             }
             const attachment = this.store["ir.attachment"].get(attachmentId);
             attachment?.delete();
         });
         this.busService.subscribe("mail.message/delete", (payload, { id: notifId }) => {
             for (const messageId of payload.message_ids) {
-                const message = this.store.Message.get(messageId);
+                const message = this.store["mail.message"].get(messageId);
                 if (!message) {
                     continue;
                 }
@@ -47,7 +47,7 @@ export class MailCoreCommon {
 
     _handleNotificationToggleStar(payload, metadata) {
         const { message_ids: messageIds, starred } = payload;
-        this.store.Message.insert(messageIds.map((id) => ({ id, starred })));
+        this.store["mail.message"].insert(messageIds.map((id) => ({ id, starred })));
     }
 }
 

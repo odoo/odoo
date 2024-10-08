@@ -4,7 +4,8 @@ import { Record } from "@mail/core/common/record";
 import { patch } from "@web/core/utils/patch";
 import { SESSION_STATE } from "./livechat_service";
 
-patch(Message.prototype, {
+/** @type {import("models").Message} */
+const messagePatch = {
     setup() {
         super.setup();
         this.chatbotStep = Record.one("ChatbotStep", { inverse: "message" });
@@ -23,4 +24,5 @@ patch(Message.prototype, {
                 this.store.env.services["im_livechat.chatbot"].inputEnabled)
         );
     },
-});
+};
+patch(Message.prototype, messagePatch);

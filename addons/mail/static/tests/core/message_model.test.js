@@ -24,7 +24,7 @@ test("Message model properties", async () => {
         mimetype: "text/plain",
         name: "test.txt",
     });
-    const message = store.Message.insert({
+    const message = store["mail.message"].insert({
         attachment_ids: 750,
         author: { id: 5, name: "Demo" },
         body: "<p>Test</p>",

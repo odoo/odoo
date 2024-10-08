@@ -44,7 +44,7 @@ patch(Thread, {
 patch(Thread.prototype, {
     setup() {
         super.setup(...arguments);
-        this.from_message_id = Record.one("Message");
+        this.from_message_id = Record.one("mail.message");
         this.parent_channel_id = Record.one("Thread", {
             onDelete() {
                 this.delete();

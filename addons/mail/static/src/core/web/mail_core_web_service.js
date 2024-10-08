@@ -31,8 +31,9 @@ export class MailCoreWeb {
             }
         });
         this.busService.subscribe("mail.message/inbox", (payload, { id: notifId }) => {
-            const { Message: messages = [] } = this.store.insert(payload, { html: true });
-            const [message] = messages;
+            const { "mail.message": messages = [] } = this.store.insert(payload, { html: true });
+            /** @type {import("models").Message} */
+            const message = messages[0];
             const inbox = this.store.inbox;
             if (notifId > inbox.counter_bus_id) {
                 inbox.counter++;
@@ -51,7 +52,7 @@ export class MailCoreWeb {
                 // Furthermore, server should not send back all messageIds marked as read
                 // but something like last read messageId or something like that.
                 // (just imagine you mark 1000 messages as read ... )
-                const message = this.store.Message.get(messageId);
+                const message = this.store["mail.message"].get(messageId);
                 if (!message) {
                     continue;
                 }

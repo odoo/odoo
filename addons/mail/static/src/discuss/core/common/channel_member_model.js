@@ -42,8 +42,8 @@ export class ChannelMember extends Record {
             }
         },
     });
-    fetched_message_id = Record.one("Message");
-    seen_message_id = Record.one("Message");
+    fetched_message_id = Record.one("mail.message");
+    seen_message_id = Record.one("mail.message");
     syncUnread = true;
     _syncUnread = Record.attr(false, {
         compute() {

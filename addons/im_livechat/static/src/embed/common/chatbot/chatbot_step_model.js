@@ -5,7 +5,7 @@ export class ChatbotStep extends Record {
 
     operatorFound = false;
     scriptStep = Record.one("chatbot.script.step");
-    message = Record.one("Message", { inverse: "chatbotStep" });
+    message = Record.one("mail.message", { inverse: "chatbotStep" });
     answers = Record.many("chatbot.script.answer", {
         compute() {
             return this.scriptStep?.answers;
