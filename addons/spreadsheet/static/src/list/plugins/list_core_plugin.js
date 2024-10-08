@@ -182,7 +182,7 @@ export class ListCorePlugin extends OdooCorePlugin {
      * @returns {string}
      */
     getListName(id) {
-        return _t(this.lists[id].definition.name);
+        return this.lists[id].definition.name;
     }
 
     /**
