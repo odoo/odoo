@@ -35,6 +35,13 @@ class PortalChatter(mail.PortalChatter):
         result.update(self._portal_rating_stats(res_model, res_id, **kwargs))
         return result
 
+    def _get_void_portal_messages_domain(self):
+        """Override the domain to include messages with ratings."""
+        domain = super()._get_void_portal_messages_domain()
+        if request.env.context.get("rating_include"):
+            return expression.OR([domain, [("rating_ids", "!=", False)]])
+        return domain
+
     @http.route()
     def portal_message_fetch(self, res_model, res_id, domain=False, limit=False, offset=False, **kw):
         # add 'rating_include' in context, to fetch them in portal_message_format
