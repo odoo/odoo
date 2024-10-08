@@ -45,12 +45,23 @@ function getRoot(element) {
 }
 
 const HASCLASS_REGEXP = /hasclass\(([^)]*)\)/g;
+const CLASS_CONTAINS_REGEX = /contains\(@class.*\)/g;
 /**
  * @param {Element} operation
  * @returns {string}
  */
 function getXpath(operation) {
     const xpath = operation.getAttribute("expr");
+    if (odoo.debug) {
+        if (CLASS_CONTAINS_REGEX.test(xpath)) {
+            const parent = operation.closest("t[t-inherit]");
+            const templateName = parent.getAttribute("t-name") || parent.getAttribute("t-inherit");
+            console.warn(
+                `Error-prone use of @class in template "${templateName}" (or one of its inheritors).` +
+                " Use the hasclass(*classes) function to filter elements by their classes"
+            );
+        }
+    }
     // hasclass does not exist in XPath 1.0 but is a custom function defined server side (see _hasclass) usable in lxml.
     // Here we have to replace it by a complex condition (which is not nice).
     // Note: we assume that classes do not contain the 2 chars , and )
