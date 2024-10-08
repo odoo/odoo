@@ -274,7 +274,8 @@ export class ProductScreen extends Component {
     }
 
     getProductPrice(product) {
-        return this.pos.getProductPriceFormatted(product, product.list_price);
+        const price = product.list_price === product.lst_price ? false : product.list_price;
+        return this.pos.getProductPriceFormatted(product, price);
     }
 
     getProductImage(product) {
