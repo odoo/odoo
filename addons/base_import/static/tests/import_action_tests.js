@@ -17,6 +17,7 @@ import { ImportDataProgress } from "../src/import_data_progress/import_data_prog
 import { ImportAction } from "../src/import_action/import_action";
 import { ImportBlockUI } from "../src/import_block_ui";
 import { useEffect } from "@odoo/owl";
+import { redirect } from "@web/core/utils/urls";
 
 const serviceRegistry = registry.category("services");
 
@@ -267,7 +268,6 @@ async function createImportAction(customRouter = {}) {
 
 QUnit.module("Base Import Tests", (hooks) => {
     hooks.beforeEach(async () => {
-        target = getFixture();
         serverData = {
             actions: {
                 1: {
@@ -276,7 +276,7 @@ QUnit.module("Base Import Tests", (hooks) => {
                     target: "current",
                     type: "ir.actions.client",
                     params: {
-                        model: "partner",
+                        active_model: "partner",
                     },
                 },
             },
@@ -314,6 +314,11 @@ QUnit.module("Base Import Tests", (hooks) => {
     QUnit.test("Import view: UI before file upload", async function (assert) {
         const templateURL = "/myTemplateURL.xlsx";
 
+        patchWithCleanup(browser.location, {
+            origin: "http://example.com",
+        });
+        redirect("/odoo");
+
         await createImportAction({
             "partner/get_import_templates": (route, args) => {
                 assert.step(route);
@@ -329,6 +334,13 @@ QUnit.module("Base Import Tests", (hooks) => {
                 return Promise.resolve(11);
             },
         });
+
+        await nextTick(); // pushState is debounced
+        assert.strictEqual(
+            browser.location.href,
+            "http://example.com/odoo/import?active_model=partner",
+            "the url contains the active_model"
+        );
 
         assert.containsOnce(target, ".o_import_action", "import view is displayed");
         assert.strictEqual(
