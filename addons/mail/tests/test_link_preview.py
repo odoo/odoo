@@ -192,6 +192,8 @@ class TestLinkPreview(MailCommon):
                 ("http://www.odoo.com/", "https://www.odoo.com/odoo/1519/tasks/4102866", 1),
                 ("https://clients.odoo.com/", "https://www.odoo.com/odoo/1519/tasks/4102866", 1),
                 ("https://www.odoo.com/", "https://wwwaodoo.com/odoo/", 1),
+                ("https://www.odoo.com/", "https://www.odoo.com/mail/message/111", 0),
+                ("https://www.odoo.com/", "https://www.odoo.com/mail/message/xyz", 1),
             ]
             for request_url, url, counter in urls:
                 with self.subTest(request_url=request_url, url=url, counter=counter):
