@@ -1986,8 +1986,6 @@ export class Wysiwyg extends Component {
         });
         $toolbar.find('#image-crop').click(() => this._showImageCrop());
         $toolbar.find('#image-transform').click(e => {
-            const sel = document.getSelection();
-            sel.removeAllRanges();
             if (!this.lastMediaClicked) {
                 return;
             }
@@ -2213,6 +2211,9 @@ export class Wysiwyg extends Component {
         if (!selection) return;
         const anchorNode = selection.anchorNode;
         if (isProtected(anchorNode)) {
+            return;
+        }
+        if (this.odooEditor.document.querySelector(".transfo-container")) {
             return;
         }
 
