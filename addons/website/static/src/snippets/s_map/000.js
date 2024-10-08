@@ -19,8 +19,8 @@ publicWidget.registry.Map = publicWidget.Widget.extend(ObservingCookieWidgetMixi
             const dataset = this.el.dataset;
             if (dataset.mapAddress) {
                 const iframeEl = generateGMapIframe();
-                this._manageIframeSrc(this.el, generateGMapLink(dataset));
                 this.el.querySelector('.s_map_color_filter').before(iframeEl);
+                this._manageIframeSrc(this.el, generateGMapLink(dataset));
             }
         }
         return this._super(...arguments);
