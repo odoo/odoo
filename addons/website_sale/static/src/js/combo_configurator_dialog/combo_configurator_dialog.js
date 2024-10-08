@@ -35,7 +35,7 @@ patch(ComboConfiguratorDialog.prototype, {
     get _comboProductData() {
         const comboProductData = super._comboProductData;
         if (this.props.isFrontend) {
-            Object.assign(comboProductData, { 'price': this._totalPrice });
+            Object.assign(comboProductData, { 'price': this._comboPrice });
         }
         return comboProductData;
     },
