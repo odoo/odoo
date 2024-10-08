@@ -89,6 +89,31 @@ class TestMailingStatistics(TestMassMailCommon):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mass_mailing.models.mailing', 'odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
+    def test_mailing_statistics_contacts(self):
+        target_records = self._create_mailing_test_records(model='mailing.contact', count=3)
+        mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
+        mailing.write({'mailing_model_real': 'mailing.contact'})
+        mailing.action_put_in_queue()
+        with self.mock_mail_gateway():
+            mailing.action_send_mail()
+
+        # simulate reply,click,bounce and for the target records
+        self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, target_records[0], use_in_reply_to=True)
+        self.gateway_mail_click(mailing, target_records[1], 'https://www.odoo.be')
+        self.gateway_mail_open(mailing, target_records[2])
+
+        expected_ratios = [
+            {'opened': 100, 'clicked': 0, 'replied': 100},
+            {'opened': 100, 'clicked': 100, 'replied': 0},
+            {'opened': 100, 'clicked': 0, 'replied': 0},
+        ]
+        for contact, expected in zip(target_records, expected_ratios):
+            self.assertEqual(contact.contact_opened_ratio, expected['opened'])
+            self.assertEqual(contact.contact_clicks_ratio, expected['clicked'])
+            self.assertEqual(contact.contact_replied_ratio, expected['replied'])
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mass_mailing.models.mailing', 'odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     def test_mailing_statistics_wo_user(self):
         target_records = self._create_mailing_test_records(model='mailing.test.blacklist', count=10)
         mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)

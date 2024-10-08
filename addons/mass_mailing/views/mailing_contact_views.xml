@@ -97,6 +97,29 @@
             <form string="Mailing List Contacts">
                 <field name="id" invisible="1"/>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_contact_traces"
+                            type="object" class="oe_stat_button"
+                            context="{'search_default_filter_opened': True}">
+                            <field name="contact_opened_ratio" string="Opened" widget="percentpie"/>
+                        </button>
+                        <button name="action_view_contact_traces"
+                            type="object" class="oe_stat_button"
+                            context="{'search_default_filter_clicked': True}">
+                            <field name="contact_clicks_ratio" string="Clicked" widget="percentpie"/>
+                        </button>
+                        <button name="action_view_contact_traces"
+                            type="object" class="oe_stat_button"
+                            context="{'search_default_filter_replied': True}">
+                            <field name="contact_replied_ratio" string="Replied" widget="percentpie"/>
+                        </button>
+                        <button name="action_view_contact_traces"
+                            type="object" class="oe_stat_button"
+                            context="{'search_default_filter_bounced': True}"
+                            icon="fa-exclamation-triangle" invisible="not message_bounce">
+                            <field name="message_bounce" widget="statinfo" string="Bounced"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name" string="Contact Name"/>
                         <h1>
@@ -114,26 +137,29 @@
                                 <field name="email" widget="email"/>
                                 <field name="is_blacklisted" invisible="1"/>
                             </div>
-                            <field name="title_id"/>
+                            <field name="title_id" placeholder="e.g. Miss or Mister"/>
                             <field name="company_name"/>
-                            <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
                         </group>
                         <group>
                             <field name="create_date" readonly="1" invisible="not id"/>
-                            <field name="message_bounce" readonly="1" invisible="not id"/>
+                            <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"
                                    placeholder="e.g. &quot;VIP&quot;, &quot;Roadshow&quot;, ..." style="width: 100%"/>
                         </group>
                     </group>
-                    <field name="subscription_ids">
-                        <list editable="bottom">
-                           <field name="list_id"/>
-                           <field name="opt_out_datetime" readonly="1"/>
-                           <field name="opt_out"/>
-                           <field name="opt_out_reason_id"/>
-                           <field name="create_date" string="Subscription Date"/>
-                        </list>
-                    </field>
+                    <notebook>
+                        <page string="Subscriptions">
+                            <field name="subscription_ids">
+                                <list editable="bottom">
+                                    <field name="list_id"/>
+                                    <field name="opt_out_datetime" readonly="1"/>
+                                    <field name="opt_out"/>
+                                    <field name="opt_out_reason_id"/>
+                                    <field name="create_date" string="Subscription Date"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <chatter/>
             </form>

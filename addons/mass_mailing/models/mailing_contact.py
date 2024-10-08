@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools.float_utils import float_round
 
 
 class MassMailingContact(models.Model):
@@ -48,6 +51,11 @@ class MassMailingContact(models.Model):
         help='Opt out flag for a specific mailing list. '
              'This field should not be used in a view without a unique and active mailing list context.')
 
+    # Stats
+    contact_opened_ratio = fields.Integer(string="Opened Ratio", compute="_compute_mail_ratio")
+    contact_clicks_ratio = fields.Integer(string="Clicks Ratio", compute="_compute_contact_clicks_ratio")
+    contact_replied_ratio = fields.Integer(string="Replied Ratio", compute="_compute_mail_ratio")
+
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         """ Hide first and last name field if the split name feature is not enabled. """
@@ -73,6 +81,43 @@ class MassMailingContact(models.Model):
             contacts = self.env['mailing.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
         return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
+
+    def _compute_contact_clicks_ratio(self):
+        self.env.cr.execute("""
+            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.res_id AS id
+            FROM mailing_trace AS stats
+            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
+            WHERE stats.res_id IN %s
+            AND stats.trace_status not in ('bounce', 'cancel', 'error')
+            GROUP BY stats.res_id
+        """, [tuple(self.ids) or (None,)])
+        contact_data = self.env.cr.dictfetchall()
+        mapped_data = {click['id']: float_round(100 * click['nb_clicks'] / click['nb_mails'], precision_digits=2) for click in contact_data}
+        for contact in self:
+            contact.contact_clicks_ratio = mapped_data.get(contact.id, 0.0)
+
+    def _compute_mail_ratio(self):
+        traces = self.env['mailing.trace']._read_group(
+            [('res_id', 'in', self.ids)],
+            ['res_id', 'trace_status'],
+            ['__count', 'sent_datetime:count']
+        )
+        traces_per_contact = defaultdict(lambda: defaultdict(int))
+        for contact, trace_status, count, sent_datetime in traces:
+            traces_per_contact[contact][trace_status] = count
+            traces_per_contact[contact]['sent_datetime'] += sent_datetime
+
+        for contact in self:
+            contact.contact_opened_ratio = 0.0
+            contact.contact_replied_ratio = 0.0
+
+            rec = traces_per_contact[contact.id]
+            total_sent = rec['sent_datetime']
+            total_opened = rec['open'] + rec['reply']
+
+            if total_sent:
+                contact.contact_opened_ratio = float_round(100.0 * total_opened / total_sent, precision_digits=2)
+                contact.contact_replied_ratio = float_round(100.0 * rec['reply'] / total_sent, precision_digits=2)
 
     @api.depends('first_name', 'last_name')
     def _compute_name(self):
@@ -175,6 +220,20 @@ class MassMailingContact(models.Model):
         action['context'] = ctx
 
         return action
+
+    def action_view_contact_traces(self):
+        trace_ids = self.env['mailing.trace'].search([
+            ('res_id', '=', self.id)
+        ]).ids
+
+        return {
+            'name': 'Mailing Contact Traces',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list,form',
+            'res_model': 'mailing.trace',
+            'domain': [('id', 'in', trace_ids)],
+            'target': 'current',
+        }
 
     @api.model
     def get_import_templates(self):
