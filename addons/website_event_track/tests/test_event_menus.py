@@ -11,9 +11,9 @@ from odoo.tests.common import users
 class TestEventWebsiteTrack(OnlineEventCase):
 
     def _get_menus(self):
-        return super(TestEventWebsiteTrack, self)._get_menus() | set(['Talks', 'Agenda', 'Talk Proposals'])
+        return super()._get_menus() | {'Talks'}
 
-    @users('user_eventmanager')
+    @users('user_event_web_manager')
     def test_create_menu(self):
         vals = {
             'name': 'TestEvent',
@@ -35,7 +35,7 @@ class TestEventWebsiteTrack(OnlineEventCase):
             'website_track': False,
             'website_track_proposal': False,
         })
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Info', 'Community'], menus_out=['Talks', 'Agenda', 'Talk Proposals'])
+        self._assert_website_menus(event, ['Home', 'Community', 'Practical'], menus_out=['Talks'])
 
     @users('user_event_web_manager')
     def test_menu_management_frontend(self):
@@ -53,28 +53,29 @@ class TestEventWebsiteTrack(OnlineEventCase):
         self.assertTrue(event.website_track_proposal)
         self._assert_website_menus(event, self._get_menus())
 
-        introduction_menu = event.menu_id.child_id.filtered(lambda menu: menu.name == 'Introduction')
-        introduction_menu.unlink()
-        self._assert_website_menus(event, ['Location', 'Info', 'Community', 'Talks', 'Agenda', 'Talk Proposals'], menus_out=["Introduction"])
+        menus = event.menu_id.child_id
+        home_menu = menus.filtered(lambda menu: menu.name == 'Home')
+        home_menu.unlink()
+        self._assert_website_menus(event, ['Talks', 'Community', 'Practical'], menus_out=['Home'])
 
-        menus = event.menu_id.child_id.filtered(lambda menu: menu.name in ['Agenda', 'Talk Proposals'])
-        menus.unlink()
+        sub_menus = menus.child_id.filtered(lambda menu: menu.name in ['Agenda', 'Propose a talk'])
+        sub_menus.unlink()
         self.assertTrue(event.website_track)
         self.assertFalse(event.website_track_proposal)
 
-        menus = event.menu_id.child_id.filtered(lambda menu: menu.name in ['Talks'])
-        menus.unlink()
+        talks_menu = menus.child_id.filtered(lambda menu: menu.name == 'Talks')
+        talks_menu.unlink()
         self.assertFalse(event.website_track)
         self.assertFalse(event.website_track_proposal)
 
-        self._assert_website_menus(event, ['Location', 'Info', 'Community'], menus_out=["Introduction", "Talks", "Agenda", "Talk Proposals"])
-
-        event.write({'website_track_proposal': True})
-        self.assertFalse(event.website_track)
-        self.assertTrue(event.website_track_proposal)
-        self._assert_website_menus(event, ['Location', 'Info', 'Community', 'Talk Proposals'], menus_out=["Introduction", "Talks", "Agenda"])
+        self._assert_website_menus(event, ['Practical', 'Community'], menus_out=['Home', 'Talks'])
 
         event.write({'website_track': True})
         self.assertTrue(event.website_track)
         self.assertTrue(event.website_track_proposal)
-        self._assert_website_menus(event, ['Location', 'Info', 'Community', 'Talks', 'Agenda', 'Talk Proposals'], menus_out=["Introduction"])
+        self._assert_website_menus(event, ['Practical', 'Community', 'Talks'], menus_out=['Home'])
+
+        event.write({'website_track_proposal': False})
+        self.assertTrue(event.website_track)
+        self.assertFalse(event.website_track_proposal)
+        self._assert_website_menus(event, ['Practical', 'Community', 'Talks'], menus_out=['Home'])

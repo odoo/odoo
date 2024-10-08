@@ -64,7 +64,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             'website_menu': True,
             'website_id': website.id,
         })
-        intro_event_menu = event.introduction_menu_ids
+        intro_event_menu = event.home_menu_ids
         url = intro_event_menu.menu_id._clean_url()
         self.start_tour(self.env['website'].get_client_action_url(url), 'website_event_pages_seo', login='admin')
         view_key = intro_event_menu.view_id.key

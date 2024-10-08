@@ -15,8 +15,13 @@
                 run: "click",
             },
             {
-                content: 'Go to "Get A Booth" page',
-                trigger: 'li.nav-item a:has(span:contains("Get A Booth"))',
+                content: 'Go to "Exhibitor" menu',
+                trigger: 'a:contains("Exhibitors")',
+                run: "click",
+            },
+            {
+                content: 'Go to "Become exhibitor" page',
+                trigger: 'li.nav-item a:has(span:contains("Become exhibitor"))',
                 run: "click",
             },
             {

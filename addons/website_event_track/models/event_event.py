@@ -84,7 +84,8 @@ class Event(models.Model):
     def _get_website_menu_entries(self):
         self.ensure_one()
         return super(Event, self)._get_website_menu_entries() + [
-            (_('Talks'), '/event/%s/track' % self.env['ir.http']._slug(self), False, 10, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % self.env['ir.http']._slug(self), False, 70, 'track'),
-            (_('Talk Proposals'), '/event/%s/track_proposal' % self.env['ir.http']._slug(self), False, 15, 'track_proposal')
+            (_('Talks'), '#', False, 10, 'track', False),
+            (_('Talks'), '/event/%s/track' % self.env['ir.http']._slug(self), False, 10, 'track', 'track'),
+            (_('Agenda'), '/event/%s/agenda' % self.env['ir.http']._slug(self), False, 15, 'track', 'track'),
+            (_('Propose a talk'), '/event/%s/track_proposal' % self.env['ir.http']._slug(self), False, 20, 'track_proposal', 'track')
         ]
