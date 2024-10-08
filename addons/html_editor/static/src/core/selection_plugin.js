@@ -8,7 +8,13 @@ import {
     paragraphRelatedElements,
     previousLeaf,
 } from "@html_editor/utils/dom_info";
-import { childNodes, closestElement, descendants } from "@html_editor/utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    firstLeaf,
+    lastLeaf,
+} from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
 import { DIRECTIONS, boundariesIn, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
@@ -121,6 +127,7 @@ export class SelectionPlugin extends Plugin {
         "modifySelection",
         "rectifySelection",
         "focusEditable",
+        "isNodeContentsFullySelected",
         // "collapseIfZWS",
     ];
     resources = {
@@ -558,6 +565,17 @@ export class SelectionPlugin extends Plugin {
             // Default rule
             (range.isPointInRange(node, 0) && range.isPointInRange(node, nodeSize(node)));
         return this.getTraversedNodes().filter(isNodeFullySelected);
+    }
+
+    isNodeContentsFullySelected(node) {
+        const selection = this.getEditableSelection();
+        const range = new Range();
+        range.setStart(selection.startContainer, selection.startOffset);
+        range.setEnd(selection.endContainer, selection.endOffset);
+        return (
+            range.isPointInRange(firstLeaf(node), 0) &&
+            range.isPointInRange(lastLeaf(node), nodeSize(lastLeaf(node)))
+        );
     }
 
     /**

@@ -14,6 +14,9 @@ export function insertListAfter(document, afterNode, mode, content = []) {
     list.append(
         ...content.map((c) => {
             const li = document.createElement("LI");
+            if (c.length === 1 && c[0].tagName === "FONT" && c[0].style.color) {
+                li.style.setProperty("--marker-color", c[0].style.color);
+            }
             li.append(...[].concat(c));
             return li;
         })

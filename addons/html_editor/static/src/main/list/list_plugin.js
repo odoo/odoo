@@ -33,13 +33,14 @@ function isListActive(listMode) {
 
 export class ListPlugin extends Plugin {
     static name = "list";
-    static dependencies = ["tabulation", "split", "selection", "delete", "dom"];
+    static dependencies = ["tabulation", "split", "selection", "delete", "dom", "color"];
     resources = {
         handle_delete_backward: this.handleDeleteBackward.bind(this),
         handle_delete_range: this.handleDeleteRange.bind(this),
         handle_tab: this.handleTab.bind(this),
         handle_shift_tab: this.handleShiftTab.bind(this),
         split_element_block: this.handleSplitBlock.bind(this),
+        colorApply: this.applyListColor.bind(this),
         toolbarCategory: withSequence(30, {
             id: "list",
         }),
@@ -772,5 +773,22 @@ export class ListPlugin extends Plugin {
             pointerOffsetY >= checkboxPosition.top &&
             pointerOffsetY <= checkboxPosition.bottom
         );
+    }
+
+    applyListColor(color, mode) {
+        const selectedNodes = new Set(
+            this.shared
+                .getSelectedNodes()
+                .map((n) => closestElement(n, "li"))
+                .filter(Boolean)
+        );
+        if (!selectedNodes.size || mode !== "color") {
+            return;
+        }
+        for (const list of selectedNodes) {
+            if (this.shared.isNodeContentsFullySelected(list)) {
+                list.style.setProperty("--marker-color", color);
+            }
+        }
     }
 }
