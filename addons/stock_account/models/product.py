@@ -8,16 +8,7 @@ from odoo.exceptions import ValidationError
 from collections import defaultdict
 from datetime import datetime
 
-COST_METHOD = [
-    ('standard', 'Standard Price'),
-    ('fifo', 'First In First Out (FIFO)'),
-    ('average', 'Average Cost (AVCO)'),
-]
-
-VALUATION = [
-    ('manual_periodic', 'Manual'),
-    ('real_time', 'Automated'),
-]
+from odoo.addons.stock_account import const
 
 
 class ProductTemplate(models.Model):
@@ -26,12 +17,12 @@ class ProductTemplate(models.Model):
 
     cost_method = fields.Selection(
         string="Cost Method",
-        selection=COST_METHOD,
+        selection=const.COST_METHOD,
         compute='_compute_cost_method',
     )
     valuation = fields.Selection(
         string="Valuation",
-        selection=VALUATION,
+        selection=const.VALUATION,
         compute='_compute_valuation',
     )
     lot_valuated = fields.Boolean(
@@ -55,10 +46,10 @@ class ProductTemplate(models.Model):
     @api.depends("categ_id.property_cost_method")
     def _compute_cost_method(self):
         for product_template in self:
-            if product_template.categ_id:
-                product_template.cost_method = product_template.categ_id.property_cost_method
-            else:
-                product_template.cost_method = self.categ_id._fields['property_cost_method'].get_company_dependent_fallback(self.categ_id)
+            product_template.cost_method = (
+                product_template.categ_id.property_cost_method
+                or self.env.company.cost_method
+            )
 
     @api.onchange('standard_price')
     def _onchange_standard_price(self):
@@ -215,12 +206,12 @@ class ProductProduct(models.Model):
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
     cost_method = fields.Selection(
         string="Cost Method",
-        selection=COST_METHOD,
+        selection=const.COST_METHOD,
         compute='_compute_cost_method',
     )
     valuation = fields.Selection(
         string="Valuation",
-        selection=VALUATION,
+        selection=const.VALUATION,
         compute='_compute_valuation',
     )
 
@@ -240,10 +231,7 @@ class ProductProduct(models.Model):
     @api.depends("categ_id.property_cost_method")
     def _compute_cost_method(self):
         for product in self:
-            if product.categ_id:
-                product.cost_method = product.categ_id.property_cost_method
-            else:
-                product.cost_method = self.categ_id._fields['property_cost_method'].get_company_dependent_fallback(self.categ_id)
+            product.cost_method = product.categ_id.property_cost_method or self.env.company.cost_method
 
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
@@ -970,14 +958,14 @@ class ProductCategory(models.Model):
 
     property_valuation = fields.Selection(
         string="Inventory Valuation",
-        selection=VALUATION,
+        selection=const.VALUATION,
         company_dependent=True, copy=True,
         help="""Manual: The accounting entries to value the inventory are not posted automatically.
         Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.
         """)
     property_cost_method = fields.Selection(
         string="Costing Method",
-        selection=COST_METHOD,
+        selection=const.COST_METHOD,
         company_dependent=True, copy=True,
         help="""Standard Price: The products are valued at their standard cost defined on the product.
         Average Cost (AVCO): The products are valued at weighted average cost.
