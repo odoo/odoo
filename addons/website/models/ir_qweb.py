@@ -137,13 +137,7 @@ class IrQWeb(models.AbstractModel):
             # are/could be built on the fly client-side for some reason.
             cookies_watchlist = {
                 'domains': website.blocked_third_party_domains.split('\n'),
-                'classes': {
-                    's_map',
-                    's_instagram_page',
-                    'o_facebook_page',
-                    'o_background_video',
-                    'media_iframe_video',
-                },
+                'classes': website._get_blocked_iframe_containers_classes(),
             }
             remove_src = False
             if tagName in ('iframe', 'script'):
