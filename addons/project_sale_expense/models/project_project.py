@@ -11,22 +11,28 @@ class Project(models.Model):
     _inherit = 'project.project'
 
     def _get_expenses_profitability_items(self, with_action=True):
-        expenses_read_group = self.env['hr.expense']._read_group(
-            [('sheet_id.state', 'in', ['post', 'done']), ('analytic_distribution', 'in', self.account_id.ids)],
-            groupby=['sale_order_id', 'product_id', 'currency_id'],
-            aggregates=['id:array_agg', 'untaxed_amount_currency:sum'],
+        expenses = self.env['hr.expense'].search_fetch(
+            domain=[('sheet_id.state', 'in', ['post', 'done']), ('analytic_distribution', 'in', self.account_id.ids)],
+            field_names=['sale_order_id', 'product_id', 'currency_id', 'analytic_distribution', 'untaxed_amount_currency']
         )
-        if not expenses_read_group:
+        if not expenses:
             return {}
         expenses_per_so_id = {}
         expense_ids = []
         dict_amount_per_currency = defaultdict(lambda: 0.0)
         can_see_expense = with_action and self.env.user.has_group('hr_expense.group_hr_expense_team_approver')
-        for sale_order, product, currency, ids, untaxed_amount_currency_sum in expenses_read_group:
-            expenses_per_so_id.setdefault(sale_order.id, {})[product.id] = ids
+        for expense in expenses:
+            # The analytic distribution can contain multiple contributions (percentages) for the same project but for different departments.
+            # That's why here we look for each percentage that is related to this analytic account and we sum them all.
+            analytic_contribution = sum(
+                percentage
+                for ids, percentage in expense.analytic_distribution.items()
+                if str(self.account_id.id) in ids.split(",")
+            ) / 100
+            expenses_per_so_id.setdefault(expense.sale_order_id.id, {})[expense.product_id.id] = expense.ids
             if can_see_expense:
-                expense_ids.extend(ids)
-            dict_amount_per_currency[currency] += untaxed_amount_currency_sum
+                expense_ids.append(expense.id)
+            dict_amount_per_currency[expense.currency_id] += expense.untaxed_amount_currency * analytic_contribution
 
         amount_billed = 0.0
         for currency, untaxed_amount_currency_sum in dict_amount_per_currency.items():
