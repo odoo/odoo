@@ -110,15 +110,6 @@ class AccountEdiFormat(models.Model):
         if not re.match("^.{1,16}$", is_purchase and move.ref or move.name):
             error_message.append(_("%s number should be set and not more than 16 characters",
                 (is_purchase and "Bill Reference" or "Invoice")))
-        for line in goods_lines:
-            if line.display_type == 'product':
-                hsn_code = self._l10n_in_edi_extract_digits(line.l10n_in_hsn_code)
-                if not hsn_code:
-                    error_message.append(_("HSN code is not set in product line %s", line.name))
-                elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
-                    error_message.append(_(
-                        "Invalid HSN Code (%s) in product line %s", hsn_code, line.name
-                    ))
         if error_message:
             error_message.insert(0, _("Impossible to send the Ewaybill."))
         return error_message

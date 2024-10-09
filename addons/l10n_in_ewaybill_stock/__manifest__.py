@@ -20,6 +20,7 @@ This module enables users to create E-waybill from Inventory App without generat
         "data/ewaybill_type_data.xml",
         "views/l10n_in_ewaybill_views.xml",
         "views/stock_picking_views.xml",
+        "views/product_views.xml",
         "report/ewaybill_report_views.xml",
         "report/ewaybill_report.xml",
         "wizard/l10n_in_ewaybill_cancel_views.xml",

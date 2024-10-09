@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
-from odoo.exceptions import UserError
+from odoo import fields, models
 
 
 class StockPicking(models.Model):
@@ -14,16 +13,6 @@ class StockPicking(models.Model):
 
     def action_l10n_in_ewaybill_create(self):
         self.ensure_one()
-        if (
-            product_with_no_hsn := self.move_ids.mapped('product_id').filtered(
-                lambda product: not product.l10n_in_hsn_code
-            )
-        ):
-            raise UserError(_("Please set HSN code in below products: \n%s", '\n'.join(
-                [product.name for product in product_with_no_hsn]
-            )))
-        if self.l10n_in_ewaybill_id:
-            raise UserError(_("Ewaybill already created for this picking."))
         action = self._get_l10n_in_ewaybill_form_action()
         ewaybill = self.env['l10n.in.ewaybill'].create({
             'picking_id': self.id,
