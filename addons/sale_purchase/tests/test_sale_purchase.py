@@ -78,7 +78,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         })
 
     def test_sale_create_purchase(self):
-        """ Confirming 2 sales orders with a service that should create a PO, then cancelling the PO should shedule 1 next activity per SO """
+        """ Confirming 2 sales orders with a service that should create two PO, then cancelling the PO should shedule 1 next activity per SO """
         self.sale_order_1.action_confirm()
         self.sale_order_2.action_confirm()
 
@@ -89,14 +89,14 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         purchase_lines_so2 = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_2.order_line.ids)])
         purchase_line2 = purchase_lines_so2[0]
 
-        self.assertEqual(len(purchase_order), 1, "Only one PO should have been created, from the 2 Sales orders")
+        self.assertEqual(len(purchase_order), 2, "Two PO should have been created, from the 2 Sales orders")
         self.assertEqual(len(purchase_order.order_line), 2, "The purchase order should have 2 lines")
-        self.assertIn(self.sale_order_1.name, purchase_order.origin, "The PO should have SO 1 in its source documents")
-        self.assertIn(self.sale_order_2.name, purchase_order.origin, "The PO should have SO 2 in its source documents")
+        self.assertIn(self.sale_order_1.name, purchase_order[1].origin, "The PO should have SO 1 in its source documents")
+        self.assertIn(self.sale_order_2.name, purchase_order[0].origin, "The PO should have SO 2 in its source documents")
         self.assertEqual(len(purchase_lines_so1), 1, "Only one SO line from SO 1 should have create a PO line")
         self.assertEqual(len(purchase_lines_so2), 1, "Only one SO line from SO 2 should have create a PO line")
         self.assertEqual(len(purchase_order.activity_ids), 0, "No activity should be scheduled on the PO")
-        self.assertEqual(purchase_order.state, 'draft', "The created PO should be in draft state")
+        self.assertEqual(set(purchase_order.mapped('state')), {'draft'}, "The created PO should be in draft state.")
 
         self.assertNotEqual(purchase_line1.product_id, purchase_line2.product_id, "The 2 PO line should have different products")
         self.assertEqual(purchase_line1.product_id, self.sol1_service_purchase_1.product_id, "The create PO line must have the same product as its mother SO line")

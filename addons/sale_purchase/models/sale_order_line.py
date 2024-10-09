@@ -102,6 +102,7 @@ class SaleOrderLine(models.Model):
                 in UoM of SO line.
             :param origin_values: map from sale line id to old value for the ordered quantity (dict)
         """
+        increased_qty_line = self.env['sale.order.line']
         for line in self:
             last_purchase_line = self.env['purchase.order.line'].search([('sale_line_id', '=', line.id)], order='create_date DESC', limit=1)
             if last_purchase_line.state in ['draft', 'sent', 'to approve']:  # update qty for draft PO lines
@@ -109,7 +110,8 @@ class SaleOrderLine(models.Model):
                 last_purchase_line.write({'product_qty': quantity})
             elif last_purchase_line.state in ['purchase', 'done', 'cancel']:  # create new PO, by forcing the quantity as the difference from SO line
                 quantity = line.product_uom._compute_quantity(new_qty - origin_values.get(line.id, 0.0), last_purchase_line.product_uom)
-                line._purchase_service_create(quantity=quantity)
+                increased_qty_line += line
+        increased_qty_line._purchase_service_create(quantity=quantity)
 
     def _purchase_get_date_order(self, supplierinfo):
         """ return the ordered date for the purchase order, computed as : SO commitment date - supplier delay """
@@ -229,6 +231,7 @@ class SaleOrderLine(models.Model):
             ('partner_id', '=', partner.id),
             ('state', '=', 'draft'),
             ('company_id', '=', (company and company or self.env.company).id),
+            ('order_line.sale_order_id', '=', self.order_id.id)
         ], order='id desc')
 
     def _create_purchase_order(self, supplierinfo):
@@ -285,10 +288,8 @@ class SaleOrderLine(models.Model):
             will not create a second one.
         """
         sale_line_purchase_map = {}
-        for line in self:
-            line = line.with_company(line._purchase_service_get_company())
-            # Do not regenerate PO line if the SO line has already created one in the past (SO cancel/reconfirmation case)
-            if line.product_id.service_to_purchase and not line.purchase_line_count:
-                result = line._purchase_service_create()
-                sale_line_purchase_map.update(result)
+        lines_to_process = self.with_company(self._purchase_service_get_company()).filtered(
+            lambda l: l.product_id.service_to_purchase and not l.purchase_line_count)
+        if lines_to_process:
+            sale_line_purchase_map.update(lines_to_process._purchase_service_create())
         return sale_line_purchase_map
