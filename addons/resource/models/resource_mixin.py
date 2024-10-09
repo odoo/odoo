@@ -4,7 +4,8 @@
 from collections import defaultdict
 from pytz import utc
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from .utils import timezone_datetime
 
 
@@ -142,7 +143,10 @@ class ResourceMixin(models.AbstractModel):
 
         mapped_resources = defaultdict(lambda: self.env['resource.resource'])
         for record in self:
-            mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
+            calendar = calendar or record._get_calendar()
+            if not calendar:
+                raise UserError(_('You need to define a working schedule on the employee for accrual plan based on working time.'))
+            mapped_resources[calendar] |= record.resource_id
 
         for calendar, calendar_resources in mapped_resources.items():
             # compute actual hours per day
