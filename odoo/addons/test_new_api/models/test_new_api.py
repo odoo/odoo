@@ -1178,6 +1178,16 @@ class ModelChild(models.Model):
     parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
 
 
+class ModelChildCompanies(models.Model):
+    _name = 'test_new_api.model_child_companies'
+    _description = 'Model Multicompany child with company_ids field'
+    _check_company_auto = True
+
+    name = fields.Char()
+    company_ids = fields.Many2many('res.company')
+    parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
+
+
 class ModelChildNoCheck(models.Model):
     _name = 'test_new_api.model_child_nocheck'
     _description = 'Model Multicompany child'

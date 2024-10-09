@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import common
 from odoo.tools import frozendict
@@ -81,6 +82,21 @@ class TestCompanyCheck(common.TransactionCase):
                 'company_id': False,
                 'parent_id': self.parent_a.id,
             })
+
+    def test_company_ids(self):
+        """ Test that check_company works correctly when the model has a company_ids field. """
+        with self.assertRaises(UserError):
+            self.env['test_new_api.model_child_companies'].create({
+                'name': 'M1',
+                'company_ids': [Command.set(self.company_b.ids)],
+                'parent_id': self.parent_a.id,
+            })
+
+        self.env['test_new_api.model_child_companies'].create({
+            'name': 'M1',
+            'company_ids': [Command.set(self.company_a.ids)],
+            'parent_id': self.parent_a.id,
+        })
 
     def test_no_company_check(self):
         """ Check you can create a record with the inconsistent company if there are no check"""
