@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.SpacingOption">
+    <BuilderRow label.translate="Spacing (Y, X)" level="1">
+        <input type="number" class="form-control" t-att-value="state.spacingY"
+            t-on-input="(e) => this.previewSpacingY(e.target.value)"
+            t-on-change="(e) => this.changeSpacingY(e.target.value)"/>
+        <input type="number" class="form-control" t-att-value="state.spacingX"
+            t-on-input="(e) => this.previewSpacingX(e.target.value)"
+            t-on-change="(e) => this.changeSpacingX(e.target.value)"/>
+    </BuilderRow>
+</t>
+
+</templates>

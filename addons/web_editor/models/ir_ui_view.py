@@ -500,6 +500,7 @@ class IrUiView(models.Model):
         }
         snippet_addition_view_values.update(self._snippet_save_view_values_hook())
         self.create(snippet_addition_view_values)
+        return name
 
     @api.model
     def rename_snippet(self, name, view_id, template_key):

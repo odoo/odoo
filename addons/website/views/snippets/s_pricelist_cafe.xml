@@ -73,6 +73,7 @@
     </li>
 </template>
 
+
 <template id="s_pricelist_cafe_add_product_widget">
     <we-row string="Product">
         <we-button data-add-item="" data-item=".s_pricelist_cafe_item:last" data-select-item="" t-att-data-apply-to="apply_to" data-no-preview="true" class="o_we_bg_brand_primary">
@@ -109,8 +110,12 @@
                 <t t-set="apply_to" t-value="'.s_pricelist_cafe_item_line'"/>
             </t>
         </div>
+        
         <div data-selector=".s_pricelist_cafe_item" data-drop-near=".s_pricelist_cafe_item"/>
     </xpath>
+
+
+
     <xpath expr="//div[@data-js='SnippetMove']" position="attributes">
         <attribute name="data-selector" add=".s_pricelist_cafe_item" separator=","/>
     </xpath>

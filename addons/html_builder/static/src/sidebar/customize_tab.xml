@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.CustomizeTab">
+    <div class="o_customize_tab h-100">
+        <t t-if="!props.currentOptionsContainers.length || !this.state.hasContent">
+            <div class="text-center pt-5">
+                Select a block on your page to style it.
+            </div>
+        </t>
+        <t t-else="">
+            <div t-ref="content" class="d-flex flex-column h-100">
+                <CustomizeComponent t-if="state.customizeComponent"
+                    editingElements="state.customizeComponent.editingEls"
+                    comp="state.customizeComponent.comp"
+                    compProps="state.customizeComponent.props"/>
+                <t t-else="" t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                    <OptionsContainer
+                        snippetModel="props.snippetModel"
+                        editingElement="optionsContainer.element"
+                        options="optionsContainer.options"
+                        headerMiddleButtons="optionsContainer.headerMiddleButtons"
+                        isRemovable="optionsContainer.isRemovable"
+                        isClonable="optionsContainer.isClonable"
+                        containerTopButtons="optionsContainer.optionsContainerTopButtons"/>
+                </t>
+            </div>
+        </t>
+    </div>
+</t>
+
+</templates>

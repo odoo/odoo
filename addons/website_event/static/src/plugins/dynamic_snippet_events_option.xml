@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_event.DynamicSnippetEventsOption" t-inherit="html_builder.DynamicSnippetOption">
+    <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
+    <div/>
+        <BuilderRow label.translate="Event Tags" preview="false">
+            <BuilderMany2Many id="'event_tag_opt'" model="'event.tag'" limit="10"
+                dataAttributeAction="'filterByTagIds'"
+                fields="['category_id']"
+                domain="[['category_id.website_published', '=', true], ['color', 'not in', ['0', false]]]"
+            />
+        </BuilderRow>
+<!-- TODO when many2many is fully supported
+            data-fakem2m="true"
+-->
+    </xpath>
+    <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
+        <BuilderRow label.translate="Show time" preview="false">
+            <BuilderCheckbox id="'time_opt'" action="'customizeTemplate'" actionParam="'events_event_time_active'"/>
+        </BuilderRow>
+    </xpath>
+</t>
+</templates>

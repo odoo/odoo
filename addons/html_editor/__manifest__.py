@@ -43,6 +43,7 @@ This addon provides an extensible, maintainable editor.
         'html_editor.assets_image_cropper': [
             'html_editor/static/lib/cropperjs/cropper.css',
             'html_editor/static/lib/cropperjs/cropper.js',
+            'html_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
         ],
     },
     'license': 'LGPL-3'

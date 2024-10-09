@@ -8,7 +8,7 @@
     'website': 'https://www.odoo.com/app/blog',
     'summary': 'Publish blog posts, announces, news',
     'version': '1.1',
-    'depends': ['website_mail', 'website_partner'],
+    'depends': ['website_mail', 'website_partner', 'html_builder'],
     'data': [
         'data/mail_message_subtype_data.xml',
         'data/mail_templates.xml',
@@ -39,6 +39,9 @@
         'website.assets_editor': [
             'website_blog/static/src/js/tours/website_blog.js',
             'website_blog/static/src/js/systray_items/*.js',
+        ],
+        'html_builder.assets': [
+            'website_blog/static/src/plugins/**/*',
         ],
         'website.backend_assets_all_wysiwyg': [
             'website_blog/static/src/js/wysiwyg_adapter.js',

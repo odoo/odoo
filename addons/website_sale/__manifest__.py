@@ -8,7 +8,7 @@
     'website': 'https://www.odoo.com/app/ecommerce',
     'version': '1.1',
     'depends': [
-        'website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery'
+        'website', 'sale', 'website_payment', 'website_mail', 'portal_rating', 'digest', 'delivery', 'html_builder',
     ],
     'data': [
         # Security
@@ -152,6 +152,9 @@
             'website_sale/static/src/js/tours/website_sale_shop.js',
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/scss/kanban_record.scss',
+        ],
+        'html_builder.assets': [
+            'website_sale/static/src/plugins/**/*',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',

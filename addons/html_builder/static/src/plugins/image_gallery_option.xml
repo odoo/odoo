@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageGalleryOption">
+    <BuilderRow label.translate="Images">
+        <BuilderButton type="'success'" className="'flex-grow-1'" preview="false" title.translate="Add Image"  action="'addImage'"> Add </BuilderButton>
+        <BuilderButton type="'danger'" className="'flex-grow-1'" preview="false" title.translate="Remove all images" action="'removeAllImages'"> Remove all </BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Mode">
+        <BuilderSelect>
+            <BuilderSelectItem action="'setImageGalleryLayout'" actionParam="'grid'">Grid</BuilderSelectItem>
+            <BuilderSelectItem action="'setImageGalleryLayout'" actionParam="'masonry'">Masonry</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

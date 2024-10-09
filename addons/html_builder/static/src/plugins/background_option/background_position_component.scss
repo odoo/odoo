@@ -1,0 +1,35 @@
+.o_we_background_position_overlay {
+    background-color: rgba(0,0,0,.7);
+    pointer-events: auto;
+    display: block;
+    z-index: 1;
+
+    .o_we_overlay_content {
+        @include o-grab-cursor;
+
+        .o_we_grabbing {
+            cursor: grabbing;
+        }
+    }
+
+    .o_we_overlay_buttons {
+        .btn-primary {
+            @include button-variant($o-brand-primary, $o-brand-primary);
+        }
+        .btn-secondary {
+            @include button-variant($o-we-color-danger, $o-we-color-danger);
+        }
+    }
+
+    .o_overlay_background > * {
+        display: block !important;
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        max-width: unset !important;
+        max-height: unset !important;
+        z-index: 0 !important;
+    }
+}

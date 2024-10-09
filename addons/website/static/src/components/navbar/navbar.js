@@ -45,7 +45,7 @@ patch(NavBar.prototype, {
     },
 
     get shouldDisplayWebsiteSystray() {
-        return this.websiteService.currentWebsite && this.websiteService.isRestrictedEditor;
+        return this.websiteService.currentWebsite && this.websiteService.isRestrictedEditor && !this.websiteService.useMysterious;
     },
 
     // Somehow a setter is needed in `patch()` to avoid an owl error.

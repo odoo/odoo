@@ -28,6 +28,10 @@ const QWEB_DATA_ATTRIBUTES = [
 ];
 const dataAttributesSelector = QWEB_DATA_ATTRIBUTES.map((attr) => `[${attr}]`).join(", ");
 
+export const isUnremovableQWebElement = (node) =>
+    node.getAttribute?.("t-set") || node.getAttribute?.("t-call");
+
+
 export class QWebPlugin extends Plugin {
     static id = "qweb";
     static dependencies = ["overlay", "protectedNode", "selection"];
@@ -44,8 +48,7 @@ export class QWebPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
 
         system_attributes: QWEB_DATA_ATTRIBUTES,
-        unremovable_node_predicates: (node) =>
-            node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
+        unremovable_node_predicates: isUnremovableQWebElement,
         unsplittable_node_predicates: isUnsplittableQWebElement,
         clipboard_content_processors: this.clearDataAttributes.bind(this),
     };
