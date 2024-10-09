@@ -2534,9 +2534,13 @@ class AccountMove(models.Model):
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
             if self.journal_id.payment_sequence:
                 domain += [('payment_id', '!=' if is_payment else '=', False)]
-            reference_move_name = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
+            # The search for the last move should employ sudo() as other modules may apply some ir.rule
+            # that restricts access to certain moves, which could cause the next sequence to violate unique
+            # constraints. This can result in the following error:
+            # psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "account_move_unique_name"
+            reference_move_name = self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
             if not reference_move_name:
-                reference_move_name = self.search(domain, order='date asc', limit=1).name
+                reference_move_name = self.sudo().search(domain, order='date asc', limit=1).name
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
             date_start, date_end = self._get_sequence_date_range(sequence_number_reset)
             where_string += """ AND date BETWEEN %(date_start)s AND %(date_end)s"""
