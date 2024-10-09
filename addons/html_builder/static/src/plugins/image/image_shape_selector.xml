@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageShapeSelector">
+    <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
+        <div class="d-flex align-items-center">
+            <button class="o_pager_nav_angle fa fa-angle-left btn btn-secondary bg-transparent border-0" t-on-click="closeComponent"/>
+            <h5 class="mb-0 text-white">Background Shapes</h5>
+        </div>
+        <div class="d-flex">
+            <t t-foreach="Object.entries(this.shapeGroups)" t-as="group" t-key="group_index">
+                <button type="button" class="p-0 text-uppercase active" t-on-click="() => this.scrollToShapes(group[0])">
+                    <span class="w-100" t-out="group[1].label"/>
+                </button>
+            </t>
+        </div>
+    </header>
+    <div class="o_pager_container" t-ref="root">
+        <t t-foreach="Object.entries(this.shapeGroups)" t-as="group" t-key="group_index">
+            <div t-att-data-shape-group-id="group[0]">
+                <t t-foreach="Object.entries(group[1].subgroups)" t-as="subgroup" t-key="subgroup_index">
+                    <span t-out="subgroup[1].label"/>
+                    <div class="builder_select_page">
+                        <t t-foreach="Object.entries(subgroup[1].shapes)" t-as="shape" t-key="shape_index">
+                            <div class="" t-on-click="closeComponent">
+                                <BuilderButton style="''" action="'setImageShape'" actionValue="shape[0]">
+                                    <div>
+                                        <img t-att-src="this.getShapeUrl(shape[0])" />
+                                        <span t-if="shape[1].imgSize" class="o_we_shape_animated_label">
+                                            <i class="fa fa-expand"></i>
+                                            <span>2.17:1</span>
+                                        </span>
+                                        <span t-elif="shape[1].animated" class="o_we_shape_animated_label">A<span>nimated</span></span>
+                                    </div>
+                                </BuilderButton>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </div>
+</t>
+
+
+</templates>

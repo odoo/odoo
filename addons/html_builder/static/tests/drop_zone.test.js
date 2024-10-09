@@ -1,0 +1,30 @@
+import { describe, expect, test } from "@odoo/hoot";
+import { contains } from "@web/../tests/web_test_helpers";
+import { setupHTMLBuilder } from "./helpers";
+import { confirmAddSnippet } from "./website_helpers";
+
+describe.current.tags("desktop");
+
+const dropzone = (hovered = false) => {
+    const highlightClass = hovered ? " o_dropzone_highlighted" : "";
+    return `<div class="oe_drop_zone oe_insert${highlightClass}" data-editor-message="DRAG BUILDING BLOCKS HERE"></div>`;
+};
+
+test("#wrap element has the 'DRAG BUILDING BLOCKS HERE' message", async () => {
+    const { contentEl } = await setupHTMLBuilder("");
+    expect(contentEl).toHaveAttribute("data-editor-message", "DRAG BUILDING BLOCKS HERE");
+});
+
+test("drop beside dropzone inserts the snippet", async () => {
+    const { contentEl, snippetContent } = await setupHTMLBuilder();
+    const { moveTo, drop } = await contains(
+        `.o-snippets-menu [data-category="snippet_groups"] div`
+    ).drag();
+    await moveTo(contentEl.ownerDocument.body);
+    // The dropzone is not hovered, so not highlighted.
+    expect(contentEl).toHaveInnerHTML(dropzone());
+    await drop();
+    await confirmAddSnippet();
+    expect(".o_add_snippet_dialog").toHaveCount(0);
+    expect(contentEl).toHaveInnerHTML(snippetContent);
+});

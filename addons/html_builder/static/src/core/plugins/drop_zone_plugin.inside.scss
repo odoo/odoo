@@ -1,0 +1,35 @@
+.oe_drop_zone {
+    height: 10px;
+    background: $o-we-dropzone-bg-color;
+    animation: dropZoneInsert 1s linear 0s infinite alternate;
+    z-index: 2000;
+
+    &.oe_insert {
+        position: relative;
+        width: 100%;
+        border-radius: $border-radius-lg;
+        outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
+        outline-offset: -$o-we-dropzone-border-width;
+    }
+
+    &.o_dropzone_highlighted {
+        filter: brightness(1.5);
+        transition: 200ms;
+    }
+}
+
+.oe_drop_zone:not(.oe_grid_zone) {
+    &.oe_insert {
+        min-width: $o-we-dropzone-size;
+        height: $o-we-dropzone-size;
+        min-height: $o-we-dropzone-size;
+        margin: (-$o-we-dropzone-size/2) 0;
+        padding: 0;
+
+        &.oe_vertical {
+            width: $o-we-dropzone-size;
+            float: left;
+            margin: 0 (-$o-we-dropzone-size/2);
+        }
+    }
+}

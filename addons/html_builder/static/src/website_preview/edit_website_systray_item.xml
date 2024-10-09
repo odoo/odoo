@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.EditWebsiteSystrayItem">
+    <a t-if="!translatable and !this.websiteService.is404" href="#" class="o-website-btn-custo-primary btn d-flex align-items-center rounded-0 border-0 px-3" t-on-click="props.onEditPage">Edit</a>
+    <Dropdown t-else="">
+        <button class="o-website-btn-custo-primary btn rounded-0 border-0 px-3" data-hotkey="a">Edit</button>
+        <t t-set-slot="content">
+            <t t-if="this.websiteService.is404">
+                <t t-if="translatable">
+                    <DropdownItem onSelected="() => this.attemptStartTranslate()" class="'o_translate_website_dropdown_item'">
+                        Translate 404 page<t t-translation="off"> - <span class="text-muted" t-out="this.currentWebsiteInfo.langName"/></t>
+                    </DropdownItem>
+                </t>
+                <DropdownItem onSelected="() => this.translatable ? this.editFromTranslate() : this.props.onEditPage()" class="'o_edit_website_dropdown_item'">
+                    Edit 404 page<t t-if="translatable" t-translation="off"> - <span class="text-muted" t-out="this.currentWebsiteInfo.defaultLangName"/></t>
+                </DropdownItem>
+                <DropdownItem onSelected="() => this.props.onNewPage()" class="'o_edit_website_dropdown_item'">
+                    <t t-set="url" t-value="this.websiteService.currentLocation"/>
+                    Create <span class="text-muted" t-out="url"/> page
+                </DropdownItem>
+            </t>
+            <t t-else=""><!-- In this case, this is translatable -->
+                <DropdownItem onSelected="() => this.attemptStartTranslate()" class="'o_translate_website_dropdown_item'">
+                    Translate<t t-translation="off"> - <span class="text-muted" t-out="this.currentWebsiteInfo.langName"/></t>
+                </DropdownItem>
+                <DropdownItem onSelected="() => this.editFromTranslate()" class="'o_edit_website_dropdown_item'">
+                    Edit<t t-translation="off"> - <span class="text-muted" t-out="this.currentWebsiteInfo.defaultLangName"/></t>
+                </DropdownItem>
+            </t>
+        </t>
+    </Dropdown>
+</t>
+
+</templates>

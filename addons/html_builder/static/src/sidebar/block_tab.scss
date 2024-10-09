@@ -1,0 +1,109 @@
+.o-snippets-menu {
+
+    .o-section {
+        padding-left: 6px;
+    }
+    .o-block-container {
+        > .row {
+            margin-right: 2px;
+        }
+    }
+    .o-draggable-block {
+        padding: 1px;
+    }
+    .block {
+        background-color: rgba(62, 62, 70, 0.9);
+        color: $o-we-color;
+
+        &:hover {
+            background: $o-we-dropdown-item-bg-hover;
+            color: $o-we-dropdown-item-hover-color;
+        }
+
+        &.to_install {
+            .img-container {
+                position: relative;
+
+                .btn {
+                    width: 80%;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    -ms-transform: translate(-50%, -50%);
+                }
+
+                &:not(:hover) .btn {
+                    display: none;
+                }
+
+                img {
+                    opacity: .4;
+                    filter: saturate(0) blur(1px);
+                }
+            }
+        }
+    }
+
+    // TODO improve later + better class names
+    .custom-inner-content {
+        display: flex;
+        width: 100%;
+
+        .thumbnail,
+        .rename-delete-buttons {
+            display: flex;
+            align-items: center;
+            background-color: rgba(62, 62, 70, 0.9);
+        }
+
+        .thumbnail {
+            flex-grow: 1;
+            min-width: 0; // Ensure text-overflow on flex children
+        }
+
+        .thumbnail-title {
+            white-space: nowrap;
+        }
+
+        .thumbnail-img {
+            flex-shrink: 0;
+            width: 41px;
+            height: 30px; // 82x60 -> 41x30
+            padding: 0;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: top center;
+            overflow: hidden;
+        }
+
+        .rename-delete-buttons button {
+            // @extend %we-generic-link;
+            padding-left: $o-we-sidebar-content-field-button-group-button-spacing;
+            padding-right: $o-we-sidebar-content-field-button-group-button-spacing;
+        }
+
+        &:not(:hover) .rename-delete-buttons button {
+            display: none;
+        }
+
+        .rename-input {
+            // @extend %we-generic-text-input;
+            display: flex;
+            cursor: pointer;
+
+            input {
+                cursor: text;
+            }
+
+            button {
+                // @extend %we-generic-clickable;
+                cursor: pointer;
+                flex: 1 1 auto;
+                padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
+                line-height: 17px;
+                text-align: center;
+            }
+        }
+    }
+}

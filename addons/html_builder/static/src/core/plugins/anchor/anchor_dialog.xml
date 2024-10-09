@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="html_builder.AnchorDialog">
+    <Dialog title="this.title" size="'lg'">
+        <div class="mb-3 row">
+            <label class="col-form-label col-md-3" for="anchorName">Choose an anchor name</label>
+            <div class="col-md-9">
+                <input t-ref="anchor-input" type="text" class="form-control" id="anchorName"
+                       t-att-class="{'is-invalid': !state.isValid}"
+                       t-attf-value="#{props.currentAnchorName}" placeholder="Anchor name"/>
+                <div class="invalid-feedback">
+                    <p t-att-class="{'d-none': state.isValid}">The chosen name already exists</p>
+                </div>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="onConfirmClick">Save &amp; Copy</button>
+            <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
+            <button class="btn btn-link ms-auto" t-on-click="onRemoveClick">
+                <i class="fa fa-icon fa-trash"/>
+                Remove
+            </button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

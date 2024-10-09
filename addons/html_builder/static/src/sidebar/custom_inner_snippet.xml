@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.CustomInnerSnippet">
+    <div class="p-1 o_draggable custom-inner-content" t-att-name="snippet.title" t-att-data-category="'snippet_custom_content'" t-att-data-id="snippet.id">
+        <div class="thumbnail">
+            <div class="thumbnail-img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
+            <t t-if="state.isRenaming">
+                <div class="rename-input w-100 mx-1">
+                    <input t-ref="rename-input" type="text" autocomplete="chrome-off" t-att-value="snippet.title" class="text-start" t-on-pointerdown.stop=""/>
+                    <button class="o_we_text_success fa fa-check btn btn-outline-success border-0"
+                            data-tooltip="Confirm"
+                            t-on-click="onConfirmRename"/>
+                    <button class="o_we_text_danger fa fa-times btn btn-outline-danger border-0"
+                            data-tooltip="Cancel"
+                            t-on-click="toggleRenamingState"/>
+                </div>
+            </t>
+            <t t-else="">
+                <span class="thumbnail-title" t-esc="snippet.title"/>
+            </t>
+        </div>
+        <div t-if="!state.isRenaming" class="rename-delete-buttons float-end">
+            <button class="fa fa-pencil btn o_we_hover_success btn-outline-info border-0"
+                    t-attf-data-tooltip="Rename {{snippet.title}}"
+                    t-on-click.stop="toggleRenamingState"/>
+            <button class="fa fa-trash btn o_we_hover_danger btn-outline-danger border-0"
+                    t-attf-data-tooltip="Delete {{snippet.title}}"
+                    t-on-click="() => this.props.snippetModel.deleteCustomSnippet(snippet)"/>
+        </div>
+    </div>
+</t>
+
+</templates>

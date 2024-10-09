@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.AccordionOption">
+    <BuilderRow label.translate="Items">
+        <BuilderButton
+            action="'addItem'"
+            actionParam="'.accordion > .accordion-item:last-of-type'"
+            preview="false"
+            className="'o_we_bg_brand_primary'">
+            Add New
+        </BuilderButton>
+    </BuilderRow>
+
+    <BuilderContext applyTo="'.accordion'">
+        <BuilderRow label.translate="Style" >
+            <BuilderSelect>
+                <BuilderSelectItem id="'accordion_style_boxed_opt'" title.translate="Boxed" classAction="''">Boxed</BuilderSelectItem>
+                <BuilderSelectItem  title.translate="Highlight Active" classAction="'s_accordion_highlight'">Highlight Active</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Hide Borders" level="1" t-if="this.isActiveItem('accordion_style_boxed_opt')">
+            <BuilderCheckbox classAction="'accordion-flush'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Round Corners" level="1">
+            <BuilderNumberInput applyTo="'.accordion-item'" styleAction="'--accordion-border-radius'" unit="'px'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Icon Position" applyTo="'.accordion-header'">
+            <BuilderButtonGroup>
+                <BuilderButton title.translate="Left" classAction="'justify-content-end flex-row-reverse'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+                <BuilderButton title.translate="Right" classAction="'justify-content-between'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="html_builder.AccordionItemOption">
+    <BuilderRow label.translate="Colors">
+        <!-- TODO add data-select-color-combination="" data-with-combinations="selectColorCombination" data-prevent-important="true" ?-->
+        <BuilderColorPicker styleAction="'background-color'" />
+    </BuilderRow>
+</t>
+
+</templates>

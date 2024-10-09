@@ -912,6 +912,17 @@ test("should not close image cropper while loading media", async () => {
     expect('.btn[title="Discard"]').toHaveCount(1);
 });
 
+test("toolbar shouldn't be visible if can_display_toolbar === false", async () => {
+    const { el } = await setupEditor("<p>[test]<img></p>", {
+        config: { resources: { can_display_toolbar: (namespace) => namespace !== "image" } },
+    });
+
+    expect(".o-we-toolbar").toHaveCount(1);
+    setContent(el, "<p>test[<img>]</p>");
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
 describe.tags("desktop");
 describe("toolbar open and close on user interaction", () => {
     describe("mouse", () => {

@@ -1,0 +1,63 @@
+// This style block is about the "editor message" which highlights the areas
+// where the user can drag & drop snippets.
+$-editor-messages-margin-x: 2%;
+
+%o-editor-messages {
+    background: $o-we-dropzone-bg-color;
+    text-align: center;
+    color: #fff;
+    outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
+    outline-offset: -$o-we-dropzone-border-width;
+
+    &:before {
+        content: attr(data-editor-message);
+        display: block;
+        font-size: 20px;
+    }
+
+    &:after {
+        content: attr(data-editor-sub-message);
+        display: block;
+    }
+}
+
+.o_editable {
+    &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
+        &:empty {
+            @extend %o-editor-messages;
+            padding: 112px 0px;
+            margin: 20px $-editor-messages-margin-x;
+            border-radius: $border-radius-lg;
+        }
+
+        .oe_drop_zone.oe_insert:only-child {
+            @extend %o-editor-messages;
+            height: auto;
+            width: 100% - 2 * $-editor-messages-margin-x;
+            padding: 112px 0;
+            margin: 20px $-editor-messages-margin-x;
+            text-shadow: none;
+        }
+
+        > p:empty:only-child {
+            color: #aaa;
+        }
+    }
+}
+
+.o-we-hint {
+    position: relative;
+
+    &:after {
+        content: attr(placeholder);
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        color: inherit;
+        opacity: 0.4;
+        pointer-events: none;
+        text-align: inherit;
+        width: 100%;
+    }
+}

@@ -8,6 +8,7 @@ export class GradientPicker extends Component {
     static props = {
         onGradientChange: { type: Function, optional: true },
         selectedGradient: { type: String, optional: true },
+        noTransparency: { type: Boolean, optional: true },
     };
 
     setup() {

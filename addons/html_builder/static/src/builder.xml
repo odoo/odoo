@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.Builder">
+    <div class="h-100 o-snippets-menu d-flex flex-column" t-ref="builder_sidebar">
+        <div class="o-snippets-top-actions d-flex justify-content-between flex-shrink-0">
+            <div class="d-flex">
+                <button type="button" t-on-click="() => this.undo()" class="btn btn-secondary fa fa-undo" t-att-disabled="!state.canUndo"/>
+                <button type="button"  t-on-click="() => this.redo()" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
+            </div>
+            <div class="d-flex">
+                <button t-on-click="onMobilePreviewClick" type="button" class="btn btn-secondary" data-action="mobile" title="Mobile Preview" accesskey="v"><span class="fa fa-mobile"/></button>
+                <button type="button"  t-on-click="discard" class="btn btn-secondary" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
+                <button type="button" t-on-click="save" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
+            </div>
+        </div>
+        <div class="o-snippets-tabs d-flex justify-content-between mt-2 p-2 pb-0 flex-shrink-0">
+            <button class="px-2 cursor-pointer pb-1 pe-auto bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'blocks'}" t-on-click="() => this.setTab('blocks')" t-att-disabled="props.isTranslation">
+                <span class="ps-1">Blocks</span>
+            </button>
+            <button class="px-2 cursor-pointer pb-1 bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'customize'}" t-on-click="() => this.setTab('customize')">
+                <span>Customize</span>
+            </button>
+            <button class="px-2 cursor-pointer pb-1 bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'theme'}" t-on-click="() => this.setTab('theme')" t-att-disabled="props.isTranslation">
+                <span class="pe-1">Theme</span>
+            </button>
+        </div>
+        <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1 pt-1">
+            <t t-if="state.activeTab === 'blocks'">
+                <BlockTab />
+            </t>
+            <t t-if="state.activeTab === 'customize'">
+                <CustomizeTab currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
+            </t>
+            <t t-if="state.activeTab === 'theme'">
+                theme
+            </t>
+        </div>
+        <InvisibleElementsPanel t-if="state.invisibleEls.length" invisibleEls="state.invisibleEls" invisibleSelector="this.getInvisibleSelector()"/>
+    </div>
+</t>
+
+</templates>

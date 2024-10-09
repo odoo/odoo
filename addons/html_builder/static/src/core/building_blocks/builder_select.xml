@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderSelect">
+    <BuilderComponent>
+        <!-- Render the SelectItem(s) into an invisible node to ensure the label of the
+        button is being set. -->
+        <div t-ref="root" style="overflow: hidden;">
+            <div class="d-none" t-ref="content"><t t-slot="default" /></div>
+            <Dropdown state="this.dropdown">
+                <button class="btn btn-primary" t-ref="button" style="width: 100%; overflow: hidden; text-overflow: ellipsis;" />
+                <t t-set-slot="content">
+                    <t t-slot="default" />
+                </t>
+            </Dropdown>
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>
