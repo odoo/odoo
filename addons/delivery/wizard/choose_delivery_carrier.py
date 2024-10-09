@@ -28,6 +28,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     delivery_message = fields.Text(readonly=True)
     total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
     weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
+    invoice_policy = fields.Selection(related='carrier_id.invoice_policy')
 
     @api.onchange('carrier_id', 'total_weight')
     def _onchange_carrier_id(self):
@@ -39,6 +40,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
         else:
             self.display_price = 0
             self.delivery_price = 0
+            if self.invoice_policy == 'estimated':
+                self.update_price()
 
     @api.onchange('order_id')
     def _onchange_order_id(self):
