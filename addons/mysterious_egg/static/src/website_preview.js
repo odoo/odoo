@@ -1,6 +1,7 @@
 import { Component, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { BuilderMenu } from "./builder_menu";
 
 export const unslugHtmlDataObject = (repr) => {
     const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
@@ -15,6 +16,7 @@ export const unslugHtmlDataObject = (repr) => {
 
 class WebsitePreview extends Component {
     static template = "mysterious_egg.WebsitePreview";
+    static components = { BuilderMenu };
 
     setup() {
         this.orm = useService("orm");
