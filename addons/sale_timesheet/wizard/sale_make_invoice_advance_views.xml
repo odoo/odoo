@@ -20,7 +20,7 @@
                         string="Timesheets Period"
                         widget="daterange"
                         required="date_start_invoice_timesheet or date_end_invoice_timesheet"
-                        options="{'end_date_field': 'date_end_invoice_timesheet'}"
+                        options="{'end_date_field': 'date_end_invoice_timesheet', 'always_range': true}"
                         title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
                     />
                     <field name="date_end_invoice_timesheet" invisible="1" />
