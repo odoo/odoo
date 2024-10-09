@@ -863,7 +863,6 @@ customPseudoClasses
             return node.shadowRoot || false;
         };
     })
-    .set("text", makePatternBasedPseudoClass("text", getNodeText))
     .set("value", makePatternBasedPseudoClass("value", getNodeValue))
     .set("visible", () => {
         return function visible(node) {
