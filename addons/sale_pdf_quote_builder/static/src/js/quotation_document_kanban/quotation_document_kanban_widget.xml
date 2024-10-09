@@ -7,6 +7,7 @@
     >
         <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
             <UploadButton
+                t-if="formData.sale_order_template_id"
                 formData="formData"
                 allowedMIMETypes="allowedMIMETypes"
                 load.bind="() => this.props.record.load()"
