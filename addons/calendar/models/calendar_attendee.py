@@ -86,7 +86,10 @@ class Attendee(models.Model):
             partners -= self.env.user.partner_id
             mapped_followers[partners] |= event
         for partners, events in mapped_followers.items():
-            events.message_subscribe(partner_ids=partners.ids)
+            # call to _message_subscribe do not check ACL. It allows one user to create
+            # an event without being an attendee or the organizer. In that case, calling
+            # event.message_subscribe() would trigger permission issues.
+            events._message_subscribe(partner_ids=partners.ids)
 
     def _unsubscribe_partner(self):
         for event in self.event_id:

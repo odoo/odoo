@@ -152,14 +152,14 @@ class TestAccessRights(TransactionCase):
         })
 
         # george tries to modify the start date of the meeting to a future date
-        # this verifies that users with "handle in Odoo" notification setting can
-        # successfully edit meetings created by other users. If this write fails,
-        # it indicates that there might be an issue with access rights for meeting attendees.
+        # this verifies that users with "handle in Odoo" notification setting cannot
+        # successfully edit meetings created by other users.
         meeting = meeting.with_user(self.george)
-        meeting.write({
-            'start': datetime.now() + timedelta(days=2),
-            'stop': datetime.now() + timedelta(days=2, hours=2),
-        })
+        with self.assertRaises(AccessError):
+            meeting.write({
+                'start': datetime.now() + timedelta(days=2),
+                'stop': datetime.now() + timedelta(days=2, hours=2),
+            })
 
     def test_event_default_privacy_as_private(self):
         """ Check the privacy of events with owner's event default privacy as 'private'. """

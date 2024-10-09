@@ -287,13 +287,11 @@ class Meeting(models.Model):
     @api.depends('partner_ids')
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
-        for event in self:
-            # By default, only current attendees and the organizer can edit the event.
-            editor_candidates = event.partner_ids.user_ids + event.user_id
-            # Right before saving the event, old partners must be able to save changes.
-            if event._origin:
-                editor_candidates += event._origin.partner_ids.user_ids
-            event.user_can_edit = self.env.user.id in editor_candidates.ids
+        new_events = self.filtered(lambda ev: isinstance(ev.id, models.NewId))
+        new_events.user_can_edit = True
+        edit_events = (self - new_events)._filter_access_rules('write')
+        edit_events.user_can_edit = True
+        (self - edit_events - new_events).user_can_edit = False
 
     @api.depends('partner_ids')
     def _compute_invalid_email_partner_ids(self):
@@ -731,7 +729,6 @@ class Meeting(models.Model):
                 ('base_event_id', 'in', self.ids)
             ])
             recurrences._select_new_base_event()
-
         return True
 
     def _check_calendar_privacy_write_permissions(self):
