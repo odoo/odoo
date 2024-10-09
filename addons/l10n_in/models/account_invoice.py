@@ -5,22 +5,22 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
+from odoo.addons.l10n_in.models.res_partner import L10N_IN_GST_TREATMENTS_TYPE
 from odoo.tools.image import image_data_uri
 
 
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    l10n_in_gst_treatment = fields.Selection([
-            ('regular', 'Registered Business - Regular'),
-            ('composition', 'Registered Business - Composition'),
-            ('unregistered', 'Unregistered Business'),
-            ('consumer', 'Consumer'),
-            ('overseas', 'Overseas'),
-            ('special_economic_zone', 'Special Economic Zone'),
-            ('deemed_export', 'Deemed Export'),
-            ('uin_holders', 'UIN Holders'),
-        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True, precompute=True)
+    l10n_in_gst_treatment = fields.Selection(
+        selection=L10N_IN_GST_TREATMENTS_TYPE,
+        string="GST Treatment",
+        compute="_compute_l10n_in_gst_treatment",
+        store=True,
+        readonly=False,
+        copy=True,
+        precompute=True
+    )
     l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", store=True, readonly=False)
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
