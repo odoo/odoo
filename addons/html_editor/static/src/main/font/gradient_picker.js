@@ -57,7 +57,7 @@ export class GradientPicker extends Component {
         } else {
             this.state.type = "radial";
             const sizeMatch = gradient.match(/(closest|farthest)-(side|corner)/);
-            const size = sizeMatch ? sizeMatch[0] : "closest-side";
+            const size = sizeMatch ? sizeMatch[0] : "farthest-corner";
             this.state.size = size;
 
             const position = gradient.match(/ at ([0-9]+)% ([0-9]+)%/) || ["", "50", "50"];
