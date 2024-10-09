@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="jo_standard_purchase_16" model="account.tax.template">
+        <field name="name">2a. Purchase Tax 16%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">16</field>
+        <field name="amount_type">percent</field>
+        <field name="description">16%</field>
+        <field name="tax_group_id" ref="jo_tax_group_16"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_base_sixteen_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_tax_sixteen_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_base_sixteen_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_tax_sixteen_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_purchase_10" model="account.tax.template">
+        <field name="name">2b. Purchase Tax 10%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="description">10%</field>
+        <field name="tax_group_id" ref="jo_tax_group_10"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_base_ten_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_tax_ten_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_base_ten_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_tax_ten_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_purchase_4" model="account.tax.template">
+        <field name="name">2c. Purchase Tax 4%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="description">4%</field>
+        <field name="tax_group_id" ref="jo_tax_group_4"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_base_four_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_tax_four_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_base_four_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_tax_four_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_purchase_other" model="account.tax.template">
+        <field name="name">2d. Purchase Other Tax</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_base_other_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_tax_other_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_base_other_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_tax_other_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_purchase_import_16" model="account.tax.template">
+        <field name="name">3a. Import Tax 16%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">16</field>
+        <field name="amount_type">percent</field>
+        <field name="description">16%</field>
+        <field name="tax_group_id" ref="jo_tax_group_16"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_import_sixteen_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_import_tax_sixteen_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_import_sixteen_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_import_tax_sixteen_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_purchase_import_10" model="account.tax.template">
+        <field name="name">3b. Import Tax 10%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="description">10%</field>
+        <field name="tax_group_id" ref="jo_tax_group_10"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_import_ten_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_import_tax_ten_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_import_ten_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_import_tax_ten_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_purchase_import_4" model="account.tax.template">
+        <field name="name">3c. Import Tax 4%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="description">4%</field>
+        <field name="tax_group_id" ref="jo_tax_group_4"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_import_four_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_import_tax_four_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_import_four_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_import_tax_four_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_purchase_import_other" model="account.tax.template">
+        <field name="name">3d. Import Other Tax</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_import_other_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_import_tax_other_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_import_other_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_import_tax_other_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_purchase_import_deferred" model="account.tax.template">
+        <field name="name">4. Imports Deferred Supply Tax</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_deferred_supply_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_deferred_supply_tax_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_deferred_supply_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_deferred_supply_tax_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="eg_zero_purchase_exempted" model="account.tax.template">
+        <field name="name">5. Exempted Purchases and Import</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">0%</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_exempt_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'plus_report_expression_ids': [ref('tax_report_vat_purchase_exempt_tax_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_exempt_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200901'),
+                'minus_report_expression_ids': [ref('tax_report_vat_purchase_exempt_tax_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_sale_16" model="account.tax.template">
+        <field name="name">6a. Sales Tax 16%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">16</field>
+        <field name="amount_type">percent</field>
+        <field name="description">16%</field>
+        <field name="tax_group_id" ref="jo_tax_group_16"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sales_base_sixteen_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sales_tax_sixteen_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sales_base_sixteen_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sales_tax_sixteen_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_sale_10" model="account.tax.template">
+        <field name="name">6b. Sales Tax 10%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">10</field>
+        <field name="amount_type">percent</field>
+        <field name="description">10%</field>
+        <field name="tax_group_id" ref="jo_tax_group_10"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sales_base_ten_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sales_tax_ten_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sales_base_ten_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sales_tax_ten_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_sale_4" model="account.tax.template">
+        <field name="name">6c. Sales Tax 4%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="description">4%</field>
+        <field name="tax_group_id" ref="jo_tax_group_4"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sales_base_four_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sales_tax_four_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sales_base_four_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sales_tax_four_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_standard_sale_other" model="account.tax.template">
+        <field name="name">6d. Sales Other Tax</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_base_other_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_tax_other_tag')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_base_other_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_tax_other_tag')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_zero_sale_0" model="account.tax.template">
+        <field name="name">7. Sales Tax 0%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">0%</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_zero_tag_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_zero_tag_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_zero_sale_export" model="account.tax.template">
+        <field name="name">8. Exported Sales</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">0%</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_export_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_export_zero_tag_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_export_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_export_zero_tag_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_zero_sale_no_tax" model="account.tax.template">
+        <field name="name">9. Sales that are not subject to tax</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_export_no_tax_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_export_no_tax_zero_tag_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_export_no_tax_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_export_no_tax_zero_tag_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_zero_sale_exempted" model="account.tax.template">
+        <field name="name">10. Exempted Local Sales</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="description">0%</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_export_exempt_local_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_export_exempt_local_zero_tag_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_export_exempt_local_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_export_exempt_local_zero_tag_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="jo_zero_sale_non_deductible" model="account.tax.template">
+        <field name="name">11. Non-deductible tax (for exempted sales)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="jo_tax_group_0"/>
+        <field name="chart_template_id" ref="jordan_chart_template_standard"/>
+        <field name="invoice_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_export_no_deductible_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'plus_report_expression_ids': [ref('tax_report_vat_sale_export_no_deductible_zero_tag_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[Command.clear(),
+            Command.create({
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_export_no_deductible_zero_tag')],
+            }),
+            Command.create({
+                'repartition_type': 'tax',
+                'account_id': ref('jo_account_200902'),
+                'minus_report_expression_ids': [ref('tax_report_vat_sale_export_no_deductible_zero_tag_tax')],
+            }),
+        ]"/>
+    </record>
+</odoo>
