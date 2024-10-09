@@ -9,7 +9,7 @@ import wSnippetOptions from "@website/js/editor/snippets.options";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { switchTextHighlight } from "@website/js/text_processing";
+import { applyTextHighlight, switchTextHighlight } from "@website/js/text_processing";
 import { registry } from "@web/core/registry";
 
 const snippetsEditorRegistry = registry.category("snippets_editor");
@@ -219,6 +219,21 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      */
     _computeSnippetTemplates(html) {
         const $html = $(html);
+
+        // TODO Remove in master. This patches the snippet move selectors.
+        const oldSelector = ".s_showcase .row:not(.s_col_no_resize) > div";
+        let optionEl = $html[0].querySelector(`[data-js="SnippetMove"][data-selector*="${oldSelector}"]`);
+        if (optionEl) {
+            const newSelector = oldSelector.replace(".row", ".row .row");
+            optionEl.dataset.selector = optionEl.dataset.selector.replace(oldSelector, newSelector);
+        }
+        const oldExclude = ".s_showcase .row > div";
+        optionEl = $html[0].querySelector(`[data-js="SnippetMove"][data-exclude*="${oldExclude}"]`);
+        if (optionEl) {
+            const newExclude = oldExclude.replace(".row", ".row .row");
+            optionEl.dataset.exclude = optionEl.dataset.exclude.replace(oldExclude, newExclude);
+        }
+
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
@@ -544,6 +559,16 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         $dropzone.attr('data-editor-message', $hookParent.attr('data-editor-message'));
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;
+    }
+    /**
+     * @override
+     */
+    _updateDroppedSnippet($target) {
+        // Build the highlighted text content for the snippets.
+        for (const textEl of $target[0]?.querySelectorAll(".o_text_highlight") || []) {
+            applyTextHighlight(textEl);
+        }
+        return super._updateDroppedSnippet(...arguments);
     }
 
     //--------------------------------------------------------------------------

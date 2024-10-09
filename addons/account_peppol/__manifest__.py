@@ -13,6 +13,9 @@
         'account_edi_proxy_client',
         'account_edi_ubl_cii',
     ],
+    'external_dependencies': {
+        'python': ['phonenumbers']
+    },
     'data': [
         'data/cron.xml',
         'data/res_partner_data.xml',

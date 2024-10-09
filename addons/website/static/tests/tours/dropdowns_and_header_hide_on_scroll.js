@@ -44,15 +44,23 @@ registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
     changeOption("undefined", 'we-select[data-variable="header-scroll-effect"]'),
     changeOption("undefined", 'we-button[data-name="header_effect_fixed_opt"]'),
     {
+        content: "Wait for the modification has been applied",
+        trigger: ".o_we_customize_panel:contains(Select a block on your page to style it.)",
+        timeout: 30000,
+    },
+    {
         trigger: ":iframe #wrapwrap header.o_header_fixed",
     },
     selectHeader(),
     changeOption("WebsiteLevelColor", 'we-select[data-variable="header-template"] we-toggler'),
     changeOption("WebsiteLevelColor", 'we-button[data-name="header_sales_two_opt"]'),
     {
-        content: "check that header_sales_two_opt is well selected before save",
-        trigger: ":iframe #wrapwrap header.o_header_fixed div[aria-label=Middle] div[role=search]",
+        trigger: ":iframe .o_header_sales_two_top",
         timeout: 30000,
+    },
+    {
+        content: "check that header_sales_two_opt is well selected",
+        trigger: ":iframe #wrapwrap header.o_header_fixed div[aria-label=Middle] div[role=search]",
     },
     ...clickOnSave(undefined, 30000),
     ...checkIfUserMenuNotMasked(),

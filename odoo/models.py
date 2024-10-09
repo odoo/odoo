@@ -4548,7 +4548,7 @@ class BaseModel(metaclass=MetaModel):
                 field_ids = tuple(IrModelFields._get_ids(field.model_name).get(field.name) for field in many2one_fields)
                 sub_ids_json_text = tuple(json.dumps(id_) for id_ in sub_ids)
                 if default := Defaults.search([('field_id', 'in', field_ids), ('json_value', 'in', sub_ids_json_text)], limit=1, order='id desc'):
-                    ir_field = self.env['ir.model.fields'].browse(default.field_id).sudo()
+                    ir_field = default.field_id.sudo()
                     field = self.env[ir_field.model]._fields[ir_field.name]
                     record = self.browse(json.loads(default.json_value))
                     raise UserError(_('Unable to delete %(record)s because it is used as the default value of %(field)s', record=record, field=field))

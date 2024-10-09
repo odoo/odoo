@@ -67,7 +67,13 @@ export class OdooPivot {
         this.odooDataProvider = services.odooDataProvider;
 
         /** @protected @type {Object} */
-        this.context = omit(definition.context, ...Object.keys(user.context));
+        this.context = omit(
+          definition.context,
+          ...Object.keys(user.context),
+          "pivot_measures",
+          "pivot_row_groupby",
+          "pivot_column_groupby"
+        );
 
         /** @protected */
         this.domainWithGlobalFilters = this.coreDefinition.domain;

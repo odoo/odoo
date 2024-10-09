@@ -7,7 +7,7 @@ import logging
 from odoo import api, fields, models, Command
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
 from odoo.addons.google_calendar.models.google_sync import google_calendar_token
-from odoo.addons.google_account.models.google_service import _get_client_secret
+from odoo.addons.google_account.models import google_service
 from odoo.loglevels import exception_to_unicode
 from odoo.tools import str2bool
 
@@ -166,7 +166,7 @@ class User(models.Model):
         """ Checks if both Client ID and Client Secret are defined in the database. """
         ICP_sudo = self.env['ir.config_parameter'].sudo()
         client_id = self.env['google.service']._get_client_id('calendar')
-        client_secret = _get_client_secret(ICP_sudo, 'calendar')
+        client_secret = google_service._get_client_secret(ICP_sudo, 'calendar')
         return bool(client_id and client_secret)
 
     @api.model

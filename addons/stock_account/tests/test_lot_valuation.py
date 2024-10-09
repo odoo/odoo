@@ -528,3 +528,41 @@ class TestLotValuation(TestStockValuationCommon):
             {'value': 9, 'lot_id': self.lot1.id, 'quantity': 1},
             {'value': 9, 'lot_id': self.lot2.id, 'quantity': 1},
         ])
+
+    def test_new_lot_inventory_std(self):
+        """Test setting quantity for a new lot via inventory adjustment fallback on the product cost
+        The product is set to standard cost """
+        self.product1.categ_id.property_cost_method = 'standard'
+        self.product1.standard_price = 9
+        lot = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'test',
+        })
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'lot_id': lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 3
+        })
+        quant.action_apply_inventory()
+        self.assertEqual(lot.standard_price, 9)
+        self.assertEqual(lot.value_svl, 27)
+
+    def test_new_lot_inventory_avco(self):
+        """Test setting quantity for a new lot via inventory adjustment fallback on the product cost
+        The product is set to avco cost """
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.standard_price = 9
+        lot = self.env['stock.lot'].create({
+            'product_id': self.product1.id,
+            'name': 'test',
+        })
+        quant = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'lot_id': lot.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 3
+        })
+        quant.action_apply_inventory()
+        self.assertEqual(lot.standard_price, 9)
+        self.assertEqual(lot.value_svl, 27)

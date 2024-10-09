@@ -380,7 +380,7 @@
             <t t-if="question.question_type == 'multiple_choice'" t-call="survey.question_multiple_choice"/>
             <t t-if="question.question_type == 'matrix'" t-call="survey.question_matrix"/>
             <div t-attf-class="o_survey_question_error d-flex align-items-center justify-content-between overflow-hidden
-                 border-0 py-0 px-3 alert alert-danger #{'slide_in' if is_skipped_question else ''}" role="alert">
+                 border-0 py-0 px-3 alert alert-danger mt-2 #{'slide_in' if is_skipped_question else ''}" role="alert">
                 <span t-if="is_skipped_question" t-out="question.constr_error_msg or default_constr_error_msg"/>
             </div>
         </div>
