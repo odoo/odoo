@@ -38,6 +38,7 @@ FUNCTION_WHITELIST = {
     'any', 'join', 'split', 'tuple', 'get_sql', 'search', 'list', 'set', 'next', '_where_calc', 'SQL'
 }
 
+
 function_definitions = collections.defaultdict(list)
 callsites_for_queries = collections.defaultdict(list)
 root_call: contextvars.ContextVar[Optional[astroid.Call]] =\
