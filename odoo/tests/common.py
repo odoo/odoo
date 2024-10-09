@@ -91,7 +91,7 @@ except ImportError:
     freezegun = None
 
 _logger = logging.getLogger(__name__)
-if config['test_enable'] or config['test_file']:
+if 'pytest' in sys.modules or config['test_enable'] or config['test_file']:
     _logger.info("Importing test framework", stack_info=_logger.isEnabledFor(logging.DEBUG))
 else:
     _logger.error(
@@ -1119,6 +1119,7 @@ class ChromeBrowser:
         if self.chrome:
             self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
             self.chrome.terminate()
+            self.chrome.wait(5)
 
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
@@ -1164,7 +1165,7 @@ class ChromeBrowser:
             debug=False,
     ):
         headless_switches = {
-            '--headless': '',
+            '--headless': 'old',
             '--disable-extensions': '',
             '--disable-background-networking' : '',
             '--disable-background-timer-throttling' : '',

@@ -13,6 +13,7 @@ import os
 import re
 import threading
 import time
+import traceback
 import typing
 import uuid
 from contextlib import contextmanager
@@ -538,6 +539,7 @@ class TestCursor(BaseCursor):
         +------------------------+---------------------------------------------------+
     """
     _cursors_stack = []
+    _source_stack = []
     def __init__(self, cursor, lock, readonly):
         assert isinstance(cursor, BaseCursor)
         super().__init__()
@@ -549,9 +551,15 @@ class TestCursor(BaseCursor):
         self._lock = lock
         self._lock.acquire()
         last_cursor = self._cursors_stack and self._cursors_stack[-1]
-        if last_cursor and last_cursor.readonly and not readonly and last_cursor._savepoint:
-            raise Exception('Opening a read/write test cursor from a readonly one')
+        if not readonly and last_cursor and last_cursor.readonly and last_cursor._savepoint:
+            raise Exception('Opening a read/write test cursor from a readonly one, readonly cursor was opened at\n%s' % (
+                self._source_stack[-1]
+            ))
         self._cursors_stack.append(self)
+        prefix = ""
+        if r := odoo.http.request:
+            prefix = f"{r.httprequest.method} {r.httprequest.full_path}\n"
+        self._source_stack.append(prefix + "\n".join(traceback.format_stack()))
         # in order to simulate commit and rollback, the cursor maintains a
         # savepoint at its last commit, the savepoint is created lazily
         self._savepoint = None
@@ -575,10 +583,9 @@ class TestCursor(BaseCursor):
         if not self._closed:
             self.rollback()
             self._closed = True
-            if self._savepoint:
-                self._savepoint.close(rollback=False)
 
             tos = self._cursors_stack.pop()
+            self._source_stack.pop()
             if tos is not self:
                 _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
             self._lock.release()

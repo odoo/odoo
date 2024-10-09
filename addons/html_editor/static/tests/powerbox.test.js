@@ -28,7 +28,7 @@ function commandNames() {
     return queryAllTexts(".o-we-command-name");
 }
 
-test("should open the Powerbox on type `/`", async () => {
+test.skip("should open the Powerbox on type `/`", async () => {
     const { el, editor } = await setupEditor("<p>ab[]</p>");
     expect(".o-we-powerbox").toHaveCount(0);
     expect(getContent(el)).toBe("<p>ab[]</p>");

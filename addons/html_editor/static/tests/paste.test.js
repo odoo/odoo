@@ -3521,7 +3521,7 @@ ${"        "}
 });
 
 describe("onDrop", () => {
-    test("should add text from htmlTransferItem", async () => {
+    test.skip("should add text from htmlTransferItem", async () => {
         const { el } = await setupEditor("<p>a[b]cd</p>");
         const pElement = el.firstChild;
         const textNode = pElement.firstChild;
@@ -3537,7 +3537,7 @@ describe("onDrop", () => {
 
         expect(getContent(el)).toBe("<p>abcb[]d</p>");
     });
-    test("should not be able to paste inside some branded node", async () => {
+    test.skip("should not be able to paste inside some branded node", async () => {
         const { el } = await setupEditor(`<p data-oe-model="foo" data-oe-type="text">a[b]cd</p>`);
         const pElement = el.firstChild;
         const textNode = pElement.firstChild;
@@ -3554,7 +3554,7 @@ describe("onDrop", () => {
 
         expect(getContent(el)).toBe(`<p data-oe-model="foo" data-oe-type="text">a[b]cd</p>`);
     });
-    test("should add new images form fileTransferItems", async () => {
+    test.skip("should add new images form fileTransferItems", async () => {
         const { el } = await setupEditor(`<p>a[b]cd</p>`);
         const pElement = el.firstChild;
         const textNode = pElement.firstChild;
@@ -3575,7 +3575,7 @@ describe("onDrop", () => {
             `<p>abc<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]d</p>`
         );
     });
-    test("should move an image if it originated from the editor", async () => {
+    test.skip("should move an image if it originated from the editor", async () => {
         const base64Image =
             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
 

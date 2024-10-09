@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.product.tests.common import ProductCommon
+from .common import ProductCommon
 
 
 class TestPricelistAutoCreation(ProductCommon):
@@ -24,25 +24,37 @@ class TestPricelistAutoCreation(ProductCommon):
         return res
 
     def test_inactive_curr_set_on_company(self):
-        """Make sure that when setting an inactive currency on a company, the activation of the
-        multi-currency group won't
+        """Make sure that when setting an inactive currency on a company, the
+        activation of the multi-currency group won't lead to the creation of a
+        pricelist for the old currency
         """
-        self.env.company.currency_id = self.currency_usd
-        self.assertFalse(
-            self.env['product.pricelist'].search([
-                ('currency_id.name', '=', 'EUR'),
-                ('company_id', '=', self.env.company.id),
-            ])
+        # no pricelists because we disabled the fuck out of all of them
+        self.assertEqual(
+            self.env['product.pricelist'].search_count([]),
+            0,
         )
-        self.assertTrue(self.currency_usd.active)
-        self.assertTrue(
-            self.env['product.pricelist'].search([
+
+        self.assertFalse(self.currency_usd.active)
+        self.env.company.currency_id = self.currency_usd
+        self.assertTrue(self.currency_usd.active, "setting an inactive currency on a company should enable it")
+        self.assertIn(
+            self.env.ref('base.group_multi_currency'),
+            self.group_user.trans_implied_ids,
+            "activating a second currency should enable multi-currency",
+        )
+        self.assertIn(
+            self.group_product_pricelist,
+            self.group_user.trans_implied_ids,
+            "enabling multi-currency should enable pricelists",
+        )
+
+        self.assertEqual(
+            self.env['product.pricelist'].search_count([
                 ('currency_id.name', '=', 'USD'),
                 ('company_id', '=', self.env.company.id),
-            ])
+            ]),
+            1,
+            "setting a new currency on the company should have created "
+            "a pricelist in that new currency",
         )
-        # self.env.user.clear_caches()
-        # self.group_user.invalidate_recordset()
-        # self.assertTrue(
-        #     self.group_product_pricelist in self.group_user.implied_ids
-        # )
+        self.assertTrue(self.currency_euro.active, "the old currency should still be active")
