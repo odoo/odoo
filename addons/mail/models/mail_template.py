@@ -31,6 +31,11 @@ class MailTemplate(models.Model):
             res['model_id'] = self.env['ir.model']._get(res.pop('model')).id
         return res
 
+    def _get_non_abstract_models_domain(self):
+        registry = self.env.registry
+        abstract_models = [model for model in registry if registry[model]._abstract]
+        return [('model', 'not in', abstract_models)]
+
     # description
     name = fields.Char('Name', translate=True)
     description = fields.Text(
@@ -42,7 +47,7 @@ class MailTemplate(models.Model):
          ('hidden_template', 'Hidden Template'),
          ('custom_template', 'Custom Template')],
          compute="_compute_template_category", search="_search_template_category")
-    model_id = fields.Many2one('ir.model', 'Applies to', ondelete='cascade')
+    model_id = fields.Many2one('ir.model', 'Applies to', ondelete='cascade', domain=_get_non_abstract_models_domain)
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',
