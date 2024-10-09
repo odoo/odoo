@@ -39,6 +39,8 @@ import {
 } from "../utils/position";
 import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
+import { selectionsAreEqual } from "@html_editor/utils/selection";
+import { isAndroid, isBrowserChrome } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} RangeLike
@@ -59,6 +61,7 @@ export class DeletePlugin extends Plugin {
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
+        onSelectionChange: withSequence(5, this.revertSelectionChange.bind(this)),
         shortcuts: [
             { hotkey: "backspace", command: "DELETE_BACKWARD" },
             { hotkey: "delete", command: "DELETE_FORWARD" },
@@ -1176,7 +1179,23 @@ export class DeletePlugin extends Plugin {
         if (argsForDelete) {
             ev.preventDefault();
             this.delete(...argsForDelete);
+            if (isAndroid() && isBrowserChrome()) {
+                // In Android Chrome, in some cases the selection is set to an
+                // incorrect position after delete. This is used to revert the
+                // selection to the correct one on selectionchange.
+                this.selectionToEnforce = this.shared.getEditableSelection();
+            }
         }
+    }
+
+    revertSelectionChange({ editableSelection }) {
+        if (!this.selectionToEnforce) {
+            return;
+        }
+        if (!selectionsAreEqual(editableSelection, this.selectionToEnforce)) {
+            this.shared.setSelection(this.selectionToEnforce, { normalize: false });
+        }
+        this.selectionToEnforce = null;
     }
 
     onBeforeInputInsertText(ev) {
