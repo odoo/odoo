@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
-    test: true,
     url: '/shop',
     steps: () => [
         ...wsTourUtils.addToCart({productName: "Acoustic Bloc Screens"}),

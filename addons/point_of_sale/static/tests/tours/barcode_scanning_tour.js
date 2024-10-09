@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("BarcodeScanningTour", {
-    test: true,
     steps: () =>
         [
             // The following step is to make sure that the Chrome widget initialization ends
@@ -37,7 +36,6 @@ registry.category("web_tour.tours").add("BarcodeScanningTour", {
 });
 
 registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -59,7 +57,6 @@ registry.category("web_tour.tours").add("BarcodeScanningProductPackagingTour", {
 });
 
 registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -87,7 +84,6 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
 });
 
 registry.category("web_tour.tours").add("BarcodeScanPartnerTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

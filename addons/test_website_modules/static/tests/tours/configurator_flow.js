@@ -4,7 +4,6 @@ import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('configurator_flow', {
-    test: true,
     url: '/odoo/action-website.action_website_configuration',
     steps: () => [
     {
@@ -59,7 +58,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
         content: "select Pricing",
         trigger: '.card:contains("Pricing")',
         run: "click",
-    }, 
+    },
     {
         trigger: '.card.border-success:contains("Pricing")',
     },
@@ -69,7 +68,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
     }, {
         content: "Slides should be selected (module already installed)",
         trigger: '.card.card_installed:contains("eLearning")',
-    }, 
+    },
     {
         trigger: '.card.card_installed:contains("Success Stories")',
     },

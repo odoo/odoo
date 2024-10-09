@@ -7,7 +7,6 @@ registerWebsitePreviewTour(
     "test_link_to_document",
     {
         url: "/",
-        test: true,
         edition: true,
     },
     () => [

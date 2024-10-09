@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_website_page_manager', {
-    test: true,
     url: '/odoo/action-test_website.action_test_model_multi_website',
     steps: () => [
 // Part 1: check that the website filter is working
@@ -45,7 +44,7 @@ registry.category("web_tour.tours").add('test_website_page_manager', {
     content: "Click on Kanban View",
     trigger: '.o_cp_switch_buttons .o_kanban',
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_renderer",
 },
@@ -60,7 +59,6 @@ registry.category("web_tour.tours").add('test_website_page_manager', {
 });
 
 registry.category("web_tour.tours").add('test_website_page_manager_js_class_bug', {
-    test: true,
     url: '/odoo/action-test_website.action_test_model_multi_website_js_class_bug',
     steps: () => [
 {
@@ -74,7 +72,6 @@ registry.category("web_tour.tours").add('test_website_page_manager_js_class_bug'
 });
 
 registry.category("web_tour.tours").add('test_website_page_manager_no_website_id', {
-    test: true,
     url: '/odoo/action-test_website.action_test_model',
     steps: () => [
 {

@@ -7,7 +7,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('website_crm_pre_tour', {
-    test: true,
     url: '/contactus',
     edition: true,
 }, () => [{
@@ -34,7 +33,6 @@ registerWebsitePreviewTour('website_crm_pre_tour', {
 }]);
 
 registry.category("web_tour.tours").add('website_crm_tour', {
-    test: true,
     url: '/contactus',
     steps: () => [{
     content: "Complete name",
@@ -70,7 +68,6 @@ registry.category("web_tour.tours").add('website_crm_tour', {
 }]});
 
 registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_tour', {
-    test: true,
     url: '/contactus',
     steps: () => [{
     content: "Complete Subject",

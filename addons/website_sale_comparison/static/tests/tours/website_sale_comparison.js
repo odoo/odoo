@@ -4,7 +4,6 @@
     import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
     registry.category("web_tour.tours").add('product_comparison', {
-        test: true,
         url: "/shop",
         steps: () => [
     // test from shop page

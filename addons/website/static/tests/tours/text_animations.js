@@ -6,7 +6,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("text_animations", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [
