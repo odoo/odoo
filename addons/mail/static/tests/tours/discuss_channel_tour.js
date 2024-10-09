@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
     sequence: 80,
     steps: () => [
         {
-            trigger: "input[placeholder='Search conversations']",
+            trigger: "input[placeholder='Find or start a conversation']",
             content: markup(
                 _t(
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: "input[placeholder='Search conversations']",
+            trigger: "input[placeholder='Find or start a conversation']",
             content: markup(_t("<p>Create a channel here.</p>")),
             tooltipPosition: "bottom",
             run: `edit SomeChannel_${new Date().getTime()}`,
@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: "input[placeholder='Search conversations']",
+            trigger: "input[placeholder='Find or start a conversation']",
             content: markup(
                 _t(
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"
@@ -112,7 +112,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: "input[placeholder='Search conversations']",
+            trigger: "input[placeholder='Find or start a conversation']",
         },
     ],
 });

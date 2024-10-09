@@ -45,7 +45,7 @@ export class NavigableList extends Component {
         onExternalClick("root", async (ev) => {
             // Let event be handled by bubbling handlers first.
             await new Promise(setTimeout);
-            if (isEventHandled(ev, "composer.onClickTextarea")) {
+            if (isEventHandled(ev, "NavigableList/DONT_CLOSE")) {
                 return;
             }
             this.close();

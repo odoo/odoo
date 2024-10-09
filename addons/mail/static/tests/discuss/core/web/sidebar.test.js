@@ -24,7 +24,7 @@ test("sidebar find shows channels matching search term", async () => {
     });
     await start();
     await openDiscuss();
-    await insertText("input[placeholder='Search conversations']", "test");
+    await insertText("input[placeholder='Find or start a conversation']", "test");
     // When searching for a single existing channel, the results list will have at least 2 lines:
     // One for the existing channel itself
     // One for creating a channel
@@ -43,7 +43,7 @@ test("sidebar find shows channels matching search term even when user is member"
     });
     await start();
     await openDiscuss();
-    await insertText("input[placeholder='Search conversations']", "test");
+    await insertText("input[placeholder='Find or start a conversation']", "test");
     // When searching for a single existing channel, the results list will have at least 2 lines:
     // One for the existing channel itself
     // One for creating a channel with the search term

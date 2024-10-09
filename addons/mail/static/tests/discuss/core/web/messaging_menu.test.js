@@ -77,7 +77,7 @@ test("new message [REQUIRE FOCUS]", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await contains(".o-mail-ChatWindow input[placeholder='Search conversations']:focus");
+    await contains(".o-mail-ChatWindow input[placeholder='Find or start a conversation']:focus");
 });
 
 test("channel preview ignores empty message", async () => {

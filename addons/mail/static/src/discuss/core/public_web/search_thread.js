@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { CreateThreadDialog } from "./create_thread_dialog";
+import { markEventHandled } from "@web/core/utils/misc";
 
 export class SearchThread extends Component {
     static template = "mail.SearchThread";
@@ -25,11 +26,14 @@ export class SearchThread extends Component {
     setup() {
         super.setup();
         this.store = useState(useService("mail.store"));
+        this.ui = useState(useService("ui"));
         this.sequential = useSequential();
         this.discussCoreCommonService = useState(useService("discuss.core.common"));
+        this.markEventHandled = markEventHandled;
         this.state = useState({
             searchValue: "",
             isFetching: false,
+            focused: false,
         });
         this.searchBoxRef = useRef("searchBox");
         this.searchInputRef = useRef("searchInput");
@@ -47,7 +51,7 @@ export class SearchThread extends Component {
 
     get inputPlaceholder() {
         if (!this.props.category) {
-            return _t("Search conversations");
+            return _t("Find or start a conversation");
         } else {
             return this.props.category.addTitle;
         }
@@ -86,6 +90,7 @@ export class SearchThread extends Component {
                     )
                     .map((thread) => {
                         return {
+                            buttonClass: "text-reset",
                             optionTemplate: "discuss.SearchThread.channel",
                             classList: "o-mail-SearchThread-suggestion",
                             channel: thread,
@@ -103,6 +108,7 @@ export class SearchThread extends Component {
                     )
                     .map((persona) => {
                         return {
+                            buttonClass: "text-reset",
                             optionTemplate: "discuss.SearchThread.partner",
                             classList: "o-mail-SearchThread-suggestion",
                             partner: persona,
@@ -122,6 +128,7 @@ export class SearchThread extends Component {
                     )
                     .map((thread) => {
                         return {
+                            buttonClass: "text-reset",
                             optionTemplate: "discuss.SearchThread.channel",
                             classList: "o-mail-SearchThread-suggestion",
                             channel: thread,
@@ -142,21 +149,33 @@ export class SearchThread extends Component {
             isLoading: this.state.isFetching,
             groupSeparators: false,
         };
+        const create = [
+            this.props.category === this.store.discuss.channels ? "channel" : undefined,
+            this.props.category === this.store.discuss.chats ? "group" : undefined,
+        ].filter((type) => !!type);
+        const createOption = {
+            create,
+            optionTemplate:
+                create.length !== 1
+                    ? "discuss.SearchThread.new"
+                    : create[0] === "channel"
+                    ? "discuss.SearchThread.newChannel"
+                    : create[0] === "group"
+                    ? "discuss.SearchThread.newGroup"
+                    : "discuss.SearchThread.new",
+            classList: "o-mail-SearchThread-suggestion py-1",
+            label: this.state.searchValue,
+            group: 100,
+        };
         if (!this.state.searchValue) {
+            if (this.canCreate && this.state.focused) {
+                props.options.push(createOption);
+            }
             return props;
         }
         props.options = this.suggestions.slice(0, 8);
-        if (
-            this.props.canCreate &&
-            (!this.props.category || this.props.category === this.store.discuss.channels)
-        ) {
-            props.options.push({
-                createChannel: true,
-                optionTemplate: "discuss.SearchThread.new",
-                classList: "o-mail-SearchThread-suggestion",
-                label: this.state.searchValue,
-                group: 100,
-            });
+        if (this.canCreate) {
+            props.options.push(createOption);
         }
         if (!props.options.length && !this.state.isFetching) {
             props.options.push({
@@ -168,10 +187,21 @@ export class SearchThread extends Component {
         return props;
     }
 
+    get canCreate() {
+        return (
+            this.props.canCreate &&
+            (!this.props.category ||
+                this.props.category === this.store.discuss.channels ||
+                this.props.category === this.store.discuss.chats)
+        );
+    }
+
     async onSelect(option) {
-        if (option.createChannel) {
+        if (option.create) {
+            const threadTypes = option.create.filter((type) => !!type);
             this.env.services.dialog.add(CreateThreadDialog, {
                 name: this.state.searchValue,
+                types: threadTypes.length > 0 ? threadTypes : undefined,
                 onCompleted: this.onCompleted.bind(this),
             });
             return;
@@ -189,5 +219,13 @@ export class SearchThread extends Component {
     onCompleted() {
         this.state.searchValue = "";
         this.props.onCompleted?.();
+    }
+
+    onFocusin() {
+        this.state.focused = true;
+    }
+
+    onFocusout() {
+        this.state.focused = false;
     }
 }

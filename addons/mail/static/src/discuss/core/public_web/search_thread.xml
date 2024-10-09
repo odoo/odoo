@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.SearchThread">
-        <div t-ref="searchBox" class="o-mail-SearchThread rounded" t-att-class="{ 'o-active': state.searchValue.length }" t-attf-class="{{ props.className }}">
+        <div t-ref="searchBox" class="o-mail-SearchThread rounded" t-att-class="{ 'o-active': state.searchValue.length, 'w-100': env.inChatWindow }" t-attf-class="{{ props.className }}">
             <div class="d-flex flex-grow-1 align-items-center justify-content-center gap-1">
-                <input class="form-control rounded-3 border-0" t-att-placeholder="inputPlaceholder" t-model="state.searchValue" t-ref="searchInput"/>
-                <button t-if="state.searchValue.length" class="btn btn-light p-1 rounded-0" t-on-click="() => state.searchValue = ''"><i class="oi oi-close" title="Clear search"/></button>
+                <input class="form-control rounded-3 border-0" t-att-class="{ 'lh-1': !ui.isSmall }" t-att-placeholder="inputPlaceholder" t-model="state.searchValue" t-ref="searchInput" t-on-click="(ev) => markEventHandled(ev, 'NavigableList/DONT_CLOSE')" t-on-focusin="onFocusin" t-on-focusout="onFocusout" tabindex="0"/>
+                <button t-if="state.searchValue.length" class="btn btn-light bg-inherit border-0 px-1 py-0 rounded-0" t-on-click="() => state.searchValue = ''"><i class="oi oi-close" title="Clear search"/></button>
             </div>
             <NavigableList t-props="navigableListProps"/>
         </div>
@@ -25,6 +25,15 @@
     </t>
 
     <t t-name="discuss.SearchThread.new">
-        <span class="text-muted fw-bold smaller">Create a new conversation</span>
+        <span class="fw-bold small"><i class="fa fa-pencil fa-fw me-1"/>Create a new conversation</span>
     </t>
+
+    <t t-name="discuss.SearchThread.newGroup">
+        <span class="fw-bold small"><i class="fa fa-users fa-fw me-1"/>Create a new group chat</span>
+    </t>
+
+    <t t-name="discuss.SearchThread.newChannel">
+        <span class="fw-bold small"><i class="fa fa-hashtag fa-fw me-1"/>Create a new channel</span>
+    </t>
+
 </templates>

@@ -27,14 +27,14 @@ test("basic rendering", async () => {
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title*='Close Chat Window']"
     );
     await contains("span", { text: "To :" });
-    await contains("input[placeholder='Search conversations']");
+    await contains("input[placeholder='Find or start a conversation']");
 });
 
 test("focused on open [REQUIRE FOCUS]", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
-    await contains(".o-mail-ChatWindow input[placeholder='Search conversations']:focus");
+    await contains(".o-mail-ChatWindow input[placeholder='Find or start a conversation']:focus");
 });
 
 test("close", async () => {
@@ -78,7 +78,7 @@ test('open chat from "new message" chat window should open new chat', async () =
     await contains(".o-mail-ChatWindow", { count: 3 });
     await contains(":nth-child(2 of .o-mail-ChatWindow)", { text: "New message" });
     // search for a user in "new message" autocomplete
-    await insertText("input[placeholder='Search conversations']", "131");
+    await insertText("input[placeholder='Find or start a conversation']", "131");
     await click(".o-mail-SearchThread-suggestion a", { text: "Partner 131" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { count: 0, text: "New message" });
@@ -103,7 +103,7 @@ test("new message chat window should close on selecting the user if chat with th
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
-    await insertText("input[placeholder='Search conversations']", "131");
+    await insertText("input[placeholder='Find or start a conversation']", "131");
     await click(".o-mail-SearchThread-suggestion a", { text: "Partner 131" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { count: 0, text: "New message" });
@@ -117,7 +117,7 @@ test("new message autocomplete should automatically select first result", async 
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
-    await insertText("input[placeholder='Search conversations']", "131");
+    await insertText("input[placeholder='Find or start a conversation']", "131");
     await contains(".o-mail-SearchThread-suggestion a.o-mail-NavigableList-active");
 });
 
@@ -139,7 +139,7 @@ test('open chat from "new message" should open chat window', async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
-    await insertText("input[placeholder='Search conversations']", "John");
+    await insertText("input[placeholder='Find or start a conversation']", "John");
     await click(".o-mail-SearchThread-suggestion a", { text: "John" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { count: 0, text: "New message" });

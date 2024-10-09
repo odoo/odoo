@@ -24,7 +24,7 @@ test("no default rtc after joining a chat conversation", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await insertText("input[placeholder='Search conversations']", "mario");
+    await insertText("input[placeholder='Find or start a conversation']", "mario");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await click(".o-mail-SearchThread-suggestion", { text: "Mario" });
     await contains(".o-mail-SearchThread-suggestion", { count: 0 });
@@ -43,10 +43,12 @@ test("no default rtc after joining a group conversation", async () => {
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     await start();
     await openDiscuss();
-    await insertText("input[placeholder='Search conversations']", "mario");
+    await insertText("input[placeholder='Find or start a conversation']", "mario");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await click(".o-mail-SearchThread-suggestion", { text: "Mario" });
-    await insertText("input[placeholder='Search conversations']", "luigi", { replace: true });
+    await insertText("input[placeholder='Find or start a conversation']", "luigi", {
+        replace: true,
+    });
     await click(".o-mail-SearchThread-suggestion", { text: "Luigi" });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel");

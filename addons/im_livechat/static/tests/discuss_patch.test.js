@@ -143,7 +143,7 @@ test("sidebar search finds livechats", async () => {
     });
     await start();
     await openDiscuss();
-    await insertText("input[placeholder='Search conversations']", "Vis");
+    await insertText("input[placeholder='Find or start a conversation']", "Vis");
     await click(":nth-child(1 of .o-mail-SearchThread-suggestion)");
     await contains(".o-mail-Discuss-threadName[title='Visitor 11']");
 });

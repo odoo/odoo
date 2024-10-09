@@ -50,7 +50,7 @@
                             t-on-keydown="onKeydown"
                             t-on-focusin="onFocusin"
                             t-on-focusout="() => this.props.composer.isFocused = false"
-                            t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
+                            t-on-click="(ev) => markEventHandled(ev, 'NavigableList/DONT_CLOSE')"
                             t-on-paste="onPaste"
                             t-model="props.composer.text"
                             t-att-placeholder="placeholder"

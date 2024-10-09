@@ -6,7 +6,7 @@
             <t t-set-slot="content">
                 <div t-att-class="{ 'p-2': !state.floatingSearchOpen }" t-ref="quick-search-floating">
                     <SearchThread t-if="state.floatingSearchOpen" autofocus="true" canCreate="!store.inPublicPage" category="store.inPublicPage and store.discuss.channels" onSearchValueChanged="(searchValue) => this.state.searchValue = searchValue"/>
-                    <span t-else="" class="text-muted user-select-none">Search conversations</span>
+                    <span t-else="" class="text-muted user-select-none">Find or start a conversation</span>
                 </div>
             </t>
         </Dropdown>

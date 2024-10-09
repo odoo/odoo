@@ -1960,10 +1960,10 @@ test("Chats input should wait until the previous RPC is done before starting a n
 
     await start();
     await openDiscuss();
-    await insertText("input[placeholder='Search conversations']", "m");
+    await insertText("input[placeholder='Find or start a conversation']", "m");
     await contains(".o-mail-NavigableList-floatingLoading", { text: "Loading…" });
-    await insertText("input[placeholder='Search conversations']", "a");
-    await insertText("input[placeholder='Search conversations']", "r");
+    await insertText("input[placeholder='Find or start a conversation']", "a");
+    await insertText("input[placeholder='Find or start a conversation']", "r");
     deferred1.resolve();
     await Promise.resolve();
     await assertSteps(["First RPC"]);
@@ -2095,7 +2095,7 @@ test("Newly created chat should be at the top of the direct message list", async
     });
     await start();
     await openDiscuss();
-    await insertText("input[placeholder='Search conversations']", "Jer");
+    await insertText("input[placeholder='Find or start a conversation']", "Jer");
     await click(".o-mail-SearchThread-suggestion", { text: "Jerry Golay" });
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebar-item", {

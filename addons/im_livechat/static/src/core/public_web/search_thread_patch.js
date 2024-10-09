@@ -15,6 +15,7 @@ patch(SearchThread.prototype, {
                     .filter((thread) => cleanTerm(thread.displayName).includes(cleanedTerm))
                     .map((thread) => {
                         return {
+                            buttonClass: "text-reset",
                             optionTemplate: "discuss.SearchThread.channel",
                             classList: "o-mail-SearchThread-suggestion",
                             channel: thread,

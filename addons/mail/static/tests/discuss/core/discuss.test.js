@@ -51,7 +51,7 @@ test("bus subscription is refreshed when channel is joined", async () => {
     await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
     await openDiscuss();
     await assertSteps([]);
-    await insertText("input[placeholder='Search conversations']", "new channel");
+    await insertText("input[placeholder='Find or start a conversation']", "new channel");
     await click(".o-mail-SearchThread-suggestion");
     await assertSteps([`subscribe - [${imStatusChannels.join(",")}]`]);
 });

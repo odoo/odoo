@@ -53,7 +53,7 @@ test("'New message' chat window can only be open [REQUIRE FOCUS]", async () => {
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
     await contains(".o-mail-ChatWindow", { count: 1 });
     await contains("[title='Fold']", { count: 0 });
-    await insertText("input[placeholder='Search conversations']", "John");
+    await insertText("input[placeholder='Find or start a conversation']", "John");
     await click(".o-mail-SearchThread-suggestion", { text: "John" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow");
@@ -70,7 +70,7 @@ test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
     // Make bubble of "John" chat
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await insertText("input[placeholder='Search conversations']", "John");
+    await insertText("input[placeholder='Find or start a conversation']", "John");
     await click(".o-mail-SearchThread-suggestion", { text: "John" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "John" });
@@ -80,7 +80,7 @@ test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
     // Make bubble of "John" chat again
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await insertText("input[placeholder='Search conversations']", "John");
+    await insertText("input[placeholder='Find or start a conversation']", "John");
     await click(".o-mail-SearchThread-suggestion", { text: "John" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
