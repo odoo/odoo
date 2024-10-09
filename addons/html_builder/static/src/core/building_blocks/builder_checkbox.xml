@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderCheckbox">
+    <BuilderComponent>
+        <div t-att-data-action-id="this.props.action">
+            <CheckBox className="getClassName()" onChange="onChange" value="state.isActive"/>
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

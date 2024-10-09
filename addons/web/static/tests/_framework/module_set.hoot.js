@@ -122,7 +122,7 @@ const fetchDependencies = async (addons) => {
             dependencyBatchPromise = Deferred.resolve().then(() => {
                 const module_names = [...new Set(dependencyBatch)];
                 dependencyBatch = [];
-                return orm("ir.module.module.dependency", "all_dependencies", [], { module_names });
+                return realOrm("ir.module.module.dependency", "all_dependencies", [], { module_names });
             });
         }
         dependencyBatch.push(...addonsToFetch);
@@ -210,7 +210,7 @@ const makeFixedFactory = (name) => {
  * @param {any[]} args
  * @param {Record<string, any>} kwargs
  */
-const orm = async (model, method, args, kwargs) => {
+export const realOrm = async (model, method, args, kwargs) => {
     const response = await realFetch(`/web/dataset/call_kw/${model}/${method}`, {
         body: JSON.stringify({
             id: nextRpcId++,
@@ -595,14 +595,7 @@ export function globalCachedFetch(input, init) {
     if (init?.method && init.method.toLowerCase() !== "get") {
         throw new Error(`cannot use a global cached fetch with HTTP method "${init.method}"`);
     }
-    const key = String(input);
-    if (!(key in globalFetchCache)) {
-        globalFetchCache[key] = realFetch(input, init).catch((reason) => {
-            delete globalFetchCache[key];
-            throw reason;
-        });
-    }
-    return globalFetchCache[key];
+    return realFetch(input, init);
 }
 
 /**

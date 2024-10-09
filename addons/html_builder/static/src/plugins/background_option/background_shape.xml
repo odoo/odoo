@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundShape">
+    <BuilderRow label.translate="Shape" level="1" t-if="isActiveItem('toggle_bg_shape_id')">
+        <button class="btn btn-primary" t-on-click="props.showBackgroundShapes" t-out="getCurrentBgShapeName()"/>
+        <BuilderButton
+            title.translate="Show/Hide on Mobile"
+            preview="false"
+            action="'showOnMobile'"
+            iconImg="'/html_builder/static/img/options/mobile_invisible.svg'"
+        />
+        <BuilderButton action="'applyShape'" actionValue="''" preview="false" icon="'fa-times'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Flip" level="2" t-if="isActiveItem('toggle_bg_shape_id')">
+        <BuilderButton icon="'oi-arrows-h'" preview="false" action="'flipShape'" actionParam="'x'"/>
+        <BuilderButton icon="'oi-arrows-v'" preview="false" action="'flipShape'" actionParam="'y'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Colors" level="2">
+        <t t-foreach="getDefaultColorNames()" t-as="colorName" t-key="colorName_index">
+            <BuilderColorPicker action="'backgroundShapeColor'" actionParam="colorName"/>
+        </t>
+        <!-- TODO handle all the attributes -->
+        <BuilderColorPicker styleAction="'background-color'" applyTo="':scope > .o_we_shape'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Speed" level="2" t-if="isShapeAnimated()">
+        <BuilderRange
+            preview="false"
+            displayRangeValue="true"
+            max="2"
+            min="-2"
+            step="0.1"
+            action="'setBgAnimationSpeed'"
+            computedOutput="getBgAnimationSpeed"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

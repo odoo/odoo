@@ -42,6 +42,7 @@ export class ColorPicker extends Component {
         applyColorPreview: Function,
         applyColorResetPreview: Function,
         colorPrefix: { type: String },
+        noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
     };
     static defaultProps = {

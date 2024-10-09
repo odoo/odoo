@@ -652,7 +652,7 @@ test("toolbar buttons should have title attribute with translated text", async (
     const { editor, plugins } = await setupEditor("");
     // map function to get the title string value
     const itemTitleString = (item) =>
-        item.title instanceof Function ? item.title().toString() : item.title.toString();
+        item.title instanceof Function ? item.title().toString() : (item.title || item.props.title).toString();
 
     // item.label could be a LazyTranslatedString so we ensure it is a string with toString()
     const titles = plugins.get("toolbar").getButtons().map(itemTitleString);
@@ -727,6 +727,17 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
 
     setContent(el, `<p>ab${strong("[\u200B]", "first")}cd</p>`);
     await tick(); // selectionChange
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
+test("toolbar shouldn't be visible if can_display_toolbar === false", async () => {
+    const { el } = await setupEditor("<p>[test]<img></p>", {
+        config: { resources: { can_display_toolbar: (namespace) => namespace !== "image" } },
+    });
+
+    expect(".o-we-toolbar").toHaveCount(1);
+    setContent(el, "<p>test[<img>]</p>");
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(0);
 });

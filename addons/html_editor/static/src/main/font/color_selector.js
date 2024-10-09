@@ -2,12 +2,11 @@ import { isColorGradient } from "@web/core/utils/colors";
 import { Component, useState } from "@odoo/owl";
 import { useColorPicker } from "@web/core/color_picker/color_picker";
 import { effect } from "@web/core/utils/reactive";
-import { toolbarButtonProps } from "../toolbar/toolbar";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
     static props = {
-        ...toolbarButtonProps,
+        title: { type: String },
         mode: { type: String },
         type: { type: String },
         getSelectedColors: Function,

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_blog.BlogPostsOption" t-inherit="html_builder.DynamicSnippetOption">
+    <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
+        <BuilderRow label.translate="Blog">
+            <BuilderSelect dataAttributeAction="'filterByBlogId'" preview="false">
+                <BuilderSelectItem dataAttributeActionValue="'-1'">All blogs</BuilderSelectItem>
+                <t t-foreach="blogState.blogs" t-as="blog" t-key="blog.id">
+                    <BuilderSelectItem dataAttributeActionValue="`${blog.id}`" t-out="blog.name"/>
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+    </xpath>
+    <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
+        <!-- TODO noWidgetRefresh="true" => refreshInteraction="false" ? -->
+        <BuilderRow label.translate="Picture Size" level="1" preview="false">
+            <BuilderButtonGroup id="'picture_size_opt'">
+                <BuilderButton label.translate="Smaller" title.translate="Smaller picture" classAction="'s_blog_posts_post_picture_size_small'"/>
+                <BuilderButton label.translate="Normal" title.translate="Normal picture" classAction="'s_blog_posts_post_picture_size_default'"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow label.translate="Author" level="1" preview="false">
+            <BuilderCheckbox id="'author_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_author_active'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Teaser" level="1" preview="false">
+            <BuilderCheckbox id="'teaser_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_teaser_active'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Date" level="1" preview="false">
+            <BuilderCheckbox id="'date_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_date_active'"/>
+        </BuilderRow>
+        <!-- TODO noWidgetRefresh="true" => refreshInteraction="false" ? -->
+        <BuilderRow label.translate="Hover Effect" level="1">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_blog_posts_effect_marley'">Marley</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_blog_posts_effect_dexter'">Dexter</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_blog_posts_effect_chico'">Silly-Chico</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </xpath>
+</t>
+</templates>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ShadowOption">
+    <BuilderRow label.translate="Shadow">
+       <BuilderButtonGroup action="'setShadowMode'">
+         <BuilderButton actionParam="'none'" id="'no_shadow'">None</BuilderButton>
+         <BuilderButton actionParam="'outset'" title.translate="Outset" iconImg="'/website/static/src/img/snippets_options/shadow_out.svg'"/>
+         <BuilderButton actionParam="'inset'" title.translate="Inset" iconImg="'/website/static/src/img/snippets_options/shadow_in.svg'"/>
+       </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderContext t-if="!this.isActiveItem('no_shadow')">
+        <BuilderRow label.translate="Color" level="1">
+            <BuilderColorPicker action="'setShadow'" actionParam="'color'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Offset (X, Y)" level="1">
+            <BuilderNumberInput action="'setShadow'" actionParam="'offsetX'" unit="'px'"/>
+            <BuilderNumberInput action="'setShadow'" actionParam="'offsetY'" unit="'px'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Blur" level="1">
+            <BuilderNumberInput action="'setShadow'" actionParam="'blur'" unit="'px'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Spread" level="1">
+            <BuilderNumberInput action="'setShadow'" actionParam="'spread'" unit="'px'"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

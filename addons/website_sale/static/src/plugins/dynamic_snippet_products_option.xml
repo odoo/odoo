@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.DynamicSnippetProductsOption" t-inherit="html_builder.DynamicSnippetCarouselOption">
+    <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
+        <BuilderRow label.translate="Category">
+            <BuilderSelect dataAttributeAction="'productCategoryId'" preview="false" id="'product_category_opt'">
+                <BuilderSelectItem dataAttributeActionValue="'all'">All Products</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'current'">Current Category or All</BuilderSelectItem>
+                <t t-foreach="saleState.categories" t-as="category" t-key="`${category.id}`">
+                    <BuilderSelectItem dataAttributeActionValue="`${category.id}`" t-out="category.name"/>
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Tags" preview="false">
+	        <BuilderMany2Many id="'product_tag_opt'" model="'product.tag'" limit="10"
+	            dataAttributeAction="'productTagIds'"
+	        />
+	    </BuilderRow>
+<!-- TODO when many2many is fully supported
+                    data-allow-delete="true"
+                    data-fakem2m="true"
+-->
+        <BuilderRow label.translate="Show variants" preview="false">
+            <BuilderCheckbox dataAttributeAction="'showVariants'" dataAttributeActionValue="'true'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Product Names" preview="false">
+            <BuilderTextInput dataAttributeAction="'productNames'" id="'product_names_opt'"
+                placeholder.translate="e.g. lamp,bin"
+                title.translate="Comma-separated list of parts of product names, barcodes or internal reference"
+            />
+        </BuilderRow>
+    </xpath>
+</t>
+</templates>

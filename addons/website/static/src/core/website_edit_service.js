@@ -29,20 +29,19 @@ export function buildEditableInteractions(builders) {
         // Apply mixins from top-most class.
         let EI = makeEditable.Interaction;
         while (mixins.length) {
-            EI =  mixins.pop()(EI);
+            EI = mixins.pop()(EI);
         }
         if (!EI.name) {
             // if we get here, this is most likely because we have an anonymous
             // class. To make it easier to work with, we can add the name property
             // by doing a little hack
             const name = makeEditable.Interaction.name + "__mixin";
-            EI = {[name]: class extends EI {}} [name];
+            EI = { [name]: class extends EI {} }[name];
         }
         result.push(EI);
     }
     return result;
 }
-
 
 registry.category("services").add("website_edit", {
     dependencies: ["public.interactions"],
@@ -50,34 +49,51 @@ registry.category("services").add("website_edit", {
         let editableInteractions = null;
         let editMode = false;
 
-        return {
-            isEditingTranslations() {
-                return !!publicInteractions.el.closest("html").dataset.edit_translations;
-            },
-            update(target, mode) {
-                // editMode = true;
-                // const currentEditMode = this.website_edit.mode === "edit";
-                const shouldActivateEditInteractions = editMode !== mode;
-                // interactions are already started. we only restart them if the
-                // public root is not just starting.
+        const update = (target, mode) => {
+            // editMode = true;
+            // const currentEditMode = this.website_edit.mode === "edit";
+            const shouldActivateEditInteractions = editMode !== mode;
+            // interactions are already started. we only restart them if the
+            // public root is not just starting.
 
-                publicInteractions.stopInteractions(target);
-                if (shouldActivateEditInteractions) {
-                    if (!editableInteractions) {
-                        const builders = registry.category("public.interactions.edit").getAll();
-                        editableInteractions = buildEditableInteractions(builders);
-                    }
-                    editMode = true;
-                    publicInteractions.editMode = true;
-                    publicInteractions.activate(editableInteractions);
-                } else {
-                    publicInteractions.startInteractions(target);
+            publicInteractions.stopInteractions(target);
+            if (shouldActivateEditInteractions) {
+                if (!editableInteractions) {
+                    const builders = registry.category("public.interactions.edit").getAll();
+                    editableInteractions = buildEditableInteractions(builders);
                 }
-            },
+                editMode = true;
+                publicInteractions.editMode = true;
+                publicInteractions.activate(editableInteractions);
+            } else {
+                publicInteractions.startInteractions(target);
+            }
         };
+
+        const stop = (target) => {
+            publicInteractions.stopInteractions(target);
+        }
+
+        const isEditingTranslations = () => {
+            return !!publicInteractions.el.closest("html").dataset.edit_translations;
+        };
+
+        const websiteEditService = { isEditingTranslations, update, stop };
+
+        // Transfer the iframe website_edit service to the EditInteractionPlugin
+        window.parent.document.addEventListener("edit_interaction_plugin_loaded", (ev) => {
+            ev.currentTarget.dispatchEvent(
+                new CustomEvent("transfer_website_edit_service", {
+                    detail: {
+                        websiteEditService,
+                    },
+                })
+            );
+        });
+
+        return websiteEditService;
     },
 });
-
 
 // Patch PublicRoot.
 

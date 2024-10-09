@@ -1,0 +1,65 @@
+.o-website-builder_sidebar {
+    width: 0px;
+    background-color: $o-we-sidebar-bg;
+    transition: width ease 400ms;
+
+    &.o_builder_sidebar_open {
+        width: $o-we-sidebar-width;
+    }
+}
+
+.o_main_navbar {
+    transition: margin ease 400ms !important;
+}
+
+
+.o_website_preview {
+    position: relative;
+    isolation: isolate;
+    height: 100%;
+    transition: margin-right ease 400ms;
+
+    .o_iframe_container {
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+        iframe {
+            position: absolute;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &.o_is_mobile {
+        .o_iframe_container {
+            @include media-breakpoint-up(md) {
+                height: 735px !important;
+                width: 362px;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+
+                // Below the following height, the preview size decreases to ensure it
+                // will always be fully visible.
+                @media(max-height: calc(800px + #{$o-navbar-height})) {
+                    height: 602px !important;
+                    width: 310px;
+
+                    // Below this height, we decrease the size of the mobile
+                    // preview (see in website.backend.scss) so we have to make
+                    // the image take the same size as its parent.
+                    div.o_mobile_preview_layout > img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+body:has(.o_builder_sidebar_open) .o_notification_manager {
+    @include o-position-absolute($top: map-get($spacers, 2), $right: calc(#{$o-we-sidebar-width} + 0.5rem));
+}

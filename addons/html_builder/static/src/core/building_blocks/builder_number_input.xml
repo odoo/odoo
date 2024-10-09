@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderNumberInput">
+    <BuilderComponent>
+        <div class="d-flex flex-row flex-nowrap align-items-center"
+            style="width: 100%"
+            t-att-data-action-id="props.action"
+            t-att-data-action-param="props.actionParam" >
+            <input
+                type="text"
+                autocomplete="chrome-off"
+                class="text-end"
+                t-on-change="this.onChange"
+                t-on-input="this.onInput"
+                t-att-value="this.state.value"
+                t-on-keydown="this.handleKeydown"
+                t-att-placeholder="props.placeholder"
+            />
+            <span t-out="props.unit" />
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

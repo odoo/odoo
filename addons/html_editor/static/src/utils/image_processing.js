@@ -1,11 +1,26 @@
 import { rpc } from "@web/core/network/rpc";
 import { pick } from "@web/core/utils/objects";
 import { getAffineApproximation, getProjective } from "./perspective_utils";
+import { loadBundle } from "@web/core/assets";
 
 // Fields returned by cropperjs 'getData' method, also need to be passed when
 // initializing the cropper to reuse the previous crop.
 export const cropperDataFields = ["x", "y", "width", "height", "rotate", "scaleX", "scaleY"];
 export const isGif = (mimetype) => mimetype === "image/gif";
+const modifierFields = [
+    'filter',
+    'quality',
+    'mimetype',
+    'glFilter',
+    'originalId',
+    'originalSrc',
+    'resizeWidth',
+    'aspectRatio',
+    "bgSrc",
+    "mimetypeBeforeConversion",
+];
+
+export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
 
 // webgl color filters
 const _applyAll = (result, filter, filters) => {
@@ -208,7 +223,7 @@ const glFilters = {
  * @param {Cropper} cropper the cropper instance
  * @returns {string} dataURL of the image with the applied modifications
  */
-export async function applyModifications(img, cropper, dataOptions = {}) {
+export async function applyModifications(img, dataOptions = {}) {
     const data = Object.assign(
         {
             glFilter: "",
@@ -248,7 +263,9 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
     // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
     originalSrc = original.getAttribute("src");
     container.appendChild(original);
+    const cropper = await activateCropper(original, 0, data);
     let croppedImg = cropper.getCroppedCanvas(width, height);
+    cropper.destroy();
 
     // Aspect Ratio
     if (imgAspectRatio) {
@@ -256,7 +273,7 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
         imgAspectRatio = imgAspectRatio.split(":");
         imgAspectRatio = parseFloat(imgAspectRatio[0]) / parseFloat(imgAspectRatio[1]);
         const croppedCropper = await activateCropper(croppedImg, imgAspectRatio, { y: 0 });
-        croppedImg = croppedCropper.cropper("getCroppedCanvas");
+        croppedImg = croppedCropper.getCroppedCanvas();
         croppedCropper.destroy();
     }
 
@@ -307,7 +324,7 @@ export async function applyModifications(img, cropper, dataOptions = {}) {
                     overlap: 0.1,
                 };
 
-                for (let { origin, sides, flange, overlap } of [upper, lower]) {
+                for (const { origin, sides, flange, overlap } of [upper, lower]) {
                     const [[a, c, e], [b, d, f]] = getAffineApproximation(project, [
                         origin,
                         [origin[0] + sides[0], origin[1]],
@@ -492,10 +509,13 @@ function _getImageSizeFromCache(src) {
  * @param {Number} aspectRatio the aspectRatio of the crop box
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
-export async function activateCropper(image, aspectRatio, dataset) {
+export async function activateCropper(image, aspectRatio, dataset, cropperOptions) {
+    await loadBundle("html_editor.assets_image_cropper");
     const oldSrc = image.src;
     const newSrc = await _loadImageObjectURL(image.getAttribute("src"));
     image.src = newSrc;
+    let readyResolve;
+    const readyPromise = new Promise((resolve) => (readyResolve = resolve));
     // eslint-disable-next-line no-undef
     const cropper = new Cropper(image, {
         viewMode: 2,
@@ -511,10 +531,13 @@ export async function activateCropper(image, aspectRatio, dataset) {
         // Can't use 0 because it's falsy and cropperjs will then use its defaults (200x100)
         minContainerWidth: 1,
         minContainerHeight: 1,
+        ready: readyResolve,
+        ...cropperOptions,
     });
     if (oldSrc === newSrc && image.complete) {
         return;
     }
+    await readyPromise;
     return cropper;
 }
 

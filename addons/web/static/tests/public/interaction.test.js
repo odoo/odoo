@@ -63,9 +63,6 @@ describe("adding listeners", () => {
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
-            dynamicContent = {
-                span: { "t-on-click": () => clicked++ },
-            };
         }
         await startInteraction(Test, TemplateTest);
         expect(clicked).toBe(0);
@@ -77,9 +74,6 @@ describe("adding listeners", () => {
         let clicked = 0;
         class Test extends Interaction {
             static selector = ".test";
-            dynamicContent = {
-                span: { "t-on-click": () => clicked++ },
-            };
         }
         await startInteraction(Test, TemplateTestDoubleSpan);
         expect(clicked).toBe(0);
