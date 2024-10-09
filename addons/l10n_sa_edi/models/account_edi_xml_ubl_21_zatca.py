@@ -254,7 +254,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         non_retention_taxes = taxes.filtered(lambda t: not t.l10n_sa_is_retention)
         return super()._get_tax_category_list(customer, supplier, non_retention_taxes)
 
-    def _get_document_allowance_charge_vals_list(self, invoice):
+    def _get_document_allowance_charge_vals_list(self, invoice, taxes_vals=None):
         """
         Charge Reasons & Codes (As per ZATCA):
         https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred5189.htm
