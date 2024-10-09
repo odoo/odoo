@@ -767,7 +767,7 @@ class IrModelFields(models.Model):
                 if field.state == 'manual' and field.ttype == 'many2many':
                     rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
                     tables_to_drop.add(rel_name)
-            if field.state == 'manual' and is_model:
+            if is_model and (field.state == 'manual' or self._context.get(MODULE_UNINSTALL_FLAG)):
                 model._pop_field(field.name)
 
         if tables_to_drop:
