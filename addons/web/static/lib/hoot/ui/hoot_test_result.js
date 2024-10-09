@@ -4,7 +4,7 @@ import { Component, useState, xml } from "@odoo/owl";
 import { Tag } from "../core/tag";
 import { Test } from "../core/test";
 import { subscribeToURLParams } from "../core/url";
-import { formatTime, ordinal } from "../hoot_utils";
+import { formatHumanReadable, formatTime, getTypeOf, ordinal } from "../hoot_utils";
 import { HootLink } from "./hoot_link";
 import { HootTechnicalValue } from "./hoot_technical_value";
 
@@ -64,10 +64,27 @@ export class HootTestResult extends Component {
                                     </a>
                                 </t>
                                 <span
-                                    class="truncate"
+                                    class="flex gap-1 truncate items-center"
                                     t-att-title="assertion.message"
-                                    t-esc="assertion.message"
-                                />
+                                >
+                                    <t t-foreach="assertion.messageParts" t-as="part" t-key="part_index">
+                                        <t t-if="part.type and part.type !== 'raw'">
+                                            <t t-if="part.type.endsWith('[]')">
+                                                <strong class="hoot-array">
+                                                    <t>[</t>
+                                                    <span t-attf-class="hoot-{{ part.type.slice(0, -2) }}" t-esc="part.slice(1, -1)" />
+                                                    <t>]</t>
+                                                </strong>
+                                            </t>
+                                            <t t-else="">
+                                                <strong t-attf-class="hoot-{{ part.type }}" t-esc="part" />
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="part" />
+                                        </t>
+                                    </t>
+                                </span>
                             </div>
                             <t t-set="timestamp" t-value="formatTime(assertion.ts - (result.ts || 0), 'ms')" />
                             <small class="text-muted flex items-center" t-att-title="timestamp">
@@ -120,9 +137,8 @@ export class HootTestResult extends Component {
                     </button>
                     <t t-if="state.showCode">
                         <pre
-                            class="px-2 py-1 rounded bg-white text-black dark:bg-black dark:text-white animate-slide-down overflow-auto"
-                            t-esc="props.test.code"
-                        />
+                            class="p-2 rounded bg-white text-black dark:bg-black dark:text-white animate-slide-down overflow-auto"
+                        ><code class="language-javascript" t-out="props.test.code" /></pre>
                     </t>
                 </div>
             </t>
@@ -130,7 +146,9 @@ export class HootTestResult extends Component {
     `;
 
     Tag = Tag;
+    formatHumanReadable = formatHumanReadable;
     formatTime = formatTime;
+    getTypeOf = getTypeOf;
     ordinal = ordinal;
 
     setup() {
