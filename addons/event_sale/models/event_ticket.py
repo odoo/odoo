@@ -60,7 +60,8 @@ class EventTemplateTicket(models.Model):
                 self.env.company,
                 fields.Datetime.now()
             )
-            discount = (lst_price - product._get_contextual_price()) / lst_price if lst_price else 0.0
+            discounted_price = pricelist.currency_id.round(product._get_contextual_price())
+            discount = (lst_price - discounted_price) / lst_price if lst_price else 0.0
             ticket.price_reduce = (1.0 - discount) * ticket.price
 
     def _init_column(self, column_name):
