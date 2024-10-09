@@ -18,15 +18,6 @@ $-seen-urls: ();
 }
 
 :root {
-    // The color behind the boxed layout is forced by Odoo. The box background
-    // color uses the `$body-bg` variable.
-    // grep: BOXED_BODY_BG_ODOO
-    @if o-website-value('layout') != 'full' {
-        $-boxed-layout-body-bg: o-color('body');
-        --#{$variable-prefix}body-bg-rgb: #{to-rgb($-boxed-layout-body-bg)};
-        --#{$variable-prefix}body-bg: #{$-boxed-layout-body-bg};
-    }
-
     // Border color
     // Let borders color adapt according to body and CCs. Also, set a fallback
     // value for browsers that don't support the color-mix function (used by
@@ -189,6 +180,15 @@ $-seen-urls: ();
         background-repeat: no-repeat;
     }
 };
+
+body {
+    // The color behind the boxed layout is forced by Odoo. The box background
+    // color uses the `$body-bg` variable.
+    // grep: BOXED_BODY_BG_ODOO
+    @if o-website-value('layout') != 'full' {
+        background-color: o-color('body');
+    }
+}
 
 #wrapwrap {
     @if o-website-value('body-image') {
