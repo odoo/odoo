@@ -40,6 +40,7 @@ import {
 import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
+import { isBrowserChrome, hasTouch } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} RangeLike
@@ -84,6 +85,7 @@ export class DeletePlugin extends Plugin {
             withSequence(5, this.onBeforeInputInsertText.bind(this)),
             this.onBeforeInputDelete.bind(this),
         ],
+        selectionchange_handlers: withSequence(5, () => this.onSelectionChange?.()),
         /** Overrides */
         delete_backward_overrides: withSequence(30, this.deleteBackwardUnmergeable.bind(this)),
         delete_backward_word_overrides: withSequence(20, this.deleteBackwardUnmergeable.bind(this)),
@@ -1158,8 +1160,12 @@ export class DeletePlugin extends Plugin {
         };
         const argsForDelete = handledInputTypes[ev.inputType];
         if (argsForDelete) {
-            ev.preventDefault();
             this.delete(...argsForDelete);
+            if (hasTouch() && isBrowserChrome()) {
+                this.preventDefaultDeleteAndroidChrome(ev);
+            } else {
+                ev.preventDefault();
+            }
         }
     }
 
@@ -1171,6 +1177,71 @@ export class DeletePlugin extends Plugin {
             }
             // Default behavior: insert text and trigger input event
         }
+    }
+
+    // ======== ANDROID CHROME =============
+
+    /**
+     * Beforeinput event of type deleteContentBackward cannot be default
+     * prevented in Android Chrome. So we need to revert:
+     * - eventual mutations between beforeinput and input events
+     * - eventual selection change after input event
+     *
+     * @param {InputEvent} beforeInputEvent
+     */
+    async preventDefaultDeleteAndroidChrome(beforeInputEvent) {
+        // Revert DOM changes that occurred between beforeinput and input
+        const restoreDOM = this.dependencies.history.makeSavePoint();
+        await this.waitForInputEvent(beforeInputEvent);
+        restoreDOM();
+
+        // Revert selection change after input but within the same tick
+        const { restore: restoreSelection } = this.dependencies.selection.preserveSelection();
+        const getMutationRecords = this.watchForMutations();
+        this.onSelectionChange = () => {
+            // If further mutations occurred, consider selection change legit
+            // (e.g. dictionary input) and do not revert it.
+            if (!getMutationRecords().length) {
+                restoreSelection();
+            }
+        };
+        setTimeout(() => delete this.onSelectionChange);
+    }
+
+    /**
+     * @param {InputEvent} beforeInputEvent
+     * @returns {Promise<void>} Promise that resolves when the input event of
+     * same type is triggered
+     */
+    waitForInputEvent(beforeInputEvent) {
+        return new Promise((resolve) => {
+            const listener = (inputEvent) => {
+                if (inputEvent.inputType === beforeInputEvent.inputType) {
+                    resolve();
+                    inputEvent.target.removeEventListener("input", listener);
+                }
+            };
+            beforeInputEvent.target.addEventListener("input", listener);
+        });
+    }
+
+    /**
+     * Call this function to start watching for mutations.
+     * Call the returned function to stop watching and get the mutation records.
+     *
+     * @returns {() => MutationRecord[]}
+     */
+    watchForMutations() {
+        const records = [];
+        const observerCallback = (mutations) => records.push(...mutations);
+        const observer = new MutationObserver(observerCallback);
+        const observerOptions = { childList: true, subtree: true, characterData: true };
+        observer.observe(this.editable, observerOptions);
+        return () => {
+            observerCallback(observer.takeRecords());
+            observer.disconnect();
+            return records;
+        };
     }
 
     // ======== AD-HOC STUFF ========
