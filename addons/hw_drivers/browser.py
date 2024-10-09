@@ -42,6 +42,7 @@ class Browser:
         self.fullscreen_args = ['--start-fullscreen']
         self.chromium_additional_args = [
             '--bwsi',  # Use Chromium without signing in
+            '--disable-extensions',  # disable extensions as they fill up /tmp
             *(self.kiosk_args if kiosk else [])
         ]
 
