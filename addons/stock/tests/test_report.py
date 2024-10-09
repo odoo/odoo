@@ -1389,6 +1389,18 @@ class TestReports(TestReportsCommon):
                 'forecast_availability': 3.0,
             }
         ])
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product.product_tmpl_id.ids)
+        self.assertEqual(len(lines), 2)
+        picking_line = next(filter(lambda line: line.get('document_out'), lines))
+        self.assertEqual(
+            (picking_line['quantity'], picking_line['replenishment_filled'], picking_line['document_out']['id']),
+            (3.0, True, delivery.id)
+        )
+        stock_line = next(filter(lambda line: not line.get('document_out'), lines))
+        self.assertEqual(
+            (stock_line['quantity'], stock_line['replenishment_filled']),
+            (7.0, True)
+        )
 
     def test_report_forecast_14_ongoing_multi_step_delivery(self):
         """ Check that an ongoing multi-step delivery is properly picked up by the forecast report.
