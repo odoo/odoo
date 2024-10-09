@@ -52,10 +52,13 @@ const expectSelector = (...queryAllSelectors) => {
         const selector = queryAllSelectors.join(", ");
         const fnNodes = queryAll(selector);
         expect(fnNodes).toEqual(queryAll`${selector}`, {
-            message: `queryAll should return the same result from a tagged template literal`,
+            message: (pass, r) => [
+                queryAll,
+                r`should return the same result from a tagged template literal`,
+            ],
         });
         expect(fnNodes).toEqual(nodes, {
-            message: `"${selector}" should match ${nodes.length} nodes`,
+            message: (pass, r) => [selector, r`should match`, nodes.length, r`nodes`],
         });
     };
 
