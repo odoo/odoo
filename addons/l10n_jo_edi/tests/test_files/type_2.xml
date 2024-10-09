@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice
+	xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+	xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+	xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+	xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+	<cbc:ProfileID>reporting:1.0</cbc:ProfileID>
+	<cbc:ID>EIN998833</cbc:ID>
+	<cbc:UUID>___ignore___</cbc:UUID>
+	<cbc:IssueDate>2022-09-27</cbc:IssueDate>
+	<cbc:InvoiceTypeCode name="021">381</cbc:InvoiceTypeCode>
+	<cbc:Note>ملاحظات 2</cbc:Note>
+	<cbc:DocumentCurrencyCode>JOD</cbc:DocumentCurrencyCode>
+	<cbc:TaxCurrencyCode>JOD</cbc:TaxCurrencyCode>
+	<cac:BillingReference>
+		<cac:InvoiceDocumentReference>
+			<cbc:ID>EIN00017</cbc:ID>
+			<cbc:UUID>___ignore___</cbc:UUID>
+			<cbc:DocumentDescription>150.800</cbc:DocumentDescription>
+		</cac:InvoiceDocumentReference>
+	</cac:BillingReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID>ICV</cbc:ID>
+		<cbc:UUID>___ignore___</cbc:UUID>
+	</cac:AdditionalDocumentReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cac:PostalAddress>
+				<cac:Country>
+					<cbc:IdentificationCode>JO</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>8000514</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Jordan Company</cbc:RegistrationName>
+			</cac:PartyLegalEntity>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cac:PostalAddress>
+				<cac:Country>
+					<cbc:IdentificationCode>JO</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:SellerSupplierParty>
+		<cac:Party>
+			<cac:PartyIdentification>
+				<cbc:ID>4419618</cbc:ID>
+			</cac:PartyIdentification>
+		</cac:Party>
+	</cac:SellerSupplierParty>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode listID="UN/ECE 4461">10</cbc:PaymentMeansCode>
+		<cbc:InstructionNote>Reversal of: EIN00017, change price</cbc:InstructionNote>
+	</cac:PaymentMeans>
+	<cac:AllowanceCharge>
+		<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+		<cbc:AllowanceChargeReason>discount</cbc:AllowanceChargeReason>
+		<cbc:Amount currencyID="JO">1.320</cbc:Amount>
+	</cac:AllowanceCharge>
+	<cac:LegalMonetaryTotal>
+		<cbc:TaxExclusiveAmount currencyID="JO">132.000</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="JO">130.680</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="JO">1.320</cbc:AllowanceTotalAmount>
+		<cbc:PayableAmount currencyID="JO">130.680</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="PCE">44.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="JO">130.680</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>product_a</cbc:Name>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="JO">3.000</cbc:PriceAmount>
+			<cac:AllowanceCharge>
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+				<cbc:AllowanceChargeReason>DISCOUNT</cbc:AllowanceChargeReason>
+				<cbc:Amount currencyID="JO">1.320</cbc:Amount>
+			</cac:AllowanceCharge>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>
