@@ -35,18 +35,22 @@ describe(parseUrl(import.meta.url), () => {
     test("formatHumanReadable", () => {
         // Strings
         expect(formatHumanReadable("abc")).toBe(`"abc"`);
-        expect(formatHumanReadable("a".repeat(300))).toBe(`"${"a".repeat(255)}..."`);
+        expect(formatHumanReadable("a".repeat(300))).toBe(`"${"a".repeat(80)}…"`);
+        expect(formatHumanReadable(`with "double quotes"`)).toBe(`'with "double quotes"'`);
+        expect(formatHumanReadable(`with "double quotes" and 'single quote'`)).toBe(
+            `\`with "double quotes" and 'single quote'\``
+        );
         // Numbers
         expect(formatHumanReadable(1)).toBe(`1`);
         // Other primitives
         expect(formatHumanReadable(true)).toBe(`true`);
         expect(formatHumanReadable(null)).toBe(`null`);
         // Functions & classes
-        expect(formatHumanReadable(function oui() {})).toBe(`Function oui() { ... }`);
-        expect(formatHumanReadable(class Oui {})).toBe(`class Oui { ... }`);
+        expect(formatHumanReadable(async function oui() {})).toBe(`async function oui() { … }`);
+        expect(formatHumanReadable(class Oui {})).toBe(`class Oui { … }`);
         // Iterators
-        expect(formatHumanReadable([1, 2, 3])).toBe(`[...]`);
-        expect(formatHumanReadable(new Set([1, 2, 3]))).toBe(`Set [...]`);
+        expect(formatHumanReadable([1, 2, 3])).toBe(`[1, 2, 3]`);
+        expect(formatHumanReadable(new Set([1, 2, 3]))).toBe(`Set [1, 2, 3]`);
         expect(
             formatHumanReadable(
                 new Map([
@@ -54,16 +58,32 @@ describe(parseUrl(import.meta.url), () => {
                     ["b", 2],
                 ])
             )
-        ).toBe(`Map [...]`);
+        ).toBe(`Map [["a", 1], ["b", 2]]`);
         // Objects
         expect(formatHumanReadable(/ab(c)d/gi)).toBe(`/ab(c)d/gi`);
         expect(formatHumanReadable(new Date("1997-01-09T12:30:00.000Z"))).toBe(
             `1997-01-09T12:30:00.000Z`
         );
-        expect(formatHumanReadable({ a: { b: 1 } })).toBe(`{ a: { ... } }`);
-        expect(formatHumanReadable(new Proxy({}, {}))).toBe(`{  }`);
-        expect(formatHumanReadable(window)).toBe(`Window { ... }`);
-        expect(formatHumanReadable(document.createElement("div"))).toBe(`<div>`);
+        expect(formatHumanReadable({})).toBe(`{  }`);
+        expect(formatHumanReadable({ a: { b: 1 } })).toBe(`{ a: { b: 1 } }`);
+        expect(
+            formatHumanReadable(
+                new Proxy(
+                    {
+                        allowed: true,
+                        get forbidden() {
+                            throw new Error("Cannot access!");
+                        },
+                    },
+                    {}
+                )
+            )
+        ).toBe(`{ allowed: true }`);
+        expect(formatHumanReadable(window)).toBe(`Window {  }`);
+        // Nodes
+        expect(formatHumanReadable(document.createElement("div"))).toBe("<div>");
+        expect(formatHumanReadable(document.createTextNode("some text"))).toBe("#text");
+        expect(formatHumanReadable(document)).toBe("#document");
     });
 
     test("formatTechnical", () => {

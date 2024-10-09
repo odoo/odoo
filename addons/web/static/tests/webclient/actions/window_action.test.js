@@ -1007,7 +1007,7 @@ test("execute_action of type object raises error: re-enables buttons", async () 
     await click('.o_form_view button[name="object"]');
     expect(".o_form_button_create").toHaveProperty("disabled", true);
     await animationFrame();
-    expect(".o_form_button_create").not.toHaveProperty("disabled");
+    expect(".o_form_button_create").toHaveProperty("disabled", false);
 });
 
 test("execute_action of type object raises error in modal: re-enables buttons", async () => {
