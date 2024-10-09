@@ -46,6 +46,10 @@
                 // mobile view, otherwise, force it to 15px.
                 --mobile-grid-item-padding-x: clamp(0px, calc(var(--grid-item-padding-x) * 100000), calc(0.5 * var(--gutter-x)));
                 padding: var(--grid-item-padding-y) var(--mobile-grid-item-padding-x) !important;
+
+                > img {
+                    max-width: 100%;
+                }
             }
         }
     }
