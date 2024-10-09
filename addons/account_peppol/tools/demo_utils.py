@@ -155,14 +155,13 @@ def _mock_deregister_participant(func, self, *args, **kwargs):
         ('peppol_message_uuid', '=', f'{self.company_id.id}_demo_vendor_bill'),
     ]).unlink()
 
-    mode_constraint = self.env['ir.config_parameter'].get_param('account_peppol.mode_constraint')
     if 'account_peppol_edi_user' in self._fields:
         self.account_peppol_edi_user.unlink()
     else:
         self.edi_user_id.unlink()
     self.account_peppol_proxy_state = 'not_registered'
     if 'account_peppol_edi_mode' in self._fields:
-        self.account_peppol_edi_mode = mode_constraint
+        self.account_peppol_edi_mode = 'demo'
 
 
 def _mock_update_user_data(func, self, *args, **kwargs):
