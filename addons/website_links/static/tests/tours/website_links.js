@@ -33,7 +33,6 @@ const mediumValue = 'Super Specific Medium';
 const sourceValue = 'Super Specific Source';
 
 registry.category("web_tour.tours").add('website_links_tour', {
-    test: true,
     url: '/r',
     steps: () => [
         // 1. Create a tracked URL

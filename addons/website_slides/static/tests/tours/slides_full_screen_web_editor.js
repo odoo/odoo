@@ -15,7 +15,6 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
  */
 registerWebsitePreviewTour('full_screen_web_editor', {
     url: '/slides',
-    test: true,
 }, () => [
     stepUtils.waitIframeIsReady(),
     {

@@ -4,7 +4,6 @@
 
     registry.category("web_tour.tours").add("shop_custom_attribute_value", {
         url: "/shop?search=Customizable Desk",
-        test: true,
         steps: () => [{
         content: "click on Customizable Desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',

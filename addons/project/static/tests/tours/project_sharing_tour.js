@@ -126,7 +126,6 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }];
 
 registry.category("web_tour.tours").add('project_sharing_tour', {
-    test: true,
     url: '/odoo',
     steps: () => {
         return projectSharingSteps;
@@ -134,7 +133,6 @@ registry.category("web_tour.tours").add('project_sharing_tour', {
 });
 
 registry.category("web_tour.tours").add("portal_project_sharing_tour", {
-    test: true,
     url: "/my/projects",
     steps: () => {
         // The begining of the project sharing feature
@@ -144,7 +142,6 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour", {
 });
 
 registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour", {
-    test: true,
     url: "/my/projects",
     steps: () => [{
         trigger: 'table > tbody > tr a:has(span:contains("Project Sharing"))',
@@ -165,7 +162,6 @@ registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour"
 ]});
 
 registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disallowed_milestones", {
-    test: true,
     url: "/my/projects",
     steps: () => [
         {
@@ -210,4 +206,3 @@ registry.category("web_tour.tours").add("portal_project_sharing_tour_with_disall
         },
     ],
 });
-

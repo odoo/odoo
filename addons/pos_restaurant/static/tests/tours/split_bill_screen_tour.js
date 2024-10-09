@@ -15,7 +15,6 @@ import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("SplitBillScreenTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -82,7 +81,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour", {
 });
 
 registry.category("web_tour.tours").add("SplitBillScreenTour2", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -116,7 +114,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
 });
 
 registry.category("web_tour.tours").add("SplitBillScreenTour3", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -152,7 +149,6 @@ registry.category("web_tour.tours").add("SplitBillScreenTour3", {
 });
 
 registry.category("web_tour.tours").add("SplitBillScreenTour4ProductCombo", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

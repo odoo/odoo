@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('portal_load_homepage', {
-    test: true,
     url: '/my',
     steps: () => [
         {

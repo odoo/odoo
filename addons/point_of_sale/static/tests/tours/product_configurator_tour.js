@@ -5,7 +5,6 @@ import * as ProductConfigurator from "@point_of_sale/../tests/tours/utils/produc
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

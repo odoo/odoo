@@ -46,13 +46,11 @@ const chatRequest = [
 ];
 
 registry.category("web_tour.tours").add("website_livechat_chat_request_part_1_no_close_tour", {
-    test: true,
     url: "/",
     steps: () => [].concat(chatRequest),
 });
 
 registry.category("web_tour.tours").add("website_livechat_chat_request_part_2_end_session_tour", {
-    test: true,
     url: "/",
     steps: () => [].concat(closeChat, confirmnClose, okRating, feedback, transcript),
 });

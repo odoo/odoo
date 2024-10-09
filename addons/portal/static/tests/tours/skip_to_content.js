@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("skip_to_content", {
-    test: true,
     url: "/",
     steps: () => [
         {

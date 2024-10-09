@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('update_billing_shipping_address', {
-    test: true,
     url: '/shop',
     steps: () => [
         ...tourUtils.addToCart({productName: "Office Chair Black TEST"}),

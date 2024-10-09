@@ -23,7 +23,6 @@ const NEW_ORDER =
     '{"lines":[],"finalized":false,"amount":"0.00","paymentLines":[],"change":0,"onlinePaymentData":{}}';
 
 registry.category("web_tour.tours").add("CustomerDisplayTour", {
-    test: true,
     steps: () =>
         [
             {

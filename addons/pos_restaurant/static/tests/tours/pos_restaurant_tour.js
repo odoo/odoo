@@ -54,7 +54,6 @@ function checkOrderChanges(expected_changes) {
 }
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -179,7 +178,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
  * This tour should be run after the first tour is done.
  */
 registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
-    test: true,
     steps: () =>
         [
             // There is one draft synced order from the previous tour
@@ -220,7 +218,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
 });
 
 registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -239,7 +236,6 @@ const billScreenQRCode = {
 };
 
 registry.category("web_tour.tours").add("BillScreenTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -258,7 +254,6 @@ registry.category("web_tour.tours").add("BillScreenTour", {
 });
 
 registry.category("web_tour.tours").add("OrderTrackingTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -284,7 +279,6 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
         ].flat(),
 });
 registry.category("web_tour.tours").add("CategLabelCheck", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

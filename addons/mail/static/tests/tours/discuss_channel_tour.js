@@ -5,7 +5,6 @@ import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add("discuss_channel_tour", {
     url: "/odoo/action-mail.action_discuss",
-    sequence: 80,
     steps: () => [
         {
             trigger: ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add",

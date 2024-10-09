@@ -34,7 +34,6 @@ function addProductandPay() {
 }
 
 registry.category("web_tour.tours").add("PaymentScreenQRISPaymentFail", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -46,7 +45,6 @@ registry.category("web_tour.tours").add("PaymentScreenQRISPaymentFail", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenQRISPaymentSuccess", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -58,7 +56,6 @@ registry.category("web_tour.tours").add("PaymentScreenQRISPaymentSuccess", {
 });
 
 registry.category("web_tour.tours").add("PayementScreenQRISFetchQR", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -75,7 +72,6 @@ registry.category("web_tour.tours").add("PayementScreenQRISFetchQR", {
 });
 
 registry.category("web_tour.tours").add("PayementScreenQRISChangeAmount", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

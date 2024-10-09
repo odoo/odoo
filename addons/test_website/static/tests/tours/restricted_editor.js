@@ -50,7 +50,6 @@ const goToMenuItem = [
 ];
 
 registerWebsitePreviewTour('test_restricted_editor_only', {
-    test: true,
     url: '/',
 }, () => [
     // Home
@@ -79,7 +78,6 @@ registerWebsitePreviewTour('test_restricted_editor_only', {
 ]);
 
 registerWebsitePreviewTour('test_restricted_editor_test_admin', {
-    test: true,
     url: '/',
 }, () => [
     // Home

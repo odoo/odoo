@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('css_error_tour', {
-    test: true,
     url: '/odoo',
     steps: () => [
     {
@@ -20,7 +19,6 @@ registry.category("web_tour.tours").add('css_error_tour', {
 
 
 registry.category("web_tour.tours").add('css_error_tour_frontend', {
-    test: true,
     url: '/',
     steps: () => [
     {

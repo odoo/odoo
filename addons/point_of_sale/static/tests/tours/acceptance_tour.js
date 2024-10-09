@@ -7,7 +7,6 @@ import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_scre
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_change", {
-    test: true,
     steps: () =>
         [
             waitForLoading(),
@@ -30,7 +29,6 @@ registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_ch
 });
 
 registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quantity", {
-    test: true,
     steps: () =>
         [
             waitForLoading(),
@@ -49,7 +47,6 @@ registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quanti
 });
 
 registry.category("web_tour.tours").add("pos_basic_order_03_tax_position", {
-    test: true,
     steps: () =>
         [
             waitForLoading(),

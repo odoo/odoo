@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: true, steps: () => [
+registry.category("web_tour.tours").add('test_detailed_op_no_save_1', {  steps: () => [
     {
         trigger: '.o_field_x2many_list_row_add > a',
         run: "click",
@@ -71,7 +71,7 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
     },
 ]});
 
-registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, steps: () => [
+registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () => [
     {
         trigger: '.o_field_x2many_list_row_add > a',
         run: "click",
@@ -166,7 +166,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
     },
 ]});
 
-registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, steps: () => [
+registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () => [
     {
         trigger: '.o_field_x2many_list_row_add > a',
         run: "click",
@@ -307,7 +307,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     },
 ]});
 
-registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', { test: true, steps: () => [
+registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {  steps: () => [
     {
         trigger: '.o_list_button_add',
         run: "click",
@@ -368,7 +368,6 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
 ]});
 
 registry.category("web_tour.tours").add('test_add_new_line', {
-    test: true,
     steps: () => [
         {
             trigger: ".o_form_editable",
@@ -419,7 +418,6 @@ registry.category("web_tour.tours").add('test_add_new_line', {
 });
 
 registry.category("web_tour.tours").add("test_edit_existing_line", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_data_cell[name=quantity]",
@@ -464,7 +462,6 @@ registry.category("web_tour.tours").add("test_edit_existing_line", {
 });
 
 registry.category("web_tour.tours").add('test_edit_existing_lines_2', {
-    test: true,
     steps: () => [
         { trigger: ".o_data_row:has(.o_data_cell[data-tooltip='Product a']) .fa-list", run: 'click'},
         { trigger: ".o_data_cell[name=lot_name]", run: 'click' },
@@ -482,7 +479,6 @@ registry.category("web_tour.tours").add('test_edit_existing_lines_2', {
 });
 
 registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
-    test: true,
     steps: () => [
         {
             trigger: ".o_optional_columns_dropdown_toggle",

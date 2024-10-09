@@ -334,7 +334,6 @@ function testWebsitePageProperties() {
 registerWebsitePreviewTour(
     "website_page_properties_common",
     {
-        test: true,
         url: "/test_view",
     },
     () => [...testCommonProperties("/test_view", false).finalize()],
@@ -343,7 +342,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_page_properties_can_publish",
     {
-        test: true,
         url: "/test_website/model_item/1",
     },
     () => [...testCommonProperties("/test_website/model_item/1", true).finalize()],
@@ -352,7 +350,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_page_properties_website_page",
     {
-        test: true,
         url: "/",
     },
     () => [

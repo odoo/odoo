@@ -16,7 +16,6 @@ import {
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -134,7 +133,6 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionNoTax", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -153,7 +151,6 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionIncl", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -175,7 +172,6 @@ registry.category("web_tour.tours").add("FiscalPositionIncl", {
 });
 
 registry.category("web_tour.tours").add("FiscalPositionExcl", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -194,7 +190,6 @@ registry.category("web_tour.tours").add("FiscalPositionExcl", {
 });
 
 registry.category("web_tour.tours").add("CashClosingDetails", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -218,7 +213,6 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
 });
 
 registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -232,7 +226,6 @@ registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
 });
 
 registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -255,7 +248,6 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
 });
 
 registry.category("web_tour.tours").add("MultiProductOptionsTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -272,7 +264,6 @@ registry.category("web_tour.tours").add("MultiProductOptionsTour", {
 });
 
 registry.category("web_tour.tours").add("TranslateProductNameTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -284,7 +275,6 @@ registry.category("web_tour.tours").add("TranslateProductNameTour", {
 });
 
 registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -298,7 +288,6 @@ registry.category("web_tour.tours").add("DecimalCommaOrderlinePrice", {
 });
 
 registry.category("web_tour.tours").add("CheckProductInformation", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -324,7 +313,6 @@ registry.category("web_tour.tours").add("CheckProductInformation", {
 });
 
 registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -358,7 +346,6 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
 });
 
 registry.category("web_tour.tours").add("PosCategoriesOrder", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

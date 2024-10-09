@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_mrp_bom_product_catalog', {
-    test: true,
     steps: () => [
         {
             trigger: 'button[name=action_add_from_catalog]',
@@ -27,7 +26,6 @@ registry.category("web_tour.tours").add('test_mrp_bom_product_catalog', {
 ]});
 
 registry.category("web_tour.tours").add('test_mrp_production_product_catalog', {
-    test: true,
     steps: () => [
         {
             trigger: 'button[name=action_add_from_catalog_raw]',
@@ -49,4 +47,3 @@ registry.category("web_tour.tours").add('test_mrp_production_product_catalog', {
             trigger: 'div.o_field_widget:contains("WH/MO/")',
         },
 ]});
-

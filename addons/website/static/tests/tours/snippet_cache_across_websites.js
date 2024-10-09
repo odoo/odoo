@@ -9,7 +9,6 @@ import {
 
 registerWebsitePreviewTour('snippet_cache_across_websites', {
     edition: true,
-    test: true,
     url: '/@/'
 }, () => [
     {

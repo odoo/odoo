@@ -6,7 +6,6 @@ import { registry } from "@web/core/registry";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 registry.category("web_tour.tours").add("FixedTaxNegativeQty", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

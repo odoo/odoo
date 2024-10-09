@@ -9,7 +9,6 @@ function assertEqual(actual, expected) {
 }
 
 registry.category("web_tour.tours").add("test_company_access_error_redirect", {
-    test: true,
     steps: () => [
         {
             trigger: ".o_form_view .o_last_breadcrumb_item:contains(p2)",

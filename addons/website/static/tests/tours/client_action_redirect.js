@@ -38,7 +38,6 @@ const checkEditorSteps = [{
 }];
 
 registry.category("web_tour.tours").add('client_action_redirect', {
-    test: true,
     url: testUrl,
     steps: () => [
     // Case 1: From frontend, click on `enable_editor=1` link without `/@/` in it

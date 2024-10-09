@@ -8,7 +8,6 @@ import { contains, inputFiles } from "@web/../tests/utils";
  * @see mail/tests/test_mail_composer.py
  */
 registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_test_tour.js", {
-    test: true,
     steps: () => [
         {
             content: "Wait for the chatter to be fully loaded",

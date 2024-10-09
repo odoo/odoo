@@ -10,7 +10,6 @@ import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosSettleOrder", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -28,7 +27,6 @@ registry.category("web_tour.tours").add("PosSettleOrder", {
 });
 
 registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -48,7 +46,6 @@ registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
 });
 
 registry.category("web_tour.tours").add("PosSettleOrder2", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -67,7 +64,6 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
 });
 
 registry.category("web_tour.tours").add("PosRefundDownpayment", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -96,7 +92,6 @@ registry.category("web_tour.tours").add("PosRefundDownpayment", {
 });
 
 registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -111,7 +106,6 @@ registry.category("web_tour.tours").add("PosSettleOrderRealTime", {
 });
 
 registry.category("web_tour.tours").add("PosSettleOrder3", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -126,7 +120,6 @@ registry.category("web_tour.tours").add("PosSettleOrder3", {
 });
 
 registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -139,7 +132,6 @@ registry.category("web_tour.tours").add("PosSettleOrderNotGroupable", {
 });
 
 registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -160,7 +152,6 @@ registry.category("web_tour.tours").add("PosSettleOrderWithNote", {
 });
 
 registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -175,7 +166,6 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
 });
 
 registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -190,7 +180,6 @@ registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
 });
 
 registry.category("web_tour.tours").add("PosSettleDraftOrder", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -201,7 +190,6 @@ registry.category("web_tour.tours").add("PosSettleDraftOrder", {
 });
 
 registry.category("web_tour.tours").add("PosSettleCustomPrice", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -215,7 +203,6 @@ registry.category("web_tour.tours").add("PosSettleCustomPrice", {
 });
 
 registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -227,7 +214,6 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
 });
 
 registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -257,7 +243,6 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
 });
 
 registry.category("web_tour.tours").add("PoSApplyDownpayment", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -270,7 +255,6 @@ registry.category("web_tour.tours").add("PoSApplyDownpayment", {
 });
 
 registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -283,7 +267,6 @@ registry.category("web_tour.tours").add("PosShipLaterNoDefault", {
 });
 
 registry.category("web_tour.tours").add("PosSaleTeam", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -297,7 +280,6 @@ registry.category("web_tour.tours").add("PosSaleTeam", {
 });
 
 registry.category("web_tour.tours").add("PosOrdersListDifferentCurrency", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

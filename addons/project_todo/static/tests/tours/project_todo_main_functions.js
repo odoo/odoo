@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('project_todo_main_functions', {
-    test: true,
     url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project_todo.menu_todo_todos"]',
@@ -14,7 +13,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add_column",
     content: "Create a personal stage from the To-do kanban view",
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_group",
 },
@@ -26,7 +25,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add",
     content: "Save the personal stage",
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_group",
 },
@@ -38,7 +37,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add",
     content: "Save the personal stage",
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_group:eq(1)",
 },
@@ -46,7 +45,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: '.o-kanban-button-new',
     content: "Create a task in the first stage",
     run: "click",
-}, 
+},
 {
     trigger: ".o_project_task_kanban_view",
 },
@@ -54,7 +53,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: '.o_kanban_quick_create div.o_field_char[name=name] input',
     content: "Create a personal task from the To-do kanban view",
     run: "edit Personal Task 1",
-}, 
+},
 {
     trigger: ".o_project_task_kanban_view",
 },
@@ -62,7 +61,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     content: "Save the personal task",
     run: "click",
-}, 
+},
 {
     trigger: ".o_project_task_kanban_view",
 },
@@ -70,7 +69,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_kanban_record",
     content: "Drag &amp; drop the card to change the personal task from personal stage.",
     run: "drag_and_drop(.o_kanban_group:eq(1))",
-}, 
+},
 {
     trigger: ".o_project_task_kanban_view",
 },
@@ -83,7 +82,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_kanban_record:first",//:contains(Send message)
     content: "Open the first todo record",
     run: "click",
-}, 
+},
 {
     trigger: ".o_todo_form_view",
 },
@@ -96,7 +95,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-sendMessage",
     content: "A 'send message' button should be present in the chatter",
     run: "click",
-}, 
+},
 {
     trigger: ".o_todo_form_view",
 },
@@ -104,7 +103,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-logNote",
     content: "A 'log note' button should be present in the chatter",
     run: "click",
-}, 
+},
 {
     trigger: ".o_todo_form_view",
 },
@@ -116,7 +115,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: "button[name=action_schedule_activities]",
     content: "Schedule an activity",
     run: "click",
-}, 
+},
 {
     trigger: ".o_todo_form_view",
 },
@@ -137,7 +136,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: '.o_todo_done_button',
     content: 'Mark the task as done',
     run: "click",
-}, 
+},
 {
     trigger: ".o_todo_form_view .o_form_dirty",
 },

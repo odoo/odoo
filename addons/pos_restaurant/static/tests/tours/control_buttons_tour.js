@@ -13,7 +13,6 @@ const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ControlButtonsTour", {
-    test: true,
     steps: () =>
         [
             // Test merging table, transfer is already tested in pos_restaurant_sync_second_login.

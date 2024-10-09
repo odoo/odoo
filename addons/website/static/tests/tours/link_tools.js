@@ -17,7 +17,6 @@ const clickOnImgStep = {
 };
 
 registerWebsitePreviewTour('link_tools', {
-    test: true,
     url: '/',
     edition: true,
     checkDelay: 200,
@@ -151,7 +150,7 @@ registerWebsitePreviewTour('link_tools', {
     {
         content: "Set URL.",
         trigger: '.o_we_customize_panel we-input:contains("Your URL") input',
-        // TODO: remove && click 
+        // TODO: remove && click
         run: "edit odoo.com && click(we-title:contains(Your URL))",
     },
     {
@@ -229,7 +228,7 @@ registerWebsitePreviewTour('link_tools', {
             return helpers.drag_and_drop(".oe_menu_editor li:contains('Home') .fa-bars", {
                 position : {
                     top: 20,
-                }, 
+                },
                 relative: true,
             });
         },
@@ -303,8 +302,8 @@ registerWebsitePreviewTour('link_tools', {
         trigger: "#o_link_dialog_url_input",
         run() {
             // TODO: update the tour to use helpers.edit("https://odoo.com")
-            // To see what happens with edit, add `pause:true` to the previous step 
-            // and type yourself https://odoo.com in #o_link_dialog_url_input  
+            // To see what happens with edit, add `pause:true` to the previous step
+            // and type yourself https://odoo.com in #o_link_dialog_url_input
             // The label will be ohttps://
             this.anchor.value = "https://odoo.com";
             this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));

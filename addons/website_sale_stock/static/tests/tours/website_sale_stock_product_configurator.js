@@ -6,7 +6,6 @@ import configuratorTourUtils from '@sale/js/tours/product_configurator_tour_util
 registry
     .category('web_tour.tours')
     .add('website_sale_stock_product_configurator', {
-        test: true,
         url: '/shop?search=Main product',
         steps: () => [
             {

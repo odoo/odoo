@@ -7,7 +7,6 @@ import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosSaleLoyaltyTour1", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

@@ -40,7 +40,6 @@ function changeTemplate(templateKey) {
 }
 
 registerWebsitePreviewTour('website_sale.snippet_products', {
-    test: true,
     url: '/',
     edition: true,
 },
@@ -64,7 +63,6 @@ registerWebsitePreviewTour('website_sale.snippet_products', {
 });
 
 registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
-    test: true,
     url: '/',
     edition: true,
 },

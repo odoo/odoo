@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('forum_question', {
-    test: true,
     url: '/forum/help-1',
     steps: () => [
     {

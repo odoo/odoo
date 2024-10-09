@@ -10,7 +10,6 @@ import { checkSimplifiedInvoiceNumber, pay } from "./utils/receipt_util";
 const SIMPLIFIED_INVOICE_LIMIT = 1000;
 
 registry.category("web_tour.tours").add("spanish_pos_tour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

@@ -20,7 +20,6 @@ const toggleMegaMenu = (stepOptions) => Object.assign({}, {
 }, stepOptions);
 
 registerWebsitePreviewTour('edit_megamenu', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -126,7 +125,6 @@ registerWebsitePreviewTour('edit_megamenu', {
     },
 ]);
 registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

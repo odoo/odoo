@@ -29,7 +29,6 @@ const clickEditLink = [{
 }];
 
 registerWebsitePreviewTour('edit_link_popover_1', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -147,7 +146,6 @@ registerWebsitePreviewTour('edit_link_popover_1', {
 ]);
 
 registerWebsitePreviewTour('edit_link_popover_2', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

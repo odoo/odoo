@@ -12,7 +12,6 @@ import {
 
 registerWebsitePreviewTour('snippet_translation', {
     url: '/',
-    test: true,
 }, () => [
     {
         content: "Wait for website preview and check language",
@@ -38,7 +37,6 @@ registerWebsitePreviewTour('snippet_translation', {
 ]);
 registerWebsitePreviewTour('snippet_translation_changing_lang', {
     url: '/',
-    test: true,
 }, () => [
     {
         content: "Change language to Parseltongue",

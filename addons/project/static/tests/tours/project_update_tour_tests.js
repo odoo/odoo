@@ -4,12 +4,11 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('project_update_tour', {
-    test: true,
     url: '/odoo',
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     run: "click",
-}, 
+},
 {
     trigger: ".o_project_kanban",
 },
@@ -29,7 +28,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     isActive: ["auto"],
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_group",
 },
@@ -40,42 +39,42 @@ registry.category("web_tour.tours").add('project_update_tour', {
     isActive: ["auto"],
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_group:eq(0)",
 },
 {
     trigger: '.o-kanban-button-new',
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_project_tasks",
 },
 {
     trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
     run: "edit New task",
-}, 
+},
 {
     trigger: ".o_kanban_project_tasks",
 },
 {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_group:eq(0)",
 },
 {
     trigger: '.o-kanban-button-new',
     run: "click",
-}, 
+},
 {
     trigger: ".o_kanban_project_tasks",
 },
 {
     trigger: '.o_kanban_quick_create div.o_field_char[name=display_name] input',
     run: "edit Second task",
-}, 
+},
 {
     trigger: ".o_kanban_project_tasks",
 },
@@ -184,7 +183,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_switch_view.o_list',
     content: 'Open List View of Dashboard',
     run: "click",
-}, 
+},
 {
     trigger: '.o_list_view',
 },
