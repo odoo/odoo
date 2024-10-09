@@ -173,6 +173,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Select font style"),
                 Component: FontSelector,
                 props: {
+                    title: _t("Font style"),
                     getItems: () => fontItems,
                     getDisplay: () => this.font,
                     onSelected: (item) => {
@@ -191,6 +192,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Select font size"),
                 Component: FontSizeSelector,
                 props: {
+                    title: _t("Font size"),
                     getItems: () => this.fontSizeItems,
                     getDisplay: () => this.fontSize,
                     onFontSizeInput: (size) => {

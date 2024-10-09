@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderRange">
+    <BuilderComponent>
+        <div class="d-flex flex-row flex-nowrap align-items-center" t-att-data-action-id="props.action" style="width: 60px">
+            <input
+            type="range"
+            t-att-min="props.min"
+            t-att-max="props.max"
+            t-att-step="props.step"
+            t-att-value="state.value"
+            t-on-change="this.onChange"
+            t-on-input="this.onInput" />
+            <output t-if="props.displayRangeValue" t-out="getOutput(state.value)" />
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

@@ -1,8 +1,7 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Plugin } from "../../plugin";
-import { _t } from "@web/core/l10n/translation";
 import { ImageCrop } from "./image_crop";
-import { loadBundle } from "@web/core/assets";
 
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
@@ -52,8 +51,6 @@ export class ImageCropPlugin extends Plugin {
         const onSave = () => {
             this.dependencies.history.addStep();
         };
-
-        await loadBundle("html_editor.assets_image_cropper");
 
         registry.category("main_components").add("ImageCropping", {
             Component: ImageCrop,

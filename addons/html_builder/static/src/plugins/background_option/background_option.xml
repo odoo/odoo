@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundComponent">
+    <!-- BackgroundToggler -->
+    <BuilderRow label.translate="Background" t-if="props.withColor or props.withImages">
+    <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
+        <BuilderColorPicker title.translate="Color" styleAction="'background-color'" t-if="props.withColors"/>
+        <t t-if="props.withImages">
+            <BuilderButton
+                action="'toggleBgImage'"
+                title="'Image'"
+                preview="false"
+                className="'ms-auto fa fa-fw fa-camera'"
+                id="'toggle_bg_image_id'"
+            />
+            <t t-if="props.withShapes">
+                <BuilderButton
+                    action="'toggleBgShape'"
+                    actionParam="showBackgroundShapes.bind(this)"
+                    preview="false"
+                    id="'toggle_bg_shape_id'"
+                    iconImg="'/html_builder/static/img/options/bg_shape.svg'"
+                />
+            </t>
+        </t>
+    </BuilderRow>
+    <t t-if="props.withImages">
+        <BackgroundImage/>
+        <BackgroundPosition/>
+        <!-- TODO: BackgroundOptimize-->
+        <!-- Color filter -->
+        <BuilderRow t-if="isActiveItem('toggle_bg_image_id')" label.translate="Color Filter" level="2">
+            <!-- TODO handle all the attributes -->
+            <BuilderColorPicker action="'selectFilterColor'"/>
+        </BuilderRow>
+        <!-- <div t-att-data-js="with_colors and with_color_combinations and 'ColoredLevelBackground' or 'BackgroundToggler'"
+            <we-colorpicker string="Color Filter"
+                            data-opacity="0.5"
+                            data-with-gradients="1"
+                            data-selected-tab="gradients"
+                            data-excluded="theme, common"
+            />
+        </div> -->
+        <BackgroundShape
+            getShapeData="props.getShapeData"
+            showBackgroundShapes="showBackgroundShapes.bind(this)"
+            allPossiblesShapes="this.props.shapesInfo.allPossiblesShapes"
+        />
+    </t>
+</t>
+
+</templates>

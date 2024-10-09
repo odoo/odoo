@@ -107,6 +107,7 @@ export class ImagePlugin extends Plugin {
                 groupId: "image_description",
                 Component: ImageDescription,
                 props: {
+                    title: _t("Edit media description"),
                     getDescription: () => this.getImageAttribute("alt"),
                     getTooltip: () => this.getImageAttribute("title"),
                     updateImageDescription: this.updateImageDescription.bind(this),
@@ -363,6 +364,7 @@ export class ImagePlugin extends Plugin {
         return {
             id: "image_transform",
             icon: "fa-object-ungroup",
+            title: _t("Transform the picture (click twice to reset transformation)"),
             getSelectedImage: this.getSelectedImage.bind(this),
             resetImageTransformation: this.resetImageTransformation.bind(this),
             addStep: this.dependencies.history.addStep.bind(this),

@@ -304,7 +304,6 @@ export class ToolbarPlugin extends Plugin {
     updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
         this.updateToolbarVisibility(selectionData);
         if (this.overlay.isOpen || this.config.disableFloatingToolbar) {
-            this.updateNamespace();
             this.updateButtonsStates(selectionData.editableSelection);
         }
     }
@@ -320,6 +319,7 @@ export class ToolbarPlugin extends Plugin {
             return;
         }
 
+        this.updateNamespace();
         if (this.shouldBeVisible(selectionData)) {
             // Open toolbar or update its position
             const props = { toolbar: this.getToolbarInfo(), class: "shadow rounded my-2" };
@@ -340,6 +340,12 @@ export class ToolbarPlugin extends Plugin {
             !selectionData.documentSelectionIsProtected &&
             !selectionData.documentSelectionIsProtecting;
         if (!inEditable) {
+            return false;
+        }
+        const canDisplayToolbar = this.getResource("can_display_toolbar").every((fn) =>
+            fn(this.state.namespace)
+        );
+        if (!canDisplayToolbar) {
             return false;
         }
         if (this.isMobileToolbar) {
