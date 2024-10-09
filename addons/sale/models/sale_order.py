@@ -1031,10 +1031,10 @@ class SaleOrder(models.Model):
             analytic = self.env['account.analytic.account'].create(order._prepare_analytic_account_data(prefix))
             order.analytic_account_id = analytic
 
-    def has_to_be_signed(self, include_draft=False):
+    def has_to_be_signed(self, include_draft=True):
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_signature and not self.signature
 
-    def has_to_be_paid(self, include_draft=False):
+    def has_to_be_paid(self, include_draft=True):
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
