@@ -85,6 +85,5 @@
             "point_of_sale/static/tests/tours/utils/numpad_util.js",
         ],
     },
-    'post_init_hook': '_post_self_order_post_init',
     "license": "LGPL-3",
 }

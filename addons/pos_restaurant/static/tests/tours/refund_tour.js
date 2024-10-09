@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             FloorScreen.clickTable("4"),
             ProductScreen.orderIsEmpty(),
             ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("-0001"),
+            TicketScreen.selectOrder("-00001"),
             Order.hasLine({
                 productName: "Coca-Cola",
             }),

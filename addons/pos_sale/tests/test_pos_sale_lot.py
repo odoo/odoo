@@ -83,16 +83,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'sale_order_origin_id': sale_order.id,
               'qty': 1,
               'tax_ids': []}]],
-           'name': 'Order 00044-003-0014',
            'session_id': current_session.id,
-           'sequence_number': self.pos_config.journal_id.id,
            'shipping_date': fields.Date.today(),
            'payment_ids': [[0,
              0,
              {'amount': 10,
               'name': fields.Datetime.now(),
               'payment_method_id': self.pos_config.payment_method_ids[0].id}]],
-           'uuid': '00044-003-0014',
            'last_order_preparation_change': '{}',
            'user_id': self.env.uid}
 
