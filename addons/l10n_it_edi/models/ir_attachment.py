@@ -1,61 +1,75 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
-from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
-
+from copy import deepcopy
 from lxml import etree
-import logging
-import re
 
-_logger = logging.getLogger(__name__)
-
-FATTURAPA_FILENAME_RE = "[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))"
+from odoo import models
+from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    def _decode_edi_l10n_it_edi(self, name, content):
-        """ Decodes a  into a list of one dictionary representing an attachment.
-            :returns:           A list with a dictionary.
+    def _decode_edi_xml(self, filename, content):
+        """ Italian FatturaPA files may have one file per multiple invoices.
+            If we detect such a file, we decompose it into a sequence of attachment entries
+            by branching the XML tree into sections and treating them as separate attachments.
+            :returns:     A list of dictionaries representing attachments.
         """
-        if not (decoded_content := remove_signature(content)):
-            return []
+        to_process = []
+        for file_data in super()._decode_edi_xml(filename, content):
+            if (
+                file_data['type'] == 'xml'
+                and len(xml_tree := file_data.get("xml_tree"))
+                and etree.QName(xml_tree).localname == 'FatturaElettronica'
+            ):
+                to_process.append(self._l10n_it_edi_split(file_data))
+            else:
+                to_process.append(file_data)
+        return to_process
 
-        parser = etree.XMLParser(recover=True, resolve_entities=False)
-        try:
-            xml_tree = etree.fromstring(decoded_content, parser)
-        except etree.ParseError as e:
-            _logger.exception("Error when converting the xml content to etree: %s", e)
-            return []
+    def _l10n_it_edi_split(self, file_data):
+        # The file's XML tree represents a collection of invoices.
+        # We branch it into one section per invoice and handle them separately.
+        xml_tree = file_data['xml_tree']
+        xml_tree_parts = []
+        bodies = xml_tree.findall(".//FatturaElettronicaBody")
+        if len(bodies) > 1:
+            parent = bodies[0].getparent()
+            # Remove all bodies
+            for body in bodies:
+                parent.remove(body)
+            # Add one at a time and create tree copies
+            for body in bodies:
+                parent.append(body)
+                xml_tree_part = deepcopy(xml_tree)
+                xml_tree_parts.append({'xml_tree': xml_tree_part})
+                parent.remove(body)
+        return {
+            **file_data,
+            'disable_prediction': True,
+            'parts': xml_tree_parts,
+        }
 
-        return [{
-            'filename': name,
-            'content': content,
-            'attachment': self,
-            'xml_tree': xml_move_tree,
-            'type': 'l10n_it_edi',
-            'sort_weight': 11,
-        } for xml_move_tree in xml_tree.xpath('//FatturaElettronicaBody')]
-
-    def _is_l10n_it_edi_import_file(self):
-        is_xml = (
-            self.name.endswith('.xml')
-            or self.mimetype.endswith('/xml')
-            or 'text/plain' in self.mimetype
-            and self.raw
-            and self.raw.startswith(b'<?xml'))
-        is_p7m = self.mimetype == 'application/pkcs7-mime'
-        return (is_xml or is_p7m) and re.search(FATTURAPA_FILENAME_RE, self.name)
-
-    @api.model
-    def _get_edi_supported_formats(self):
-        """ XML files could be l10n_it_edi related or not, so check it
-            before demanding the decoding to the the standard XML methods.
+    def _decode_edi_binary(self, filename, content):
+        """ Italian FatturaPA invoices, either coming from the Tax Agency SdICoop webservices
+            or manually uploaded by the user, are modeled as XML files.
+            They can be binary CADES signed .xml.p7m files, which are XML files
+            enveloped in an ASN1 formatted binary structure.
         """
-        # EXTENDS 'account'
-        return [{
-            'format': 'l10n_it_edi',
-            'check': lambda a: a._is_l10n_it_edi_import_file(),
-            'decoder': self._decode_edi_l10n_it_edi,
-        }] + super()._get_edi_supported_formats()
+        to_process = []
+        to_process_old = super()._decode_edi_binary(filename, content)
+        for file_data in to_process_old:
+            filename = file_data['filename']
+            attachment = file_data['attachment']
+            mimetype = attachment.mimetype
+            parts = [part.lower() for part in filename.split('.')]
+            if 'p7m' in parts or 'application/pkcs7-mime' in mimetype:
+                # Remove the CADES signature and handle the file as unsigned XML files,
+                # recursively call this function with new data
+                if xml_content := remove_signature(file_data['content']):
+                    if to_process_new := attachment._decode_edi_xml(f"{parts[:1]}.xml", xml_content):
+                        to_process += to_process_new
+                        continue
+            to_process.append(file_data)
+        return to_process
