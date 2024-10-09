@@ -15,6 +15,9 @@ registerModel({
         download() {
             return this.attachmentOwner.download();
         },
+        remove() {
+            return this.attachmentOwner.remove();
+        },
     },
     fields: {
         attachmentOwner: one("Attachment", {
