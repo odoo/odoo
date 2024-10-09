@@ -874,7 +874,7 @@ test(`list view: buttons handler is called once on double click`, async () => {
 
     executeActionDef.resolve();
     await animationFrame();
-    expect(`tbody .o_list_button > button:eq(0)`).not.toHaveProperty("disabled");
+    expect(`tbody .o_list_button > button:eq(0)`).toHaveProperty("disabled", false);
     expect.verifySteps(["execute_action"]);
 });
 
