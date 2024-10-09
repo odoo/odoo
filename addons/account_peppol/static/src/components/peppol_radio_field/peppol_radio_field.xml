@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-name="account_peppol.PeppolRadioField" t-inherit-mode="primary" t-inherit="web.RadioField">
-        <xpath expr="//input" position="attributes">
-            <attribute name="t-att-disabled" add="|| this.readonlyItems.includes(item[0])" separator=" "/>
-        </xpath>
-    </t>
-</templates>

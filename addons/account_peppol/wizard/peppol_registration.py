@@ -38,11 +38,6 @@ class PeppolRegistration(models.TransientModel):
         compute='_compute_edi_user_id',
     )
     account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
-    edi_mode_constraint = fields.Selection(
-        selection=[('demo', 'Demo'), ('test', 'Test'), ('prod', 'Live')],
-        compute='_compute_edi_mode_constraint',
-        help="Using the config params, this field specifies which edi modes may be selected from the UI"
-    )
     phone_number = fields.Char(related='company_id.account_peppol_phone_number', readonly=False)
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     verification_code = fields.Char(related='edi_user_id.peppol_verification_code', readonly=False)
@@ -107,12 +102,6 @@ class PeppolRegistration(models.TransientModel):
                                 "The Endpoint should be the Company Registry number."),
                 }
             wizard.peppol_warnings = peppol_warnings or False
-
-    @api.depends('edi_user_id')
-    def _compute_edi_mode_constraint(self):
-        mode_constraint = self.env['ir.config_parameter'].sudo().get_param('account_peppol.mode_constraint')
-        trial_param = self.env['ir.config_parameter'].sudo().get_param('saas_trial.confirm_token')
-        self.edi_mode_constraint = trial_param and 'demo' or mode_constraint or 'prod'
 
     @api.depends('edi_user_id')
     def _compute_edi_mode(self):
