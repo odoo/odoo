@@ -370,3 +370,47 @@ class TestHrEmployee(TestHrCommon):
         employee_norbert = self.env['hr.employee'].create({'name': 'Norbert Employee', 'user_id': user_norbert.id})
         self.assertEqual(employee_norbert.image_1920, user_norbert.image_1920)
         self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)
+
+    def test_calendar_timezone(self):
+        # Priority is:
+        #   * employee.resource_calendar_id.tz
+        #   * employee.company_id.resource_calendar_id.tz -- should be defined but only enforced in frontend
+        #   * employee.tz -- always defined because resource_resource.tz is required
+        calendar = self.env.company.resource_calendar_id.copy()
+        company2 = self.env['res.company'].create({
+            'name': "Co 2",
+        })
+        company2.resource_calendar_id = False
+        self.env.company.resource_calendar_id.tz = "Europe/Brussels"
+
+        calendar.tz = "Asia/Tokyo"
+        tz = "America/New_York"
+        employees = employee_tz_from_calendar, employee_tz_from_company, employee_tz_from_self = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Employee with calendar',
+                'resource_calendar_id': calendar.id,
+                'tz': tz,
+            },
+            {
+                'name': 'Employee without calendar',
+                'resource_calendar_id': False,
+                'tz': tz,
+            },
+            {
+                'name': 'Employee with Timezone only',
+                'resource_calendar_id': False,
+                'tz': tz,
+                'company_id': company2.id,
+            },
+        ])
+
+        self.assertEqual(employee_tz_from_calendar._get_calendar_tz(), "Asia/Tokyo")
+        self.assertEqual(employee_tz_from_company._get_calendar_tz(), "Europe/Brussels")
+        self.assertEqual(employee_tz_from_self._get_calendar_tz(), "America/New_York")
+
+        # Test the sql query matches the logic
+        self.env.flush_all()
+        self.env.cr.execute(self.env['hr.employee']._get_timezones_query())
+        employee_timezones = self.env.cr.dictfetchall()
+        for emp in employees:
+            self.assertIn({'employee_id': emp.id, 'timezone': emp._get_calendar_tz()}, employee_timezones)

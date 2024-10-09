@@ -69,19 +69,14 @@ class HrAttendance(models.Model):
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
     @api.depends('worked_hours')
-    def _compute_overtime_hours(self):
+    def _compute_overtime_hours(self, timezones_query=''):
         att_progress_values = dict()
         if self.employee_id:
             self.env['hr.attendance'].flush_model(['worked_hours'])
             self.env['hr.attendance.overtime'].flush_model(['duration'])
-            self.env.cr.execute('''
-                WITH employee_time_zones AS (
-                    SELECT employee.id AS employee_id,
-                           calendar.tz AS timezone
-                      FROM hr_employee employee
-                INNER JOIN resource_calendar calendar
-                        ON calendar.id = employee.resource_calendar_id
-                )
+            timezones_query = self.env['hr.employee']._get_timezones_query()
+            self.env.cr.execute(f'''
+                WITH employee_time_zones AS {timezones_query}
                 SELECT att.id AS att_id,
                        att.worked_hours AS att_wh,
                        ot.id AS ot_id,
@@ -220,7 +215,8 @@ class HrAttendance(models.Model):
         #Returns a tuple containing the datetime in naive UTC of the employee's start of the day
         # and the date it was for that employee
         if not dt.tzinfo:
-            date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(employee._get_tz()))
+            date_from = dt.replace(hour=0, minute=0, second=0) - timedelta(days=1)
+            date_employee_tz = pytz.utc.localize(dt).astimezone(pytz.timezone(employee._get_calendar_tz(date_from)))
         else:
             date_employee_tz = dt
         start_day_employee_tz = date_employee_tz.replace(hour=0, minute=0, second=0)

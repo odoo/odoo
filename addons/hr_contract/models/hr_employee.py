@@ -133,6 +133,20 @@ class Employee(models.Model):
         return contracts[0].resource_calendar_id.sudo(False)
 
     @api.model
+    def _get_timezones_query(self):
+        super_query = super()._get_timezones_query()
+        return f'''(
+            WITH super AS {super_query}
+          SELECT super.employee_id,
+                 coalesce(contract_calendar.tz, super.timezone) as timezone
+            FROM super
+       LEFT JOIN hr_contract contract
+              ON contract.employee_id = super.employee_id
+       LEFT JOIN resource_calendar contract_calendar
+              ON contract.resource_calendar_id = contract_calendar.id
+        )'''
+
+    @api.model
     def _get_all_contracts(self, date_from, date_to, states=['open']):
         """
         Returns the contracts of all employees between date_from and date_to

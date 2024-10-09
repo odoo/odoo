@@ -535,6 +535,43 @@ class HrEmployeePrivate(models.Model):
                self.company_id.resource_calendar_id.tz or\
                'UTC'
 
+    def _get_calendar_tz(self, date_from=None):
+        # same as ``_get_tz`` but prioritze the date on the employee's calendar
+        self.ensure_one()
+        if date_from:  # contract overload has different signature
+            calendar = self._get_calendar(date_from)
+        else:
+            calendar = self._get_calendar()
+        return calendar.tz or\
+               self.tz
+
+    @api.model
+    def _get_timezones_query(self):
+        """ Return an sql query (as string) for a `employee_id | timezone` table.
+            Prioritize timezone on employee calendar then on resource
+            This query should match the logic implemented by ``_get_calendar_tz``
+
+            Note: Usually the company should have a calendar so the `res.tz` fallback
+            should not be reached but this is only enforced in frontend.
+        """
+        return '''(
+            SELECT employee.id AS employee_id,
+                   coalesce(
+                        employee_calendar.tz,
+                        company_calendar.tz,
+                        res.tz
+                    ) AS timezone
+              FROM hr_employee employee
+         LEFT JOIN res_company company
+                ON company.id = employee.company_id
+         LEFT JOIN resource_calendar employee_calendar
+                ON employee_calendar.id = employee.resource_calendar_id
+         LEFT JOIN resource_calendar company_calendar
+                ON company_calendar.id = company.resource_calendar_id
+         LEFT JOIN resource_resource res
+                ON res.id = employee.resource_id
+        )'''
+
     def _get_tz_batch(self):
         # Finds the first valid timezone in his tz, his work hours tz,
         #  the company calendar tz or UTC
