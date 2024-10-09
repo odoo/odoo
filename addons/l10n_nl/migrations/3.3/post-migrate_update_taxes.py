@@ -19,7 +19,10 @@ def _get_tax_ids_for_xml_id(cr, xml_id):
 def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
 
-    goods_taxes = env['account.tax'].browse(_get_tax_ids_for_xml_id(cr, 'btw_X0_producten'))
+    goods_tax_ids = [tax_id for xml_id in ['btw_X0_producten', 'btw_X0']
+                     for tax_id in _get_tax_ids_for_xml_id(cr, xml_id)]
+
+    goods_taxes = env['account.tax'].browse(goods_tax_ids)
     services_taxes = env['account.tax'].browse(_get_tax_ids_for_xml_id(cr, 'btw_X0_diensten'))
 
     old_3bl_tax_tags = env['account.account.tag']._get_tax_tags('3bl (omzet)', 'nl')
