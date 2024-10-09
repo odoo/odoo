@@ -222,7 +222,11 @@ class Module(models.Model):
                     'file_insertion_enabled': False,
                 }
                 output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
-                module.description_html = tools.html_sanitize(output)
+                html = lxml.html.document_fromstring(output)
+                for element, attribute, link, pos in html.iterlinks():
+                    if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
+                        element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
+                module.description_html = tools.html_sanitize(lxml.html.tostring(html))
 
     @api.depends('name')
     def _get_latest_version(self):
