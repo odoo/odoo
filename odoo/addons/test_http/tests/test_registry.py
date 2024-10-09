@@ -48,7 +48,7 @@ class TestHttpRegistry(BaseCase):
     def setUpClass(cls):
         lazy_property.reset_all(odoo.http.root)
         cls.addClassCleanup(lazy_property.reset_all, odoo.http.root)
-        cls.classPatch(odoo.conf, 'server_wide_modules', ['base', 'web', 'test_http'])
+        cls.classPatch(odoo.conf, 'server_wide_modules', ['base', 'web', 'rpc', 'test_http'])
 
         # make sure there are always many databases, to break monodb
         cls._db_list = cls.startClassPatcher(patch('odoo.http.db_list'))

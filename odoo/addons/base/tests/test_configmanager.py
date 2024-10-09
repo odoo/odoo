@@ -52,7 +52,7 @@ class TestConfigManager(TransactionCase):
             'pidfile': '',
             'addons_path': f'{PROJECT_PATH}/odoo/addons,{PROJECT_PATH}/addons',
             'upgrade_path': '',
-            'server_wide_modules': 'base,web',
+            'server_wide_modules': 'base,rpc,web',
             'data_dir': _get_default_datadir(),
 
             # HTTP
