@@ -1,13 +1,11 @@
-import re
 import sys
 import traceback
 import xmlrpc.client
 from datetime import date, datetime
-
 from collections import defaultdict
 from markupsafe import Markup
 
-import odoo
+import odoo.exceptions
 from odoo.http import Controller, route, dispatch_rpc, request, Response
 from odoo.fields import Date, Datetime, Command
 from odoo.tools import lazy
@@ -21,7 +19,7 @@ from odoo.tools.misc import frozendict
 # constants are also defined client-side and must remain in sync.
 # User code must use the exceptions defined in ``odoo.exceptions`` (not
 # create directly ``xmlrpc.client.Fault`` objects).
-RPC_FAULT_CODE_CLIENT_ERROR = 1 # indistinguishable from app. error.
+RPC_FAULT_CODE_CLIENT_ERROR = 1  # indistinguishable from app. error.
 RPC_FAULT_CODE_APPLICATION_ERROR = 1
 RPC_FAULT_CODE_WARNING = 2
 RPC_FAULT_CODE_ACCESS_DENIED = 3
@@ -50,16 +48,16 @@ def xmlrpc_handle_exception_int(e):
 
 def xmlrpc_handle_exception_string(e):
     if isinstance(e, odoo.exceptions.RedirectWarning):
-        fault = xmlrpc.client.Fault('warning -- Warning\n\n' + str(e), '')
+        fault = xmlrpc.client.Fault(f'warning -- Warning\n\n{e}', '')
     elif isinstance(e, odoo.exceptions.MissingError):
-        fault = xmlrpc.client.Fault('warning -- MissingError\n\n' + str(e), '')
+        fault = xmlrpc.client.Fault(f'warning -- MissingError\n\n{e}', '')
     elif isinstance(e, odoo.exceptions.AccessError):
-        fault = xmlrpc.client.Fault('warning -- AccessError\n\n' + str(e), '')
+        fault = xmlrpc.client.Fault(f'warning -- AccessError\n\n{e}', '')
     elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpc.client.Fault('AccessDenied', str(e))
     elif isinstance(e, odoo.exceptions.UserError):
-        fault = xmlrpc.client.Fault('warning -- UserError\n\n' + str(e), '')
-    #InternalError
+        fault = xmlrpc.client.Fault(f'warning -- UserError\n\n{e}', '')
+    # InternalError
     else:
         info = sys.exc_info()
         formatted_info = "".join(traceback.format_exception(*info))
@@ -128,6 +126,7 @@ def _check_request():
     if request.db:
         request.env.cr.close()
 
+
 class RPC(Controller):
     """Handle RPC connections."""
 
@@ -149,7 +148,7 @@ class RPC(Controller):
         _check_request()
         try:
             response = self._xmlrpc(service)
-        except Exception as error:
+        except Exception as error:  # noqa: BLE001
             response = xmlrpc_handle_exception_string(error)
         return Response(response=response, mimetype='text/xml')
 
@@ -159,7 +158,7 @@ class RPC(Controller):
         _check_request()
         try:
             response = self._xmlrpc(service)
-        except Exception as error:
+        except Exception as error:  # noqa: BLE001
             response = xmlrpc_handle_exception_int(error)
         return Response(response=response, mimetype='text/xml')
 

@@ -18,7 +18,7 @@ class TestHttpBase(HttpCaseWithUserDemo):
 
         lazy_property.reset_all(odoo.http.root)
         cls.addClassCleanup(lazy_property.reset_all, odoo.http.root)
-        cls.classPatch(odoo.conf, 'server_wide_modules', ['base', 'web', 'test_http'])
+        cls.classPatch(odoo.conf, 'server_wide_modules', ['base', 'web', 'rpc', 'test_http'])
         cls.classPatch(odoo.http.Application, 'session_store', session_store)
         cls.classPatch(odoo.http.Application, 'geoip_city_db', geoip_resolver)
         cls.classPatch(odoo.http.Application, 'geoip_country_db', geoip_resolver)
