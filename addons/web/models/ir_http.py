@@ -182,7 +182,7 @@ class Http(models.AbstractModel):
             'is_system': user._is_system() if session_uid else False,
             'is_public': user._is_public(),
             'is_website_user': user._is_public() if session_uid else False,
-            'uid': session_uid,
+            'uid': session_uid or False,
             'is_frontend': True,
             'profile_session': request.session.profile_session,
             'profile_collectors': request.session.profile_collectors,
