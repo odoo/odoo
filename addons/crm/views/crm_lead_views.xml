@@ -989,6 +989,7 @@
                         <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>
                         <separator/>
                         <filter string="Properties" name="group_by_lead_properties" context="{'group_by':'lead_properties'}"/>
+                        <filter name="partner_filter" string="Partner" domain="[('partner_id', 'child_of', context.get('lead_parent_partner'))]" context="{'active_test': False}" invisible="1"/>
                     </group>
                 </search>
             </field>
