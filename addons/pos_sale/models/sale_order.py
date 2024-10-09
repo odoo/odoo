@@ -133,3 +133,11 @@ class SaleOrderLine(models.Model):
         super()._compute_untaxed_amount_invoiced()
         for line in self:
             line.untaxed_amount_invoiced += sum(line.pos_order_line_ids.mapped('price_subtotal'))
+
+    @api.depends('product_id', 'pos_order_line_ids.refunded_orderline_id')
+    def _compute_name(self):
+        super()._compute_name()
+        for sol in self:
+            downpayment_sols = sol.pos_order_line_ids.mapped('refunded_orderline_id.sale_order_line_id')
+            for downpayment_sol in downpayment_sols:
+                downpayment_sol.name = _("%(line_description)s (Cancelled)", line_description=downpayment_sol.name)
