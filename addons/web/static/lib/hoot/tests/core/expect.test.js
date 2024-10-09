@@ -87,7 +87,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(results.pass).toBe(false);
         expect(results.assertions).toHaveLength(1);
         expect(results.assertions[0].message).toBe(
-            "expected at least one assertion, but none were run"
+            "expected at least 1 assertion, but none were run"
         );
     });
 

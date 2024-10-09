@@ -165,7 +165,7 @@ export class HootConfigDropdown extends Component {
                         <small class="flex items-center p-1 pt-0 gap-1">
                             <span class="text-muted whitespace-nowrap ms-1">Level:</span>
                             <select
-                                class="outline-none w-full border-b border-primary px-1"
+                                class="outline-none w-full bg-base text-base border-b border-primary px-1"
                                 t-model.number="config.loglevel"
                             >
                                 <t t-foreach="logLevels" t-as="level" t-key="level.value">

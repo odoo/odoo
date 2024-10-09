@@ -12,6 +12,7 @@ import {
     debounce,
     lookup,
     normalize,
+    stringify,
     title,
     useWindowListener,
 } from "../hoot_utils";
@@ -137,7 +138,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
     </${tagName}>
 `;
 
-const EMPTY_SUITE = new Suite(null, "...", []);
+const EMPTY_SUITE = new Suite(null, "…", []);
 const SECRET_SEQUENCE = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
 const R_QUERY_CONTENT = new RegExp(`^\\s*${EXCLUDE_PREFIX}?\\s*(.*)\\s*$`);
 const RESULT_LIMIT = 5;
@@ -349,7 +350,7 @@ export class HootSearch extends Component {
 
     get wrappedQuery() {
         const query = this.state.query.trim();
-        return this.useRegExp ? query : `"${query}"`;
+        return this.useRegExp ? query : stringify(query);
     }
 
     updateSuggestions = debounce(() => {
