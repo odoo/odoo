@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentVideo">
+        <div
+            t-att-aria-label="props.attachment.name"
+            class="o-mail-AttachmentVideo o-mail-mediaAttachment d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1"
+            t-att-title="props.attachment.name"
+            t-att-class="{ 'o-isUploading': props.attachment.uploading }"
+            tabindex="0"
+            t-att-data-mimetype="props.attachment.mimetype"
+            role="menuitem"
+            t-on-click="onClickAttachment"
+        >
+            <video
+                t-ref="videoRef"
+                class="my-0 mx-auto rounded"
+                t-att-class="{ 'cursor-pointer': canPlay }"
+                t-att-src="props.attachment.defaultSource"
+                t-on-pause="onPause"
+                t-on-seeking="() => this.seeking = true"
+                t-on-seeked="() => this.seeking = false"
+                t-attf-style="max-width: min(100%, {{ props.maxWidth }}px); max-height: {{ props.maxHeight }}px;"
+            />
+            <div t-if="props.attachment.uploading" class="position-absolute top-0 bottom-0 start-0 end-0 d-flex align-items-center justify-content-center" title="Uploading">
+                <i class="fa fa-spin fa-spinner"/>
+            </div>
+            <div t-if="state.paused" class="position-absolute flex-grow-1 cursor-pointer top-0 bottom-0 start-0 end-0 p-2 text-white d-flex flex-wrap align-content-center justify-content-center" t-on-click="onClickPlay">
+                <div t-if="canPlay" class="o-mail-AttachmentVideo-play btn btn-lg rounded opacity-75 bg-black">
+                    <i class="fa fa-play text-white"/>
+                </div>
+                <AttachmentActions actions="getActions(props.attachment)" maxHeight="props.maxHeight"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

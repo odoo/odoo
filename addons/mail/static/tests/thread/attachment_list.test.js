@@ -44,6 +44,36 @@ test("simplest layout", async () => {
     await contains(".o-mail-AttachmentCard-aside button[title='Download']");
 });
 
+test("layout with image, video and document files", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    const attachmentIds = pyEnv["ir.attachment"].create(
+        [
+            ["text/plain", "text"],
+            ["image/png", "png"],
+            ["video/mp4", "mp4"],
+        ].map(([mimetype, ext]) => ({
+            name: `test.${ext}`,
+            mimetype,
+        }))
+    );
+    pyEnv["mail.message"].create({
+        attachment_ids: attachmentIds,
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-AttachmentList > div:eq(0) .o-mail-AttachmentImage");
+    await contains(".o-mail-AttachmentList > div:eq(1) .o-mail-AttachmentVideo");
+    await contains(".o-mail-AttachmentList > div:eq(2) .o-mail-AttachmentCard");
+});
+
 test("layout with card details and filename and extension", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

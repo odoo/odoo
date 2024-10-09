@@ -15,7 +15,7 @@
                         }" role="menu" >
                 <div t-foreach="images" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.name"
-                     class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded o-viewable"
+                     class="o-mail-AttachmentImage o-mail-mediaAttachment d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded o-viewable"
                      t-att-title="attachment.name"
                      t-att-class="{ 'o-isUploading': attachment.uploading }"
                      tabindex="0"
@@ -36,6 +36,18 @@
                     </div>
                     <AttachmentActions actions="getActions(attachment)" maxHeight="props.imagesHeight"/>
                 </div>
+            </div>
+            <div class="d-flex flex-grow-1 flex-wrap mx-1 align-items-center" t-att-class="{
+                'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
+            }" role="menu" >
+                <AttachmentVideo
+                    t-foreach="videos" t-as="attachment" t-key="attachment.id"
+                    attachment="attachment"
+                    maxWidth="imagesWidth"
+                    maxHeight="props.imagesHeight"
+                    showDelete="showDelete"
+                    unlinkAttachment="props.unlinkAttachment"
+                />
             </div>
             <div class="d-flex flex-wrap mt-1 mx-1">
                 <!-- t-attf-class overridden in extensions -->

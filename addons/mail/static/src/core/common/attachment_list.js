@@ -1,25 +1,23 @@
-import { Component, useState } from "@odoo/owl";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { useChildSubEnv, useState } from "@odoo/owl";
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { AttachmentActions } from "@mail/core/common/attachment_actions";
+import { AttachmentVideo } from "@mail/core/common/attachment_video";
+import { AttachmentUtils } from "@mail/core/common/attachment_utils";
 
 /**
  * @typedef {Object} Props
  * @property {import("models").Attachment[]} attachments
- * @property {function} unlinkAttachment
  * @property {number} imagesHeight
  * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
- * @extends {Component<Props, Env>}
+ * @extends {AttachmentUtils<Props, Env>}
  */
-export class AttachmentList extends Component {
-    static components = { AttachmentActions };
-    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
+export class AttachmentList extends AttachmentUtils {
+    static components = { AttachmentActions, AttachmentVideo };
+    static props = [...AttachmentUtils.props, "attachments", "imagesHeight", "messageSearch?"];
     static template = "mail.AttachmentList";
 
     setup() {
@@ -27,10 +25,9 @@ export class AttachmentList extends Component {
         this.ui = useState(useService("ui"));
         // Arbitrary high value, this is effectively a max-width.
         this.imagesWidth = 1920;
-        this.dialog = useService("dialog");
         this.fileViewer = useFileViewer();
         this.actionsMenuState = useDropdownState();
-        this.isMobileOS = isMobileOS;
+        useChildSubEnv({ onClickAttachment: this.onClickAttachment.bind(this) });
     }
 
     /**
@@ -51,53 +48,20 @@ export class AttachmentList extends Component {
         return this.props.attachments.filter((a) => a.isImage);
     }
 
+    get videos() {
+        return this.props.attachments.filter((a) => a.isVideo);
+    }
+
     get cards() {
-        return this.props.attachments.filter((a) => !a.isImage);
-    }
-
-    /**
-     * @param {import("models").Attachment} attachment
-     */
-    canDownload(attachment) {
-        return !attachment.uploading && !this.env.inComposer;
-    }
-
-    /**
-     * @param {import("models").Attachment} attachment
-     */
-    onClickDownload(attachment) {
-        const downloadLink = document.createElement("a");
-        downloadLink.setAttribute("href", attachment.downloadUrl);
-        // Adding 'download' attribute into a link prevents open a new
-        // tab or change the current location of the window. This avoids
-        // interrupting the activity in the page such as rtc call.
-        downloadLink.setAttribute("download", "");
-        downloadLink.click();
-    }
-
-    /**
-     * @param {import("models").Attachment} attachment
-     */
-    onClickUnlink(attachment) {
-        if (this.env.inComposer) {
-            return this.props.unlinkAttachment(attachment);
-        }
-        this.dialog.add(ConfirmationDialog, {
-            body: _t('Do you really want to delete "%s"?', attachment.name),
-            cancel: () => {},
-            confirm: () => this.onConfirmUnlink(attachment),
-        });
+        return this.props.attachments.filter((a) => !a.isImage && !a.isVideo);
     }
 
     onClickAttachment(attachment) {
-        this.fileViewer.open(attachment, this.props.attachments);
-    }
-
-    /**
-     * @param {import("models").Attachment} attachment
-     */
-    onConfirmUnlink(attachment) {
-        this.props.unlinkAttachment(attachment);
+        const attachments = [...this.images, ...this.videos, ...this.cards];
+        this.fileViewer.open(
+            attachments.find((a) => a.id === attachment.id),
+            attachments
+        );
     }
 
     onImageLoaded() {
@@ -110,25 +74,6 @@ export class AttachmentList extends Component {
 
     get isInChatWindowAndIsAlignedLeft() {
         return this.env.inChatWindow && !this.env.alignedRight;
-    }
-
-    getActions(attachment) {
-        const res = [];
-        if (this.showDelete) {
-            res.push({
-                label: _t("Remove"),
-                icon: "fa fa-trash",
-                onSelect: () => this.onClickUnlink(attachment),
-            });
-        }
-        if (this.canDownload(attachment)) {
-            res.push({
-                label: _t("Download"),
-                icon: "fa fa-download",
-                onSelect: () => this.onClickDownload(attachment),
-            });
-        }
-        return res;
     }
 
     get showDelete() {
