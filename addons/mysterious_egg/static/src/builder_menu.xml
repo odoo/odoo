@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mysterious_egg.BuilderMenu">
+    <div id="oe_snippets">
+        <div class="o_we_website_top_actions">
+            <div class="o_we_external_history_buttons d-flex">
+                <button type="button" t-on-click="() => {}" class="btn btn-secondary fa fa-undo" t-att-disabled="!state.canUndo"/>
+                <button type="button"  t-on-click="() => {}" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
+            </div>
+            <form class="ms-auto d-flex">
+                <button type="button"  t-on-click="() => {}" class="btn btn-secondary" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
+                <button type="button" t-on-click="() => {}" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
+            </form>
+        </div>
+        <div id="snippets_menu">
+            <t t-foreach="tabs" t-as="tab" t-key="tab.name">
+                <button type="button" tabindex="1"  t-on-click="() => { this.state.currentTab = tab }" class="o_we_add_snippet_btn text-uppercase" t-att-accesskey="tab_index">
+                    <span t-esc="tab.title"/>
+                </button>
+            </t>
+        </div>
+
+        <t t-component="state.currentTab.Component"/>
+    </div>
+</t>
+
+</templates>
