@@ -173,6 +173,13 @@ class SaleOrderLine(models.Model):
                     line.task_id.write({'allocated_hours': allocated_hours})
         return result
 
+    def copy_data(self, default=None):
+        data = super().copy_data(default)
+        for origin, datum in zip(self, data):
+            if origin.analytic_distribution == origin.order_id.project_id.sudo()._get_analytic_distribution():
+                datum['analytic_distribution'] = False
+        return data
+
     ###########################################
     # Service : Project and task generation
     ###########################################
