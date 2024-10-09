@@ -332,32 +332,47 @@
                                     </td>
                                 </tr>
                                 <t t-set="tax_totals" t-value="o.tax_totals"/>
+                                <t t-set="currency" t-value="o.currency_id"/>
+                                <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
                                 <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                                    <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
-                                    <!-- copy-pasted template "account.tax_groups_totals" with reversed columns order -->
-                                    <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
+                                    <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
                                         <tr class="o_taxes">
                                             <td class="text-end o_price_total">
-                                                <span class="text-nowrap" t-esc="amount_by_group['formatted_tax_group_amount']"/>
+                                                <span class="text-nowrap"
+                                                      t-out="tax_group['display_base_amount_currency']"
+                                                      t-options='{"widget": "monetary", "display_currency": currency}'
+                                                >1.05</span>
                                             </td>
-                                            <td class="text-end">
-                                                <strong>
-                                                    <span t-esc="amount_by_group['tax_group_name']"/>
-                                                    <t t-if="tax_totals['display_tax_base']">
-                                                        <span class="text-nowrap"> on
-                                                            <t t-esc="amount_by_group['formatted_tax_group_base_amount']"/>
-                                                        </span>
-                                                    </t>
-                                                    <!-- Arabic translation of tax group -->
-                                                    <t t-set="arabic_tax_group_name" t-value="o_sec.tax_totals['groups_by_subtotal'][o_sec.tax_totals['subtotals'][subtotal_index]['name']][amount_by_group_index]['tax_group_name']"/>
-                                                    <span t-if="arabic_tax_group_name != amount_by_group['tax_group_name']" class="text-nowrap">/
+                                            <t t-set="arabic_tax_group_name" t-value="o_sec.tax_totals['subtotals'][subtotal_index]['tax_groups'][tax_group_index]['group_name']"/>
+                                            <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
+                                                <td class="text-end">
+                                                    <strong class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</strong>
+                                                    <strong t-if="arabic_tax_group_name != tax_group['group_name']" class="text-nowrap">/
                                                         <t t-esc="arabic_tax_group_name"/>
-                                                    </span>
-                                                </strong>
-                                            </td>
+                                                    </strong>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td class="text-end o_price_total">
+                                                    <span class="text-nowrap"
+                                                          t-out="tax_group['display_base_amount_currency']"
+                                                          t-options='{"widget": "monetary", "display_currency": currency}'
+                                                    >4.05</span>
+                                                </td>
+                                                <td>
+                                                    <span t-out="tax_group['group_name']">Tax 15%</span>
+                                                    <strong t-if="arabic_tax_group_name != tax_group['group_name']" class="text-nowrap">/
+                                                        <t t-esc="arabic_tax_group_name"/>
+                                                    </strong>
+                                                    <span> on </span>
+                                                    <span class="text-nowrap"
+                                                          t-out="tax_group['display_base_amount_currency']"
+                                                          t-options='{"widget": "monetary", "display_currency": currency}'
+                                                    >27.00</span>
+                                                </td>
+                                            </t>
                                         </tr>
                                     </t>
-
                                 </t>
                                 <tr class="o_total">
                                     <td class="text-end">
