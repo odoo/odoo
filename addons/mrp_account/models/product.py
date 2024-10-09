@@ -76,13 +76,15 @@ class ProductProduct(models.Model):
         if not boms_to_recompute:
             boms_to_recompute = []
         total = 0
+        quantity = bom.product_qty
         for opt in bom.operation_ids:
             if opt._skip_operation_line(self):
                 continue
 
-            duration_expected = (
-                opt.workcenter_id._get_expected_duration(self) +
-                opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
+            wc_capacity = opt.workcenter_id._get_capacity(self)
+            operation_cycle = float_round(quantity / wc_capacity, precision_rounding=1, rounding_method='UP')
+            duration_expected = (operation_cycle * opt.time_cycle * 100.0 / opt.workcenter_id.time_efficiency) + \
+                                opt.workcenter_id._get_expected_duration(self)
             total += (duration_expected / 60) * opt._total_cost_per_hour()
 
         for line in bom.bom_line_ids:
