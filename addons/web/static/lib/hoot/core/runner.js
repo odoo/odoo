@@ -20,6 +20,7 @@ import {
     formatTime,
     getFuzzyScore,
     normalize,
+    stringify,
 } from "../hoot_utils";
 import { cleanupDate } from "../mock/date";
 import { internalRandom } from "../mock/math";
@@ -546,21 +547,24 @@ export class Runner {
             );
         }
         const runFn = this.dry ? null : fn;
-        let test = markRaw(new Test(parentSuite, name, config, runFn));
+        let test = markRaw(new Test(parentSuite, name, config));
         const originalTest = this.tests.get(test.id);
         if (originalTest) {
             if (this.dry || originalTest.run) {
                 throw testError(
                     { name, parent: parentSuite },
-                    `a test with that name already exists in the suite "${parentSuite.name}"`
+                    `a test with that name already exists in the suite ${stringify(
+                        parentSuite.name
+                    )}`
                 );
             }
             test = originalTest;
-            test.setRunFn(runFn);
         } else {
             parentSuite.addJob(test);
             this.tests.set(test.id, test);
         }
+
+        test.setRunFn(runFn);
 
         this._applyTagModifiers(test);
 
@@ -1007,7 +1011,9 @@ export class Runner {
                         ...lastResults.errors.map((e) => `\n${e.message}`)
                     );
                 }
-                logger.error([`Test "${test.fullName}" failed:`, ...failReasons].join("\n"));
+                logger.error(
+                    [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n")
+                );
             }
 
             await this._callbacks.call("after-post-test", test, handleError);
@@ -1207,7 +1213,9 @@ export class Runner {
                 case Tag.ONLY:
                     if (!this.dry) {
                         logger.warn(
-                            `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
+                            `${stringify(job.fullName)} is marked as ${stringify(
+                                tag.name
+                            )}. This is not suitable for CI`
                         );
                     }
                     this._include(
@@ -1229,7 +1237,9 @@ export class Runner {
         if (skip) {
             if (ignoreSkip) {
                 logger.warn(
-                    `test "${job.fullName}" is explicitly included but marked as skipped: "skip" modifier has been ignored`
+                    `test ${stringify(
+                        job.fullName
+                    )} is explicitly included but marked as skipped: "skip" modifier has been ignored`
                 );
             } else {
                 job.config.skip = true;

@@ -304,12 +304,12 @@ export class HootSideBar extends Component {
     }
 
     /**
-     * @param {KeyboardEvent} ev
+     * @param {KeyboardEvent & { currentTarget: HTMLInputElement }} ev
      */
     onSearchInputKeydown(ev) {
         switch (ev.key) {
             case "ArrowDown": {
-                if (ev.target.selectionEnd === ev.target.value.length) {
+                if (ev.currentTarget.selectionEnd === ev.currentTarget.value.length) {
                     const suiteElements = this.getSuiteElements();
                     suiteElements[0]?.focus();
                 }
@@ -318,7 +318,7 @@ export class HootSideBar extends Component {
     }
 
     /**
-     * @param {KeyboardEvent} ev
+     * @param {KeyboardEvent & { currentTarget: HTMLButtonElement }} ev
      * @param {Suite} suite
      */
     onSuiteKeydown(ev, suite) {
@@ -327,7 +327,7 @@ export class HootSideBar extends Component {
          */
         const selectElementAt = (delta) => {
             const suiteElements = this.getSuiteElements();
-            const nextIndex = suiteElements.indexOf(ev.target) + delta;
+            const nextIndex = suiteElements.indexOf(ev.currentTarget) + delta;
             if (nextIndex < 0) {
                 this.searchInputRef.el?.focus();
             } else if (nextIndex >= suiteElements.length) {

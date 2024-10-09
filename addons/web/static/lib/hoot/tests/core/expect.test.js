@@ -42,7 +42,8 @@ describe(parseUrl(import.meta.url), () => {
 
     test("makeExpect with a test", async () => {
         const [customExpect, hooks] = makeExpect({ headless: true });
-        const customTest = new Test(null, "test", {}, () => {
+        const customTest = new Test(null, "test", {});
+        customTest.setRunFn(() => {
             customExpect({ key: true }).toEqual({ key: true });
             customExpect("oui").toBe("non");
         });
@@ -59,7 +60,8 @@ describe(parseUrl(import.meta.url), () => {
 
     test("makeExpect with a test flagged with TODO", async () => {
         const [customExpect, hooks] = makeExpect({ headless: true });
-        const customTest = new Test(null, "test", { todo: true }, () => {
+        const customTest = new Test(null, "test", { todo: true });
+        customTest.setRunFn(() => {
             customExpect(1).toBe(1);
         });
 
@@ -87,7 +89,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(results.pass).toBe(false);
         expect(results.assertions).toHaveLength(1);
         expect(results.assertions[0].message).toBe(
-            "expected at least one assertion, but none were run"
+            "expected at least 1 assertion, but none were run"
         );
     });
 
@@ -383,6 +385,16 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     describe("DOM matchers", () => {
+        test("toBeChecked", async () => {
+            await mountOnFixture(/* xml */ `
+                <input type="checkbox" />
+                <input type="checkbox" checked="" />
+            `);
+
+            expect("input:first").not.toBeChecked();
+            expect("input:last").toBeChecked();
+        });
+
         test("toHaveAttribute", async () => {
             await mountOnFixture(/* xml */ `
                 <input type="number" disabled="" />
@@ -411,6 +423,16 @@ describe(parseUrl(import.meta.url), () => {
             expect("li:contains(milk)").toHaveCount(2);
         });
 
+        test("toHaveProperty", async () => {
+            await mountOnFixture(/* xml */ `
+                <input type="search" readonly="" />
+            `);
+
+            expect("input").toHaveProperty("type", "search");
+            expect("input").not.toHaveProperty("readonly");
+            expect("input").toHaveProperty("readOnly", true);
+        });
+
         test("toHaveText", async () => {
             class TextComponent extends Component {
                 static props = {};
@@ -431,6 +453,40 @@ describe(parseUrl(import.meta.url), () => {
             expect(".without").toHaveText("Without nbsp");
             expect(".without").not.toHaveText("Without\u00a0nbsp");
             expect(".without").not.toHaveText("Without\u00a0nbsp", { raw: true });
+        });
+
+        test("toHaveInnerHTML", async () => {
+            await mountOnFixture(/* xml */ `
+                <div class="parent">
+                    <p>
+                        abc<strong>def</strong>ghi
+                        <br />
+                        <input type="text" />
+                    </p>
+                </div>
+            `);
+
+            expect(".parent").toHaveInnerHTML(/* xml */ `
+                <p>abc<strong>def</strong>ghi<br><input type="text"></p>
+            `);
+        });
+
+        test("toHaveOuterHTML", async () => {
+            await mountOnFixture(/* xml */ `
+                <div class="parent">
+                    <p>
+                        abc<strong>def</strong>ghi
+                        <br />
+                        <input type="text" />
+                    </p>
+                </div>
+            `);
+
+            expect(".parent").toHaveOuterHTML(/* xml */ `
+                <div class="parent">
+                    <p>abc<strong>def</strong>ghi<br><input type="text"></p>
+                </div>
+            `);
         });
     });
 });
