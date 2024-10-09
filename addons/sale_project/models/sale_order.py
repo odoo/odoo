@@ -273,6 +273,12 @@ class SaleOrder(models.Model):
             self.env['project.project'].sudo().search([('sale_line_id.order_id', 'in', self.ids)]).sale_line_id = False
         return res
 
+    def copy_data(self, default=None):
+        return super().copy_data({
+            'project_id': False,
+            **(default or {}),
+        })
+
     def _prepare_analytic_account_data(self, prefix=None):
         """ Prepare SO analytic account creation values.
 
