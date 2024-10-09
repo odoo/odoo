@@ -2234,6 +2234,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             fiscal_position = request.website.fiscal_position_id.sudo()
             taxes = fiscal_position.map_tax(product_taxes)
             return request.env['product.template']._apply_taxes_to_price(
-                price, currency, product_taxes, taxes, product_or_template
+                price, currency, product_taxes, taxes, product_or_template, website=request.website
             )
         return price
