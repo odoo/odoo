@@ -40,7 +40,6 @@ const deletePAV = (product_attribute_value, message) => [
 // This tour relies on data created on the Python test.
 registry.category("web_tour.tours").add('delete_product_attribute_value_tour', {
     url: '/odoo',
-    test: true,
     steps: () => [
         ...openProductAttribute("PA"),
         // Test error message on a used attribute value

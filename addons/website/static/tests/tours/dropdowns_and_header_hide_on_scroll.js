@@ -34,7 +34,6 @@ const scrollDownToMediaList = function () {
 };
 
 registerWebsitePreviewTour("dropdowns_and_header_hide_on_scroll", {
-    test: true,
     url: "/",
     edition: true,
     checkDelay: 100,

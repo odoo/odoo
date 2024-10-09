@@ -6,7 +6,6 @@ import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 registry
     .category('web_tour.tours')
     .add('website_sale_product_configurator_hide_dialog', {
-        test: true,
         url: '/shop?search=Main product',
         steps: () => [
             {

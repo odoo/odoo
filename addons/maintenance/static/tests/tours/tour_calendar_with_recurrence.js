@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
-    test: true,
     steps: () => [
         {
             content: "Enter event form",
@@ -52,7 +51,6 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
 });
 
 registry.category("web_tour.tours").add("test_drag_and_drop_event_in_calendar", {
-    test: true,
     steps: () => [
         {
             content: "Move event to Wednesday 1 PM",

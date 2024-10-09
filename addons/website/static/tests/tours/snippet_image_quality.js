@@ -3,7 +3,6 @@
 import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour('website_image_quality', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

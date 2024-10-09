@@ -19,7 +19,6 @@ function ensurePopupNotVisible() {
 }
 
 registry.category("web_tour.tours").add('snippet_newsletter_popup_use', {
-    test: true,
     url: '/',
     steps: () => [
     {

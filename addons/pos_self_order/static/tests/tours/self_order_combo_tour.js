@@ -4,7 +4,6 @@ import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 
 registry.category("web_tour.tours").add("self_combo_selector", {
-    test: true,
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Office Combo"),

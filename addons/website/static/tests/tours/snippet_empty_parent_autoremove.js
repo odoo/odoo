@@ -16,7 +16,6 @@ function removeSelectedBlock() {
 }
 
 registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

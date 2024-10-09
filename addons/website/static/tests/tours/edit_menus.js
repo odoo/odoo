@@ -9,7 +9,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('edit_menus', {
-    test: true,
     url: '/',
 }, () => [
     // Add a megamenu item from the menu.
@@ -353,7 +352,6 @@ registerWebsitePreviewTour('edit_menus', {
 registerWebsitePreviewTour(
     "edit_menus_delete_parent",
     {
-        test: true,
         url: "/",
     },
     () => [

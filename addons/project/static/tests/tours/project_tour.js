@@ -4,13 +4,12 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('project_test_tour', {
-    test: true,
     url: '/odoo',
     steps: () => [
     stepUtils.showAppsMenuItem(), {
         trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
         run: "click",
-    }, 
+    },
     {
         trigger: '.o_project_kanban',
     },
@@ -31,7 +30,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         isActive: ["auto"],
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
         run: "click",
-    }, 
+    },
     {
         trigger: ".o_kanban_group",
     },
@@ -42,14 +41,14 @@ registry.category("web_tour.tours").add('project_test_tour', {
         isActive: ["auto"],
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
         run: "click",
-    }, 
+    },
     {
         trigger: ".o_kanban_group:eq(0)",
     },
     {
         trigger: '.o-kanban-button-new',
         run: "click",
-    }, 
+    },
     {
         trigger: ".o_kanban_project_tasks",
     },
@@ -83,7 +82,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button",
         content: 'open sub-tasks from kanban card',
         run: "click",
-    }, 
+    },
     {
         trigger: ".o_widget_subtask_kanban_list .subtask_list",
     },
@@ -91,7 +90,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create",
         content: 'Create a new sub-task',
         run: "click",
-    }, 
+    },
     {
         trigger: ".subtask_create_input",
     },
@@ -103,7 +102,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
         content: 'Change the subtask state',
         run: "click",
-    }, 
+    },
     {
         trigger: ".dropdown-menu",
     },
@@ -140,7 +139,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: '.o_field_subtasks_one2many div[name="name"] input',
         content: 'Set subtask name',
         run: "edit new subtask",
-    }, 
+    },
     {
         trigger: '.o_field_many2many_tags_avatar .o_m2m_avatar',
     },

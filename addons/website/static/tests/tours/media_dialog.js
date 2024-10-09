@@ -8,7 +8,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("website_media_dialog_undraw", {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -32,7 +31,6 @@ registerWebsitePreviewTour("website_media_dialog_undraw", {
 ]);
 
 registerWebsitePreviewTour("website_media_dialog_external_library", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [
@@ -82,7 +80,6 @@ registerWebsitePreviewTour("website_media_dialog_external_library", {
 ]);
 
 registerWebsitePreviewTour('website_media_dialog_icons', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -122,7 +119,6 @@ registerWebsitePreviewTour('website_media_dialog_icons', {
 ]);
 
 registerWebsitePreviewTour("website_media_dialog_image_shape", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

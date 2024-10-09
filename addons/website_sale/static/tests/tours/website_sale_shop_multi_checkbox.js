@@ -5,7 +5,6 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 // This tour relies on a data created from the python test.
 registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
-    test: true,
     url: '/shop?search=Product Multi',
     steps: () => [
     {
@@ -64,7 +63,6 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
 ]});
 
 registry.category("web_tour.tours").add('tour_shop_multi_checkbox_single_value', {
-    test: true,
     url: '/shop?search=Burger',
     steps: () => [
     {

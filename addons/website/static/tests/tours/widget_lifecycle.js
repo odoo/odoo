@@ -15,7 +15,6 @@ import {
 const localStorageKey = 'widgetAndWysiwygLifecycle';
 
 registerWebsitePreviewTour("widget_lifecycle", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

@@ -9,7 +9,6 @@ import {
 import { markup } from "@odoo/owl";
 
 registerWebsitePreviewTour("website_event_tour", {
-    test: true,
     url: "/",
 }, () => [{
     content: _t("Click here to add new content to your website."),

@@ -144,7 +144,6 @@ const addExistingField = function (name, type, label, required, display) {
 registerWebsitePreviewTour("website_form_editor_tour", {
     url: '/',
     edition: true,
-    test: true,
     checkDelay: 100,
 }, () => [
     // Drop a form builder snippet and configure it
@@ -730,7 +729,6 @@ return [
 registerWebsitePreviewTour('website_form_contactus_edition_with_email', {
     url: '/contactus',
     edition: true,
-    test: true,
 }, () => editContactUs([
     {
         content: 'Change the Recipient Email',
@@ -742,7 +740,6 @@ registerWebsitePreviewTour('website_form_contactus_edition_with_email', {
 registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
     url: '/contactus',
     edition: true,
-    test: true,
 }, () => editContactUs([
     {
         content: "Change a random option",
@@ -755,7 +752,6 @@ registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
 ]));
 
 registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [
@@ -894,7 +890,6 @@ registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
 ]);
 
 registerWebsitePreviewTour('website_form_contactus_change_random_option', {
-    test: true,
     url: '/contactus',
     edition: true,
 }, () => editContactUs([
@@ -908,7 +903,6 @@ registerWebsitePreviewTour('website_form_contactus_change_random_option', {
 
 // Check that the editable form content is actually editable.
 registerWebsitePreviewTour("website_form_editable_content", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [
@@ -973,7 +967,6 @@ registerWebsitePreviewTour("website_form_editable_content", {
 ]);
 
 registerWebsitePreviewTour("website_form_special_characters", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

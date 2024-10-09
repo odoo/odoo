@@ -1,9 +1,8 @@
 /** @odoo-module **/
-    
+
     import { registry } from "@web/core/registry";
 
     registry.category("web_tour.tours").add('test_stock_route_diagram_report', {
-        test: true,
         steps: () => [
         {
             trigger: ".o_breadcrumb",
@@ -27,7 +26,6 @@
 
 
 registry.category("web_tour.tours").add('test_multiple_warehouses_filter', {
-    test: true,
     steps: () => [
         // Add (Warehouse A or Warehouse B) to the filter
         {

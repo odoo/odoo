@@ -85,7 +85,6 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
 };
 
 registerWebsitePreviewTour('snippet_social_media', {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

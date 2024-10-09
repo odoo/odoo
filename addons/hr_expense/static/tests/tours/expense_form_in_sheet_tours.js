@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add("do_not_create_zero_amount_expense_in_sheet", {
-    test: true,
     url: "/odoo",
     steps: () => [
         ...stepUtils.goToAppSteps("hr_expense.menu_hr_expense_root", "Go to the Expenses app"),

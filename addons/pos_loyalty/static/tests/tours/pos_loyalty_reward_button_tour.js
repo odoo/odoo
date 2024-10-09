@@ -6,7 +6,6 @@ import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_p
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -129,7 +128,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -148,7 +146,6 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -174,7 +171,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProductTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -191,7 +187,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithFreeProdu
 });
 
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardProductDomainTour", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
@@ -209,7 +204,6 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountWithRewardPro
 });
 
 registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
-    test: true,
     checkDelay: 50,
     steps: () =>
         [
