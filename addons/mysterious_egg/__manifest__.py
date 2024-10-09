@@ -19,11 +19,17 @@
     'auto_install': True,
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'html_editor'],
+    'depends': ['base', 'html_editor', 'website'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
         'views/views.xml',
     ],
+
+    'assets': {
+        'web.assets_backend': [
+            'mysterious_egg/static/src/**/*',
+        ],
+    },
 }
