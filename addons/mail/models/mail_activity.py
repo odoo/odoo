@@ -678,16 +678,19 @@ class MailActivity(models.Model):
         res_id_to_date_done = {}
         res_id_to_deadline = {}
         grouped_activities = defaultdict(dict)
+        filter_my_activities = self.env.context.get("my_activities", False)
         for res_id_tuple in res_id_type_tuples:
             res_id, activity_type_id = res_id_tuple
             ongoing = grouped_ongoing.get(res_id_tuple, Activity)
+            user_ongoing = ongoing.filtered(lambda rec: rec.user_id.id == self.env.uid)
             completed = grouped_completed.get(res_id_tuple, Activity)
+            user_completed = completed.filtered(lambda rec: rec.user_id.id == self.env.uid)
             activities = ongoing | completed
 
             # As completed is sorted on date_done DESC, we take here the max date_done
-            date_done = completed and completed[0].date_done
+            date_done = (filter_my_activities and user_completed and user_completed[0].date_done) or (completed and completed[0].date_done)
             # As ongoing is sorted on date_deadline ASC, we take here the min date_deadline
-            date_deadline = ongoing and ongoing[0].date_deadline
+            date_deadline = (filter_my_activities and user_ongoing and user_ongoing[0].date_deadline) or (ongoing and ongoing[0].date_deadline)
             if date_deadline and (res_id not in res_id_to_deadline or date_deadline < res_id_to_deadline[res_id]):
                 res_id_to_deadline[res_id] = date_deadline
             if date_done and (res_id not in res_id_to_date_done or date_done > res_id_to_date_done[res_id]):
