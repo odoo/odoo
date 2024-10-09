@@ -329,6 +329,30 @@ class TranslationToolsTestCase(BaseCase):
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
 
+    def test_force_inline_translation(self):
+        """ Test xml_translate() with elements translated as a whole (using the
+            `o_translate_inline` class).
+        """
+        terms = []
+        source = """<form>
+                        <p>{}</p>
+                    </form>""".format
+        content = """<span class="o_text_highlight o_text_highlight_wavy {}">
+                        Go to the <a href="/contactus">Contact Us</a> page
+                    </span>""".format
+        source_init = source(content(''))
+        source_inline = source(content('o_translate_inline'))
+
+        result_init = xml_translate(terms.append, source_init)
+        self.assertEqual(result_init, source_init)
+        self.assertItemsEqual(terms, ['Go to the', 'Contact Us', 'page'])
+
+        terms = []
+        result_inline = xml_translate(terms.append, source_inline)
+        self.assertEqual(result_inline, source_inline)
+        # The `o_translate_inline` element should be translated as a whole.
+        self.assertItemsEqual(terms, [content('o_translate_inline')])
+
 
 class TestLanguageInstall(TransactionCase):
     def test_language_install(self):
