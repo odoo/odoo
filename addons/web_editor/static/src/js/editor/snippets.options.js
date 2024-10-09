@@ -8277,7 +8277,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             return src.searchParams.has(params.colorName);
         } else if (widgetName === 'main_color_opt') {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
-            return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
+            return src.origin === window.location.origin && (
+                src.pathname.startsWith('/html_editor/shape/') ||
+                src.pathname.startsWith('/web_editor/shape/')
+            );
         }
         return this._super(...arguments);
     },
@@ -9580,7 +9583,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
      * @override
      */
     _computeVisibility(methodName, params) {
-        return this.$target.is("img[src^='/web_editor/shape/']");
+        return this.$target.is("img[src^='/html_editor/shape/'], img[src^='/web_editor/shape/']");
     },
 
     //--------------------------------------------------------------------------
