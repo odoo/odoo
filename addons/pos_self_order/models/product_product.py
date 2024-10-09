@@ -52,11 +52,30 @@ class ProductProduct(models.Model):
 
     def _load_pos_self_data(self, data):
         domain = self._load_pos_self_data_domain(data)
-        fields = self._load_pos_self_data_fields(data['pos.config']['data'][0]['id'])
+        config_id = data['pos.config']['data'][0]['id']
+        fields = self._load_pos_self_data_fields(config_id)
+        products = self.with_context(display_default_code=False).search_read(domain, fields, load=False)
+        self._compute_product_price_with_pricelist(products, config_id)
         return {
-            'data': self.with_context(display_default_code=False).search_read(domain, fields, load=False),
+            'data': products,
             'fields': fields,
         }
+
+    def _compute_product_price_with_pricelist(self, products, config_id):
+        config = self.env['pos.config'].browse(config_id)
+        pricelist = config.pricelist_id
+
+        product_ids = [product['id'] for product in products]
+        product_objs = self.env['product.product'].browse(product_ids)
+
+        product_map = {product.id: product for product in product_objs}
+
+        for product in products:
+            product_obj = product_map.get(product['id'])
+            if product_obj:
+                product['lst_price'] = pricelist._get_product_price(
+                    product_obj, 1.0, currency=config.currency_id
+                )
 
     def _filter_applicable_attributes(self, attributes_by_ptal_id: Dict) -> List[Dict]:
         """
