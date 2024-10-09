@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_delivery_receipt_wizard_form" model="ir.ui.view">
+        <field name="name">delivery.receipt.wizard.form</field>
+        <field name="model">delivery.receipt.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Product Lines">
+                <sheet>
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="open,close"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="license_plate_barcode" required="True"/>
+                            <field name="picking_id" options="{'no_open': True}" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="automation_manual"/>
+                        </group>
+
+                    </group>
+                    <group>
+                        <field name="line_ids" delete="False">
+                            <tree editable="bottom">
+                                <field name="available_product_ids" column_invisible="1"/>
+                                <field name="product_id"/>
+                                <field name="barcode"/>
+                                <field name="quantity"/>
+                                <field name="available_quantity"/>
+                                <field name="remaining_quantity"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Add Lines" type="object" name="action_add_lines" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

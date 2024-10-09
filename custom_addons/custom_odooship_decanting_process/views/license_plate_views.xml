@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View for License Plate Orders -->
+        <record id="view_license_plate_orders_tree" model="ir.ui.view">
+            <field name="name">license.plate.orders.tree</field>
+            <field name="model">license.plate.orders</field>
+            <field name="arch" type="xml">
+                <tree string="License Plate Orders">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="license_plate_order_line_ids" widget="one2many_list"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View for License Plate Orders -->
+        <record id="view_license_plate_orders_form" model="ir.ui.view">
+            <field name="name">license.plate.orders.form</field>
+            <field name="model">license.plate.orders</field>
+            <field name="arch" type="xml">
+                <form string="License Plate Order">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="open,close"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="automation_manual"/>
+                        </group>
+                        <group>
+                            <field name="license_plate_order_line_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="sku_code"/>
+                                    <field name="barcode"/>
+                                    <field name="state"/>
+                                    <field name="sequence"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree View for License Plate Orders Line -->
+        <record id="view_license_plate_orders_line_tree" model="ir.ui.view">
+            <field name="name">license.plate.orders.line.tree</field>
+            <field name="model">license.plate.orders.line</field>
+            <field name="arch" type="xml">
+                <tree string="License Plate Orders Lines">
+                    <field name="name"/>
+                    <field name="license_plate_orders_id"/>
+                    <field name="product_id"/>
+                    <field name="quantity"/>
+                    <field name="sku_code"/>
+                    <field name="barcode"/>
+                    <field name="state"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View for License Plate Orders Line -->
+        <record id="view_license_plate_orders_line_form" model="ir.ui.view">
+            <field name="name">license.plate.orders.line.form</field>
+            <field name="model">license.plate.orders.line</field>
+            <field name="arch" type="xml">
+                <form string="License Plate Order Line">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="license_plate_orders_id"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="sku_code"/>
+                            <field name="barcode"/>
+                            <field name="state"/>
+                            <field name="sequence"/>
+                        </group>
+                        <footer>
+                            <button name="button_close_license_plate" type="object"
+                                    string="Close License Plate"
+                                    class="btn-primary"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action for License Plate Orders -->
+        <record id="action_license_plate_orders" model="ir.actions.act_window">
+            <field name="name">License Plate Orders</field>
+            <field name="res_model">license.plate.orders</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_license_plate_orders_tree"/>
+        </record>
+
+        <!-- Action for License Plate Orders Line -->
+        <record id="action_license_plate_orders_line" model="ir.actions.act_window">
+            <field name="name">License Plate Orders Lines</field>
+            <field name="res_model">license.plate.orders.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_license_plate_orders_line_tree"/>
+        </record>
+
+
+    </data>
+</odoo>

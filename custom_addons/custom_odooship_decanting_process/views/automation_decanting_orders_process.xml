@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Form view for Automation decanting process-->
+    <record id="view_automation_decanting_process" model="ir.ui.view">
+        <field name="name">automation.decanting.orders.process.form</field>
+        <field name="model">automation.decanting.orders.process</field>
+        <field name="arch" type="xml">
+            <form string="Automation Decanting Orders Process">
+                <sheet>
+                    <header>
+                        <button name="action_button_close" type="object"
+                                string="Close Crate" invisible="state in ('done')"/>
+                        <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
+                        <hr/>
+                        <field name="crate_status" widget="statusbar" statusbar_visible="close"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="pallet_barcode"/>
+                            <field name="hu_barcode" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="crate_barcode"/>
+                            <field name="container_id"/>
+                            <field name="container_partition"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Items">
+                            <field name="automation_decanting_process_line_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="sku_code"/>
+                                    <field name="quantity"/>
+                                    <field name="partition_code" readonly="True"/>
+                                    <field name="bin_code" readonly="True"/>
+                                    <field name="available_product_ids" column_invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--    Tree view for automation decanting process-->
+    <record id="view_automation_decanting_orders_process" model="ir.ui.view">
+        <field name="name">automation.decanting.orders.process.tree</field>
+        <field name="model">automation.decanting.orders.process</field>
+        <field name="arch" type="xml">
+            <tree string="Automation Decanting Orders Process">
+                <field name="name"/>
+                <field name="pallet_barcode"/>
+                <field name="hu_barcode"/>
+                <field name="crate_barcode"/>
+                <field name="compartments"/>
+                <field name="container_id"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!--    Action for automation decanting process-->
+    <record id="action_automation_decanting_orders_process" model="ir.actions.act_window">
+        <field name="name">Automation Decanting Orders Process</field>
+        <field name="res_model">automation.decanting.orders.process</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

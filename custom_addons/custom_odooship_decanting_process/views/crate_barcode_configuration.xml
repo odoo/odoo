@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Form view of Crate Barcode Configuration -->
+    <record id="view_crate_barcode_configuration_form" model="ir.ui.view">
+        <field name="name">crate.barcode.configuration.form</field>
+        <field name="model">crate.barcode.configuration</field>
+        <field name="arch" type="xml">
+            <form string="Geek Totes Barcode">
+                <sheet>
+                    <header>
+                        <button name="action_set_available"
+                            type="object"
+                            string="Set Available"
+                            class="btn-primary"
+                            invisible="crate_status in ('not_available')"/>
+                        <field name="crate_status" widget="statusbar" statusbar_visible="not_available"/>
+                    </header>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+<!--    Tree View of Crate Barcode Configuration-->
+    <record id="view_crate_barcode_configuration_tree" model="ir.ui.view">
+        <field name="name">crate.barcode.configuration.tree</field>
+        <field name="model">crate.barcode.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="crate_status"/>
+            </tree>
+        </field>
+    </record>
+
+<!--    Action for Crate barcode configuration model-->
+    <record id="action_crate_barcode_configuration" model="ir.actions.act_window">
+        <field name="name">Geek Totes Barcode</field>
+        <field name="res_model">crate.barcode.configuration</field>
+        <field name="view_mode">tree,form</field>
+<!--        <field name="view_id" ref="view_crate_barcode_configuration_tree"/>-->
+    </record>
+</odoo>

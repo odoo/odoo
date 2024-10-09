@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    Main Menuitem-->
+    <menuitem id="menu_shiperoo_receipt_parent"
+              name="Shiperoo Inbound Process" sequence="10"/>
+
+    <!--    Receipt Orders Menuitem-->
+    <menuitem id="menu_delivery_receipt_orders"
+              parent="menu_shiperoo_receipt_parent"
+              name="Manual/Automation Orders Process"
+              action="action_delivery_receipt_orders"
+              sequence="20"/>
+
+    <!--    Menu for Automation Decanting Process-->
+    <menuitem id="menu_automation_decanting_orders_process"
+              name="Automation Decanting Orders Process"
+              parent="menu_shiperoo_receipt_parent"
+              action="action_automation_decanting_orders_process"
+              sequence="30"/>
+
+    <!--    Configuration Menu for configuring Partition for Crate-->
+    <menuitem id="container_configuration_menu"
+              name="Configuration"
+              parent="menu_shiperoo_receipt_parent"
+              sequence="50"/>
+
+    <!--    Submenu to configure Crate Partition-->
+    <menuitem id="submenu_container_configuration_menu"
+              name="Crate Container Configuration"
+              parent="container_configuration_menu"
+              action="action_crate_container_configuration"
+              sequence="60"/>
+
+    <!--    Submenu to configure Crate Barcode in system and to track status of Crate is
+    Available and not available-->
+    <menuitem id="submenu_crate_barcode_configuration"
+              name="Geek Totes Barcode"
+              parent="container_configuration_menu"
+              action="action_crate_barcode_configuration"
+              sequence="70"/>
+
+    <!-- SubMenu Item for License Plate Orders -->
+    <menuitem id="menu_license_plate_orders"
+              name="License Plate Orders"
+              action="action_license_plate_orders"
+              parent="container_configuration_menu"
+              sequence="70"/>
+</odoo>
