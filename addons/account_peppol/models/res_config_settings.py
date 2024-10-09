@@ -28,12 +28,6 @@ class ResConfigSettings(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
-    def _compute_account_peppol_mode_constraint(self):
-        mode_constraint = self.env['ir.config_parameter'].sudo().get_param('account_peppol.mode_constraint')
-        trial_param = self.env['ir.config_parameter'].sudo().get_param('saas_trial.confirm_token')
-        self.account_peppol_mode_constraint = trial_param and 'demo' or mode_constraint or 'prod'
-
     @api.depends("company_id.account_edi_proxy_client_ids")
     def _compute_account_peppol_edi_user(self):
         for config in self:
