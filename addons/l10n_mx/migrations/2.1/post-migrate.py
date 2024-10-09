@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, Command, SUPERUSER_ID
+from odoo import api, Command
 
 
 def migrate(cr, version):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, api.SUPERUSER_ID, {})
     # Migrate wrong data tag on account cuenta102_02
     debit_tag = env.ref('l10n_mx.tag_debit_balance_account')
     credit_tag = env.ref('l10n_mx.tag_credit_balance_account')

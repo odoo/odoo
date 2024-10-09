@@ -1327,7 +1327,7 @@ def preload_registries(dbnames):
                 post_install_suite = loader.make_suite(module_names, 'post_install')
                 if post_install_suite.has_http_case():
                     with registry.cursor() as cr:
-                        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                        env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
                         env['ir.qweb']._pregenerate_assets_bundles()
                 result = loader.run_suite(post_install_suite)
                 registry._assertion_report.update(result)

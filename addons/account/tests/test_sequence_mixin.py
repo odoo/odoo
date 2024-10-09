@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged, TransactionCase
-from odoo import fields, api, SUPERUSER_ID, Command
+from odoo import fields, api, Command
 from odoo.tools import mute_logger
 
 from dateutil.relativedelta import relativedelta
@@ -817,7 +817,7 @@ class TestSequenceMixinConcurrency(TransactionCase):
     def setUp(self):
         super().setUp()
         with self.env.registry.cursor() as cr:
-            env = api.Environment(cr, SUPERUSER_ID, {})
+            env = api.Environment(cr, api.SUPERUSER_ID, {})
             journal = env['account.journal'].create({
                 'name': 'concurency_test',
                 'code': 'CT',
@@ -842,16 +842,16 @@ class TestSequenceMixinConcurrency(TransactionCase):
             'account_id': account.id,
             'journal_id': journal.id,
             'envs': [
-                api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
-                api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
-                api.Environment(self.env.registry.cursor(), SUPERUSER_ID, {}),
+                api.Environment(self.env.registry.cursor(), api.SUPERUSER_ID, {}),
+                api.Environment(self.env.registry.cursor(), api.SUPERUSER_ID, {}),
+                api.Environment(self.env.registry.cursor(), api.SUPERUSER_ID, {}),
             ],
         }
         self.addCleanup(self.cleanUp)
 
     def cleanUp(self):
         with self.env.registry.cursor() as cr:
-            env = api.Environment(cr, SUPERUSER_ID, {})
+            env = api.Environment(cr, api.SUPERUSER_ID, {})
             moves = env['account.move'].browse(self.data['move_ids'])
             moves.filtered(lambda x: x.state in ('posted', 'cancel')).button_draft()
             moves.posted_before = False

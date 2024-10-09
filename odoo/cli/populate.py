@@ -56,7 +56,7 @@ class Populate(Command):
         dbname = odoo.tools.config['db_name']
         registry = Registry(dbname)
         with registry.cursor() as cr:
-            env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {'active_test': False})
+            env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {'active_test': False})
             self.populate(env, model_factors, separator_code)
 
     @classmethod

@@ -10,7 +10,7 @@ from lxml import html
 from unittest.mock import patch
 from werkzeug.urls import url_encode, url_join
 
-from odoo import SUPERUSER_ID
+from odoo.api import SUPERUSER_ID
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.digest.tests.common import TestDigestCommon
 from odoo.addons.mail.tests.common import MailCommon

@@ -4,7 +4,8 @@
 import json
 from datetime import date
 
-from odoo import api, fields, models, tools, _, SUPERUSER_ID
+from odoo import api, fields, models, tools, _
+from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 

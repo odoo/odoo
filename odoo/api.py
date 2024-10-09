@@ -8,11 +8,16 @@
 from __future__ import annotations
 
 __all__ = [
+    'SUPERUSER_ID',
     'Environment',
     'Meta',
-    'model',
-    'constrains', 'depends', 'onchange', 'returns',
     'call_kw',
+    'constrains',
+    'depends',
+    'model',
+    'onchange',
+    'ondelete',
+    'returns',
 ]
 
 import logging
@@ -55,6 +60,9 @@ ValuesType = dict[str, typing.Any]
 T = typing.TypeVar('T')
 
 _logger = logging.getLogger(__name__)
+
+# The hard-coded super-user id (a.k.a. administrator, or root user).
+SUPERUSER_ID = 1
 
 
 class NewId:
@@ -1540,6 +1548,5 @@ class Starred:
 
 
 # keep those imports here in order to handle cyclic dependencies correctly
-from odoo import SUPERUSER_ID
 from odoo.modules.registry import Registry
 from .sql_db import BaseCursor

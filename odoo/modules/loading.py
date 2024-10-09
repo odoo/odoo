@@ -16,7 +16,8 @@ import odoo.modules.db
 import odoo.modules.graph
 import odoo.modules.migration
 import odoo.modules.registry
-from .. import SUPERUSER_ID, api, tools
+from odoo import api, tools
+
 from .module import adapt_version, initialize_sys_path, load_openerp_module
 
 _logger = logging.getLogger(__name__)
@@ -417,7 +418,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
         report = registry._assertion_report
-        env = api.Environment(cr, SUPERUSER_ID, {})
+        env = api.Environment(cr, api.SUPERUSER_ID, {})
         loaded_modules, processed_modules = load_module_graph(
             env, graph, status, perform_checks=update_module,
             report=report, models_to_check=models_to_check)

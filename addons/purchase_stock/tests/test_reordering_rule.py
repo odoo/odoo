@@ -5,7 +5,8 @@ from datetime import datetime as dt, time
 from datetime import timedelta as td
 from json import loads
 
-from odoo import SUPERUSER_ID, Command
+from odoo import Command
+from odoo.api import SUPERUSER_ID
 from odoo.fields import Date
 from odoo.tests import Form, tagged, freeze_time
 from odoo.tests.common import TransactionCase

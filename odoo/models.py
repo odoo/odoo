@@ -50,10 +50,9 @@ import psycopg2.extensions
 from psycopg2.extras import Json
 
 import odoo
-from . import SUPERUSER_ID
 from . import api
 from . import tools
-from .api import NewId
+from .api import SUPERUSER_ID, NewId
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .tools import (
     clean_context, config, date_utils, discardattr,

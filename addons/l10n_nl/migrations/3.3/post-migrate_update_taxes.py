@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, SUPERUSER_ID
+from odoo import api
 from odoo.tools import SQL
 
 
@@ -16,7 +16,7 @@ def _get_tax_ids_for_xml_id(env, xml_id):
 
 
 def migrate(cr, version):
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    env = api.Environment(cr, api.SUPERUSER_ID, {})
 
     goods_taxes = env['account.tax'].browse(_get_tax_ids_for_xml_id(env, 'btw_X0_producten'))
     services_taxes = env['account.tax'].browse(_get_tax_ids_for_xml_id(env, 'btw_X0_diensten'))
