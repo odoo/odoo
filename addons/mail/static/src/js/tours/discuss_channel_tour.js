@@ -17,23 +17,16 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector input",
             content: markup(_t("<p>Create a channel here.</p>")),
             tooltipPosition: "bottom",
             run: `edit SomeChannel_${new Date().getTime()}`,
         },
         {
-            isActive: ["auto"],
             trigger: ".o-discuss-ChannelSelector-suggestion",
-        },
-        {
-            trigger: ".o-discuss-ChannelSelector-list",
             content: markup(_t("<p>Create a public or private channel.</p>")),
+            run: "click",
             tooltipPosition: "right",
-            run() {
-                document.querySelector(".o-discuss-ChannelSelector-suggestion").click();
-            },
         },
         {
             trigger: ".o-mail-Composer-input",
