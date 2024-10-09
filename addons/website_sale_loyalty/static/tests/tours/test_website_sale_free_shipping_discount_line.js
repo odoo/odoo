@@ -6,6 +6,7 @@ import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 registry.category("web_tour.tours").add('check_shipping_discount', {
     test: true,
     url: '/shop?search=Plumbus',
+    checkDelay: 50,
     steps: () => [
         {
             content: "select Plumbus",
@@ -43,7 +44,13 @@ registry.category("web_tour.tours").add('check_shipping_discount', {
             run: "click",
         },
         {
-            trigger: ".accordion-button",
+            trigger: ".oe_cart:contains(confirm order)",
+        },
+        {
+            trigger: ".o_total_card:contains(order summary)",
+        },
+        {
+            trigger: ".o_total_card button.accordion-button",
             run: "click",
         },
         {
