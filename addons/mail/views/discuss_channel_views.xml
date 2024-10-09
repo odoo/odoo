@@ -30,6 +30,21 @@
             </field>
         </record>
 
+        <record id="mail.discuss_channel_view_list" model="ir.ui.view">
+            <field name="name">discuss.channel.list</field>
+            <field name="model">discuss.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <list string="Channels" default_order="name">
+                    <field name="avatar_128" invisible="parent_channel_id" widget="image" options="{'size': [24, 24]}" width="30" string=""/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <button type="object" invisible="is_member or group_ids" class="btn btn-primary ms-auto mt-auto" name="channel_join" string="Join"/>
+                    <button type="object" invisible="not is_member or group_ids" class="btn btn-secondary ms-auto mt-auto" name="action_unfollow" string="Leave"/>
+                </list>
+            </field>
+        </record>
+
         <record id="mail.discuss_channel_view_form" model="ir.ui.view">
             <field name="name">discuss.channel.form</field>
             <field name="model">discuss.channel</field>
