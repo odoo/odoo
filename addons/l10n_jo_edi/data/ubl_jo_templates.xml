@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="ubl_jo_InvoiceType" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceType" primary="True">
+        <xpath expr="//*[local-name()='IssueDate']" position="before">
+            <cbc:UUID
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                t-out="vals.get('invoice').get('uuid')"/>
+        </xpath>
+
+        <xpath expr="//*[local-name()='BillingReference']" position="replace">
+            <cac:BillingReference
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-set="billing_reference_vals" t-value="vals.get('billing_reference_vals', {})"/>
+                    <cac:InvoiceDocumentReference>
+                    <cbc:ID t-out="billing_reference_vals.get('id')"/>
+                    <cbc:UUID t-out="billing_reference_vals.get('uuid')"/>
+                    <cbc:DocumentDescription t-out="billing_reference_vals.get('description')"/>
+                    </cac:InvoiceDocumentReference>
+            </cac:BillingReference>
+        </xpath>
+
+        <xpath expr="//*[local-name()='AccountingSupplierParty']" position="before">
+            <cac:AdditionalDocumentReference
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID>ICV</cbc:ID>
+                <cbc:UUID t-out="vals.get('invoice').get('id')"/>
+            </cac:AdditionalDocumentReference>
+        </xpath>
+
+        <xpath expr="//*[local-name()='AccountingCustomerParty']" position="inside">
+            <cac:AccountingContact
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:Telephone t-out="vals.get('accounting_customer_party_vals').get('telephone')"/>
+            </cac:AccountingContact>
+        </xpath>
+
+        <xpath expr="//*[local-name()='AccountingCustomerParty']" position="after">
+            <cac:SellerSupplierParty
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cac:Party>
+                        <cac:PartyIdentification>
+                        <cbc:ID t-out="vals.get('invoice').get('sequence_income_source')"/>
+                        </cac:PartyIdentification>
+                    </cac:Party>
+            </cac:SellerSupplierParty>
+        </xpath>
+
+        <xpath expr="//*[local-name()='DocumentCurrencyCode']" position="attributes">
+            <!-- Exported XML currency should always be JOD regardless of the invoice currency -->
+            <attribute name="t-out">'JOD'</attribute>
+        </xpath>
+    </template>
+
+    <template id="ubl_jo_PaymentMeansType" inherit_id="account_edi_ubl_cii.ubl_20_PaymentMeansType" primary="True">
+        <xpath expr="//*[local-name()='PaymentMeansCode']" position="after">
+            <cbc:InstructionNote xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" t-out="vals.get('instruction_note')"/>
+        </xpath>
+    </template>
+
+    <template id="ubl_jo_InvoiceLineType" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceLineType" primary="True">
+        <xpath expr="//*[local-name()='AllowanceCharge']" position="replace"/>
+
+        <xpath expr="//*[local-name()='Price']//*[local-name()='BaseQuantity']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                <cac:AllowanceCharge t-foreach="vals.get('allowance_charge_vals', [])" t-as="foreach_vals">
+                    <t t-call="{{AllowanceChargeType_template}}">
+                        <t t-set="vals" t-value="foreach_vals"/>
+                    </t>
+                </cac:AllowanceCharge>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_jo_TaxTotalType" inherit_id="account_edi_ubl_cii.ubl_20_TaxTotalType" primary="True">
+        <xpath expr="//*[local-name()='TaxAmount']" position="after">
+            <cbc:RoundingAmount
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(vals.get('rounding_amount'), vals.get('currency_dp'))"/>
+        </xpath>
+    </template>
+</odoo>
