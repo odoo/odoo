@@ -22,7 +22,11 @@ export class NavigableList extends Component {
         position: { type: String, optional: true },
         isLoading: { type: Boolean, optional: true },
     };
-    static defaultProps = { position: "bottom", isLoading: false, autoSelectFirst: true };
+    static defaultProps = {
+        position: "bottom",
+        isLoading: false,
+        autoSelectFirst: true,
+    };
 
     setup() {
         super.setup();
@@ -39,10 +43,7 @@ export class NavigableList extends Component {
         onExternalClick("root", async (ev) => {
             // Let event be handled by bubbling handlers first.
             await new Promise(setTimeout);
-            if (
-                isEventHandled(ev, "composer.onClickTextarea") ||
-                isEventHandled(ev, "channelSelector.onClickInput")
-            ) {
+            if (isEventHandled(ev, "composer.onClickTextarea")) {
                 return;
             }
             this.close();

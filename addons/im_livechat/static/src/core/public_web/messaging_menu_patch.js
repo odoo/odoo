@@ -15,7 +15,7 @@ patch(MessagingMenu.prototype, {
         if (hasLivechats) {
             items.push({
                 id: "livechat",
-                icon: "fa fa-comments",
+                icon: "fa fa-commenting-o",
                 label: _t("Livechat"),
             });
         }

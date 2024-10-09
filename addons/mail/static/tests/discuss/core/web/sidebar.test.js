@@ -9,54 +9,10 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
-
-test("sidebar find shows channels matching search term", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({
-        channel_member_ids: [],
-        channel_type: "channel",
-        group_public_id: false,
-        name: "test",
-    });
-    await start();
-    await openDiscuss();
-    await click(
-        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
-    );
-    await insertText(".o-discuss-ChannelSelector input", "test");
-    // When searching for a single existing channel, the results list will have at least 2 lines:
-    // One for the existing channel itself
-    // One for creating a channel with the search term
-    await contains(".o-mail-NavigableList-item", { count: 2 });
-    await contains(".o-mail-NavigableList-item", { text: "test" });
-    await contains(".o-mail-NavigableList-item", { text: "Create: # test" });
-});
-
-test("sidebar find shows channels matching search term even when user is member", async () => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({
-        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
-        channel_type: "channel",
-        group_public_id: false,
-        name: "test",
-    });
-    await start();
-    await openDiscuss();
-    await click(
-        ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-add"
-    );
-    await insertText(".o-discuss-ChannelSelector input", "test");
-    // When searching for a single existing channel, the results list will have at least 2 lines:
-    // One for the existing channel itself
-    // One for creating a channel with the search term
-    await contains(".o-mail-NavigableList-item", { count: 2 });
-    await contains(".o-mail-NavigableList-item", { text: "test" });
-    await contains(".o-mail-NavigableList-item", { text: "Create: # test" });
-});
 
 test("unknown channel can be displayed and interacted with", async () => {
     const pyEnv = await startServer();

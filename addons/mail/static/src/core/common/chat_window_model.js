@@ -1,8 +1,6 @@
 import { Record } from "@mail/core/common/record";
 import { rpc } from "@web/core/network/rpc";
 
-import { _t } from "@web/core/l10n/translation";
-
 /** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
 
 export class ChatWindow extends Record {
@@ -28,12 +26,6 @@ export class ChatWindow extends Record {
         onAdd() {
             this.hubAsFolded = undefined;
         },
-        /** @this {import("models").ChatWindow} */
-        onDelete() {
-            if (!this.thread && !this.hubAsOpened) {
-                this.delete();
-            }
-        },
     });
     hubAsFolded = Record.one("ChatHub", {
         /** @this {import("models").ChatWindow} */
@@ -43,7 +35,7 @@ export class ChatWindow extends Record {
     });
 
     get displayName() {
-        return this.thread?.displayName ?? _t("New message");
+        return this.thread?.displayName;
     }
 
     get isOpen() {
@@ -54,9 +46,8 @@ export class ChatWindow extends Record {
         const { escape = false } = options;
         const chatHub = this.store.chatHub;
         const indexAsOpened = chatHub.opened.findIndex((w) => w.eq(this));
-        const thread = this.thread;
-        if (thread) {
-            thread.state = "closed";
+        if (this.thread) {
+            this.thread.state = "closed";
         }
         await this._onClose(options);
         this.delete();
@@ -99,7 +90,7 @@ export class ChatWindow extends Record {
         ) {
             return;
         }
-        if (this.thread?.model === "discuss.channel") {
+        if (this.thread.model === "discuss.channel") {
             this.thread.foldStateCount++;
             return rpc(
                 "/discuss/channel/fold",

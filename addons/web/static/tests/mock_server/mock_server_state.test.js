@@ -23,6 +23,7 @@ test("default state", () => {
         lang: "en",
         multiLang: false,
         odoobotId: 418,
+        odoobotUid: 518,
         partnerId: 17,
         partnerName: "Mitchell Admin",
         publicPartnerId: 18,

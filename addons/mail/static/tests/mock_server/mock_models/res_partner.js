@@ -174,52 +174,6 @@ export class ResPartner extends webModels.ResPartner {
     }
 
     /**
-     * @param {string} [name]
-     * @param {number} [limit = 20]
-     * @param {number[]} [excluded_ids]
-     */
-    im_search(name, limit = 20, excluded_ids) {
-        const kwargs = getKwArgs(arguments, "name", "limit", "excluded_ids");
-        name = kwargs.name || "";
-        limit = kwargs.limit || 20;
-        excluded_ids = kwargs.excluded_ids || [];
-
-        /** @type {import("mock_models").ResUsers} */
-        const ResUsers = this.env["res.users"];
-
-        name = name.toLowerCase(); // simulates ILIKE
-        // simulates domain with relational parts (not supported by mock server)
-        const matchingPartnersIds = ResUsers._filter([])
-            .filter((user) => {
-                const [partner] = this.browse(user.partner_id);
-                // user must have a partner
-                if (!partner) {
-                    return false;
-                }
-                // not excluded
-                if (excluded_ids.includes(partner.id)) {
-                    return false;
-                }
-                // not current partner
-                if (partner.id === this.env.user.partner_id) {
-                    return false;
-                }
-                // no name is considered as return all
-                if (!name) {
-                    return true;
-                }
-                if (partner.name && partner.name.toLowerCase().includes(name)) {
-                    return true;
-                }
-                return false;
-            })
-            .map((user) => user.partner_id)
-            .sort((a, b) => (a.name === b.name ? a.id - b.id : a.name > b.name ? 1 : -1));
-        matchingPartnersIds.length = Math.min(matchingPartnersIds.length, limit);
-        return new mailDataHelpers.Store(this.browse(matchingPartnersIds)).get_result();
-    }
-
-    /**
      * @param {number[]} ids
      * @returns {Record<string, ModelRecord>}
      */
@@ -292,6 +246,23 @@ export class ResPartner extends webModels.ResPartner {
      */
     search_for_channel_invite(search_term, channel_id, limit = 30) {
         const kwargs = getKwArgs(arguments, "search_term", "channel_id", "limit");
+        const store = new mailDataHelpers.Store();
+        const count = this._search_for_channel_invite(
+            store,
+            kwargs.search_term,
+            kwargs.channel_id,
+            kwargs.limit
+        );
+        return { count: count, data: store.get_result() };
+    }
+
+    /**
+     * @param {string} [search_term]
+     * @param {number} [channel_id]
+     * @param {number} [limit]
+     */
+    _search_for_channel_invite(store, search_term, channel_id, limit = 30) {
+        const kwargs = getKwArgs(arguments, "store", "search_term", "channel_id", "limit");
         search_term = kwargs.search_term || "";
         channel_id = kwargs.channel_id;
         limit = kwargs.limit || 30;
@@ -302,11 +273,14 @@ export class ResPartner extends webModels.ResPartner {
         const ResUsers = this.env["res.users"];
 
         search_term = search_term.toLowerCase(); // simulates ILIKE
-        const memberPartnerIds = new Set(
-            DiscussChannelMember._filter([["channel_id", "=", channel_id]]).map(
-                (member) => member.partner_id
-            )
-        );
+        let memberPartnerIds;
+        if (channel_id) {
+            memberPartnerIds = new Set(
+                DiscussChannelMember._filter([["channel_id", "=", channel_id]]).map(
+                    (member) => member.partner_id
+                )
+            );
+        }
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartnersIds = ResUsers._filter([])
             .filter((user) => {
@@ -315,8 +289,12 @@ export class ResPartner extends webModels.ResPartner {
                 if (!partner) {
                     return false;
                 }
+                // not current partner
+                if (!channel_id && partner.id === this.env.user.partner_id) {
+                    return false;
+                }
                 // user should not already be a member of the channel
-                if (memberPartnerIds.has(partner.id)) {
+                if (channel_id && memberPartnerIds.has(partner.id)) {
                     return false;
                 }
                 // no name is considered as return all
@@ -331,9 +309,8 @@ export class ResPartner extends webModels.ResPartner {
             .map((user) => user.partner_id);
         const count = matchingPartnersIds.length;
         matchingPartnersIds.length = Math.min(count, limit);
-        const store = new mailDataHelpers.Store();
         this._search_for_channel_invite_to_store(matchingPartnersIds, store, channel_id);
-        return { count, data: store.get_result() };
+        return count;
     }
 
     _search_for_channel_invite_to_store(ids, store, channel_id) {

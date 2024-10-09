@@ -71,7 +71,7 @@ export function useMessageSearch(thread) {
             if (this.searchTerm) {
                 this.searching = true;
                 const data = await sequential(() =>
-                    store.search(this.searchTerm, this.thread, before)
+                    store.searchMessagesInThread(this.searchTerm, this.thread, before)
                 );
                 if (!data) {
                     return;

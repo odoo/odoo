@@ -9,6 +9,7 @@ import {
     serverState,
     unmakeKwArgs,
 } from "@web/../tests/web_test_helpers";
+import { Domain } from "@web/core/domain";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
@@ -902,6 +903,43 @@ registerRoute("/mail/data", mail_data);
 /** @type {RouteCallback} */
 async function mail_data(request) {
     return (await mailDataHelpers.processRequest.call(this, request)).get_result();
+}
+
+registerRoute("/discuss/search", search);
+/** @type {RouteCallback} */
+async function search(request) {
+    const { term, limit = 8 } = await parseRequestParams(request);
+
+    /** @type {import("mock_models").DiscussChannel} */
+    const DiscussChannel = this.env["discuss.channel"];
+    /** @type {import("mock_models").ResPartner} */
+    const ResPartner = this.env["res.partner"];
+
+    const store = new mailDataHelpers.Store();
+    const base_domain = [
+        ["name", "ilike", term],
+        ["channel_type", "!=", "chat"],
+    ];
+    const priority_conditions = [[["is_member", "=", true], ...base_domain], base_domain];
+    const channels = new Set();
+    let remaining_limit;
+    for (const domain of priority_conditions) {
+        remaining_limit = limit - channels.size;
+        if (remaining_limit <= 0) {
+            break;
+        }
+        const channelIds = DiscussChannel.search(
+            Domain.and([[["id", "not in", [...channels]]], domain]).toList(),
+            undefined,
+            remaining_limit
+        );
+        for (const channelId of channelIds) {
+            channels.add(channelId);
+        }
+    }
+    store.add(channels);
+    ResPartner._search_for_channel_invite(store, term, undefined, limit);
+    return store.get_result();
 }
 
 /** @type {RouteCallback} */

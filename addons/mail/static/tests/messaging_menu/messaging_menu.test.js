@@ -8,7 +8,6 @@ import {
     insertText,
     onRpcBefore,
     openDiscuss,
-    openFormView,
     patchBrowserNotification,
     patchUiSize,
     start,
@@ -286,18 +285,6 @@ test("Is closed after clicking on new message", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button", { text: "New Message" });
     await contains(".o-mail-MessagingMenu", { count: 0 });
-});
-
-test("no 'New Message' button when discuss is open", async () => {
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await contains("button", { text: "New Message" });
-    await openDiscuss();
-    await contains("button", { count: 0, text: "New Message" });
-    await openFormView("res.partner");
-    await contains("button", { text: "New Message" });
-    await openDiscuss();
-    await contains("button", { count: 0, text: "New Message" });
 });
 
 test("grouped notifications by document", async () => {
@@ -581,51 +568,6 @@ test("open chat window from preview", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow");
-});
-
-test('"Start a conversation" in mobile shows channel selector (+ click away)', async () => {
-    patchUiSize({ size: SIZES.SM });
-    await start();
-    await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Chat" });
-    await contains("button", { text: "Start a conversation" });
-    await contains("input[placeholder='Start a conversation']", { count: 0 });
-    await click("button", { text: "Start a conversation" });
-    await contains("button", { count: 0, text: "Start a conversation" });
-    await contains("input[placeholder='Start a conversation']");
-    await click(".o-mail-MessagingMenu");
-    await contains("button", { text: "Start a conversation" });
-    await contains("input[placeholder='Start a conversation']", { count: 0 });
-});
-test('"New Channel" in mobile shows channel selector (+ click away)', async () => {
-    patchUiSize({ size: SIZES.SM });
-    await start();
-    await openDiscuss();
-    await contains("button.active", { text: "Inbox" });
-    await click("button", { text: "Channel" });
-    await contains("button", { text: "New Channel" });
-    await contains("input[placeholder='Add or join a channel']", { count: 0 });
-    await click("button", { text: "New Channel" });
-    await contains("button", { count: 0, text: "New Channel" });
-    await contains("input[placeholder='Add or join a channel']");
-    await click(".o-mail-MessagingMenu");
-    await contains("button", { text: "New Channel" });
-    await contains("input[placeholder='Add or join a channel']", { count: 0 });
-});
-
-test("'Start a conversation' button should open a thread in mobile", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
-    patchUiSize({ size: SIZES.SM });
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click("button", { text: "Start a conversation" });
-    await insertText("input[placeholder='Start a conversation']", "demo");
-    await click(".o-discuss-ChannelSelector-suggestion", { text: "Demo" });
-    triggerHotkey("enter");
-    await contains(".o-mail-ChatWindow", { text: "Demo" });
 });
 
 test("Counter is updated when receiving new message", async () => {
