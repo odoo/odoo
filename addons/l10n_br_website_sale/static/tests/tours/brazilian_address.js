@@ -19,7 +19,6 @@ function assertCityAndState(expectedCity, expectedState) {
 }
 
 registry.category("web_tour.tours").add("test_brazilian_address", {
-    test: true,
     url: '/shop?search=Brazilian test product',
     steps: () => [
         ...tourUtils.addToCart({productName: "Brazilian test product", search: false}),

@@ -5,7 +5,6 @@
 
     registry.category("web_tour.tours").add('sql_constaint', {
         url: '/odoo/action-test_new_api.action_categories?debug=1',
-        test: true,
         steps: () => [
     {
         content: "wait web client",

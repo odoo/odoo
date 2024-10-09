@@ -8,7 +8,6 @@ import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_p
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosHrTour", {
-    test: true,
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
@@ -87,7 +86,6 @@ registry.category("web_tour.tours").add("PosHrTour", {
 });
 
 registry.category("web_tour.tours").add("CashierStayLogged", {
-    test: true,
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),
@@ -110,7 +108,6 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
 });
 
 registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
-    test: true,
     steps: () =>
         [
             Chrome.clickBtn("Open Register"),

@@ -9,7 +9,6 @@ function assertEqual(actual, expected) {
 }
 
 registerWebsitePreviewTour('website_controller_page_listing_layout', {
-    test: true,
     url: '/model/exposed-model',
     edition: true,
 }, () => [
@@ -59,7 +58,6 @@ registerWebsitePreviewTour('website_controller_page_listing_layout', {
 ]);
 
 registerWebsitePreviewTour('website_controller_page_default_page_check', {
-    test: true,
     url: '/model/exposed-model',
 }, () => [
     {

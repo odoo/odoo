@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('project_create_sol_tour', {
-    test: true,
     url: "/odoo",
     steps: () => [
     stepUtils.showAppsMenuItem(), {
@@ -26,7 +25,7 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
         content: "Select the customer in the autocomplete dropdown",
         run: "click",
-    }, 
+    },
     {
         trigger: 'div.o_notebook_headers',
     },

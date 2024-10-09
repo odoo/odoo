@@ -13,7 +13,6 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
  * Makes sure that blog tags can be created and removed.
  */
 registerWebsitePreviewTour('blog_tags', {
-    test: true,
     url: '/blog',
 }, () => [
     stepUtils.waitIframeIsReady(),

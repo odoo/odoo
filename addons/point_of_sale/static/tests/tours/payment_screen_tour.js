@@ -6,7 +6,6 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_scre
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PaymentScreenTour", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -63,7 +62,6 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenTour2", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -81,7 +79,6 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -104,7 +101,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -127,7 +123,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -172,7 +167,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
 });
 
 registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -213,7 +207,6 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUpCashAndBank"
 });
 
 registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -230,7 +223,6 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
 });
 
 registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -248,7 +240,6 @@ registry.category("web_tour.tours").add("InvoiceShipLaterAccessRight", {
 });
 
 registry.category("web_tour.tours").add("CashRoundingPayment", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),

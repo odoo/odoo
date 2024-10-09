@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('shop_sale_loyalty', {
-    test: true,
     url: '/shop?search=Small%20Cabinet',
     steps: () => [
         /* 1. Buy 1 Small Cabinet, enable coupon code & insert 10% code */

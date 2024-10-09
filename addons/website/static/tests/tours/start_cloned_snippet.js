@@ -7,7 +7,6 @@ import {
 
 registerWebsitePreviewTour('website_start_cloned_snippet', {
     edition: true,
-    test: true,
     url: '/',
 }, () => {
     const countdownSnippet = {
@@ -38,6 +37,6 @@ registerWebsitePreviewTour('website_start_cloned_snippet', {
                 }
             },
         },
-        
+
     ]
 });

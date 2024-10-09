@@ -5,7 +5,6 @@
     import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
     registry.category("web_tour.tours").add('website_sale_tour_1', {
-        test: true,
         checkDelay: 150,
         url: '/shop?search=Storage Box Test',
         steps: () => [
@@ -445,7 +444,6 @@
     }]});
 
     registry.category("web_tour.tours").add('website_sale_tour_2', {
-        test: true,
         url: '/shop/cart',
         checkDelay: 150,
         steps: () => [

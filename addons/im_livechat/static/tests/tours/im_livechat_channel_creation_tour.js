@@ -11,12 +11,10 @@ const requestChatSteps = [
 ];
 
 registry.category("web_tour.tours").add("im_livechat_request_chat", {
-    test: true,
     steps: () => requestChatSteps,
 });
 
 registry.category("web_tour.tours").add("im_livechat_request_chat_and_send_message", {
-    test: true,
     steps: () => [
         ...requestChatSteps,
         {

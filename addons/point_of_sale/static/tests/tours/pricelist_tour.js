@@ -7,7 +7,6 @@ import * as Pricelist from "@point_of_sale/../tests/tours/utils/pricelist_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 
 registry.category("web_tour.tours").add("pos_pricelist", {
-    test: true,
     steps: () =>
         [
             Chrome.startPoS(),
