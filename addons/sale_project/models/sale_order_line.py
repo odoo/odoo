@@ -93,6 +93,15 @@ class SaleOrderLine(models.Model):
                 del defaults["name"]
         return defaults
 
+    @api.depends('order_id.analytic_account_id')
+    def _compute_analytic_distribution(self):
+        super()._compute_analytic_distribution()
+        for line in self:
+            if line.display_type or line.analytic_distribution or not line.product_id:
+                continue
+            if line.order_id.analytic_account_id:
+                line.analytic_distribution = {line.order_id.analytic_account_id.id: 100}
+
     @api.depends('product_id.type')
     def _compute_product_updatable(self):
         super()._compute_product_updatable()

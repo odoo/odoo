@@ -672,45 +672,6 @@ class TestSaleToInvoice(TestSaleCommon):
         aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
         self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100}}])
 
-    def test_invoice_analytic_account_so_not_default(self):
-        """ Tests whether, when an analytic account rule is set and the so has an analytic account,
-        the default analytic acount doesn't replace the one from the so in the invoice.
-        """
-        # Required for `analytic_account_id` to be visible in the view
-        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
-        analytic_plan_default = self.env['account.analytic.plan'].create({'name': 'default'})
-        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
-        analytic_account_so = self.env['account.analytic.account'].create({'name': 'so', 'plan_id': analytic_plan_default.id})
-
-        self.env['account.analytic.distribution.model'].create({
-            'analytic_distribution': {analytic_account_default.id: 100},
-            'product_id': self.product_a.id,
-        })
-
-        so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.partner_a
-        so_form.analytic_account_id = analytic_account_so
-
-        with so_form.order_line.new() as sol:
-            sol.product_id = self.product_a
-            sol.product_uom_qty = 1
-
-        so = so_form.save()
-        so.action_confirm()
-        so._force_lines_to_invoice_policy_order()
-
-        so_context = {
-            'active_model': 'sale.order',
-            'active_ids': [so.id],
-            'active_id': so.id,
-            'default_journal_id': self.company_data['default_journal_sale'].id,
-        }
-        down_payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({})
-        down_payment.create_invoices()
-
-        aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
-        self.assertRecordValues(aml, [{'analytic_distribution': {str(analytic_account_default.id): 100, str(analytic_account_so.id): 100}}])
-
     def test_invoice_analytic_rule_with_account_prefix(self):
         """
         Test whether, when an analytic account rule is set within the scope (applicability) of invoice
