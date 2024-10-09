@@ -460,13 +460,13 @@ test("settings views does not read existing id when coming back in breadcrumbs",
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    expect(".o_field_boolean input").not.toHaveProperty("disabled");
+    expect(".o_field_boolean input").toHaveProperty("disabled", false);
     await click("button[name='4']");
     await animationFrame();
     expect(".breadcrumb").toHaveText("Settings");
     await click(".o_control_panel .breadcrumb-item a");
     await animationFrame();
-    expect(".o_field_boolean input").not.toHaveProperty("disabled");
+    expect(".o_field_boolean input").toHaveProperty("disabled", false);
     expect.verifySteps([
         "get_views", // initial setting action
         "onchange", // this is a setting view => new record transient record
@@ -787,7 +787,7 @@ test("settings views does not write the id on the url", async () => {
     await getService("action").doAction(1);
     await runAllTimers();
     expect(browser.location.pathname).toBe("/odoo/settings");
-    expect(".o_field_boolean input").not.toHaveProperty("disabled");
+    expect(".o_field_boolean input").toHaveProperty("disabled", false);
     await click(".o_field_boolean input");
     await animationFrame();
     expect(".o_field_boolean input").toBeChecked({ message: "checkbox should be checked" });
@@ -980,7 +980,7 @@ test("clicking on any button in setting should show discard warning if setting f
 
     await clickSave();
     expect(".modal").toHaveCount(0, { message: "should not open a warning dialog" });
-    expect(".o_field_boolean input").not.toHaveProperty("disabled"); // Everything must stay in edit
+    expect(".o_field_boolean input").toHaveProperty("disabled", false); // Everything must stay in edit
 
     await click(".o_field_boolean input");
     await animationFrame();
@@ -1102,7 +1102,7 @@ test("click on save button which throws an error", async () => {
     });
     expect.verifySteps(["get_views", "onchange"]);
     expect(".o_form_button_save").toHaveCount(1);
-    expect(".o_form_button_save").not.toHaveProperty("disabled");
+    expect(".o_form_button_save").toHaveProperty("disabled", false);
 
     await click(".o_field_boolean input[type='checkbox']");
     await animationFrame();
@@ -1115,7 +1115,7 @@ test("click on save button which throws an error", async () => {
     await click(".o_error_dialog .btn-close");
     await animationFrame();
     expect(".o_form_button_save").toHaveCount(1);
-    expect(".o_form_button_save").not.toHaveProperty("disabled");
+    expect(".o_form_button_save").toHaveProperty("disabled", false);
     expect.verifySteps(["web_save"]);
 });
 

@@ -99,13 +99,17 @@ export class HootPresets extends Component {
         return activePreset?.icon || "fa-check-square-o";
     }
 
+    /**
+     * @param {string} presetId
+     * @param {Event & { currentTarget: HTMLInputElement }} ev
+     */
     onPresetChange(presetId, ev) {
-        if (ev.target.checked) {
+        if (ev.currentTarget.checked) {
             this.config.preset = presetId;
         } else {
             this.config.preset = "";
             if (presetId === "") {
-                ev.target.checked = true;
+                ev.currentTarget.checked = true;
             }
         }
     }
