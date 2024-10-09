@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.CreateThreadDialog">
+        <Dialog size="'md'" title.translate="Create a new conversation">
+            <div class="d-flex flex-column gap-2">
+                <div>
+                    <span class="ms-2 my-1 text-uppercase text-muted"><i class="fa fa-comments"/> Conversation type</span>
+                    <div class="ms-2 mt-2">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" value="group" name="thread-type" id="group" t-model="state.threadType"/>
+                            <label class="form-check-label" for="group">Group chat</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" value="channel" name="thread-type" id="channel" t-model="state.threadType"/>
+                            <label class="form-check-label" for="channel">Channel</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="form-control" t-att-class="{'is-invalid': state.threadType === 'channel' and state.triedSubmitting and !state.name}" t-att-placeholder="state.threadType === 'channel' ? 'Channel name' : 'Group name'" t-model.trim="state.name"/>
+                    <div class="invalid-feedback">
+                        New channel must have a name
+                    </div>
+                </div>
+                <div class="d-flex flex-column flex-grow-1 bg-inherit o-mail-Discuss-threadActionPopover w-100">
+                    <span class="ms-2 my-1 text-uppercase text-muted"><i class="fa fa-user-plus"/> Invite people</span>
+                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-model="state.searchValue" placeholder="Type the name of a person"/>
+                    <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': state.selectablePartners.length === 0 }">
+                        <div t-if="state.selectablePartners.length === 0" class="small text-muted mx-1 fst-italic">No user found.</div>
+                        <div t-if="state.searchResultCount > state.selectablePartners.length" class="smaller text-muted mx-1 fst-italic">
+                            Showing
+                            <t t-esc="state.selectablePartners.length"/>
+                            results out of
+                            <t t-esc="state.searchResultCount"/>
+                            . Narrow your search to see more choices.
+                        </div>
+                        <t t-foreach="state.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
+                            <li class="o-discuss-ChannelInvitation-selectable o_object_fit_cover d-flex align-items-center px-1 py-0 btn list-group-item border-0 rounded-0" t-att-class="{ 'o-odd': selectablePartner_index % 2 === 1, 'o-selected': selectablePartner.in(state.selectedPartners) }" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
+                                <div class="d-flex align-items-center p-1 bg-inherit">
+                                    <div class="o-discuss-ChannelInvitation-avatar position-relative d-flex flex-shrink-0 bg-inherit">
+                                        <img class="w-100 h-100 rounded o_object_fit_cover"
+                                            t-att-src="selectablePartner.avatarUrl"/>
+                                        <ImStatus persona="selectablePartner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
+                                    </div>
+                                </div>
+                                <t name="selectablePartnerDetail">
+                                    <span class="flex-grow-1 mx-2 text-truncate text-start" t-esc="selectablePartner.name"/>
+                                </t>
+                                <input class="form-check-input flex-shrink-0 me-1" type="checkbox" t-att-checked="selectablePartner.in(state.selectedPartners) ? 'checked' : undefined"/>
+                            </li>
+                        </t>
+                    </ul>
+                    <div class="o-discuss-ChannelInvitation-invitationBox pt-0 pb-1 bg-inherit">
+                        <div t-if="state.selectedPartners.length > 0" class="pt-2">
+                            <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap overflow-auto">
+                                <t t-foreach="state.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
+                                    <button class="btn btn-light fw-bolder smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
+                                        <t t-esc="selectedPartner.name"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary me-2" t-on-click="onClickConfirm" title="Create">Create</button>
+                <button class="btn btn-secondary me-2" t-on-click="props.close" title="Cancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="discuss.CreateThreadDialog.partner">
+        <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px">
+            <img class="w-100 h-100 rounded" t-att-src="option.partner.avatarUrl" alt="Thread Image"/>
+        </div>
+        <span class="mx-2 text-truncate" t-esc="option.partner.name" />
+    </t>
+</templates>

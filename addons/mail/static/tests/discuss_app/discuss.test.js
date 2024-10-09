@@ -1945,45 +1945,32 @@ test("Chats input should wait until the previous RPC is done before starting a n
     const deferred1 = new Deferred();
     const deferred2 = new Deferred();
 
-    onRpc("res.partner", "im_search", async ({ args }) => {
-        if (args[0] === "m") {
+    onRpc("/discuss/search", async (req) => {
+        const { params } = await req.json();
+        if (params.term === "m") {
             await deferred1;
             step("First RPC");
-        } else if (args[0] === "mar") {
+        } else if (params.term === "mar") {
             await deferred2;
             step("Second RPC");
         } else {
-            throw new Error(`Unexpected search term: ${args[0]}`);
+            throw new Error(`Unexpected search term: ${params[0]}`);
         }
     });
 
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarCategory-add[title='Start a conversation']");
-    await insertText(".o-discuss-ChannelSelector input", "m");
-    await contains(".o-mail-NavigableList-item", { text: "Loading…" });
-    await insertText(".o-discuss-ChannelSelector input", "a");
-    await insertText(".o-discuss-ChannelSelector input", "r");
+    await insertText("input[placeholder='Search conversations']", "m");
+    await contains(".o-mail-NavigableList-floatingLoading", { text: "Loading…" });
+    await insertText("input[placeholder='Search conversations']", "a");
+    await insertText("input[placeholder='Search conversations']", "r");
     deferred1.resolve();
     await Promise.resolve();
     await assertSteps(["First RPC"]);
     deferred2.resolve();
-    await contains(".o-discuss-ChannelSelector-suggestion", { text: "Mario" });
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0, text: "Mama" });
+    await contains(".o-mail-SearchThread-suggestion", { text: "Mario" });
+    await contains(".o-mail-SearchThread-suggestion", { count: 0, text: "Mama" });
     await assertSteps(["Second RPC"]);
-});
-
-test("Escape key should close the channel selector and focus the composer [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input:focus");
-    await click("[title='Add or join a channel']");
-    await contains(".o-discuss-ChannelSelector");
-    await triggerHotkey("escape");
-    await contains(".o-discuss-ChannelSelector", { count: 0 });
-    await contains(".o-mail-Composer-input:focus");
 });
 
 test("Escape key should focus the composer if it's not focused [REQUIRE FOCUS]", async () => {
@@ -2108,9 +2095,8 @@ test("Newly created chat should be at the top of the direct message list", async
     });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebarCategory-add[title='Start a conversation']");
-    await insertText(".o-discuss-ChannelSelector input", "Jer");
-    await click(".o-discuss-ChannelSelector-suggestion");
+    await insertText("input[placeholder='Search conversations']", "Jer");
+    await click(".o-mail-SearchThread-suggestion", { text: "Jerry Golay" });
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebar-item", {
         text: "Jerry Golay",

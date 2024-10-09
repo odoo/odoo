@@ -904,6 +904,60 @@ async function mail_data(request) {
     return (await mailDataHelpers.processRequest.call(this, request)).get_result();
 }
 
+registerRoute("/discuss/search", search);
+/** @type {RouteCallback} */
+async function search(request) {
+    const { term, category_id, limit = 8 } = await parseRequestParams(request);
+
+    const store = new mailDataHelpers.Store();
+
+    if (!category_id || category_id === "channels") {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        // adding whatsapp channel_type to cover whatsapp tests
+        // controllers methods in mock server are not patchable
+        const domain = ["|", ["channel_type", "=", "whatsapp"], ["channel_type", "=", "channel"]];
+        const channels = DiscussChannel.search(domain).filter((channel) => {
+            const [channelInfo] = DiscussChannel.browse(channel);
+            return channelInfo.name && channelInfo.name.toLowerCase().includes(term.toLowerCase());
+        });
+        channels.length = Math.min(channels.length, limit);
+        store.add(channels);
+    }
+    if (!category_id || category_id === "chats") {
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        // simulates domain with relational parts (not supported by mock server)
+        const matchingPartnersIds = ResUsers._filter([])
+            .filter((user) => {
+                const [partner] = ResPartner.browse(user.partner_id);
+                // user must have a partner
+                if (!partner) {
+                    return false;
+                }
+                // not current partner
+                if (partner.id === ResPartner.env.user.partner_id) {
+                    return false;
+                }
+                // no name is considered as return all
+                if (!term) {
+                    return true;
+                }
+                if (partner.name && partner.name.toLowerCase().includes(term.toLowerCase())) {
+                    return true;
+                }
+                return false;
+            })
+            .map((user) => user.partner_id)
+            .sort((a, b) => (a.name === b.name ? a.id - b.id : a.name > b.name ? 1 : -1));
+        matchingPartnersIds.length = Math.min(matchingPartnersIds.length, limit);
+        store.add(ResPartner.browse(matchingPartnersIds));
+    }
+    return store.get_result();
+}
+
 /** @type {RouteCallback} */
 async function processRequest(request) {
     /** @type {import("mock_models").DiscussChannel} */

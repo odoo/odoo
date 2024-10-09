@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
     sequence: 80,
     steps: () => [
         {
-            trigger: ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add",
+            trigger: "input[placeholder='Search conversations']",
             content: markup(
                 _t(
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
@@ -19,21 +19,41 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: ".o-discuss-ChannelSelector input",
+            trigger: "input[placeholder='Search conversations']",
             content: markup(_t("<p>Create a channel here.</p>")),
             tooltipPosition: "bottom",
             run: `edit SomeChannel_${new Date().getTime()}`,
         },
         {
             isActive: ["auto"],
-            trigger: ".o-discuss-ChannelSelector-suggestion",
+            trigger: ".o-mail-SearchThread-suggestion",
         },
         {
-            trigger: ".o-discuss-ChannelSelector-list",
+            trigger: ".o-mail-SearchThread",
             content: markup(_t("<p>Create a public or private channel.</p>")),
             tooltipPosition: "right",
             run() {
-                document.querySelector(".o-discuss-ChannelSelector-suggestion").click();
+                document.querySelector(".o-mail-SearchThread-suggestion").click();
+            },
+        },
+        {
+            isActive: ["auto"],
+            trigger: ".modal-content",
+        },
+        {
+            trigger: ".form-check-label[for='channel']",
+            content: markup(_t("<p>Select conversation type channel.</p>")),
+            tooltipPosition: "right",
+            run() {
+                document.querySelector(".form-check-label[for='channel']").click();
+            },
+        },
+        {
+            trigger: ".btn[title='Create']",
+            content: markup(_t("<p>Create channel.</p>")),
+            tooltipPosition: "bottom",
+            run() {
+                document.querySelector(".btn[title='Create']").click();
             },
         },
         {
@@ -81,7 +101,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add",
+            trigger: "input[placeholder='Search conversations']",
             content: markup(
                 _t(
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"
@@ -92,7 +112,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: ".o-discuss-ChannelSelector",
+            trigger: "input[placeholder='Search conversations']",
         },
     ],
 });

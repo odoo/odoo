@@ -4,6 +4,7 @@ from . import binary
 from . import channel
 from . import gif
 from . import public_page
+from . import search
 from . import rtc
 from . import settings
 from . import thread

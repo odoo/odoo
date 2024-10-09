@@ -95,10 +95,11 @@ export class DiscussCoreCommon {
         });
     }
 
-    async createGroupChat({ default_display_mode, partners_to }) {
+    async createGroupChat({ default_display_mode, partners_to, name }) {
         const data = await this.orm.call("discuss.channel", "create_group", [], {
             default_display_mode,
             partners_to,
+            name,
         });
         const { Thread } = this.store.insert(data);
         const [channel] = Thread;

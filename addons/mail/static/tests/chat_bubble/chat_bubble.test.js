@@ -53,8 +53,8 @@ test("'New message' chat window can only be open [REQUIRE FOCUS]", async () => {
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
     await contains(".o-mail-ChatWindow", { count: 1 });
     await contains("[title='Fold']", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "John");
-    await click(".o-discuss-ChannelSelector-suggestion");
+    await insertText("input[placeholder='Search conversations']", "John");
+    await click(".o-mail-SearchThread-suggestion", { text: "John" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-Thread-empty", { text: "The conversation is empty." });
@@ -70,8 +70,8 @@ test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
     // Make bubble of "John" chat
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await insertText(".o-discuss-ChannelSelector input", "John");
-    await click(".o-discuss-ChannelSelector-suggestion");
+    await insertText("input[placeholder='Search conversations']", "John");
+    await click(".o-mail-SearchThread-suggestion", { text: "John" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "The conversation is empty." }); // wait fully loaded
@@ -80,8 +80,8 @@ test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
     // Make bubble of "John" chat again
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await insertText(".o-discuss-ChannelSelector input", "John");
-    await click(".o-discuss-ChannelSelector-suggestion");
+    await insertText("input[placeholder='Search conversations']", "John");
+    await click(".o-mail-SearchThread-suggestion", { text: "John" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
     await contains(".o-mail-ChatWindow", { text: "John" });

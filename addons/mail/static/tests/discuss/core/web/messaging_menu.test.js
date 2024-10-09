@@ -36,8 +36,9 @@ test('"Start a conversation" item selection opens chat', async () => {
     await click("button", { text: "Chat" });
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Start a conversation']", "Gandalf");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
+    await click(".o-mail-SearchThread-suggestion");
+    await contains(".o-mail-SearchThread-suggestion", { count: 0 });
+    triggerHotkey("Enter");
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
 });
@@ -52,8 +53,8 @@ test('"New channel" item selection opens channel (existing)', async () => {
     await click("button", { text: "Channel" });
     await click("button", { text: "New Channel" });
     await insertText("input[placeholder='Add or join a channel']", "Gryff");
-    await click(":nth-child(1 of .o-discuss-ChannelSelector-suggestion)");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
+    await click(":nth-child(1 of .o-mail-SearchThread-suggestion)");
+    await contains(".o-mail-SearchThread-suggestion", { count: 0 });
     await contains(".o-mail-ChatWindow", { text: "Gryffindors" });
 });
 
@@ -65,8 +66,10 @@ test('"New channel" item selection opens channel (new)', async () => {
     await click("button", { text: "Channel" });
     await click("button", { text: "New Channel" });
     await insertText("input[placeholder='Add or join a channel']", "slytherins");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
+    await click(".o-mail-SearchThread-suggestion");
+    await click(".form-check-label", { text: "Channel" });
+    await click(".btn", { text: "Create" });
+    await contains(".o-mail-SearchThread-suggestion", { count: 0 });
     await contains(".o-mail-ChatWindow", { text: "slytherins" });
 });
 
@@ -74,7 +77,7 @@ test("new message [REQUIRE FOCUS]", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector input:focus");
+    await contains(".o-mail-ChatWindow input[placeholder='Search conversations']:focus");
 });
 
 test("channel preview ignores empty message", async () => {

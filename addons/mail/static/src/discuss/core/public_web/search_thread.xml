@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SearchThread">
+        <div t-ref="searchBox" class="o-mail-SearchThread rounded" t-att-class="{ 'o-active': state.searchValue.length }" t-attf-class="{{ props.className }}">
+            <div class="d-flex flex-grow-1 align-items-center justify-content-center gap-1">
+                <input class="form-control rounded-3 border-0" t-att-placeholder="inputPlaceholder" t-model="state.searchValue" t-ref="searchInput"/>
+                <button t-if="state.searchValue.length" class="btn btn-light p-1 rounded-0" t-on-click="() => state.searchValue = ''"><i class="oi oi-close" title="Clear search"/></button>
+            </div>
+            <NavigableList t-props="navigableListProps"/>
+        </div>
+    </t>
+
+    <t t-name="discuss.SearchThread.partner">
+        <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px">
+            <img class="w-100 h-100 rounded" t-att-src="option.partner.avatarUrl" alt="Thread Image"/>
+        </div>
+        <span class="mx-2 text-truncate" t-esc="option.partner.name" />
+    </t>
+
+    <t t-name="discuss.SearchThread.channel">
+        <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:26px;height:26px">
+            <img class="w-100 h-100 rounded" t-att-src="option.channel.avatarUrl" alt="Thread Image"/>
+        </div>
+        <span class="mx-2 text-truncate" t-esc="option.channel.displayName" />
+    </t>
+
+    <t t-name="discuss.SearchThread.new">
+        <span class="text-muted fw-bold smaller">Create a new conversation</span>
+    </t>
+</templates>
