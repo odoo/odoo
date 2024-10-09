@@ -260,7 +260,7 @@ class WebsiteBlog(http.Controller):
 
         # Find next Post
         blog_post_domain = [('blog_id', '=', blog.id)]
-        if not request.env.user.has_group('website.group_website_designer'):
+        if not request.env.user.has_group('website_blog.group_website_blog_manager'):
             blog_post_domain += [('post_date', '<=', fields.Datetime.now())]
 
         all_post = BlogPost.search(blog_post_domain)
