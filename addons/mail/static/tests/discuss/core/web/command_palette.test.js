@@ -8,25 +8,24 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { registry } from "@web/core/registry";
-import { advanceTime } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
 
-const commandSetupRegistry = registry.category("command_setup");
-
-test("open the chatWindow of a user from the command palette", async () => {
+test("can open DM from @username in command palette", async () => {
+    const pyEnv = await startServer();
+    const marioUid = pyEnv["res.users"].create({ name: "Mario" });
+    pyEnv["res.partner"].create({ name: "Mario", user_ids: [marioUid] });
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
-    await contains(".o_command", { count: 2 });
-    await click(".o_command.focused", { text: "Mitchell Admin" });
-    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin" });
+    await insertText("input[placeholder='Search a conversation']", "Mario");
+    await click(".o_command.focused:has(.fa-user)", { text: "Mario" });
+    await contains(".o-mail-ChatWindow", { text: "Mario" });
 });
 
-test("open the chatWindow of a channel from the command palette", async () => {
+test("can open channel from @channel_name in command palette", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         name: "general",
@@ -48,15 +47,19 @@ test("open the chatWindow of a channel from the command palette", async () => {
     });
     await start();
     triggerHotkey("control+k");
-    await insertText(".o_command_palette_search input", "#");
-    await contains(".o_command", { count: 2 });
-    await contains(".o_command", { text: "project", before: [".o_command", { text: "general" }] });
-    await contains(".o_command.focused");
-    await click(".o_command.focused", { text: "project" });
+    await insertText(".o_command_palette_search input", "@");
+    await contains(".o_command", { count: 6 });
+    await contains(".o_command:eq(0):has(.fa-hashtag)", { text: "project" });
+    await contains(".o_command:eq(1):has(.fa-hashtag)", { text: "general" });
+    await contains(".o_command:has(.fa-user)", { text: "OdooBot" });
+    await contains(".o_command:has(.fa-user)", { text: "Mitchell Admin" }); // self-conversation
+    await contains(".o_command", { text: "Create Channel" });
+    await contains(".o_command", { text: "Create Chat" });
+    await click(".o_command.focused:has(.fa-hashtag)", { text: "project" });
     await contains(".o-mail-ChatWindow", { text: "project" });
 });
 
-test("Channel mentions in the command palette of Discuss app with @", async () => {
+test("Conversation mentions in the command palette with @", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -87,6 +90,7 @@ test("Channel mentions in the command palette of Discuss app with @", async () =
             [".o_command.focused .o_command_name", { text: "Mitchell Admin and Mario" }],
         ],
     });
+    // can also make self conversation
     await contains(".o_command_palette .o_command_category", {
         contains: [[".o_command_name", { text: "Mitchell Admin" }]],
     });
@@ -94,7 +98,7 @@ test("Channel mentions in the command palette of Discuss app with @", async () =
     await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
 });
 
-test("Max 3 most recent channels in command palette of Discuss app with #", async () => {
+test("Max 3 most recent conversations in command palette of Discuss", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "channel_1" });
     pyEnv["discuss.channel"].create({ name: "channel_2" });
@@ -102,7 +106,7 @@ test("Max 3 most recent channels in command palette of Discuss app with #", asyn
     pyEnv["discuss.channel"].create({ name: "channel_4" });
     await start();
     triggerHotkey("control+k");
-    await insertText(".o_command_palette_search input", "#", { replace: true });
+    await insertText(".o_command_palette_search input", "@", { replace: true });
     await contains(".o_command_palette .o_command_category", {
         contains: [
             ["span.fw-bold", { text: "Recent" }],
@@ -113,20 +117,17 @@ test("Max 3 most recent channels in command palette of Discuss app with #", asyn
 
 test("only partners with dedicated users will be displayed in command palette", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test user" });
-    pyEnv["discuss.channel"].create({
-        name: "TestChanel",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
+    const demoUid = pyEnv["res.users"].create({ name: "Demo" });
+    pyEnv["res.partner"].create({ name: "Demo", user_ids: [demoUid] });
+    pyEnv["res.partner"].create({ name: "Portal" });
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
-    advanceTime(commandSetupRegistry.get("@").debounceDelay);
-    await contains(".o_command_name", { text: "Mitchell Admin" });
+    await contains(".o_command_name", { count: 5 });
+    await contains(".o_command_name", { text: "Demo" });
     await contains(".o_command_name", { text: "OdooBot" });
-    await contains(".o_command_name", { text: "test user", count: 0 });
+    await contains(".o_command_name", { text: "Mitchell Admin" }); // self-conversation
+    await contains(".o_command_name", { text: "Create Channel" });
+    await contains(".o_command_name", { text: "Create Chat" });
+    await contains(".o_command_name", { text: "Portal", count: 0 });
 });

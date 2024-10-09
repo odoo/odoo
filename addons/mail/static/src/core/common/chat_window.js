@@ -70,7 +70,7 @@ export class ChatWindow extends Component {
     }
 
     get composerType() {
-        if (this.thread && this.thread.model !== "discuss.channel") {
+        if (this.thread.model !== "discuss.channel") {
             return "note";
         }
         return undefined;
@@ -122,12 +122,7 @@ export class ChatWindow extends Component {
     }
 
     onClickHeader() {
-        if (
-            this.ui.isSmall ||
-            this.state.editingName ||
-            !this.thread ||
-            this.state.actionsDisabled
-        ) {
+        if (this.ui.isSmall || this.state.editingName || this.state.actionsDisabled) {
             return;
         }
         this.toggleFold();

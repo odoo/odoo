@@ -21,6 +21,13 @@ export class ResUsers extends ServerModel {
             partner_id: serverState.publicPartnerId,
             password: "public",
         },
+        {
+            id: serverState.odoobotUid,
+            active: false,
+            login: "odoobot",
+            partner_id: serverState.odoobotId,
+            password: "odoobot",
+        },
     ];
 
     has_group() {

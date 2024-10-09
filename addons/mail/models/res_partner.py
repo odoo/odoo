@@ -292,29 +292,6 @@ class ResPartner(models.Model):
             partners |= self.browse(query)
         return partners
 
-    @api.readonly
-    @api.model
-    def im_search(self, name, limit=20, excluded_ids=None):
-        """ Search partner with a name and return its id, name and im_status.
-            Note : the user must be logged
-            :param name : the partner name to search
-            :param limit : the limit of result to return
-            :param excluded_ids : the ids of excluded partners
-        """
-        # This method is supposed to be used only in the context of channel creation or
-        # extension via an invite. As both of these actions require the 'create' access
-        # right, we check this specific ACL.
-        if excluded_ids is None:
-            excluded_ids = []
-        users = self.env['res.users'].search([
-            ('id', '!=', self.env.user.id),
-            ('name', 'ilike', name),
-            ('active', '=', True),
-            ('share', '=', False),
-            ('partner_id', 'not in', excluded_ids)
-        ], order='name, id', limit=limit)
-        return Store(users.partner_id).get_result()
-
     @api.model
     def _get_current_persona(self):
         if not self.env.user or self.env.user._is_public():

@@ -1,7 +1,7 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -10,12 +10,18 @@ import { useSequential } from "@mail/utils/common/hooks";
 export class ChannelInvitation extends Component {
     static components = { ImStatus, ActionPanel };
     static defaultProps = { hasSizeConstraints: false };
-    static props = ["hasSizeConstraints?", "thread", "close", "className?"];
+    static props = [
+        "autofocus?",
+        "hasSizeConstraints?",
+        "thread?",
+        "close?",
+        "className?",
+        "state?",
+    ];
     static template = "discuss.ChannelInvitation";
 
     setup() {
         super.setup();
-        this.discussCoreCommonService = useState(useService("discuss.core.common"));
         this.orm = useService("orm");
         this.store = useState(useService("mail.store"));
         this.notification = useService("notification");
@@ -23,11 +29,11 @@ export class ChannelInvitation extends Component {
         this.ui = useService("ui");
         this.inputRef = useRef("input");
         this.sequential = useSequential();
-        this.searchStr = "";
         this.state = useState({
             selectablePartners: [],
             selectedPartners: [],
             searchResultCount: 0,
+            searchStr: "",
         });
         onWillStart(() => {
             if (this.store.self.type === "partner") {
@@ -35,24 +41,78 @@ export class ChannelInvitation extends Component {
             }
         });
         onMounted(() => {
-            if (this.store.self.type === "partner") {
+            if (this.store.self.type === "partner" && this.props.thread) {
                 this.inputRef.el.focus();
             }
         });
+        useEffect(
+            () => {
+                if (this.props.autofocus) {
+                    this.inputRef.el.focus();
+                }
+            },
+            () => [this.props.autofocus]
+        );
+    }
+
+    get selectablePartners() {
+        return this.props.state?.selectablePartners ?? this.state.selectablePartners;
+    }
+
+    set selectablePartners(partners) {
+        if (this.props.state?.selectablePartners) {
+            this.props.state.selectablePartners = partners;
+        } else {
+            this.state.selectablePartners = partners;
+        }
+    }
+
+    get selectedPartners() {
+        return this.props.state?.selectedPartners ?? this.state.selectedPartners;
+    }
+
+    set selectedPartners(partners) {
+        if (this.props.state?.selectedPartners) {
+            this.props.state.selectedPartners = partners;
+        } else {
+            this.state.selectedPartners = partners;
+        }
+    }
+
+    get searchStr() {
+        return this.props.state?.searchStr ?? this.state.searchStr;
+    }
+
+    set searchStr(newSearchStr) {
+        if (this.props.state?.searchStr !== undefined) {
+            this.props.state.searchStr = newSearchStr;
+        } else {
+            this.state.searchStr = newSearchStr;
+        }
+    }
+
+    get showingResultNarrowText() {
+        return _t(
+            "Showing %(result_count)s results out of %(total_count)s. Narrow your search to see more choices.",
+            {
+                result_count: this.selectablePartners.length,
+                total_count: this.state.searchResultCount,
+            }
+        );
     }
 
     async fetchPartnersToInvite() {
         const results = await this.sequential(() =>
             this.orm.call("res.partner", "search_for_channel_invite", [
                 this.searchStr,
-                this.props.thread.id,
+                this.props.thread?.id ?? false,
             ])
         );
         if (!results) {
             return;
         }
         const { Persona: selectablePartners = [] } = this.store.insert(results.data);
-        this.state.selectablePartners = this.suggestionService.sortPartnerSuggestions(
+        this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,
             this.props.thread
@@ -66,19 +126,19 @@ export class ChannelInvitation extends Component {
     }
 
     onClickSelectablePartner(partner) {
-        if (partner.in(this.state.selectedPartners)) {
-            const index = this.state.selectedPartners.indexOf(partner);
+        if (partner.in(this.selectedPartners)) {
+            const index = this.selectedPartners.indexOf(partner);
             if (index !== -1) {
-                this.state.selectedPartners.splice(index, 1);
+                this.selectedPartners.splice(index, 1);
             }
             return;
         }
-        this.state.selectedPartners.push(partner);
+        this.selectedPartners.push(partner);
     }
 
     onClickSelectedPartner(partner) {
-        const index = this.state.selectedPartners.indexOf(partner);
-        this.state.selectedPartners.splice(index, 1);
+        const index = this.selectedPartners.indexOf(partner);
+        this.selectedPartners.splice(index, 1);
     }
 
     onFocusInvitationLinkInput(ev) {
@@ -92,32 +152,35 @@ export class ChannelInvitation extends Component {
 
     async onClickInvite() {
         if (this.props.thread.channel_type === "chat") {
-            const partnerIds = this.state.selectedPartners.map((partner) => partner.id);
+            const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.thread.correspondent) {
                 partnerIds.unshift(this.props.thread.correspondent.persona.id);
             }
-            await this.discussCoreCommonService.startChat(partnerIds);
+            await this.store.startChat(partnerIds);
         } else {
             await this.orm.call("discuss.channel", "add_members", [[this.props.thread.id]], {
-                partner_ids: this.state.selectedPartners.map((partner) => partner.id),
+                partner_ids: this.selectedPartners.map((partner) => partner.id),
             });
         }
         this.props.close();
     }
 
     get invitationButtonText() {
+        if (!this.props.thread) {
+            return "";
+        }
         if (this.props.thread.channel_type === "channel") {
             return _t("Invite to Channel");
         } else if (this.props.thread.channel_type === "group") {
             return _t("Invite to Group Chat");
         } else if (this.props.thread.channel_type === "chat") {
             if (this.props.thread.correspondent?.persona.eq(this.store.self)) {
-                if (this.state.selectedPartners.length === 0) {
+                if (this.selectedPartners.length === 0) {
                     return _t("Invite");
                 }
-                if (this.state.selectedPartners.length === 1) {
+                if (this.selectedPartners.length === 1) {
                     const alreadyChat = Object.values(this.store.Thread.records).some((thread) =>
-                        thread.correspondent?.persona.eq(this.state.selectedPartners[0])
+                        thread.correspondent?.persona.eq(this.selectedPartners[0])
                     );
                     if (alreadyChat) {
                         return _t("Go to conversation");

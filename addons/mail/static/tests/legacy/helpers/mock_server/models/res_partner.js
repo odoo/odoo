@@ -5,12 +5,6 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
     async _performRPC(route, args) {
-        if (args.model === "res.partner" && args.method === "im_search") {
-            const name = args.args[0] || args.kwargs.search;
-            const limit = args.args[1] || args.kwargs.limit;
-            const excluded_ids = args.args[2] || args.kwargs.excluded_ids;
-            return this._mockResPartnerImSearch(name, limit, excluded_ids);
-        }
         if (args.model === "res.partner" && args.method === "get_mention_suggestions") {
             return this._mockResPartnerGetMentionSuggestions(args);
         }
@@ -183,57 +177,6 @@ patch(MockServer.prototype, {
             ["res_partner_id", "=", partner.id],
             ["is_read", "=", false],
         ]).length;
-    },
-    /**
-     * Simulates `im_search` on `res.partner`.
-     *
-     * @private
-     * @param {string} [name='']
-     * @param {integer} [limit=20]
-     * @returns {Object[]}
-     */
-    _mockResPartnerImSearch(name = "", limit = 20, excluded_ids = []) {
-        name = name.toLowerCase(); // simulates ILIKE
-        // simulates domain with relational parts (not supported by mock server)
-        const matchingPartners = this.getRecords("res.users", [])
-            .filter((user) => {
-                const partner = this.getRecords("res.partner", [["id", "=", user.partner_id]])[0];
-                // user must have a partner
-                if (!partner) {
-                    return false;
-                }
-                // not current partner
-                if (partner.id === this.pyEnv.currentPartnerId) {
-                    return false;
-                }
-                // no name is considered as return all
-                if (!name) {
-                    return true;
-                }
-                if (partner.name && partner.name.toLowerCase().includes(name)) {
-                    return true;
-                }
-                return false;
-            })
-            .map((user) => {
-                const partner = this.getRecords("res.partner", [["id", "=", user.partner_id]])[0];
-                return {
-                    id: partner.id,
-                    name: partner.name,
-                };
-            })
-            .sort((a, b) => (a.name === b.name ? a.id - b.id : a.name > b.name ? 1 : -1));
-        matchingPartners.length = Math.min(matchingPartners.length, limit);
-        const resultPartners = matchingPartners.filter(
-            (partner) => !excluded_ids.includes(partner.id)
-        );
-        return {
-            "res.partner": [
-                ...this._mockResPartnerMailPartnerFormat(
-                    resultPartners.map((partner) => partner.id)
-                ).values(),
-            ],
-        };
     },
     /**
      * Simulates `mail_partner_format` on `res.partner`.

@@ -1,6 +1,3 @@
-import { ChannelSelector } from "@mail/discuss/core/web/channel_selector";
-import { onExternalClick } from "@mail/utils/common/hooks";
-
 import { patch } from "@web/core/utils/patch";
 import {
     DiscussSidebarCategory,
@@ -8,9 +5,6 @@ import {
 } from "../public_web/discuss_sidebar_categories";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useEffect, useState } from "@odoo/owl";
-
-DiscussSidebarCategory.components = { ...DiscussSidebarCategory.components, ChannelSelector };
 
 /** @type {import("@mail/discuss/core/public_web/discuss_sidebar_categories").DiscussSidebarChannel} */
 const DiscussSidebarChannelPatch = {
@@ -48,20 +42,6 @@ const DiscussSidebarCategoryPatch = {
     setup() {
         super.setup();
         this.actionService = useService("action");
-        this.state ??= useState({});
-        this.state.editing = false;
-        onExternalClick("selector", () => (this.state.editing = false));
-        useEffect(
-            () => {
-                if (this.store.discuss.isSidebarCompact && !this.floating.isOpen) {
-                    this.state.editing = false;
-                }
-            },
-            () => [this.floating.isOpen]
-        );
-    },
-    addToCategory() {
-        this.state.editing = true;
     },
     open() {
         if (this.category.id === "channels") {
@@ -81,18 +61,6 @@ const DiscussSidebarCategoryPatch = {
             });
         }
     },
-    onHover() {
-        if (this.state.editing && this.store.discuss.isSidebarCompact) {
-            return;
-        }
-        super.onHover(...arguments);
-        if (this.store.discuss.isSidebarCompact && !this.floating.isOpen) {
-            this.state.editing = false;
-        }
-    },
-    stopEditing() {
-        this.state.editing = false;
-    },
     get actions() {
         const actions = super.actions;
         if (this.category.canView) {
@@ -100,15 +68,6 @@ const DiscussSidebarCategoryPatch = {
                 onSelect: () => this.open(),
                 label: _t("View or join channels"),
                 icon: "fa fa-cog",
-            });
-        }
-        if (this.category.canAdd && this.category.open) {
-            actions.push({
-                onSelect: () => this.addToCategory(),
-                label: this.category.addTitle,
-                icon: "fa fa-plus",
-                hotkey: this.category.addHotkey,
-                class: "o-mail-DiscussSidebarCategory-add",
             });
         }
         return actions;

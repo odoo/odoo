@@ -372,7 +372,7 @@ export class Store extends BaseStore {
     }
 
     async startMeeting() {
-        const thread = await this.env.services["discuss.core.common"].createGroupChat({
+        const thread = await this.createGroupChat({
             default_display_mode: "video_full_screen",
             partners_to: [this.self.id],
         });
@@ -670,23 +670,12 @@ export class Store extends BaseStore {
         });
     }
 
-    openNewMessage() {
-        let cw = this.ChatWindow.get({ thread: undefined });
-        if (cw) {
-            cw.focus();
-            return;
-        }
-        cw = this.ChatWindow.insert({ thread: undefined, fromMessagingMenu: true });
-        this.chatHub.opened.unshift(cw);
-        cw.focus();
-    }
-
     /**
      * @param {string} searchTerm
      * @param {Thread} thread
      * @param {number|false} [before]
      */
-    async search(searchTerm, thread, before = false) {
+    async searchMessagesInThread(searchTerm, thread, before = false) {
         const { count, data, messages } = await rpc(thread.getFetchRoute(), {
             ...thread.getFetchParams(),
             search_term: await prettifyMessageContent(searchTerm), // formatted like message_post
@@ -698,37 +687,6 @@ export class Store extends BaseStore {
             loadMore: messages.length === this.FETCH_LIMIT,
             messages: this["mail.message"].insert(messages),
         };
-    }
-
-    async searchPartners(searchStr = "", limit = 10) {
-        const partners = [];
-        const searchTerm = cleanTerm(searchStr);
-        for (const localId in this.Persona.records) {
-            const persona = this.Persona.records[localId];
-            if (persona.type !== "partner") {
-                continue;
-            }
-            const partner = persona;
-            if (
-                partner.name &&
-                cleanTerm(partner.name).includes(searchTerm) &&
-                ((partner.active && partner.userId) || partner === this.store.odoobot)
-            ) {
-                partners.push(partner);
-                if (partners.length >= limit) {
-                    break;
-                }
-            }
-        }
-        if (!partners.length) {
-            const data = await this.env.services.orm.silent.call("res.partner", "im_search", [
-                searchTerm,
-                limit,
-            ]);
-            const { Persona = [] } = this.store.insert(data);
-            partners.push(...Persona);
-        }
-        return partners;
     }
 }
 Store.register();

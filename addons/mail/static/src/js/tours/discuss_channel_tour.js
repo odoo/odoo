@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
     url: "/odoo/action-mail.action_discuss",
     steps: () => [
         {
-            trigger: ".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add",
+            trigger: ".o-mail-DiscussSidebarCategories-search",
             content: markup(
                 _t(
                     "<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"
@@ -17,13 +17,13 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: ".o-discuss-ChannelSelector input",
+            trigger: ".o_command_palette_search input",
             content: markup(_t("<p>Create a channel here.</p>")),
             tooltipPosition: "bottom",
             run: `edit SomeChannel_${new Date().getTime()}`,
         },
         {
-            trigger: ".o-discuss-ChannelSelector-suggestion",
+            trigger: ".o-mail-DiscussCommand-createChannel",
             content: markup(_t("<p>Create a public or private channel.</p>")),
             run: "click",
             tooltipPosition: "right",
@@ -51,13 +51,13 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-Message [title='Expand']",
+            trigger: ".o-mail-Message-expandBtn",
             content: _t("Expand options"),
             tooltipPosition: "top",
             run: "click",
         },
         {
-            trigger: ".o-mail-Message [title='Mark as Todo']",
+            trigger: ".o-mail-Message button[name='toggle-star']",
             content: markup(
                 _t("Messages can be <b>starred</b> to remind you to check back later.")
             ),
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: "button:contains(Starred)",
+            trigger: "button[data-mailbox-id='starred']",
             content: _t(
                 "Once a message has been starred, you can come back and review it at any time here."
             ),
@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add",
+            trigger: ".o-mail-DiscussSidebarCategories-search",
             content: markup(
                 _t(
                     "<p><b>Chat with coworkers</b> in real-time using direct messages.</p><p><i>You might need to invite users from the Settings app first.</i></p>"
@@ -81,10 +81,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             ),
             tooltipPosition: "bottom",
             run: "click",
-        },
-        {
-            isActive: ["auto"],
-            trigger: ".o-discuss-ChannelSelector",
         },
     ],
 });

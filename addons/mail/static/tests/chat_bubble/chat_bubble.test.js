@@ -9,7 +9,6 @@ import {
     onRpcBefore,
     start,
     startServer,
-    triggerHotkey,
     hover,
     step,
     assertSteps,
@@ -44,24 +43,6 @@ test("Folded chat windows are displayed as chat bubbles", async () => {
     await contains(".o-mail-ChatWindow", { count: 1 });
 });
 
-test("'New message' chat window can only be open [REQUIRE FOCUS]", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "John" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
-    await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await contains(".o-mail-ChatWindow", { count: 1 });
-    await contains("[title='Fold']", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "John");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    triggerHotkey("Enter");
-    await contains(".o-mail-ChatWindow");
-    await contains(".o-mail-Thread-empty", { text: "The conversation is empty." });
-    await click(".o-mail-ChatWindow-command[title='Fold']");
-    await contains(".o-mail-ChatBubble", { count: 1 }); // can fold chat
-});
-
 test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John" });
@@ -70,9 +51,8 @@ test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
     // Make bubble of "John" chat
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await insertText(".o-discuss-ChannelSelector input", "John");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    triggerHotkey("Enter");
+    await insertText("input[placeholder='Search a conversation']", "John");
+    await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "The conversation is empty." }); // wait fully loaded
     await click("button[title='Fold']");
@@ -80,9 +60,8 @@ test("No duplicated chat bubbles [REQUIRE FOCUS]", async () => {
     // Make bubble of "John" chat again
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await insertText(".o-discuss-ChannelSelector input", "John");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    triggerHotkey("Enter");
+    await insertText("input[placeholder='Search a conversation']", "John");
+    await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
     await contains(".o-mail-ChatWindow", { text: "John" });
     await click(".o-mail-ChatWindow-command[title='Fold']");

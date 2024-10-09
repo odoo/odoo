@@ -30,6 +30,7 @@
                 'justify-content-center position-relative': store.discuss.isSidebarCompact,
                 'py-0': !store.discuss.isSidebarCompact,
             }"
+            t-att-data-mailbox-id="mailbox.id"
             t-on-click="(ev) => this.openThread(ev)"
             t-ref="root"
         >

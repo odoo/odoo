@@ -1,4 +1,5 @@
 import {
+    SIZES,
     assertSteps,
     click,
     contains,
@@ -6,12 +7,12 @@ import {
     insertText,
     onRpcBefore,
     openDiscuss,
+    patchUiSize,
     start,
     startServer,
     step,
-    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, test } from "@odoo/hoot";
 import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 import { pick } from "@web/core/utils/objects";
@@ -22,15 +23,16 @@ defineMailModels();
 test("can create a new channel [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
-        if (route.startsWith("/mail") || route.startsWith("/discuss/channel/messages")) {
+        if (
+            route.startsWith("/mail") ||
+            route.startsWith("/discuss/channel/messages") ||
+            route.startsWith("/discuss/search")
+        ) {
             step(`${route} - ${JSON.stringify(args)}`);
         }
     });
     onRpc((params) => {
-        if (
-            params.model === "discuss.channel" &&
-            ["search_read", "channel_create"].includes(params.method)
-        ) {
+        if (params.model === "discuss.channel" && params.method === "channel_create") {
             step(
                 `${params.route} - ${JSON.stringify(
                     pick(params, "args", "kwargs", "method", "model")
@@ -55,34 +57,14 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
-    await click(".o-mail-DiscussSidebar [title='Add or join a channel']");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "abc");
-    await assertSteps([
-        `/web/dataset/call_kw/discuss.channel/search_read - ${JSON.stringify({
-            args: [],
-            kwargs: {
-                limit: 10,
-                domain: [
-                    ["parent_channel_id", "=", false],
-                    ["channel_type", "=", "channel"],
-                    ["name", "ilike", "abc"],
-                ],
-                fields: ["name"],
-                context: {
-                    lang: "en",
-                    tz: "taht",
-                    uid: serverState.userId,
-                    allowed_company_ids: [1],
-                },
-            },
-            method: "search_read",
-            model: "discuss.channel",
-        })}`,
-    ]);
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-Discuss-content .o-mail-Message", { count: 0 });
+    await contains(".o-mail-Discuss");
+    await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
+    await click("input[placeholder='Find or start a conversation']");
+    await insertText("input[placeholder='Search a conversation']", "abc");
+    await assertSteps([`/discuss/search - {"term":""}`, `/discuss/search - {"term":"abc"}`]);
+    await click("a", { text: "Create Channel" });
+    await contains(".o-mail-DiscussSidebar-item", { text: "abc" });
+    await contains(".o-mail-Message", { count: 0 });
     const [channelId] = pyEnv["discuss.channel"].search([["name", "=", "abc"]]);
     const [selfMember] = pyEnv["discuss.channel.member"].search_read([
         ["channel_id", "=", channelId],
@@ -106,27 +88,7 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
     ]);
 });
 
-test("do not close channel selector when creating chat conversation after selection", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
-    await start();
-    await openDiscuss();
-    await click("[title='Start a conversation']");
-    await insertText(".o-discuss-ChannelSelector input", "mario");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector span[title='Mario']");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    triggerHotkey("Backspace");
-    await contains(".o-discuss-ChannelSelector span[title='Mario']", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "mario");
-    await contains(".o-discuss-ChannelSelector-suggestion");
-    triggerHotkey("Enter");
-    await contains(".o-discuss-ChannelSelector span[title='Mario']");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-});
-
-test("can join a chat conversation", async () => {
+test("can make a DM chat", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -164,21 +126,22 @@ test("can join a chat conversation", async () => {
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
-    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "mario");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-Discuss");
+    await contains(".o-mail-DiscussSidebar-item", { text: "Mario", count: 0 });
+    await click("input[placeholder='Find or start a conversation']");
+    await insertText("input[placeholder='Search a conversation']", "mario");
+    await click("a", { text: "Mario" });
+    await contains(".o-mail-DiscussSidebar-item", { text: "Mario" });
     await contains(".o-mail-Message", { count: 0 });
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
     await assertSteps([
+        `/discuss/search - {"term":""}`,
+        `/discuss/search - {"term":"mario"}`,
         `/web/dataset/call_kw/discuss.channel/channel_get - ${JSON.stringify({
             args: [],
             kwargs: {
                 partners_to: [partnerId],
-                force_open: true,
+                force_open: false,
                 context: {
                     lang: "en",
                     tz: "taht",
@@ -202,71 +165,25 @@ test("can create a group chat conversation", async () => {
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "Mario");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "Luigi");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    triggerHotkey("Enter");
+    await click("input[placeholder='Find or start a conversation']");
+    await click("a", { text: "Create Chat" });
+    await click("li", { text: "Mario" });
+    await click("li", { text: "Luigi" });
+    await click(".btn", { text: "Create Group Chat" });
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-Message", { count: 0 });
 });
 
-test("should create DM chat when adding self and another user", async () => {
-    const pyEnv = await startServer();
-    const partner_id = pyEnv["res.partner"].create({ name: "Mario", im_status: "online" });
-    pyEnv["res.users"].create({ partner_id });
+test("mobile chat search should allow to create group chat", async () => {
+    patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "Mi"); // Mitchell Admin
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    await insertText(".o-discuss-ChannelSelector input", "Mario");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Mario" });
+    await contains("button.active", { text: "Inbox" });
+    await click("button", { text: "Chat" });
+    await contains("button", { text: "Start a conversation" });
 });
 
-test("chat search should display no result when no matches found", async () => {
-    await start();
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
-    await insertText(".o-discuss-ChannelSelector input", "Rainbow Panda");
-    await contains(".o-discuss-ChannelSelector-suggestion", { text: "No results found" });
-});
-
-test("chat search should not be visible when clicking outside of the field", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Panda" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
-    await start();
-    await openDiscuss();
-    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
-    await insertText(".o-discuss-ChannelSelector input", "Panda");
-    await contains(".o-discuss-ChannelSelector-suggestion");
-    await click(".o-mail-DiscussSidebar");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-});
-
-test("sidebar: add channel", async () => {
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add");
-    expect(
-        $(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add")[0]
-    ).toHaveAttribute("title", "Add or join a channel");
-    await click(".o-mail-DiscussSidebarCategory-channel .o-mail-DiscussSidebarCategory-add");
-    await contains(".o-discuss-ChannelSelector");
-    await contains(".o-discuss-ChannelSelector input[placeholder='Add or join a channel']");
-});
-
-test("Chat is added to discuss on other tab that the one that joined", async () => {
+test("Chat is pinned on other tabs when joined", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jerry Golay" });
     pyEnv["res.users"].create({ partner_id: partnerId });
@@ -274,14 +191,11 @@ test("Chat is added to discuss on other tab that the one that joined", async () 
     const env2 = await start({ asTab: true });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click(".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add", {
-        target: env1,
-    });
-    await insertText(".o-discuss-ChannelSelector input", "Jer", { target: env1 });
-    await click(".o-discuss-ChannelSelector-suggestion", { target: env1 });
-    triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { target: env1, text: "Jerry Golay" });
-    await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Jerry Golay" });
+    await click("input[placeholder='Find or start a conversation']", { target: env1 });
+    await insertText("input[placeholder='Search a conversation']", "Jer", { target: env1 });
+    await click("a", { text: "Jerry Golay", target: env1 });
+    await contains(".o-mail-DiscussSidebar-item", { target: env1, text: "Jerry Golay" });
+    await contains(".o-mail-DiscussSidebar-item", { target: env2, text: "Jerry Golay" });
 });
 
 test("no conversation selected when opening non-existing channel in discuss", async () => {
@@ -327,8 +241,8 @@ test("can access portal partner profile from avatar popover", async () => {
 test("Preserve letter case and accents when creating channel from sidebar", async () => {
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar [title='Add or join a channel']");
-    await insertText(".o-discuss-ChannelSelector input", "Crème brûlée Fan Club");
-    await click(".o-discuss-ChannelSelector-suggestion");
+    await click("input[placeholder='Find or start a conversation']");
+    await insertText("input[placeholder='Search a conversation']", "Crème brûlée Fan Club");
+    await click("a", { text: "Create Channel" });
     await contains(".o-mail-Discuss-threadName", { value: "Crème brûlée Fan Club" });
 });

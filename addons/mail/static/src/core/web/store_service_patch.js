@@ -1,6 +1,5 @@
 import { Record } from "@mail/core/common/record";
 import { Store } from "@mail/core/common/store_service";
-import { compareDatetime } from "@mail/utils/common/misc";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
@@ -63,14 +62,6 @@ const StorePatch = {
             failures: true,
             systray_get_activities: true,
         };
-    },
-    getNeedactionChannels() {
-        return this.getRecentChannels().filter((channel) => channel.importantCounter > 0);
-    },
-    getRecentChannels() {
-        return Object.values(this.Thread.records)
-            .filter((thread) => thread.model === "discuss.channel")
-            .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },
     onUpdateActivityGroups() {},
     async scheduleActivity(resModel, resIds, defaultActivityTypeId = undefined) {

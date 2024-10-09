@@ -132,12 +132,6 @@ test("channel - command: should have view command when category is folded", asyn
     await contains("[title='View or join channels']");
 });
 
-test("channel - command: should have add command when category is unfolded", async () => {
-    await start();
-    await openDiscuss();
-    await contains("[title='Add or join a channel']");
-});
-
 test("channel - command: should not have add command when category is folded", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users.settings"].create({
@@ -217,62 +211,6 @@ test("default thread rendering", async () => {
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "General" });
     await contains(".o-mail-Thread", { text: "The conversation is empty." });
-});
-
-test("sidebar quick search at 20 or more pinned channels", async () => {
-    const pyEnv = await startServer();
-    for (let id = 1; id <= 20; id++) {
-        pyEnv["discuss.channel"].create({ name: `channel${id}` });
-    }
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
-    await contains(".o-mail-DiscussSidebar input[placeholder='Quick search…']");
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "1");
-    await contains(".o-mail-DiscussSidebarChannel", { count: 11 });
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "12", {
-        replace: true,
-    });
-    await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "channel12" });
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "123", {
-        replace: true,
-    });
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    // search should work in case-insensitive
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "C", {
-        replace: true,
-    });
-    await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
-});
-
-test("sidebar quick search takes DM custom name into account", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    for (let id = 1; id <= 20; id++) {
-        pyEnv["discuss.channel"].create({ name: `channel${id}` });
-    }
-    const chatId = pyEnv["discuss.channel"].create({
-        channel_type: "chat",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-    });
-    await start();
-    await openDiscuss(chatId);
-    await contains(".o-mail-DiscussSidebarChannel", { count: 21 });
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
-    // set custom name
-    await insertText("input.o-mail-Discuss-threadName:enabled", "Marc", {
-        replace: true,
-    });
-    triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
-    // search
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "Marc");
-    await contains(".o-mail-DiscussSidebarChannel");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
 });
 
 test("sidebar: basic chat rendering", async () => {
@@ -657,18 +595,6 @@ test("chat - counter: should have correct value of unread threads if category is
             ["i.oi.oi-chevron-right"],
             ["span", { text: "Direct messages" }],
             [".badge", { text: "2" }],
-        ],
-    });
-});
-
-test("chat - command: should have add command when category is unfolded", async () => {
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory", {
-        contains: [
-            ["i.oi.oi-chevron-down"],
-            ["span", { text: "Direct messages" }],
-            ["[title='Start a conversation']"],
         ],
     });
 });

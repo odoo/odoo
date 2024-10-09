@@ -174,9 +174,6 @@ patch(MessagingMenu.prototype, {
         }
         return value;
     },
-    get displayStartConversation() {
-        return this.store.discuss.activeTab !== "channel" && !this.state.adding;
-    },
     get shouldAskPushPermission() {
         return this.notification.permission === "prompt" && !isIOS();
     },

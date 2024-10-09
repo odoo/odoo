@@ -101,35 +101,6 @@ export class DiscussCoreCommon {
         });
     }
 
-    async createGroupChat({ default_display_mode, partners_to }) {
-        const data = await this.orm.call("discuss.channel", "create_group", [], {
-            default_display_mode,
-            partners_to,
-        });
-        const { Thread } = this.store.insert(data);
-        const [channel] = Thread;
-        channel.open();
-        return channel;
-    }
-
-    /** @param {[number]} partnerIds */
-    async startChat(partnerIds) {
-        const partners_to = [...new Set([this.store.self.id, ...partnerIds])];
-        if (partners_to.length === 1) {
-            const chat = await this.store.joinChat(partners_to[0], true);
-            this.store.ChatWindow?.get({ thread: undefined })?.close();
-            chat.open();
-        } else if (partners_to.length === 2) {
-            const correspondentId = partners_to.find(
-                (partnerId) => partnerId !== this.store.self.id
-            );
-            const chat = await this.store.joinChat(correspondentId, true);
-            chat.open();
-        } else {
-            await this.createGroupChat({ partners_to });
-        }
-    }
-
     /**
      * @param {import("models").Thread} thread
      * @param {{ notifId: number}} metadata

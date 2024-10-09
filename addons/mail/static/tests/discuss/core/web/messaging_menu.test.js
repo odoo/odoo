@@ -9,7 +9,6 @@ import {
     patchUiSize,
     start,
     startServer,
-    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import {
@@ -25,7 +24,7 @@ import { rpc } from "@web/core/network/rpc";
 describe.current.tags("desktop");
 defineMailModels();
 
-test('"Start a conversation" item selection opens chat', async () => {
+test("can make DM chat in mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
@@ -35,14 +34,12 @@ test('"Start a conversation" item selection opens chat', async () => {
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Chat" });
     await click("button", { text: "Start a conversation" });
-    await insertText("input[placeholder='Start a conversation']", "Gandalf");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    triggerHotkey("Enter");
+    await insertText("input[placeholder='Search a conversation']", "Gandalf");
+    await click(".o_command_name", { text: "Gandalf" });
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
 });
 
-test('"New channel" item selection opens channel (existing)', async () => {
+test("can search channel in mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "Gryffindors" });
@@ -50,31 +47,30 @@ test('"New channel" item selection opens channel (existing)', async () => {
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
-    await click("button", { text: "New Channel" });
-    await insertText("input[placeholder='Add or join a channel']", "Gryff");
-    await click(":nth-child(1 of .o-discuss-ChannelSelector-suggestion)");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
-    await contains(".o-mail-ChatWindow", { text: "Gryffindors" });
+    await click("button", { text: "Start a conversation" });
+    await insertText("input[placeholder='Search a conversation']", "Gryff");
+    await click("a", { text: "Gryffindors" });
+    await contains(".o-mail-ChatWindow div[title='Gryffindors']");
 });
 
-test('"New channel" item selection opens channel (new)', async () => {
+test("can make new channel in mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss();
     await contains("button.active", { text: "Inbox" });
     await click("button", { text: "Channel" });
-    await click("button", { text: "New Channel" });
-    await insertText("input[placeholder='Add or join a channel']", "slytherins");
-    await click(".o-discuss-ChannelSelector-suggestion");
-    await contains(".o-discuss-ChannelSelector-suggestion", { count: 0 });
+    await click("button", { text: "Start a conversation" });
+    await insertText("input[placeholder='Search a conversation']", "slytherins");
+    await click("a", { text: "Create Channel" });
     await contains(".o-mail-ChatWindow", { text: "slytherins" });
 });
 
-test("new message [REQUIRE FOCUS]", async () => {
+test("new message opens the @ command palette", async () => {
     await start();
     await click(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
-    await contains(".o-mail-ChatWindow .o-discuss-ChannelSelector input:focus");
+    await contains(".o_command_palette_search .o_namespace", { text: "@" });
+    await contains(".o_command_palette input[placeholder='Search a conversation']");
 });
 
 test("channel preview ignores empty message", async () => {

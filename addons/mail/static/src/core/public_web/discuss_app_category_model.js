@@ -43,7 +43,6 @@ export class DiscussAppCategory extends Record {
     name;
     hideWhenEmpty = false;
     canView = false;
-    canAdd = false;
     app = Record.one("DiscussApp", {
         compute() {
             return this.store.discuss;
@@ -99,10 +98,6 @@ export class DiscussAppCategory extends Record {
 
     /** @type {string} */
     serverStateKey;
-    /** @type {string} */
-    addTitle;
-    /** @type {string} */
-    addHotkey;
     threads = Record.many("Thread", {
         sort(t1, t2) {
             return this.sortThreads(t1, t2);

@@ -14,6 +14,7 @@ import { Component, EventBus } from "@odoo/owl";
  *  action: ()=>(void | CommandPaletteConfig);
  *  category?: string;
  *  href?: string;
+ *  className?: string;
  * }} Command
  */
 
