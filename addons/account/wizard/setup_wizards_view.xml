@@ -56,6 +56,25 @@
             </field>
         </record>
 
+        <record id="setup_credit_card_account_wizard" model="ir.ui.view">
+            <field name="name">account.online.sync.res.partner.credit.card.setup.form</field>
+            <field name="model">account.setup.bank.manual.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="acc_number" placeholder="e.g BE15001559627230"/>
+                            <field name="bank_id" placeholder="e.g Bank of America"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Create" class="oe_highlight" type="object" name="validate" data-hotkey="q"/>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
         <record id="init_accounts_tree" model="ir.ui.view">
             <field name="name">account.setup.opening.move.line.list</field>
             <field name="model">account.account</field>
