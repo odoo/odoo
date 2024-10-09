@@ -86,10 +86,10 @@
     <!-- Change 'continue' button to use the website login settings -->
     <xpath expr="//div[hasclass('modal-footer')]//button[hasclass('btn-primary')]" position="replace">
         <t t-if="website.account_on_checkout == 'mandatory' and website.is_public_user()">
-            <a class="btn btn-primary" t-attf-href="/web/login?redirect=/event/#{slug(event)}">
+            <button class="btn btn-primary" type="submit">
                 <span>Sign In</span>
                 <span class="fa fa-sign-in"/>
-            </a>
+            </button>
         </t>
         <t t-else="">
             <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
