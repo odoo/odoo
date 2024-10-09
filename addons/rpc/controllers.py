@@ -1,13 +1,11 @@
-import re
 import sys
 import traceback
 import xmlrpc.client
 from datetime import date, datetime
-
 from collections import defaultdict
 from markupsafe import Markup
 
-import odoo
+import odoo.exceptions
 from odoo.http import Controller, route, dispatch_rpc, request, Response
 from odoo.fields import Date, Datetime, Command
 from odoo.tools import lazy
