@@ -24,14 +24,9 @@ export class ForecastedWarehouseFilter extends Component {
     }
 
     get activeWarehouse() {
-        let warehouseIds = null;
-        if (Array.isArray(this.context.warehouse_id)) {
-            warehouseIds = this.context.warehouse_id;
-        } else {
-            warehouseIds = [this.context.warehouse_id];
-        }
-        return warehouseIds
-            ? this.warehouses.find((w) => warehouseIds.includes(w.id))
+        const warehouse_id = this.context.warehouse_id[0];
+        return warehouse_id
+            ? this.warehouses.find((w) => w.id === warehouse_id)
             : this.warehouses[0];
     }
 

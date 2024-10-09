@@ -115,9 +115,9 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _get_report_data(self, product_template_ids=False, product_ids=False):
         assert product_template_ids or product_ids
         res = {}
-
-        if self.env.context.get('warehouse_id') and isinstance(self.env.context['warehouse_id'], int):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id'))
+        breakpoint()
+        if self.env.context.get('warehouse_id') and not isinstance(self.env.context['warehouse_id'], int):
+            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id')[0])
         else:
             warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
 
