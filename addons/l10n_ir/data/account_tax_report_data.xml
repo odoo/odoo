@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.ir" />
+    </record>
+    <!-- sales reports -->
+    <record id="tax_report_line_base_all_sales" model="account.tax.report.line">
+        <field name="name">VAT on Sales and all other Outputs (Base)</field>
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="1" />
+    </record>
+
+    <record
+        id="tax_report_line_standard_rated_sales_base"
+        model="account.tax.report.line"
+    >
+        <field name="name">1. Standard rated sales</field>
+        <field name="tag_name">1. Standard rated sales (Base)</field>
+        <field name="code">STD_RATE_SALES_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales" />
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="1" />
+    </record>
+
+    <record id="tax_report_line_vat_all_sales" model="account.tax.report.line">
+        <field name="name">VAT on Sales and all other Outputs (Tax)</field>
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="3" />
+    </record>
+
+    <record
+        id="tax_report_line_standard_rated_sales_vat"
+        model="account.tax.report.line"
+    >
+        <field name="name">1. Standard rated sales</field>
+        <field name="tag_name">1. Standard rated sales (Tax)</field>
+        <field name="code">STD_RATE_SALES_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales" />
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="1" />
+    </record>
+    <!-- expenses reports -->
+    <record id="tax_report_line_base_all_expense" model="account.tax.report.line">
+        <field name="name">VAT on Expenses and all other Inputs (Base)</field>
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="2" />
+    </record>
+
+    <record
+        id="tax_report_line_standard_rated_expense_base"
+        model="account.tax.report.line"
+    >
+        <field name="name">1. Standard rated expenses</field>
+        <field name="tag_name">1. Standard rated expenses (Base)</field>
+        <field name="code">STD_RATE_EXPENSES_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_expense" />
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="1" />
+    </record>
+
+    <record id="tax_report_line_vat_all_expense" model="account.tax.report.line">
+        <field name="name">VAT on Expenses and all other Inputs (Tax)</field>
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="4" />
+    </record>
+
+    <record
+        id="tax_report_line_standard_rated_expense_vat"
+        model="account.tax.report.line"
+    >
+        <field name="name">1. Standard rated expenses</field>
+        <field name="tag_name">1. Standard rated expenses (Tax)</field>
+        <field name="code">STD_RATE_EXPENSES_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_expense" />
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="1" />
+    </record>
+
+    <record id="tax_report_line_net_vat_due" model="account.tax.report.line">
+        <field name="name">Net VAT Due</field>
+        <field name="report_id" ref="tax_report" />
+        <field name="sequence" eval="5" />
+        <field name="formula">STD_RATE_SALES_TAX + STD_RATE_EXPENSES_TAX</field>
+    </record>
+
+</odoo>
