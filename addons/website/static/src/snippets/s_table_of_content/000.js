@@ -62,7 +62,6 @@ const TableOfContent = publicWidget.Widget.extend({
      */
     async start() {
         this._stripNavbarStyles();
-        await this._super(...arguments);
         this._scrollElement = this.$target.closest(".s_table_of_content").closestScrollable()[0];
         this._scrollTarget = $().getScrollingTarget(this._scrollElement)[0];
         this._tocElement = this.el.querySelector('.s_table_of_content_navbar');
@@ -71,6 +70,7 @@ const TableOfContent = publicWidget.Widget.extend({
         this._updateTableOfContentNavbarPositionBound = this._updateTableOfContentNavbarPosition.bind(this);
         extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPositionBound);
         this._scrollTarget.addEventListener("scroll", this._onScrollBound);
+        await this._super(...arguments);
     },
     /**
      * @override
