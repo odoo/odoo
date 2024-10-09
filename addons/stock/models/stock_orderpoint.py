@@ -208,7 +208,7 @@ class StockWarehouseOrderpoint(models.Model):
         }
         warehouse = self.warehouse_id
         if warehouse:
-            action['context']['warehouse'] = warehouse.id
+            action['context']['warehouse'] = [warehouse.id]
         return action
 
     @api.model

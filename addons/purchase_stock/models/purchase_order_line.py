@@ -124,7 +124,7 @@ class PurchaseOrderLine(models.Model):
         }
         warehouse = self.order_id.picking_type_id.warehouse_id
         if warehouse:
-            action['context']['warehouse'] = warehouse.id
+            action['context']['warehouse'] = [warehouse.id]
         return action
 
     def unlink(self):
