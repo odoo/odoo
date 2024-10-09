@@ -7,7 +7,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour("snippet_rating", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

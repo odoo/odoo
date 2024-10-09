@@ -11,7 +11,6 @@ import {
 registerWebsitePreviewTour('shop_customize', {
     url: '/shop',
     edition: true,
-    test: true,
 },
     () => [
         ...clickOnSave(),

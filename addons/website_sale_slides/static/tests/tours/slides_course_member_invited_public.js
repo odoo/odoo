@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("invited_on_payment_course_public", {
-    test: true,
     steps: () => [
         {
             trigger: '.o_wslides_identification_banner a:contains("Log in")',

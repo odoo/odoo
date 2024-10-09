@@ -9,7 +9,6 @@ import {
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour("default_shape_gets_palette_colors", {
-    test: true,
     url: '/',
     edition: true,
 }, () => [

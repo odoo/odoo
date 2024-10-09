@@ -37,7 +37,6 @@ const setOnScrollAnim = function () {
 };
 
 registerWebsitePreviewTour("snippet_popup_and_animations", {
-    test: true,
     url: "/",
     edition: true,
 }, () => [

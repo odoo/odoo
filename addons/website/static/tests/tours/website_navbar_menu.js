@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_navbar_menu", {
-    test: true,
     url: "/",
     steps: () => [
     {

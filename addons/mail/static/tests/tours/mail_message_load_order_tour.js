@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import { contains, scroll } from "@web/../tests/utils";
 
 registry.category("web_tour.tours").add("mail_message_load_order_tour", {
-    test: true,
     steps: () => [
         {
             trigger: ".o-mail-DiscussSidebarChannel:contains(MyTestChannel)",
