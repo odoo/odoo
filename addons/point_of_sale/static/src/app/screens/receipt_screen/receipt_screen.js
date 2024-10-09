@@ -35,10 +35,6 @@ export class ReceiptScreen extends Component {
             this.pos.sendOrderInPreparation(order);
         });
     }
-
-    _addNewOrder() {
-        this.pos.add_new_order();
-    }
     actionSendReceiptOnEmail() {
         this.sendReceipt.call({
             action: "action_send_receipt",
@@ -76,10 +72,12 @@ export class ReceiptScreen extends Component {
     showPhoneInput() {
         return false;
     }
-    orderDone() {
+    async orderDone() {
         this.currentOrder.uiState.screen_data.value = "";
         this.currentOrder.uiState.locked = true;
-        this._addNewOrder();
+        if (!this.pos.config.module_pos_restaurant) {
+            await this.pos.add_new_order();
+        }
         this.pos.searchProductWord = "";
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);

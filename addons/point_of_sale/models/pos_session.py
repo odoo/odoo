@@ -48,8 +48,8 @@ class PosSession(models.Model):
         required=True, readonly=True,
         index=True, copy=False, default='opening_control')
 
-    sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
-    login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
+    order_seq_id = fields.Many2one('ir.sequence', string='Order Sequence', readonly=True, copy=False, ondelete='restrict', help='Used to generate the OOOO part of the pos_reference field of the pos.order model.')
+    login_number_seq_id = fields.Many2one('ir.sequence', string='Login Number Sequence', readonly=True, copy=False, ondelete='restrict', help='Determines the number of times the UI is opened. It is used as proxy to the identity of the device where the UI is opened. And as such, it is the LL part of the pos_reference field of the pos.order model.')
 
     opening_notes = fields.Text(string="Opening Notes")
     closing_notes = fields.Text(string="Closing Notes")
@@ -142,7 +142,7 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
-            'id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'login_number',
+            'id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at',
             'payment_method_ids', 'state', 'update_stock_at_closing', 'cash_register_balance_start', 'access_token'
         ]
 
@@ -309,6 +309,51 @@ class PosSession(models.Model):
                 '\n'.join(f'{invoice.name} - {invoice.state}' for invoice in unposted_invoices)
             ))
 
+    def _create_sequences(self):
+        for session in self:
+            order_seq = self.env['ir.sequence'].sudo().create({
+                'name': _("PoS Order Sequence of Session %s", session.id),
+                'padding': 0,
+                'code': f'pos.order_{session.id}',
+                'number_next': 1,
+                'number_increment': 1,
+                'company_id': session.company_id.id,
+            })
+            login_number_seq = self.env['ir.sequence'].sudo().create({
+                'name': _("Login Number Sequence of Session %s", session.id),
+                'padding': 0,
+                'code': f'pos.login_number_{session.id}',
+                'number_next': 1,
+                'number_increment': 1,
+                'company_id': session.company_id.id,
+            })
+            session.write({
+                'order_seq_id': order_seq.id,
+                'login_number_seq_id': login_number_seq.id
+            })
+
+    def get_next_pos_reference(self, login_number=0, ref_prefix=None, tracking_prefix=''):
+        """
+        Generates a consistent set of tracking_number, sequence_number and pos_reference for a new order.
+        Side-effect: Calling this will increment the order_seq_id.
+        Convention: `login_number != 0` means the order is created in the classic PoS UI.
+            During self-ordering workflow (kiosk and mobile), login_number = 0 is used.
+        """
+        self.ensure_one()
+        if ref_prefix is None:
+            ref_prefix = _("Order")
+        # get current year in YY format
+        YY = fields.Datetime.now().strftime('%y')
+        LL = f"{login_number % 100:02}"
+        SSS = f"{self.id:03}"
+        # reaching this endpoint means the client is online
+        F = 0
+        order_sequence_number = int(self.order_seq_id._next())
+        OOOO = f"{order_sequence_number:04}"
+        order_ref = f"{ref_prefix} {YY}{LL}-{SSS}-{F}{OOOO}"
+        tracking_number = f"{OOOO}"[-3:]
+        return [order_ref, order_sequence_number, tracking_prefix + tracking_number]
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -340,19 +385,9 @@ class PosSession(models.Model):
             sessions = super(PosSession, self.sudo()).create(vals_list)
         else:
             sessions = super().create(vals_list)
-        sessions.action_pos_session_open()
 
-        date_string = fields.Date.today().isoformat()
-        ir_sequence = self.env['ir.sequence'].sudo().search([('code', '=', f'pos.order_{date_string}')])
-        if not ir_sequence:
-            self.env['ir.sequence'].sudo().create({
-                'name': _("PoS Order"),
-                'padding': 0,
-                'code': f'pos.order_{date_string}',
-                'number_next': 1,
-                'number_increment': 1,
-                'company_id': self.env.company.id,
-            })
+        sessions._create_sequences()
+        sessions.action_pos_session_open()
 
         return sessions
 
@@ -362,11 +397,7 @@ class PosSession(models.Model):
 
     def login(self):
         self.ensure_one()
-        login_number = self.login_number + 1
-        self.write({
-            'login_number': login_number,
-        })
-        return login_number
+        return self.login_number_seq_id._next()
 
     def action_pos_session_open(self):
         # we only open sessions that haven't already been opened
